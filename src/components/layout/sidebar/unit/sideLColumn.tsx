@@ -12,9 +12,9 @@ export function SideLColumn({ topMenu, onTopClick }: SideLColumnProps) {
 
 	return (
 		<div
-			className={`${styles.leftColWidth} flex flex-col border-r border-border/60 bg-gradient-to-b from-gray-100/90 to-gray-200/95 flex-shrink-0`}>
+			className={`${styles.leftColWidth} flex flex-col border-r border-gray-300/70 bg-gradient-to-b from-gray-100/90 to-gray-200/95 flex-shrink-0`}>
 			{/* side_Lcol: top 메뉴 버튼들 */}
-			<div className="flex flex-col flex-1 w-full px-2 py-3 space-y-2">
+			<div className="flex flex-col flex-1 w-full px-2 py-2 space-y-2">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = topMenu === topKey;
@@ -53,7 +53,7 @@ export function SideLColumn({ topMenu, onTopClick }: SideLColumnProps) {
 			</div>
 
 			{/* side_Lcol: 하단 사용자 아바타 */}
-			<div className="px-2 py-3 border-t border-border/60">
+			<div className="px-2 py-3 border-t border-gray-300/70">
 				<div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-br from-white/80 to-gray-50/80 shadow-[3px_3px_7px_rgba(0,0,0,0.15),-3px_-3px_7px_rgba(255,255,255,0.9)] border border-white/40 hover:shadow-[inset_-1px_-1px_2px_rgba(255,255,255,1),inset_1px_1px_2px_rgba(0,0,0,0.1),2px_2px_8px_rgba(0,0,0,0.2),-2px_-2px_8px_rgba(255,255,255,1)] hover:bg-gradient-to-br hover:from-white/90 hover:to-gray-50/90 hover:scale-[1.01] transition-transform duration-300 ease-in-out cursor-pointer">
 					<div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-primary/40 to-primary/15 shadow-[inset_2px_2px_3px_rgba(0,0,0,0.15),inset_-2px_-2px_3px_rgba(255,255,255,0.8)] transition-all duration-300 ease-in-out">
 						<span className="text-xs font-semibold text-primary drop-shadow-md">

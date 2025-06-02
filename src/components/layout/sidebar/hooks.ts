@@ -67,3 +67,35 @@ export function useSidebarMenu() {
 	};
 }
 // #endregion
+
+// #region 검색 상태 관리 훅
+export function useSidebarSearch() {
+	const [searchQuery, setSearchQuery] = useState<string>('');
+	const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
+
+	const handleSearchChange = (value: string) => {
+		setSearchQuery(value);
+		setIsSearchActive(value.length > 0);
+	};
+
+	const handleSearchClear = () => {
+		setSearchQuery('');
+		setIsSearchActive(false);
+	};
+
+	const handleSearchSubmit = () => {
+		if (searchQuery.trim()) {
+			// 검색 실행 로직
+			console.log('검색 실행:', searchQuery);
+		}
+	};
+
+	return {
+		searchQuery,
+		isSearchActive,
+		handleSearchChange,
+		handleSearchClear,
+		handleSearchSubmit,
+	};
+}
+// #endregion

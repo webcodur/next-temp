@@ -32,3 +32,10 @@ export interface SidebarState {
 	isCollapsed: boolean;
 }
 // #endregion
+
+// #region 검색 타입 정의
+export interface SearchState {
+	query: string;
+	isActive: boolean;
+}
+// #endregion
