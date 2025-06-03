@@ -10,6 +10,7 @@ import {
 	currentBotMenuAtom,
 } from '@/store/sidebar';
 import { menuData } from '@/data/menuData';
+import { siteData } from '@/data/siteData';
 
 export function Breadcrumb() {
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
@@ -56,24 +57,34 @@ export function Breadcrumb() {
 	// #endregion
 
 	// #region breadcrumb 아이템 생성
-	const breadcrumbItems = [];
+	const breadcrumbItems = [
+		// 현장명칭은 항상 첫 번째
+		{
+			label: siteData.name,
+			href: '/',
+			isHome: true,
+		},
+	];
 
 	if (currentTopMenu && menuData[currentTopMenu]) {
 		breadcrumbItems.push({
 			label: menuData[currentTopMenu].label,
 			href: '#',
+			isHome: false,
 		});
 
 		if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
 			breadcrumbItems.push({
 				label: menuData[currentTopMenu].midItems[currentMidMenu].label,
 				href: '#',
+				isHome: false,
 			});
 
 			if (currentBotMenu) {
 				breadcrumbItems.push({
 					label: currentBotMenu,
 					href: '#',
+					isHome: false,
 				});
 			}
 		}
