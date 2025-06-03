@@ -1,0 +1,51 @@
+* {
+	@apply border-border;
+}
+body {
+	@apply bg-background text-foreground;
+	font-family:
+		'Pretendard',
+		-apple-system,
+		BlinkMacSystemFont,
+		system-ui,
+		sans-serif;
+	margin: 0;
+	padding: 0;
+}
+html {
+	height: 100%;
+}
+
+/* 버튼과 링크의 즉각적 hover */
+/* button:hover,
+a:hover,
+[role="button"]:hover {
+  transition: none !important;
+} */
+
+/* #region 자동 foreground 시스템 */
+.bg-primary {
+	background-color: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+}
+
+.bg-secondary {
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+}
+
+.bg-destructive {
+	background-color: hsl(var(--destructive));
+	color: hsl(var(--destructive-foreground));
+}
+
+.bg-card {
+	background-color: hsl(var(--card));
+	color: hsl(var(--card-foreground));
+}
+
+.bg-muted {
+	background-color: hsl(var(--muted));
+	color: hsl(var(--muted-foreground));
+}
+/* #endregion */

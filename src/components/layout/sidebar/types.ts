@@ -5,11 +5,13 @@ export interface BotItem {
 	label: string;
 	href: string;
 	description?: string;
+	icon?: LucideIcon;
 }
 
 export interface MidItem {
 	label: string;
 	botItems: BotItem[];
+	icon?: LucideIcon;
 }
 
 export interface TopItem {

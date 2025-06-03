@@ -1,0 +1,41 @@
+/* #region 기본 뉴모피즘 */
+/* 기본 뉴모피즘 컨테이너 */
+.neumorphic {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card) / 0.9),
+		hsl(var(--muted) / 0.7)
+	);
+	border: 1px solid hsl(var(--border) / 0.4);
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.15),
+		-3px -3px 6px rgba(255, 255, 255, 0.9);
+}
+
+.dark .neumorphic {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.3),
+		-3px -3px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* 뉴모피즘 활성 상태 (선택됨) */
+.neumorphic-active {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card) / 0.95),
+		hsl(var(--background) / 0.95)
+	);
+	color: hsl(var(--primary));
+	transform: scale(0.98);
+	box-shadow:
+		inset 3px 3px 6px rgba(0, 0, 0, 0.15),
+		inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+	border: 1px solid hsl(var(--border) / 0.4);
+}
+
+.dark .neumorphic-active {
+	box-shadow:
+		inset 3px 3px 6px rgba(0, 0, 0, 0.3),
+		inset -3px -3px 6px rgba(255, 255, 255, 0.1);
+}
+/* #endregion */

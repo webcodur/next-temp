@@ -1,0 +1,280 @@
+/* #region 뉴모피즘 버튼 */
+/* 뉴모피즘 버튼 */
+.neumorphic-button {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card) / 0.9),
+		hsl(var(--muted) / 0.7)
+	);
+	border: 1px solid hsl(var(--border) / 0.4);
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.15),
+		-3px -3px 6px rgba(255, 255, 255, 0.9);
+	transition: all 0.2s ease-in-out;
+}
+
+.dark .neumorphic-button {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.3),
+		-3px -3px 6px rgba(255, 255, 255, 0.1);
+}
+
+.neumorphic-button:hover {
+	transform: scale(0.99);
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.18),
+		-2px -2px 4px rgba(255, 255, 255, 1),
+		inset -1px -1px 2px rgba(255, 255, 255, 0.9),
+		inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark .neumorphic-button:hover {
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.4),
+		-2px -2px 4px rgba(255, 255, 255, 0.15),
+		inset -1px -1px 2px rgba(255, 255, 255, 0.1),
+		inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.neumorphic-button:active {
+	transform: scale(0.97);
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.2),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+}
+
+.dark .neumorphic-button:active {
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* 뉴모피즘 토글 버튼 */
+.neumorphic-toggle {
+	background: hsl(var(--background) / 0.95);
+	border: 2px solid hsl(var(--border) / 0.6);
+	color: hsl(var(--muted-foreground));
+	box-shadow:
+		4px 4px 8px rgba(0, 0, 0, 0.15),
+		-2px -2px 4px rgba(255, 255, 255, 0.95),
+		inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+		inset -1px -1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .neumorphic-toggle {
+	box-shadow:
+		4px 4px 8px rgba(0, 0, 0, 0.3),
+		-2px -2px 4px rgba(255, 255, 255, 0.1),
+		inset 1px 1px 2px rgba(255, 255, 255, 0.1),
+		inset -1px -1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.neumorphic-toggle:hover {
+	color: hsl(var(--foreground));
+	border-color: hsl(var(--border));
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.18),
+		-1px -1px 2px rgba(255, 255, 255, 1),
+		inset 1px 1px 2px rgba(255, 255, 255, 0.95),
+		inset -1px -1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.dark .neumorphic-toggle:hover {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.35),
+		-1px -1px 2px rgba(255, 255, 255, 0.15),
+		inset 1px 1px 2px rgba(255, 255, 255, 0.15),
+		inset -1px -1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* 뉴모피즘 토글 슬라이더 */
+.neumorphic-toggle-slider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+
+.neumorphic-toggle-slider:hover {
+	transform: scale(1.02);
+}
+
+.neumorphic-toggle-slider .slider-container {
+	position: relative;
+	width: 60px;
+	height: 28px;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.8),
+		hsl(var(--background) / 0.9)
+	);
+	border: 1px solid hsl(var(--border) / 0.4);
+	border-radius: 14px;
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.15),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+	transition: all 0.2s ease-in-out;
+}
+
+.dark .neumorphic-toggle-slider .slider-container {
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.neumorphic-toggle-slider .slider-thumb {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 22px;
+	height: 22px;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card) / 0.95),
+		hsl(var(--background) / 0.9)
+	);
+	border: 1px solid hsl(var(--border) / 0.3);
+	border-radius: 50%;
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.15),
+		-1px -1px 2px rgba(255, 255, 255, 0.9);
+	transition: all 0.2s ease-in-out;
+	transform: translateX(0);
+}
+
+.dark .neumorphic-toggle-slider .slider-thumb {
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.3),
+		-1px -1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* ON 상태 */
+.neumorphic-toggle-slider.active .slider-thumb {
+	transform: translateX(32px);
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.18),
+		-2px -2px 4px rgba(255, 255, 255, 1);
+}
+
+.dark .neumorphic-toggle-slider.active .slider-thumb {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.35),
+		-2px -2px 4px rgba(255, 255, 255, 0.15);
+}
+
+/* 호버 시 슬라이더 강화 */
+.neumorphic-toggle-slider:hover .slider-thumb {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.2),
+		-2px -2px 4px rgba(255, 255, 255, 1);
+}
+
+.dark .neumorphic-toggle-slider:hover .slider-thumb {
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, 0.4),
+		-2px -2px 4px rgba(255, 255, 255, 0.15);
+}
+
+.neumorphic-toggle-slider .slider-text {
+	font-size: 12px;
+	font-weight: 500;
+	color: hsl(var(--foreground));
+	user-select: none;
+}
+
+/* 뉴모피즘 체크박스 토글 */
+.neumorphic-toggle-checkbox {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+
+.neumorphic-toggle-checkbox:hover {
+	transform: scale(1.02);
+}
+
+.neumorphic-toggle-checkbox .checkbox-container {
+	position: relative;
+	width: 18px;
+	height: 18px;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.8),
+		hsl(var(--background) / 0.9)
+	);
+	border: 1px solid hsl(var(--border) / 0.4);
+	border-radius: 3px;
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.15),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.9);
+	transition: all 0.2s ease-in-out;
+}
+
+.dark .neumorphic-toggle-checkbox .checkbox-container {
+	box-shadow:
+		inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.neumorphic-toggle-checkbox .checkbox-indicator {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	width: 10px;
+	height: 10px;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--primary) / 0.9),
+		hsl(var(--primary) / 0.7)
+	);
+	border-radius: 2px;
+	box-shadow:
+		1px 1px 2px rgba(0, 0, 0, 0.2),
+		-1px -1px 2px rgba(255, 255, 255, 0.8);
+	transition: all 0.2s ease-in-out;
+}
+
+.dark .neumorphic-toggle-checkbox .checkbox-indicator {
+	box-shadow:
+		1px 1px 2px rgba(0, 0, 0, 0.4),
+		-1px -1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* ON 상태 */
+.neumorphic-toggle-checkbox.active .checkbox-indicator {
+	transform: translate(-50%, -50%) scale(1);
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.25),
+		-1px -1px 2px rgba(255, 255, 255, 1);
+}
+
+.dark .neumorphic-toggle-checkbox.active .checkbox-indicator {
+	box-shadow:
+		2px 2px 4px rgba(0, 0, 0, 0.5),
+		-1px -1px 2px rgba(255, 255, 255, 0.15);
+}
+
+/* 호버 시 체크박스 강화 */
+.neumorphic-toggle-checkbox:hover .checkbox-container {
+	box-shadow:
+		inset 3px 3px 6px rgba(0, 0, 0, 0.18),
+		inset -3px -3px 6px rgba(255, 255, 255, 1);
+}
+
+.dark .neumorphic-toggle-checkbox:hover .checkbox-container {
+	box-shadow:
+		inset 3px 3px 6px rgba(0, 0, 0, 0.35),
+		inset -3px -3px 6px rgba(255, 255, 255, 0.15);
+}
+
+.neumorphic-toggle-checkbox .checkbox-text {
+	font-size: 12px;
+	font-weight: 500;
+	color: hsl(var(--foreground));
+	user-select: none;
+}
+/* #endregion */

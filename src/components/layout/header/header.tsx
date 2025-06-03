@@ -4,6 +4,7 @@ import { Bell, Search, Menu } from 'lucide-react';
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
+import { ThemeToggle } from '@/components/unit/theme-toggle';
 
 export function Header() {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
@@ -35,6 +36,9 @@ export function Header() {
 						className="pl-10 pr-4 py-2 w-64 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
 					/>
 				</div>
+
+				{/* Theme Toggle */}
+				<ThemeToggle />
 
 				{/* Notifications */}
 				<button className="relative p-2 hover:bg-accent rounded-lg">

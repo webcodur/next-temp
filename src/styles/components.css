@@ -1,0 +1,32 @@
+/* #region 단축 클래스 정의 */
+/* 버튼 단축 클래스 */
+.btn-primary {
+	@apply bg-primary text-primary-foreground px-4 py-2 rounded-lg;
+}
+
+.btn-secondary {
+	@apply bg-secondary text-secondary-foreground px-4 py-2 rounded-lg;
+}
+
+.btn-destructive {
+	@apply bg-destructive text-destructive-foreground px-4 py-2 rounded-lg;
+}
+
+/* 카드 단축 클래스 */
+.card {
+	@apply bg-card text-card-foreground border border-border rounded-lg p-6;
+}
+
+/* 텍스트 단축 클래스 */
+.text-main {
+	@apply text-foreground;
+}
+
+.text-sub {
+	@apply text-muted-foreground;
+}
+
+.text-accent {
+	@apply text-primary;
+}
+/* #endregion */

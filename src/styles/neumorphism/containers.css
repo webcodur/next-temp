@@ -1,0 +1,23 @@
+/* #region 뉴모피즘 컨테이너 */
+/* 뉴모피즘 컨테이너 (패널, 사이드바 등) */
+.neumorphic-container {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--background) / 0.95),
+		hsl(var(--card) / 0.98),
+		hsl(var(--muted) / 0.9)
+	);
+	border: 1px solid hsl(var(--border) / 0.5);
+	box-shadow:
+		8px 8px 16px rgba(0, 0, 0, 0.12),
+		-8px -8px 16px rgba(255, 255, 255, 0.9),
+		4px 4px 8px rgba(0, 0, 0, 0.08) inset;
+}
+
+.dark .neumorphic-container {
+	box-shadow:
+		8px 8px 16px rgba(0, 0, 0, 0.3),
+		-8px -8px 16px rgba(255, 255, 255, 0.05),
+		4px 4px 8px rgba(0, 0, 0, 0.2) inset;
+}
+/* #endregion */
