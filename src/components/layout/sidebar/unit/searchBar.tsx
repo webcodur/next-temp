@@ -32,7 +32,7 @@ export function SearchBar() {
 						handleSearchChange(e.target.value)
 					}
 					onKeyDown={handleKeyDown}
-					className="w-full h-10 px-4 pr-10 text-base rounded-md outline-none text-foreground placeholder:text-muted-foreground transition-all duration-200 bg-card/80 border border-border/70 shadow-sm"
+					className="w-full h-10 px-4 pr-10 text-base rounded-md outline-none text-foreground placeholder:text-muted-foreground transition-all duration-200 bg-card/80 border border-border/70 shadow-sm select-text"
 				/>
 
 				{/* X 버튼 (입력창 내부) */}

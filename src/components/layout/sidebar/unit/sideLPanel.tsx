@@ -12,9 +12,8 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 
 	return (
 		<div
-			className={`${styles.leftColWidth} flex flex-col border-r border-border/70 bg-gradient-to-b from-muted/90 to-secondary/95 flex-shrink-0`}>
-			{/* side_Lpanel: top 메뉴 버튼들 */}
-			<div className="flex flex-col flex-1 w-full px-2 py-3 space-y-2.5">
+			className={`${styles.leftColWidth} h-full bg-gradient-to-b from-muted/90 to-secondary/95 border-r border-border/70 flex-shrink-0`}>
+			<div className="w-[80px] px-2 py-3 space-y-2.5">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = topMenu === topKey;
@@ -23,13 +22,15 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 						<button
 							key={topKey}
 							onClick={() => onTopClick(topKey)}
-							className={`
-								w-full h-12 rounded-xl flex items-center justify-center px-2 relative
-								${isActive ? 'neumorphic-active' : 'neumorphic-button'}
-							`}>
-							{/* 아이콘만 표시 */}
+							className={`w-full h-14 rounded-xl flex items-center justify-center px-2 ${
+								isActive ? 'neumorphic-active' : 'neumorphic-button'
+							}`}>
 							<topItem.icon
-								className={`w-6 h-6 relative z-10 ${isActive ? 'drop-shadow-md scale-105 text-primary transition-all duration-300 ease-in-out' : 'text-foreground/80 hover:text-foreground'}`}
+								className={`w-7 h-7 ${
+									isActive
+										? 'text-primary scale-105'
+										: 'text-foreground/80 hover:text-foreground'
+								}`}
 							/>
 						</button>
 					);

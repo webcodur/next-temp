@@ -26,25 +26,17 @@ export function Sidebar() {
 	const topData = menuData[topMenu];
 
 	return (
-		<>
-			<aside
-				style={{ width: `${defaults.sidebarWidth}px` }}
-				className={`
-					fixed left-0 top-0 h-screen 
-					neumorphic-container
-					flex flex-col transition-transform duration-300 z-40 
-					rounded-r-3xl
-					${isCollapsed ? '-translate-x-full' : 'translate-x-0'}
-				`}>
-				{/* side_header */}
+		<aside
+			style={{ width: `${defaults.sidebarWidth}px` }}
+			className={`fixed left-4 top-0 h-screen neumorphic-container rounded-r-3xl ${
+				isCollapsed ? '-translate-x-full' : 'translate-x-0'
+			} transition-transform duration-300 z-40`}>
+			<div className="flex flex-col h-full overflow-auto scrollbar-hide">
 				<SideHeader />
 
-				{/* 메인 영역: side_Lpanel + side_Rpanel */}
-				<div className="flex flex-1 overflow-hidden border-t border-border/50">
-					{/* side_Lpanel */}
+				<div className="flex flex-1 border-t border-border/50">
 					<SideLPanel topMenu={topMenu} onTopClick={handleTopClick} />
 
-					{/* side_Rpanel */}
 					{topData && (
 						<SideRPanel
 							topData={topData}
@@ -58,7 +50,7 @@ export function Sidebar() {
 						/>
 					)}
 				</div>
-			</aside>
-		</>
+			</div>
+		</aside>
 	);
 }
