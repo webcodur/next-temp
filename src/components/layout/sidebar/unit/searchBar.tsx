@@ -21,8 +21,8 @@ export function SearchBar() {
 	};
 
 	return (
-		<div className="neumorphic-search flex items-center gap-2 p-1 rounded-2xl transition-all duration-200">
-			{/* 검색 영역 */}
+		<div className="flex items-center gap-4">
+			{/* 검색 입력창 */}
 			<div className="relative flex-1">
 				<input
 					type="text"
@@ -32,24 +32,31 @@ export function SearchBar() {
 						handleSearchChange(e.target.value)
 					}
 					onKeyDown={handleKeyDown}
-					className="neumorphic-input w-full h-8 px-3 pr-8 text-sm rounded-xl outline-none text-foreground placeholder:text-muted-foreground transition-all duration-200"
+					className="w-full h-10 px-4 pr-10 text-base rounded-md outline-none text-foreground placeholder:text-muted-foreground transition-all duration-200 bg-card/80 border border-border/70 shadow-sm"
 				/>
 
-				{/* X 버튼 */}
+				{/* X 버튼 (입력창 내부) */}
 				{isSearchActive && (
 					<Button
 						variant="ghost"
 						size="sm"
 						onClick={handleSearchClear}
-						className="neumorphic-button absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 rounded-lg transition-all duration-150"
+						className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 rounded-sm transition-all duration-150"
 						title="검색 지우기">
-						<X className="w-3 h-3 text-muted-foreground drop-shadow-sm" />
+						<X className="w-4 h-4 text-muted-foreground" />
 					</Button>
 				)}
 			</div>
 
-			{/* 검색 버튼 */}
-			<Search className="w-4 h-4 text-muted-foreground drop-shadow-sm" />
+			{/* 돋보기 버튼 (독립적) */}
+			<Button
+				variant="ghost"
+				size="sm"
+				onClick={handleSearchSubmit}
+				className="neumorphic-button h-10 w-10 p-0 rounded-md flex-shrink-0 transition-all duration-200 hover:scale-105"
+				title="현장 검색">
+				<Search className="w-5 h-5 text-muted-foreground" />
+			</Button>
 		</div>
 	);
 }

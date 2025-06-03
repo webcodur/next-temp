@@ -2,14 +2,14 @@
 export const defaults = {
 	topMenu: 'parking',
 	midMenu: 'facility',
-	sidebarWidth: 350,
-	leftColumnWidth: 160,
+	sidebarWidth: 320,
+	leftColumnWidth: 72,
 };
 
 export const styles = {
-	leftColWidth: 'w-[160px]',
-	buttonSize: 'w-12 h-12',
-	avatarSize: 'w-12 h-12',
-	headerHeight: 'h-[73px]',
+	leftColWidth: 'w-[72px]',
+	buttonSize: 'w-14 h-14',
+	avatarSize: 'w-14 h-14',
+	headerHeight: 'h-[80px]',
 };
 // #endregion

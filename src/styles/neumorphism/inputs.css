@@ -12,23 +12,11 @@
 		inset -2px -2px 4px rgba(255, 255, 255, 0.8);
 }
 
-.dark .neumorphic-input {
-	box-shadow:
-		inset 2px 2px 4px rgba(0, 0, 0, 0.3),
-		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
-}
-
 .neumorphic-input:focus {
 	border-color: hsl(var(--border) / 0.6);
 	box-shadow:
 		inset 4px 4px 8px rgba(0, 0, 0, 0.15),
 		inset -4px -4px 8px rgba(255, 255, 255, 0.95);
-}
-
-.dark .neumorphic-input:focus {
-	box-shadow:
-		inset 4px 4px 8px rgba(0, 0, 0, 0.35),
-		inset -4px -4px 8px rgba(255, 255, 255, 0.1);
 }
 
 /* 뉴모피즘 검색바 */
@@ -44,22 +32,10 @@
 		-6px -6px 12px rgba(255, 255, 255, 0.95);
 }
 
-.dark .neumorphic-search {
-	box-shadow:
-		6px 6px 12px rgba(0, 0, 0, 0.4),
-		-6px -6px 12px rgba(255, 255, 255, 0.1);
-}
-
 .neumorphic-search:hover {
 	box-shadow:
 		3px 3px 6px rgba(0, 0, 0, 0.22),
 		-3px -3px 6px rgba(255, 255, 255, 1);
-}
-
-.dark .neumorphic-search:hover {
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.5),
-		-3px -3px 6px rgba(255, 255, 255, 0.15);
 }
 
 .neumorphic-search:focus-within {
@@ -67,11 +43,5 @@
 	box-shadow:
 		inset 3px 3px 6px rgba(0, 0, 0, 0.15),
 		inset -3px -3px 6px rgba(255, 255, 255, 0.9);
-}
-
-.dark .neumorphic-search:focus-within {
-	box-shadow:
-		inset 3px 3px 6px rgba(0, 0, 0, 0.3),
-		inset -3px -3px 6px rgba(255, 255, 255, 0.1);
 }
 /* #endregion */

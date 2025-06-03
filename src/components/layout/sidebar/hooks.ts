@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
+import { singleOpenModeAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
 import { menuData } from '@/data/menuData';
 
@@ -6,7 +8,7 @@ import { menuData } from '@/data/menuData';
 export function useSidebarMenu() {
 	const [topMenu, setTopMenu] = useState<string>(defaults.topMenu);
 	const [midMenu, setMidMenu] = useState<string>('');
-	const [singleOpenMode, setSingleOpenMode] = useState<boolean>(false);
+	const [singleOpenMode, setSingleOpenMode] = useAtom(singleOpenModeAtom);
 
 	// 기본적으로 현재 topMenu의 모든 midItems를 펼친 상태로 초기화
 	const getDefaultExpandedMidItems = (topKey: string): Set<string> => {
@@ -17,14 +19,37 @@ export function useSidebarMenu() {
 	};
 
 	const [midExpanded, setMidExpanded] = useState<Set<string>>(
-		getDefaultExpandedMidItems(defaults.topMenu)
+		singleOpenMode
+			? new Set<string>()
+			: getDefaultExpandedMidItems(defaults.topMenu)
 	);
+
+	// 페이지 로드 시 singleOpenMode 값에 따라 midExpanded 상태 초기화
+	useEffect(() => {
+		if (singleOpenMode) {
+			// 하나만 열기 모드에서는 초기에 모든 메뉴를 닫거나
+			// 첫 번째 메뉴만 열기 (선택)
+			setMidExpanded(new Set<string>());
+		} else {
+			// 일반 모드에서는 현재 topMenu의 모든 midItems 열기
+			setMidExpanded(getDefaultExpandedMidItems(topMenu));
+		}
+	}, [singleOpenMode, topMenu]);
 
 	// #region top 메뉴 클릭 핸들러
 	const handleTopClick = (topKey: string) => {
 		setTopMenu(topKey);
-		// 새로운 topMenu 선택 시 모든 midItems를 닫힌 상태로 설정
-		setMidExpanded(new Set<string>());
+		// 새로운 topMenu 선택 시 singleOpenMode에 따라 초기 상태 설정
+		if (singleOpenMode) {
+			// 하나만 열기 모드에서는 모든 메뉴 닫기
+			setMidExpanded(new Set<string>());
+		} else {
+			// 일반 모드에서는 새 topMenu의 모든 메뉴 열기
+			const topData = menuData[topKey];
+			if (topData) {
+				setMidExpanded(new Set<string>(Object.keys(topData.midItems)));
+			}
+		}
 	};
 	// #endregion
 
@@ -58,11 +83,7 @@ export function useSidebarMenu() {
 	// #region 하나만 열기 모드 토글 핸들러
 	const handleSingleOpenToggle = () => {
 		setSingleOpenMode(!singleOpenMode);
-		// 하나만 열기 모드로 전환 시 현재 열린 메뉴 중 첫 번째만 유지
-		if (!singleOpenMode && midExpanded.size > 1) {
-			const firstOpenKey = Array.from(midExpanded)[0];
-			setMidExpanded(new Set<string>([firstOpenKey]));
-		}
+		// handleSingleOpenToggle에서 midExpanded 상태 변경은 useEffect에서 자동으로 처리됨
 	};
 	// #endregion
 
@@ -72,18 +93,16 @@ export function useSidebarMenu() {
 			// 하나만 열기 모드에서는 첫 번째 메뉴만 열기
 			const topData = menuData[topMenu];
 			if (topData) {
-				const firstMidKey = Object.keys(topData.midItems)[0];
-				if (firstMidKey) {
-					setMidExpanded(new Set<string>([firstMidKey]));
+				const midKeys = Object.keys(topData.midItems);
+				if (midKeys.length > 0) {
+					setMidExpanded(new Set<string>([midKeys[0]]));
 				}
 			}
 		} else {
-			// 기존 방식: 모든 메뉴 열기
+			// 일반 모드: 모든 메뉴 열기
 			const topData = menuData[topMenu];
 			if (topData) {
-				setMidExpanded(
-					new Set<string>(Object.keys(topData.midItems) as string[])
-				);
+				setMidExpanded(new Set<string>(Object.keys(topData.midItems)));
 			}
 		}
 	};
@@ -135,102 +154,6 @@ export function useSidebarSearch() {
 		handleSearchChange,
 		handleSearchClear,
 		handleSearchSubmit,
-	};
-}
-// #endregion
-
-// #region 메뉴검색 상태 관리 훅
-export function useMenuSearch() {
-	const [menuSearchQuery, setMenuSearchQuery] = useState<string>('');
-	const [isMenuSearchActive, setIsMenuSearchActive] = useState<boolean>(false);
-	const [searchResults, setSearchResults] = useState<
-		Array<{
-			topKey: string;
-			topLabel: string;
-			midKey: string;
-			midLabel: string;
-			botLabel?: string;
-			href?: string;
-		}>
-	>([]);
-
-	const handleMenuSearchChange = (value: string) => {
-		setMenuSearchQuery(value);
-		setIsMenuSearchActive(value.length > 0);
-
-		if (value.trim()) {
-			// 메뉴 검색 로직
-			const results: Array<{
-				topKey: string;
-				topLabel: string;
-				midKey: string;
-				midLabel: string;
-				botLabel?: string;
-				href?: string;
-			}> = [];
-
-			Object.entries(menuData).forEach(([topKey, topItem]) => {
-				Object.entries(topItem.midItems).forEach(([midKey, midItem]) => {
-					// mid 메뉴 검색
-					if (midItem.label.toLowerCase().includes(value.toLowerCase())) {
-						results.push({
-							topKey,
-							topLabel: topItem.label,
-							midKey,
-							midLabel: midItem.label,
-						});
-					}
-
-					// bot 메뉴 검색
-					midItem.botItems.forEach((botItem) => {
-						if (botItem.label.toLowerCase().includes(value.toLowerCase())) {
-							results.push({
-								topKey,
-								topLabel: topItem.label,
-								midKey,
-								midLabel: midItem.label,
-								botLabel: botItem.label,
-								href: botItem.href,
-							});
-						}
-					});
-				});
-			});
-
-			setSearchResults(results);
-		} else {
-			setSearchResults([]);
-		}
-	};
-
-	const handleMenuSearchClear = () => {
-		setMenuSearchQuery('');
-		setIsMenuSearchActive(false);
-		setSearchResults([]);
-	};
-
-	const handleMenuSearchSelect = (result: {
-		topKey: string;
-		midKey: string;
-		botLabel?: string;
-		href?: string;
-	}) => {
-		// 메뉴 위치로 이동하는 콜백을 위한 함수
-		return {
-			topKey: result.topKey,
-			midKey: result.midKey,
-			botLabel: result.botLabel,
-			href: result.href,
-		};
-	};
-
-	return {
-		menuSearchQuery,
-		isMenuSearchActive,
-		searchResults,
-		handleMenuSearchChange,
-		handleMenuSearchClear,
-		handleMenuSearchSelect,
 	};
 }
 // #endregion

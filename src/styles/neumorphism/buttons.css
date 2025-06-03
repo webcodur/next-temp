@@ -13,12 +13,6 @@
 	transition: all 0.2s ease-in-out;
 }
 
-.dark .neumorphic-button {
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.3),
-		-3px -3px 6px rgba(255, 255, 255, 0.1);
-}
-
 .neumorphic-button:hover {
 	transform: scale(0.99);
 	box-shadow:
@@ -28,25 +22,11 @@
 		inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.dark .neumorphic-button:hover {
-	box-shadow:
-		2px 2px 4px rgba(0, 0, 0, 0.4),
-		-2px -2px 4px rgba(255, 255, 255, 0.15),
-		inset -1px -1px 2px rgba(255, 255, 255, 0.1),
-		inset 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
 .neumorphic-button:active {
 	transform: scale(0.97);
 	box-shadow:
 		inset 2px 2px 4px rgba(0, 0, 0, 0.2),
 		inset -2px -2px 4px rgba(255, 255, 255, 0.9);
-}
-
-.dark .neumorphic-button:active {
-	box-shadow:
-		inset 2px 2px 4px rgba(0, 0, 0, 0.4),
-		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
 }
 
 /* 뉴모피즘 토글 버튼 */
@@ -61,14 +41,6 @@
 		inset -1px -1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.dark .neumorphic-toggle {
-	box-shadow:
-		4px 4px 8px rgba(0, 0, 0, 0.3),
-		-2px -2px 4px rgba(255, 255, 255, 0.1),
-		inset 1px 1px 2px rgba(255, 255, 255, 0.1),
-		inset -1px -1px 2px rgba(0, 0, 0, 0.3);
-}
-
 .neumorphic-toggle:hover {
 	color: hsl(var(--foreground));
 	border-color: hsl(var(--border));
@@ -77,14 +49,6 @@
 		-1px -1px 2px rgba(255, 255, 255, 1),
 		inset 1px 1px 2px rgba(255, 255, 255, 0.95),
 		inset -1px -1px 2px rgba(0, 0, 0, 0.08);
-}
-
-.dark .neumorphic-toggle:hover {
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.35),
-		-1px -1px 2px rgba(255, 255, 255, 0.15),
-		inset 1px 1px 2px rgba(255, 255, 255, 0.15),
-		inset -1px -1px 2px rgba(0, 0, 0, 0.35);
 }
 
 /* 뉴모피즘 토글 슬라이더 */
@@ -117,12 +81,6 @@
 	transition: all 0.2s ease-in-out;
 }
 
-.dark .neumorphic-toggle-slider .slider-container {
-	box-shadow:
-		inset 2px 2px 4px rgba(0, 0, 0, 0.3),
-		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
-}
-
 .neumorphic-toggle-slider .slider-thumb {
 	position: absolute;
 	top: 2px;
@@ -143,12 +101,6 @@
 	transform: translateX(0);
 }
 
-.dark .neumorphic-toggle-slider .slider-thumb {
-	box-shadow:
-		2px 2px 4px rgba(0, 0, 0, 0.3),
-		-1px -1px 2px rgba(255, 255, 255, 0.1);
-}
-
 /* ON 상태 */
 .neumorphic-toggle-slider.active .slider-thumb {
 	transform: translateX(32px);
@@ -157,23 +109,11 @@
 		-2px -2px 4px rgba(255, 255, 255, 1);
 }
 
-.dark .neumorphic-toggle-slider.active .slider-thumb {
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.35),
-		-2px -2px 4px rgba(255, 255, 255, 0.15);
-}
-
 /* 호버 시 슬라이더 강화 */
 .neumorphic-toggle-slider:hover .slider-thumb {
 	box-shadow:
 		3px 3px 6px rgba(0, 0, 0, 0.2),
 		-2px -2px 4px rgba(255, 255, 255, 1);
-}
-
-.dark .neumorphic-toggle-slider:hover .slider-thumb {
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.4),
-		-2px -2px 4px rgba(255, 255, 255, 0.15);
 }
 
 .neumorphic-toggle-slider .slider-text {
@@ -213,12 +153,6 @@
 	transition: all 0.2s ease-in-out;
 }
 
-.dark .neumorphic-toggle-checkbox .checkbox-container {
-	box-shadow:
-		inset 2px 2px 4px rgba(0, 0, 0, 0.3),
-		inset -2px -2px 4px rgba(255, 255, 255, 0.1);
-}
-
 .neumorphic-toggle-checkbox .checkbox-indicator {
 	position: absolute;
 	top: 50%;
@@ -238,42 +172,17 @@
 	transition: all 0.2s ease-in-out;
 }
 
-.dark .neumorphic-toggle-checkbox .checkbox-indicator {
-	box-shadow:
-		1px 1px 2px rgba(0, 0, 0, 0.4),
-		-1px -1px 2px rgba(255, 255, 255, 0.1);
-}
-
 /* ON 상태 */
 .neumorphic-toggle-checkbox.active .checkbox-indicator {
 	transform: translate(-50%, -50%) scale(1);
-	box-shadow:
-		2px 2px 4px rgba(0, 0, 0, 0.25),
-		-1px -1px 2px rgba(255, 255, 255, 1);
 }
 
-.dark .neumorphic-toggle-checkbox.active .checkbox-indicator {
-	box-shadow:
-		2px 2px 4px rgba(0, 0, 0, 0.5),
-		-1px -1px 2px rgba(255, 255, 255, 0.15);
-}
-
-/* 호버 시 체크박스 강화 */
 .neumorphic-toggle-checkbox:hover .checkbox-container {
-	box-shadow:
-		inset 3px 3px 6px rgba(0, 0, 0, 0.18),
-		inset -3px -3px 6px rgba(255, 255, 255, 1);
-}
-
-.dark .neumorphic-toggle-checkbox:hover .checkbox-container {
-	box-shadow:
-		inset 3px 3px 6px rgba(0, 0, 0, 0.35),
-		inset -3px -3px 6px rgba(255, 255, 255, 0.15);
+	border-color: hsl(var(--border));
 }
 
 .neumorphic-toggle-checkbox .checkbox-text {
-	font-size: 12px;
-	font-weight: 500;
+	font-size: 14px;
 	color: hsl(var(--foreground));
 	user-select: none;
 }

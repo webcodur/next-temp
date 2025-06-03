@@ -13,11 +13,4 @@
 		-8px -8px 16px rgba(255, 255, 255, 0.9),
 		4px 4px 8px rgba(0, 0, 0, 0.08) inset;
 }
-
-.dark .neumorphic-container {
-	box-shadow:
-		8px 8px 16px rgba(0, 0, 0, 0.3),
-		-8px -8px 16px rgba(255, 255, 255, 0.05),
-		4px 4px 8px rgba(0, 0, 0, 0.2) inset;
-}
 /* #endregion */
