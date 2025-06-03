@@ -8,7 +8,7 @@ export interface BotMenuPath {
 	midKey: string;
 	botLabel: string;
 	href: string;
-	description: string;
+	description?: string;
 	topLabel: string;
 	midLabel: string;
 }
@@ -27,7 +27,7 @@ export function getAllBotMenuPaths(): BotMenuPath[] {
 					midKey,
 					botLabel: botItem.label,
 					href: botItem.href,
-					description: botItem.description,
+					description: botItem.description || '',
 					topLabel: topItem.label,
 					midLabel: midItem.label,
 				});
