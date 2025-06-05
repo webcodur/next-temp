@@ -3,9 +3,11 @@ import { useAtom } from 'jotai';
 import { singleOpenModeAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
 import { menuData } from '@/data/menuData';
+import { usePathname } from 'next/navigation';
 
 // #region 사이드바 상태 관리 훅
 export function useSidebarMenu() {
+	const pathname = usePathname();
 	const [topMenu, setTopMenu] = useState<string>(defaults.topMenu);
 	const [midMenu, setMidMenu] = useState<string>('');
 	const [singleOpenMode, setSingleOpenMode] = useAtom(singleOpenModeAtom);
@@ -24,17 +26,26 @@ export function useSidebarMenu() {
 			: getDefaultExpandedMidItems(defaults.topMenu)
 	);
 
-	// 페이지 로드 시 singleOpenMode 값에 따라 midExpanded 상태 초기화
+	// URL 및 모드 변경 시 topMenu, midMenu, midExpanded 초기화
 	useEffect(() => {
-		if (singleOpenMode) {
-			// 하나만 열기 모드에서는 초기에 모든 메뉴를 닫거나
-			// 첫 번째 메뉴만 열기 (선택)
-			setMidExpanded(new Set<string>());
-		} else {
-			// 일반 모드에서는 현재 topMenu의 모든 midItems 열기
-			setMidExpanded(getDefaultExpandedMidItems(topMenu));
+		for (const [topKey, topData] of Object.entries(menuData)) {
+			for (const midKey of Object.keys(topData.midItems)) {
+				for (const botItem of topData.midItems[midKey].botItems) {
+					if (botItem.href === pathname) {
+						setTopMenu(topKey);
+						setMidMenu(midKey);
+						// midExpanded 설정: 단일 모드면 해당 메뉴만, 다중 모드면 모두 펼치기
+						if (singleOpenMode) {
+							setMidExpanded(new Set<string>([midKey]));
+						} else {
+							setMidExpanded(getDefaultExpandedMidItems(topKey));
+						}
+						return;
+					}
+				}
+			}
 		}
-	}, [singleOpenMode, topMenu]);
+	}, [pathname, singleOpenMode]);
 
 	// #region top 메뉴 클릭 핸들러
 	const handleTopClick = (topKey: string) => {

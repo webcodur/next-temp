@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Sidebar } from './sidebar/sidebar';
 import { Header } from './header/header';
+import Footer from './footer/Footer';
 import { defaults } from '@/data/sidebarConfig';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
@@ -35,11 +36,14 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 			<main
 				style={{
-					marginLeft: isCollapsed ? '4px' : `${defaults.sidebarWidth + 4}px`,
+					marginLeft: isCollapsed ? '16px' : `${defaults.sidebarWidth + 16}px`,
 				}}
-				className="flex flex-col flex-1 transition-all duration-300">
+				className="flex flex-col flex-1 transition-all duration-300 h-screen overflow-hidden">
 				<Header />
-				<div className="flex-1 p-6 overflow-auto">{children}</div>
+				<div className="flex-1 overflow-y-scroll">
+					<div className="container mx-auto p-6">{children}</div>
+					<Footer />
+				</div>
 			</main>
 		</div>
 	);

@@ -131,46 +131,37 @@ export function SideRPanel({
 												{midItem.label}
 											</span>
 											<ChevronDown
-												className={`w-5 h-5 ${
-													midExpanded.has(midKey) ? 'rotate-180' : ''
-												}`}
+												className={`w-5 h-5 transform transition-transform duration-300 ${midExpanded.has(midKey) ? 'rotate-180' : ''}`}
 											/>
 										</Button>
 									</CollapsibleTrigger>
 
-									<CollapsibleContent className="mt-1.5">
+									<CollapsibleContent className="mt-1.5 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
 										<div className="pl-3 ml-2 space-y-2 border-l border-border/30">
 											{midItem.botItems.map((botItem) => {
 												const isActive = pathname === botItem.href;
 												return (
-													<Tooltip key={botItem.href}>
-														<TooltipTrigger asChild>
-															<Button
-																variant="ghost"
-																size="sm"
-																asChild
-																className={`w-full justify-start h-auto px-4 py-1.5 text-sm border ${
+													<div key={botItem.href}>
+														<Button
+															variant="ghost"
+															size="sm"
+															asChild
+															className={`w-full justify-start h-auto px-4 py-1.5 text-sm border ${
+																isActive
+																	? 'border-primary/60 shadow-sm'
+																	: 'border-transparent hover:border-border'
+															} rounded-md`}>
+															<Link
+																href={botItem.href}
+																className={`w-full ${
 																	isActive
-																		? 'border-primary/60 shadow-sm'
-																		: 'border-transparent hover:border-border'
-																} rounded-md`}>
-																<Link
-																	href={botItem.href}
-																	className={`w-full ${
-																		isActive
-																			? 'text-primary font-medium'
-																			: 'text-foreground/90'
-																	}`}>
-																	<span className="text-sm">
-																		{botItem.label}
-																	</span>
-																</Link>
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent side="right">
-															<p>{botItem.label}</p>
-														</TooltipContent>
-													</Tooltip>
+																		? 'text-primary font-medium'
+																		: 'text-foreground/90'
+																}`}>
+																<span className="text-sm">{botItem.label}</span>
+															</Link>
+														</Button>
+													</div>
 												);
 											})}
 										</div>

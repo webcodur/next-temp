@@ -28,26 +28,28 @@ export function Sidebar() {
 	return (
 		<aside
 			style={{ width: `${defaults.sidebarWidth}px` }}
-			className={`fixed left-4 top-0 h-screen neumorphic-container rounded-r-3xl ${
+			className={`fixed left-4 top-0 h-screen overflow-y-auto scrollbar-hide neumorphic-container rounded-r-3xl ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
 			} transition-transform duration-300 z-40`}>
-			<div className="flex flex-col h-full overflow-auto scrollbar-hide">
+			<div className="flex flex-col h-full">
 				<SideHeader />
 
 				<div className="flex flex-1 border-t border-border/50">
 					<SideLPanel topMenu={topMenu} onTopClick={handleTopClick} />
 
 					{topData && (
-						<SideRPanel
-							topData={topData}
-							midMenu={midMenu}
-							midExpanded={midExpanded}
-							singleOpenMode={singleOpenMode}
-							onMidClick={handleMidClick}
-							onSingleOpenToggle={handleSingleOpenToggle}
-							onExpandAll={handleExpandAll}
-							onCollapseAll={handleCollapseAll}
-						/>
+						<div className="flex-1 overflow-auto">
+							<SideRPanel
+								topData={topData}
+								midMenu={midMenu}
+								midExpanded={midExpanded}
+								singleOpenMode={singleOpenMode}
+								onMidClick={handleMidClick}
+								onSingleOpenToggle={handleSingleOpenToggle}
+								onExpandAll={handleExpandAll}
+								onCollapseAll={handleCollapseAll}
+							/>
+						</div>
 					)}
 				</div>
 			</div>

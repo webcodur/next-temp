@@ -1,24 +1,24 @@
 import { LucideIcon } from 'lucide-react';
 
 // #region 사이드바 메뉴 타입 정의
-export interface BotItem {
+export interface BotMenu {
 	label: string;
 	href: string;
 	description?: string;
 	icon?: LucideIcon;
 }
 
-export interface MidItem {
+export interface MidMenu {
 	label: string;
-	botItems: BotItem[];
 	icon?: LucideIcon;
+	botItems: BotMenu[];
 }
 
 export interface TopItem {
 	icon: LucideIcon;
 	label: string;
 	color: string;
-	midItems: Record<string, MidItem>;
+	midItems: Record<string, MidMenu>;
 }
 
 export interface MenuData {

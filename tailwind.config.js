@@ -47,9 +47,27 @@ module.exports = {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
 			},
+			keyframes: {
+				slideDown: {
+					'0%': { height: '0' },
+					'100%': { height: 'var(--radix-collapsible-content-height)' },
+				},
+				slideUp: {
+					'0%': { height: 'var(--radix-collapsible-content-height)' },
+					'100%': { height: '0' },
+				},
+			},
+			animation: {
+				'slide-down': 'slideDown 100ms ease-in-out',
+				'slide-up': 'slideUp 100ms ease-in-out',
+			},
 			fontFamily: {
 				sans: ['system-ui', 'sans-serif'],
 				mono: ['ui-monospace', 'monospace'],
+			},
+			boxShadow: {
+				neu: '8px 8px 16px rgba(0,0,0,0.1), -8px -8px 16px rgba(255,255,255,0.7)',
+				'neu-inset': 'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.7)',
 			},
 		},
 	},
