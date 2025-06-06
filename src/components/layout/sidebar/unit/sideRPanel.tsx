@@ -23,16 +23,27 @@ import {
 } from '@/components/ui/collapsible';
 import { isImplementedPage } from '@/data/implementedPages';
 
+/**
+ * 사이드바 우측 패널 Props 타입
+ */
 interface SideRPanelProps {
-	topData: TopItem;
-	midMenu: string;
-	midExpanded: Set<string>;
-	singleOpenMode: boolean;
-	onMidClick: (midKey: string) => void;
-	onSingleOpenToggle: () => void;
-	onExpandAll?: () => void;
-	onCollapseAll?: () => void;
+	topData: TopItem; // 현재 선택된 Top 메뉴 데이터
+	midMenu: string; // 현재 선택된 Mid 메뉴 키
+	midExpanded: Set<string>; // 펼쳐진 Mid 메뉴들의 키 집합
+	singleOpenMode: boolean; // 단일 열기 모드 여부
+	onMidClick: (midKey: string) => void; // Mid 메뉴 클릭 핸들러
+	onSingleOpenToggle: () => void; // 단일/다중 모드 토글 핸들러
+	onExpandAll?: () => void; // 전체 펼치기 핸들러 (선택사항)
+	onCollapseAll?: () => void; // 전체 접기 핸들러 (선택사항)
 }
+
+/**
+ * 사이드바 우측 패널 컴포넌트
+ * - Mid/Bot 메뉴들을 계층적으로 표시
+ * - 접힌/펼친 상태 관리 및 애니메이션 처리
+ * - 단일/다중 열기 모드 지원
+ * - 구현되지 않은 페이지 표시 기능
+ */
 
 // #region side_Rpanel: 사이드바 우측 패널 컴포넌트
 export function SideRPanel({
@@ -49,14 +60,17 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex flex-col flex-1 h-full bg-gradient-to-b from-background/50 to-background/30">
-				{/* 타이틀 영역 */}
+			<div className="flex flex-col flex-1 h-full overflow-auto bg-gradient-to-b from-background/50 to-background/30">
+				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex items-center justify-between px-5 py-3 border-b border-border/40">
+					{/* Top 메뉴 타이틀 */}
 					<h2 className="text-base font-medium text-foreground">
 						{topData.label}
 					</h2>
 
+					{/* 제어 버튼 그룹 */}
 					<div className="flex items-center gap-1.5">
+						{/* 단일/다중 모드 토글 버튼 */}
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
@@ -80,6 +94,7 @@ export function SideRPanel({
 							</TooltipContent>
 						</Tooltip>
 
+						{/* 전체 펼치기 버튼 */}
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
@@ -95,6 +110,7 @@ export function SideRPanel({
 							</TooltipContent>
 						</Tooltip>
 
+						{/* 전체 접기 버튼 */}
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
@@ -112,7 +128,7 @@ export function SideRPanel({
 					</div>
 				</div>
 
-				{/* 메뉴 영역 */}
+				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
 				<div className="flex-1 overflow-y-auto">
 					<nav className="p-2.5 space-y-3">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
@@ -120,6 +136,7 @@ export function SideRPanel({
 								key={midKey}
 								className="border border-transparent rounded-lg hover:bg-gradient-to-br hover:from-card/90 hover:to-secondary/80 hover:border-border">
 								<Collapsible open={midExpanded.has(midKey)}>
+									{/* Mid 메뉴 헤더 (클릭 가능) */}
 									<CollapsibleTrigger asChild>
 										<Button
 											variant="ghost"
@@ -132,12 +149,14 @@ export function SideRPanel({
 											<span className="text-base font-medium">
 												{midItem.label}
 											</span>
+											{/* 펼침/접힘 표시 화살표 */}
 											<ChevronDown
 												className={`w-5 h-5 transform transition-transform duration-300 ${midExpanded.has(midKey) ? 'rotate-180' : ''}`}
 											/>
 										</Button>
 									</CollapsibleTrigger>
 
+									{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 									<CollapsibleContent className="mt-1.5 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
 										<div className="pl-3 ml-2 space-y-2 border-l border-border/30">
 											{midItem.botItems.map((botItem) => {
@@ -165,6 +184,7 @@ export function SideRPanel({
 																		: 'text-foreground/90'
 																}`}>
 																<span className="text-sm">{botItem.label}</span>
+																{/* 미구현 페이지 표시 아이콘 */}
 																{!implemented && (
 																	<ExternalLink className="w-3 h-3 opacity-50" />
 																)}
@@ -179,20 +199,6 @@ export function SideRPanel({
 							</div>
 						))}
 					</nav>
-				</div>
-
-				{/* 하단 범례 */}
-				<div className="p-3 text-xs text-muted-foreground bg-muted/20 border-t border-border/60">
-					<div className="space-y-1">
-						<div className="flex items-center gap-2">
-							<div className="w-2 h-2 bg-primary rounded-full"></div>
-							<span>구현된 페이지</span>
-						</div>
-						<div className="flex items-center gap-2">
-							<ExternalLink className="w-3 h-3 opacity-50" />
-							<span>템플릿 페이지</span>
-						</div>
-					</div>
 				</div>
 			</div>
 		</TooltipProvider>

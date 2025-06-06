@@ -1,0 +1,196 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# React 컴포넌트 리팩토링 룰북
+
+## 임포트 관리 규칙
+
+### 기본 임포트 순서
+1. React 관련 임포트
+2. 외부 라이브러리
+3. 내부 유틸/상수
+4. 컴포넌트
+5. 타입
+
+각 그룹 간에는 빈 줄로 구분하며, 알파벳 순으로 정렬한다.
+
+### 임포트 섹션 구분 (10개 이상일 때)
+```jsx
+// React 관련 임포트
+import { ReactNode, useState, useEffect } from 'react';
+
+// External Libraries
+import { useAtom } from 'jotai';
+import clsx from 'clsx';
+
+// Internal Utils
+import { defaults } from '@/data/config';
+import { formatDate } from '@/utils/date';
+
+// Components
+import { Button } from '@/components/unit/button';
+import { Modal } from '@/components/unit/modal';
+
+// Types
+import type { User } from '@/types/user';
+```
+
+### 임포트 정렬 규칙
+- 같은 라이브러리에서 여러 항목 임포트 시 한 줄로 합치고 중괄호 내 알파벳 순 정렬
+- 상대 경로는 절대 경로보다 뒤에 배치
+
+## 컴포넌트 구조 규칙
+
+### 파일 내 구조 순서
+1. 타입 정의
+2. Props 인터페이스
+3. 컴포넌트 함수
+4. export
+
+### 컴포넌트 함수 내부 순서
+1. 훅 호출 (useState → useEffect → useCallback → useMemo → 커스텀 훅)
+2. 이벤트 핸들러 정의
+3. 유틸 함수 정의
+4. 조건부 렌더링 변수
+5. JSX 반환
+
+```jsx
+interface ButtonProps {
+  children: ReactNode;
+  variant?: 'primary' | 'secondary';
+  onClick?: () => void;
+}
+
+export function Button({ children, variant = 'primary', onClick }: ButtonProps) {
+  // 1. 훅 호출
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleClick = useCallback(() => {
+    setIsLoading(true);
+    onClick?.();
+  }, [onClick]);
+
+  // 2. 이벤트 핸들러
+  const handleMouseEnter = () => {
+    // 호버 로직
+  };
+
+  // 3. 조건부 렌더링 변수
+  const buttonClass = clsx(
+    'px-4 py-2 rounded',
+    variant === 'primary' ? 'bg-blue-500' : 'bg-gray-500'
+  );
+
+  // 4. JSX 반환
+  return (
+    <button 
+      className={buttonClass}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## JSX 작성 규칙
+
+### 속성 순서
+1. key
+2. ref
+3. className
+4. 이벤트 핸들러
+5. 나머지 props
+
+### 조건부 렌더링 규칙
+- 단순 조건: `&&` 연산자 사용
+- 복잡한 조건: 별도 변수로 분리
+- early return 패턴 활용하여 중첩 줄이기
+- null 체크는 옵셔널 체이닝 활용
+
+```jsx
+// 좋은 예
+if (!user) return null;
+
+const isAdmin = user.role === 'admin';
+const canEdit = isAdmin && user.permissions.includes('edit');
+
+return (
+  <div>
+    {canEdit && <EditButton />}
+    {user?.profile?.avatar && <Avatar src={user.profile.avatar} />}
+  </div>
+);
+```
+
+## 함수 및 성능 최적화 규칙
+
+### 함수 메모이제이션
+- 컴포넌트 내부 함수는 `useCallback`으로 메모이제이션
+- 컴포넌트와 독립적인 함수는 외부로 분리
+- Props로 전달되는 함수들은 반드시 `useCallback` 사용
+
+### Props 구조분해할당
+- 컴포넌트 매개변수에서 직접 수행
+- 기본값도 매개변수에서 설정
+- 복잡한 Props는 별도 인터페이스로 정의
+- 옵셔널 Props는 물음표 표기 활용
+
+```jsx
+interface ComplexProps {
+  user: User;
+  settings?: Settings;
+  onUpdate?: (data: UpdateData) => void;
+}
+
+export function Component({ 
+  user, 
+  settings = defaultSettings, 
+  onUpdate 
+}: ComplexProps) {
+  // 컴포넌트 로직
+}
+```
+
+## 스타일 및 성능 규칙
+
+### 스타일링
+- 조건부 className은 `clsx` 또는 `classnames` 라이브러리 사용
+- 인라인 스타일 최소화, CSS 변수나 클래스 활용
+- 스타일드 컴포넌트 사용 시 컴포넌트 외부에 정의
+
+### React.memo 사용 기준
+- Props 비교 비용이 렌더링 비용보다 낮을 때만 사용
+- 자주 변경되는 Props를 가진 컴포넌트는 memo 사용 피하기
+- 실제 성능 이슈가 있을 때만 적용
+
+## 타입 정의 규칙
+
+### 타입 배치 및 네이밍
+- 타입 정의는 컴포넌트 파일 상단에 배치
+- 공통 타입은 별도 파일로 분리
+- Props 인터페이스는 `컴포넌트명 + Props` 형태로 네이밍
+- 제네릭 타입은 명확한 네이밍 사용
+- `any` 타입 사용 피하기
+
+```jsx
+// 타입 정의
+type ButtonVariant = 'primary' | 'secondary' | 'danger';
+
+interface ButtonProps {
+  children: ReactNode;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+// 제네릭 타입 예시
+interface ListProps<TItem> {
+  items: TItem[];
+  renderItem: (item: TItem) => ReactNode;
+}
+
+```

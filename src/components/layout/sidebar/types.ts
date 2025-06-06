@@ -1,43 +1,73 @@
 import { LucideIcon } from 'lucide-react';
 
+/**
+ * 사이드바 관련 타입 정의 파일
+ * - 메뉴 구조, 상태, 검색 관련 타입들을 정의
+ * - 3단계 메뉴 구조: Top > Mid > Bot
+ */
+
 // #region 사이드바 메뉴 타입 정의
+/**
+ * 최하위 메뉴 아이템 (Bot Menu)
+ * - 실제 페이지로 이동하는 링크 메뉴
+ */
 export interface BotMenu {
-	label: string;
-	href: string;
-	description?: string;
-	icon?: LucideIcon;
+	label: string; // 메뉴 표시명
+	href: string; // 페이지 경로
+	description?: string; // 메뉴 설명 (선택사항)
+	icon?: LucideIcon; // 아이콘 (선택사항)
 }
 
+/**
+ * 중간 단계 메뉴 (Mid Menu)
+ * - Bot 메뉴들을 그룹화하는 카테고리
+ */
 export interface MidMenu {
-	label: string;
-	icon?: LucideIcon;
-	botItems: BotMenu[];
+	label: string; // 메뉴 표시명
+	icon?: LucideIcon; // 아이콘 (선택사항)
+	botItems: BotMenu[]; // 하위 Bot 메뉴 목록
 }
 
+/**
+ * 최상위 메뉴 아이템 (Top Item)
+ * - 사이드바 좌측에 표시되는 메인 카테고리
+ */
 export interface TopItem {
-	icon: LucideIcon;
-	label: string;
-	color: string;
-	midItems: Record<string, MidMenu>;
+	icon: LucideIcon; // 메뉴 아이콘 (필수)
+	label: string; // 메뉴 표시명
+	color: string; // 테마 색상
+	midItems: Record<string, MidMenu>; // 하위 Mid 메뉴 목록 (키-값 쌍)
 }
 
+/**
+ * 전체 메뉴 데이터 구조
+ * - Top 메뉴들을 키-값 쌍으로 관리
+ */
 export interface MenuData {
 	[key: string]: TopItem;
 }
 // #endregion
 
 // #region 사이드바 상태 타입
+/**
+ * 사이드바 전체 상태 관리 타입
+ * - 현재 선택된 메뉴와 UI 상태를 포함
+ */
 export interface SidebarState {
-	topMenu: string;
-	midMenu: string;
-	midExpanded: Set<string>;
-	isCollapsed: boolean;
+	topMenu: string; // 현재 선택된 Top 메뉴 키
+	midMenu: string; // 현재 선택된 Mid 메뉴 키
+	midExpanded: Set<string>; // 펼쳐진 Mid 메뉴들의 키 집합
+	isCollapsed: boolean; // 사이드바 접힘 상태
 }
 // #endregion
 
 // #region 검색 타입 정의
+/**
+ * 사이드바 검색 기능 상태 타입
+ * - 현장 검색 입력과 활성화 상태 관리
+ */
 export interface SearchState {
-	query: string;
-	isActive: boolean;
+	query: string; // 검색 쿼리 문자열
+	isActive: boolean; // 검색 활성화 상태 (입력값 존재 여부)
 }
 // #endregion

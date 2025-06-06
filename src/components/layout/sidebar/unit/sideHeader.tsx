@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { Building2, Minus } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
@@ -11,35 +11,38 @@ import {
 } from '@/store/sidebar';
 import { Button } from '@/components/ui/button';
 import { SearchBar } from '@/components/layout/sidebar/unit/searchBar';
+import { HeaderToggle } from '@/components/layout/sidebar/unit/headerToggle';
+
+/**
+ * 사이드바 헤더 컴포넌트
+ * - 사이드바 상단에 위치하는 헤더 영역
+ * - 로고, 타이틀, 검색바를 포함
+ * - 접힘/펼침 기능으로 공간 절약 가능
+ */
 
 // #region side_header: 사이드바 헤더 컴포넌트
 export function SideHeader() {
+	// 메뉴 상태 초기화를 위한 atom 관리
 	const [, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
-	const [isHeaderCollapsed, setIsHeaderCollapsed] =
-		useAtom(headerCollapsedAtom);
+	const [isHeaderCollapsed] = useAtom(headerCollapsedAtom);
 
+	/**
+	 * 로고 클릭 시 메뉴 상태 초기화
+	 * - 홈으로 이동하면서 모든 메뉴 선택 해제
+	 */
 	const handleLogoClick = () => {
 		setCurrentTopMenu('');
 		setCurrentMidMenu('');
 		setCurrentBotMenu('');
 	};
 
-	const toggleHeaderCollapse = () => {
-		setIsHeaderCollapsed(!isHeaderCollapsed);
-	};
-
 	return (
 		<div className="flex flex-col select-none">
-			{/* 헤더 토글 바 */}
-			<div
-				className="h-[18px] w-full bg-muted/60 border-y border-border flex items-center justify-center cursor-pointer hover:bg-primary/20 group"
-				onClick={toggleHeaderCollapse}>
-				<Minus className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
-			</div>
+			<HeaderToggle />
 
-			{/* 헤더 콘텐츠 */}
+			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
 				className={`bg-gradient-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
 					isHeaderCollapsed
@@ -60,9 +63,11 @@ export function SideHeader() {
 								onClick={handleLogoClick}
 								className="block transition-all duration-200 group-hover:scale-105 select-none">
 								<div className="flex items-center justify-center gap-4">
+									{/* 로고 아이콘 */}
 									<div className="flex items-center justify-center flex-shrink-0 transition-all duration-200 border-2 w-14 h-14 neumorphic rounded-xl group-hover:scale-110 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
 										<Building2 className="font-bold w-9 h-9 text-primary drop-shadow-md" />
 									</div>
+									{/* 타이틀 텍스트 */}
 									<div className="text-xl font-semibold transition-colors text-foreground/90 group-hover:text-primary/90 truncate max-w-[160px] drop-shadow-sm">
 										건물 타이틀
 									</div>
