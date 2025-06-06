@@ -319,14 +319,14 @@ export const menuData: MenuData = {
 						description: 'API 검색 필터 UI 예시 페이지',
 					},
 					{
-						label: 'Tooltip',
+						label: 'Tooltip ✅',
 						href: '/lab/ui-display/tooltip',
 						description: '추가 정보 제공을 위한 툴팁 컴포넌트',
 					},
 					{
-						label: 'Barrier ✅',
-						href: '/lab/ui-display/barrier',
-						description: '주차장 차단기 컴포넌트',
+						label: 'Barrier3D ✅',
+						href: '/lab/ui-display/barrier-3d',
+						description: '3D 주차장 차단기 컴포넌트',
 					},
 				],
 			},
@@ -371,7 +371,8 @@ export const menuData: MenuData = {
 					{
 						label: 'InfiniteScroll ✅',
 						href: '/lab/ui-navigation/infinite-scroll',
-						description: '대량 데이터의 효율적 로딩을 위한 무한 스크롤 컴포넌트',
+						description:
+							'대량 데이터의 효율적 로딩을 위한 무한 스크롤 컴포넌트',
 					},
 				],
 			},
@@ -396,7 +397,8 @@ export const menuData: MenuData = {
 					{
 						label: 'DragAndDrop ✅',
 						href: '/lab/ui-layout/drag-and-drop',
-						description: '항목 재배치나 파일 업로드를 위한 드래그 앤 드롭 컴포넌트',
+						description:
+							'항목 재배치나 파일 업로드를 위한 드래그 앤 드롭 컴포넌트',
 					},
 				],
 			},

@@ -4,6 +4,7 @@ import {
 	ChevronsUp,
 	Focus,
 	Layers,
+	ExternalLink,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,12 +15,13 @@ import {
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/ui/tooltip/tooltip';
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { isImplementedPage } from '@/data/implementedPages';
 
 interface SideRPanelProps {
 	topData: TopItem;
@@ -47,7 +49,7 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex-1 h-full flex flex-col bg-gradient-to-b from-background/50 to-background/30">
+			<div className="flex flex-col flex-1 h-full bg-gradient-to-b from-background/50 to-background/30">
 				{/* 타이틀 영역 */}
 				<div className="flex items-center justify-between px-5 py-3 border-b border-border/40">
 					<h2 className="text-base font-medium text-foreground">
@@ -61,7 +63,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onSingleOpenToggle}
-									className="w-7 h-7 rounded-md hover:bg-muted/40">
+									className="rounded-md w-7 h-7 hover:bg-muted/40">
 									{singleOpenMode ? (
 										<Focus className="w-5 h-5 text-primary" />
 									) : (
@@ -84,7 +86,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onExpandAll}
-									className="w-7 h-7 rounded-md hover:bg-muted/40">
+									className="rounded-md w-7 h-7 hover:bg-muted/40">
 									<ChevronsDown className="w-5 h-5 text-muted-foreground" />
 								</Button>
 							</TooltipTrigger>
@@ -99,7 +101,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onCollapseAll}
-									className="w-7 h-7 rounded-md hover:bg-muted/40">
+									className="rounded-md w-7 h-7 hover:bg-muted/40">
 									<ChevronsUp className="w-5 h-5 text-muted-foreground" />
 								</Button>
 							</TooltipTrigger>
@@ -111,7 +113,7 @@ export function SideRPanel({
 				</div>
 
 				{/* 메뉴 영역 */}
-				<div className="flex-1">
+				<div className="flex-1 overflow-y-auto">
 					<nav className="p-2.5 space-y-3">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<div
@@ -140,25 +142,32 @@ export function SideRPanel({
 										<div className="pl-3 ml-2 space-y-2 border-l border-border/30">
 											{midItem.botItems.map((botItem) => {
 												const isActive = pathname === botItem.href;
+												const implemented = isImplementedPage(botItem.href);
+
 												return (
 													<div key={botItem.href}>
 														<Button
 															variant="ghost"
 															size="sm"
 															asChild
-															className={`w-full justify-start h-auto px-4 py-1.5 text-sm border ${
+															className={`w-full justify-between h-auto px-4 py-1.5 text-sm border ${
 																isActive
 																	? 'border-primary/60 shadow-sm'
 																	: 'border-transparent hover:border-border'
-															} rounded-md`}>
+															} rounded-md ${
+																!implemented ? 'opacity-75' : ''
+															}`}>
 															<Link
 																href={botItem.href}
-																className={`w-full ${
+																className={`w-full flex items-center justify-between ${
 																	isActive
 																		? 'text-primary font-medium'
 																		: 'text-foreground/90'
 																}`}>
 																<span className="text-sm">{botItem.label}</span>
+																{!implemented && (
+																	<ExternalLink className="w-3 h-3 opacity-50" />
+																)}
 															</Link>
 														</Button>
 													</div>
@@ -170,6 +179,20 @@ export function SideRPanel({
 							</div>
 						))}
 					</nav>
+				</div>
+
+				{/* 하단 범례 */}
+				<div className="p-3 text-xs text-muted-foreground bg-muted/20 border-t border-border/60">
+					<div className="space-y-1">
+						<div className="flex items-center gap-2">
+							<div className="w-2 h-2 bg-primary rounded-full"></div>
+							<span>구현된 페이지</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<ExternalLink className="w-3 h-3 opacity-50" />
+							<span>템플릿 페이지</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</TooltipProvider>

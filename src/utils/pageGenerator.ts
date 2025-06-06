@@ -1,4 +1,5 @@
 import { menuData } from '@/data/menuData';
+import { isImplementedPage } from '@/data/implementedPages';
 
 /**
  * bot 메뉴 경로 정보 타입
@@ -61,17 +62,20 @@ export function findBotMenuByParams(
 
 /**
  * generateStaticParams용 경로 파라미터 생성
+ * 실제 구현된 페이지들은 제외하고 생성
  */
 export function generateBotMenuParams() {
 	const allPaths = getAllBotMenuPaths();
 
-	return allPaths.map((path) => {
-		const segments = path.href.split('/').filter(Boolean);
-		// 안전한 배열 접근을 위한 기본값 처리
-		return {
-			topMenu: segments[0] || '',
-			midMenu: segments[1] || '',
-			botMenu: segments[2] || '',
-		};
-	});
+	return allPaths
+		.filter((path) => !isImplementedPage(path.href)) // 실제 구현된 페이지들 제외
+		.map((path) => {
+			const segments = path.href.split('/').filter(Boolean);
+			// 안전한 배열 접근을 위한 기본값 처리
+			return {
+				topMenu: segments[0] || '',
+				midMenu: segments[1] || '',
+				botMenu: segments[2] || '',
+			};
+		});
 }

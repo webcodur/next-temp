@@ -144,7 +144,16 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind, lucide-react
 - **예상 사용 사례**: API 검색 필터 UI
 
-### 24. Tooltip
+### 24. Barrier3D ✅
+
+- **컴포넌트 경로**: `src/components/ui/barrier/barrier-3d.tsx`
+- **페이지 경로**: `src/app/lab/ui-display/barrier-3d/page.tsx`
+- **기능**: 3D 주차장 차단기 시각화, 애니메이션, 토글 기능
+- **구현 방식**: Three.js를 활용한 3D 렌더링
+- **활용 라이브러리**: React, Three.js, Tailwind
+- **예상 사용 사례**: 고급 주차장 차단기 인터페이스, 시각적 표현
+
+### 25. Tooltip
 
 - **컴포넌트 경로**: `src/components/ui/tooltip/tooltip.tsx`
 - **페이지 경로**: `src/app/lab/ui-display/tooltip/page.tsx`
@@ -153,38 +162,23 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Radix UI, Framer Motion
 - **예상 사용 사례**: 추가 정보 제공, 기능 힌트
 
-### 25. Select
-
-- **컴포넌트 경로**: `src/components/ui/select/select.tsx`
-- **페이지 경로**: `src/app/lab/ui-input/select/page.tsx`
-- **기능**: 다중 선택, 검색 필터링, 가상화
-- **구현 방식**: 자체 구현 + Tailwind
-- **활용 라이브러리**: Tailwind, React
-- **예상 사용 사례**: 옵션 선택, 필터링, 분류 선택
-
-### 26. Editor
-
-- **컴포넌트 경로**: `src/components/ui/editor/markdown-editor.tsx`
-- **페이지 경로**: `src/app/lab/ui-input/editor/page.tsx`
-- **기능**: 기본 서식, 미리보기, 이미지 삽입
-- **구현 방식**: 간단한 마크다운 에디터 구현
-- **활용 라이브러리**: React, Tailwind
-- **예상 사용 사례**: 게시물 작성, 문서 편집
-
 ## 구현 전략
 
 모든 컴포넌트는 다음과 같은 구조로 설계한다:
 
 1. **코어 컴포넌트 구현**
+
    - 기본 기능 구현
    - 스타일링 (Tailwind 활용)
    - 접근성 고려
 
 2. **상태 관리와 로직 분리**
+
    - 복잡한 상태는 Jotai 활용
    - 재사용 가능한 Hook 분리
 
 3. **테스트 작성**
+
    - 기본 기능 테스트
    - 에지 케이스 테스트
    - 접근성 테스트
