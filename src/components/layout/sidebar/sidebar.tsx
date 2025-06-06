@@ -38,7 +38,7 @@ export function Sidebar() {
 	return (
 		<aside
 			style={{ width: `${defaults.sidebarWidth}px` }}
-			className={`fixed left-4 top-0 h-screen overflow-y-auto scrollbar-hide neumorphic-container rounded-r-3xl ${
+			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide neumorphic-container rounded-r-3xl ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
 			} transition-transform duration-300 z-40`}>
 			<div className="flex flex-col h-full">

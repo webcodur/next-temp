@@ -9,6 +9,7 @@ import { Sidebar } from './sidebar/sidebar';
 import { Header } from './header/Header';
 import Footer from './footer/Footer';
 import { SidebarToggle } from './sidebar/unit/sidebarToggle';
+import { HeaderToggle } from './sidebar/unit/headerToggle';
 
 // data
 import { defaults } from '@/data/sidebarConfig';
@@ -23,11 +24,12 @@ export function MainLayout({ children }: MainLayoutProps) {
 	return (
 		<div className="flex h-screen bg-background">
 			<SidebarToggle />
+			<HeaderToggle />
 			<Sidebar />
 
 			<main
 				style={{
-					marginLeft: isCollapsed ? '16px' : `${defaults.sidebarWidth + 16}px`,
+					marginLeft: isCollapsed ? '50px' : `${defaults.sidebarWidth}px`,
 				}}
 				className="flex flex-col flex-1 h-screen overflow-hidden transition-all duration-300">
 				<div className="flex-1 overflow-y-scroll">

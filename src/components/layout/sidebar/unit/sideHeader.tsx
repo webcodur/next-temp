@@ -11,7 +11,6 @@ import {
 } from '@/store/sidebar';
 import { Button } from '@/components/ui/button';
 import { SearchBar } from '@/components/layout/sidebar/unit/searchBar';
-import { HeaderToggle } from '@/components/layout/sidebar/unit/headerToggle';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -39,9 +38,7 @@ export function SideHeader() {
 	};
 
 	return (
-		<div className="flex flex-col select-none">
-			<HeaderToggle />
-
+		<div className="flex flex-col select-none pt-[36px]">
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
 				className={`bg-gradient-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
