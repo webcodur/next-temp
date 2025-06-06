@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
-// #region 주차장 관리 시스템 메뉴 데이터 구조
+//  주차장 관리 시스템 메뉴 데이터 구조
 export const menuData: MenuData = {
 	parking: {
 		icon: Car,
@@ -295,108 +295,88 @@ export const menuData: MenuData = {
 		label: '연구소',
 		color: 'bg-yellow-500',
 		midItems: {
-			uiDisplay: {
-				label: 'UI-표시',
+			uiCheck: {
+				label: 'UI-확인',
 				botItems: [
 					{
-						label: 'Card ✅',
-						href: '/lab/ui-display/card',
+						label: 'Card',
+						href: '/lab/ui-check/card',
 						description: '정보 그룹화 표시를 위한 카드 컴포넌트',
 					},
 					{
-						label: 'Toast ✅',
-						href: '/lab/ui-display/toast',
+						label: 'Toast',
+						href: '/lab/ui-check/toast',
 						description: '상태 알림과 메시지를 표시하는 토스트 컴포넌트',
 					},
 					{
-						label: 'Modal ✅',
-						href: '/lab/ui-display/modal',
+						label: 'Modal',
+						href: '/lab/ui-check/modal',
 						description: '커스텀 확인창과 입력 폼을 위한 모달 컴포넌트',
 					},
 					{
-						label: 'SearchFilter ✅',
-						href: '/lab/ui-display/search-filter',
+						label: 'SearchFilter',
+						href: '/lab/ui-check/search-filter',
 						description: 'API 검색 필터 UI 예시 페이지',
 					},
 					{
-						label: 'Tooltip ✅',
-						href: '/lab/ui-display/tooltip',
+						label: 'Tooltip',
+						href: '/lab/ui-check/tooltip',
 						description: '추가 정보 제공을 위한 툴팁 컴포넌트',
 					},
 					{
-						label: 'Barrier3D ✅',
-						href: '/lab/ui-display/barrier-3d',
+						label: 'Barrier3D',
+						href: '/lab/ui-check/barrier-3d',
 						description: '3D 주차장 차단기 컴포넌트',
 					},
-				],
-			},
-			uiInput: {
-				label: 'UI-입력',
-				botItems: [
 					{
-						label: 'Datepicker ✅',
-						href: '/lab/ui-input/datepicker',
+						label: 'Datepicker',
+						href: '/lab/ui-check/datepicker',
 						description: '날짜 선택을 위한 데이트피커 컴포넌트',
 					},
 					{
-						label: 'Editor ✅',
-						href: '/lab/ui-input/editor',
+						label: 'Editor',
+						href: '/lab/ui-check/editor',
 						description: '서식 있는 텍스트 입력을 위한 에디터 컴포넌트',
 					},
 					{
-						label: 'Select',
-						href: '/lab/ui-input/select',
+						label: 'Select (+)',
+						href: '/lab/ui-check/select',
 						description: '다중 선택, 검색 기능을 포함한 드롭다운 컴포넌트',
 					},
-				],
-			},
-			uiNavigation: {
-				label: 'UI-탐색',
-				botItems: [
 					{
-						label: 'Tabs ✅',
-						href: '/lab/ui-navigation/tabs',
+						label: 'Tabs',
+						href: '/lab/ui-check/tabs',
 						description: '콘텐츠 구분과 전환을 위한 탭 컴포넌트',
 					},
 					{
-						label: 'Pagination ✅',
-						href: '/lab/ui-navigation/pagination',
+						label: 'Pagination',
+						href: '/lab/ui-check/pagination',
 						description: '페이지 이동을 위한 페이지네이션 컴포넌트',
 					},
 					{
-						label: 'Stepper ✅',
-						href: '/lab/ui-navigation/stepper',
+						label: 'Stepper',
+						href: '/lab/ui-check/stepper',
 						description: '단계별 진행을 위한 스텝퍼 컴포넌트',
 					},
 					{
-						label: 'InfiniteScroll ✅',
-						href: '/lab/ui-navigation/infinite-scroll',
+						label: 'InfiniteScroll',
+						href: '/lab/ui-check/infinite-scroll',
 						description:
 							'대량 데이터의 효율적 로딩을 위한 무한 스크롤 컴포넌트',
 					},
-				],
-			},
-			uiData: {
-				label: 'UI-데이터',
-				botItems: [
 					{
-						label: 'Timeline ✅',
-						href: '/lab/ui-data/timeline',
+						label: 'Timeline',
+						href: '/lab/ui-check/timeline',
 						description: '이벤트나 작업 흐름 표시를 위한 타임라인 컴포넌트',
 					},
-				],
-			},
-			uiLayout: {
-				label: 'UI-레이아웃',
-				botItems: [
 					{
-						label: 'Carousel ✅',
-						href: '/lab/ui-layout/carousel',
+						label: 'Carousel',
+						href: '/lab/ui-check/carousel',
 						description: '이미지나 카드 회전 표시를 위한 캐러셀 컴포넌트',
 					},
 					{
-						label: 'DragAndDrop ✅',
-						href: '/lab/ui-layout/drag-and-drop',
+						label: 'DragAndDrop',
+						href: '/lab/ui-check/drag-and-drop',
 						description:
 							'항목 재배치나 파일 업로드를 위한 드래그 앤 드롭 컴포넌트',
 					},
@@ -405,4 +385,3 @@ export const menuData: MenuData = {
 		},
 	},
 };
-// #endregion

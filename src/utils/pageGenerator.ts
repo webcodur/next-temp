@@ -1,5 +1,6 @@
 import { menuData } from '@/data/menuData';
-import { isImplementedPage } from '@/data/implementedPages';
+import { existsSync } from 'fs';
+import { join } from 'path';
 
 /**
  * bot 메뉴 경로 정보 타입
@@ -26,11 +27,11 @@ export function getAllBotMenuPaths(): BotMenuPath[] {
 				paths.push({
 					topKey,
 					midKey,
+					topLabel: topItem.label,
+					midLabel: midItem.label,
 					botLabel: botItem.label,
 					href: botItem.href,
 					description: botItem.description || '',
-					topLabel: topItem.label,
-					midLabel: midItem.label,
 				});
 			});
 		});
@@ -61,6 +62,19 @@ export function findBotMenuByParams(
 }
 
 /**
+ * 실제 페이지 파일이 존재하는지 확인
+ */
+function isPageImplemented(href: string): boolean {
+	// href를 파일 경로로 변환 (/lab/ui-check/card -> src/app/lab/ui-check/card)
+	const segments = href.split('/').filter(Boolean);
+	const pagePath = join(process.cwd(), 'src', 'app', ...segments, 'page.tsx');
+	const pageJsPath = join(process.cwd(), 'src', 'app', ...segments, 'page.ts');
+
+	// page.tsx 또는 page.ts 파일이 존재하는지 확인
+	return existsSync(pagePath) || existsSync(pageJsPath);
+}
+
+/**
  * generateStaticParams용 경로 파라미터 생성
  * 실제 구현된 페이지들은 제외하고 생성
  */
@@ -68,7 +82,7 @@ export function generateBotMenuParams() {
 	const allPaths = getAllBotMenuPaths();
 
 	return allPaths
-		.filter((path) => !isImplementedPage(path.href)) // 실제 구현된 페이지들 제외
+		.filter((path) => !isPageImplemented(path.href))
 		.map((path) => {
 			const segments = path.href.split('/').filter(Boolean);
 			// 안전한 배열 접근을 위한 기본값 처리

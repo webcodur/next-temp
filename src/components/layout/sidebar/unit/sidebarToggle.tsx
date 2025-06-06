@@ -28,13 +28,13 @@ export function SidebarToggle() {
 				height: '36px',
 				zIndex: 50,
 			}}
-			className="bg-muted border-y border-border border-r border-border/50 flex items-center justify-center cursor-pointer hover:bg-primary/20 group transition-all duration-300 rounded-bl-lg rounded-br-lg"
+			className="flex items-center justify-center transition-all duration-300 border-r-2 rounded-bl-lg rounded-br-lg cursor-pointer bg-muted border-y border-border border-r-border hover:bg-primary/20 group"
 			onClick={handleToggle}
 			title={isCollapsed ? '사이드바 열기' : '사이드바 닫기'}>
 			{isCollapsed ? (
-				<ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
+				<ChevronRight className="w-5 h-5 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			) : (
-				<ChevronLeft className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
+				<ChevronLeft className="w-5 h-5 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			)}
 		</div>
 	);

@@ -37,7 +37,7 @@ export function HeaderToggle() {
 			}}
 			className="bg-muted border-y border-border flex">
 			{/* 좌측 영역 - 전체 토글 버튼 공간 (비워둠) */}
-			<div className="w-[50px] border-r border-border/50"></div>
+			<div className="w-[50px] border-r-2 border-r-border"></div>
 
 			{/* 우측 영역 - 헤더 토글 버튼 */}
 			<div

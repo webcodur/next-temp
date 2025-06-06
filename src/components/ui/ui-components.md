@@ -12,7 +12,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 1. Card ✅
 
 - **컴포넌트 경로**: `src/components/ui/card/card.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/card/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/card/page.tsx`
 - **기능**: 다양한 레이아웃, 호버 효과, 액션 버튼
 - **구현 방식**: 자체 구현 + Tailwind
 - **활용 라이브러리**: Tailwind, React
@@ -21,7 +21,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 2. Tooltip
 
 - **컴포넌트 경로**: `src/components/ui/tooltip/tooltip.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/tooltip/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/tooltip/page.tsx`
 - **기능**: 위치 자동 조정, 지연 표시
 - **구현 방식**: `@radix-ui/react-tooltip` 활용
 - **활용 라이브러리**: Radix UI, Framer Motion
@@ -30,7 +30,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 3. Toast ✅
 
 - **컴포넌트 경로**: `src/components/ui/toast/toast-provider.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/toast/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/toast/page.tsx`
 - **기능**: 성공, 에러, 경고 메시지 알림
 - **구현 방식**: `sonner` 라이브러리 활용
 - **활용 라이브러리**: Sonner, React
@@ -39,7 +39,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 4. Modal ✅
 
 - **컴포넌트 경로**: `src/components/ui/modal/modal.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/modal/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/modal/page.tsx`
 - **기능**: 확인창, 커스텀 폼 지원, 애니메이션
 - **구현 방식**: 자체 구현 + `framer-motion`으로 애니메이션
 - **활용 라이브러리**: Framer Motion, React
@@ -48,7 +48,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 6. Select
 
 - **컴포넌트 경로**: `src/components/ui/select/select.tsx`
-- **페이지 경로**: `src/app/lab/ui-input/select/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/select/page.tsx`
 - **기능**: 다중 선택, 검색 필터링, 가상화
 - **구현 방식**: 자체 구현 + Tailwind
 - **활용 라이브러리**: Tailwind, React
@@ -57,7 +57,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 7. Datepicker ✅
 
 - **컴포넌트 경로**: `src/components/ui/datepicker/datepicker.tsx`
-- **페이지 경로**: `src/app/lab/ui-input/datepicker/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/datepicker/page.tsx`
 - **기능**: 날짜/기간 선택, 달력 표시, 날짜 범위 선택
 - **구현 방식**: 자체 구현 + date-fns
 - **활용 라이브러리**: date-fns, React
@@ -66,7 +66,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 11. Editor ✅
 
 - **컴포넌트 경로**: `src/components/ui/editor/markdown-editor.tsx`
-- **페이지 경로**: `src/app/lab/ui-input/editor/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/editor/page.tsx`
 - **기능**: 기본 서식, 미리보기, 이미지 삽입
 - **구현 방식**: 간단한 마크다운 에디터 구현
 - **활용 라이브러리**: React, Tailwind
@@ -75,7 +75,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 12. Tabs ✅
 
 - **컴포넌트 경로**: `src/components/ui/tabs/tabs.tsx`
-- **페이지 경로**: `src/app/lab/ui-navigation/tabs/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/tabs/page.tsx`
 - **기능**: 접근성 고려, 반응형 디자인
 - **구현 방식**: Radix UI 스타일로 자체 구현
 - **활용 라이브러리**: React, Tailwind
@@ -84,7 +84,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 13. Pagination ✅
 
 - **컴포넌트 경로**: `src/components/ui/pagination/pagination.tsx`
-- **페이지 경로**: `src/app/lab/ui-navigation/pagination/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/pagination/page.tsx`
 - **기능**: 페이지 이동, 크기 조절, 경계 처리
 - **구현 방식**: 자체 구현
 - **활용 라이브러리**: React, Tailwind
@@ -93,7 +93,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 14. 스탭퍼 ✅
 
 - **컴포넌트 경로**: `src/components/ui/stepper/stepper.tsx`
-- **페이지 경로**: `src/app/lab/ui-navigation/stepper/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/stepper/page.tsx`
 - **기능**: 진행 상태 표시, 단계 이동 제어
 - **구현 방식**: 자체 구현
 - **활용 라이브러리**: React, Tailwind
@@ -102,7 +102,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 15. InfiniteScroll ✅
 
 - **컴포넌트 경로**: `src/components/ui/infinite-scroll/infinite-scroll.tsx`
-- **페이지 경로**: `src/app/lab/ui-navigation/infinite-scroll/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/infinite-scroll/page.tsx`
 - **기능**: 데이터 증분 로딩, 로딩 표시기
 - **구현 방식**: Intersection Observer API + React Hook
 - **활용 라이브러리**: React, Tailwind
@@ -111,7 +111,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 18. Timeline ✅
 
 - **컴포넌트 경로**: `src/components/ui/timeline/timeline.tsx`
-- **페이지 경로**: `src/app/lab/ui-data/timeline/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/timeline/page.tsx`
 - **기능**: 수직/수평 레이아웃, 반응형
 - **구현 방식**: 자체 구현 + Tailwind
 - **활용 라이브러리**: React, Tailwind
@@ -120,7 +120,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 21. Carousel ✅
 
 - **컴포넌트 경로**: `src/components/ui/carousel/carousel.tsx`
-- **페이지 경로**: `src/app/lab/ui-layout/carousel/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/carousel/page.tsx`
 - **기능**: 무한 스크롤, 자동 슬라이드, 썸네일
 - **구현 방식**: `framer-motion` 활용
 - **활용 라이브러리**: Framer Motion, React
@@ -129,7 +129,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 22. DragAndDrop ✅
 
 - **컴포넌트 경로**: `src/components/ui/dnd/sortable-list.tsx`
-- **페이지 경로**: `src/app/lab/ui-layout/drag-and-drop/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/drag-and-drop/page.tsx`
 - **기능**: 목록 정렬, 파일 업로드 지원
 - **구현 방식**: 전용 라이브러리 설치하여 작업
 - **활용 라이브러리**: Framer Motion, React
@@ -138,7 +138,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 23. SearchFilter ✅
 
 - **컴포넌트 경로**: `외부UI/SearchFilterComponents.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/search-filter/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/search-filter/page.tsx`
 - **기능**: 텍스트 검색 입력, HTTP 메서드 선택, 검색/초기화 버튼
 - **구현 방식**: 자체 구현 + Tailwind + lucide-react
 - **활용 라이브러리**: React, Tailwind, lucide-react
@@ -147,7 +147,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 24. Barrier3D ✅
 
 - **컴포넌트 경로**: `src/components/ui/barrier/barrier-3d.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/barrier-3d/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/barrier-3d/page.tsx`
 - **기능**: 3D 주차장 차단기 시각화, 애니메이션, 토글 기능
 - **구현 방식**: Three.js를 활용한 3D 렌더링
 - **활용 라이브러리**: React, Three.js, Tailwind
@@ -156,7 +156,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 ### 25. Tooltip
 
 - **컴포넌트 경로**: `src/components/ui/tooltip/tooltip.tsx`
-- **페이지 경로**: `src/app/lab/ui-display/tooltip/page.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/tooltip/page.tsx`
 - **기능**: 위치 자동 조정, 지연 표시
 - **구현 방식**: `@radix-ui/react-tooltip` 활용
 - **활용 라이브러리**: Radix UI, Framer Motion

@@ -4,7 +4,6 @@ import {
 	ChevronsUp,
 	Focus,
 	Layers,
-	ExternalLink,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -21,7 +20,6 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { isImplementedPage } from '@/data/implementedPages';
 
 /**
  * 사이드바 우측 패널 Props 타입
@@ -161,7 +159,6 @@ export function SideRPanel({
 										<div className="pl-3 ml-2 space-y-2 border-l border-border/30">
 											{midItem.botItems.map((botItem) => {
 												const isActive = pathname === botItem.href;
-												const implemented = isImplementedPage(botItem.href);
 
 												return (
 													<div key={botItem.href}>
@@ -173,9 +170,7 @@ export function SideRPanel({
 																isActive
 																	? 'border-primary/60 shadow-sm'
 																	: 'border-transparent hover:border-border'
-															} rounded-md ${
-																!implemented ? 'opacity-75' : ''
-															}`}>
+															} rounded-md`}>
 															<Link
 																href={botItem.href}
 																className={`w-full flex items-center justify-between ${
@@ -184,10 +179,6 @@ export function SideRPanel({
 																		: 'text-foreground/90'
 																}`}>
 																<span className="text-sm">{botItem.label}</span>
-																{/* 미구현 페이지 표시 아이콘 */}
-																{!implemented && (
-																	<ExternalLink className="w-3 h-3 opacity-50" />
-																)}
 															</Link>
 														</Button>
 													</div>
