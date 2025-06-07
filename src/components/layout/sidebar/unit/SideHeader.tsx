@@ -10,7 +10,7 @@ import {
 	headerCollapsedAtom,
 } from '@/store/sidebar';
 import { Button } from '@/components/ui/Button';
-import { SearchBar } from '@/components/layout/sidebar/unit/searchBar';
+import { SearchBar } from '@/components/layout/sidebar/unit/SearchBar';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -53,12 +53,12 @@ export function SideHeader() {
 					<div className="flex-1 flex justify-center max-w-[250px]">
 						<Button
 							variant="ghost"
-							className="w-full h-auto p-0 text-left hover:bg-transparent group select-none"
+							className="w-full h-auto p-0 text-left select-none hover:bg-transparent group"
 							asChild>
 							<Link
 								href="/"
 								onClick={handleLogoClick}
-								className="block transition-all duration-200 group-hover:scale-105 select-none">
+								className="block transition-all duration-200 select-none group-hover:scale-105">
 								<div className="flex items-center justify-center gap-4">
 									{/* 로고 아이콘 */}
 									<div className="flex items-center justify-center flex-shrink-0 transition-all duration-200 border-2 w-14 h-14 neumorphic rounded-xl group-hover:scale-110 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">

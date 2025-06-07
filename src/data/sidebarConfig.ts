@@ -12,4 +12,9 @@ export const styles = {
 	avatarSize: 'w-14 h-14',
 	headerHeight: 'h-[80px]',
 };
+
+export const animations = {
+	sidebarDuration: 200, // 사이드바 슬라이드 애니메이션 지속시간 (ms)
+	headerToggleDuration: 200, // 헤더 토글 수직 애니메이션 지속시간 (ms)
+};
 // #endregion

@@ -1,0 +1,163 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 디자인 가이드라인
+
+## 테마 및 스타일
+
+### 화이트 테마
+- **CSS 변수 기반**: `hsl(var(--background))`, `hsl(var(--card))` 등 시맨틱 변수 사용
+- **배경 그라데이션**: `linear-gradient(135deg, hsl(var(--card) / 0.9), hsl(var(--muted) / 0.7))`
+- **텍스트 색상**: `hsl(var(--foreground))`, `hsl(var(--muted-foreground))` 사용
+- **투명도 활용**: 색상에 알파값 적용 (예: `/ 0.9`, `/ 0.7`)
+
+### 뉴모피즘 스타일
+- **기본 그림자**: 
+  ```css
+  box-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.08),
+    -3px -3px 6px rgba(255, 255, 255, 0.9);
+  ```
+- **활성 상태 (inset)**: 
+  ```css
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.08),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+  ```
+- **색상 팔레트**: CSS 변수 기반 시스템
+  - 베이스: `hsl(var(--card))`, `hsl(var(--muted))`
+  - 경계선: `hsl(var(--border) / 0.4)`
+  - 활성 색상: `hsl(var(--primary))`
+- **모서리**: `rounded-xl` (12px), `rounded-3xl` (24px) 주로 사용
+- **깊이감**: `transform: scale(0.98)` 등 미세한 스케일 변화
+
+## UI 컴포넌트 스타일
+
+### 버튼 (.neumorphic-button)
+- **기본 상태**: 
+  ```css
+  background: linear-gradient(135deg, hsl(var(--card) / 0.9), hsl(var(--muted) / 0.7));
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.08), -3px -3px 6px rgba(255, 255, 255, 0.9);
+  ```
+- **호버 상태**: `transform: scale(0.99)` + 복합 그림자
+- **클릭 상태**: `transform: scale(0.97)` + inset 그림자
+- **전환 효과**: `transition: all 0.2s ease-in-out`
+- **크기**: `w-14 h-14` (56px) 또는 `w-16 h-16` (64px)
+
+### 활성 버튼 (.neumorphic-active)
+- **배경**: `linear-gradient(135deg, hsl(var(--card) / 0.95), hsl(var(--background) / 0.95))`
+- **색상**: `hsl(var(--primary))` 
+- **변형**: `transform: scale(0.98)`
+- **그림자**: inset 스타일로 눌린 효과
+
+### 컨테이너 (.neumorphic-container)
+- **배경**: 그라데이션 + 경계선 조합
+- **모서리**: `rounded-r-3xl` (오른쪽만 둥글게)
+- **그림자**: 기본 뉴모피즘 효과
+
+### 아이콘
+- **크기**: `w-7 h-7` (28px) 기본
+- **색상**: 
+  - 기본: `text-foreground/80`
+  - 호버: `text-foreground`
+  - 활성: `text-primary scale-105`
+- **전환**: 즉각적인 색상 변화 + 미세한 스케일
+
+## 레이아웃 원칙
+
+### 간격 (Tailwind 기반)
+- **기본 간격**: `space-y-2.5` (10px), `gap-12px` 등
+- **패딩**: `px-2 py-3` (8px 12px), `p-0` (버튼 내부)
+- **컨테이너 크기**: 
+  - 좌측 패널: `w-[96px]` (96px 고정)
+  - 전체 사이드바: `w-[320px]` 기본
+  - 버튼 높이: `h-14` (56px)
+
+### 사이드바 구조
+- **좌측 컬럼**: 아이콘 버튼들 세로 배치
+- **배경**: `bg-gradient-to-b from-muted/90 to-secondary/95`
+- **경계선**: `border-r border-border/70`
+- **스크롤**: `overflow-y-auto scrollbar-hide`
+
+### 색상 시스템 (CSS 변수)
+- **주요 색상**: `hsl(var(--primary))`
+- **배경**: `hsl(var(--background))`, `hsl(var(--card))`
+- **텍스트**: `hsl(var(--foreground))`, `hsl(var(--muted-foreground))`
+- **경계선**: `hsl(var(--border))` + 투명도 조절
+- **그라데이션**: `from-muted/90 to-secondary/95` 패턴
+
+## 애니메이션
+
+### 전환 효과 (실제 구현 기준)
+- **기본 duration**: `200ms` (sidebarConfig에서 정의)
+- **Easing**: `ease-in-out` 주로 사용
+- **호버 효과**: `transition-all duration-200` + 즉각적 반응
+- **스케일 변화**: `hover:scale-105`, `hover:scale-110` 등
+
+### 마이크로 인터랙션
+- **버튼 호버**: `scale(0.99)` → 살짝 축소
+- **버튼 클릭**: `scale(0.97)` → 더 많이 축소
+- **아이콘 활성화**: `scale-105` + 색상 변화
+- **그룹 호버**: `group-hover:scale-110`
+
+## 구현 가이드
+
+### 필수 CSS 클래스
+```css
+/* 기본 뉴모피즘 */
+.neumorphic-button { /* 버튼 기본 상태 */ }
+.neumorphic-active { /* 선택된 상태 */ }
+.neumorphic-container { /* 컨테이너 */ }
+```
+
+### Tailwind 커스텀 그림자
+```javascript
+// tailwind.config.js
+boxShadow: {
+  'neumorphism': '12px 12px 24px rgba(163, 177, 198, 0.6), -12px -12px 24px rgba(255, 255, 255, 0.8)',
+  'neumorphism-inset': 'inset 6px 6px 12px rgba(163, 177, 198, 0.4), inset -6px -6px 12px rgba(255, 255, 255, 0.9)',
+  'neumorphism-button': '6px 6px 12px rgba(163, 177, 198, 0.5), -6px -6px 12px rgba(255, 255, 255, 0.8)'
+}
+```
+
+### 필수 유틸리티
+- **스크롤바 숨김**: `.scrollbar-hide`
+- **그라데이션**: `bg-gradient-to-b`, `from-muted/90`, `to-secondary/95`
+- **투명도**: `/90`, `/80`, `/70` 등 알파값 활용
+
+## 실제 구현 예시
+
+### 사이드바 버튼 구현
+```tsx
+<button
+  className={`w-full h-14 rounded-xl flex items-center justify-center px-2 ${
+    isActive ? 'neumorphic-active' : 'neumorphic-button'
+  }`}
+>
+  <Icon className={`w-7 h-7 ${
+    isActive 
+      ? 'text-primary scale-105' 
+      : 'text-foreground/80 hover:text-foreground'
+  }`} />
+</button>
+```
+
+### 컨테이너 구조
+```tsx
+<div className="w-[96px] h-full bg-gradient-to-b from-muted/90 to-secondary/95 border-r border-border/70">
+  <div className="px-2 py-3 space-y-2.5">
+    {/* 버튼들 */}
+  </div>
+</div>
+```
+
+## 주의사항
+- **미묘함이 핵심**: 과도한 그림자 효과 지양
+- **일관성**: CSS 변수 기반 색상 시스템 준수
+- **성능**: `transition-all duration-200` 등 최적화된 애니메이션
+- **접근성**: 충분한 대비율, 키보드 네비게이션 지원
+- **반응형**: 모바일에서 터치하기 쉬운 크기 (최소 44px)
+- **확장성**: 새로운 컴포넌트도 기존 뉴모피즘 클래스 활용
+

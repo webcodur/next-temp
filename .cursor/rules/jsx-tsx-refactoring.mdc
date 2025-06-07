@@ -1,6 +1,6 @@
 ---
 description: 
-globs: 
+globs: .tsx
 alwaysApply: false
 ---
 # React 컴포넌트 리팩토링 룰북

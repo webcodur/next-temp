@@ -4,10 +4,10 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { useSidebarMenu } from '@/components/layout/sidebar/hooks';
 import { menuData } from '@/data/menuData';
-import { SideHeader } from '@/components/layout/sidebar/unit/sideHeader';
-import { SideLPanel } from '@/components/layout/sidebar/unit/sideLPanel';
-import { SideRPanel } from '@/components/layout/sidebar/unit/sideRPanel';
-import { defaults } from '@/data/sidebarConfig';
+import { SideHeader } from '@/components/layout/sidebar/unit/SideHeader';
+import { SideLPanel } from '@/components/layout/sidebar/unit/SideLPanel';
+import { SideRPanel } from '@/components/layout/sidebar/unit/SideRPanel';
+import { defaults, animations } from '@/data/sidebarConfig';
 
 /**
  * 사이드바 메인 컴포넌트
@@ -37,10 +37,13 @@ export function Sidebar() {
 
 	return (
 		<aside
-			style={{ width: `${defaults.sidebarWidth}px` }}
+			style={{
+				width: `${defaults.sidebarWidth}px`,
+				transition: `transform ${animations.sidebarDuration}ms ease-in`,
+			}}
 			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide neumorphic-container rounded-r-3xl ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
-			} transition-transform duration-300 z-40`}>
+			} z-40`}>
 			<div className="flex flex-col h-full">
 				{/* 사이드바 헤더 영역 */}
 				<SideHeader />
