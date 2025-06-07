@@ -44,17 +44,15 @@ const TooltipButton = ({
 	delay?: number;
 	side?: 'top' | 'right' | 'bottom' | 'left';
 }) => {
-	const delayProps = delay
-		? useDelayedTooltip(delay)
-		: { open: undefined, onMouseEnter: () => {}, onMouseLeave: () => {} };
+	const delayProps = useDelayedTooltip(delay || 0);
 
 	return (
 		<Tooltip open={delayProps.open}>
 			<TooltipTrigger
 				onMouseEnter={delayProps.onMouseEnter}
 				onMouseLeave={delayProps.onMouseLeave}
-				className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 shadow-sm hover:bg-gray-50">
-				<Icon className="h-4 w-4" />
+				className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-md shadow-sm hover:bg-gray-50">
+				<Icon className="w-4 h-4" />
 				<span>{label}</span>
 			</TooltipTrigger>
 			<TooltipContent variant={variant} side={side} className="max-w-xs">
@@ -74,13 +72,13 @@ const CodeExample = () => {
 	};
 
 	return (
-		<div className="relative rounded-md bg-gray-800 p-4">
+		<div className="relative p-4 bg-gray-800 rounded-md">
 			<pre className="text-gray-300">{code}</pre>
 			<Tooltip>
 				<TooltipTrigger
-					className="absolute right-2 top-2 rounded-full p-1 text-gray-400 hover:bg-gray-700 hover:text-white"
+					className="absolute p-1 text-gray-400 rounded-full right-2 top-2 hover:bg-gray-700 hover:text-white"
 					onClick={copyCode}>
-					<Copy className="h-4 w-4" />
+					<Copy className="w-4 h-4" />
 				</TooltipTrigger>
 				<TooltipContent>코드 복사</TooltipContent>
 			</Tooltip>
@@ -91,7 +89,7 @@ const CodeExample = () => {
 // 메인 페이지 컴포넌트
 export default function TooltipPage() {
 	return (
-		<div className="mx-auto max-w-4xl space-y-8 p-8">
+		<div className="max-w-4xl p-8 mx-auto space-y-8">
 			<div>
 				<h1 className="mb-2 text-3xl font-bold">툴팁 컴포넌트</h1>
 				<p className="text-gray-600">
@@ -200,7 +198,7 @@ export default function TooltipPage() {
 								</label>
 								<Tooltip>
 									<TooltipTrigger className="text-gray-400 hover:text-gray-500">
-										<HelpCircle className="h-4 w-4" />
+										<HelpCircle className="w-4 h-4" />
 									</TooltipTrigger>
 									<TooltipContent variant="info">
 										사용자 이름은 3-15자 사이의 영문, 숫자, 밑줄(_)만 사용
@@ -211,7 +209,7 @@ export default function TooltipPage() {
 							<input
 								id="username"
 								type="text"
-								className="mt-1 w-full rounded-md border border-gray-300 p-2"
+								className="w-full p-2 mt-1 border border-gray-300 rounded-md"
 								placeholder="사용자 이름 입력"
 							/>
 						</div>
@@ -221,8 +219,8 @@ export default function TooltipPage() {
 
 			<section className="space-y-4">
 				<h2 className="text-xl font-semibold">사용 방법</h2>
-				<div className="rounded-md bg-gray-50 p-4">
-					<pre className="whitespace-pre-wrap text-sm">
+				<div className="p-4 rounded-md bg-gray-50">
+					<pre className="text-sm whitespace-pre-wrap">
 						{`import {
   Tooltip,
   TooltipContent,

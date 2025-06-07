@@ -15,16 +15,18 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
 	const [index, setIndex] = useState<number>(0);
 
-	// 이미지가 없으면 빈 div 반환
-	if (!images.length)
-		return <div className="w-full h-64 bg-gray-200 rounded-md"></div>;
-
 	useEffect(() => {
+		if (!images.length) return;
+
 		const timer = setInterval(() => {
 			setIndex((prev) => (prev + 1) % images.length);
 		}, autoPlayInterval);
 		return () => clearInterval(timer);
 	}, [images.length, autoPlayInterval]);
+
+	// 이미지가 없으면 빈 div 반환
+	if (!images.length)
+		return <div className="w-full h-64 bg-gray-200 rounded-md"></div>;
 
 	const handlePrev = () =>
 		setIndex((prev) => (prev - 1 + images.length) % images.length);

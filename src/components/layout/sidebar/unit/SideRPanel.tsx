@@ -173,9 +173,8 @@ export function SideRPanel({
 
 										{/* 트리 컨테이너 */}
 										<div className="space-y-0">
-											{midItem.botItems.map((botItem, index) => {
+											{midItem.botItems.map((botItem) => {
 												const isActive = pathname === botItem.href;
-												const isLast = index === midItem.botItems.length - 1;
 
 												return (
 													<div key={botItem.href} className="relative h-11">

@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import {
 	ParkingBarrier3DProps,
 	COLORS,
-	POSITIONS,
 	SETTINGS,
 	CAMERA_POSITIONS,
 } from './constants';
@@ -172,7 +171,8 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 						minWidth: `${width + 32}px`,
 						minHeight: `${height + 32}px`,
 						// 확대/축소에 대응하는 CSS 설정
-						imageRendering: 'crisp-edges' as any,
+						imageRendering:
+							'crisp-edges' as React.CSSProperties['imageRendering'],
 						// GPU 가속 활성화
 						transform: 'translateZ(0)',
 						willChange: 'transform',
