@@ -9,8 +9,8 @@ import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
 import Footer from './footer/Footer';
-import { SidebarToggle } from './sidebar/unit/SidebarToggle';
-import { HeaderToggle } from './sidebar/unit/HeaderToggle';
+import { SideToggleMain } from './sidebar/unit/SideToggleMain';
+import { SideToggleHead } from './sidebar/unit/SideToggleHead';
 
 // data
 import { defaults, animations } from '@/data/sidebarConfig';
@@ -33,8 +33,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 	return (
 		<div className="flex h-screen bg-background">
-			<SidebarToggle />
-			<HeaderToggle />
+			<SideToggleMain />
+			<SideToggleHead />
 			<Sidebar />
 
 			<main
