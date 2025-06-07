@@ -2,14 +2,14 @@
 
 ## 개요
 
-이 문서는 프로젝트에서 구현할 20개의 UI 컴포넌트에 대한 상세 설명과 구현 계획을 담고 있다.
-각 UI 모듈을 하나씩 요청받고 작업하게 될 거야. 작업을 마친 항목 옆에는 체크표시 이모지를 부착한다
-src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인지 나타낼 수 있도록 해.
-그리고 각각의 페이지 경로에 해당 UI모듈을 활용한 실제 페이지 예시까지 만들도록
+- 이 문서는 프로젝트에서 구현할 20개의 UI 컴포넌트에 대한 상세 설명과 구현 계획을 담고 있다.
+- 각 UI 모듈을 하나씩 요청받고 작업하게 될 거야. 작업을 마친 항목 옆에는 체크표시 이모지를 부착한다
+- 그리고 각각의 페이지 경로에 해당 UI모듈을 활용한 실제 페이지 예시까지 만들도록
+- 뉴모피즘 디자인 반영할 것.
 
 ## 카테고리별 컴포넌트
 
-### 1. Card ✅
+### 1. Card
 
 - **컴포넌트 경로**: `src/components/ui/card/card.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/card/page.tsx`
@@ -27,7 +27,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Radix UI, Framer Motion
 - **예상 사용 사례**: 추가 정보 제공, 기능 힌트
 
-### 3. Toast ✅
+### 3. Toast
 
 - **컴포넌트 경로**: `src/components/ui/toast/toast-provider.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/toast/page.tsx`
@@ -36,7 +36,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Sonner, React
 - **예상 사용 사례**: 작업 완료 알림, 오류 메시지
 
-### 4. Modal ✅
+### 4. Modal
 
 - **컴포넌트 경로**: `src/components/ui/modal/modal.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/modal/page.tsx`
@@ -45,16 +45,16 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Framer Motion, React
 - **예상 사용 사례**: 확인 대화상자, 상세 정보 표시, 입력 폼
 
-### 6. Select
+### 6. Select ✅
 
 - **컴포넌트 경로**: `src/components/ui/select/select.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/select/page.tsx`
-- **기능**: 다중 선택, 검색 필터링, 가상화
+- **기능**: 다중 선택, 검색 필터링, 가상화, 미리보기에 하나만 뜰 경우 enter 시 바로 선택되도록
 - **구현 방식**: 자체 구현 + Tailwind
 - **활용 라이브러리**: Tailwind, React
 - **예상 사용 사례**: 옵션 선택, 필터링, 분류 선택
 
-### 7. Datepicker ✅
+### 7. Datepicker
 
 - **컴포넌트 경로**: `src/components/ui/datepicker/datepicker.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/datepicker/page.tsx`
@@ -63,7 +63,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: date-fns, React
 - **예상 사용 사례**: 날짜 입력, 일정 설정, 기간 선택
 
-### 11. Editor ✅
+### 11. Editor
 
 - **컴포넌트 경로**: `src/components/ui/editor/markdown-editor.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/editor/page.tsx`
@@ -72,7 +72,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 게시물 작성, 문서 편집
 
-### 12. Tabs ✅
+### 12. Tabs
 
 - **컴포넌트 경로**: `src/components/ui/tabs/tabs.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/tabs/page.tsx`
@@ -81,7 +81,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 콘텐츠 분리, 페이지 분할
 
-### 13. Pagination ✅
+### 13. Pagination
 
 - **컴포넌트 경로**: `src/components/ui/pagination/pagination.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/pagination/page.tsx`
@@ -90,7 +90,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 목록 페이지 이동, 테이블 페이징
 
-### 14. 스탭퍼 ✅
+### 14. 스탭퍼
 
 - **컴포넌트 경로**: `src/components/ui/stepper/stepper.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/stepper/page.tsx`
@@ -99,7 +99,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 가입 절차, 주문 과정, 설정 마법사
 
-### 15. InfiniteScroll ✅
+### 15. InfiniteScroll
 
 - **컴포넌트 경로**: `src/components/ui/infinite-scroll/infinite-scroll.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/infinite-scroll/page.tsx`
@@ -108,7 +108,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 피드 스크롤, 대용량 데이터 표시
 
-### 18. Timeline ✅
+### 18. Timeline
 
 - **컴포넌트 경로**: `src/components/ui/timeline/timeline.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/timeline/page.tsx`
@@ -117,7 +117,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 이벤트 표시, 작업 이력, 프로세스 표시
 
-### 21. Carousel ✅
+### 21. Carousel
 
 - **컴포넌트 경로**: `src/components/ui/carousel/carousel.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/carousel/page.tsx`
@@ -126,7 +126,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Framer Motion, React
 - **예상 사용 사례**: 이미지 갤러리, 상품 회전 보기
 
-### 22. DragAndDrop ✅
+### 22. DragAndDrop
 
 - **컴포넌트 경로**: `src/components/ui/dnd/sortable-list.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/drag-and-drop/page.tsx`
@@ -135,7 +135,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: Framer Motion, React
 - **예상 사용 사례**: 목록 재정렬, 구성 요소 배치
 
-### 23. SearchFilter ✅
+### 23. SearchFilter
 
 - **컴포넌트 경로**: `외부UI/SearchFilterComponents.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/search-filter/page.tsx`
@@ -144,7 +144,7 @@ src/app/data/menuData.ts 파일에서도 체크표시를 해서 완성된 UI 인
 - **활용 라이브러리**: React, Tailwind, lucide-react
 - **예상 사용 사례**: API 검색 필터 UI
 
-### 24. Barrier3D ✅
+### 24. Barrier3D
 
 - **컴포넌트 경로**: `src/components/ui/barrier/barrier-3d.tsx`
 - **페이지 경로**: `src/app/lab/ui-check/barrier-3d/page.tsx`

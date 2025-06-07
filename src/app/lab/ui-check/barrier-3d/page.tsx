@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import ParkingBarrier3D from '@/components/ui/barrier/barrier-3d';
+import ParkingBarrier3D from '@/components/ui/barrier/Barrier3d';
 import { ViewAngle, VIEW_ANGLE_NAMES } from '@/components/ui/barrier/constants';
 
 export default function Barrier3DPage() {

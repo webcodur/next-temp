@@ -8,18 +8,18 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { TopItem } from '@/components/layout/sidebar/types';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '@/components/ui/tooltip/tooltip';
+} from '@/components/ui/tooltip/Tooltip';
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/ui/Collapsible';
 
 /**
  * 사이드바 우측 패널 Props 타입

@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
 	SingleDatePicker,
 	DateRangePicker,
-} from '@/components/ui/datepicker/datepicker';
+} from '@/components/ui/datepicker/Datepicker';
 
 export default function DatepickerPage() {
 	const [startDate, setStartDate] = React.useState<Date | null>(null);

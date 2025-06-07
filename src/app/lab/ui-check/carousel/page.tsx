@@ -1,5 +1,5 @@
 import React from 'react';
-import Carousel from '@/components/ui/carousel/carousel';
+import Carousel from '@/components/ui/carousel/Carousel';
 
 const sampleImages = [
 	'/images/2.png',

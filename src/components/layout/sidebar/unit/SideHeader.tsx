@@ -9,7 +9,7 @@ import {
 	currentBotMenuAtom,
 	headerCollapsedAtom,
 } from '@/store/sidebar';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { SearchBar } from '@/components/layout/sidebar/unit/searchBar';
 
 /**

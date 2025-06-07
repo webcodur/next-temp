@@ -1,7 +1,7 @@
 'use client';
 
 import { MainLayout } from '@/components/layout/main-layout';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 
 export default function NotFound() {

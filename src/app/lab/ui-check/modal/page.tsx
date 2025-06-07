@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import Modal from '@/components/ui/modal/modal';
+import { Button } from '@/components/ui/Button';
+import Modal from '@/components/ui/modal/Modal';
 
 export default function ModalPage() {
   const [isOpen, setIsOpen] = React.useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import Timeline, { TimelineEvent } from '@/components/ui/timeline/timeline';
+import Timeline, { TimelineEvent } from '@/components/ui/timeline/Timeline';
 
 const sampleEvents: TimelineEvent[] = [
   { id: '1', timestamp: '2025-01-01', title: 'Event One', description: 'Description for event one' },

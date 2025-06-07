@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Stepper from '@/components/ui/stepper/stepper';
+import Stepper from '@/components/ui/stepper/Stepper';
 
 // #region Types
 interface ProfileData { name: string; email: string; }
@@ -125,7 +125,7 @@ const StepperDemo = () => {
 				<h2 className="text-xl font-semibold mb-4">사용 방법</h2>
 				<div className="bg-gray-50 p-4 rounded-md overflow-auto">
 					<pre className="text-sm">
-{`import Stepper from '@/components/ui/stepper/stepper';
+{`import Stepper from '@/components/ui/stepper/Stepper';
 
 const steps = ['프로필', '주소', '결제', '완료'];
 const [currentStep, setCurrentStep] = useState(1);

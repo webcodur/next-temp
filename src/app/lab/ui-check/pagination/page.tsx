@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Pagination from '@/components/ui/pagination/pagination';
+import Pagination from '@/components/ui/pagination/Pagination';
 
 const PaginationDemo = () => {
 	// #region 상태 관리
@@ -118,7 +118,7 @@ const PaginationDemo = () => {
 					<h2 className="text-xl font-semibold mb-4">사용 방법</h2>
 					<div className="bg-gray-50 p-4 rounded-md overflow-auto">
 						<pre className="text-sm">
-{`import Pagination from '@/components/ui/pagination/pagination';
+{`import Pagination from '@/components/ui/pagination/Pagination';
 
 // 기본 사용법
 <Pagination

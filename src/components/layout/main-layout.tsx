@@ -5,11 +5,11 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 
 // components
-import { Sidebar } from './sidebar/sidebar';
+import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
 import Footer from './footer/Footer';
-import { SidebarToggle } from './sidebar/unit/sidebarToggle';
-import { HeaderToggle } from './sidebar/unit/headerToggle';
+import { SidebarToggle } from './sidebar/unit/SidebarToggle';
+import { HeaderToggle } from './sidebar/unit/HeaderToggle';
 
 // data
 import { defaults } from '@/data/sidebarConfig';

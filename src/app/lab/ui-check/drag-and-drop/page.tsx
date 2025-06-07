@@ -1,5 +1,5 @@
 import React from 'react';
-import DragAndDrop from '@/components/ui/dnd/sortable-list';
+import DragAndDrop from '@/components/ui/dnd/SortableList';
 
 const DragAndDropPage: React.FC = () => {
   return (
