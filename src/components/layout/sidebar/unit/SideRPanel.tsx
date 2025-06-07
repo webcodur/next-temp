@@ -136,15 +136,26 @@ export function SideRPanel({
 									<Button
 										variant="ghost"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg ${
-											midMenu === midKey ? 'neu-inset' : 'neu-raised'
+										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg transition-all duration-200 group ${
+											midMenu === midKey
+												? 'neu-inset'
+												: 'neu-raised hover:scale-[1.01] hover:bg-primary/5 hover:border-primary/20'
 										}`}>
-										<span className="text-base font-medium">
+										<span
+											className={`text-base font-medium transition-colors duration-200 ${
+												midMenu === midKey ? '' : 'group-hover:text-primary/80'
+											}`}>
 											{midItem.label}
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
-											className={`w-5 h-5 transform transition-transform duration-300 ${midExpanded.has(midKey) ? 'rotate-180' : ''}`}
+											className={`w-5 h-5 transform transition-all duration-300 ${
+												midExpanded.has(midKey) ? 'rotate-180' : ''
+											} ${
+												midMenu === midKey
+													? ''
+													: 'group-hover:text-primary/70 group-hover:scale-105'
+											}`}
 										/>
 									</Button>
 								</CollapsibleTrigger>
@@ -172,9 +183,9 @@ export function SideRPanel({
 														<div
 															className="absolute h-0.5 border-t-2 border-dashed border-muted-foreground/30"
 															style={{
-																left: '0px',
+																left: '4px',
 																top: '18px',
-																width: '24px',
+																width: '17px',
 															}}></div>
 
 														{/* 수평선 종료점 (봇메뉴 앞) */}
@@ -185,21 +196,32 @@ export function SideRPanel({
 														{/* 메뉴 아이템 */}
 														<Link
 															href={botItem.href}
-															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-300 group ${
+															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group ${
 																isActive
 																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
-																	: 'neu-flat hover:neu-raised hover:bg-muted/30'
+																	: 'neu-flat hover:scale-[1.01] hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'
 															}`}>
 															{/* 아이템 라벨 */}
-															<span className="relative z-10 flex items-center gap-2">
+															<span
+																className={`relative z-10 flex items-center gap-2 transition-all duration-200 ${
+																	isActive
+																		? ''
+																		: 'group-hover:font-semibold group-hover:translate-x-1'
+																}`}>
 																{botItem.label}
 																{isActive && (
 																	<div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></div>
 																)}
+																{!isActive && (
+																	<div className="w-1 h-1 transition-opacity duration-200 rounded-full opacity-0 bg-primary/50 group-hover:opacity-100"></div>
+																)}
 															</span>
 
 															{/* 호버 시 배경 효과 */}
-															<div className="absolute inset-0 transition-opacity duration-300 opacity-0 rounded-xl bg-gradient-to-r from-transparent via-muted/10 to-transparent group-hover:opacity-100"></div>
+															<div className="absolute inset-0 transition-all duration-200 opacity-0 rounded-xl bg-gradient-to-r from-primary/5 via-primary/3 to-transparent group-hover:opacity-100"></div>
+
+															{/* 왼쪽 슬라이드 인디케이터 */}
+															<div className="absolute left-0 w-1 h-0 transition-all duration-200 -translate-y-1/2 rounded-r-full top-1/2 bg-primary/70 group-hover:h-6"></div>
 														</Link>
 													</div>
 												);

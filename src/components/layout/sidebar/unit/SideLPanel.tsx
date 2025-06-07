@@ -33,13 +33,17 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 						<button
 							key={topKey}
 							onClick={() => onTopClick(topKey)}
-							className={`w-full h-14 rounded-xl flex items-center justify-center px-2 ${
-								isActive ? 'neu-inset' : 'neu-raised'
+							className={`w-full h-14 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group ${
+								isActive
+									? 'neu-inset'
+									: 'neu-raised hover:scale-[1.02] hover:shadow-lg'
 							}`}>
 							{/* Top 메뉴 아이콘 */}
 							<topItem.icon
-								className={`w-7 h-7 ${
-									isActive ? 'neu-icon-active' : 'neu-icon-inactive'
+								className={`w-7 h-7 transition-all duration-200 ${
+									isActive
+										? 'neu-icon-active'
+										: 'neu-icon-inactive group-hover:scale-105 group-hover:text-primary/70'
 								}`}
 							/>
 						</button>
