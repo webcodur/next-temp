@@ -151,21 +151,60 @@ export function SideRPanel({
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="pb-2 pl-4 pr-2 space-y-1.5 border-l-2 border-border/30 ml-4">
-										{midItem.botItems.map((botItem) => {
-											const isActive = pathname === botItem.href;
+									<div className="relative ml-2 mr-3">
+										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
+										<div
+											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
+											style={{
+												top: '0px',
+												height: `${(midItem.botItems.length - 1) * 44 + 18}px`,
+											}}></div>
 
-											return (
-												<Link
-													key={botItem.href}
-													href={botItem.href}
-													className={`w-full flex items-center px-4 py-2 text-sm rounded-lg block font-medium ${
-														isActive ? 'neu-inset' : 'neu-flat'
-													}`}>
-													<span className="text-sm">{botItem.label}</span>
-												</Link>
-											);
-										})}
+										{/* 트리 컨테이너 */}
+										<div className="space-y-0">
+											{midItem.botItems.map((botItem, index) => {
+												const isActive = pathname === botItem.href;
+												const isLast = index === midItem.botItems.length - 1;
+
+												return (
+													<div key={botItem.href} className="relative h-11">
+														{/* 수평 점선 연결선 */}
+														<div
+															className="absolute h-0.5 border-t-2 border-dashed border-muted-foreground/30"
+															style={{
+																left: '0px',
+																top: '18px',
+																width: '24px',
+															}}></div>
+
+														{/* 수평선 종료점 (봇메뉴 앞) */}
+														<div
+															className="absolute w-1 h-1 rounded-full bg-muted-foreground/40"
+															style={{ left: '22px', top: '17.5px' }}></div>
+
+														{/* 메뉴 아이템 */}
+														<Link
+															href={botItem.href}
+															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-300 group ${
+																isActive
+																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
+																	: 'neu-flat hover:neu-raised hover:bg-muted/30'
+															}`}>
+															{/* 아이템 라벨 */}
+															<span className="relative z-10 flex items-center gap-2">
+																{botItem.label}
+																{isActive && (
+																	<div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></div>
+																)}
+															</span>
+
+															{/* 호버 시 배경 효과 */}
+															<div className="absolute inset-0 transition-opacity duration-300 opacity-0 rounded-xl bg-gradient-to-r from-transparent via-muted/10 to-transparent group-hover:opacity-100"></div>
+														</Link>
+													</div>
+												);
+											})}
+										</div>
 									</div>
 								</CollapsibleContent>
 							</Collapsible>
