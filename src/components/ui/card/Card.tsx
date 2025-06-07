@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 // #region 카드 기본 컴포넌트
@@ -114,13 +115,24 @@ CardAction.displayName = 'CardAction';
 
 const CardImage = React.forwardRef<
 	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement> & { src: string; alt?: string }
->(({ className, src, alt = '', ...props }, ref) => (
+	React.HTMLAttributes<HTMLDivElement> & {
+		src: string;
+		alt?: string;
+		width?: number;
+		height?: number;
+	}
+>(({ className, src, alt = '', width = 400, height = 300, ...props }, ref) => (
 	<div
 		ref={ref}
 		className={cn('relative overflow-hidden rounded-t-lg', className)}
 		{...props}>
-		<img src={src} alt={alt} className="object-cover w-full h-full" />
+		<Image
+			src={src}
+			alt={alt}
+			width={width}
+			height={height}
+			className="object-cover w-full h-full"
+		/>
 	</div>
 ));
 CardImage.displayName = 'CardImage';

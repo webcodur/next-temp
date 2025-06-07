@@ -97,18 +97,22 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 
 		isInitializedRef.current = true;
 
+		// cleanup에서 사용할 현재 mount 참조를 미리 저장
+		const currentMount = mountRef.current;
+
 		return () => {
 			if (animationIdRef.current) {
 				cancelAnimationFrame(animationIdRef.current);
 			}
 			window.removeEventListener('resize', handleResize);
-			if (mountRef.current?.contains(renderer.domElement)) {
-				mountRef.current.removeChild(renderer.domElement);
+			if (currentMount?.contains(renderer.domElement)) {
+				currentMount.removeChild(renderer.domElement);
 			}
 			renderer.dispose();
 			isInitializedRef.current = false;
 		};
-	}, []); // 빈 의존성 배열로 한 번만 실행
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // 의도적으로 빈 의존성 배열 - 초기화는 한 번만 실행
 
 	// viewAngle 변경 시 카메라 위치만 업데이트
 	useEffect(() => {

@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, {
+	useState,
+	useRef,
+	useEffect,
+	useMemo,
+	useCallback,
+} from 'react';
 import { X } from 'lucide-react';
 
 export interface Option {
@@ -72,23 +78,44 @@ export const Select: React.FC<SelectProps> = ({
 		[options, inputValue, searchable]
 	);
 
+	// props 구조 분해 (useCallback 최적화를 위해)
+	const { multiple, value, onChange } = props;
+
 	// 선택된 값들과 옵션들
-	const selectedValues = props.multiple
-		? props.value || []
-		: props.value
-			? [props.value]
-			: [];
+	const selectedValues = multiple ? value || [] : value ? [value] : [];
 	const selectedOptions = options.filter((option) =>
 		selectedValues.includes(option.value)
 	);
 
+	// 옵션 선택 처리 (useEffect보다 먼저 선언)
+	const handleOptionSelect = useCallback(
+		(option: Option) => {
+			if (option.disabled) return;
+
+			if (multiple) {
+				const currentValues = value || [];
+				const newValues = currentValues.includes(option.value)
+					? currentValues.filter((v) => v !== option.value)
+					: [...currentValues, option.value];
+				onChange?.(newValues);
+			} else {
+				onChange?.(option.value);
+				if (searchable) setInputValue(option.label);
+				setIsOpen(false);
+				setHighlightedIndex(-1);
+				setHoveredIndex(-1);
+			}
+		},
+		[multiple, value, onChange, searchable]
+	);
+
 	// 입력값 동기화 (searchable 단일 선택)
 	useEffect(() => {
-		if (searchable && !props.multiple) {
-			const selected = options.find((option) => option.value === props.value);
+		if (searchable && !multiple) {
+			const selected = options.find((option) => option.value === value);
 			setInputValue(isOpen ? inputValue : selected?.label || '');
 		}
-	}, [props.value, options, searchable, props.multiple, isOpen, inputValue]);
+	}, [value, options, searchable, multiple, isOpen, inputValue]);
 
 	// 외부 클릭과 키보드 이벤트 처리
 	useEffect(() => {
@@ -104,10 +131,8 @@ export const Select: React.FC<SelectProps> = ({
 				!selectRef.current.contains(event.target as Node)
 			) {
 				closeDropdown();
-				if (searchable && !props.multiple) {
-					const selected = options.find(
-						(option) => option.value === props.value
-					);
+				if (searchable && !multiple) {
+					const selected = options.find((option) => option.value === value);
 					setInputValue(selected?.label || '');
 				}
 			}
@@ -151,29 +176,11 @@ export const Select: React.FC<SelectProps> = ({
 		highlightedIndex,
 		filteredOptions,
 		searchable,
-		props.multiple,
-		props.value,
+		multiple,
+		value,
 		options,
+		handleOptionSelect,
 	]);
-
-	// 옵션 선택 처리
-	const handleOptionSelect = (option: Option) => {
-		if (option.disabled) return;
-
-		if (props.multiple) {
-			const currentValues = props.value || [];
-			const newValues = currentValues.includes(option.value)
-				? currentValues.filter((v) => v !== option.value)
-				: [...currentValues, option.value];
-			props.onChange?.(newValues);
-		} else {
-			props.onChange?.(option.value);
-			if (searchable) setInputValue(option.label);
-			setIsOpen(false);
-			setHighlightedIndex(-1);
-			setHoveredIndex(-1);
-		}
-	};
 
 	// 태그 컴포넌트
 	const Tag = ({
@@ -217,8 +224,8 @@ export const Select: React.FC<SelectProps> = ({
 				onMouseEnter={() => setHoveredIndex(index)}
 				onMouseLeave={() => setHoveredIndex(-1)}>
 				<span className="truncate">{option.label}</span>
-				{isSelected && props.multiple && (
-					<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 rounded-full bg-gray-200">
+				{isSelected && multiple && (
+					<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">
 						✓
 					</div>
 				)}
@@ -250,18 +257,18 @@ export const Select: React.FC<SelectProps> = ({
 				tabIndex={searchable ? -1 : 0}>
 				<div className="flex flex-wrap items-center flex-1 gap-1 max-h-[52px] overflow-hidden">
 					{/* 다중 선택 태그들 */}
-					{props.multiple && selectedOptions.length > 0 && (
+					{multiple && selectedOptions.length > 0 && (
 						<div className="flex flex-wrap flex-1 min-w-0 gap-1">
 							{selectedOptions.slice(0, 3).map((option) => (
 								<Tag
 									key={option.value}
 									option={option}
 									onRemove={() => {
-										if (props.multiple) {
-											const newValues = (props.value || []).filter(
+										if (multiple) {
+											const newValues = (value || []).filter(
 												(v) => v !== option.value
 											);
-											props.onChange?.(newValues);
+											onChange?.(newValues);
 										}
 									}}
 								/>
@@ -282,11 +289,11 @@ export const Select: React.FC<SelectProps> = ({
 							value={inputValue}
 							onChange={(e) => {
 								setInputValue(e.target.value);
-								if (!e.target.value && !props.multiple) props.onChange?.('');
+								if (!e.target.value && !multiple) onChange?.('');
 							}}
 							onFocus={() => setIsOpen(true)}
 							placeholder={
-								props.multiple && selectedOptions.length > 0
+								multiple && selectedOptions.length > 0
 									? '추가 검색...'
 									: placeholder
 							}
@@ -299,7 +306,7 @@ export const Select: React.FC<SelectProps> = ({
 							className={`${selectedOptions.length === 0 ? 'text-gray-400' : 'text-gray-700'} font-medium`}>
 							{selectedOptions.length === 0
 								? placeholder
-								: props.multiple
+								: multiple
 									? selectedOptions.length === 1
 										? selectedOptions[0].label
 										: `${selectedOptions.length}개 선택됨`
@@ -309,11 +316,11 @@ export const Select: React.FC<SelectProps> = ({
 				</div>
 
 				{/* X 버튼 (단일 선택 시) */}
-				{!props.multiple && selectedOptions.length > 0 && (
+				{!multiple && selectedOptions.length > 0 && (
 					<button
 						onClick={(e) => {
 							e.stopPropagation();
-							props.onChange?.('');
+							onChange?.('');
 							if (searchable) setInputValue('');
 						}}
 						className={`${STYLES.button} w-4 h-4`}>
