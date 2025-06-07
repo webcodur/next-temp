@@ -63,7 +63,7 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex flex-col flex-1 h-full overflow-auto bg-gradient-to-b from-background/50 to-background/30">
+			<div className="flex flex-col flex-1 h-full overflow-hidden bg-gradient-to-b from-background/50 to-background/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex items-center justify-between px-5 py-3 border-b border-border/40">
 					{/* Top 메뉴 타이틀 */}
@@ -132,8 +132,8 @@ export function SideRPanel({
 				</div>
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
-				<div className="flex-1 overflow-y-auto">
-					<nav className="px-3 py-3 space-y-2">
+				<div className="flex-1 overflow-x-hidden overflow-y-auto">
+					<nav className="min-w-0 px-3 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<Collapsible key={midKey} open={midExpanded.has(midKey)}>
 								{/* Mid 메뉴 헤더 (클릭 가능) */}
@@ -141,13 +141,13 @@ export function SideRPanel({
 									<Button
 										variant="ghost"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg transition-all duration-200 group ${
+										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg transition-all duration-200 group min-w-0 ${
 											midMenu === midKey
 												? 'neu-inset'
 												: 'neu-raised hover:scale-[1.01] hover:bg-primary/5 hover:border-primary/20'
 										}`}>
 										<span
-											className={`text-base font-medium transition-colors duration-200 ${
+											className={`text-base font-medium transition-colors duration-200 truncate flex-1 text-left ${
 												midMenu === midKey ? '' : 'group-hover:text-primary/80'
 											}`}>
 											{midItem.label}
@@ -167,7 +167,7 @@ export function SideRPanel({
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="relative ml-2 mr-3">
+									<div className="relative min-w-0 ml-2 mr-3">
 										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
 										<div
 											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
@@ -200,24 +200,26 @@ export function SideRPanel({
 														{/* 메뉴 아이템 */}
 														<button
 															onClick={() => handleBotMenuClick(botItem.href)}
-															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left ${
+															className={`relative flex items-center ml-6 pl-3 pr-2 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left min-w-0 ${
 																isActive
 																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
 																	: 'neu-flat hover:scale-[1.01] hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'
 															}`}>
 															{/* 아이템 라벨 */}
 															<span
-																className={`relative z-10 flex items-center gap-2 transition-all duration-200 ${
+																className={`relative z-10 flex items-center gap-1.5 transition-all duration-200 min-w-0 flex-1 ${
 																	isActive
 																		? ''
 																		: 'group-hover:font-semibold group-hover:translate-x-1'
 																}`}>
-																{botItem.label}
+																<span className="flex-1 truncate">
+																	{botItem.label}
+																</span>
 																{isActive && (
-																	<div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></div>
+																	<div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse flex-shrink-0"></div>
 																)}
 																{!isActive && (
-																	<div className="w-1 h-1 transition-opacity duration-200 rounded-full opacity-0 bg-primary/50 group-hover:opacity-100"></div>
+																	<div className="flex-shrink-0 w-1 h-1 transition-opacity duration-200 rounded-full opacity-0 bg-primary/50 group-hover:opacity-100"></div>
 																)}
 															</span>
 

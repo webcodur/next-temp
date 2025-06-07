@@ -1,4 +1,4 @@
-/* #region 뉴모피즘 통합 3종 패턴 */
+/* 뉴모피즘 통합 3종 패턴 */
 
 /* 1. neu-flat - 평면 (컨테이너, 패널) */
 .neu-flat {
@@ -185,5 +185,3 @@
 			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 	transition: all 0.15s ease-in-out;
 }
-
-/* #endregion */

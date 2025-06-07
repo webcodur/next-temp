@@ -61,12 +61,7 @@ module.exports = {
 				'slide-down': 'slideDown 100ms ease-in-out',
 				'slide-up': 'slideUp 100ms ease-in-out',
 			},
-			fontFamily: {
-				sans: ['system-ui', 'sans-serif'],
-				mono: ['ui-monospace', 'monospace'],
-			},
 			boxShadow: {
-				// 뉴모피즘 핵심 3종 (음양각 처리)
 				'neu-raised':
 					'var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)), calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) rgba(var(--neu-light))',
 				'neu-inset':
