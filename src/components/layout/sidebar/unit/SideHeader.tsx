@@ -9,7 +9,6 @@ import {
 	currentBotMenuAtom,
 	headerCollapsedAtom,
 } from '@/store/sidebar';
-import { Button } from '@/components/ui/Button';
 import { SearchBar } from '@/components/layout/sidebar/unit/SearchBar';
 
 /**
@@ -51,26 +50,19 @@ export function SideHeader() {
 					className={`relative flex items-center justify-center px-2 mb-4 ${isHeaderCollapsed ? 'h-0' : ''}`}>
 					{/* 타이틀 영역 */}
 					<div className="flex-1 flex justify-center max-w-[250px]">
-						<Button
-							variant="ghost"
-							className="w-full h-auto p-0 text-left select-none hover:bg-transparent group"
-							asChild>
-							<Link
-								href="/"
-								onClick={handleLogoClick}
-								className="block select-none">
-								<div className="flex items-center justify-center gap-4">
-									{/* 로고 아이콘 */}
-									<div className="flex items-center justify-center flex-shrink-0 w-14 h-14 neu-flat rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-										<Building2 className="font-bold w-9 h-9 text-primary drop-shadow-md" />
-									</div>
-									{/* 타이틀 텍스트 */}
-									<div className="text-xl font-semibold text-foreground/90 truncate max-w-[160px] drop-shadow-sm">
-										건물 타이틀
-									</div>
-								</div>
-							</Link>
-						</Button>
+						<Link
+							href="/"
+							onClick={handleLogoClick}
+							className="flex items-center justify-center gap-4 p-3 select-none neu-raised rounded-xl">
+							{/* 로고 아이콘 */}
+							<div className="flex items-center justify-center flex-shrink-0">
+								<Building2 className="w-8 h-8 neu-icon-active" />
+							</div>
+							{/* 타이틀 텍스트 */}
+							<div className="text-xl font-semibold text-foreground/90 truncate max-w-[160px]">
+								건물 타이틀
+							</div>
+						</Link>
 					</div>
 				</div>
 
