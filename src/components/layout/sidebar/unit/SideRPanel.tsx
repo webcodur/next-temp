@@ -5,8 +5,7 @@ import {
 	Focus,
 	Layers,
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type { TopItem } from '@/components/layout/sidebar/types';
 import { Button } from '@/components/ui/Button';
 import {
@@ -55,6 +54,12 @@ export function SideRPanel({
 	onCollapseAll,
 }: SideRPanelProps) {
 	const pathname = usePathname();
+	const router = useRouter();
+
+	// botMenu 클릭 처리 - 즉시 페이지 이동 (상태는 useEffect에서 자동 처리)
+	const handleBotMenuClick = (href: string) => {
+		router.push(href);
+	};
 
 	return (
 		<TooltipProvider>
@@ -193,9 +198,9 @@ export function SideRPanel({
 															style={{ left: '22px', top: '17.5px' }}></div>
 
 														{/* 메뉴 아이템 */}
-														<Link
-															href={botItem.href}
-															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group ${
+														<button
+															onClick={() => handleBotMenuClick(botItem.href)}
+															className={`relative flex items-center ml-8 pl-4 pr-4 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left ${
 																isActive
 																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
 																	: 'neu-flat hover:scale-[1.01] hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'
@@ -221,7 +226,7 @@ export function SideRPanel({
 
 															{/* 왼쪽 슬라이드 인디케이터 */}
 															<div className="absolute left-0 w-1 h-0 transition-all duration-200 -translate-y-1/2 rounded-r-full top-1/2 bg-primary/70 group-hover:h-6"></div>
-														</Link>
+														</button>
 													</div>
 												);
 											})}
