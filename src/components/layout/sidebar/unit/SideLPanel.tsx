@@ -34,14 +34,12 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 							key={topKey}
 							onClick={() => onTopClick(topKey)}
 							className={`w-full h-14 rounded-xl flex items-center justify-center px-2 ${
-								isActive ? 'neumorphic-active' : 'neumorphic-button'
+								isActive ? 'neu-inset' : 'neu-raised'
 							}`}>
 							{/* Top 메뉴 아이콘 */}
 							<topItem.icon
 								className={`w-7 h-7 ${
-									isActive
-										? 'text-primary scale-105'
-										: 'text-foreground/80 hover:text-foreground'
+									isActive ? 'neu-icon-active' : 'neu-icon-inactive'
 								}`}
 							/>
 						</button>

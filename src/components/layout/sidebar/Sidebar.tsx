@@ -41,7 +41,7 @@ export function Sidebar() {
 				width: `${defaults.sidebarWidth}px`,
 				transition: `transform ${animations.sidebarDuration}ms ease-in`,
 			}}
-			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide neumorphic-container rounded-r-3xl ${
+			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide neu-flat rounded-r-3xl ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
 			} z-40`}>
 			<div className="flex flex-col h-full">

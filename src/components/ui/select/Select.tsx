@@ -33,28 +33,14 @@ type SelectProps = {
 
 // 공통 스타일 상수
 const STYLES = {
-	container:
-		'bg-gray-50 rounded-2xl transition-all duration-200 ease-out focus:outline-none focus:ring-0',
+	container: 'neu-flat bg-gray-50 rounded-2xl focus:outline-none focus:ring-0',
 	dropdown:
-		'absolute z-50 w-full mt-2 overflow-hidden transition-all duration-200 bg-gray-50 rounded-2xl',
+		'neu-raised absolute z-50 w-full mt-2 overflow-hidden bg-gray-50 rounded-2xl',
 	option:
-		'mx-2 my-1 px-4 py-3 rounded-xl cursor-pointer transition-all duration-150 flex items-center justify-between font-medium',
-	tag: 'inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-700 transition-all duration-200 bg-white rounded-lg',
+		'mx-2 my-1 px-4 py-3 rounded-xl cursor-pointer flex items-center justify-between font-medium',
+	tag: 'neu-inset inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-700 bg-white rounded-lg',
 	button:
-		'flex items-center justify-center transition-all duration-200 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-0',
-	boxShadow: {
-		normal: '4px 4px 8px rgba(0,0,0,0.1), -4px -4px 8px rgba(255,255,255,0.9)',
-		inset:
-			'inset 4px 4px 8px rgba(0,0,0,0.1), inset -4px -4px 8px rgba(255,255,255,0.9)',
-		disabled:
-			'inset 3px 3px 6px rgba(0,0,0,0.1), inset -3px -3px 6px rgba(255,255,255,0.8)',
-		dropdown:
-			'6px 6px 12px rgba(0,0,0,0.1), -6px -6px 12px rgba(255,255,255,0.9)',
-		tagInset:
-			'inset 1px 1px 2px rgba(0,0,0,0.08), inset -1px -1px 2px rgba(255,255,255,0.9)',
-		optionInset:
-			'inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.9)',
-	},
+		'neu-raised flex items-center justify-center rounded-full focus:outline-none focus:ring-0',
 };
 
 export const Select: React.FC<SelectProps> = ({
@@ -102,7 +88,7 @@ export const Select: React.FC<SelectProps> = ({
 			const selected = options.find((option) => option.value === props.value);
 			setInputValue(isOpen ? inputValue : selected?.label || '');
 		}
-	}, [props.value, options, searchable, props.multiple, isOpen]);
+	}, [props.value, options, searchable, props.multiple, isOpen, inputValue]);
 
 	// 외부 클릭과 키보드 이벤트 처리
 	useEffect(() => {
@@ -189,12 +175,6 @@ export const Select: React.FC<SelectProps> = ({
 		}
 	};
 
-	// 공통 박스 스타일
-	const getBoxShadow = (type: keyof typeof STYLES.boxShadow) => ({
-		boxShadow: STYLES.boxShadow[type],
-		outline: 'none',
-	});
-
 	// 태그 컴포넌트
 	const Tag = ({
 		option,
@@ -203,15 +183,14 @@ export const Select: React.FC<SelectProps> = ({
 		option: Option;
 		onRemove: () => void;
 	}) => (
-		<span className={STYLES.tag} style={getBoxShadow('tagInset')}>
+		<span className={STYLES.tag}>
 			<span className="truncate max-w-[80px]">{option.label}</span>
 			<button
 				onClick={(e) => {
 					e.stopPropagation();
 					onRemove();
 				}}
-				className={`${STYLES.button} w-3 h-3`}
-				style={getBoxShadow('tagInset')}>
+				className={`${STYLES.button} w-3 h-3`}>
 				<X className="w-2 h-2" />
 			</button>
 		</span>
@@ -226,22 +205,20 @@ export const Select: React.FC<SelectProps> = ({
 
 		return (
 			<div
+				key={option.value}
 				className={`${STYLES.option} ${
 					option.disabled
 						? 'text-gray-400 cursor-not-allowed opacity-50'
 						: isActive
-							? 'text-gray-700 bg-white'
-							: 'text-gray-600 hover:text-gray-700 hover:bg-white'
+							? 'neu-inset text-gray-700 bg-white'
+							: 'neu-raised text-gray-600'
 				}`}
 				onClick={() => handleOptionSelect(option)}
 				onMouseEnter={() => setHoveredIndex(index)}
-				onMouseLeave={() => setHoveredIndex(-1)}
-				style={isActive && !option.disabled ? getBoxShadow('optionInset') : {}}>
-				<span>{option.label}</span>
+				onMouseLeave={() => setHoveredIndex(-1)}>
+				<span className="truncate">{option.label}</span>
 				{isSelected && props.multiple && (
-					<div
-						className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 rounded-full"
-						style={getBoxShadow('tagInset')}>
+					<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 rounded-full bg-gray-200">
 						✓
 					</div>
 				)}
@@ -249,7 +226,6 @@ export const Select: React.FC<SelectProps> = ({
 		);
 	};
 
-	// 메인 렌더링
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
 			{label && (
@@ -260,7 +236,7 @@ export const Select: React.FC<SelectProps> = ({
 
 			{/* 입력/선택 영역 */}
 			<div
-				className={`relative flex items-center min-h-[48px] px-4 py-3 ${STYLES.container} ${
+				className={`px-4 py-3 ${STYLES.container} ${
 					disabled
 						? 'opacity-60 cursor-not-allowed'
 						: searchable
@@ -271,10 +247,7 @@ export const Select: React.FC<SelectProps> = ({
 					!disabled &&
 					(searchable ? inputRef.current?.focus() : setIsOpen(!isOpen))
 				}
-				tabIndex={searchable ? -1 : 0}
-				style={getBoxShadow(
-					disabled ? 'disabled' : isOpen ? 'inset' : 'normal'
-				)}>
+				tabIndex={searchable ? -1 : 0}>
 				<div className="flex flex-wrap items-center flex-1 gap-1 max-h-[52px] overflow-hidden">
 					{/* 다중 선택 태그들 */}
 					{props.multiple && selectedOptions.length > 0 && (
@@ -301,7 +274,7 @@ export const Select: React.FC<SelectProps> = ({
 						</div>
 					)}
 
-					{/* 검색 입력 필드 또는 표시 값 */}
+					{/* 검색 입력 또는 선택된 값 표시 */}
 					{searchable ? (
 						<input
 							ref={inputRef}
@@ -309,8 +282,6 @@ export const Select: React.FC<SelectProps> = ({
 							value={inputValue}
 							onChange={(e) => {
 								setInputValue(e.target.value);
-								setIsOpen(true);
-								setHighlightedIndex(-1);
 								if (!e.target.value && !props.multiple) props.onChange?.('');
 							}}
 							onFocus={() => setIsOpen(true)}
@@ -321,7 +292,7 @@ export const Select: React.FC<SelectProps> = ({
 							}
 							disabled={disabled}
 							className="flex-1 min-w-0 font-medium text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
-							style={{ outline: 'none', boxShadow: 'none' }}
+							style={{ minWidth: '100px' }}
 						/>
 					) : (
 						<span
@@ -332,7 +303,7 @@ export const Select: React.FC<SelectProps> = ({
 									? selectedOptions.length === 1
 										? selectedOptions[0].label
 										: `${selectedOptions.length}개 선택됨`
-									: selectedOptions[0]?.label}
+									: selectedOptions[0].label}
 						</span>
 					)}
 				</div>
@@ -345,8 +316,7 @@ export const Select: React.FC<SelectProps> = ({
 							props.onChange?.('');
 							if (searchable) setInputValue('');
 						}}
-						className={`${STYLES.button} w-6 h-6 ml-2`}
-						style={getBoxShadow('normal')}>
+						className={`${STYLES.button} w-4 h-4`}>
 						<X className="w-4 h-4 text-gray-500" />
 					</button>
 				)}
@@ -354,9 +324,7 @@ export const Select: React.FC<SelectProps> = ({
 
 			{/* 드롭다운 옵션 */}
 			{isOpen && (
-				<div
-					className={STYLES.dropdown}
-					style={{ ...getBoxShadow('dropdown'), maxHeight }}>
+				<div className={STYLES.dropdown} style={{ maxHeight }}>
 					<div className="overflow-auto" style={{ maxHeight }}>
 						{filteredOptions.length === 0 ? (
 							<div className="px-4 py-6 font-medium text-center text-gray-500">

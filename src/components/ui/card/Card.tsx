@@ -12,11 +12,11 @@ const Card = React.forwardRef<
 	<div
 		ref={ref}
 		className={cn(
-			'rounded-lg border bg-card text-card-foreground transition-all duration-200',
-			variant === 'default' && 'shadow-sm',
-			variant === 'outline' && 'border-2',
-			variant === 'elevated' && 'shadow-md',
-			hoverEffect && 'hover:shadow-lg hover:-translate-y-1',
+			'rounded-lg bg-card text-card-foreground',
+			variant === 'default' && 'neu-flat',
+			variant === 'outline' && 'neu-flat border-2',
+			variant === 'elevated' && 'neu-raised',
+			hoverEffect && 'neu-raised',
 			className
 		)}
 		{...props}
@@ -104,7 +104,7 @@ const CardAction = React.forwardRef<
 	<button
 		ref={ref}
 		className={cn(
-			'inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-sm text-muted-foreground backdrop-blur-sm transition-colors hover:bg-background hover:text-foreground',
+			'neu-raised inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-sm text-muted-foreground backdrop-blur-sm',
 			className
 		)}
 		{...props}
@@ -119,13 +119,8 @@ const CardImage = React.forwardRef<
 	<div
 		ref={ref}
 		className={cn('relative overflow-hidden rounded-t-lg', className)}
-		{...props}
-	>
-		<img
-			src={src}
-			alt={alt}
-			className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-		/>
+		{...props}>
+		<img src={src} alt={alt} className="object-cover w-full h-full" />
 	</div>
 ));
 CardImage.displayName = 'CardImage';
@@ -133,7 +128,13 @@ CardImage.displayName = 'CardImage';
 const CardBadge = React.forwardRef<
 	HTMLSpanElement,
 	React.HTMLAttributes<HTMLSpanElement> & {
-		variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+		variant?:
+			| 'default'
+			| 'primary'
+			| 'secondary'
+			| 'success'
+			| 'warning'
+			| 'danger';
 	}
 >(({ className, variant = 'default', ...props }, ref) => (
 	<span
@@ -165,4 +166,4 @@ export {
 	CardAction,
 	CardImage,
 	CardBadge,
-}; 
+};

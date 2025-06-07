@@ -49,7 +49,7 @@ const TooltipContent = React.forwardRef<
 					transition={{ duration: 0.15 }}
 					className={cn(
 						'z-50 overflow-hidden rounded-md px-3 py-1.5 text-xs',
-						'shadow-md',
+						'neu-raised',
 						variantClasses[variant],
 						className
 					)}>

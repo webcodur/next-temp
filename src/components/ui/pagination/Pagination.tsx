@@ -84,7 +84,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						className={`p-2 rounded-md cursor-pointer ${
 							currentPage === 1 || disabled
 								? 'text-[#cccccc] cursor-not-allowed'
-								: 'text-[#333333] hover:bg-[#f0f0f0]'
+								: 'text-[#333333] neu-raised'
 						}`}
 						aria-label="첫 페이지로 이동">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -100,7 +100,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						className={`p-2 rounded-md cursor-pointer ${
 							startPage === 1 || disabled
 								? 'text-[#cccccc] cursor-not-allowed'
-								: 'text-[#333333] hover:bg-[#f0f0f0]'
+								: 'text-[#333333] neu-raised'
 						}`}
 						aria-label="이전 그룹으로 이동">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -120,7 +120,7 @@ const Pagination: React.FC<PaginationProps> = ({
 										? 'bg-[#2563eb] text-white'
 										: disabled
 										? 'text-[#cccccc] cursor-not-allowed'
-										: 'text-[#333333] hover:bg-[#f0f0f0]'
+										: 'text-[#333333] neu-raised'
 								}`}
 								aria-current={pageNumber === currentPage ? 'page' : undefined}>
 								{pageNumber}
@@ -135,7 +135,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						className={`p-2 rounded-md cursor-pointer ${
 							endPage === totalPages || disabled
 								? 'text-[#cccccc] cursor-not-allowed'
-								: 'text-[#333333] hover:bg-[#f0f0f0]'
+								: 'text-[#333333] neu-raised'
 						}`}
 						aria-label="다음 그룹으로 이동">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -150,7 +150,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						className={`p-2 rounded-md cursor-pointer ${
 							currentPage === totalPages || disabled
 								? 'text-[#cccccc] cursor-not-allowed'
-								: 'text-[#333333] hover:bg-[#f0f0f0]'
+								: 'text-[#333333] neu-raised'
 						}`}
 						aria-label="마지막 페이지로 이동">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">

@@ -82,7 +82,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, children }) => {
 							key={tab.id}
 							onClick={() => setActiveId(tab.id)}
 							className={`
-								relative px-6 py-3 mx-1 rounded-lg font-medium text-sm transition-all duration-200 overflow-hidden
+								relative px-6 py-3 mx-1 rounded-lg font-medium text-sm  overflow-hidden
 								${activeId === tab.id ? 'text-gray-700' : 'text-gray-600 hover:text-gray-800'}
 								focus:outline-none
 							`}

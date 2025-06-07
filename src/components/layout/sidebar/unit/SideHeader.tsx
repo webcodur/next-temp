@@ -58,14 +58,14 @@ export function SideHeader() {
 							<Link
 								href="/"
 								onClick={handleLogoClick}
-								className="block transition-all duration-200 select-none group-hover:scale-105">
+								className="block select-none">
 								<div className="flex items-center justify-center gap-4">
 									{/* 로고 아이콘 */}
-									<div className="flex items-center justify-center flex-shrink-0 transition-all duration-200 border-2 w-14 h-14 neumorphic rounded-xl group-hover:scale-110 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+									<div className="flex items-center justify-center flex-shrink-0 w-14 h-14 neu-flat rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
 										<Building2 className="font-bold w-9 h-9 text-primary drop-shadow-md" />
 									</div>
 									{/* 타이틀 텍스트 */}
-									<div className="text-xl font-semibold transition-colors text-foreground/90 group-hover:text-primary/90 truncate max-w-[160px] drop-shadow-sm">
+									<div className="text-xl font-semibold text-foreground/90 truncate max-w-[160px] drop-shadow-sm">
 										건물 타이틀
 									</div>
 								</div>

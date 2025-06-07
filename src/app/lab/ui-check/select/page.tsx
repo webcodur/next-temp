@@ -68,12 +68,7 @@ export default function SelectPage() {
 		<div className="min-h-screen p-8 bg-gray-50">
 			<div className="max-w-4xl mx-auto">
 				<div className="mb-12 text-center">
-					<div
-						className="inline-block px-8 py-6 mb-6 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'8px 8px 16px rgba(0,0,0,0.1), -8px -8px 16px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised inline-block px-8 py-6 mb-6 bg-white rounded-3xl">
 						<h1 className="mb-2 text-4xl font-bold text-gray-800">
 							Select 컴포넌트 테스트
 						</h1>
@@ -85,12 +80,7 @@ export default function SelectPage() {
 
 				<div className="grid gap-8 md:grid-cols-2">
 					{/* 기본 단일 선택 */}
-					<div
-						className="p-8 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised p-8 bg-white rounded-3xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-800">
 							기본 단일 선택
 						</h2>
@@ -102,12 +92,7 @@ export default function SelectPage() {
 							onChange={setSingleValue}
 							className="mb-4"
 						/>
-						<div
-							className="p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl"
-							style={{
-								boxShadow:
-									'inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.9)',
-							}}>
+						<div className="neu-inset p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl">
 							선택된 값:{' '}
 							<span className="font-semibold text-gray-700">
 								{singleValue || '없음'}
@@ -116,12 +101,7 @@ export default function SelectPage() {
 					</div>
 
 					{/* 다중 선택 */}
-					<div
-						className="p-8 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised p-8 bg-white rounded-3xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-800">
 							다중 선택
 						</h2>
@@ -134,12 +114,7 @@ export default function SelectPage() {
 							onChange={setMultiValue}
 							className="mb-4"
 						/>
-						<div
-							className="p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl"
-							style={{
-								boxShadow:
-									'inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.9)',
-							}}>
+						<div className="neu-inset p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl">
 							선택된 값:{' '}
 							<span className="font-semibold text-gray-700">
 								{multiValue.join(', ') || '없음'}
@@ -148,12 +123,7 @@ export default function SelectPage() {
 					</div>
 
 					{/* 검색 가능한 선택 */}
-					<div
-						className="p-8 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised p-8 bg-white rounded-3xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-800">
 							검색 가능한 선택
 						</h2>
@@ -166,12 +136,7 @@ export default function SelectPage() {
 							onChange={setSearchableValue}
 							className="mb-4"
 						/>
-						<div
-							className="p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl"
-							style={{
-								boxShadow:
-									'inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.9)',
-							}}>
+						<div className="neu-inset p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl">
 							선택된 값:{' '}
 							<span className="font-semibold text-gray-700">
 								{searchableValue || '없음'}
@@ -180,12 +145,7 @@ export default function SelectPage() {
 					</div>
 
 					{/* 비활성화된 Select */}
-					<div
-						className="p-8 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised p-8 bg-white rounded-3xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-800">
 							비활성화 상태
 						</h2>
@@ -198,12 +158,7 @@ export default function SelectPage() {
 							onChange={() => {}}
 							className="mb-4"
 						/>
-						<div
-							className="p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl"
-							style={{
-								boxShadow:
-									'inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.9)',
-							}}>
+						<div className="neu-inset p-3 mt-4 text-sm text-gray-600 bg-gray-50 rounded-xl">
 							이 Select는 비활성화되어 있습니다.
 						</div>
 					</div>
@@ -211,12 +166,7 @@ export default function SelectPage() {
 
 				{/* 실제 사용 예시 */}
 				<div className="mt-12">
-					<div
-						className="p-8 bg-white rounded-3xl"
-						style={{
-							boxShadow:
-								'8px 8px 16px rgba(0,0,0,0.08), -8px -8px 16px rgba(255,255,255,0.9)',
-						}}>
+					<div className="neu-raised p-8 bg-white rounded-3xl">
 						<h2 className="mb-6 text-2xl font-semibold text-gray-800">
 							실제 사용 예시: 사용자 설정
 						</h2>
@@ -251,12 +201,7 @@ export default function SelectPage() {
 								/>
 							</div>
 
-							<div
-								className="p-6 bg-gray-50 rounded-2xl"
-								style={{
-									boxShadow:
-										'inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.9)',
-								}}>
+							<div className="neu-inset p-6 bg-gray-50 rounded-2xl">
 								<h4 className="mb-4 font-semibold text-gray-800">
 									설정 미리보기
 								</h4>

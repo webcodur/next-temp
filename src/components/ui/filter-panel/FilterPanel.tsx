@@ -20,7 +20,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     <div className="bg-[#e0e0e0] rounded-xl mb-6">
       <div
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-between cursor-pointer p-4 bg-[#e0e0e0] rounded-t-xl shadow-neu hover:shadow-lg active:shadow-neu-inset transition-all duration-200"
+        className="flex items-center justify-between cursor-pointer p-4 bg-[#e0e0e0] rounded-t-xl shadow-neu hover:neu-raised active:shadow-neu-inset "
       >
         <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         {isOpen ? (
@@ -29,7 +29,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           <ChevronDown className="w-5 h-5 text-gray-700" />
         )}
       </div>
-      <div className={`overflow-hidden origin-top transition-all duration-300 ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}>
+      <div className={`overflow-hidden origin-top  ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="p-4">
           {children}
           {footer && <div className="flex gap-2 mt-4">{footer}</div>}

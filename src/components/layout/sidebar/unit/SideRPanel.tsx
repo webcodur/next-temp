@@ -77,9 +77,9 @@ export function SideRPanel({
 									onClick={onSingleOpenToggle}
 									className="rounded-md w-7 h-7 hover:bg-muted/40">
 									{singleOpenMode ? (
-										<Focus className="w-5 h-5 text-primary" />
+										<Focus className="w-5 h-5 neu-icon-active" />
 									) : (
-										<Layers className="w-5 h-5 text-muted-foreground" />
+										<Layers className="w-5 h-5 neu-icon-inactive" />
 									)}
 								</Button>
 							</TooltipTrigger>
@@ -100,7 +100,7 @@ export function SideRPanel({
 									size="icon"
 									onClick={onExpandAll}
 									className="rounded-md w-7 h-7 hover:bg-muted/40">
-									<ChevronsDown className="w-5 h-5 text-muted-foreground" />
+									<ChevronsDown className="w-5 h-5 neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">
@@ -116,7 +116,7 @@ export function SideRPanel({
 									size="icon"
 									onClick={onCollapseAll}
 									className="rounded-md w-7 h-7 hover:bg-muted/40">
-									<ChevronsUp className="w-5 h-5 text-muted-foreground" />
+									<ChevronsUp className="w-5 h-5 neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">
@@ -128,66 +128,47 @@ export function SideRPanel({
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
 				<div className="flex-1 overflow-y-auto">
-					<nav className="p-2.5 space-y-3">
+					<nav className="px-3 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
-							<div
-								key={midKey}
-								className="border border-transparent rounded-lg hover:bg-gradient-to-br hover:from-card/90 hover:to-secondary/80 hover:border-border">
-								<Collapsible open={midExpanded.has(midKey)}>
-									{/* Mid 메뉴 헤더 (클릭 가능) */}
-									<CollapsibleTrigger asChild>
-										<Button
-											variant="ghost"
-											onClick={() => onMidClick(midKey)}
-											className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-none ${
-												midMenu === midKey
-													? 'bg-accent/80 text-foreground shadow-sm ring-1 ring-border/50'
-													: 'text-foreground'
-											}`}>
-											<span className="text-base font-medium">
-												{midItem.label}
-											</span>
-											{/* 펼침/접힘 표시 화살표 */}
-											<ChevronDown
-												className={`w-5 h-5 transform transition-transform duration-300 ${midExpanded.has(midKey) ? 'rotate-180' : ''}`}
-											/>
-										</Button>
-									</CollapsibleTrigger>
+							<Collapsible key={midKey} open={midExpanded.has(midKey)}>
+								{/* Mid 메뉴 헤더 (클릭 가능) */}
+								<CollapsibleTrigger asChild>
+									<Button
+										variant="ghost"
+										onClick={() => onMidClick(midKey)}
+										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg ${
+											midMenu === midKey ? 'neu-inset' : 'neu-raised'
+										}`}>
+										<span className="text-base font-medium">
+											{midItem.label}
+										</span>
+										{/* 펼침/접힘 표시 화살표 */}
+										<ChevronDown
+											className={`w-5 h-5 transform transition-transform duration-300 ${midExpanded.has(midKey) ? 'rotate-180' : ''}`}
+										/>
+									</Button>
+								</CollapsibleTrigger>
 
-									{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
-									<CollapsibleContent className="mt-1.5 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-										<div className="pl-3 ml-2 space-y-2 border-l border-border/30">
-											{midItem.botItems.map((botItem) => {
-												const isActive = pathname === botItem.href;
+								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
+								<CollapsibleContent className="mt-2 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
+									<div className="pb-2 pl-4 pr-2 space-y-1.5 border-l-2 border-border/30 ml-4">
+										{midItem.botItems.map((botItem) => {
+											const isActive = pathname === botItem.href;
 
-												return (
-													<div key={botItem.href}>
-														<Button
-															variant="ghost"
-															size="sm"
-															asChild
-															className={`w-full justify-between h-auto px-4 py-1.5 text-sm border ${
-																isActive
-																	? 'border-primary/60 shadow-sm'
-																	: 'border-transparent hover:border-border'
-															} rounded-md`}>
-															<Link
-																href={botItem.href}
-																className={`w-full flex items-center justify-between ${
-																	isActive
-																		? 'text-primary font-medium'
-																		: 'text-foreground/90'
-																}`}>
-																<span className="text-sm">{botItem.label}</span>
-															</Link>
-														</Button>
-													</div>
-												);
-											})}
-										</div>
-									</CollapsibleContent>
-								</Collapsible>
-							</div>
+											return (
+												<Link
+													key={botItem.href}
+													href={botItem.href}
+													className={`w-full flex items-center px-4 py-2 text-sm rounded-lg block font-medium ${
+														isActive ? 'neu-inset' : 'neu-flat'
+													}`}>
+													<span className="text-sm">{botItem.label}</span>
+												</Link>
+											);
+										})}
+									</div>
+								</CollapsibleContent>
+							</Collapsible>
 						))}
 					</nav>
 				</div>

@@ -27,30 +27,15 @@ const TabsPage: React.FC = () => {
 							대시보드 개요
 						</h2>
 						<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-							<div
-								className="p-4 bg-gray-100 rounded-lg"
-								style={{
-									boxShadow:
-										'inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff',
-								}}>
+							<div className="neu-inset p-4 rounded-lg">
 								<h3 className="font-medium text-gray-700">총 방문자</h3>
 								<p className="text-2xl font-bold text-gray-600">12,345</p>
 							</div>
-							<div
-								className="p-4 bg-gray-100 rounded-lg"
-								style={{
-									boxShadow:
-										'inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff',
-								}}>
+							<div className="neu-inset p-4 rounded-lg">
 								<h3 className="font-medium text-gray-700">월간 매출</h3>
 								<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
 							</div>
-							<div
-								className="p-4 bg-gray-100 rounded-lg"
-								style={{
-									boxShadow:
-										'inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff',
-								}}>
+							<div className="neu-inset p-4 rounded-lg">
 								<h3 className="font-medium text-gray-700">신규 가입</h3>
 								<p className="text-2xl font-bold text-gray-600">834</p>
 							</div>
@@ -81,23 +66,9 @@ const TabsPage: React.FC = () => {
 									onClick={() => setNotifications(!notifications)}
 									className="focus:outline-none">
 									<div
-										className={`w-12 h-6 rounded-full relative transition-all duration-300 ${
-											notifications ? 'bg-gray-100' : 'bg-gray-100'
-										}`}
-										style={{
-											boxShadow: notifications
-												? 'inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff'
-												: 'inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff',
-										}}>
+										className={`neu-inset w-12 h-6 rounded-full relative ${notifications ? 'neu-inset' : 'neu-inset'}`}>
 										<div
-											className={`w-5 h-5 bg-gray-100 rounded-full absolute top-0.5 transition-all duration-300 ${
-												notifications ? 'right-0.5' : 'left-0.5'
-											}`}
-											style={{
-												boxShadow: notifications
-													? '2px 2px 4px #bebebe, -2px -2px 4px #ffffff'
-													: '3px 3px 6px #bebebe, -3px -3px 6px #ffffff',
-											}}
+											className={`neu-raised w-5 h-5 rounded-full absolute top-0.5 ${notifications ? 'right-0.5' : 'left-0.5'}`}
 										/>
 									</div>
 								</button>
@@ -121,23 +92,9 @@ const TabsPage: React.FC = () => {
 									onClick={() => setDarkMode(!darkMode)}
 									className="focus:outline-none">
 									<div
-										className={`w-12 h-6 rounded-full relative transition-all duration-300 ${
-											darkMode ? 'bg-gray-100' : 'bg-gray-100'
-										}`}
-										style={{
-											boxShadow: darkMode
-												? 'inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff'
-												: 'inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff',
-										}}>
+										className={`neu-inset w-12 h-6 rounded-full relative ${darkMode ? 'neu-inset' : 'neu-inset'}`}>
 										<div
-											className={`w-5 h-5 bg-gray-100 rounded-full absolute top-0.5 transition-all duration-300 ${
-												darkMode ? 'right-0.5' : 'left-0.5'
-											}`}
-											style={{
-												boxShadow: darkMode
-													? '2px 2px 4px #bebebe, -2px -2px 4px #ffffff'
-													: '3px 3px 6px #bebebe, -3px -3px 6px #ffffff',
-											}}
+											className={`neu-raised w-5 h-5 rounded-full absolute top-0.5 ${darkMode ? 'right-0.5' : 'left-0.5'}`}
 										/>
 									</div>
 								</button>

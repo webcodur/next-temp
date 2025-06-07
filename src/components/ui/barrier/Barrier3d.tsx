@@ -184,7 +184,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 					<button
 						onClick={handleToggle}
 						disabled={!onToggle}
-						className={`px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300 shadow-neumorphism-button ${
+						className={`px-8 py-4 rounded-2xl font-semibold text-white  shadow-neumorphism-button ${
 							isOpen
 								? 'bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 shadow-red-200'
 								: 'bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 shadow-green-200'
@@ -193,7 +193,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 					</button>
 					<div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl shadow-neumorphism-inset">
 						<div
-							className={`w-4 h-4 rounded-full transition-all duration-300 shadow-lg ${
+							className={`w-4 h-4 rounded-full  neu-raised ${
 								isOpen
 									? 'bg-gradient-to-r from-green-400 to-green-500 shadow-green-200'
 									: 'bg-gradient-to-r from-red-400 to-red-500 shadow-red-200'

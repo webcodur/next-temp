@@ -1,33 +1,6 @@
-/* #region 뉴모피즘 버튼 */
-/* 뉴모피즘 버튼 */
-.neumorphic-button {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--card) / 0.9),
-		hsl(var(--muted) / 0.7)
-	);
-	border: 1px solid hsl(var(--border) / 0.4);
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, 0.08),
-		-3px -3px 6px rgba(255, 255, 255, 0.9);
-	transition: all 0.2s ease-in-out;
-}
-
-.neumorphic-button:hover {
-	transform: scale(0.99);
-	box-shadow:
-		2px 2px 4px rgba(0, 0, 0, 0.1),
-		-2px -2px 4px rgba(255, 255, 255, 1),
-		inset -1px -1px 2px rgba(255, 255, 255, 0.9),
-		inset 1px 1px 2px rgba(0, 0, 0, 0.06);
-}
-
-.neumorphic-button:active {
-	transform: scale(0.97);
-	box-shadow:
-		inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-		inset -2px -2px 4px rgba(255, 255, 255, 0.9);
-}
+/* #region 단순화된 뉴모피즘 버튼 */
+/* 기본 구현은 base.css에서 처리됨 */
+/* 추가 커스텀이 필요한 경우에만 여기에 정의 */
 
 /* 뉴모피즘 토글 버튼 */
 .neumorphic-toggle {

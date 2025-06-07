@@ -31,7 +31,7 @@ const Carousel: React.FC<CarouselProps> = ({
 	const handleNext = () => setIndex((prev) => (prev + 1) % images.length);
 
 	return (
-		<div className="relative w-full overflow-hidden rounded-lg shadow-md aspect-video">
+		<div className="relative w-full overflow-hidden rounded-lg neu-raised aspect-video">
 			<AnimatePresence mode="wait">
 				<motion.img
 					key={index}
@@ -46,12 +46,12 @@ const Carousel: React.FC<CarouselProps> = ({
 			</AnimatePresence>
 			<button
 				onClick={handlePrev}
-				className="absolute p-2 text-white transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full hover:bg-opacity-70 top-1/2 left-2">
+				className="absolute p-2 text-white transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full neu-raised top-1/2 left-2">
 				<ChevronLeft size={24} />
 			</button>
 			<button
 				onClick={handleNext}
-				className="absolute p-2 text-white transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full hover:bg-opacity-70 top-1/2 right-2">
+				className="absolute p-2 text-white transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full neu-raised top-1/2 right-2">
 				<ChevronRight size={24} />
 			</button>
 			<div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-4 left-1/2">
@@ -59,8 +59,8 @@ const Carousel: React.FC<CarouselProps> = ({
 					<button
 						key={idx}
 						onClick={() => setIndex(idx)}
-						className={`w-3 h-3 rounded-full transition-colors ${
-							idx === index ? 'bg-white' : 'bg-gray-400 hover:bg-gray-300'
+						className={`w-3 h-3 rounded-full  ${
+							idx === index ? 'bg-white' : 'bg-gray-400 neu-raised'
 						}`}
 						aria-label={`슬라이드 ${idx + 1}로 이동`}
 					/>
