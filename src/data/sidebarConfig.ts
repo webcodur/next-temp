@@ -2,7 +2,7 @@
 export const defaults = {
 	topMenu: 'parking',
 	midMenu: 'facility',
-	sidebarWidth: 286, // 공간 절약을 위해 85% 크기로 축소 (320 → 286)
+	sidebarWidth: 300, // botMenu 텍스트 여유 공간 확보를 위해 증가 (286 → 300)
 	leftColumnWidth: 96,
 };
 

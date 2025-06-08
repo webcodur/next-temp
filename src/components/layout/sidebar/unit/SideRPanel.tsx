@@ -135,7 +135,7 @@ export function SideRPanel({
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
 				<div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide">
-					<nav className="min-w-0 px-2 py-3 space-y-2">
+					<nav className="min-w-0 px-1.5 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<Collapsible key={midKey} open={midExpanded.has(midKey)}>
 								{/* Mid 메뉴 헤더 (클릭 가능) */}
@@ -143,7 +143,7 @@ export function SideRPanel({
 									<Button
 										variant="ghost"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2.5 rounded-lg transition-all duration-200 group min-w-0 ${
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg transition-all duration-200 group min-w-0 ${
 											midMenu === midKey
 												? 'neu-inset'
 												: 'neu-raised hover:scale-[1.01] hover:bg-primary/5 hover:border-primary/20'
@@ -156,7 +156,7 @@ export function SideRPanel({
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
-											className={`w-4 h-4 transform transition-all duration-300 ${
+											className={`w-4 h-4 transform transition-all duration-300 flex-shrink-0 ${
 												midExpanded.has(midKey) ? 'rotate-180' : ''
 											} ${
 												midMenu === midKey
@@ -168,8 +168,8 @@ export function SideRPanel({
 								</CollapsibleTrigger>
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
-								<CollapsibleContent className="mt-2 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="relative min-w-0 ml-1.5 mr-2">
+								<CollapsibleContent className="mt-2 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
+									<div className="relative min-w-0 ml-1 mr-1 overflow-hidden">
 										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
 										<div
 											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
@@ -179,37 +179,51 @@ export function SideRPanel({
 											}}></div>
 
 										{/* 트리 컨테이너 */}
-										<div className="space-y-0">
-											{midItem.botItems.map((botItem) => {
+										<div className="space-y-0 overflow-hidden">
+											{midItem.botItems.map((botItem, index) => {
 												const isActive = pathname === botItem.href;
 
 												return (
-													<div key={botItem.href} className="relative h-11">
+													<div
+														key={botItem.href}
+														className={`relative h-11 transition-all duration-300 ease-out overflow-hidden ${
+															midExpanded.has(midKey)
+																? 'opacity-100 translate-y-0'
+																: 'opacity-0 translate-y-2'
+														}`}
+														style={{
+															transitionDelay: midExpanded.has(midKey)
+																? `${index * 50}ms`
+																: `${(midItem.botItems.length - index - 1) * 30}ms`,
+														}}>
 														{/* 수평 점선 연결선 */}
 														<div
 															className="absolute h-0.5 border-t-2 border-dashed border-muted-foreground/30"
 															style={{
 																left: '4px',
 																top: '18px',
-																width: '17px',
+																width: '14px',
 															}}></div>
 
 														{/* 수평선 종료점 (봇메뉴 앞) */}
 														<div
 															className="absolute w-1 h-1 rounded-full bg-muted-foreground/40"
-															style={{ left: '22px', top: '17.5px' }}></div>
+															style={{ left: '19px', top: '17.5px' }}></div>
 
 														{/* 메뉴 아이템 */}
 														<button
 															onClick={() => handleBotMenuClick(botItem.href)}
-															className={`relative flex items-center ml-5 pl-2.5 pr-2 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left min-w-0 ${
+															className={`relative flex items-center ml-4 pl-2 pr-1.5 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group text-left min-w-0 max-w-full overflow-hidden ${
 																isActive
 																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
-																	: 'neu-flat hover:scale-[1.01] hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'
-															}`}>
+																	: 'neu-flat hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'
+															}`}
+															style={{
+																width: 'calc(100% - 1rem)', // ml-4를 고려한 정확한 width 계산
+															}}>
 															{/* 아이템 라벨 */}
 															<span
-																className={`relative z-10 flex items-center gap-1.5 transition-all duration-200 min-w-0 flex-1 ${
+																className={`relative z-10 flex items-center gap-1.5 transition-all duration-200 min-w-0 flex-1 overflow-hidden ${
 																	isActive
 																		? ''
 																		: 'group-hover:font-semibold group-hover:translate-x-1'

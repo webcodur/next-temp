@@ -49,12 +49,24 @@ module.exports = {
 			},
 			keyframes: {
 				slideDown: {
-					'0%': { height: '0' },
-					'100%': { height: 'var(--radix-collapsible-content-height)' },
+					'0%': {
+						height: '0',
+						opacity: '0',
+					},
+					'100%': {
+						height: 'var(--radix-collapsible-content-height)',
+						opacity: '1',
+					},
 				},
 				slideUp: {
-					'0%': { height: 'var(--radix-collapsible-content-height)' },
-					'100%': { height: '0' },
+					'0%': {
+						height: 'var(--radix-collapsible-content-height)',
+						opacity: '1',
+					},
+					'100%': {
+						height: '0',
+						opacity: '0',
+					},
 				},
 				fadeFlow: {
 					'0%': { opacity: '0.1' },
@@ -71,8 +83,8 @@ module.exports = {
 				},
 			},
 			animation: {
-				'slide-down': 'slideDown 100ms ease-in-out',
-				'slide-up': 'slideUp 100ms ease-in-out',
+				'slide-down': 'slideDown 250ms ease-out',
+				'slide-up': 'slideUp 200ms ease-in',
 			},
 		},
 	},
