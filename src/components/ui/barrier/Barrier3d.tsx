@@ -1,10 +1,13 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import * as THREE from 'three';
+import { CheckCircle, RotateCcw, Zap } from 'lucide-react';
 import {
 	ParkingBarrier3DProps,
 	COLORS,
 	SETTINGS,
 	CAMERA_POSITIONS,
+	OperationMode,
+	OPERATION_MODE_NAMES,
 } from './constants';
 import {
 	createRenderer,
@@ -23,6 +26,23 @@ import { TripleChevronUp, TripleChevronDown } from './icons';
  * - 애니메이션 차단기 동작
  * - 뉴모피즘 스타일 컨트롤 UI
  */
+
+// 운행 모드별 아이콘 컴포넌트 매핑
+const getOperationModeIcon = (mode: OperationMode, className?: string) => {
+	const iconProps = { className: className || 'w-4 h-4' };
+
+	switch (mode) {
+		case 'always-open':
+			return <CheckCircle {...iconProps} />;
+		case 'auto-operation':
+			return <RotateCcw {...iconProps} />;
+		case 'bypass':
+			return <Zap {...iconProps} />;
+		default:
+			return <CheckCircle {...iconProps} />;
+	}
+};
+
 const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	width = 150,
 	height = 180,
@@ -32,9 +52,16 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	className = '',
 	animationDuration = SETTINGS.DEFAULT_ANIMATION_DURATION,
 	viewAngle = 'diagonal',
+	operationMode = 'auto-operation',
+	onOperationModeChange,
 }) => {
 	// 3D 캔버스와 버튼 간 hover 상태 공유
 	const [isHovering, setIsHovering] = useState(false);
+	// 버튼 비활성화 상태 (1초 딜레이)
+	const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+	// 운행 모드 드롭다운 상태
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 	const mountRef = useRef<HTMLDivElement>(null);
 	const barrierArmRef = useRef<THREE.Group | null>(null);
 	const armMaterialRef = useRef<THREE.MeshPhongMaterial | null>(null);
@@ -170,14 +197,67 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 		onToggle
 	);
 
+	// 1초 딜레이가 포함된 토글 핸들러
+	const handleToggleWithDelay = useCallback(() => {
+		if (isButtonDisabled || !onToggle) return;
+
+		setIsButtonDisabled(true);
+		handleToggle();
+
+		setTimeout(() => {
+			setIsButtonDisabled(false);
+		}, 1000);
+	}, [isButtonDisabled, onToggle, handleToggle]);
+
+	// 운행 모드 변경 핸들러
+	const handleOperationModeChange = useCallback(
+		(mode: OperationMode) => {
+			console.log('운행 모드 변경:', mode, '현재:', operationMode);
+			if (onOperationModeChange) {
+				onOperationModeChange(mode);
+			}
+		},
+		[onOperationModeChange, operationMode]
+	);
+
+	// 드롭다운 외부 클릭 감지
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node)
+			) {
+				setIsDropdownOpen(false);
+			}
+		};
+
+		if (isDropdownOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isDropdownOpen]);
+
 	return (
 		<div className={`flex flex-col items-center gap-6 ${className}`}>
 			<div
 				ref={mountRef}
-				onClick={onToggle ? handleToggle : undefined}
-				onMouseEnter={() => onToggle && setIsHovering(true)}
+				onClick={
+					onToggle && !isButtonDisabled ? handleToggleWithDelay : undefined
+				}
+				onMouseEnter={() =>
+					onToggle && !isButtonDisabled && setIsHovering(true)
+				}
 				onMouseLeave={() => setIsHovering(false)}
-				className={`flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat ${onToggle ? 'cursor-pointer' : ''}`}
+				className={`flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat ${
+					onToggle && !isButtonDisabled
+						? 'cursor-pointer hover:neu-raised'
+						: isButtonDisabled
+							? 'cursor-not-allowed opacity-60 pointer-events-none'
+							: ''
+				}`}
 				style={
 					{
 						width: `${width + 32}px`,
@@ -194,48 +274,103 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 				}
 			/>
 			{showControls && (
-				<div className="flex flex-col items-center gap-4">
-					{/* 동작 버튼 */}
-					<button
-						onClick={handleToggle}
-						disabled={!onToggle}
-						onMouseEnter={() => setIsHovering(true)}
-						onMouseLeave={() => setIsHovering(false)}
-						className={`group flex items-center justify-center gap-3 px-6 h-12 rounded-2xl font-medium neu-raised ${
-							!onToggle ? 'opacity-50 cursor-not-allowed' : ''
-						}`}>
-						{isOpen ? (
-							<>
-								<TripleChevronDown
-									className="w-5 h-5"
-									isHovering={isHovering}
-								/>
-								차단기 닫기
-							</>
-						) : (
-							<>
-								<TripleChevronUp className="w-5 h-5" isHovering={isHovering} />
-								차단기 열기
-							</>
-						)}
-					</button>
+				<div className="flex flex-col items-center gap-2">
+					{/* 컨트롤 영역 - 2x2 그리드 */}
+					<div className="grid w-full grid-cols-2 gap-2 px-1">
+						{/* 좌측 컬럼: 운행 모드 */}
+						<div className="flex flex-col items-center gap-1">
+							<h4 className="text-xs font-medium text-gray-600">운행모드</h4>
+							<div ref={dropdownRef} className="relative">
+								<button
+									onClick={(e) => {
+										e.stopPropagation();
+										setIsDropdownOpen(!isDropdownOpen);
+									}}
+									className="flex items-center gap-1 px-2 py-1 text-xs font-medium neu-raised rounded-lg min-w-[80px] min-h-[30px]">
+									{getOperationModeIcon(operationMode, 'w-4 h-4')}
+									<span className="text-xs">
+										{OPERATION_MODE_NAMES[operationMode]}
+									</span>
+									<svg
+										className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M19 9l-7 7-7-7"
+										/>
+									</svg>
+								</button>
 
-					{/* 상태 표시 */}
-					<div className="flex items-center gap-4 px-6 py-3 neu-inset rounded-2xl">
-						<div
-							className="w-3 h-3 rounded-full"
-							style={{
-								background: isOpen
-									? 'linear-gradient(135deg, #4ade80, #22c55e)'
-									: 'linear-gradient(135deg, #f87171, #ef4444)',
-								boxShadow: isOpen
-									? '0 2px 4px rgba(34, 197, 94, 0.3)'
-									: '0 2px 4px rgba(239, 68, 68, 0.3)',
-							}}
-						/>
-						<span className="text-sm font-medium">
-							{isOpen ? '열림' : '닫힘'}
-						</span>
+								{/* 드롭다운 메뉴 */}
+								{isDropdownOpen && (
+									<div className="absolute top-full left-0 mt-1 py-1 neu-flat rounded-lg bg-white shadow-lg border z-10 min-w-[120px]">
+										{(
+											Object.entries(OPERATION_MODE_NAMES) as [
+												OperationMode,
+												string,
+											][]
+										).map(([mode, label]) => (
+											<button
+												key={mode}
+												onClick={(e) => {
+													e.stopPropagation();
+													console.log('드롭다운 아이템 클릭:', mode);
+													handleOperationModeChange(mode);
+													setIsDropdownOpen(false);
+												}}
+												className={`w-full flex items-center gap-2 px-2 py-1 text-xs hover:bg-gray-50 transition-colors ${
+													operationMode === mode
+														? 'bg-blue-50 text-blue-600'
+														: 'text-gray-700'
+												}`}>
+												{getOperationModeIcon(mode, 'w-4 h-4')}
+												<span className="font-medium">{label}</span>
+											</button>
+										))}
+									</div>
+								)}
+							</div>
+						</div>
+
+						{/* 우측 컬럼: 차단기 개폐 */}
+						<div className="flex flex-col items-center gap-1">
+							<h4 className="text-xs font-medium text-gray-600">차단기 개폐</h4>
+							<button
+								onClick={handleToggleWithDelay}
+								disabled={!onToggle || isButtonDisabled}
+								onMouseEnter={() => setIsHovering(true)}
+								onMouseLeave={() => setIsHovering(false)}
+								style={{ width: '80px' }}
+								className={`flex items-center justify-center gap-1 px-2 py-1 rounded-lg font-medium neu-raised min-h-[30px] ${
+									!onToggle || isButtonDisabled
+										? 'opacity-50 cursor-not-allowed'
+										: ''
+								} ${isButtonDisabled ? 'animate-pulse' : ''}`}>
+								{isButtonDisabled ? (
+									<span className="text-xs">...</span>
+								) : isOpen ? (
+									<>
+										<TripleChevronDown
+											className="w-4 h-4"
+											isHovering={isHovering}
+										/>
+										<span className="text-xs">닫기</span>
+									</>
+								) : (
+									<>
+										<TripleChevronUp
+											className="w-4 h-4"
+											isHovering={isHovering}
+										/>
+										<span className="text-xs">열기</span>
+									</>
+								)}
+							</button>
+						</div>
 					</div>
 				</div>
 			)}

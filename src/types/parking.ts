@@ -22,14 +22,15 @@ export interface CarAllowType {
 	deleted_at?: string | null;
 }
 
+// 차단기 운행 모드 타입
+export type OperationMode = 'always-open' | 'auto-operation' | 'bypass';
+
 // 차단기 데이터 타입
 export interface ParkingBarrier {
 	id: string;
 	name: string;
 	isOpen: boolean;
-	alwaysOpen: boolean;
-	autoMode: boolean;
-	bypass: boolean;
+	operationMode: OperationMode;
 }
 
 // 검색 필터 타입

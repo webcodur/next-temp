@@ -1,8 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import ParkingBarrier3D from '@/components/ui/barrier/Barrier3d';
-import { ViewAngle, VIEW_ANGLE_NAMES } from '@/components/ui/barrier/constants';
+import {
+	BarrierDiagonalView,
+	BarrierDriverView,
+	BarrierSecurityView,
+	OperationMode,
+	ViewAngle,
+} from '@/unit/barrier/barrier';
 
 export default function Barrier3DPage() {
 	const [barrierStates, setBarrierStates] = React.useState<
@@ -13,6 +18,14 @@ export default function Barrier3DPage() {
 		security: false,
 	});
 
+	const [operationModes, setOperationModes] = React.useState<
+		Record<ViewAngle, OperationMode>
+	>({
+		diagonal: 'auto-operation',
+		driver: 'always-open',
+		security: 'bypass',
+	});
+
 	const toggleBarrier = (viewAngle: ViewAngle) => {
 		setBarrierStates((prev) => ({
 			...prev,
@@ -20,15 +33,26 @@ export default function Barrier3DPage() {
 		}));
 	};
 
+	const handleOperationModeChange = (
+		viewAngle: ViewAngle,
+		mode: OperationMode
+	) => {
+		console.log('부모에서 운행 모드 변경:', viewAngle, mode);
+		setOperationModes((prev) => {
+			const newModes = {
+				...prev,
+				[viewAngle]: mode,
+			};
+			console.log('새로운 운행 모드 상태:', newModes);
+			return newModes;
+		});
+	};
+
 	return (
 		<div className="container py-10">
 			<h1 className="mb-8 text-3xl font-bold">
 				Barrier3D 컴포넌트 - 핵심 시점
 			</h1>
-			<p className="mb-6 text-gray-600">
-				Three.js를 활용한 3D 주차장 차단기 컴포넌트의 핵심 시점들을
-				확인해보세요. 모든 차단기는 0.3초의 빠른 애니메이션 속도로 동작합니다.
-			</p>
 
 			<div className="p-4 mb-8 border border-blue-200 rounded-lg bg-blue-50">
 				<h3 className="mb-2 text-lg font-semibold text-blue-800">
@@ -48,26 +72,59 @@ export default function Barrier3DPage() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-				{(Object.keys(VIEW_ANGLE_NAMES) as ViewAngle[]).map((viewAngle) => (
-					<div
-						key={viewAngle}
-						className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
-						<h2 className="mb-4 text-lg font-semibold text-center">
-							{VIEW_ANGLE_NAMES[viewAngle]}
-						</h2>
-						<div className="flex justify-center mb-4">
-							<ParkingBarrier3D
-								width={220}
-								height={264}
-								isOpen={barrierStates[viewAngle]}
-								onToggle={() => toggleBarrier(viewAngle)}
-								showControls={true}
-								animationDuration={300}
-								viewAngle={viewAngle}
-							/>
-						</div>
+				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+					<div className="flex justify-center mb-4">
+						<BarrierDiagonalView
+							width={220}
+							height={264}
+							isOpen={barrierStates.diagonal}
+							onToggle={() => toggleBarrier('diagonal')}
+							showControls={true}
+							animationDuration={300}
+							operationMode={operationModes.diagonal}
+							onOperationModeChange={(mode: OperationMode) =>
+								handleOperationModeChange('diagonal', mode)
+							}
+							showTitle={true}
+						/>
 					</div>
-				))}
+				</div>
+
+				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+					<div className="flex justify-center mb-4">
+						<BarrierDriverView
+							width={220}
+							height={264}
+							isOpen={barrierStates.driver}
+							onToggle={() => toggleBarrier('driver')}
+							showControls={true}
+							animationDuration={300}
+							operationMode={operationModes.driver}
+							onOperationModeChange={(mode: OperationMode) =>
+								handleOperationModeChange('driver', mode)
+							}
+							showTitle={true}
+						/>
+					</div>
+				</div>
+
+				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+					<div className="flex justify-center mb-4">
+						<BarrierSecurityView
+							width={220}
+							height={264}
+							isOpen={barrierStates.security}
+							onToggle={() => toggleBarrier('security')}
+							showControls={true}
+							animationDuration={300}
+							operationMode={operationModes.security}
+							onOperationModeChange={(mode: OperationMode) =>
+								handleOperationModeChange('security', mode)
+							}
+							showTitle={true}
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

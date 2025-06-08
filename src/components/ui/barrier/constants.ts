@@ -1,4 +1,5 @@
 export type ViewAngle = 'diagonal' | 'driver' | 'security';
+export type OperationMode = 'always-open' | 'auto-operation' | 'bypass';
 
 export interface ParkingBarrier3DProps {
 	width?: number;
@@ -9,6 +10,8 @@ export interface ParkingBarrier3DProps {
 	className?: string;
 	animationDuration?: number;
 	viewAngle?: ViewAngle;
+	operationMode?: OperationMode;
+	onOperationModeChange?: (mode: OperationMode) => void;
 }
 
 export const COLORS = {
@@ -79,4 +82,16 @@ export const VIEW_ANGLE_NAMES: Record<ViewAngle, string> = {
 	diagonal: '대각선 시점 (기본)',
 	driver: '운전자 시점',
 	security: '보안 카메라 시점',
+} as const;
+
+export const OPERATION_MODE_NAMES: Record<OperationMode, string> = {
+	'always-open': '항시열림',
+	'auto-operation': '자동운행',
+	bypass: '바이패스',
+} as const;
+
+export const OPERATION_MODE_ICONS: Record<OperationMode, string> = {
+	'always-open': 'CheckCircle', // 항상 열려있음을 의미하는 체크 아이콘
+	'auto-operation': 'RotateCcw', // 자동 순환을 의미하는 회전 아이콘
+	bypass: 'Zap', // 우회/빠른 통과를 의미하는 번개 아이콘
 } as const;

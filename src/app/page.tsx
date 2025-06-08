@@ -5,7 +5,12 @@ import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleSearchFilter from '@/unit/parking/VehicleSearchFilter';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
 import BarrierGrid from '@/unit/parking/BarrierGrid';
-import { VehicleEntry, SearchFilters, ParkingBarrier } from '@/types/parking';
+import {
+	VehicleEntry,
+	SearchFilters,
+	ParkingBarrier,
+	OperationMode,
+} from '@/types/parking';
 import {
 	generateMockVehicleEntries,
 	mockBarriers,
@@ -71,64 +76,42 @@ export default function Home() {
 	};
 
 	const handleBarrierOpen = (barrierId: string) => {
-		// 애니메이션이 완료된 후 상태 업데이트되도록 지연
-		setTimeout(() => {
-			setBarriers((prev) =>
-				prev.map((barrier) =>
-					barrier.id === barrierId ? { ...barrier, isOpen: true } : barrier
-				)
-			);
-		}, 1000); // 애니메이션 지속시간과 맞춤
+		// 상태를 즉시 업데이트 (애니메이션은 자동으로 처리됨)
+		setBarriers((prev) =>
+			prev.map((barrier) =>
+				barrier.id === barrierId ? { ...barrier, isOpen: true } : barrier
+			)
+		);
 	};
 
 	const handleBarrierClose = (barrierId: string) => {
-		// 애니메이션이 완료된 후 상태 업데이트되도록 지연
-		setTimeout(() => {
-			setBarriers((prev) =>
-				prev.map((barrier) =>
-					barrier.id === barrierId ? { ...barrier, isOpen: false } : barrier
-				)
-			);
-		}, 1000); // 애니메이션 지속시간과 맞춤
-	};
-
-	const handleBarrierAlwaysOpen = (barrierId: string) => {
+		// 상태를 즉시 업데이트 (애니메이션은 자동으로 처리됨)
 		setBarriers((prev) =>
 			prev.map((barrier) =>
-				barrier.id === barrierId
-					? { ...barrier, alwaysOpen: !barrier.alwaysOpen }
-					: barrier
+				barrier.id === barrierId ? { ...barrier, isOpen: false } : barrier
 			)
 		);
 	};
 
-	const handleBarrierAutoMode = (barrierId: string) => {
+	const handleOperationModeChange = (
+		barrierId: string,
+		mode: OperationMode
+	) => {
 		setBarriers((prev) =>
 			prev.map((barrier) =>
-				barrier.id === barrierId
-					? { ...barrier, autoMode: !barrier.autoMode }
-					: barrier
-			)
-		);
-	};
-
-	const handleBarrierBypass = (barrierId: string) => {
-		setBarriers((prev) =>
-			prev.map((barrier) =>
-				barrier.id === barrierId
-					? { ...barrier, bypass: !barrier.bypass }
-					: barrier
+				barrier.id === barrierId ? { ...barrier, operationMode: mode } : barrier
 			)
 		);
 	};
 	// #endregion
 
+	// #region 렌더링
 	return (
-		<div className="min-h-screen bg-gray-50 p-4">
-			<div className="max-w-7xl mx-auto">
+		<div className="min-h-screen p-4 bg-gray-50">
+			<div className="mx-auto max-w-7xl">
 				{/* 헤더 */}
 				<div className="mb-4">
-					<h1 className="text-2xl font-bold text-gray-800 mb-1">
+					<h1 className="mb-1 text-2xl font-bold text-gray-800">
 						주차관제 시스템
 					</h1>
 					<p className="text-sm text-gray-600">
@@ -137,9 +120,9 @@ export default function Home() {
 				</div>
 
 				{/* 메인 2분할 레이아웃 */}
-				<div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
 					{/* 좌측: 입출차 패널 */}
-					<div className="space-y-4">
+					<div className="p-4 space-y-4 bg-white neu-flat rounded-2xl">
 						{/* 차량 상세정보 */}
 						<VehicleDetailCard vehicle={selectedVehicle} />
 
@@ -163,14 +146,12 @@ export default function Home() {
 					</div>
 
 					{/* 우측: 차단기 패널 */}
-					<div>
+					<div className="p-4 bg-white neu-flat rounded-2xl">
 						<BarrierGrid
 							barriers={barriers}
 							onBarrierOpen={handleBarrierOpen}
 							onBarrierClose={handleBarrierClose}
-							onBarrierAlwaysOpen={handleBarrierAlwaysOpen}
-							onBarrierAutoMode={handleBarrierAutoMode}
-							onBarrierBypass={handleBarrierBypass}
+							onOperationModeChange={handleOperationModeChange}
 						/>
 					</div>
 				</div>
@@ -178,3 +159,4 @@ export default function Home() {
 		</div>
 	);
 }
+// #endregion

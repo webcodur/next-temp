@@ -65,26 +65,20 @@ export function SideRPanel({
 		<TooltipProvider>
 			<div className="flex flex-col flex-1 h-full overflow-hidden bg-gradient-to-b from-background/50 to-background/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
-				<div className="flex items-center justify-between px-5 py-3 border-b border-border/40">
-					{/* Top 메뉴 타이틀 */}
-					<h2 className="text-base font-medium text-foreground">
-						{topData.label}
-					</h2>
-
-					{/* 제어 버튼 그룹 */}
-					<div className="flex items-center gap-1.5">
-						{/* 단일/다중 모드 토글 버튼 */}
+				<div className="flex items-center justify-between px-3 py-3 border-b border-border/40">
+					{/* 좌측: 단일/다중 모드 토글 버튼 */}
+					<div className="flex items-center">
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
 									variant="ghost"
 									size="icon"
 									onClick={onSingleOpenToggle}
-									className="rounded-md w-7 h-7 hover:bg-muted/40">
+									className="rounded-md w-6 h-6 hover:bg-muted/40">
 									{singleOpenMode ? (
-										<Focus className="w-5 h-5 neu-icon-active" />
+										<Focus className="w-4 h-4 neu-icon-active" />
 									) : (
-										<Layers className="w-5 h-5 neu-icon-inactive" />
+										<Layers className="w-4 h-4 neu-icon-inactive" />
 									)}
 								</Button>
 							</TooltipTrigger>
@@ -96,6 +90,30 @@ export function SideRPanel({
 								</p>
 							</TooltipContent>
 						</Tooltip>
+					</div>
+
+					{/* 가운데: Top 메뉴 타이틀 */}
+					<h2 className="text-sm font-medium text-foreground text-center flex-1">
+						{topData.label}
+					</h2>
+
+					{/* 우측: 전체 열기/닫기 버튼들 - 수직 배치 */}
+					<div className="flex flex-col gap-1">
+						{/* 전체 접기 버튼 */}
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button
+									variant="ghost"
+									size="icon"
+									onClick={onCollapseAll}
+									className="rounded-md w-6 h-5 hover:bg-muted/40">
+									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive" />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent side="bottom">
+								<p>전체 메뉴 접기</p>
+							</TooltipContent>
+						</Tooltip>
 
 						{/* 전체 펼치기 버튼 */}
 						<Tooltip>
@@ -104,28 +122,12 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onExpandAll}
-									className="rounded-md w-7 h-7 hover:bg-muted/40">
-									<ChevronsDown className="w-5 h-5 neu-icon-inactive" />
+									className="rounded-md w-6 h-5 hover:bg-muted/40">
+									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">
 								<p>전체 메뉴 펼치기</p>
-							</TooltipContent>
-						</Tooltip>
-
-						{/* 전체 접기 버튼 */}
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={onCollapseAll}
-									className="rounded-md w-7 h-7 hover:bg-muted/40">
-									<ChevronsUp className="w-5 h-5 neu-icon-inactive" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<p>전체 메뉴 접기</p>
 							</TooltipContent>
 						</Tooltip>
 					</div>
@@ -133,7 +135,7 @@ export function SideRPanel({
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
 				<div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide">
-					<nav className="min-w-0 px-3 py-3 space-y-2">
+					<nav className="min-w-0 px-2 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<Collapsible key={midKey} open={midExpanded.has(midKey)}>
 								{/* Mid 메뉴 헤더 (클릭 가능) */}
@@ -141,20 +143,20 @@ export function SideRPanel({
 									<Button
 										variant="ghost"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-3.5 rounded-lg transition-all duration-200 group min-w-0 ${
+										className={`w-full justify-between h-auto py-2.5 px-2.5 rounded-lg transition-all duration-200 group min-w-0 ${
 											midMenu === midKey
 												? 'neu-inset'
 												: 'neu-raised hover:scale-[1.01] hover:bg-primary/5 hover:border-primary/20'
 										}`}>
 										<span
-											className={`text-base font-medium transition-colors duration-200 truncate flex-1 text-left ${
+											className={`text-sm font-medium transition-colors duration-200 truncate flex-1 text-left ${
 												midMenu === midKey ? '' : 'group-hover:text-primary/80'
 											}`}>
 											{midItem.label}
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
-											className={`w-5 h-5 transform transition-all duration-300 ${
+											className={`w-4 h-4 transform transition-all duration-300 ${
 												midExpanded.has(midKey) ? 'rotate-180' : ''
 											} ${
 												midMenu === midKey
@@ -167,7 +169,7 @@ export function SideRPanel({
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="relative min-w-0 ml-2 mr-3">
+									<div className="relative min-w-0 ml-1.5 mr-2">
 										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
 										<div
 											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
@@ -200,7 +202,7 @@ export function SideRPanel({
 														{/* 메뉴 아이템 */}
 														<button
 															onClick={() => handleBotMenuClick(botItem.href)}
-															className={`relative flex items-center ml-6 pl-3 pr-2 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left min-w-0 ${
+															className={`relative flex items-center ml-5 pl-2.5 pr-2 py-2.5 text-sm rounded-xl font-medium transition-all duration-200 group w-full text-left min-w-0 ${
 																isActive
 																	? 'neu-inset bg-primary/5 text-primary border border-primary/20'
 																	: 'neu-flat hover:scale-[1.01] hover:bg-primary/3 hover:text-primary/80 hover:border-primary/10'

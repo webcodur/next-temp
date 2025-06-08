@@ -32,6 +32,7 @@ export function SideToggleHead() {
 				opacity: isHeadVisible ? 1 : 0,
 				transition: `transform ${animations.headerToggleDuration}ms ease-in-out, opacity ${animations.headerToggleDuration}ms ease-in-out`,
 				pointerEvents: isHeadVisible ? 'auto' : 'none',
+				borderTopRightRadius: '24px',
 			}}
 			className="flex bg-muted border-y border-border">
 			{/* 좌측 영역 - 메인 토글 버튼 공간 (비워둠) */}
@@ -39,6 +40,9 @@ export function SideToggleHead() {
 
 			{/* 우측 영역 - 헤더 토글 버튼 */}
 			<div
+				style={{
+					borderTopRightRadius: '24px',
+				}}
 				className="flex items-center justify-center flex-1 transition-all duration-300 rounded-bl-lg rounded-br-lg cursor-pointer hover:bg-primary/20 group"
 				onClick={handleHeadToggle}
 				title={isHeadCollapsed ? '헤더 펼치기' : '헤더 접기'}>

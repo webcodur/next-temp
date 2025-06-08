@@ -125,6 +125,16 @@
 	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
+/* 사이드바 전용 강화된 우측 음영 */
+.sidebar-shadow {
+	box-shadow:
+		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
+			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 우측 모서리 강화 음영 */ 8px 0 20px rgba(0, 0, 0, 0.15),
+		12px 0 30px rgba(0, 0, 0, 0.08);
+}
+
 /* 기존 호환성 */
 .neumorphic {
 	background: linear-gradient(
