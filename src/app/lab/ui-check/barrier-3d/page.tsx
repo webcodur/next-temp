@@ -30,11 +30,11 @@ export default function Barrier3DPage() {
 				확인해보세요. 모든 차단기는 0.3초의 빠른 애니메이션 속도로 동작합니다.
 			</p>
 
-			<div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+			<div className="p-4 mb-8 border border-blue-200 rounded-lg bg-blue-50">
 				<h3 className="mb-2 text-lg font-semibold text-blue-800">
 					핵심 시점별 특징
 				</h3>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-blue-700">
+				<div className="grid grid-cols-1 gap-2 text-sm text-blue-700 md:grid-cols-3">
 					<div>
 						• <strong>대각선 시점</strong>: 입체감이 가장 좋은 기본 시점
 					</div>
@@ -47,7 +47,7 @@ export default function Barrier3DPage() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+			<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
 				{(Object.keys(VIEW_ANGLE_NAMES) as ViewAngle[]).map((viewAngle) => (
 					<div
 						key={viewAngle}
@@ -71,7 +71,7 @@ export default function Barrier3DPage() {
 			</div>
 
 			{/* 비교 섹션 */}
-			<div className="mt-12 p-6 border border-purple-200 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100">
+			<div className="p-6 mt-12 border border-purple-200 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100">
 				<h2 className="mb-6 text-xl font-semibold text-purple-800">
 					시점 비교 - 동일한 상태
 				</h2>
@@ -90,7 +90,7 @@ export default function Barrier3DPage() {
 								)
 							)
 						}
-						className="px-6 py-3 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-2xl shadow-neumorphism-button hover:from-red-500 hover:to-red-600 transition-all duration-300">
+						className="px-6 py-3 text-white transition-all duration-300 bg-gradient-to-r from-red-400 to-red-500 rounded-2xl neu-raised hover:from-red-500 hover:to-red-600">
 						모든 차단기 닫기
 					</button>
 					<button
@@ -102,12 +102,12 @@ export default function Barrier3DPage() {
 								)
 							)
 						}
-						className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-2xl shadow-neumorphism-button hover:from-green-500 hover:to-green-600 transition-all duration-300">
+						className="px-6 py-3 text-white transition-all duration-300 bg-gradient-to-r from-green-400 to-green-500 rounded-2xl neu-raised hover:from-green-500 hover:to-green-600">
 						모든 차단기 열기
 					</button>
 				</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 					{(Object.keys(VIEW_ANGLE_NAMES) as ViewAngle[]).map((viewAngle) => (
 						<div key={`compare-${viewAngle}`} className="text-center">
 							<ParkingBarrier3D
@@ -118,7 +118,7 @@ export default function Barrier3DPage() {
 								animationDuration={300}
 								viewAngle={viewAngle}
 							/>
-							<p className="mt-2 text-sm text-purple-600 font-medium">
+							<p className="mt-2 text-sm font-medium text-purple-600">
 								{VIEW_ANGLE_NAMES[viewAngle]}
 							</p>
 						</div>
@@ -127,13 +127,13 @@ export default function Barrier3DPage() {
 			</div>
 
 			{/* 시점별 용도 안내 */}
-			<div className="mt-8 p-6 border border-green-200 rounded-lg bg-gradient-to-br from-green-50 to-green-100">
+			<div className="p-6 mt-8 border border-green-200 rounded-lg bg-gradient-to-br from-green-50 to-green-100">
 				<h2 className="mb-4 text-xl font-semibold text-green-800">
 					시점별 활용 용도
 				</h2>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					<div className="text-center p-4 bg-white rounded-lg shadow-sm">
-						<h3 className="font-semibold text-green-700 mb-2">대각선 시점</h3>
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+					<div className="p-4 text-center bg-white rounded-lg shadow-sm">
+						<h3 className="mb-2 font-semibold text-green-700">대각선 시점</h3>
 						<p className="text-sm text-green-600">
 							• 일반적인 UI 컴포넌트
 							<br />
@@ -141,8 +141,8 @@ export default function Barrier3DPage() {
 							<br />• 상태 표시기
 						</p>
 					</div>
-					<div className="text-center p-4 bg-white rounded-lg shadow-sm">
-						<h3 className="font-semibold text-green-700 mb-2">운전자 시점</h3>
+					<div className="p-4 text-center bg-white rounded-lg shadow-sm">
+						<h3 className="mb-2 font-semibold text-green-700">운전자 시점</h3>
 						<p className="text-sm text-green-600">
 							• 차량 내비게이션
 							<br />
@@ -150,8 +150,8 @@ export default function Barrier3DPage() {
 							<br />• 실제 사용자 경험
 						</p>
 					</div>
-					<div className="text-center p-4 bg-white rounded-lg shadow-sm">
-						<h3 className="font-semibold text-green-700 mb-2">
+					<div className="p-4 text-center bg-white rounded-lg shadow-sm">
+						<h3 className="mb-2 font-semibold text-green-700">
 							보안 카메라 시점
 						</h3>
 						<p className="text-sm text-green-600">
@@ -165,11 +165,11 @@ export default function Barrier3DPage() {
 			</div>
 
 			{/* 확대/축소 테스트 안내 */}
-			<div className="mt-8 p-6 border border-blue-200 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
+			<div className="p-6 mt-8 border border-blue-200 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
 				<h2 className="mb-4 text-xl font-semibold text-blue-800">
 					확대/축소 테스트
 				</h2>
-				<p className="text-blue-700 mb-4">
+				<p className="mb-4 text-blue-700">
 					Ctrl + 마우스 휠 또는 Ctrl + +/- 키를 사용하여 페이지를
 					확대/축소해보세요. 모든 시점에서 차단기가 선명하게 렌더링되는 것을
 					확인할 수 있습니다.

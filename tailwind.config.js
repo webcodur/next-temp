@@ -61,14 +61,6 @@ module.exports = {
 				'slide-down': 'slideDown 100ms ease-in-out',
 				'slide-up': 'slideUp 100ms ease-in-out',
 			},
-			boxShadow: {
-				'neu-raised':
-					'var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)), calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) rgba(var(--neu-light))',
-				'neu-inset':
-					'inset var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)), inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) rgba(var(--neu-light))',
-				'neu-flat':
-					'1px 1px 2px rgba(var(--neu-dark)), -1px -1px 2px rgba(var(--neu-light))',
-			},
 		},
 	},
 	plugins: [

@@ -167,7 +167,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 		<div className={`flex flex-col items-center gap-6 ${className}`}>
 			<div
 				ref={mountRef}
-				className="flex items-center justify-center p-4 overflow-hidden rounded-3xl shadow-neumorphism bg-gradient-to-br from-gray-50 to-gray-100"
+				className="flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat"
 				style={
 					{
 						width: `${width + 32}px`,
@@ -188,14 +188,14 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 					<button
 						onClick={handleToggle}
 						disabled={!onToggle}
-						className={`px-8 py-4 rounded-2xl font-semibold text-white  shadow-neumorphism-button ${
+						className={`px-8 py-4 rounded-2xl font-semibold text-white neu-raised ${
 							isOpen
 								? 'bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 shadow-red-200'
 								: 'bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 shadow-green-200'
 						} ${!onToggle ? 'opacity-50 cursor-not-allowed' : ''}`}>
 						{isOpen ? '차단기 내리기' : '차단기 올리기'}
 					</button>
-					<div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl shadow-neumorphism-inset">
+					<div className="flex items-center gap-3 px-6 py-3 neu-inset rounded-2xl">
 						<div
 							className={`w-4 h-4 rounded-full  neu-raised ${
 								isOpen

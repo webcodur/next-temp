@@ -1,4 +1,4 @@
-/* 뉴모피즘 통합 3종 패턴 */
+/* 뉴모피즘 통합 5종 패턴 */
 
 /* 1. neu-flat - 평면 (컨테이너, 패널) */
 .neu-flat {
@@ -41,7 +41,7 @@
 }
 
 .neu-raised:hover {
-	transform: scale(1.02) translateY(-1px);
+	/* transform: translateY(-1px); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--card) / 0.95),
@@ -57,7 +57,7 @@
 }
 
 .neu-raised:active {
-	transform: scale(0.98) translateY(0px);
+	/* transform: scale(0.98) translateY(0px); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--muted) / 0.8),
@@ -79,7 +79,7 @@
 	);
 	border: 1px solid hsl(var(--primary) / 0.2);
 	color: hsl(var(--primary));
-	transform: scale(0.98);
+	/* transform: scale(0.98); */
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
@@ -90,7 +90,7 @@
 }
 
 .neu-inset:hover {
-	transform: scale(0.99);
+	/* transform: scale(0.99); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--muted) / 0.9),
@@ -104,23 +104,24 @@
 		0 0 0 1px hsl(var(--primary) / 0.3);
 }
 
-/* 아이콘/텍스트 활성화 패턴 */
+/* 4. neu-icon-active - 활성 아이콘 */
 .neu-icon-active {
 	color: hsl(var(--primary));
-	transform: scale(1.1);
+	/* transform: scale(1.1); */
 	filter: drop-shadow(0 2px 4px rgba(var(--primary-rgb), 0.3));
 	transition: all 0.15s ease-in-out;
 }
 
+/* 5. neu-icon-inactive - 비활성 아이콘 */
 .neu-icon-inactive {
 	color: hsl(var(--foreground) / 0.7);
-	transform: scale(1);
+	/* transform: scale(1); */
 	transition: all 0.15s ease-in-out;
 }
 
 .neu-icon-inactive:hover {
 	color: hsl(var(--foreground));
-	transform: scale(1.05);
+	/* transform: scale(1.05); */
 	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
@@ -162,7 +163,7 @@
 	);
 	border: 1px solid hsl(var(--primary) / 0.2);
 	color: hsl(var(--primary));
-	transform: scale(0.98);
+	/* transform: scale(0.98); */
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)

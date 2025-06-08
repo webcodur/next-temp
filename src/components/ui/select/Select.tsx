@@ -7,7 +7,7 @@ import React, {
 	useMemo,
 	useCallback,
 } from 'react';
-import { X } from 'lucide-react';
+import { X, Filter, ArrowUpDown } from 'lucide-react';
 
 export interface Option {
 	value: string;
@@ -35,18 +35,20 @@ type SelectProps = {
 	disabled?: boolean;
 	className?: string;
 	maxHeight?: number;
+	iconType?: 'filter' | 'sort' | 'none';
 } & (SingleSelectProps | MultiSelectProps);
 
 // 공통 스타일 상수
 const STYLES = {
-	container: 'neu-flat bg-gray-50 rounded-2xl focus:outline-none focus:ring-0',
+	container:
+		'neu-flat bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:neu-inset transition-all duration-200',
 	dropdown:
 		'neu-raised absolute z-50 w-full mt-2 overflow-hidden bg-gray-50 rounded-2xl',
 	option:
-		'mx-2 my-1 px-4 py-3 rounded-xl cursor-pointer flex items-center justify-between font-medium',
-	tag: 'neu-inset inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-700 bg-white rounded-lg',
+		'mx-2 my-0.5 px-4 py-2 rounded-xl cursor-pointer flex items-center justify-between font-medium',
+	tag: 'inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 border border-gray-200 rounded-lg',
 	button:
-		'neu-raised flex items-center justify-center rounded-full focus:outline-none focus:ring-0',
+		'flex items-center justify-center neu-raised rounded-full text-gray-500 hover:text-gray-700 transition-colors focus:outline-none focus:ring-0',
 };
 
 export const Select: React.FC<SelectProps> = ({
@@ -57,6 +59,7 @@ export const Select: React.FC<SelectProps> = ({
 	disabled = false,
 	className = '',
 	maxHeight = 200,
+	iconType = 'none',
 	...props
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -197,8 +200,8 @@ export const Select: React.FC<SelectProps> = ({
 					e.stopPropagation();
 					onRemove();
 				}}
-				className={`${STYLES.button} w-3 h-3`}>
-				<X className="w-2 h-2" />
+				className={`${STYLES.button} w-5 h-5`}>
+				<X className="w-3 h-3" />
 			</button>
 		</span>
 	);
@@ -236,26 +239,39 @@ export const Select: React.FC<SelectProps> = ({
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
 			{label && (
-				<label className="block mb-3 text-sm font-medium text-gray-700">
+				<label className="mb-2 text-sm font-medium text-gray-700">
 					{label}
 				</label>
 			)}
 
 			{/* 입력/선택 영역 */}
 			<div
-				className={`px-4 py-3 ${STYLES.container} ${
+				className={`relative flex items-center py-2.5 h-10 ${STYLES.container} ${
 					disabled
 						? 'opacity-60 cursor-not-allowed'
 						: searchable
 							? ''
 							: 'cursor-pointer'
-				}`}
+				} ${iconType !== 'none' ? 'pl-10 pr-4' : 'px-4'}`}
 				onClick={() =>
 					!disabled &&
 					(searchable ? inputRef.current?.focus() : setIsOpen(!isOpen))
 				}
 				tabIndex={searchable ? -1 : 0}>
-				<div className="flex flex-wrap items-center flex-1 gap-1 max-h-[52px] overflow-hidden">
+				{/* 아이콘 */}
+				{iconType !== 'none' && (
+					<div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+						{iconType === 'filter' && (
+							<Filter className="w-4 h-4 text-gray-500" />
+						)}
+						{iconType === 'sort' && (
+							<ArrowUpDown className="w-4 h-4 text-gray-500" />
+						)}
+					</div>
+				)}
+
+				{/* 콘텐츠 영역 */}
+				<div className="flex flex-wrap items-center flex-1 min-w-0 gap-1 max-h-[52px] overflow-hidden">
 					{/* 다중 선택 태그들 */}
 					{multiple && selectedOptions.length > 0 && (
 						<div className="flex flex-wrap flex-1 min-w-0 gap-1">
@@ -298,12 +314,12 @@ export const Select: React.FC<SelectProps> = ({
 									: placeholder
 							}
 							disabled={disabled}
-							className="flex-1 min-w-0 font-medium text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
+							className="flex-1 min-w-0 font-medium text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
 							style={{ minWidth: '100px' }}
 						/>
 					) : (
 						<span
-							className={`${selectedOptions.length === 0 ? 'text-gray-400' : 'text-gray-700'} font-medium`}>
+							className={`flex-1 ${selectedOptions.length === 0 ? 'text-gray-400' : 'text-gray-800'} font-medium truncate`}>
 							{selectedOptions.length === 0
 								? placeholder
 								: multiple
@@ -323,8 +339,8 @@ export const Select: React.FC<SelectProps> = ({
 							onChange?.('');
 							if (searchable) setInputValue('');
 						}}
-						className={`${STYLES.button} w-4 h-4`}>
-						<X className="w-4 h-4 text-gray-500" />
+						className={`${STYLES.button} w-5 h-5 ml-2 flex-shrink-0`}>
+						<X className="w-3 h-3" />
 					</button>
 				)}
 			</div>
