@@ -31,7 +31,6 @@ type SelectProps = {
 	label?: string;
 	placeholder?: string;
 	options: Option[];
-	searchable?: boolean;
 	disabled?: boolean;
 	className?: string;
 	maxHeight?: number;
@@ -55,7 +54,6 @@ export const Select: React.FC<SelectProps> = ({
 	label,
 	placeholder = '선택하세요',
 	options,
-	searchable = false,
 	disabled = false,
 	className = '',
 	maxHeight = 200,
@@ -73,12 +71,12 @@ export const Select: React.FC<SelectProps> = ({
 	// 검색 필터링
 	const filteredOptions = useMemo(
 		() =>
-			!searchable || !inputValue
+			!inputValue
 				? options
 				: options.filter((option) =>
 						option.label.toLowerCase().includes(inputValue.toLowerCase())
 					),
-		[options, inputValue, searchable]
+		[options, inputValue]
 	);
 
 	// props 구조 분해 (useCallback 최적화를 위해)
@@ -103,22 +101,22 @@ export const Select: React.FC<SelectProps> = ({
 				onChange?.(newValues);
 			} else {
 				onChange?.(option.value);
-				if (searchable) setInputValue(option.label);
+				setInputValue(option.label);
 				setIsOpen(false);
 				setHighlightedIndex(-1);
 				setHoveredIndex(-1);
 			}
 		},
-		[multiple, value, onChange, searchable]
+		[multiple, value, onChange]
 	);
 
-	// 입력값 동기화 (searchable 단일 선택)
+	// 입력값 동기화 (단일 선택)
 	useEffect(() => {
-		if (searchable && !multiple) {
+		if (!multiple) {
 			const selected = options.find((option) => option.value === value);
 			setInputValue(isOpen ? inputValue : selected?.label || '');
 		}
-	}, [value, options, searchable, multiple, isOpen, inputValue]);
+	}, [value, options, multiple, isOpen, inputValue]);
 
 	// 외부 클릭과 키보드 이벤트 처리
 	useEffect(() => {
@@ -134,7 +132,7 @@ export const Select: React.FC<SelectProps> = ({
 				!selectRef.current.contains(event.target as Node)
 			) {
 				closeDropdown();
-				if (searchable && !multiple) {
+				if (!multiple) {
 					const selected = options.find((option) => option.value === value);
 					setInputValue(selected?.label || '');
 				}
@@ -178,7 +176,6 @@ export const Select: React.FC<SelectProps> = ({
 		isOpen,
 		highlightedIndex,
 		filteredOptions,
-		searchable,
 		multiple,
 		value,
 		options,
@@ -247,20 +244,13 @@ export const Select: React.FC<SelectProps> = ({
 			{/* 입력/선택 영역 */}
 			<div
 				className={`relative flex items-center py-2.5 h-10 ${STYLES.container} ${
-					disabled
-						? 'opacity-60 cursor-not-allowed'
-						: searchable
-							? ''
-							: 'cursor-pointer'
+					disabled ? 'opacity-60 cursor-not-allowed' : ''
 				} ${iconType !== 'none' ? 'pl-10 pr-4' : 'px-4'}`}
-				onClick={() =>
-					!disabled &&
-					(searchable ? inputRef.current?.focus() : setIsOpen(!isOpen))
-				}
-				tabIndex={searchable ? -1 : 0}>
+				onClick={() => !disabled && inputRef.current?.focus()}
+				tabIndex={-1}>
 				{/* 아이콘 */}
 				{iconType !== 'none' && (
-					<div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+					<div className="absolute transform -translate-y-1/2 left-3 top-1/2">
 						{iconType === 'filter' && (
 							<Filter className="w-4 h-4 text-gray-500" />
 						)}
@@ -271,64 +261,26 @@ export const Select: React.FC<SelectProps> = ({
 				)}
 
 				{/* 콘텐츠 영역 */}
-				<div className="flex flex-wrap items-center flex-1 min-w-0 gap-1 max-h-[52px] overflow-hidden">
-					{/* 다중 선택 태그들 */}
-					{multiple && selectedOptions.length > 0 && (
-						<div className="flex flex-wrap flex-1 min-w-0 gap-1">
-							{selectedOptions.slice(0, 3).map((option) => (
-								<Tag
-									key={option.value}
-									option={option}
-									onRemove={() => {
-										if (multiple) {
-											const newValues = (value || []).filter(
-												(v) => v !== option.value
-											);
-											onChange?.(newValues);
-										}
-									}}
-								/>
-							))}
-							{selectedOptions.length > 3 && (
-								<span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg">
-									+{selectedOptions.length - 3}
-								</span>
-							)}
-						</div>
-					)}
-
-					{/* 검색 입력 또는 선택된 값 표시 */}
-					{searchable ? (
-						<input
-							ref={inputRef}
-							type="text"
-							value={inputValue}
-							onChange={(e) => {
-								setInputValue(e.target.value);
-								if (!e.target.value && !multiple) onChange?.('');
-							}}
-							onFocus={() => setIsOpen(true)}
-							placeholder={
-								multiple && selectedOptions.length > 0
-									? '추가 검색...'
-									: placeholder
-							}
-							disabled={disabled}
-							className="flex-1 min-w-0 font-medium text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
-							style={{ minWidth: '100px' }}
-						/>
-					) : (
-						<span
-							className={`flex-1 ${selectedOptions.length === 0 ? 'text-gray-400' : 'text-gray-800'} font-medium truncate`}>
-							{selectedOptions.length === 0
-								? placeholder
-								: multiple
-									? selectedOptions.length === 1
-										? selectedOptions[0].label
-										: `${selectedOptions.length}개 선택됨`
-									: selectedOptions[0].label}
-						</span>
-					)}
+				<div className="flex items-center flex-1 min-w-0">
+					{/* 검색 입력 */}
+					<input
+						ref={inputRef}
+						type="text"
+						value={inputValue}
+						onChange={(e) => {
+							setInputValue(e.target.value);
+							if (!e.target.value && !multiple) onChange?.('');
+						}}
+						onFocus={() => setIsOpen(true)}
+						placeholder={
+							multiple && selectedOptions.length > 0
+								? '추가 검색...'
+								: placeholder
+						}
+						disabled={disabled}
+						className="flex-1 min-w-0 font-medium text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
+						style={{ minWidth: '100px' }}
+					/>
 				</div>
 
 				{/* X 버튼 (단일 선택 시) */}
@@ -337,13 +289,31 @@ export const Select: React.FC<SelectProps> = ({
 						onClick={(e) => {
 							e.stopPropagation();
 							onChange?.('');
-							if (searchable) setInputValue('');
+							setInputValue('');
 						}}
 						className={`${STYLES.button} w-5 h-5 ml-2 flex-shrink-0`}>
 						<X className="w-3 h-3" />
 					</button>
 				)}
 			</div>
+
+			{/* 다중 선택 태그들 (별도 영역) */}
+			{multiple && selectedOptions.length > 0 && (
+				<div className="flex flex-wrap gap-2 mt-3">
+					{selectedOptions.map((option) => (
+						<Tag
+							key={option.value}
+							option={option}
+							onRemove={() => {
+								const newValues = (value || []).filter(
+									(v) => v !== option.value
+								);
+								onChange?.(newValues);
+							}}
+						/>
+					))}
+				</div>
+			)}
 
 			{/* 드롭다운 옵션 */}
 			{isOpen && (
