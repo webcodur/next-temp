@@ -60,7 +60,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 			<div className="relative">
 				{/* 검색 아이콘 */}
 				{showSearchIcon && (
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+					<Search className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
 				)}
 
 				<input
@@ -84,10 +84,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 				{showClearButton && value && (
 					<button
 						onClick={handleClear}
-						className="absolute right-3 top-1/2 transform -translate-y-1/2 
-						         w-5 h-5 flex items-center justify-center
-						         neu-raised rounded-full
-						         text-gray-500 hover:text-gray-700 transition-colors"
+						className="absolute flex items-center justify-center w-5 h-5 text-gray-500 transition-colors transform -translate-y-1/2 rounded-full right-3 top-1/2 neu-raised hover:text-gray-700"
 						type="button">
 						<X className="w-3 h-3" />
 					</button>
