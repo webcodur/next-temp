@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Select, Option } from '@/components/ui/select/Select';
+import {
+	FieldFilterSelect,
+	FieldMultiSelect,
+	Option,
+} from '@/components/ui/field/Field';
 
 // 테스트 데이터
 const countries: Option[] = [
@@ -61,9 +65,11 @@ export default function SelectPage() {
 				<div className="mb-8 text-center">
 					<div className="inline-block px-8 py-6 bg-white neu-raised rounded-2xl">
 						<h1 className="mb-2 text-3xl font-bold text-gray-900">
-							Select Component Test
+							Field Component Test
 						</h1>
-						<p className="text-gray-600">단일 선택과 다중 선택 컴포넌트</p>
+						<p className="text-gray-600">
+							필터 선택과 다중 선택 Field 컴포넌트
+						</p>
 					</div>
 				</div>
 
@@ -72,16 +78,15 @@ export default function SelectPage() {
 					{/* 단일 선택 */}
 					<div className="p-8 bg-white neu-flat rounded-2xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-900">
-							단일 선택 (항상 검색 가능)
+							필터 선택 (검색 가능한 단일 선택)
 						</h2>
-						<Select
+						<FieldFilterSelect
 							label="국가 선택"
 							placeholder="국가를 선택하거나 검색하세요"
 							options={countries}
 							value={singleValue}
 							onChange={setSingleValue}
 							className="mb-4"
-							iconType="filter"
 						/>
 						<div className="p-4 mt-6 neu-inset bg-gray-50 rounded-xl">
 							<h4 className="mb-2 text-sm font-semibold text-gray-800">
@@ -98,17 +103,15 @@ export default function SelectPage() {
 					{/* 다중 선택 */}
 					<div className="p-8 bg-white neu-flat rounded-2xl">
 						<h2 className="mb-6 text-xl font-semibold text-gray-900">
-							다중 선택 (항상 검색 가능)
+							다중 선택 (검색 가능한 멀티 선택)
 						</h2>
-						<Select
+						<FieldMultiSelect
 							label="기술 스택"
 							placeholder="기술을 선택하거나 검색하세요"
 							options={skills}
-							multiple
 							value={multiValue}
 							onChange={setMultiValue}
 							className="mb-4"
-							iconType="filter"
 						/>
 						<div className="p-4 mt-6 neu-inset bg-gray-50 rounded-xl">
 							<h4 className="mb-2 text-sm font-semibold text-gray-800">
@@ -145,10 +148,10 @@ export default function SelectPage() {
 						<div className="p-4 neu-inset bg-gray-50 rounded-xl">
 							<h4 className="mb-3 font-semibold text-gray-800">주요 기능</h4>
 							<div className="space-y-2 text-sm text-gray-600">
-								<div>• 단일/다중 선택 지원</div>
-								<div>• 항상 검색 가능</div>
+								<div>• 필터/다중 선택 지원</div>
+								<div>• 실시간 검색 필터링</div>
 								<div>• X 버튼으로 값 제거</div>
-								<div>• 뉴모피즘 디자인</div>
+								<div>• 뉴모피즘 디자인 적용</div>
 							</div>
 						</div>
 					</div>

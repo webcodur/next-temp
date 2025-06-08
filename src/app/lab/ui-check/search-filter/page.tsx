@@ -1,23 +1,42 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Select, Option } from '@/components/ui/select/Select';
+import {
+	FieldText,
+	FieldFilterSelect,
+	FieldMultiSelect,
+	FieldSortSelect,
+	Option,
+} from '@/components/ui/field/Field';
 import { FilterPanel } from '@/components/ui/filter-panel/FilterPanel';
 
 export default function SearchFilterPage() {
+	const [textValue, setTextValue] = useState('');
 	const [singleSelectValue, setSingleSelectValue] = useState('');
 	const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+	const [sortValue, setSortValue] = useState('');
 
 	const handleSearch = () => {
-		console.log('검색 실행:', { singleSelectValue, multiSelectValue });
+		console.log('검색 실행:', {
+			textValue,
+			singleSelectValue,
+			multiSelectValue,
+			sortValue,
+		});
 	};
 
 	const handleReset = () => {
+		setTextValue('');
 		setSingleSelectValue('');
 		setMultiSelectValue([]);
+		setSortValue('');
 	};
 
-	const hasValues = singleSelectValue !== '' || multiSelectValue.length > 0;
+	const hasValues =
+		textValue !== '' ||
+		singleSelectValue !== '' ||
+		multiSelectValue.length > 0 ||
+		sortValue !== '';
 
 	// 옵션 데이터들
 	const singleSelectOptions: Option[] = [
@@ -37,6 +56,15 @@ export default function SearchFilterPage() {
 		{ value: 'feature6', label: '기능 F' },
 	];
 
+	const sortOptions: Option[] = [
+		{ value: 'name_asc', label: '이름 오름차순' },
+		{ value: 'name_desc', label: '이름 내림차순' },
+		{ value: 'date_asc', label: '날짜 오름차순' },
+		{ value: 'date_desc', label: '날짜 내림차순' },
+		{ value: 'price_asc', label: '가격 낮은순' },
+		{ value: 'price_desc', label: '가격 높은순' },
+	];
+
 	return (
 		<div className="min-h-screen p-8 bg-gray-50">
 			<div className="max-w-4xl mx-auto">
@@ -44,37 +72,54 @@ export default function SearchFilterPage() {
 				<div className="mb-8 text-center">
 					<div className="inline-block px-8 py-6 bg-white neu-raised rounded-2xl">
 						<h1 className="mb-2 text-3xl font-bold text-gray-900">
-							Select Component Demo
+							Field Component Demo
 						</h1>
-						<p className="text-gray-600">단일 선택 및 다중 선택 컴포넌트</p>
+						<p className="text-gray-600">
+							통합 필드 컴포넌트 (텍스트, 필터, 다중선택, 정렬)
+						</p>
 					</div>
 				</div>
 
-				{/* Select 컴포넌트 테스트 */}
+				{/* Field 컴포넌트 테스트 */}
 				<FilterPanel
-					title="Select Component Test"
+					title="Field Component Test"
 					onSearch={handleSearch}
 					onReset={handleReset}
-					statusText="컴포넌트 테스트">
-					{/* 단일 선택 */}
-					<Select
-						label="단일 선택"
+					statusText="통합 필드 컴포넌트 테스트">
+					{/* 텍스트 입력 */}
+					<FieldText
+						label="검색어 입력"
+						placeholder="검색어를 입력하세요"
+						value={textValue}
+						onChange={setTextValue}
+						showSearchIcon={true}
+					/>
+
+					{/* 필터 선택 */}
+					<FieldFilterSelect
+						label="필터 선택"
 						placeholder="하나의 옵션을 선택하세요"
 						value={singleSelectValue}
 						onChange={setSingleSelectValue}
 						options={singleSelectOptions}
-						iconType="filter"
 					/>
 
 					{/* 다중 선택 */}
-					<Select
+					<FieldMultiSelect
 						label="다중 선택"
 						placeholder="여러 옵션을 선택하세요"
-						multiple
 						value={multiSelectValue}
 						onChange={setMultiSelectValue}
 						options={multiSelectOptions}
-						iconType="filter"
+					/>
+
+					{/* 정렬 선택 */}
+					<FieldSortSelect
+						label="정렬 기준"
+						placeholder="정렬 방식을 선택하세요"
+						value={sortValue}
+						onChange={setSortValue}
+						options={sortOptions}
 					/>
 				</FilterPanel>
 
@@ -85,11 +130,24 @@ export default function SearchFilterPage() {
 							선택된 값
 						</h3>
 
-						<div className="grid gap-4 md:grid-cols-2">
-							{/* 단일 선택 결과 */}
+						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+							{/* 텍스트 입력 결과 */}
 							<div className="p-4 bg-white neu-inset rounded-xl">
 								<h4 className="mb-3 text-sm font-semibold text-gray-800">
-									단일 선택 결과
+									텍스트 입력
+								</h4>
+								<div className="text-sm text-gray-600">
+									<div>
+										<span className="font-medium text-gray-700">입력값:</span>{' '}
+										{textValue || '없음'}
+									</div>
+								</div>
+							</div>
+
+							{/* 필터 선택 결과 */}
+							<div className="p-4 bg-white neu-inset rounded-xl">
+								<h4 className="mb-3 text-sm font-semibold text-gray-800">
+									필터 선택
 								</h4>
 								<div className="text-sm text-gray-600">
 									<div>
@@ -108,7 +166,7 @@ export default function SearchFilterPage() {
 							{/* 다중 선택 결과 */}
 							<div className="p-4 bg-white neu-inset rounded-xl">
 								<h4 className="mb-3 text-sm font-semibold text-gray-800">
-									다중 선택 결과
+									다중 선택
 								</h4>
 								<div className="text-sm text-gray-600">
 									<div>
@@ -136,6 +194,24 @@ export default function SearchFilterPage() {
 											</div>
 										</div>
 									)}
+								</div>
+							</div>
+
+							{/* 정렬 선택 결과 */}
+							<div className="p-4 bg-white neu-inset rounded-xl">
+								<h4 className="mb-3 text-sm font-semibold text-gray-800">
+									정렬 기준
+								</h4>
+								<div className="text-sm text-gray-600">
+									<div>
+										<span className="font-medium text-gray-700">
+											선택된 정렬:
+										</span>{' '}
+										{sortValue
+											? sortOptions.find((opt) => opt.value === sortValue)
+													?.label
+											: '없음'}
+									</div>
 								</div>
 							</div>
 						</div>
