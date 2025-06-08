@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import * as THREE from 'three';
 import {
 	ParkingBarrier3DProps,
@@ -13,7 +13,16 @@ import {
 	createBarrier,
 } from './scene';
 import { createToggleHandler } from './animation';
+import { TripleChevronUp, TripleChevronDown } from './icons';
 
+// #region 메인 컴포넌트
+/**
+ * 3D 주차장 차단기 컴포넌트
+ * - Three.js로 구현된 3D 차단기 시뮬레이션
+ * - 3가지 시점 지원 (대각선, 운전자, 보안카메라)
+ * - 애니메이션 차단기 동작
+ * - 뉴모피즘 스타일 컨트롤 UI
+ */
 const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	width = 150,
 	height = 180,
@@ -24,6 +33,8 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	animationDuration = SETTINGS.DEFAULT_ANIMATION_DURATION,
 	viewAngle = 'diagonal',
 }) => {
+	// 3D 캔버스와 버튼 간 hover 상태 공유
+	const [isHovering, setIsHovering] = useState(false);
 	const mountRef = useRef<HTMLDivElement>(null);
 	const barrierArmRef = useRef<THREE.Group | null>(null);
 	const armMaterialRef = useRef<THREE.MeshPhongMaterial | null>(null);
@@ -123,18 +134,14 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 		}
 	}, [viewAngle]);
 
-	// isOpen 상태 변경 시 차단기 상태만 업데이트
+	// isOpen 상태 변경 시 차단기 상태만 업데이트 - 초기화 시에만
 	useEffect(() => {
-		if (sceneRef.current && isInitializedRef.current) {
-			// 기존 차단기 제거
-			const existingBarrier = sceneRef.current.children.find(
-				(child) => child.userData && child.userData.isBarrier
-			);
-			if (existingBarrier) {
-				sceneRef.current.remove(existingBarrier);
-			}
-
-			// 새로운 차단기 상태로 재생성
+		if (
+			sceneRef.current &&
+			isInitializedRef.current &&
+			!barrierArmRef.current
+		) {
+			// 최초 한 번만 차단기 생성
 			createBarrier(
 				sceneRef.current,
 				isOpen,
@@ -167,7 +174,10 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 		<div className={`flex flex-col items-center gap-6 ${className}`}>
 			<div
 				ref={mountRef}
-				className="flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat"
+				onClick={onToggle ? handleToggle : undefined}
+				onMouseEnter={() => onToggle && setIsHovering(true)}
+				onMouseLeave={() => setIsHovering(false)}
+				className={`flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat ${onToggle ? 'cursor-pointer' : ''}`}
 				style={
 					{
 						width: `${width + 32}px`,
@@ -185,26 +195,46 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 			/>
 			{showControls && (
 				<div className="flex flex-col items-center gap-4">
+					{/* 동작 버튼 */}
 					<button
 						onClick={handleToggle}
 						disabled={!onToggle}
-						className={`px-8 py-4 rounded-2xl font-semibold text-white neu-raised ${
-							isOpen
-								? 'bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 shadow-red-200'
-								: 'bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 shadow-green-200'
-						} ${!onToggle ? 'opacity-50 cursor-not-allowed' : ''}`}>
-						{isOpen ? '차단기 내리기' : '차단기 올리기'}
+						onMouseEnter={() => setIsHovering(true)}
+						onMouseLeave={() => setIsHovering(false)}
+						className={`group flex items-center justify-center gap-3 px-6 h-12 rounded-2xl font-medium neu-raised ${
+							!onToggle ? 'opacity-50 cursor-not-allowed' : ''
+						}`}>
+						{isOpen ? (
+							<>
+								<TripleChevronDown
+									className="w-5 h-5"
+									isHovering={isHovering}
+								/>
+								차단기 닫기
+							</>
+						) : (
+							<>
+								<TripleChevronUp className="w-5 h-5" isHovering={isHovering} />
+								차단기 열기
+							</>
+						)}
 					</button>
-					<div className="flex items-center gap-3 px-6 py-3 neu-inset rounded-2xl">
+
+					{/* 상태 표시 */}
+					<div className="flex items-center gap-4 px-6 py-3 neu-inset rounded-2xl">
 						<div
-							className={`w-4 h-4 rounded-full  neu-raised ${
-								isOpen
-									? 'bg-gradient-to-r from-green-400 to-green-500 shadow-green-200'
-									: 'bg-gradient-to-r from-red-400 to-red-500 shadow-red-200'
-							}`}
+							className="w-3 h-3 rounded-full"
+							style={{
+								background: isOpen
+									? 'linear-gradient(135deg, #4ade80, #22c55e)'
+									: 'linear-gradient(135deg, #f87171, #ef4444)',
+								boxShadow: isOpen
+									? '0 2px 4px rgba(34, 197, 94, 0.3)'
+									: '0 2px 4px rgba(239, 68, 68, 0.3)',
+							}}
 						/>
-						<span className="text-sm font-medium text-gray-700">
-							{isOpen ? '통행 가능' : '통행 차단'}
+						<span className="text-sm font-medium">
+							{isOpen ? '열림' : '닫힘'}
 						</span>
 					</div>
 				</div>
@@ -214,3 +244,4 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 };
 
 export default ParkingBarrier3D;
+// #endregion

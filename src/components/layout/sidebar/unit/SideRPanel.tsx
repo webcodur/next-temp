@@ -132,7 +132,7 @@ export function SideRPanel({
 				</div>
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
-				<div className="flex-1 overflow-x-hidden overflow-y-auto">
+				<div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide">
 					<nav className="min-w-0 px-3 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<Collapsible key={midKey} open={midExpanded.has(midKey)}>

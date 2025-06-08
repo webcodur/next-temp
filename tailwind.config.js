@@ -56,6 +56,19 @@ module.exports = {
 					'0%': { height: 'var(--radix-collapsible-content-height)' },
 					'100%': { height: '0' },
 				},
+				fadeFlow: {
+					'0%': { opacity: '0.1' },
+					'15%': { opacity: '0.9' },
+					'25%': { opacity: '0.1' },
+					'25.1%': { opacity: '0.1' },
+					'100%': { opacity: '0.1' },
+				},
+				tripleFlow: {
+					'0%': { opacity: '0.3' },
+					'15%': { opacity: '0.8' },
+					'20%': { opacity: '0.3' },
+					'100%': { opacity: '0.3' },
+				},
 			},
 			animation: {
 				'slide-down': 'slideDown 100ms ease-in-out',

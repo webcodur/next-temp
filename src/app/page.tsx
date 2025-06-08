@@ -1,82 +1,180 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
+import VehicleSearchFilter from '@/unit/parking/VehicleSearchFilter';
+import VehicleListTable from '@/unit/parking/VehicleListTable';
+import BarrierGrid from '@/unit/parking/BarrierGrid';
+import { VehicleEntry, SearchFilters, ParkingBarrier } from '@/types/parking';
+import {
+	generateMockVehicleEntries,
+	mockBarriers,
+} from '@/data/mockParkingData';
+
 export default function Home() {
+	// #region 상태 관리
+	const [vehicles, setVehicles] = useState<VehicleEntry[]>([]);
+	const [barriers, setBarriers] = useState<ParkingBarrier[]>(mockBarriers);
+	const [selectedVehicle, setSelectedVehicle] = useState<VehicleEntry | null>(
+		null
+	);
+	const [filters, setFilters] = useState<SearchFilters>({});
+	const [isLoading, setIsLoading] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+	// #endregion
+
+	// #region 초기 데이터 로드
+	useEffect(() => {
+		const initialData = generateMockVehicleEntries(50);
+		setVehicles(initialData);
+		// 첫 번째 차량을 기본 선택
+		if (initialData.length > 0) {
+			setSelectedVehicle(initialData[0]);
+		}
+	}, []);
+	// #endregion
+
+	// #region 무한스크롤 핸들러
+	const handleLoadMore = () => {
+		if (isLoading || vehicles.length >= 500) {
+			setHasMore(false);
+			return;
+		}
+
+		setIsLoading(true);
+
+		// 실제로는 API 호출이지만 여기서는 Mock 데이터 추가
+		setTimeout(() => {
+			const newData = generateMockVehicleEntries(20);
+			setVehicles((prev) => [...prev, ...newData]);
+			setIsLoading(false);
+
+			if (vehicles.length >= 480) {
+				setHasMore(false);
+			}
+		}, 1000);
+	};
+	// #endregion
+
+	// #region 이벤트 핸들러
+	const handleFiltersChange = (newFilters: SearchFilters) => {
+		setFilters(newFilters);
+	};
+
+	const handleSearch = () => {
+		// 실제로는 API 호출하여 필터링된 데이터 가져오기
+		console.log('검색 실행:', filters);
+	};
+
+	const handleVehicleSelect = (vehicle: VehicleEntry) => {
+		setSelectedVehicle(vehicle);
+	};
+
+	const handleBarrierOpen = (barrierId: string) => {
+		// 애니메이션이 완료된 후 상태 업데이트되도록 지연
+		setTimeout(() => {
+			setBarriers((prev) =>
+				prev.map((barrier) =>
+					barrier.id === barrierId ? { ...barrier, isOpen: true } : barrier
+				)
+			);
+		}, 1000); // 애니메이션 지속시간과 맞춤
+	};
+
+	const handleBarrierClose = (barrierId: string) => {
+		// 애니메이션이 완료된 후 상태 업데이트되도록 지연
+		setTimeout(() => {
+			setBarriers((prev) =>
+				prev.map((barrier) =>
+					barrier.id === barrierId ? { ...barrier, isOpen: false } : barrier
+				)
+			);
+		}, 1000); // 애니메이션 지속시간과 맞춤
+	};
+
+	const handleBarrierAlwaysOpen = (barrierId: string) => {
+		setBarriers((prev) =>
+			prev.map((barrier) =>
+				barrier.id === barrierId
+					? { ...barrier, alwaysOpen: !barrier.alwaysOpen }
+					: barrier
+			)
+		);
+	};
+
+	const handleBarrierAutoMode = (barrierId: string) => {
+		setBarriers((prev) =>
+			prev.map((barrier) =>
+				barrier.id === barrierId
+					? { ...barrier, autoMode: !barrier.autoMode }
+					: barrier
+			)
+		);
+	};
+
+	const handleBarrierBypass = (barrierId: string) => {
+		setBarriers((prev) =>
+			prev.map((barrier) =>
+				barrier.id === barrierId
+					? { ...barrier, bypass: !barrier.bypass }
+					: barrier
+			)
+		);
+	};
+	// #endregion
+
 	return (
-		<div className="container mx-auto p-6 space-y-8">
-			{/* #region Welcome Section */}
-			<div className="bg-card p-6 rounded-lg border border-border">
-				<h1 className="text-3xl font-bold text-foreground mb-4">
-					환영합니다! 🎉
-				</h1>
-				<p className="text-lg text-muted-foreground mb-6">
-					이것은 평범한 보일러플레이트 레이아웃입니다. 사이드바와 헤더가 포함된
-					기본적인 대시보드 구조를 제공합니다.
-				</p>
-				<div className="flex gap-4">
-					<button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90">
-						시작하기
-					</button>
-					<button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90">
-						문서 보기
-					</button>
-				</div>
-			</div>
-			{/* #endregion */}
-
-			{/* #region Features Grid */}
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<div className="bg-card p-6 rounded-lg border border-border">
-					<h3 className="text-lg font-semibold text-foreground mb-2">
-						반응형 디자인
-					</h3>
-					<p className="text-muted-foreground">
-						모든 디바이스에서 완벽하게 작동하는 반응형 레이아웃
+		<div className="min-h-screen bg-gray-50 p-4">
+			<div className="max-w-7xl mx-auto">
+				{/* 헤더 */}
+				<div className="mb-4">
+					<h1 className="text-2xl font-bold text-gray-800 mb-1">
+						주차관제 시스템
+					</h1>
+					<p className="text-sm text-gray-600">
+						실시간 입출차 현황 및 차단기 제어
 					</p>
 				</div>
 
-				<div className="bg-card p-6 rounded-lg border border-border">
-					<h3 className="text-lg font-semibold text-foreground mb-2">
-						다크 모드 지원
-					</h3>
-					<p className="text-muted-foreground">
-						라이트/다크 테마를 자동으로 지원하는 색상 시스템
-					</p>
-				</div>
+				{/* 메인 2분할 레이아웃 */}
+				<div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+					{/* 좌측: 입출차 패널 */}
+					<div className="space-y-4">
+						{/* 차량 상세정보 */}
+						<VehicleDetailCard vehicle={selectedVehicle} />
 
-				<div className="bg-card p-6 rounded-lg border border-border">
-					<h3 className="text-lg font-semibold text-foreground mb-2">
-						TypeScript
-					</h3>
-					<p className="text-muted-foreground">
-						타입 안전성을 보장하는 TypeScript 기반 개발
-					</p>
-				</div>
-			</div>
-			{/* #endregion */}
+						{/* 검색 필터 */}
+						<VehicleSearchFilter
+							filters={filters}
+							onFiltersChange={handleFiltersChange}
+							onSearch={handleSearch}
+						/>
 
-			{/* #region Stats Section */}
-			<div className="bg-card p-6 rounded-lg border border-border">
-				<h2 className="text-xl font-semibold text-foreground mb-4">
-					프로젝트 통계
-				</h2>
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-					<div className="text-center">
-						<div className="text-2xl font-bold text-primary">24</div>
-						<div className="text-sm text-muted-foreground">컴포넌트</div>
+						{/* 차량 목록 테이블 */}
+						<VehicleListTable
+							vehicles={vehicles}
+							filters={filters}
+							selectedVehicle={selectedVehicle}
+							onVehicleSelect={handleVehicleSelect}
+							onLoadMore={handleLoadMore}
+							hasMore={hasMore}
+							isLoading={isLoading}
+						/>
 					</div>
-					<div className="text-center">
-						<div className="text-2xl font-bold text-primary">8</div>
-						<div className="text-sm text-muted-foreground">페이지</div>
-					</div>
-					<div className="text-center">
-						<div className="text-2xl font-bold text-primary">100%</div>
-						<div className="text-sm text-muted-foreground">TypeScript</div>
-					</div>
-					<div className="text-center">
-						<div className="text-2xl font-bold text-primary">∞</div>
-						<div className="text-sm text-muted-foreground">가능성</div>
+
+					{/* 우측: 차단기 패널 */}
+					<div>
+						<BarrierGrid
+							barriers={barriers}
+							onBarrierOpen={handleBarrierOpen}
+							onBarrierClose={handleBarrierClose}
+							onBarrierAlwaysOpen={handleBarrierAlwaysOpen}
+							onBarrierAutoMode={handleBarrierAutoMode}
+							onBarrierBypass={handleBarrierBypass}
+						/>
 					</div>
 				</div>
 			</div>
-			{/* #endregion */}
 		</div>
 	);
 }
