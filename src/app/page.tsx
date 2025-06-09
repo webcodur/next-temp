@@ -112,7 +112,7 @@ export default function Home() {
 				{/* 헤더 */}
 				<div className="mb-4">
 					<h1 className="mb-1 text-2xl font-bold text-gray-800">
-						주차관제 시스템
+						주차관제 시스템!
 					</h1>
 					<p className="text-sm text-gray-600">
 						실시간 입출차 현황 및 차단기 제어
