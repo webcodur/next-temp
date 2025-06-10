@@ -5,6 +5,51 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 
+// #region 커스텀 헤더 구성 함수
+interface CustomHeaderProps {
+  date: Date;
+  changeYear: (year: number) => void;
+  changeMonth: (month: number) => void;
+}
+
+const renderCustomYearMonthHeader = ({
+  date,
+  changeYear,
+  changeMonth,
+}: CustomHeaderProps) => {
+  const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - 15 + i);
+  const months = Array.from({ length: 12 }, (_, i) => i);
+  
+  return (
+    <div className="flex items-center justify-center px-2 py-2 space-x-2">
+      <select
+        className="px-2 py-1 text-sm border rounded neu-inset"
+        value={date.getFullYear()}
+        onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}
+      >
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}년
+          </option>
+        ))}
+      </select>
+      
+      <select
+        className="px-2 py-1 text-sm border rounded neu-inset"
+        value={date.getMonth()}
+        onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}
+      >
+        {months.map((month) => (
+          <option key={month} value={month}>
+            {month + 1}월
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+// #endregion
+
 // #region DateRangePicker 컴포넌트
 export type DateRangePickerProps = {
   startDate: Date | null;
@@ -12,6 +57,9 @@ export type DateRangePickerProps = {
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
   className?: string;
+  yearDropdownItemNumber?: number;
+  scrollableYearDropdown?: boolean;
+  showMonthYearPicker?: boolean;
 };
 
 export function DateRangePicker({
@@ -20,6 +68,9 @@ export function DateRangePicker({
   onStartDateChange,
   onEndDateChange,
   className = '',
+  yearDropdownItemNumber = 15,
+  scrollableYearDropdown = true,
+  showMonthYearPicker = false,
 }: DateRangePickerProps) {
   // Date Picker 콜백 핸들러
   const handleStartDateChange = (date: Date | null) => {
@@ -41,7 +92,11 @@ export function DateRangePicker({
         dateFormat="yyyy-MM-dd"
         placeholderText="시작 날짜"
         locale={ko}
-        className="border px-2 py-1 rounded w-36"
+        yearDropdownItemNumber={yearDropdownItemNumber}
+        scrollableYearDropdown={scrollableYearDropdown}
+        showMonthYearPicker={showMonthYearPicker}
+        renderCustomHeader={renderCustomYearMonthHeader}
+        className="px-2 py-1 border rounded neu-inset w-36"
       />
       <span className="text-sm">~</span>
       <DatePicker
@@ -54,7 +109,11 @@ export function DateRangePicker({
         dateFormat="yyyy-MM-dd"
         placeholderText="마지막 날짜"
         locale={ko}
-        className="border px-2 py-1 rounded w-36"
+        yearDropdownItemNumber={yearDropdownItemNumber}
+        scrollableYearDropdown={scrollableYearDropdown}
+        showMonthYearPicker={showMonthYearPicker}
+        renderCustomHeader={renderCustomYearMonthHeader}
+        className="px-2 py-1 border rounded neu-inset w-36"
       />
     </div>
   );
@@ -73,6 +132,9 @@ export type SingleDatePickerProps = {
   showTimeSelect?: boolean;
   timeFormat?: string;
   timeIntervals?: number;
+  yearDropdownItemNumber?: number;
+  scrollableYearDropdown?: boolean;
+  showMonthYearPicker?: boolean;
 };
 
 export function SingleDatePicker({
@@ -86,6 +148,9 @@ export function SingleDatePicker({
   showTimeSelect = false,
   timeFormat = "HH:mm",
   timeIntervals = 30,
+  yearDropdownItemNumber = 15,
+  scrollableYearDropdown = true,
+  showMonthYearPicker = false,
 }: SingleDatePickerProps) {
   // Date Picker 콜백 핸들러
   const handleDateChange = (date: Date | null) => {
@@ -109,7 +174,11 @@ export function SingleDatePicker({
       showTimeSelect={showTimeSelect}
       timeFormat={timeFormat}
       timeIntervals={timeIntervals}
-      className={`border px-2 py-1 rounded ${className}`}
+      yearDropdownItemNumber={yearDropdownItemNumber}
+      scrollableYearDropdown={scrollableYearDropdown}
+      showMonthYearPicker={showMonthYearPicker}
+      renderCustomHeader={renderCustomYearMonthHeader}
+      className={`px-2 py-1 border rounded neu-inset ${className}`}
     />
   );
 }

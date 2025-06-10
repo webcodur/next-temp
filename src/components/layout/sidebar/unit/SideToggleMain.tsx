@@ -41,7 +41,7 @@ export function SideToggleMain() {
 				left: '0px',
 				top: '0px',
 				width: '50px',
-				height: '36px',
+				height: '30px',
 				zIndex: 50,
 			}}
 			className="flex items-center justify-center transition-all duration-300 border-r-2 rounded-bl-lg rounded-br-lg cursor-pointer bg-muted border-y border-border border-r-border hover:bg-primary/20 group"
@@ -50,9 +50,9 @@ export function SideToggleMain() {
 			}}
 			title={isMainCollapsed ? '사이드바 열기' : '사이드바 닫기'}>
 			{isMainCollapsed ? (
-				<ChevronRight className="w-5 h-5 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
+				<ChevronRight className="w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			) : (
-				<ChevronLeft className="w-5 h-5 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
+				<ChevronLeft className="w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			)}
 		</div>
 	);

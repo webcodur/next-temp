@@ -8,9 +8,9 @@ export const defaults = {
 
 export const styles = {
 	leftColWidth: 'w-[96px]',
-	buttonSize: 'w-16 h-16',
-	avatarSize: 'w-14 h-14',
-	headerHeight: 'h-[80px]',
+	buttonSize: 'w-14 h-14',
+	avatarSize: 'w-12 h-12',
+	headerHeight: 'h-[70px]',
 };
 
 export const animations = {

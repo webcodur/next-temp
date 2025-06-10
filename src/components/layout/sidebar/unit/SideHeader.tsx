@@ -37,36 +37,36 @@ export function SideHeader() {
 	};
 
 	return (
-		<div className="flex flex-col select-none pt-[36px]">
+		<div className="flex flex-col select-none pt-[30px]">
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
 				className={`bg-gradient-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
 					isHeaderCollapsed
 						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0'
-						: 'max-h-[200px] p-5 pt-4 opacity-100'
+						: 'max-h-[180px] p-4 pt-3 opacity-100'
 				}`}>
 				{/* 로고 영역 */}
 				<div
-					className={`relative flex items-center justify-center px-2 mb-4 ${isHeaderCollapsed ? 'h-0' : ''}`}>
+					className={`relative flex items-center justify-center px-2 mb-3 ${isHeaderCollapsed ? 'h-0' : ''}`}>
 					{/* 타이틀 영역 */}
 					<div className="flex-1 flex justify-center max-w-[250px]">
 						<Link
 							href="/"
 							onClick={handleLogoClick}
-							className="flex items-center justify-center gap-4 p-3 select-none neu-raised rounded-xl">
+							className="flex items-center justify-center gap-3 p-2 select-none neu-raised rounded-xl">
 							{/* 로고 아이콘 */}
 							<div className="flex items-center justify-center flex-shrink-0">
-								<Building2 className="w-8 h-8 neu-icon-active" />
+								<Building2 className="w-6 h-6 neu-icon-active" />
 							</div>
 							{/* 타이틀 텍스트 */}
-							<div className="text-xl font-semibold text-foreground/90 truncate max-w-[160px]">
+							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px]">
 								건물 타이틀
 							</div>
 						</Link>
 					</div>
 				</div>
 
-				{/* 현장검색 영역 */}
+				{/* 현장검색 영역 - 컴팩트하게 가로로 늘리고 세로를 줄임 */}
 				<div className={`px-1 ${isHeaderCollapsed ? 'h-0' : ''}`}>
 					<SearchBar />
 				</div>

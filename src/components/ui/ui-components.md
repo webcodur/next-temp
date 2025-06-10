@@ -108,6 +108,15 @@
 - **활용 라이브러리**: React, Tailwind
 - **예상 사용 사례**: 피드 스크롤, 대용량 데이터 표시
 
+### 16. Table
+
+- **컴포넌트 경로**: `src/components/ui/table/table.tsx`
+- **페이지 경로**: `src/app/lab/ui-check/table/page.tsx`
+- **기능**: 데이터 테이블 표시, 컬럼 정렬, 커스텀 셀 렌더링
+- **구현 방식**: 자체 구현 + Tailwind
+- **활용 라이브러리**: React, Tailwind
+- **예상 사용 사례**: 데이터 목록 표시, 현황 조회, 관리 인터페이스
+
 ### 18. Timeline
 
 - **컴포넌트 경로**: `src/components/ui/timeline/timeline.tsx`

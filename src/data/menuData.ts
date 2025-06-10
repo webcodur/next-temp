@@ -314,9 +314,9 @@ export const menuData: MenuData = {
 						description: '커스텀 확인창과 입력 폼을 위한 모달 컴포넌트',
 					},
 					{
-						label: 'SearchFilter',
-						href: '/lab/ui-check/search-filter',
-						description: 'API 검색 필터 UI 예시 페이지',
+						label: 'Field',
+						href: '/lab/ui-check/field',
+						description: '텍스트 입력, 필터, 정렬 선택을 위한 필드 컴포넌트',
 					},
 					{
 						label: 'Tooltip',
@@ -337,11 +337,6 @@ export const menuData: MenuData = {
 						label: 'Editor',
 						href: '/lab/ui-check/editor',
 						description: '서식 있는 텍스트 입력을 위한 에디터 컴포넌트',
-					},
-					{
-						label: 'Select (+)',
-						href: '/lab/ui-check/select',
-						description: '다중 선택, 검색 기능을 포함한 드롭다운 컴포넌트',
 					},
 					{
 						label: 'Tabs',
@@ -379,6 +374,11 @@ export const menuData: MenuData = {
 						href: '/lab/ui-check/drag-and-drop',
 						description:
 							'항목 재배치나 파일 업로드를 위한 드래그 앤 드롭 컴포넌트',
+					},
+					{
+						label: 'Table',
+						href: '/lab/ui-check/table',
+						description: '데이터 테이블 표시를 위한 컴포넌트',
 					},
 				],
 			},

@@ -222,20 +222,20 @@ export default function TooltipPage() {
 				<div className="p-4 rounded-md bg-gray-50">
 					<pre className="text-sm whitespace-pre-wrap">
 						{`import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip/Tooltip';
+                Tooltip,
+                TooltipContent,
+                TooltipProvider,
+                TooltipTrigger,
+              } from '@/components/ui/tooltip/Tooltip';
 
-<TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger>마우스를 올려보세요</TooltipTrigger>
-    <TooltipContent>
-      툴팁 내용이 여기에 표시됩니다
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>`}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>마우스를 올려보세요</TooltipTrigger>
+                  <TooltipContent>
+                    툴팁 내용이 여기에 표시됩니다
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>`}
 					</pre>
 				</div>
 			</section>

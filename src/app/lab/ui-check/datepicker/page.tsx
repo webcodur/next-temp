@@ -12,6 +12,7 @@ export default function DatepickerPage() {
 
 	const [singleDate, setSingleDate] = React.useState<Date | null>(null);
 	const [dateTimeValue, setDateTimeValue] = React.useState<Date | null>(null);
+	const [monthYearDate, setMonthYearDate] = React.useState<Date | null>(null);
 
 	return (
 		<div className="container py-10">
@@ -71,6 +72,26 @@ export default function DatepickerPage() {
 							선택된 날짜/시간:{' '}
 							{dateTimeValue ? dateTimeValue.toLocaleString() : '없음'}
 						</p>
+					</div>
+				</section>
+
+				{/* 월별 선택 */}
+				<section>
+					<h2 className="mb-4 text-2xl font-semibold">월별 선택</h2>
+					<div className="flex flex-col space-y-6">
+						<div>
+							<p className="mb-2 font-medium">월 단위 선택</p>
+							<SingleDatePicker
+								selected={monthYearDate}
+								onChange={setMonthYearDate}
+								showMonthYearPicker={true}
+								dateFormat="yyyy년 MM월"
+							/>
+							<p className="mt-2 text-sm text-gray-600">
+								선택된 월:{' '}
+								{monthYearDate ? monthYearDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' }) : '없음'}
+							</p>
+						</div>
 					</div>
 				</section>
 			</div>

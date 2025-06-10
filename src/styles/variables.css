@@ -8,8 +8,8 @@
 	--muted-foreground: 0 0% 45.1%;
 	--border: 0 0% 89.8%;
 	--primary: 0 0% 9%;
-	--primary-rgb: 23, 23, 23; /* primary 색상의 RGB 값 */
-	--primary-foreground: 0 0% 98%;
+	--primary-rgb: 23, 23, 23;
+	--primary-foreground: 0 0% 3.9%;
 	--secondary: 0 0% 96.1%;
 	--secondary-foreground: 0 0% 9%;
 	--destructive: 0 84.2% 60.2%;

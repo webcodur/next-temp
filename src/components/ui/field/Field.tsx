@@ -9,7 +9,7 @@ import React, {
 	ChangeEvent,
 	KeyboardEvent,
 } from 'react';
-import { Search, X, Filter, ArrowUpDown, ChevronDown } from 'lucide-react';
+import { Search, X, Filter, ArrowUpDown, ChevronDown, Type } from 'lucide-react';
 
 //#region Types & Interfaces
 export interface Option {
@@ -61,11 +61,20 @@ interface FieldSortSelectProps extends BaseFieldProps {
 	maxHeight?: number;
 }
 
+interface FieldRadioGroupProps extends BaseFieldProps {
+	type: 'radio-group';
+	value?: string;
+	onChange?: (value: string) => void;
+	options: Option[];
+	layout?: 'horizontal' | 'vertical';
+}
+
 type FieldProps =
 	| FieldTextProps
 	| FieldMultiSelectProps
 	| FieldFilterSelectProps
-	| FieldSortSelectProps;
+	| FieldSortSelectProps
+	| FieldRadioGroupProps;
 //#endregion
 
 //#region Styles
@@ -73,12 +82,13 @@ const STYLES = {
 	container:
 		'neu-flat bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-300 focus:neu-inset transition-all duration-200',
 	dropdown:
-		'neu-raised absolute z-50 w-full mt-2 overflow-hidden bg-gray-50 rounded-2xl',
+		'absolute z-[100] w-full top-full left-0 mt-1 overflow-hidden bg-gray-50 rounded-2xl shadow-md',
 	option:
-		'mx-2 my-0.5 px-4 py-2 rounded-xl cursor-pointer flex items-center justify-between font-medium',
+		'mx-2 my-0.5 px-3 py-1.5 rounded-xl cursor-pointer flex items-center justify-between font-medium text-sm',
 	tag: 'inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 border border-gray-200 rounded-lg',
 	button:
 		'flex items-center justify-center neu-raised rounded-full text-gray-500 hover:text-gray-700 transition-colors focus:outline-none focus:ring-0',
+	fieldHeaderHeight: 'h-9 mb-2',
 };
 //#endregion
 
@@ -92,7 +102,7 @@ const FieldTextComponent: React.FC<FieldTextProps> = ({
 	onClear,
 	inputType = 'text',
 	className = '',
-	size = 'md',
+	size = 'sm',
 	showSearchIcon = false,
 	showClearButton = true,
 	disabled = false,
@@ -120,14 +130,18 @@ const FieldTextComponent: React.FC<FieldTextProps> = ({
 
 	return (
 		<div className="flex flex-col">
-			{label && (
-				<label className="mb-2 text-sm font-medium text-gray-700">
-					{label}
-				</label>
-			)}
+			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+				{label && (
+					<label className="text-sm font-medium text-gray-700">
+						{label}
+					</label>
+				)}
+			</div>
 			<div className="relative">
-				{showSearchIcon && (
+				{showSearchIcon ? (
 					<Search className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
+				) : (
+					<Type className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
 				)}
 
 				<input
@@ -141,7 +155,7 @@ const FieldTextComponent: React.FC<FieldTextProps> = ({
 						w-full ${STYLES.container}
 						text-gray-800 placeholder-gray-400 
 						${sizeStyles[size]}
-						${showSearchIcon ? 'pl-10' : ''}
+						pl-10
 						${showClearButton && value ? 'pr-10' : ''}
 						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 						${className}
@@ -332,7 +346,7 @@ const SelectDropdown: React.FC<{
 		<div className={STYLES.dropdown} style={{ maxHeight }}>
 			<div className="overflow-auto" style={{ maxHeight }}>
 				{filteredOptions.length === 0 ? (
-					<div className="px-4 py-6 font-medium text-center text-gray-500">
+					<div className="px-3 py-1.5 font-medium text-center text-gray-500 text-sm">
 						검색 결과가 없습니다
 					</div>
 				) : (
@@ -349,8 +363,8 @@ const SelectDropdown: React.FC<{
 									option.disabled
 										? 'text-gray-400 cursor-not-allowed opacity-50'
 										: isActive
-											? 'neu-inset text-gray-700 bg-white'
-											: 'neu-raised text-gray-600'
+											? 'bg-white text-gray-700 shadow-sm'
+											: 'text-gray-700 hover:bg-gray-100'
 								}`}
 								onClick={() => handleOptionSelect(option)}
 								onMouseEnter={() => setHoveredIndex(index)}
@@ -420,14 +434,37 @@ const FieldMultiSelectComponent: React.FC<FieldMultiSelectProps> = ({
 
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
-			{label && (
-				<label className="mb-2 text-sm font-medium text-gray-700">
-					{label}
-				</label>
-			)}
+			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+				{label && (
+					<label className="text-sm font-medium text-gray-700">
+						{label}
+					</label>
+				)}
+				{selectedOptions.length > 0 && (
+					<div className="flex flex-wrap gap-1">
+						{selectedOptions.slice(0, 2).map((option) => (
+							<Tag
+								key={option.value}
+								option={option}
+								onRemove={() => {
+									const newValues = (value || []).filter(
+										(v) => v !== option.value
+									);
+									onChange?.(newValues);
+								}}
+							/>
+						))}
+						{selectedOptions.length > 2 && (
+							<span className="px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg flex items-center justify-center">
+								+{selectedOptions.length - 2}
+							</span>
+						)}
+					</div>
+				)}
+			</div>
 
 			<div
-				className={`relative flex items-center py-2.5 h-10 pl-10 pr-4 ${STYLES.container} ${
+				className={`relative flex items-center py-2 h-8 pl-10 pr-4 ${STYLES.container} ${
 					disabled ? 'opacity-60 cursor-not-allowed' : ''
 				}`}
 				onClick={() => !disabled && inputRef.current?.focus()}
@@ -449,40 +486,25 @@ const FieldMultiSelectComponent: React.FC<FieldMultiSelectProps> = ({
 							selectedOptions.length > 0 ? '추가 검색...' : placeholder
 						}
 						disabled={disabled}
-						className="flex-1 min-w-0 font-medium text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
+						className="flex-1 min-w-0 text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
 						style={{ minWidth: '100px' }}
 					/>
 				</div>
 			</div>
 
-			{selectedOptions.length > 0 && (
-				<div className="flex flex-wrap gap-2 mt-3">
-					{selectedOptions.map((option) => (
-						<Tag
-							key={option.value}
-							option={option}
-							onRemove={() => {
-								const newValues = (value || []).filter(
-									(v) => v !== option.value
-								);
-								onChange?.(newValues);
-							}}
-						/>
-					))}
-				</div>
-			)}
-
-			<SelectDropdown
-				isOpen={isOpen}
-				filteredOptions={filteredOptions}
-				selectedValues={selectedValues}
-				highlightedIndex={highlightedIndex}
-				hoveredIndex={hoveredIndex}
-				setHoveredIndex={setHoveredIndex}
-				handleOptionSelect={handleOptionSelect}
-				maxHeight={maxHeight}
-				multiple={true}
-			/>
+			<div className="relative">
+				<SelectDropdown
+					isOpen={isOpen}
+					filteredOptions={filteredOptions}
+					selectedValues={selectedValues}
+					highlightedIndex={highlightedIndex}
+					hoveredIndex={hoveredIndex}
+					setHoveredIndex={setHoveredIndex}
+					handleOptionSelect={handleOptionSelect}
+					maxHeight={maxHeight}
+					multiple={true}
+				/>
+			</div>
 		</div>
 	);
 };
@@ -517,14 +539,16 @@ const FieldFilterSelectComponent: React.FC<FieldFilterSelectProps> = ({
 
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
-			{label && (
-				<label className="mb-2 text-sm font-medium text-gray-700">
-					{label}
-				</label>
-			)}
+			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+				{label && (
+					<label className="text-sm font-medium text-gray-700">
+						{label}
+					</label>
+				)}
+			</div>
 
 			<div
-				className={`relative flex items-center py-2.5 h-10 pl-10 pr-4 ${STYLES.container} ${
+				className={`relative flex items-center py-2 h-8 pl-10 pr-4 ${STYLES.container} ${
 					disabled ? 'opacity-60 cursor-not-allowed' : ''
 				}`}
 				onClick={() => !disabled && inputRef.current?.focus()}
@@ -563,17 +587,19 @@ const FieldFilterSelectComponent: React.FC<FieldFilterSelectProps> = ({
 				)}
 			</div>
 
-			<SelectDropdown
-				isOpen={isOpen}
-				filteredOptions={filteredOptions}
-				selectedValues={selectedValues}
-				highlightedIndex={highlightedIndex}
-				hoveredIndex={hoveredIndex}
-				setHoveredIndex={setHoveredIndex}
-				handleOptionSelect={handleOptionSelect}
-				maxHeight={maxHeight}
-				multiple={false}
-			/>
+			<div className="relative">
+				<SelectDropdown
+					isOpen={isOpen}
+					filteredOptions={filteredOptions}
+					selectedValues={selectedValues}
+					highlightedIndex={highlightedIndex}
+					hoveredIndex={hoveredIndex}
+					setHoveredIndex={setHoveredIndex}
+					handleOptionSelect={handleOptionSelect}
+					maxHeight={maxHeight}
+					multiple={false}
+				/>
+			</div>
 		</div>
 	);
 };
@@ -597,13 +623,13 @@ const FieldSortSelectComponent: React.FC<FieldSortSelectProps> = ({
 
 	const selectedOption = options.find((option) => option.value === value);
 
-	const handleOptionSelect = (option: Option) => {
+	const handleOptionSelect = useCallback((option: Option) => {
 		if (option.disabled) return;
 		onChange?.(option.value);
 		setIsOpen(false);
 		setHighlightedIndex(-1);
 		setHoveredIndex(-1);
-	};
+	}, [onChange]);
 
 	useEffect(() => {
 		const closeDropdown = () => {
@@ -653,18 +679,20 @@ const FieldSortSelectComponent: React.FC<FieldSortSelectProps> = ({
 			document.removeEventListener('mousedown', handleClickOutside);
 			document.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [isOpen, highlightedIndex, options]);
+	}, [isOpen, highlightedIndex, options, handleOptionSelect]);
 
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
-			{label && (
-				<label className="mb-2 text-sm font-medium text-gray-700">
-					{label}
-				</label>
-			)}
+			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+				{label && (
+					<label className="text-sm font-medium text-gray-700">
+						{label}
+					</label>
+				)}
+			</div>
 
 			<div
-				className={`relative flex items-center justify-between py-2.5 h-10 pl-10 pr-4 cursor-pointer ${STYLES.container} ${
+				className={`relative flex items-center justify-between py-2 h-8 pl-10 pr-4 cursor-pointer ${STYLES.container} ${
 					disabled ? 'opacity-60 cursor-not-allowed' : ''
 				}`}
 				onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -675,7 +703,7 @@ const FieldSortSelectComponent: React.FC<FieldSortSelectProps> = ({
 
 				<span
 					className={`flex-1 ${
-						selectedOption ? 'text-gray-800' : 'text-gray-400'
+						selectedOption ? 'text-gray-800' : 'text-gray-500'
 					} font-medium truncate`}>
 					{selectedOption?.label || placeholder}
 				</span>
@@ -687,40 +715,99 @@ const FieldSortSelectComponent: React.FC<FieldSortSelectProps> = ({
 				/>
 			</div>
 
-			{isOpen && (
-				<div className={STYLES.dropdown} style={{ maxHeight }}>
-					<div className="overflow-auto" style={{ maxHeight }}>
-						{options.map((option, index) => {
-							const isSelected = option.value === value;
-							const isHighlighted = index === highlightedIndex;
-							const isHovered = index === hoveredIndex;
-							const isActive = isHighlighted || isHovered || isSelected;
+			<div className="relative">
+				{isOpen && (
+					<div className={STYLES.dropdown} style={{ maxHeight }}>
+						<div className="overflow-auto" style={{ maxHeight }}>
+							{options.map((option, index) => {
+								const isSelected = option.value === value;
+								const isHighlighted = index === highlightedIndex;
+								const isHovered = index === hoveredIndex;
+								const isActive = isHighlighted || isHovered || isSelected;
 
-							return (
-								<div
-									key={option.value}
-									className={`${STYLES.option} ${
-										option.disabled
-											? 'text-gray-400 cursor-not-allowed opacity-50'
-											: isActive
-												? 'neu-inset text-gray-700 bg-white'
-												: 'neu-raised text-gray-600'
-									}`}
-									onClick={() => handleOptionSelect(option)}
-									onMouseEnter={() => setHoveredIndex(index)}
-									onMouseLeave={() => setHoveredIndex(-1)}>
-									<span className="truncate">{option.label}</span>
-									{isSelected && (
-										<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">
-											✓
-										</div>
-									)}
-								</div>
-							);
-						})}
+								return (
+									<div
+										key={option.value}
+										className={`${STYLES.option} ${
+											option.disabled
+												? 'text-gray-400 cursor-not-allowed opacity-50'
+												: isActive
+													? 'bg-white text-gray-700 shadow-sm'
+													: 'text-gray-700 hover:bg-gray-100'
+										}`}
+										onClick={() => handleOptionSelect(option)}
+										onMouseEnter={() => setHoveredIndex(index)}
+										onMouseLeave={() => setHoveredIndex(-1)}>
+										<span className="truncate">{option.label}</span>
+										{isSelected && (
+											<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">
+												✓
+											</div>
+										)}
+									</div>
+								);
+							})}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
+		</div>
+	);
+};
+//#endregion
+
+//#region Radio Group Component
+const FieldRadioGroupComponent: React.FC<FieldRadioGroupProps> = ({
+	label,
+	value,
+	onChange,
+	options,
+	disabled = false,
+	className = '',
+	layout = 'vertical',
+}) => {
+	const handleChange = (optionValue: string) => {
+		if (disabled) return;
+		onChange?.(optionValue);
+	};
+
+	return (
+		<div className={`relative ${className}`}>
+			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+				{label && (
+					<label className="text-sm font-medium text-gray-700">
+						{label}
+					</label>
+				)}
+			</div>
+
+			<div className={`flex ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
+				{options.map((option) => {
+					const isSelected = option.value === value;
+					const isDisabled = disabled || option.disabled;
+
+					return (
+						<div
+							key={option.value}
+							className={`flex items-center ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+							onClick={() => !isDisabled && handleChange(option.value)}>
+							<div
+								className={`w-5 h-5 flex items-center justify-center rounded-full mr-2 ${
+									isSelected
+										? 'neu-inset bg-gray-50 shadow-inner'
+										: 'neu-raised bg-gray-50 shadow-md'
+								}`}>
+								{isSelected && (
+									<div className="w-2.5 h-2.5 bg-gray-800 rounded-full"></div>
+								)}
+							</div>
+							<span className={`text-sm font-medium ${isSelected ? 'text-gray-800' : 'text-gray-700'}`}>
+								{option.label}
+							</span>
+						</div>
+					);
+				})}
+			</div>
 		</div>
 	);
 };
@@ -737,6 +824,8 @@ export const Field: React.FC<FieldProps> = (props) => {
 			return <FieldFilterSelectComponent {...props} />;
 		case 'sort-select':
 			return <FieldSortSelectComponent {...props} />;
+		case 'radio-group':
+			return <FieldRadioGroupComponent {...props} />;
 		default:
 			return null;
 	}
@@ -758,4 +847,8 @@ export const FieldFilterSelect: React.FC<
 export const FieldSortSelect: React.FC<Omit<FieldSortSelectProps, 'type'>> = (
 	props
 ) => <Field {...props} type="sort-select" />;
+
+export const FieldRadioGroup: React.FC<Omit<FieldRadioGroupProps, 'type'>> = (
+	props
+) => <Field {...props} type="radio-group" />;
 //#endregion

@@ -26,7 +26,7 @@ export function SideToggleHead() {
 				left: '0px',
 				top: '0px',
 				width: `${defaults.sidebarWidth}px`,
-				height: '36px',
+				height: '30px',
 				zIndex: 45,
 				transform: isHeadVisible ? 'translateY(0)' : 'translateY(-100%)',
 				opacity: isHeadVisible ? 1 : 0,
@@ -46,7 +46,7 @@ export function SideToggleHead() {
 				className="flex items-center justify-center flex-1 transition-all duration-300 rounded-bl-lg rounded-br-lg cursor-pointer hover:bg-primary/20 group"
 				onClick={handleHeadToggle}
 				title={isHeadCollapsed ? '헤더 펼치기' : '헤더 접기'}>
-				<Minus className="w-5 h-5 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
+				<Minus className="w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			</div>
 		</div>
 	);

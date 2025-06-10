@@ -33,42 +33,28 @@ export function SearchBar() {
 	};
 
 	return (
-		<div className="flex items-center gap-4">
-			{/* 검색 입력창 영역 */}
-			<div className="relative flex-1">
-				<input
-					type="text"
-					placeholder="현장 검색"
-					value={searchQuery}
-					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-						handleSearchChange(e.target.value)
-					}
-					onKeyDown={handleKeyDown}
-					className="w-full h-10 px-4 pr-10 text-base rounded-md outline-none select-text neu-flat text-foreground placeholder:text-muted-foreground bg-card/80 border-border/70"
-				/>
-
-				{/* 검색어 초기화 버튼 (입력창 내부) */}
-				{isSearchActive && (
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={handleSearchClear}
-						className="neu-raised absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 rounded-sm"
-						title="검색 지우기">
-						<X className="w-4 h-4 text-muted-foreground" />
-					</Button>
-				)}
-			</div>
-
-			{/* 검색 실행 버튼 (독립적) */}
-			<Button
-				variant="ghost"
-				size="sm"
-				onClick={handleSearchSubmit}
-				className="flex-shrink-0 w-10 h-10 p-0 rounded-md neu-raised"
-				title="현장 검색">
-				<Search className="w-5 h-5 text-muted-foreground" />
-			</Button>
+		<div className="relative flex items-center">
+			<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
+			<input
+				type="text"
+				placeholder="현장 검색"
+				value={searchQuery}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+					handleSearchChange(e.target.value)
+				}
+				onKeyDown={handleKeyDown}
+				className="w-full h-8 pl-9 pr-9 text-sm rounded-md outline-none select-text neu-flat text-foreground placeholder:text-muted-foreground bg-card/80 border-border/70"
+			/>
+			{isSearchActive && (
+				<Button
+					variant="ghost"
+					size="sm"
+					onClick={handleSearchClear}
+					className="neu-raised absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 rounded-sm"
+					title="검색 지우기">
+					<X className="w-3.5 h-3.5 text-muted-foreground" />
+				</Button>
+			)}
 		</div>
 	);
 }

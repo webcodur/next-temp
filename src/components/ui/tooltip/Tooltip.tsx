@@ -31,9 +31,9 @@ const TooltipContent = React.forwardRef<
 	) => {
 		const variantClasses = {
 			default: 'bg-primary text-primary-foreground',
-			info: 'bg-blue-500 text-white',
-			warning: 'bg-amber-500 text-white',
-			error: 'bg-red-500 text-white',
+			info: 'bg-blue-500 text-black',
+			warning: 'bg-amber-500 text-black',
+			error: 'bg-red-500 text-black',
 		};
 
 		return (

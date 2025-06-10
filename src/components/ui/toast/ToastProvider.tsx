@@ -7,7 +7,7 @@ import { Toaster, toast } from "sonner";
 const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <>
     {children}
-    <Toaster position="top-right" richColors toastOptions={{ duration: 3000 }} />
+    <Toaster position="bottom-center" richColors toastOptions={{ duration: 3000 }} />
   </>
 );
 // #endregion
