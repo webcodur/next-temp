@@ -83,7 +83,6 @@ const StatusBadge = ({ status }: { status: User['status'] }) => {
 
 export default function TablePage() {
   const [loading, setLoading] = useState(false);
-  const [isCompact, setIsCompact] = useState(false);
 
   // 테이블 컬럼 정의
   const columns: TableColumn<User>[] = [
@@ -129,7 +128,7 @@ export default function TablePage() {
       id: 'actions',
       header: '작업',
       cell: (user) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 justify-center">
           <Button
             size="icon"
             variant="ghost"
@@ -175,12 +174,6 @@ export default function TablePage() {
         <Button onClick={simulateLoading} className="neu-raised">
           로딩 시뮬레이션
         </Button>
-        <Button 
-          onClick={() => setIsCompact(!isCompact)} 
-          className={isCompact ? 'neu-inset' : 'neu-raised'}
-        >
-          {isCompact ? '기본 크기' : '작은 크기'}
-        </Button>
       </div>
 
       <div className="mb-10">
@@ -189,7 +182,7 @@ export default function TablePage() {
           data={users}
           columns={columns}
           isLoading={loading}
-          compact={isCompact}
+          compact={true}
         />
       </div>
 
@@ -200,7 +193,7 @@ export default function TablePage() {
             data={[]}
             columns={columns}
             emptyMessage="사용자가 없습니다."
-            compact={isCompact}
+            compact={true}
           />
         </div>
 
@@ -209,7 +202,7 @@ export default function TablePage() {
           <Table
             data={users.slice(0, 3)}
             columns={columns}
-            compact={isCompact}
+            compact={true}
           />
         </div>
       </div>

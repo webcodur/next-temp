@@ -153,7 +153,7 @@ const FieldTextComponent: React.FC<FieldTextProps> = ({
 					disabled={disabled}
 					className={`
 						w-full ${STYLES.container}
-						text-gray-800 placeholder-gray-400 
+						text-gray-800 placeholder-gray-400 font-medium
 						${sizeStyles[size]}
 						pl-10
 						${showClearButton && value ? 'pr-10' : ''}

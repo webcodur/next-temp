@@ -172,7 +172,7 @@ export function Table<T extends Record<string, any>>({
     const baseClasses = cn(
       'border-b border-gray-200 transition-colors',
       'hover:bg-gray-50/50',
-      'even:bg-gray-50/30', // 얼룩말 효과 항상 적용
+      'even:bg-gray-100/70', // 얼룩말 효과 더 진하게 조정
       {
         'h-10': compact,
         'h-12': !compact,
@@ -203,7 +203,7 @@ export function Table<T extends Record<string, any>>({
   // 헤더 셀 스타일 설정
   const headerCellClasses = cn(
     'font-medium text-sm text-gray-700',
-    'px-4',
+    'px-4 text-center', // 가운데 정렬 추가
     {
       'py-2': compact,
       'py-3': !compact,
@@ -249,7 +249,7 @@ export function Table<T extends Record<string, any>>({
                 )}
                 onClick={() => column.sortable && handleSort(column.id)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center"> {/* 가운데 정렬로 변경 */}
                   <span>{column.header}</span>
                   {column.sortable && (
                     <span className="flex flex-col ml-1">
@@ -280,36 +280,23 @@ export function Table<T extends Record<string, any>>({
         </thead>
         <tbody className={bodyClasses}>
           {isLoading ? (
-            Array(minRows).fill(null).map((_, rowIndex) => (
-              <tr key={`loading-${rowIndex}`} className={getRowClasses(null, rowIndex)}>
-                <td
-                  colSpan={columns.length}
-                  className={cn(
-                    cellClasses,
-                    "text-center",
-                    rowIndex === Math.floor(minRows / 2) ? "py-8 text-gray-500" : "opacity-0"
-                  )}
-                >
-                  {rowIndex === Math.floor(minRows / 2) ? '로딩 중...' : '\u00A0'}
-                </td>
-              </tr>
-            ))
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="py-20 text-center text-gray-500"
+              >
+                로딩 중...
+              </td>
+            </tr>
           ) : sortedData.length === 0 ? (
-            <>
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="text-center py-8 text-gray-500"
-                >
-                  {emptyMessage}
-                </td>
-              </tr>
-              {emptyRows.map((_, index) => (
-                <tr key={`empty-${index}`} className={getRowClasses(null, index)}>
-                  <td colSpan={columns.length} className="opacity-0">&nbsp;</td>
-                </tr>
-              ))}
-            </>
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="py-20 text-center text-gray-500"
+              >
+                {emptyMessage}
+              </td>
+            </tr>
           ) : (
             <>
               {sortedData.map((item, rowIndex) => (
