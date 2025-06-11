@@ -295,95 +295,143 @@ export const menuData: MenuData = {
 		label: '연구소',
 		color: 'bg-yellow-500',
 		midItems: {
-			uiCheck: {
-				label: 'UI-확인',
+			basicElements: {
+				label: '기본 요소',
 				botItems: [
 					{
-						label: 'Neumorphic',
-						href: '/lab/ui-check/neumorphic',
-						description: '뉴모피즘 디자인의 양각/음각 컴포넌트',
+						label: 'Container',
+						href: '/lab/ui-check/container',
+						description: '뉴모피즘 기본 컨테이너',
 					},
 					{
-						label: 'Card',
-						href: '/lab/ui-check/card',
-						description: '정보 그룹화 표시를 위한 카드 컴포넌트',
+						label: 'Button',
+						href: '/lab/ui-check/button',
+						description: '기본 버튼 컴포넌트',
 					},
 					{
-						label: 'Toast',
-						href: '/lab/ui-check/toast',
-						description: '상태 알림과 메시지를 표시하는 토스트 컴포넌트',
+						label: 'Badge',
+						href: '/lab/ui-check/badge',
+						description: '상태 표시 배지',
 					},
 					{
-						label: 'Modal',
-						href: '/lab/ui-check/modal',
-						description: '커스텀 확인창과 입력 폼을 위한 모달 컴포넌트',
-					},
-					{
-						label: 'Field',
-						href: '/lab/ui-check/field',
-						description: '텍스트 입력, 필터, 정렬 선택을 위한 필드 컴포넌트',
+						label: 'Avatar',
+						href: '/lab/ui-check/avatar',
+						description: '사용자 아바타',
 					},
 					{
 						label: 'Tooltip',
 						href: '/lab/ui-check/tooltip',
-						description: '추가 정보 제공을 위한 툴팁 컴포넌트',
+						description: '보조 정보 팝업',
 					},
 					{
-						label: 'Barrier3D',
-						href: '/lab/ui-check/barrier-3d',
-						description: '3D 주차장 차단기 컴포넌트',
+						label: 'Card',
+						href: '/lab/ui-check/card',
+						description: '정보 그룹화 컨테이너',
+					},
+				],
+			},
+			inputFeedback: {
+				label: '입력 & 피드백',
+				botItems: [
+					{
+						label: 'Field',
+						href: '/lab/ui-check/field',
+						description: '텍스트/선택/필터 입력',
 					},
 					{
 						label: 'Datepicker',
 						href: '/lab/ui-check/datepicker',
-						description: '날짜 선택을 위한 데이트피커 컴포넌트',
+						description: '날짜 선택',
 					},
 					{
 						label: 'Editor',
 						href: '/lab/ui-check/editor',
-						description: '서식 있는 텍스트 입력을 위한 에디터 컴포넌트',
+						description: '마크다운 에디터',
 					},
+					{
+						label: 'Toast',
+						href: '/lab/ui-check/toast',
+						description: '상태 알림 메시지',
+					},
+					{
+						label: 'Modal',
+						href: '/lab/ui-check/modal',
+						description: '기본 모달 (단순 확인창)',
+					},
+					{
+						label: 'Dialog',
+						href: '/lab/ui-check/dialog',
+						description: '고급 다이얼로그 (복잡한 폼/인터랙션)',
+					},
+				],
+			},
+			layoutNavigation: {
+				label: '레이아웃 & 네비게이션',
+				botItems: [
 					{
 						label: 'Tabs',
 						href: '/lab/ui-check/tabs',
-						description: '콘텐츠 구분과 전환을 위한 탭 컴포넌트',
-					},
-					{
-						label: 'Pagination',
-						href: '/lab/ui-check/pagination',
-						description: '페이지 이동을 위한 페이지네이션 컴포넌트',
+						description: '콘텐츠 분할/전환',
 					},
 					{
 						label: 'Stepper',
 						href: '/lab/ui-check/stepper',
-						description: '단계별 진행을 위한 스텝퍼 컴포넌트',
-					},
-					{
-						label: 'InfiniteScroll',
-						href: '/lab/ui-check/infinite-scroll',
-						description:
-							'대량 데이터의 효율적 로딩을 위한 무한 스크롤 컴포넌트',
+						description: '단계별 진행 표시',
 					},
 					{
 						label: 'Timeline',
 						href: '/lab/ui-check/timeline',
-						description: '이벤트나 작업 흐름 표시를 위한 타임라인 컴포넌트',
+						description: '시간순 이벤트 표시',
 					},
 					{
-						label: 'Carousel',
-						href: '/lab/ui-check/carousel',
-						description: '이미지나 카드 회전 표시를 위한 캐러셀 컴포넌트',
+						label: 'Accordion',
+						href: '/lab/ui-check/accordion',
+						description: '접기/펼치기 아코디언',
 					},
+				],
+			},
+			advancedData: {
+				label: '고급 & 데이터',
+				botItems: [
 					{
-						label: 'DragAndDrop',
-						href: '/lab/ui-check/drag-and-drop',
-						description:
-							'항목 재배치나 파일 업로드를 위한 드래그 앤 드롭 컴포넌트',
+						label: 'Pagination',
+						href: '/lab/ui-check/pagination',
+						description: '페이지 이동',
 					},
 					{
 						label: 'Table',
 						href: '/lab/ui-check/table',
-						description: '데이터 테이블 표시를 위한 컴포넌트',
+						description: '구조화된 데이터 표시',
+					},
+					{
+						label: 'Carousel',
+						href: '/lab/ui-check/carousel',
+						description: '슬라이더/회전 표시',
+					},
+					{
+						label: 'DragAndDrop',
+						href: '/lab/ui-check/drag-and-drop',
+						description: '드래그 앤 드롭 정렬',
+					},
+					{
+						label: 'InfiniteScroll',
+						href: '/lab/ui-check/infinite-scroll',
+						description: '무한 스크롤 로딩',
+					},
+					{
+						label: 'AdvancedSearch',
+						href: '/lab/ui-check/advanced-search',
+						description: '고급 검색 패널',
+					},
+				],
+			},
+			etc: {
+				label: '기타',
+				botItems: [
+					{
+						label: 'Barrier3D',
+						href: '/lab/ui-check/barrier-3d',
+						description: '3D 차단기 시각화',
 					},
 				],
 			},

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import Modal from '@/components/ui/modal/Modal';
 
 export default function ModalPage() {

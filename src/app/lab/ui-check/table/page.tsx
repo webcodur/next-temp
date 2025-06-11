@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Table, TableColumn } from '@/components/ui/table/table';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge/index';
 import { Pencil, Trash2 } from 'lucide-react';
 
@@ -82,7 +82,7 @@ const StatusBadge = ({ status }: { status: User['status'] }) => {
 };
 
 export default function TablePage() {
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<User[] | null>(users); // null로 설정하면 로딩 상태
 
   // 테이블 컬럼 정의
   const columns: TableColumn<User>[] = [
@@ -91,30 +91,40 @@ export default function TablePage() {
       header: 'ID',
       accessorKey: 'id',
       sortable: true,
+      align: 'center',
+      width: '80px',
     },
     {
       id: 'name',
       header: '이름',
       accessorKey: 'name',
       sortable: true,
+      align: 'left',
+      width: '120px',
     },
     {
       id: 'email',
       header: '이메일',
       accessorKey: 'email',
       sortable: true,
+      align: 'left',
+      width: '200px',
     },
     {
       id: 'role',
       header: '역할',
       accessorKey: 'role',
       sortable: true,
+      align: 'center',
+      width: '100px',
     },
     {
       id: 'status',
       header: '상태',
       accessorKey: 'status',
       sortable: true,
+      align: 'center',
+      width: '100px',
       cell: (user) => <StatusBadge status={user.status} />,
     },
     {
@@ -122,28 +132,32 @@ export default function TablePage() {
       header: '가입일',
       accessorKey: 'joinDate',
       sortable: true,
+      align: 'center',
+      width: '120px',
       cell: (user) => user.joinDate.toLocaleDateString('ko-KR'),
     },
     {
       id: 'actions',
       header: '작업',
+      align: 'center',
+      width: '140px',
       cell: (user) => (
-        <div className="flex items-center space-x-2 justify-center">
+        <div className="flex items-center justify-center space-x-2">
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 p-0 neu-raised"
+            className="w-8 h-8 p-0 neu-raised"
             onClick={() => handleEdit(user.id)}
           >
-            <Pencil className="h-4 w-4" />
+            <Pencil className="w-4 h-4" />
           </Button>
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 p-0 text-red-500 neu-raised"
+            className="w-8 h-8 p-0 text-red-500 neu-raised"
             onClick={() => handleDelete(user.id)}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="w-4 h-4" />
           </Button>
         </div>
       ),
@@ -160,50 +174,166 @@ export default function TablePage() {
     alert(`사용자 ${id} 삭제`);
   };
 
-  // 로딩 시뮬레이션
+  // 로딩 시뮬레이션 (data를 null로 설정)
   const simulateLoading = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 1500);
+    setData(null);
+    setTimeout(() => setData(users), 1500);
+  };
+
+  // 빈 데이터 시뮬레이션
+  const simulateEmpty = () => {
+    setData([]);
+  };
+
+  // 데이터 복원
+  const restoreData = () => {
+    setData(users);
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">테이블 컴포넌트</h1>
+    <div className="max-w-6xl p-6 mx-auto">
+      <h1 className="mb-6 text-2xl font-bold">간소화된 테이블 컴포넌트</h1>
       
-      <div className="mb-6 flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 mb-6">
         <Button onClick={simulateLoading} className="neu-raised">
           로딩 시뮬레이션
+        </Button>
+        <Button onClick={simulateEmpty} className="neu-raised" variant="outline">
+          빈 데이터
+        </Button>
+        <Button onClick={restoreData} className="neu-raised" variant="outline">
+          데이터 복원
         </Button>
       </div>
 
       <div className="mb-10">
-        <h2 className="text-xl font-semibold mb-4">기본 테이블</h2>
+        <h2 className="mb-4 text-xl font-semibold">자동 처리 테이블</h2>
+        <div className="p-4 mb-4 rounded-lg bg-blue-50 neu-flat">
+          <h3 className="mb-2 font-semibold text-blue-800">🚀 간소화된 기능</h3>
+          <ul className="space-y-1 text-sm text-blue-700">
+            <li>• <strong>자동 로딩 감지</strong>: data가 null/undefined이면 자동으로 &quot;로딩 중...&quot; 표시</li>
+            <li>• <strong>자동 빈 메시지</strong>: 데이터가 빈 배열이면 자동으로 &quot;데이터가 없습니다.&quot; 표시</li>
+            <li>• <strong>컴팩트 모드 고정</strong>: 항상 작은 패딩으로 공간 효율적</li>
+            <li>• <strong>세로선 항상 표시</strong>: 명확한 컬럼 구분</li>
+            <li>• <strong>둥근 모서리 고정</strong>: 일관된 디자인</li>
+            <li>• <strong>페이지네이션</strong>: pageSize로 표시할 행 수 제어 (기본 10행)</li>
+            <li>• <strong>고정 높이</strong>: 로딩/빈 상태에서도 지정된 행 수만큼 높이 유지</li>
+            <li>• <strong>Props 대폭 축소</strong>: 15개 → 5개로 간소화</li>
+          </ul>
+        </div>
         <Table
-          data={users}
+          data={data || []} // null이면 빈 배열로 처리
           columns={columns}
-          isLoading={loading}
-          compact={true}
+          pageSize={5} // 5행으로 제한하여 페이지네이션 효과 확인
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
-          <h2 className="text-xl font-semibold mb-4">빈 테이블</h2>
+          <h2 className="mb-4 text-xl font-semibold">조건부 스타일링</h2>
+          <p className="mb-4 text-sm text-gray-600">
+            rowClassName으로 비활성 사용자를 흐리게 표시 (3행 고정)
+          </p>
           <Table
-            data={[]}
+            data={users}
             columns={columns}
-            emptyMessage="사용자가 없습니다."
-            compact={true}
+            pageSize={3}
+            rowClassName={(user) => 
+              user.status === 'inactive' ? 'opacity-50' : ''
+            }
           />
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">일부 데이터</h2>
+          <h2 className="mb-4 text-xl font-semibold">기본 페이지 크기</h2>
+          <p className="mb-4 text-sm text-gray-600">
+            pageSize 미지정 시 기본 10행으로 표시
+          </p>
           <Table
-            data={users.slice(0, 3)}
+            data={users}
             columns={columns}
-            compact={true}
           />
+        </div>
+      </div>
+
+      <div className="mt-10">
+        <h2 className="mb-4 text-xl font-semibold">다양한 페이지 크기 테스트</h2>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div>
+            <h3 className="mb-2 font-semibold">2행 고정</h3>
+            <p className="mb-4 text-sm text-gray-600">
+              데이터가 많아도 2행만 표시, 로딩/빈 상태도 2행 높이 유지
+            </p>
+            <Table
+              data={users}
+              columns={columns}
+              pageSize={2}
+            />
+          </div>
+          
+          <div>
+            <h3 className="mb-2 font-semibold">빈 데이터 (3행 높이)</h3>
+            <p className="mb-4 text-sm text-gray-600">
+              데이터가 없어도 3행 높이로 고정
+            </p>
+            <Table
+              data={[]}
+              columns={columns}
+              pageSize={3}
+            />
+          </div>
+          
+          <div>
+            <h3 className="mb-2 font-semibold">로딩 상태 (4행 높이)</h3>
+            <p className="mb-4 text-sm text-gray-600">
+              로딩 중에도 4행 높이로 고정
+            </p>
+            <Table
+              data={null}
+              columns={columns}
+              pageSize={4}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-10">
+        <h2 className="mb-4 text-xl font-semibold">API 비교</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="p-4 rounded-lg bg-red-50 neu-flat">
+            <h3 className="mb-2 font-semibold text-red-800">❌ 이전 (15개 Props)</h3>
+            <pre className="overflow-x-auto text-xs text-red-700">
+{`<Table
+  data={users}
+  columns={columns}
+  className='custom'
+  tableClassName='table'
+  headerClassName='header'
+  bodyClassName='body'
+  rowClassName='row'
+  cellClassName='cell'
+  emptyMessage='없음'
+  isLoading={loading}
+  compact={true}
+  rounded={true}
+  minRows={5}
+  showVerticalLines={true}
+/>`}
+            </pre>
+          </div>
+          
+          <div className="p-4 rounded-lg bg-green-50 neu-flat">
+            <h3 className="mb-2 font-semibold text-green-800">✅ 현재 (5개 Props)</h3>
+            <pre className="overflow-x-auto text-xs text-green-700">
+{`<Table
+  data={users}
+  columns={columns}
+  className='custom'
+  rowClassName='row'
+  pageSize={10}
+/>`}
+            </pre>
+          </div>
         </div>
       </div>
     </div>

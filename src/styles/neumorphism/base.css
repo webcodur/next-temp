@@ -1,6 +1,6 @@
 /* 뉴모피즘 통합 5종 패턴 */
 
-/* 1. neu-flat - 평면 (컨테이너, 패널) */
+/* #region - 1. neu-flat - 평면 (컨테이너, 패널) */
 .neu-flat {
 	background: linear-gradient(
 		135deg,
@@ -10,8 +10,9 @@
 	border: 1px solid hsl(var(--border) / 0.4);
 	box-shadow:
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
-			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
+		calc(var(--neu-offset) * -0.5) 
+    calc(var(--neu-offset) * -0.5)
+    calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 	transition: all 0.15s ease-in-out;
 }
 
@@ -23,8 +24,9 @@
 	);
 	border: 1px solid hsl(var(--border) / 0.6);
 }
+/* #endregion */
 
-/* 2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */
+/* #region - 2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */
 .neu-raised {
 	background: linear-gradient(
 		135deg,
@@ -41,7 +43,6 @@
 }
 
 .neu-raised:hover {
-	/* transform: translateY(-1px); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--card) / 0.95),
@@ -57,7 +58,6 @@
 }
 
 .neu-raised:active {
-	/* transform: scale(0.98) translateY(0px); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--muted) / 0.8),
@@ -69,8 +69,9 @@
 		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light));
 }
+/* #endregion */
 
-/* 3. neu-inset - 음각 (활성/선택 상태) */
+/* #region - 3. neu-inset - 음각 (활성/선택 상태) */
 .neu-inset {
 	background: linear-gradient(
 		135deg,
@@ -79,7 +80,6 @@
 	);
 	border: 1px solid hsl(var(--primary) / 0.2);
 	color: hsl(var(--primary));
-	/* transform: scale(0.98); */
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
@@ -90,7 +90,6 @@
 }
 
 .neu-inset:hover {
-	/* transform: scale(0.99); */
 	background: linear-gradient(
 		135deg,
 		hsl(var(--muted) / 0.9),
@@ -103,29 +102,27 @@
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
 		0 0 0 1px hsl(var(--primary) / 0.3);
 }
+/* #endregion */
 
-/* 4. neu-icon-active - 활성 아이콘 */
+/* #region - 4. neu-icon - 아이콘 */
 .neu-icon-active {
 	color: hsl(var(--primary));
-	/* transform: scale(1.1); */
 	filter: drop-shadow(0 2px 4px rgba(var(--primary-rgb), 0.3));
 	transition: all 0.15s ease-in-out;
 }
 
-/* 5. neu-icon-inactive - 비활성 아이콘 */
 .neu-icon-inactive {
 	color: hsl(var(--foreground) / 0.7);
-	/* transform: scale(1); */
 	transition: all 0.15s ease-in-out;
 }
 
 .neu-icon-inactive:hover {
 	color: hsl(var(--foreground));
-	/* transform: scale(1.05); */
 	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
+/* #endregion */
 
-/* 사이드바 전용 강화된 우측 음영 */
+/* #region - 5. sidebar-shadow -사이드바 전용 강화된 우측 음영 */
 .sidebar-shadow {
 	box-shadow:
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
@@ -134,65 +131,4 @@
 		/* 우측 모서리 강화 음영 */ 8px 0 20px rgba(0, 0, 0, 0.15),
 		12px 0 30px rgba(0, 0, 0, 0.08);
 }
-
-/* 기존 호환성 */
-.neumorphic {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--card) / 0.9),
-		hsl(var(--muted) / 0.7)
-	);
-	border: 1px solid hsl(var(--border) / 0.4);
-	box-shadow:
-		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
-			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
-	transition: all 0.15s ease-in-out;
-}
-
-.neumorphic-button {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--card) / 0.9),
-		hsl(var(--muted) / 0.7)
-	);
-	border: 1px solid hsl(var(--border) / 0.4);
-	cursor: pointer;
-	transition: all 0.15s ease-in-out;
-	box-shadow:
-		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur)
-			rgba(var(--neu-light));
-}
-
-.neumorphic-active {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--muted) / 0.85),
-		hsl(var(--card) / 0.75)
-	);
-	border: 1px solid hsl(var(--primary) / 0.2);
-	color: hsl(var(--primary));
-	/* transform: scale(0.98); */
-	transition: all 0.15s ease-in-out;
-	box-shadow:
-		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-			rgba(var(--neu-dark)),
-		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
-			var(--neu-blur) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.2);
-}
-
-.neumorphic-container {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--card) / 0.9),
-		hsl(var(--muted) / 0.7)
-	);
-	border: 1px solid hsl(var(--border) / 0.4);
-	box-shadow:
-		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
-			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
-	transition: all 0.15s ease-in-out;
-}
+/* #endregion */

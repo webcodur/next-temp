@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import type { TopItem } from '@/components/layout/sidebar/types';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import {
 	Tooltip,
 	TooltipContent,
@@ -18,7 +18,7 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@/components/ui/Collapsible';
+} from '@/components/ui/collapsible';
 
 /**
  * 사이드바 우측 패널 Props 타입
@@ -78,7 +78,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onSingleOpenToggle}
-									className="rounded-md w-6 h-6 hover:bg-muted/40">
+									className="w-6 h-6 rounded-md hover:bg-muted/40">
 									{singleOpenMode ? (
 										<Focus className="w-4 h-4 neu-icon-active" />
 									) : (
@@ -97,7 +97,7 @@ export function SideRPanel({
 					</div>
 
 					{/* 가운데: Top 메뉴 타이틀 */}
-					<h2 className="text-base font-bold text-foreground text-center flex-1">
+					<h2 className="flex-1 text-base font-bold text-center text-foreground">
 						{topData.label} <span className="text-sm">메뉴</span>
 					</h2>
 
@@ -110,7 +110,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onCollapseAll}
-									className="rounded-md w-6 h-5 hover:bg-muted/40">
+									className="w-6 h-5 rounded-md hover:bg-muted/40">
 									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
@@ -126,7 +126,7 @@ export function SideRPanel({
 									variant="ghost"
 									size="icon"
 									onClick={onExpandAll}
-									className="rounded-md w-6 h-5 hover:bg-muted/40">
+									className="w-6 h-5 rounded-md hover:bg-muted/40">
 									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
@@ -211,10 +211,8 @@ export function SideRPanel({
 														{/* 메뉴 아이템 */}
 														<button
 															onClick={() => handleBotMenuClick(botItem.href)}
-															className={`relative flex items-center ml-4 pl-3 pr-1.5 py-2.5 text-sm rounded-md font-medium group text-left min-w-0 max-w-full overflow-hidden neu-flat bg-white text-black hover:bg-white hover:text-black hover:shadow-md hover:scale-[1.01] ${
-																isActive
-																	? '!bg-[#a0a0a0] !text-black font-bold !shadow-none'
-																	: ''
+															className={`relative flex items-center ml-3 pl-3 py-2 text-sm rounded-md text-left neu-flat ${
+																isActive ? '!bg-[#a0a0a0] !text-black font-bold !shadow-none' : ''
 															}`}
 															style={{
 																width: 'calc(100% - 1rem)', // ml-4를 고려한 정확한 width 계산

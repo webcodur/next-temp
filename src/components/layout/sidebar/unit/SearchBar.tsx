@@ -1,7 +1,7 @@
 'use client';
 
 import { Search, X } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { useSidebarSearch } from '@/components/layout/sidebar/hooks';
 
 /**
