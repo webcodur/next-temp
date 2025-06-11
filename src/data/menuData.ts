@@ -299,6 +299,11 @@ export const menuData: MenuData = {
 				label: 'UI-확인',
 				botItems: [
 					{
+						label: 'Neumorphic',
+						href: '/lab/ui-check/neumorphic',
+						description: '뉴모피즘 디자인의 양각/음각 컴포넌트',
+					},
+					{
 						label: 'Card',
 						href: '/lab/ui-check/card',
 						description: '정보 그룹화 표시를 위한 카드 컴포넌트',
