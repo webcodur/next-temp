@@ -1,62 +1,62 @@
 'use client';
 
 import React from 'react';
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const AvatarPage = () => {
 	return (
-		<div className="min-h-screen bg-gray-50 p-8">
-			<div className="max-w-4xl mx-auto">
+		<div className="p-8 min-h-screen bg-gray-50">
+			<div className="mx-auto max-w-4xl">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-gray-900 mb-4">Avatar 컴포넌트</h1>
+					<h1 className="mb-4 text-3xl font-bold text-gray-900">Avatar 컴포넌트</h1>
 					<p className="text-gray-600">사용자 아바타 표시 컴포넌트 테스트</p>
 				</div>
 
 				<div className="space-y-8">
 					{/* 기본 아바타 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
-						<h2 className="text-xl font-semibold mb-4">기본 아바타</h2>
-						<div className="space-x-4 flex items-center">
+					<section className="p-6 bg-white rounded-lg shadow-sm">
+						<h2 className="mb-4 text-xl font-semibold">기본 아바타</h2>
+						<div className="flex items-center space-x-4">
 							<Avatar>
-								<img src="https://github.com/shadcn.png" alt="Avatar" />
+								<AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
+								<AvatarFallback>U</AvatarFallback>
 							</Avatar>
 							<Avatar>
-								<div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600">
-									U
-								</div>
+								<AvatarFallback>U</AvatarFallback>
 							</Avatar>
 						</div>
 					</section>
 
 					{/* 사이즈 변형 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
-						<h2 className="text-xl font-semibold mb-4">사이즈 변형</h2>
-						<div className="space-x-4 flex items-center">
+					<section className="p-6 bg-white rounded-lg shadow-sm">
+						<h2 className="mb-4 text-xl font-semibold">사이즈 변형</h2>
+						<div className="flex items-center space-x-4">
 							<Avatar className="w-8 h-8">
-								<div className="w-full h-full bg-blue-300 flex items-center justify-center text-white text-xs">
+								<AvatarFallback className="text-xs text-white bg-blue-300">
 									S
-								</div>
+								</AvatarFallback>
 							</Avatar>
 							<Avatar className="w-12 h-12">
-								<div className="w-full h-full bg-green-300 flex items-center justify-center text-white">
+								<AvatarFallback className="text-white bg-green-300">
 									M
-								</div>
+								</AvatarFallback>
 							</Avatar>
 							<Avatar className="w-16 h-16">
-								<div className="w-full h-full bg-purple-300 flex items-center justify-center text-white text-lg">
+								<AvatarFallback className="text-lg text-white bg-purple-300">
 									L
-								</div>
+								</AvatarFallback>
 							</Avatar>
 						</div>
 					</section>
 
 					{/* 사용 예시 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
-						<h2 className="text-xl font-semibold mb-4">사용 예시</h2>
+					<section className="p-6 bg-white rounded-lg shadow-sm">
+						<h2 className="mb-4 text-xl font-semibold">사용 예시</h2>
 						<div className="space-y-4">
 							<div className="flex items-center space-x-3">
 								<Avatar>
-									<img src="https://github.com/shadcn.png" alt="User 1" />
+									<AvatarImage src="https://github.com/shadcn.png" alt="User 1" />
+									<AvatarFallback>JD</AvatarFallback>
 								</Avatar>
 								<div>
 									<p className="font-medium">John Doe</p>
@@ -65,9 +65,9 @@ const AvatarPage = () => {
 							</div>
 							<div className="flex items-center space-x-3">
 								<Avatar>
-									<div className="w-full h-full bg-red-400 flex items-center justify-center text-white font-bold">
+									<AvatarFallback className="font-bold text-white bg-red-400">
 										JD
-									</div>
+									</AvatarFallback>
 								</Avatar>
 								<div>
 									<p className="font-medium">Jane Doe</p>

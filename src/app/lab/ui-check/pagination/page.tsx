@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PaginatedTable from '@/components/ui/pagination/PaginatedTable';
 import { TableColumn } from '@/components/ui/table/table';
 
@@ -96,7 +96,7 @@ const PaginationDemo = () => {
 	// #endregion
 
 	// #region 데이터 로딩 시뮬레이션
-	const loadData = async () => {
+	const loadData = useCallback(async () => {
 		setIsFetching(true);
 		setUserData(null);
 		
@@ -105,11 +105,11 @@ const PaginationDemo = () => {
 			setUserData(generateMockUsers(237));
 			setIsFetching(false);
 		}, 2000);
-	};
+	}, []);
 
 	useEffect(() => {
 		loadData();
-	}, []);
+	}, [loadData]);
 	// #endregion
 	
 	// #region 이벤트 핸들러
@@ -138,7 +138,7 @@ const PaginationDemo = () => {
 			<div className="mb-8">
 				<h2 className="mb-4 text-xl font-semibold">기본 예제 (통합 구조)</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
-					<div className="flex items-center gap-4 mb-4">
+					<div className="flex gap-4 items-center mb-4">
 						<p className="text-gray-700">
 							현재 페이지: <span className="font-medium">{currentPage}</span>
 						</p>
@@ -155,8 +155,8 @@ const PaginationDemo = () => {
 							onClick={handleToggleDisabled}
 							className={`px-4 py-2 rounded-md ${
 								isDisabled 
-									? 'bg-gray-300 text-gray-600' 
-									: 'bg-blue-600 text-white hover:bg-blue-700'
+									? 'text-gray-600 bg-gray-300' 
+									: 'text-white bg-blue-600 hover:bg-blue-700'
 							}`}
 						>
 							{isDisabled ? '페이지네이션 활성화' : '페이지네이션 비활성화'}
@@ -167,8 +167,8 @@ const PaginationDemo = () => {
 							disabled={isFetching}
 							className={`px-4 py-2 rounded-md ${
 								isFetching
-									? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-									: 'bg-green-600 text-white hover:bg-green-700'
+									? 'text-gray-600 bg-gray-300 cursor-not-allowed'
+									: 'text-white bg-green-600 hover:bg-green-700'
 							}`}
 						>
 							{isFetching ? '로딩 중...' : '데이터 새로고침'}
