@@ -11,6 +11,8 @@ export default function BasicsPage() {
 	useEffect(() => {
 		if (!mountRef.current) return;
 
+		const mount = mountRef.current; // ref 값을 변수로 복사
+
 		// #region Scene 생성
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0xf0f0f0);
@@ -31,7 +33,7 @@ export default function BasicsPage() {
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(800, 600);
 		rendererRef.current = renderer;
-		mountRef.current.appendChild(renderer.domElement);
+		mount.appendChild(renderer.domElement);
 		// #endregion
 
 		// #region 기본 정육면체 추가
@@ -55,8 +57,8 @@ export default function BasicsPage() {
 
 		// #region 정리 함수
 		return () => {
-			if (mountRef.current && renderer.domElement) {
-				mountRef.current.removeChild(renderer.domElement);
+			if (mount && renderer.domElement) {
+				mount.removeChild(renderer.domElement);
 			}
 			renderer.dispose();
 			geometry.dispose();

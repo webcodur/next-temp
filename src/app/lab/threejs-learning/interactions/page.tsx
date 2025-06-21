@@ -132,6 +132,8 @@ export default function InteractionsPage() {
 	useEffect(() => {
 		if (!mountRef.current) return;
 
+		const mount = mountRef.current; // ref 값을 변수로 복사
+
 		// #region 기본 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0xf0f4f8);
@@ -144,7 +146,7 @@ export default function InteractionsPage() {
 		const renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setSize(800, 600);
 		rendererRef.current = renderer;
-		mountRef.current.appendChild(renderer.domElement);
+		mount.appendChild(renderer.domElement);
 
 		// 궤도 컨트롤 생성
 		const controls = new SimpleOrbitControls(camera, renderer.domElement);
@@ -250,8 +252,8 @@ export default function InteractionsPage() {
 		// #endregion
 
 		return () => {
-			if (mountRef.current && renderer.domElement) {
-				mountRef.current.removeChild(renderer.domElement);
+			if (mount && renderer.domElement) {
+				mount.removeChild(renderer.domElement);
 			}
 			controls.dispose();
 			renderer.dispose();

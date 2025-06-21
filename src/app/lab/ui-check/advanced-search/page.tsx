@@ -7,10 +7,6 @@ import {
   FieldMultiSelect,
   FieldFilterSelect,
   FieldSortSelect,
-  FieldRadioGroup,
-  FieldCheckbox,
-  FieldToggleSwitch,
-  FieldToggleButton,
   Option
 } from '@/components/ui/field/Field';
 
@@ -101,10 +97,10 @@ export default function AdvancedSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="p-8 min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">AdvancedSearch + Field 컴포넌트</h1>
+          <h1 className="mb-4 text-3xl font-bold text-gray-900">AdvancedSearch + Field 컴포넌트</h1>
           <p className="text-gray-600">모든 Field 컴포넌트를 고급 검색 패널에서 테스트</p>
         </div>
 
@@ -165,42 +161,13 @@ export default function AdvancedSearchPage() {
               value={sortOrder}
               onChange={setSortOrder}
             />
-
-            {/* 세 번째 줄: 라디오 그룹 */}
-            <FieldRadioGroup
-              label="카테고리 유형"
-              options={categoryOptions}
-              value={categoryType}
-              onChange={setCategoryType}
-              layout="horizontal"
-            />
-
-            {/* 네 번째 줄: 토글 필드들 */}
-            <FieldCheckbox
-              label="인증된 사용자만"
-              checked={isVerified}
-              onChange={setIsVerified}
-            />
-            
-            <FieldToggleSwitch
-              label="알림 활성화"
-              checked={enableNotifications}
-              onChange={setEnableNotifications}
-            />
-            
-            <FieldToggleButton
-              label="공개 여부"
-              pressed={isPublic}
-              onChange={setIsPublic}
-              variant="default"
-            />
           </AdvancedSearch>
         </div>
 
         {/* 현재 검색 상태 표시 */}
-        <div className="mt-8 bg-white rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4">현재 검색 조건</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+        <div className="p-6 mt-8 bg-white rounded-lg shadow-sm">
+          <h3 className="mb-4 text-lg font-semibold">현재 검색 조건</h3>
+          <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2 lg:grid-cols-3">
             <div><span className="font-medium">키워드:</span> {searchKeyword || '없음'}</div>
             <div><span className="font-medium">이메일:</span> {searchEmail || '없음'}</div>
             <div><span className="font-medium">전화번호:</span> {searchPhone || '없음'}</div>

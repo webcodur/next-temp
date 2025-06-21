@@ -80,6 +80,8 @@ export default function MaterialsLightsPage() {
 	useEffect(() => {
 		if (!mountRef.current) return;
 
+		const mount = mountRef.current; // ref 값을 변수로 복사
+
 		// #region 기본 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0x202020);
@@ -93,7 +95,7 @@ export default function MaterialsLightsPage() {
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		rendererRef.current = renderer;
-		mountRef.current.appendChild(renderer.domElement);
+		mount.appendChild(renderer.domElement);
 		// #endregion
 
 		// #region 기본 도형 생성
@@ -159,8 +161,8 @@ export default function MaterialsLightsPage() {
 		// #endregion
 
 		return () => {
-			if (mountRef.current && renderer.domElement) {
-				mountRef.current.removeChild(renderer.domElement);
+			if (mount && renderer.domElement) {
+				mount.removeChild(renderer.domElement);
 			}
 			renderer.dispose();
 			geometry.dispose();

@@ -111,6 +111,8 @@ export default function AdvancedPage() {
 	useEffect(() => {
 		if (!mountRef.current) return;
 
+		const mount = mountRef.current; // ref 값을 변수로 복사
+
 		// #region 기본 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0x1a1a2e);
@@ -125,7 +127,7 @@ export default function AdvancedPage() {
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		rendererRef.current = renderer;
-		mountRef.current.appendChild(renderer.domElement);
+		mount.appendChild(renderer.domElement);
 		// #endregion
 
 		// #region 조명 설정
@@ -151,8 +153,8 @@ export default function AdvancedPage() {
 		// #endregion
 
 		return () => {
-			if (mountRef.current && renderer.domElement) {
-				mountRef.current.removeChild(renderer.domElement);
+			if (mount && renderer.domElement) {
+				mount.removeChild(renderer.domElement);
 			}
 			renderer.dispose();
 		};
@@ -326,22 +328,22 @@ export default function AdvancedPage() {
 
 	return (
 		<div className="p-8 space-y-8">
-			<div className="neu-flat p-6 rounded-xl">
-				<h1 className="text-3xl font-bold mb-4">6단계: 고급 기능</h1>
-				<p className="text-gray-600 mb-6">
+			<div className="p-6 rounded-xl neu-flat">
+				<h1 className="mb-4 text-3xl font-bold">6단계: 고급 기능</h1>
+				<p className="mb-6 text-gray-600">
 					Three.js의 고급 기능들로 더욱 사실적이고 복잡한 3D 장면을 만들어보자
 				</p>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 				{/* 3D 뷰어 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">실습: 고급 기능 체험</h2>
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold">실습: 고급 기능 체험</h2>
 					
 					{isLoading && (
 						<div className="flex items-center justify-center h-[600px] border border-gray-200 rounded-lg">
 							<div className="text-center">
-								<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+								<div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 border-blue-500 animate-spin"></div>
 								<p className="text-gray-600">로딩 중...</p>
 							</div>
 						</div>
@@ -353,11 +355,11 @@ export default function AdvancedPage() {
 					/>
 					
 					{/* 현재 기능 설명 */}
-					<div className="neu-inset p-4 rounded-lg">
-						<h3 className="font-semibold text-lg text-purple-600 mb-2">
+					<div className="p-4 rounded-lg neu-inset">
+						<h3 className="mb-2 text-lg font-semibold text-purple-600">
 							{currentFeature.name}
 						</h3>
-						<p className="text-sm text-gray-600 mb-2">
+						<p className="mb-2 text-sm text-gray-600">
 							{currentFeature.description}
 						</p>
 						<p className="text-sm font-semibold text-green-600">
@@ -367,8 +369,8 @@ export default function AdvancedPage() {
 				</div>
 
 				{/* 기능 선택 패널 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">고급 기능</h2>
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold">고급 기능</h2>
 					<div className="space-y-3">
 						{(Object.keys(advancedFeatures) as AdvancedFeature[]).map((feature) => {
 							const data = advancedFeatures[feature];
@@ -381,11 +383,11 @@ export default function AdvancedPage() {
 									disabled={isLoading}
 									className={`w-full p-4 rounded-lg text-left transition-all ${
 										isActive 
-											? 'neu-inset bg-purple-50' 
+											? 'bg-purple-50 neu-inset' 
 											: 'neu-raised hover:neu-inset'
 									} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
 								>
-									<h3 className="font-semibold text-sm mb-1">{data.name}</h3>
+									<h3 className="mb-1 text-sm font-semibold">{data.name}</h3>
 									<p className="text-xs text-gray-600">
 										{data.description}
 									</p>
@@ -395,15 +397,15 @@ export default function AdvancedPage() {
 					</div>
 
 					{/* 학습 진행도 */}
-					<div className="mt-6 neu-inset p-4 rounded-lg">
-						<h4 className="font-semibold text-gray-800 mb-2">🎓 학습 진행도</h4>
-						<div className="w-full bg-gray-200 rounded-full h-2">
+					<div className="p-4 mt-6 rounded-lg neu-inset">
+						<h4 className="mb-2 font-semibold text-gray-800">🎓 학습 진행도</h4>
+						<div className="w-full h-2 bg-gray-200 rounded-full">
 							<div 
-								className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+								className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
 								style={{ width: '100%' }}
 							></div>
 						</div>
-						<p className="text-xs text-gray-600 mt-2">
+						<p className="mt-2 text-xs text-gray-600">
 							축하합니다! 모든 3D 기초 과정을 완료했습니다.
 						</p>
 					</div>
@@ -411,11 +413,11 @@ export default function AdvancedPage() {
 			</div>
 
 			{/* 이론 설명 */}
-			<div className="neu-flat p-6 rounded-xl">
-				<h2 className="text-xl font-semibold mb-4">고급 기능 심화 이론</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div className="p-6 rounded-xl neu-flat">
+				<h2 className="mb-4 text-xl font-semibold">고급 기능 심화 이론</h2>
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-purple-600">🖼️ 텍스처 시스템</h3>
+						<h3 className="mb-2 text-lg font-semibold text-purple-600">🖼️ 텍스처 시스템</h3>
 						<p className="text-sm text-gray-600">
 							UV 매핑을 통해 2D 이미지를 3D 표면에 적용한다. 
 							Diffuse, Normal, Specular 등 다양한 맵 타입이 있다.
@@ -423,7 +425,7 @@ export default function AdvancedPage() {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-yellow-600">✨ 파티클 효과</h3>
+						<h3 className="mb-2 text-lg font-semibold text-yellow-600">✨ 파티클 효과</h3>
 						<p className="text-sm text-gray-600">
 							수천 개의 점으로 자연 현상을 시뮬레이션한다. 
 							BufferGeometry로 성능을 최적화할 수 있다.
@@ -431,7 +433,7 @@ export default function AdvancedPage() {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-gray-600">🌫️ 그림자와 안개</h3>
+						<h3 className="mb-2 text-lg font-semibold text-gray-600">🌫️ 그림자와 안개</h3>
 						<p className="text-sm text-gray-600">
 							실시간 그림자와 거리 기반 안개로 사실감을 높인다. 
 							성능과 품질의 균형을 고려해야 한다.
@@ -441,9 +443,9 @@ export default function AdvancedPage() {
 
 				{/* 다음 단계 안내 */}
 				<div className="mt-6 space-y-4">
-					<div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+					<div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-purple-400">
 						<h4 className="font-semibold text-purple-800">🚀 다음 학습 방향</h4>
-						<div className="text-sm text-purple-700 mt-2 space-y-1">
+						<div className="mt-2 space-y-1 text-sm text-purple-700">
 							<p>• <strong>WebXR:</strong> VR/AR 경험 개발</p>
 							<p>• <strong>물리 엔진:</strong> Cannon.js, Ammo.js 연동</p>
 							<p>• <strong>성능 최적화:</strong> LOD, Culling, Instancing</p>
@@ -451,9 +453,9 @@ export default function AdvancedPage() {
 						</div>
 					</div>
 
-					<div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+					<div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
 						<h4 className="font-semibold text-green-800">💡 실전 프로젝트 아이디어</h4>
-						<div className="text-sm text-green-700 mt-2 space-y-1">
+						<div className="mt-2 space-y-1 text-sm text-green-700">
 							<p>• 3D 제품 전시관 / 포트폴리오 사이트</p>
 							<p>• 인터랙티브 데이터 시각화 대시보드</p>
 							<p>• 미니 게임 또는 교육용 시뮬레이션</p>
