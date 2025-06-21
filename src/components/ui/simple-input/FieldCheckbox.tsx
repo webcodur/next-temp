@@ -2,10 +2,17 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Check, Minus } from 'lucide-react';
-import { FieldCheckboxComponentProps } from './types';
-import { STYLES } from './styles';
 
-export const FieldCheckbox: React.FC<FieldCheckboxComponentProps> = ({
+interface FieldCheckboxProps {
+	label?: string;
+	checked?: boolean;
+	onChange?: (checked: boolean) => void;
+	indeterminate?: boolean;
+	disabled?: boolean;
+	className?: string;
+}
+
+export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 	label,
 	checked = false,
 	onChange,
@@ -30,7 +37,7 @@ export const FieldCheckbox: React.FC<FieldCheckboxComponentProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+			<div className="flex items-center justify-between h-6">
 				{label && (
 					<label className="text-sm font-medium text-gray-700 leading-6">
 						{label}

@@ -1,10 +1,17 @@
 'use client';
 
 import React from 'react';
-import { FieldToggleSwitchComponentProps } from './types';
-import { STYLES } from './styles';
 
-export const FieldToggleSwitch: React.FC<FieldToggleSwitchComponentProps> = ({
+interface FieldToggleSwitchProps {
+	label?: string;
+	checked?: boolean;
+	onChange?: (checked: boolean) => void;
+	size?: 'sm' | 'md' | 'lg' | 'xl';
+	disabled?: boolean;
+	className?: string;
+}
+
+export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 	label,
 	checked = false,
 	onChange,
@@ -44,7 +51,7 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchComponentProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+			<div className="flex items-center justify-between h-6">
 				{label && (
 					<label className="text-sm font-medium text-gray-700 leading-6">
 						{label}
@@ -63,14 +70,12 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchComponentProps> = ({
 						disabled={disabled}
 						className="sr-only"
 					/>
-					{/* 트랙 */}
 					<div
 						className={`${currentSize.track} relative rounded-full transition-all duration-200 border ${
 							checked
 								? 'neu-inset bg-blue-100 border-blue-300 shadow-inner'
 								: 'neu-flat bg-gray-100 border-gray-300 shadow-sm hover:shadow-md'
 						}`}>
-						{/* 썸 */}
 						<div
 							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-white border border-gray-200 rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
 								checked ? 'border-blue-200' : 'border-gray-300'

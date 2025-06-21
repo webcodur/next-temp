@@ -1,10 +1,24 @@
 'use client';
 
 import React from 'react';
-import { FieldRadioGroupComponentProps } from './types';
-import { STYLES } from './styles';
 
-export const FieldRadioGroup: React.FC<FieldRadioGroupComponentProps> = ({
+interface Option {
+	value: string;
+	label: string;
+	disabled?: boolean;
+}
+
+interface FieldRadioGroupProps {
+	label?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	options: Option[];
+	disabled?: boolean;
+	className?: string;
+	layout?: 'horizontal' | 'vertical';
+}
+
+export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 	label,
 	value,
 	onChange,
@@ -20,7 +34,7 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupComponentProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+			<div className="flex items-center justify-between h-6">
 				{label && (
 					<label className="text-sm font-medium text-gray-700 leading-6">
 						{label}

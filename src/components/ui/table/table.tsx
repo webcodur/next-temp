@@ -20,7 +20,7 @@ export type TableColumn<T> = {
 // 테이블 정렬 타입
 type SortDirection = 'asc' | 'desc' | null;
 
-// 테이블 프롭스 타입 (간소화)
+// 테이블 프롭스 타입
 type TableProps<T> = {
   data: T[] | null | undefined; // 테이블 데이터 배열 (로딩 상태를 위해 null/undefined 허용)
   columns: TableColumn<T>[]; // 컬럼 정의 배열
@@ -28,6 +28,8 @@ type TableProps<T> = {
   rowClassName?: string | ((item: T, index: number) => string); // 로우 클래스 (버튼 제어용)
   pageSize?: number; // 페이지당 표시할 행 수 (기본 10)
   isFetching?: boolean; // 명시적 로딩 상태 제어
+  onRowClick?: (item: T, index: number) => void; // 행 클릭 핸들러 (상세 페이지 이동용)
+  clickableRows?: boolean; // 행 클릭 활성화 여부 (기본 false)
 };
 
 // 테이블 컴포넌트
@@ -38,6 +40,8 @@ export function Table<T extends Record<string, any>>({
   rowClassName,
   pageSize = 10, // 기본 10행
   isFetching = false,
+  onRowClick,
+  clickableRows = false,
 }: TableProps<T>) {
   // 로딩 상태 결정 (isFetching 우선, 그 다음 data 상태)
   const isLoading = isFetching || data === undefined || data === null;
@@ -56,6 +60,8 @@ export function Table<T extends Record<string, any>>({
     key: '',
     direction: null,
   });
+
+
 
   // 정렬 함수
   const handleSort = (columnId: string) => {
@@ -162,17 +168,31 @@ export function Table<T extends Record<string, any>>({
   // 바디 스타일 설정
   const bodyClasses = cn('bg-white');
 
-  // 테이블 로우 스타일 설정 (컴팩트 모드 고정)
+  // 테이블 로우 스타일 설정 (높이 고정, 전역 얼룩무늬 스타일 사용)
   const getRowClasses = (item: T | null, index: number) => {
+    const isEven = index % 2 === 0;
     const baseClasses = cn(
       'border-b border-gray-200 transition-colors',
-      'hover:bg-gray-50/50',
-      'even:bg-gray-100/70',
+      isEven ? 'list-item-even' : 'list-item-odd',
       'h-10' // 컴팩트 모드 고정
     );
 
     if (item === null) {
       return cn(baseClasses, 'opacity-0');
+    }
+
+    // 클릭 가능한 행인 경우 hover 효과 추가 (ListHighlightMarker 스타일 활용)
+    if (clickableRows && onRowClick) {
+      const interactionClasses = cn(
+        baseClasses,
+        'cursor-pointer',
+        'list-item-hover hover:list-item-active'
+      );
+      
+      if (typeof rowClassName === 'function') {
+        return cn(interactionClasses, rowClassName(item as T, index));
+      }
+      return cn(interactionClasses, rowClassName);
     }
 
     if (typeof rowClassName === 'function' && item !== null) {
@@ -241,6 +261,15 @@ export function Table<T extends Record<string, any>>({
   // 로딩/빈 상태 메시지의 높이 계산 (pageSize에 맞춰)
   const messageRowHeight = pageSize * 40; // 각 행이 h-10 (40px)이므로
 
+  // 행 클릭 핸들러
+  const handleRowClick = (item: T, index: number) => {
+    if (clickableRows && onRowClick) {
+      onRowClick(item, index);
+    }
+  };
+
+
+
   return (
     <div className={containerClasses}>
       <table className={tableClasses}>
@@ -261,7 +290,7 @@ export function Table<T extends Record<string, any>>({
                 )}
                 onClick={() => column.sortable && handleSort(column.id)}
               >
-                <div className="flex items-center justify-center">
+                <div className="flex justify-center items-center">
                   <span>{column.header}</span>
                   {column.sortable && (
                     <span className="flex flex-col ml-1">
@@ -298,7 +327,7 @@ export function Table<T extends Record<string, any>>({
                 className="text-center text-gray-500 align-middle"
                 style={{ height: `${messageRowHeight}px` }}
               >
-                <div className="flex items-center justify-center h-full">
+                <div className="flex justify-center items-center h-full">
                   로딩 중...
                 </div>
               </td>
@@ -310,7 +339,7 @@ export function Table<T extends Record<string, any>>({
                 className="text-center text-gray-500 align-middle"
                 style={{ height: `${messageRowHeight}px` }}
               >
-                <div className="flex items-center justify-center h-full">
+                <div className="flex justify-center items-center h-full">
                   {emptyMessage}
                 </div>
               </td>
@@ -318,7 +347,11 @@ export function Table<T extends Record<string, any>>({
           ) : (
             <>
               {paginatedData.map((item, rowIndex) => (
-                <tr key={rowIndex} className={getRowClasses(item, rowIndex)}>
+                <tr 
+                  key={rowIndex} 
+                  className={getRowClasses(item, rowIndex)}
+                  onClick={() => handleRowClick(item, rowIndex)}
+                >
                   {columns.map((column) => (
                     <td
                       key={`${rowIndex}-${column.id}`}

@@ -67,9 +67,9 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex flex-col flex-1 h-full overflow-hidden bg-gradient-to-b from-background/50 to-background/30">
+			<div className="flex overflow-hidden flex-col flex-1 h-full bg-gradient-to-b from-background/50 to-background/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
-				<div className="flex items-center justify-between px-3 py-3 border-b border-border/40">
+				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
 					<div className="flex items-center">
 						<Tooltip>
@@ -138,7 +138,7 @@ export function SideRPanel({
 				</div>
 
 				{/* 메뉴 영역 - Mid/Bot 메뉴 계층 구조 */}
-				<div className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-hide">
+				<div className="overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
 					<nav className="min-w-0 px-1.5 py-3 space-y-2">
 						{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 							<Collapsible key={midKey} open={midExpanded.has(midKey)}>
@@ -147,13 +147,13 @@ export function SideRPanel({
 									<Button
 										variant="outline"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !neu-flat !bg-white !text-black !border-none hover:!bg-white hover:!text-black hover:shadow-md hover:scale-[1.01] ${
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !neu-flat !bg-white !text-black !border-none hover:ring-2 hover:ring-border/60 hover:shadow-lg ${
 											isMidMenuActive(midItem) 
 												? '!bg-[#a0a0a0] !text-black !font-bold !shadow-none' 
 												: ''
 										}`}>
 										<span
-											className={`text-sm font-medium truncate flex-1 text-left`}>
+											className={`flex-1 text-sm font-medium text-left truncate`}>
 											{midItem.label}
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
@@ -167,7 +167,7 @@ export function SideRPanel({
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="relative min-w-0 ml-1 mr-1 overflow-hidden">
+									<div className="overflow-hidden relative mr-1 ml-1 min-w-0">
 										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
 										<div
 											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
@@ -177,7 +177,7 @@ export function SideRPanel({
 											}}></div>
 
 										{/* 트리 컨테이너 */}
-										<div className="space-y-0 overflow-hidden">
+										<div className="overflow-hidden space-y-0">
 											{midItem.botItems.map((botItem, index) => {
 												const isActive = pathname === botItem.href;
 
@@ -211,7 +211,7 @@ export function SideRPanel({
 														{/* 메뉴 아이템 */}
 														<button
 															onClick={() => handleBotMenuClick(botItem.href)}
-															className={`relative flex items-center ml-3 pl-3 py-2 text-sm rounded-md text-left neu-flat ${
+															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left neu-flat group hover:pr-2 !transition-none ${
 																isActive ? '!bg-[#a0a0a0] !text-black font-bold !shadow-none' : ''
 															}`}
 															style={{
@@ -221,6 +221,8 @@ export function SideRPanel({
 															<span className="flex-1 truncate">
 																{botItem.label}
 															</span>
+															{/* 호버 시 우측 점 인디케이터 */}
+															<div className="w-2 h-2 rounded-full bg-muted-foreground/60 opacity-0 group-hover:opacity-100 !transition-none" />
 														</button>
 													</div>
 												);

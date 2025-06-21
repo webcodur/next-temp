@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Car, Shield } from 'lucide-react';
+import Tabs from '@/components/ui/tabs/Tabs';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleSearchFilter from '@/unit/parking/VehicleSearchFilter';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
@@ -105,24 +107,39 @@ export default function Home() {
 	};
 	// #endregion
 
+	// #region 탭 데이터
+	const tabs = [
+		{
+			id: 'vehicles',
+			label: '입출차 관리',
+			icon: <Car size={16} />,
+		},
+		{
+			id: 'barriers',
+			label: '차단기 제어',
+			icon: <Shield size={16} />,
+		},
+	];
+	// #endregion
+
 	// #region 렌더링
 	return (
-		<div className="min-h-screen p-4 bg-gray-50">
+		<div className="p-4 min-h-screen bg-gray-50">
 			<div className="mx-auto max-w-7xl">
 				{/* 헤더 */}
-				<div className="mb-4">
+				<div className="mb-6">
 					<h1 className="mb-1 text-2xl font-bold text-gray-800">
-						주차관제 시스템!
+						주차관제 시스템
 					</h1>
 					<p className="text-sm text-gray-600">
 						실시간 입출차 현황 및 차단기 제어
 					</p>
 				</div>
 
-				{/* 메인 2분할 레이아웃 */}
-				<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-					{/* 좌측: 입출차 패널 */}
-					<div className="p-4 space-y-4 bg-white neu-flat rounded-2xl">
+				{/* 탭 메뉴 */}
+				<Tabs tabs={tabs} variant="default" align="start" size="md" forceRemount={true}>
+					{/* 입출차 관리 탭 */}
+					<div className="space-y-4">
 						{/* 차량 상세정보 */}
 						<VehicleDetailCard vehicle={selectedVehicle} />
 
@@ -145,8 +162,8 @@ export default function Home() {
 						/>
 					</div>
 
-					{/* 우측: 차단기 패널 */}
-					<div className="p-4 bg-white neu-flat rounded-2xl">
+					{/* 차단기 제어 탭 */}
+					<div className="space-y-4">
 						<BarrierGrid
 							barriers={barriers}
 							onBarrierOpen={handleBarrierOpen}
@@ -154,7 +171,7 @@ export default function Home() {
 							onOperationModeChange={handleOperationModeChange}
 						/>
 					</div>
-				</div>
+				</Tabs>
 			</div>
 		</div>
 	);

@@ -1,10 +1,18 @@
 'use client';
 
 import React from 'react';
-import { FieldToggleButtonComponentProps } from './types';
-import { STYLES } from './styles';
 
-export const FieldToggleButton: React.FC<FieldToggleButtonComponentProps> = ({
+interface FieldToggleButtonProps {
+	label?: string;
+	pressed?: boolean;
+	onChange?: (pressed: boolean) => void;
+	variant?: 'default' | 'outline' | 'ghost';
+	size?: 'sm' | 'md' | 'lg';
+	disabled?: boolean;
+	className?: string;
+}
+
+export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 	label,
 	pressed = false,
 	onChange,
@@ -38,7 +46,7 @@ export const FieldToggleButton: React.FC<FieldToggleButtonComponentProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
+			<div className="flex items-center justify-between h-6">
 				{label && (
 					<label className="text-sm font-medium text-gray-700 leading-6">
 						{label}

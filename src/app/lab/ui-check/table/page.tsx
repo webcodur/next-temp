@@ -142,11 +142,11 @@ export default function TablePage() {
       align: 'center',
       width: '140px',
       cell: (user) => (
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex justify-center items-center space-x-2">
           <Button
             size="icon"
             variant="ghost"
-            className="w-8 h-8 p-0 neu-raised"
+            className="p-0 w-8 h-8 neu-raised"
             onClick={() => handleEdit(user.id)}
           >
             <Pencil className="w-4 h-4" />
@@ -154,7 +154,7 @@ export default function TablePage() {
           <Button
             size="icon"
             variant="ghost"
-            className="w-8 h-8 p-0 text-red-500 neu-raised"
+            className="p-0 w-8 h-8 text-red-500 neu-raised"
             onClick={() => handleDelete(user.id)}
           >
             <Trash2 className="w-4 h-4" />
@@ -174,6 +174,11 @@ export default function TablePage() {
     alert(`사용자 ${id} 삭제`);
   };
 
+  // 행 클릭 핸들러 (상세 페이지 이동 시뮬레이션)
+  const handleRowClick = (user: User) => {
+    alert(`${user.name}의 상세 정보 페이지로 이동\n이메일: ${user.email}\n상태: ${user.status === 'active' ? '활성' : user.status === 'inactive' ? '비활성' : '대기'}`);
+  };
+
   // 로딩 시뮬레이션 (data를 null로 설정)
   const simulateLoading = () => {
     setData(null);
@@ -191,7 +196,7 @@ export default function TablePage() {
   };
 
   return (
-    <div className="max-w-6xl p-6 mx-auto">
+    <div className="p-6 mx-auto max-w-6xl">
       <h1 className="mb-6 text-2xl font-bold">간소화된 테이블 컴포넌트</h1>
       
       <div className="flex flex-wrap gap-4 mb-6">
@@ -208,7 +213,7 @@ export default function TablePage() {
 
       <div className="mb-10">
         <h2 className="mb-4 text-xl font-semibold">자동 처리 테이블</h2>
-        <div className="p-4 mb-4 rounded-lg bg-blue-50 neu-flat">
+        <div className="p-4 mb-4 bg-blue-50 rounded-lg neu-flat">
           <h3 className="mb-2 font-semibold text-blue-800">🚀 간소화된 기능</h3>
           <ul className="space-y-1 text-sm text-blue-700">
             <li>• <strong>자동 로딩 감지</strong>: data가 null/undefined이면 자동으로 &quot;로딩 중...&quot; 표시</li>
@@ -225,6 +230,27 @@ export default function TablePage() {
           data={data || []} // null이면 빈 배열로 처리
           columns={columns}
           pageSize={5} // 5행으로 제한하여 페이지네이션 효과 확인
+        />
+      </div>
+
+      <div className="mb-10">
+        <h2 className="mb-4 text-xl font-semibold">행 클릭 인터랙션 테이블</h2>
+        <div className="p-4 mb-4 bg-green-50 rounded-lg neu-flat">
+          <h3 className="mb-2 font-semibold text-green-800">✨ 행 클릭 기능</h3>
+          <ul className="space-y-1 text-sm text-green-700">
+            <li>• <strong>clickableRows</strong>: 행 클릭 활성화 여부</li>
+            <li>• <strong>onRowClick</strong>: 행 클릭 시 실행할 함수</li>
+            <li>• <strong>간단한 hover 효과</strong>: 그림자와 테두리만 적용</li>
+            <li>• <strong>커서 포인터</strong>: 클릭 가능함을 시각적으로 표시</li>
+            <li>• <strong>선택적 적용</strong>: 상세 페이지 이동이 필요한 경우에만 사용</li>
+          </ul>
+        </div>
+        <Table
+          data={users}
+          columns={columns}
+          pageSize={5}
+          clickableRows={true}
+          onRowClick={handleRowClick}
         />
       </div>
 
@@ -300,7 +326,7 @@ export default function TablePage() {
       <div className="mt-10">
         <h2 className="mb-4 text-xl font-semibold">API 비교</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="p-4 rounded-lg bg-red-50 neu-flat">
+          <div className="p-4 bg-red-50 rounded-lg neu-flat">
             <h3 className="mb-2 font-semibold text-red-800">❌ 이전 (15개 Props)</h3>
             <pre className="overflow-x-auto text-xs text-red-700">
 {`<Table
@@ -322,7 +348,7 @@ export default function TablePage() {
             </pre>
           </div>
           
-          <div className="p-4 rounded-lg bg-green-50 neu-flat">
+          <div className="p-4 bg-green-50 rounded-lg neu-flat">
             <h3 className="mb-2 font-semibold text-green-800">✅ 현재 (5개 Props)</h3>
             <pre className="overflow-x-auto text-xs text-green-700">
 {`<Table

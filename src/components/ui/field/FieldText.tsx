@@ -44,16 +44,16 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 		<div className="flex flex-col">
 			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium leading-6 text-gray-700">
 						{label}
 					</label>
 				)}
 			</div>
 			<div className="relative">
 				{showSearchIcon ? (
-					<Search className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
+					<Search className="absolute left-3 top-1/2 w-4 h-4 text-gray-500 transform -translate-y-1/2" />
 				) : (
-					<Type className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
+					<Type className="absolute left-3 top-1/2 w-4 h-4 text-gray-500 transform -translate-y-1/2" />
 				)}
 
 				<input
@@ -63,6 +63,8 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					disabled={disabled}
+					spellCheck={false}
+					autoComplete="off"
 					className={`
 						w-full ${STYLES.container}
 						text-gray-800 placeholder-gray-400 font-medium

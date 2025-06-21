@@ -21,9 +21,9 @@ const renderCustomYearMonthHeader = ({
   const months = Array.from({ length: 12 }, (_, i) => i);
   
   return (
-    <div className="flex items-center justify-center px-2 py-2 space-x-2">
+    <div className="flex justify-center items-center px-2 py-2 space-x-2">
       <select
-        className="px-2 py-1 text-sm border rounded neu-inset"
+        className="px-2 py-1 text-sm rounded border neu-inset"
         value={date.getFullYear()}
         onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}
       >
@@ -35,7 +35,7 @@ const renderCustomYearMonthHeader = ({
       </select>
       
       <select
-        className="px-2 py-1 text-sm border rounded neu-inset"
+        className="px-2 py-1 text-sm rounded border neu-inset"
         value={date.getMonth()}
         onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}
       >
@@ -82,39 +82,43 @@ export function DateRangePicker({
   };
 
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
-      <DatePicker
-        selected={startDate ?? undefined}
-        onChange={handleStartDateChange}
-        selectsStart
-        startDate={startDate ?? undefined}
-        endDate={endDate ?? undefined}
-        dateFormat="yyyy-MM-dd"
-        placeholderText="시작 날짜"
-        locale={ko}
-        yearDropdownItemNumber={yearDropdownItemNumber}
-        scrollableYearDropdown={scrollableYearDropdown}
-        showMonthYearPicker={showMonthYearPicker}
-        renderCustomHeader={renderCustomYearMonthHeader}
-        className="px-2 py-1 border rounded neu-inset w-36"
-      />
-      <span className="text-sm">~</span>
-      <DatePicker
-        selected={endDate ?? undefined}
-        onChange={handleEndDateChange}
-        selectsEnd
-        startDate={startDate ?? undefined}
-        endDate={endDate ?? undefined}
-        minDate={startDate ?? undefined}
-        dateFormat="yyyy-MM-dd"
-        placeholderText="마지막 날짜"
-        locale={ko}
-        yearDropdownItemNumber={yearDropdownItemNumber}
-        scrollableYearDropdown={scrollableYearDropdown}
-        showMonthYearPicker={showMonthYearPicker}
-        renderCustomHeader={renderCustomYearMonthHeader}
-        className="px-2 py-1 border rounded neu-inset w-36"
-      />
+    <div className={`flex items-center space-x-2 ${className}`} style={{ width: 'fit-content' }}>
+      <div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
+        <DatePicker
+          selected={startDate ?? undefined}
+          onChange={handleStartDateChange}
+          selectsStart
+          startDate={startDate ?? undefined}
+          endDate={endDate ?? undefined}
+          dateFormat="yyyy-MM-dd"
+          placeholderText="시작 날짜"
+          locale={ko}
+          yearDropdownItemNumber={yearDropdownItemNumber}
+          scrollableYearDropdown={scrollableYearDropdown}
+          showMonthYearPicker={showMonthYearPicker}
+          renderCustomHeader={renderCustomYearMonthHeader}
+          className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-none focus:ring-0"
+        />
+      </div>
+      <span className="text-sm flex-shrink-0">~</span>
+      <div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
+        <DatePicker
+          selected={endDate ?? undefined}
+          onChange={handleEndDateChange}
+          selectsEnd
+          startDate={startDate ?? undefined}
+          endDate={endDate ?? undefined}
+          minDate={startDate ?? undefined}
+          dateFormat="yyyy-MM-dd"
+          placeholderText="마지막 날짜"
+          locale={ko}
+          yearDropdownItemNumber={yearDropdownItemNumber}
+          scrollableYearDropdown={scrollableYearDropdown}
+          showMonthYearPicker={showMonthYearPicker}
+          renderCustomHeader={renderCustomYearMonthHeader}
+          className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-none focus:ring-0"
+        />
+      </div>
     </div>
   );
 }
@@ -163,23 +167,25 @@ export function SingleDatePicker({
     : dateFormat;
 
   return (
-    <DatePicker
-      selected={selected ?? undefined}
-      onChange={handleDateChange}
-      dateFormat={inputDateFormat}
-      placeholderText={placeholderText}
-      minDate={minDate ?? undefined}
-      maxDate={maxDate ?? undefined}
-      locale={ko}
-      showTimeSelect={showTimeSelect}
-      timeFormat={timeFormat}
-      timeIntervals={timeIntervals}
-      yearDropdownItemNumber={yearDropdownItemNumber}
-      scrollableYearDropdown={scrollableYearDropdown}
-      showMonthYearPicker={showMonthYearPicker}
-      renderCustomHeader={renderCustomYearMonthHeader}
-      className={`px-2 py-1 border rounded neu-inset ${className}`}
-    />
+    <div style={{ width: 'fit-content', minWidth: 'fit-content' }}>
+      <DatePicker
+        selected={selected ?? undefined}
+        onChange={handleDateChange}
+        dateFormat={inputDateFormat}
+        placeholderText={placeholderText}
+        minDate={minDate ?? undefined}
+        maxDate={maxDate ?? undefined}
+        locale={ko}
+        showTimeSelect={showTimeSelect}
+        timeFormat={timeFormat}
+        timeIntervals={timeIntervals}
+        yearDropdownItemNumber={yearDropdownItemNumber}
+        scrollableYearDropdown={scrollableYearDropdown}
+        showMonthYearPicker={showMonthYearPicker}
+        renderCustomHeader={renderCustomYearMonthHeader}
+        className={`box-border px-2 py-1 rounded border neu-inset focus:outline-none focus:ring-0 ${className}`}
+      />
+    </div>
   );
 }
 // #endregion 

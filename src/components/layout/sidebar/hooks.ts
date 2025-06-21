@@ -39,42 +39,68 @@ export function useSidebarMenu() {
 			: getDefaultExpandedMidItems(defaults.topMenu)
 	);
 
-	// URL 및 모드 변경 시 topMenu, midMenu, midExpanded 초기화
+	// URL 및 모드 변경 시 topMenu, midMenu 선택 (midExpanded는 필요시에만 변경)
 	useEffect(() => {
+		let foundMatch = false;
+		let targetTopMenu = '';
+		let targetMidMenu = '';
+
 		// 현재 URL과 일치하는 메뉴를 찾아서 자동 선택
 		for (const [topKey, topData] of Object.entries(menuData)) {
 			for (const midKey of Object.keys(topData.midItems)) {
 				for (const botItem of topData.midItems[midKey].botItems) {
 					if (botItem.href === pathname) {
-						setTopMenu(topKey);
-						setMidMenu(midKey);
-						// midExpanded 설정: 단일 모드면 해당 메뉴만, 다중 모드면 모두 펼치기
-						if (singleOpenMode) {
-							setMidExpanded(new Set<string>([midKey]));
-						} else {
-							setMidExpanded(getDefaultExpandedMidItems(topKey));
-						}
-						return;
+						targetTopMenu = topKey;
+						targetMidMenu = midKey;
+						foundMatch = true;
+						break;
 					}
 				}
+				if (foundMatch) break;
 			}
+			if (foundMatch) break;
 		}
-	}, [pathname, singleOpenMode]);
+
+		if (foundMatch) {
+			// Top 메뉴가 변경되는 경우에만 midExpanded 초기화
+			const isTopMenuChanged = targetTopMenu !== topMenu;
+			
+			setTopMenu(targetTopMenu);
+			setMidMenu(targetMidMenu);
+			
+			// Top 메뉴 변경 시에만 midExpanded 상태 초기화
+			if (isTopMenuChanged) {
+				if (singleOpenMode) {
+					setMidExpanded(new Set<string>([targetMidMenu]));
+				} else {
+					// 다중 모드에서는 새 topMenu의 모든 메뉴 열기
+					setMidExpanded(getDefaultExpandedMidItems(targetTopMenu));
+				}
+			} else if (singleOpenMode) {
+				// 같은 Top 메뉴 내에서 단일 모드인 경우에만 해당 Mid 메뉴 열기
+				setMidExpanded(new Set<string>([targetMidMenu]));
+			}
+			// 다중 모드에서 같은 Top 메뉴 내 이동 시에는 midExpanded 상태 보존
+		}
+	}, [pathname, singleOpenMode, topMenu]);
 
 	// #region top 메뉴 클릭 핸들러
 	/**
 	 * Top 메뉴 클릭 시 처리
 	 * - 선택된 Top 메뉴 변경
-	 * - 모드에 따른 Mid 메뉴 확장 상태 초기화
+	 * - 모드에 따른 Mid 메뉴 확장 상태 초기화 (Top 메뉴 변경 시에만)
 	 */
 	const handleTopClick = (topKey: string) => {
+		// Top 메뉴가 실제로 변경되는 경우에만 처리
+		if (topKey === topMenu) return;
+		
 		setTopMenu(topKey);
 		// 새로운 topMenu 선택 시 singleOpenMode에 따라 초기 상태 설정
 		if (singleOpenMode) {
 			// 하나만 열기 모드에서는 모든 메뉴 닫기
 			setMidExpanded(new Set<string>());
 		} else {
-			// 일반 모드에서는 새 topMenu의 모든 메뉴 열기
+			// 다중 모드에서는 새 topMenu의 모든 메뉴 열기
 			const topData = menuData[topKey];
 			if (topData) {
 				setMidExpanded(new Set<string>(Object.keys(topData.midItems)));

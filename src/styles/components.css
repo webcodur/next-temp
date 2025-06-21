@@ -30,3 +30,66 @@
 	@apply text-primary;
 }
 /* #endregion */
+
+/* #region 리스트 얼룩무늬 패턴 */
+/* 기본 얼룩무늬 항목 */
+.list-item-zebra {
+	@apply mx-2 my-0.5 px-3 py-1.5 rounded-md cursor-pointer text-sm font-normal transition-all duration-200 ease-out border-l-4 border-l-transparent;
+}
+
+/* 짝수 줄 (흰색 배경) */
+.list-item-even {
+	@apply bg-white;
+}
+
+/* 홀수 줄 (연한 회색 배경) */
+.list-item-odd {
+	@apply bg-gray-50;
+}
+
+/* 활성화 상태 (선택됨, 하이라이트됨, 호버됨) */
+.list-item-active {
+	@apply shadow-xl border-l-gray-600 text-gray-900 ring-2 ring-gray-300;
+}
+
+/* 비활성화 상태 */
+.list-item-disabled {
+	@apply text-gray-400 cursor-not-allowed opacity-50;
+}
+
+/* 기본 호버 효과 */
+.list-item-hover {
+	@apply hover:shadow-lg hover:border-l-gray-400 text-gray-700;
+}
+/* #endregion */
+
+/* react-datepicker width 안정화 */
+.react-datepicker-wrapper {
+	width: 144px !important; /* w-36 = 144px */
+	box-sizing: border-box !important;
+}
+
+.react-datepicker__input-container {
+	width: 144px !important;
+	box-sizing: border-box !important;
+	display: block !important;
+}
+
+.react-datepicker__input-container input {
+	width: 144px !important;
+	box-sizing: border-box !important;
+	outline: none !important;
+	border: 1px solid hsl(var(--border) / 0.4) !important;
+	transition: all 0.15s ease-in-out !important;
+}
+
+.react-datepicker__input-container input:focus {
+	width: 144px !important;
+	outline: none !important;
+	box-shadow: 
+		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
+			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
+		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
+			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
+		0 0 0 1px hsl(var(--primary) / 0.4) !important;
+}

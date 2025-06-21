@@ -102,6 +102,21 @@
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
 		0 0 0 1px hsl(var(--primary) / 0.3);
 }
+
+.neu-inset:focus {
+	outline: none;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.9),
+		hsl(var(--card) / 0.8)
+	);
+	box-shadow:
+		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
+			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
+		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
+			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
+		0 0 0 1px hsl(var(--primary) / 0.4);
+}
 /* #endregion */
 
 /* #region - 4. neu-icon - 아이콘 */

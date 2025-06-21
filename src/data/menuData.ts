@@ -328,6 +328,11 @@ export const menuData: MenuData = {
 						href: '/lab/ui-check/card',
 						description: '정보 그룹화 컨테이너',
 					},
+					{
+						label: 'List Highlight Marker',
+						href: '/lab/ui-check/list-highlight-marker',
+						description: '리스트 강조 마커 (왼쪽 색상 바)',
+					},
 				],
 			},
 			inputFeedback: {
@@ -337,6 +342,11 @@ export const menuData: MenuData = {
 						label: 'Field',
 						href: '/lab/ui-check/field',
 						description: '텍스트/선택/필터 입력',
+					},
+					{
+						label: 'Simple Input',
+						href: '/lab/ui-check/simple-input',
+						description: '체크박스/라디오/토글 입력',
 					},
 					{
 						label: 'Datepicker',
@@ -422,6 +432,41 @@ export const menuData: MenuData = {
 						label: 'AdvancedSearch',
 						href: '/lab/ui-check/advanced-search',
 						description: '고급 검색 패널',
+					},
+				],
+			},
+			threejsLearning: {
+				label: '3D 학습',
+				botItems: [
+					{
+						label: '1. 기초 개념',
+						href: '/lab/threejs-learning/basics',
+						description: 'Scene, Camera, Renderer 삼각구조 이해',
+					},
+					{
+						label: '2. 기본 도형',
+						href: '/lab/threejs-learning/geometries',
+						description: '정육면체, 구, 평면 등 기본 도형 생성',
+					},
+					{
+						label: '3. 재질과 조명',
+						href: '/lab/threejs-learning/materials-lights',
+						description: '재질 종류와 조명 시스템 학습',
+					},
+					{
+						label: '4. 애니메이션',
+						href: '/lab/threejs-learning/animations',
+						description: '회전, 이동, 크기 변경 애니메이션',
+					},
+					{
+						label: '5. 인터랙션',
+						href: '/lab/threejs-learning/interactions',
+						description: '마우스 컨트롤과 카메라 조작',
+					},
+					{
+						label: '6. 고급 기능',
+						href: '/lab/threejs-learning/advanced',
+						description: '텍스처, 모델 로딩, 파티클 등',
 					},
 				],
 			},

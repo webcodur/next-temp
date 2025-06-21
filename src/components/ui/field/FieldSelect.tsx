@@ -7,21 +7,85 @@ import React, {
 	useMemo,
 	useCallback,
 } from 'react';
-import { X, Filter, ArrowUpDown, ChevronDown } from 'lucide-react';
+import { X, Filter, ArrowUpDown, ChevronDown, Edit, List, ArrowUp, ArrowDown } from 'lucide-react';
 import {
 	Option,
+	SelectMode,
+	SortDirection,
 	FieldMultiSelectComponentProps,
 	FieldFilterSelectComponentProps,
 	FieldSortSelectComponentProps,
 } from './types';
 import { STYLES } from './styles';
+import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
+
+//#region Mode Toggle Indicator
+const ModeToggleIndicator: React.FC<{
+	mode: SelectMode;
+	onModeChange: (mode: SelectMode) => void;
+	disabled?: boolean;
+}> = ({ mode, onModeChange, disabled = false }) => {
+	const isDropdown = mode === 'dropdown';
+	
+	return (
+		<button
+			type="button"
+			onClick={(e) => {
+				e.stopPropagation();
+				if (!disabled) {
+					onModeChange(isDropdown ? 'combobox' : 'dropdown');
+				}
+			}}
+			disabled={disabled}
+			title={isDropdown ? '콤보박스로 전환 (검색 모드)' : '드롭다운으로 전환 (선택 모드)'}
+			className={`${STYLES.button} w-5 h-5 flex-shrink-0`}>
+			{isDropdown ? (
+				<List className="w-3 h-3" />  // 드롭다운 = 리스트 아이콘
+			) : (
+				<Edit className="w-3 h-3" />  // 콤보박스 = 연필 아이콘
+			)}
+		</button>
+	);
+};
+//#endregion
+
+//#region Sort Direction Toggle
+const SortDirectionToggle: React.FC<{
+	direction: SortDirection;
+	onDirectionChange: (direction: SortDirection) => void;
+	disabled?: boolean;
+}> = ({ direction, onDirectionChange, disabled = false }) => {
+	const isAsc = direction === 'asc';
+	
+	return (
+		<button
+			type="button"
+			onClick={(e) => {
+				e.stopPropagation();
+				if (!disabled) {
+					onDirectionChange(isAsc ? 'desc' : 'asc');
+				}
+			}}
+			disabled={disabled}
+			title={isAsc ? '내림차순으로 변경' : '오름차순으로 변경'}
+			className={`${STYLES.button} w-5 h-5 flex-shrink-0`}>
+			{isAsc ? (
+				<ArrowUp className="w-3 h-3" />  // 오름차순 = 위쪽 화살표
+			) : (
+				<ArrowDown className="w-3 h-3" />  // 내림차순 = 아래쪽 화살표
+			)}
+		</button>
+	);
+};
+//#endregion
 
 //#region Select Logic Hook
 const useSelectLogic = (
 	options: Option[],
 	multiple: boolean,
 	value: string | string[] | undefined,
-	onChange: ((value: string) => void) | ((value: string[]) => void) | undefined
+	onChange: ((value: string) => void) | ((value: string[]) => void) | undefined,
+	mode: SelectMode = 'dropdown'
 ) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -32,13 +96,19 @@ const useSelectLogic = (
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const filteredOptions = useMemo(
-		() =>
-			!inputValue
+		() => {
+			// 드롭다운 모드에서는 항상 전체 옵션 표시
+			if (mode === 'dropdown') {
+				return options;
+			}
+			// 콤보박스 모드에서만 입력값에 따른 필터링 적용
+			return !inputValue
 				? options
 				: options.filter((option) =>
 						option.label.toLowerCase().includes(inputValue.toLowerCase())
-					),
-		[options, inputValue]
+					);
+		},
+		[options, inputValue, mode]
 	);
 
 	const selectedValues = multiple
@@ -74,9 +144,22 @@ const useSelectLogic = (
 	useEffect(() => {
 		if (!multiple) {
 			const selected = options.find((option) => option.value === value);
-			setInputValue(isOpen ? inputValue : selected?.label || '');
+			// 드롭다운 모드에서는 항상 선택된 값으로 설정, 콤보박스 모드에서만 입력값 유지
+			if (mode === 'dropdown') {
+				setInputValue(selected?.label || '');
+			} else {
+				setInputValue(isOpen ? inputValue : selected?.label || '');
+			}
 		}
-	}, [value, options, multiple, isOpen, inputValue]);
+	}, [value, options, multiple, isOpen, inputValue, mode]);
+
+	// 모드 변경 시 inputValue 초기화
+	useEffect(() => {
+		if (mode === 'dropdown') {
+			const selected = options.find((option) => option.value === value);
+			setInputValue(selected?.label || '');
+		}
+	}, [mode, value, options]);
 
 	useEffect(() => {
 		const closeDropdown = () => {
@@ -188,7 +271,7 @@ const SelectDropdown: React.FC<{
 		<div className={STYLES.dropdown} style={{ maxHeight }}>
 			<div className="overflow-auto" style={{ maxHeight }}>
 				{filteredOptions.length === 0 ? (
-					<div className="px-3 py-1.5 font-medium text-center text-gray-500 text-sm">
+					<div className="px-3 py-1.5 text-center text-gray-500 text-sm">
 						검색 결과가 없습니다
 					</div>
 				) : (
@@ -196,28 +279,28 @@ const SelectDropdown: React.FC<{
 						const isSelected = selectedValues.includes(option.value);
 						const isHighlighted = index === highlightedIndex;
 						const isHovered = index === hoveredIndex;
-						const isActive = isHighlighted || isHovered || isSelected;
 
 						return (
-							<div
+							<ListHighlightMarker
 								key={option.value}
-								className={`${STYLES.option} ${
-									option.disabled
-										? 'text-gray-400 cursor-not-allowed opacity-50'
-										: isActive
-											? 'bg-white text-gray-700 shadow-sm'
-											: 'text-gray-700 hover:bg-gray-100'
-								}`}
+								index={index}
+								totalCount={filteredOptions.length}
+								isSelected={isSelected}
+								isHighlighted={isHighlighted}
+								isHovered={isHovered}
+								disabled={option.disabled}
 								onClick={() => handleOptionSelect(option)}
 								onMouseEnter={() => setHoveredIndex(index)}
 								onMouseLeave={() => setHoveredIndex(-1)}>
-								<span className="truncate">{option.label}</span>
-								{isSelected && multiple && (
-									<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">
-										✓
-									</div>
-								)}
-							</div>
+								<div className="flex items-center justify-between w-full">
+									<span className="truncate">{option.label}</span>
+									{isSelected && multiple && (
+										<div className="flex justify-center items-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full ml-2">
+											✓
+										</div>
+									)}
+								</div>
+							</ListHighlightMarker>
 						);
 					})
 				)}
@@ -237,6 +320,8 @@ export const FieldMultiSelect: React.FC<FieldMultiSelectComponentProps> = ({
 	disabled = false,
 	className = '',
 	maxHeight = 200,
+	mode = 'dropdown',
+	onModeChange,
 }) => {
 	const {
 		isOpen,
@@ -252,7 +337,7 @@ export const FieldMultiSelect: React.FC<FieldMultiSelectComponentProps> = ({
 		selectedValues,
 		selectedOptions,
 		handleOptionSelect,
-	} = useSelectLogic(options, true, value, onChange);
+	} = useSelectLogic(options, true, value, onChange, mode);
 
 	const Tag = ({
 		option,
@@ -278,7 +363,7 @@ export const FieldMultiSelect: React.FC<FieldMultiSelectComponentProps> = ({
 		<div className={`relative ${className}`} ref={selectRef}>
 			<div className={`flex items-start justify-between ${STYLES.fieldHeaderHeight}`}>
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium leading-6 text-gray-700">
 						{label}
 					</label>
 				)}
@@ -311,26 +396,73 @@ export const FieldMultiSelect: React.FC<FieldMultiSelectComponentProps> = ({
 				}`}
 				onClick={() => !disabled && inputRef.current?.focus()}
 				tabIndex={-1}>
-				<div className="absolute transform -translate-y-1/2 left-3 top-1/2">
+				<div className="absolute left-3 top-1/2 transform -translate-y-1/2">
 					<Filter className="w-4 h-4 text-gray-500" />
 				</div>
 
-				<div className="flex items-center flex-1 min-w-0">
-					<input
-						ref={inputRef}
-						type="text"
-						value={inputValue}
-						onChange={(e) => {
-							setInputValue(e.target.value);
-						}}
-						onFocus={() => setIsOpen(true)}
-						placeholder={
-							selectedOptions.length > 0 ? '추가 검색...' : placeholder
-						}
-						disabled={disabled}
-						className="flex-1 min-w-0 text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
-						style={{ minWidth: '100px' }}
-					/>
+				<div className="flex flex-1 items-center min-w-0">
+					{mode === 'combobox' ? (
+						<input
+							ref={inputRef}
+							type="text"
+							value={inputValue}
+							onChange={(e) => {
+								setInputValue(e.target.value);
+							}}
+							onFocus={() => setIsOpen(true)}
+							placeholder={
+								selectedOptions.length > 0 ? '추가 검색...' : placeholder
+							}
+							disabled={disabled}
+							spellCheck={false}
+							autoComplete="off"
+							className="flex-1 min-w-0 placeholder-gray-400 text-gray-800 bg-transparent focus:outline-none focus:ring-0"
+							style={{ minWidth: '100px' }}
+						/>
+					) : (
+						<span
+							className={`flex-1 ${
+								selectedOptions.length > 0 ? 'text-gray-800' : 'text-gray-500'
+							} truncate cursor-pointer`}
+							onClick={() => !disabled && setIsOpen(!isOpen)}>
+							{selectedOptions.length > 0 
+								? `${selectedOptions.length}개 선택됨`
+								: placeholder
+							}
+						</span>
+					)}
+				</div>
+
+				<div className="flex gap-1 items-center ml-2">
+					{onModeChange && (
+						<ModeToggleIndicator
+							mode={mode}
+							onModeChange={onModeChange}
+							disabled={disabled}
+						/>
+					)}
+					
+					{mode === 'dropdown' ? (
+						<button
+							onClick={() => !disabled && setIsOpen(!isOpen)}
+							disabled={disabled}
+							className={`${STYLES.button} w-5 h-5 flex-shrink-0`}>
+							<ChevronDown className="w-3 h-3" />
+						</button>
+					) : (
+						<button
+							onClick={(e) => {
+								e.stopPropagation();
+								onChange?.([]);
+								setInputValue('');
+							}}
+							disabled={selectedOptions.length === 0}
+							className={`${STYLES.button} w-5 h-5 flex-shrink-0 ${
+								selectedOptions.length === 0 ? 'opacity-40 cursor-not-allowed' : ''
+							}`}>
+							<X className="w-3 h-3" />
+						</button>
+					)}
 				</div>
 			</div>
 
@@ -362,6 +494,8 @@ export const FieldFilterSelect: React.FC<FieldFilterSelectComponentProps> = ({
 	disabled = false,
 	className = '',
 	maxHeight = 200,
+	mode = 'dropdown',
+	onModeChange,
 }) => {
 	const {
 		isOpen,
@@ -377,13 +511,13 @@ export const FieldFilterSelect: React.FC<FieldFilterSelectComponentProps> = ({
 		selectedValues,
 		selectedOptions,
 		handleOptionSelect,
-	} = useSelectLogic(options, false, value, onChange);
+	} = useSelectLogic(options, false, value, onChange, mode);
 
 	return (
 		<div className={`relative ${className}`} ref={selectRef}>
 			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium leading-6 text-gray-700">
 						{label}
 					</label>
 				)}
@@ -395,38 +529,70 @@ export const FieldFilterSelect: React.FC<FieldFilterSelectComponentProps> = ({
 				}`}
 				onClick={() => !disabled && inputRef.current?.focus()}
 				tabIndex={-1}>
-				<div className="absolute transform -translate-y-1/2 left-3 top-1/2">
+				<div className="absolute left-3 top-1/2 transform -translate-y-1/2">
 					<Filter className="w-4 h-4 text-gray-500" />
 				</div>
 
-				<div className="flex items-center flex-1 min-w-0">
-					<input
-						ref={inputRef}
-						type="text"
-						value={inputValue}
-						onChange={(e) => {
-							setInputValue(e.target.value);
-							if (!e.target.value) onChange?.('');
-						}}
-						onFocus={() => setIsOpen(true)}
-						placeholder={placeholder}
-						disabled={disabled}
-						className="flex-1 min-w-0 font-medium text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none focus:ring-0"
-						style={{ minWidth: '100px' }}
-					/>
+				<div className="flex flex-1 items-center min-w-0">
+					{mode === 'combobox' ? (
+						<input
+							ref={inputRef}
+							type="text"
+							value={inputValue}
+							onChange={(e) => {
+								setInputValue(e.target.value);
+								if (!e.target.value) onChange?.('');
+							}}
+							onFocus={() => setIsOpen(true)}
+							placeholder={placeholder}
+							disabled={disabled}
+							spellCheck={false}
+							autoComplete="off"
+							className="flex-1 min-w-0 placeholder-gray-400 text-gray-800 bg-transparent focus:outline-none focus:ring-0"
+							style={{ minWidth: '100px' }}
+						/>
+					) : (
+						<span
+							className={`flex-1 ${
+								selectedOptions[0] ? 'text-gray-800' : 'text-gray-500'
+							} truncate cursor-pointer`}
+							onClick={() => !disabled && setIsOpen(!isOpen)}>
+							{selectedOptions[0]?.label || placeholder}
+						</span>
+					)}
 				</div>
 
-				{selectedOptions.length > 0 && (
-					<button
-						onClick={(e) => {
-							e.stopPropagation();
-							onChange?.('');
-							setInputValue('');
-						}}
-						className={`${STYLES.button} w-5 h-5 ml-2 flex-shrink-0`}>
-						<X className="w-3 h-3" />
-					</button>
-				)}
+				<div className="flex gap-1 items-center ml-2">
+					{onModeChange && (
+						<ModeToggleIndicator
+							mode={mode}
+							onModeChange={onModeChange}
+							disabled={disabled}
+						/>
+					)}
+					
+					{mode === 'dropdown' ? (
+						<button
+							onClick={() => !disabled && setIsOpen(!isOpen)}
+							disabled={disabled}
+							className={`${STYLES.button} w-5 h-5 flex-shrink-0`}>
+							<ChevronDown className="w-3 h-3" />
+						</button>
+					) : (
+						<button
+							onClick={(e) => {
+								e.stopPropagation();
+								onChange?.('');
+								setInputValue('');
+							}}
+							disabled={selectedOptions.length === 0}
+							className={`${STYLES.button} w-5 h-5 flex-shrink-0 ${
+								selectedOptions.length === 0 ? 'opacity-40 cursor-not-allowed' : ''
+							}`}>
+							<X className="w-3 h-3" />
+						</button>
+					)}
+				</div>
 			</div>
 
 			<div className="relative">
@@ -457,6 +623,8 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	disabled = false,
 	className = '',
 	maxHeight = 200,
+	sortDirection = 'asc',
+	onSortDirectionChange,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -527,7 +695,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 		<div className={`relative ${className}`} ref={selectRef}>
 			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium leading-6 text-gray-700">
 						{label}
 					</label>
 				)}
@@ -539,59 +707,69 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 				}`}
 				onClick={() => !disabled && setIsOpen(!isOpen)}
 				tabIndex={0}>
-				<div className="absolute transform -translate-y-1/2 left-3 top-1/2">
+				<div className="absolute left-3 top-1/2 transform -translate-y-1/2">
 					<ArrowUpDown className="w-4 h-4 text-gray-500" />
 				</div>
 
-				<span
-					className={`flex-1 ${
-						selectedOption ? 'text-gray-800' : 'text-gray-500'
-					} font-medium truncate`}>
-					{selectedOption?.label || placeholder}
-				</span>
+				<div className="flex flex-1 items-center gap-2 min-w-0">
+					<span
+						className={`${
+							selectedOption ? 'text-gray-800' : 'text-gray-500'
+						} truncate cursor-pointer`}>
+						{selectedOption?.label || placeholder}
+					</span>
+					{selectedOption && (
+						<button
+							type="button"
+							onClick={(e) => {
+								e.stopPropagation();
+								if (!disabled && onSortDirectionChange) {
+									onSortDirectionChange(sortDirection === 'asc' ? 'desc' : 'asc');
+								}
+							}}
+							disabled={disabled || !onSortDirectionChange}
+							className={`text-xs text-gray-400 flex-shrink-0 hover:text-gray-600 transition-colors ${
+								disabled || !onSortDirectionChange ? 'cursor-default' : 'cursor-pointer'
+							}`}
+							title="정렬 방향 변경">
+							({sortDirection === 'asc' ? '오름차순' : '내림차순'})
+						</button>
+					)}
+				</div>
 
-				<ChevronDown
-					className={`w-4 h-4 text-gray-500 transition-transform ${
-						isOpen ? 'rotate-180' : ''
-					}`}
-				/>
+				<div className="flex gap-1 items-center">
+					{onSortDirectionChange && (
+						<SortDirectionToggle
+							direction={sortDirection}
+							onDirectionChange={onSortDirectionChange}
+							disabled={disabled}
+						/>
+					)}
+					
+					<button
+						onClick={() => !disabled && setIsOpen(!isOpen)}
+						disabled={disabled}
+						className={`${STYLES.button} w-5 h-5 flex-shrink-0`}>
+						<ChevronDown
+							className={`w-3 h-3 transition-transform ${
+								isOpen ? 'rotate-180' : ''}`}
+						/>
+					</button>
+				</div>
 			</div>
 
 			<div className="relative">
-				{isOpen && (
-					<div className={STYLES.dropdown} style={{ maxHeight }}>
-						<div className="overflow-auto" style={{ maxHeight }}>
-							{options.map((option, index) => {
-								const isSelected = option.value === value;
-								const isHighlighted = index === highlightedIndex;
-								const isHovered = index === hoveredIndex;
-								const isActive = isHighlighted || isHovered || isSelected;
-
-								return (
-									<div
-										key={option.value}
-										className={`${STYLES.option} ${
-											option.disabled
-												? 'text-gray-400 cursor-not-allowed opacity-50'
-												: isActive
-													? 'bg-white text-gray-700 shadow-sm'
-													: 'text-gray-700 hover:bg-gray-100'
-										}`}
-										onClick={() => handleOptionSelect(option)}
-										onMouseEnter={() => setHoveredIndex(index)}
-										onMouseLeave={() => setHoveredIndex(-1)}>
-										<span className="truncate">{option.label}</span>
-										{isSelected && (
-											<div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-600 bg-gray-200 rounded-full">
-												✓
-											</div>
-										)}
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				)}
+				<SelectDropdown
+					isOpen={isOpen}
+					filteredOptions={options}
+					selectedValues={value ? [value] : []}
+					highlightedIndex={highlightedIndex}
+					hoveredIndex={hoveredIndex}
+					setHoveredIndex={setHoveredIndex}
+					handleOptionSelect={handleOptionSelect}
+					maxHeight={maxHeight}
+					multiple={false}
+				/>
 			</div>
 		</div>
 	);

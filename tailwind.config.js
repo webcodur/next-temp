@@ -8,6 +8,12 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
+				// 얼룩무늬 효과를 위한 회색 확장 (현재 사용하지 않음 - 기본 gray-50 사용)
+				// gray: {
+				// 	25: '#f8f9fa',
+				// 	150: '#e2e6ea',
+				// 	250: '#d6dbdf',
+				// },
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

@@ -16,6 +16,8 @@ export interface TabsProps {
 	variant?: 'default' | 'filled';
 	align?: 'start' | 'center' | 'end';
 	size?: 'sm' | 'md' | 'lg';
+	// Three.js 컴포넌트 언마운트를 위한 옵션
+	forceRemount?: boolean;
 }
 // #endregion
 
@@ -29,6 +31,7 @@ const Tabs = React.forwardRef<
 	variant = 'default',
 	align = 'start',
 	size = 'md',
+	forceRemount = true, // 기본값을 true로 설정
 	className,
 	...props
 }, ref) => {
@@ -57,8 +60,8 @@ const Tabs = React.forwardRef<
 			{...props}
 		>
 			{/* 탭 헤더 */}
-			<div className="relative p-2 overflow-hidden rounded-xl neu-flat">
-				<div className={cn("relative z-10 flex", alignClasses[align])}>
+			<div className="overflow-hidden relative p-2 rounded-xl neu-flat">
+				<div className={cn("flex relative z-10", alignClasses[align])}>
 					{tabs.map((tab) => (
 						<button
 							key={tab.id}
@@ -83,17 +86,35 @@ const Tabs = React.forwardRef<
 			</div>
 
 			{/* 탭 컨텐츠 */}
-			<div className="relative p-6 mt-6 overflow-hidden rounded-xl neu-flat">
+			<div className="overflow-hidden relative p-6 mt-6 rounded-xl neu-flat">
 				<div className="relative z-10">
-					{tabs.map((tab, idx) =>
-						activeId === tab.id ? (
+					{forceRemount ? (
+						// 조건부 렌더링: 활성 탭만 렌더링 (Three.js 컴포넌트 완전 언마운트)
+						tabs.map((tab, idx) => 
+							activeId === tab.id ? (
+								<div 
+									key={tab.id} 
+									className="transition-opacity duration-200 animate-fadeIn"
+								>
+									{children[idx]}
+								</div>
+							) : null
+						)
+					) : (
+						// 기존 방식: 모든 컨텐츠 렌더링 후 visibility로 제어
+						tabs.map((tab, idx) => (
 							<div 
 								key={tab.id} 
-								className="transition-opacity duration-200 animate-fadeIn"
+								className={cn(
+									"transition-opacity duration-200",
+									activeId === tab.id 
+										? 'block animate-fadeIn' 
+										: 'hidden'
+								)}
 							>
 								{children[idx]}
 							</div>
-						) : null
+						))
 					)}
 				</div>
 			</div>
