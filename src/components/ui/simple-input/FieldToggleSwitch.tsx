@@ -24,6 +24,13 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 		onChange?.(!checked);
 	};
 
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === ' ' || e.key === 'Enter') {
+			e.preventDefault();
+			handleChange();
+		}
+	};
+
 	const sizeStyles = {
 		sm: {
 			track: 'w-8 h-4',
@@ -51,9 +58,9 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className="flex items-center justify-between h-6">
+			<div className="flex justify-between items-center h-6">
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium leading-6 text-gray-700">
 						{label}
 					</label>
 				)}
@@ -61,7 +68,11 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 
 			<div
 				className={`flex items-center h-8 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-				onClick={handleChange}>
+				onClick={handleChange}
+				onKeyDown={handleKeyDown}
+				tabIndex={disabled ? -1 : 0}
+				role="switch"
+				aria-checked={checked}>
 				<div className="relative">
 					<input
 						type="checkbox"
@@ -71,7 +82,7 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 						className="sr-only"
 					/>
 					<div
-						className={`${currentSize.track} relative rounded-full transition-all duration-200 border ${
+						className={`${currentSize.track} relative rounded-full transition-all duration-200 border focus-within:neu-inset ${
 							checked
 								? 'neu-inset bg-blue-100 border-blue-300 shadow-inner'
 								: 'neu-flat bg-gray-100 border-gray-300 shadow-sm hover:shadow-md'
@@ -86,4 +97,4 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 			</div>
 		</div>
 	);
-}; 
+};

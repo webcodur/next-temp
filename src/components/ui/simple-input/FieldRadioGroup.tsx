@@ -32,6 +32,13 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 		onChange?.(optionValue);
 	};
 
+	const handleKeyDown = (optionValue: string) => (e: React.KeyboardEvent) => {
+		if (e.key === ' ' || e.key === 'Enter') {
+			e.preventDefault();
+			handleChange(optionValue);
+		}
+	};
+
 	return (
 		<div className={`relative ${className}`}>
 			<div className="flex items-center justify-between h-6">
@@ -42,7 +49,8 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 				)}
 			</div>
 
-			<div className={`flex min-h-[2rem] ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
+			<div
+				className={`flex min-h-[2rem] ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
 				{options.map((option) => {
 					const isSelected = option.value === value;
 					const isDisabled = disabled || option.disabled;
@@ -51,9 +59,13 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 						<div
 							key={option.value}
 							className={`flex items-center h-8 ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-							onClick={() => !isDisabled && handleChange(option.value)}>
+							onClick={() => !isDisabled && handleChange(option.value)}
+							onKeyDown={handleKeyDown(option.value)}
+							tabIndex={isDisabled ? -1 : 0}
+							role="radio"
+							aria-checked={isSelected}>
 							<div
-								className={`w-6 h-6 flex items-center justify-center rounded-full mr-3 border transition-all duration-200 ${
+								className={`w-6 h-6 flex items-center justify-center rounded-full mr-3 border transition-all duration-200 focus-within:neu-inset ${
 									isSelected
 										? 'neu-inset bg-white border-gray-400 shadow-inner'
 										: 'neu-raised bg-white border-gray-300 shadow-md hover:shadow-lg'
@@ -62,7 +74,8 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 									<div className="w-3 h-3 bg-gray-900 rounded-full"></div>
 								)}
 							</div>
-							<span className={`text-sm font-medium ${isSelected ? 'text-gray-800' : 'text-gray-700'}`}>
+							<span
+								className={`text-sm font-medium ${isSelected ? 'text-gray-800' : 'text-gray-700'}`}>
 								{option.label}
 							</span>
 						</div>
@@ -71,4 +84,4 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 			</div>
 		</div>
 	);
-}; 
+};

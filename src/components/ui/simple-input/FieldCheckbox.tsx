@@ -33,6 +33,13 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 		onChange?.(!checked);
 	};
 
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === ' ' || e.key === 'Enter') {
+			e.preventDefault();
+			handleChange();
+		}
+	};
+
 	const isChecked = indeterminate ? false : checked;
 
 	return (
@@ -47,7 +54,11 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 
 			<div
 				className={`flex items-center h-8 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-				onClick={handleChange}>
+				onClick={handleChange}
+				onKeyDown={handleKeyDown}
+				tabIndex={disabled ? -1 : 0}
+				role="checkbox"
+				aria-checked={indeterminate ? 'mixed' : isChecked}>
 				<div className="relative">
 					<input
 						ref={checkboxRef}
@@ -58,7 +69,7 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 						className="sr-only"
 					/>
 					<div
-						className={`w-6 h-6 flex items-center justify-center rounded-md transition-all duration-200 border ${
+						className={`w-6 h-6 flex items-center justify-center rounded-md transition-all duration-200 border focus-within:neu-inset ${
 							isChecked || indeterminate
 								? 'neu-inset bg-white border-gray-400 shadow-inner'
 								: 'neu-raised bg-white border-gray-300 shadow-md hover:shadow-lg'
@@ -73,4 +84,4 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 			</div>
 		</div>
 	);
-}; 
+};

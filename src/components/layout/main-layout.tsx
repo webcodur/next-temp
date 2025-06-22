@@ -48,13 +48,13 @@ export function MainLayout({ children }: MainLayoutProps) {
 					marginLeft: isCollapsed ? '0px' : `${defaults.sidebarWidth}px`,
 					transition: `margin-left ${animations.sidebarDuration}ms ease-in-out`,
 				}}
-				className="flex flex-col flex-1 h-screen overflow-hidden">
+				className="flex overflow-hidden flex-col flex-1 h-screen">
 				<div
 					ref={scrollContainerRef}
-					className="flex-1 overflow-y-scroll bg-gray-50">
+					className="overflow-y-scroll flex-1 bg-gray-50">
 					<Header />
-					<div className="flex items-center justify-center flex-1 px-6 py-8">
-						<div className="container w-full p-8 mx-auto bg-white border border-gray-100 rounded-lg shadow-sm max-w-7xl min-h-96 min-w-96">
+					<div className="flex flex-1 justify-center items-center px-6 py-8">
+						<div className="container p-8 mx-auto w-full max-w-7xl bg-white rounded-lg border border-gray-100 shadow-sm min-h-96 min-w-96">
 							{children}
 						</div>
 					</div>

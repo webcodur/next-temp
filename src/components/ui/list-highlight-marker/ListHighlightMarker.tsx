@@ -5,27 +5,16 @@ import { cn } from '@/lib/utils';
 
 //#region Types
 export interface ListHighlightMarkerProps {
-	/** 인덱스 (0부터 시작) */
-	index: number;
-	/** 총 아이템 수 */
-	totalCount: number;
-	/** 선택됨 여부 */
-	isSelected?: boolean;
-	/** 하이라이트됨 여부 (키보드 네비게이션) */
-	isHighlighted?: boolean;
-	/** 호버됨 여부 */
-	isHovered?: boolean;
-	/** 비활성화 여부 */
-	disabled?: boolean;
-	/** 클릭 핸들러 */
-	onClick?: () => void;
-	/** 마우스 엔터 핸들러 */
-	onMouseEnter?: () => void;
-	/** 마우스 리브 핸들러 */
-	onMouseLeave?: () => void;
-	/** 커스텀 클래스명 */
-	className?: string;
-	/** 자식 컴포넌트 */
+	index: number; // 인덱스 (0부터 시작)
+	totalCount: number; // 총 아이템 수
+	isSelected?: boolean; // 선택됨 여부
+	isHighlighted?: boolean; // 하이라이트됨 여부 (키보드 네비게이션)
+	isHovered?: boolean; // 호버됨 여부
+	disabled?: boolean; // 비활성화 여부
+	onClick?: () => void; // 클릭 핸들러
+	onMouseEnter?: () => void; // 마우스 엔터 핸들러
+	onMouseLeave?: () => void; // 마우스 리브 핸들러
+	className?: string; // 커스텀 클래스명
 	children: React.ReactNode;
 }
 //#endregion
@@ -65,18 +54,15 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 			onClick={disabled ? undefined : onClick}
 			onMouseEnter={disabled ? undefined : onMouseEnter}
 			onMouseLeave={disabled ? undefined : onMouseLeave}>
-			
 			<div className="flex flex-1 gap-2 items-center min-w-0">
 				<span className="flex-shrink-0 text-xs text-gray-400">
 					{index + 1}/{totalCount}
 				</span>
-				<div className="flex-1 truncate">
-					{children}
-				</div>
+				<div className="flex-1 truncate">{children}</div>
 			</div>
 		</div>
 	);
 };
 //#endregion
 
-export default ListHighlightMarker; 
+export default ListHighlightMarker;

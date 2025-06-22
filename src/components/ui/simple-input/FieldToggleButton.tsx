@@ -60,7 +60,7 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 				disabled={disabled}
 				className={`
 					inline-flex items-center justify-center font-medium rounded-xl
-					transition-all duration-200 focus:outline-none focus:ring-0
+					transition-all duration-200 focus:outline-none focus:neu-inset
 					${sizeStyles[size]}
 					${variantStyles[variant]}
 					${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
@@ -69,4 +69,4 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 			</button>
 		</div>
 	);
-}; 
+};

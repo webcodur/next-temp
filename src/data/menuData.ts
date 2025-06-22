@@ -488,13 +488,6 @@ export const menuData: MenuData = {
 						description: '아코디언 컴포넌트 테스트',
 					},
 					{
-						key: 'advanced-search',
-						'kor-name': '고급검색',
-						'eng-name': 'Advanced Search',
-						href: '/lab/ui-check/advanced-search',
-						description: '고급 검색 컴포넌트 테스트',
-					},
-					{
 						key: 'avatar',
 						'kor-name': '아바타',
 						'eng-name': 'Avatar',

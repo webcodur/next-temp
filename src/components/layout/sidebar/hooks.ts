@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
 	singleOpenModeAtom,
 	sidebarCollapsedAtom,
+	headerToggleVisibleAtom,
 	menuSearchQueryAtom,
 	menuSearchResultsAtom,
 	menuSearchActiveAtom,
@@ -15,7 +16,7 @@ import {
 	siteSearchActiveAtom,
 	recentSitesAtom,
 } from '@/store/sidebar';
-import { defaults } from '@/data/sidebarConfig';
+import { defaults, animations } from '@/data/sidebarConfig';
 import { menuData } from '@/data/menuData';
 import { BotMenu } from './types';
 import { usePathname } from 'next/navigation';
@@ -351,14 +352,33 @@ export function useSidebarSearch() {
  * - Ctrl+B: 사이드바 토글
  */
 export function useSidebarKeyboard() {
-	const [, setSidebarCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [isMainCollapsed, setSidebarCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [, setHeaderToggleVisible] = useAtom(headerToggleVisibleAtom);
+
+	// 지연 함수
+	const delay = (ms: number) =>
+		new Promise((resolve) => setTimeout(resolve, ms));
+
+	const handleKeyboardToggle = async () => {
+		if (isMainCollapsed) {
+			// 오프닝 시퀀스: 사이드바 펼치기 → 대기 → 헤더 토글 표시
+			setSidebarCollapsed(false);
+			await delay(animations.sidebarDuration);
+			setHeaderToggleVisible(true);
+		} else {
+			// 클로징 시퀀스: 헤더 토글 숨기기 → 대기 → 사이드바 접기
+			setHeaderToggleVisible(false);
+			await delay(animations.headerToggleDuration);
+			setSidebarCollapsed(true);
+		}
+	};
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			// Ctrl+B 조합 확인
 			if (event.ctrlKey && event.key === 'b') {
 				event.preventDefault();
-				setSidebarCollapsed((prev) => !prev);
+				void handleKeyboardToggle();
 			}
 		};
 
@@ -369,7 +389,7 @@ export function useSidebarKeyboard() {
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [setSidebarCollapsed]);
+	}, [isMainCollapsed, setSidebarCollapsed, setHeaderToggleVisible]);
 }
 // #endregion
 

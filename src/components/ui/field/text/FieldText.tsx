@@ -1,9 +1,10 @@
 'use client';
 
 import React, { ChangeEvent, KeyboardEvent } from 'react';
-import { Search, X, Type } from 'lucide-react';
-import { FieldTextComponentProps } from './types';
-import { STYLES } from './styles';
+import { Type } from 'lucide-react';
+import { FieldTextComponentProps } from '../core/types';
+import { FIELD_STYLES } from '../core/config';
+import { ClearButton } from '../shared/ClearButton';
 
 export const FieldText: React.FC<FieldTextComponentProps> = ({
 	label,
@@ -15,7 +16,6 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 	inputType = 'text',
 	className = '',
 	size = 'sm',
-	showSearchIcon = false,
 	showClearButton = true,
 	disabled = false,
 }) => {
@@ -41,20 +41,15 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 	};
 
 	return (
-		<div className="flex flex-col">
-			<div className={`flex items-center justify-between ${STYLES.fieldHeaderHeight}`}>
-				{label && (
-					<label className="text-sm font-medium leading-6 text-gray-700">
-						{label}
-					</label>
-				)}
-			</div>
+		<div className={`space-y-1 ${className}`}>
+			{label && (
+				<label className="block mb-1 text-sm font-medium text-gray-800">
+					{label}
+				</label>
+			)}
+
 			<div className="relative">
-				{showSearchIcon ? (
-					<Search className="absolute left-3 top-1/2 w-4 h-4 text-gray-500 transform -translate-y-1/2" />
-				) : (
-					<Type className="absolute left-3 top-1/2 w-4 h-4 text-gray-500 transform -translate-y-1/2" />
-				)}
+				<Type className="absolute left-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2" />
 
 				<input
 					type={inputType}
@@ -66,25 +61,19 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 					spellCheck={false}
 					autoComplete="off"
 					className={`
-						w-full ${STYLES.container}
-						text-gray-800 placeholder-gray-400 font-medium
+						w-full
+						${FIELD_STYLES.container}
 						${sizeStyles[size]}
 						pl-10
-						${showClearButton && value ? 'pr-10' : ''}
+						${showClearButton && value ? 'pr-10' : 'pr-3'}
+						font-medium
+						placeholder-gray-700 text-gray-800
 						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
-						${className}
 					`}
 				/>
 
-				{showClearButton && value && (
-					<button
-						onClick={handleClear}
-						className={`absolute flex items-center justify-center w-5 h-5 text-gray-500 transition-colors transform -translate-y-1/2 rounded-full right-3 top-1/2 ${STYLES.button}`}
-						type="button">
-						<X className="w-3 h-3" />
-					</button>
-				)}
+				{showClearButton && value && <ClearButton onClick={handleClear} />}
 			</div>
 		</div>
 	);
-}; 
+};
