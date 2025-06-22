@@ -12,7 +12,9 @@ import { LucideIcon } from 'lucide-react';
  * - 실제 페이지로 이동하는 링크 메뉴
  */
 export interface BotMenu {
-	label: string; // 메뉴 표시명
+	key: string; // 메뉴 키 (고유 식별자)
+	'kor-name': string; // 한국어 표시명 (검색 및 표현용)
+	'eng-name': string; // 영어 표시명 (다국어 처리용)
 	href: string; // 페이지 경로
 	description?: string; // 메뉴 설명 (선택사항)
 	icon?: LucideIcon; // 아이콘 (선택사항)
@@ -23,7 +25,9 @@ export interface BotMenu {
  * - Bot 메뉴들을 그룹화하는 카테고리
  */
 export interface MidMenu {
-	label: string; // 메뉴 표시명
+	key: string; // 메뉴 키 (고유 식별자)
+	'kor-name': string; // 한국어 표시명
+	'eng-name': string; // 영어 표시명 (다국어 처리용)
 	icon?: LucideIcon; // 아이콘 (선택사항)
 	botItems: BotMenu[]; // 하위 Bot 메뉴 목록
 }
@@ -34,7 +38,9 @@ export interface MidMenu {
  */
 export interface TopItem {
 	icon: LucideIcon; // 메뉴 아이콘 (필수)
-	label: string; // 메뉴 표시명
+	key: string; // 메뉴 키 (고유 식별자)
+	'kor-name': string; // 한국어 표시명
+	'eng-name': string; // 영어 표시명 (다국어 처리용)
 	color: string; // 테마 색상
 	midItems: Record<string, MidMenu>; // 하위 Mid 메뉴 목록 (키-값 쌍)
 }

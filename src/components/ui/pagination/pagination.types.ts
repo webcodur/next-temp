@@ -1,4 +1,4 @@
-import { TableColumn } from '@/components/ui/table/table';
+import { SmartTableColumn } from '@/components/ui/smartTable/SmartTable';
 
 // 페이지네이션 설정 타입
 export interface PaginationConfig {
@@ -48,11 +48,11 @@ export interface PaginationNavigation {
 export interface PaginatedTableProps<T = Record<string, unknown>> {
 	// 테이블 관련 props
 	data: T[] | null | undefined;
-	columns: TableColumn<T>[];
+	columns: SmartTableColumn<T>[];
 	className?: string;
 	rowClassName?: string | ((item: T, index: number) => string);
 	isFetching?: boolean;
-	
+
 	// 페이지네이션 관련 props
 	currentPage?: number;
 	pageSize?: number;
@@ -63,4 +63,4 @@ export interface PaginatedTableProps<T = Record<string, unknown>> {
 	itemName?: string;
 	disabled?: boolean;
 	showPagination?: boolean;
-} 
+}

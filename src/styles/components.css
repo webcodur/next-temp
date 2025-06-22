@@ -86,10 +86,21 @@
 .react-datepicker__input-container input:focus {
 	width: 144px !important;
 	outline: none !important;
-	box-shadow: 
+	box-shadow:
 		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
 		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
 		0 0 0 1px hsl(var(--primary) / 0.4) !important;
 }
+
+/* #region 스크롤바 숨기기 */
+.scrollbar-hide {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none; /* Chrome, Safari and Opera */
+}
+/* #endregion */

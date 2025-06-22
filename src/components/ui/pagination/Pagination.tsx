@@ -1,15 +1,23 @@
 import React, { useState, useMemo } from 'react';
-import { Table, TableColumn } from '@/components/ui/table/table';
-import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
+import {
+	SmartTable,
+	SmartTableColumn,
+} from '@/components/ui/smartTable/SmartTable';
+import {
+	ChevronsLeft,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsRight,
+} from 'lucide-react';
 
 interface PaginationProps<T = Record<string, unknown>> {
 	// 테이블 관련 props
 	data: T[] | null | undefined;
-	columns: TableColumn<T>[];
+	columns: SmartTableColumn<T>[];
 	className?: string;
 	rowClassName?: string | ((item: T, index: number) => string);
 	isFetching?: boolean;
-	
+
 	// 페이지네이션 관련 props
 	currentPage?: number;
 	pageSize?: number;
@@ -30,7 +38,7 @@ const Pagination = <T extends Record<string, unknown>>({
 	className,
 	rowClassName,
 	isFetching = false,
-	
+
 	// 페이지네이션 props
 	currentPage: externalCurrentPage,
 	pageSize: externalPageSize = 10,
@@ -38,7 +46,7 @@ const Pagination = <T extends Record<string, unknown>>({
 	onPageSizeChange: externalOnPageSizeChange,
 	pageSizeOptions = [5, 10, 20, 50],
 	groupSize = 5,
-	itemName = "항목",
+	itemName = '항목',
 	disabled = false,
 	disablePageSizeChange = false,
 	showPagination = true,
@@ -55,8 +63,8 @@ const Pagination = <T extends Record<string, unknown>>({
 
 	// 로딩 상태 및 실제 데이터
 	const isLoading = isFetching || data === undefined || data === null;
-	const actualData = useMemo(() => isLoading ? [] : data, [isLoading, data]);
-	
+	const actualData = useMemo(() => (isLoading ? [] : data), [isLoading, data]);
+
 	// 페이지네이션 계산
 	const totalItems = actualData.length;
 	const totalPages = Math.ceil(totalItems / pageSize);
@@ -113,12 +121,13 @@ const Pagination = <T extends Record<string, unknown>>({
 	// #endregion
 
 	// 페이지네이션 표시 여부 결정
-	const shouldShowPagination = showPagination && (totalPages > 1 || externalOnPageSizeChange);
+	const shouldShowPagination =
+		showPagination && (totalPages > 1 || externalOnPageSizeChange);
 
 	return (
 		<div>
 			{/* 테이블 렌더링 */}
-			<Table
+			<SmartTable
 				data={isLoading ? null : paginatedData}
 				columns={columns}
 				className={className}
@@ -136,7 +145,9 @@ const Pagination = <T extends Record<string, unknown>>({
 						<div className="flex-shrink-0">
 							{totalItems > 0 && (
 								<div className="text-[#666666] text-sm">
-									총 {totalItems}개의 {itemName} 중 {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}개 표시
+									총 {totalItems}개의 {itemName} 중{' '}
+									{(currentPage - 1) * pageSize + 1}-
+									{Math.min(currentPage * pageSize, totalItems)}개 표시
 								</div>
 							)}
 						</div>
@@ -151,10 +162,15 @@ const Pagination = <T extends Record<string, unknown>>({
 										onChange={handlePageSizeChange}
 										disabled={disabled || disablePageSizeChange}
 										className={`bg-white cursor-pointer border border-[#dddddd] text-[#333333] rounded-md py-1 focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] m-0 p-0 ${
-											disabled || disablePageSizeChange ? 'opacity-50 cursor-not-allowed' : ''
+											disabled || disablePageSizeChange
+												? 'opacity-50 cursor-not-allowed'
+												: ''
 										}`}>
 										{pageSizeOptions.map((size) => (
-											<option key={size} value={size} className="cursor-pointer">
+											<option
+												key={size}
+												value={size}
+												className="cursor-pointer">
 												{size}
 											</option>
 										))}
@@ -166,77 +182,79 @@ const Pagination = <T extends Record<string, unknown>>({
 						{/* 중앙 페이지네이션 버튼들 - 완전히 독립적인 절대 중앙 고정 */}
 						<div className="absolute z-10 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
 							<nav className="flex items-center gap-1">
-							{/* 첫 페이지 버튼 */}
-							<button
-								onClick={goToFirstPage}
-								disabled={currentPage === 1 || disabled}
-								className={`p-2 rounded-md cursor-pointer ${
-									currentPage === 1 || disabled
-										? 'text-[#cccccc] cursor-not-allowed'
-										: 'text-[#333333] neu-raised'
-								}`}
-								aria-label="첫 페이지로 이동">
-								<ChevronsLeft size={14} />
-							</button>
+								{/* 첫 페이지 버튼 */}
+								<button
+									onClick={goToFirstPage}
+									disabled={currentPage === 1 || disabled}
+									className={`p-2 rounded-md cursor-pointer ${
+										currentPage === 1 || disabled
+											? 'text-[#cccccc] cursor-not-allowed'
+											: 'text-[#333333] neu-raised'
+									}`}
+									aria-label="첫 페이지로 이동">
+									<ChevronsLeft size={14} />
+								</button>
 
-							{/* 이전 그룹 버튼 */}
-							<button
-								onClick={goToPreviousGroup}
-								disabled={startPage === 1 || disabled}
-								className={`p-2 rounded-md cursor-pointer ${
-									startPage === 1 || disabled
-										? 'text-[#cccccc] cursor-not-allowed'
-										: 'text-[#333333] neu-raised'
-								}`}
-								aria-label="이전 그룹으로 이동">
-								<ChevronLeft size={14} />
-							</button>
+								{/* 이전 그룹 버튼 */}
+								<button
+									onClick={goToPreviousGroup}
+									disabled={startPage === 1 || disabled}
+									className={`p-2 rounded-md cursor-pointer ${
+										startPage === 1 || disabled
+											? 'text-[#cccccc] cursor-not-allowed'
+											: 'text-[#333333] neu-raised'
+									}`}
+									aria-label="이전 그룹으로 이동">
+									<ChevronLeft size={14} />
+								</button>
 
-							{/* 페이지 번호 버튼 그룹 */}
-							<div className="flex items-center gap-1 mx-1">
-								{pageNumbers.map((pageNumber) => (
-									<button
-										key={pageNumber}
-										onClick={() => !disabled && onPageChange(pageNumber)}
-										disabled={disabled}
-										className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
-											pageNumber === currentPage
-												? 'bg-[#2563eb] text-white'
-												: disabled
-												? 'text-[#cccccc] cursor-not-allowed'
-												: 'text-[#333333] neu-raised'
-										}`}
-										aria-current={pageNumber === currentPage ? 'page' : undefined}>
-										{pageNumber}
-									</button>
-								))}
-							</div>
+								{/* 페이지 번호 버튼 그룹 */}
+								<div className="flex items-center gap-1 mx-1">
+									{pageNumbers.map((pageNumber) => (
+										<button
+											key={pageNumber}
+											onClick={() => !disabled && onPageChange(pageNumber)}
+											disabled={disabled}
+											className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
+												pageNumber === currentPage
+													? 'bg-[#2563eb] text-white'
+													: disabled
+														? 'text-[#cccccc] cursor-not-allowed'
+														: 'text-[#333333] neu-raised'
+											}`}
+											aria-current={
+												pageNumber === currentPage ? 'page' : undefined
+											}>
+											{pageNumber}
+										</button>
+									))}
+								</div>
 
-							{/* 다음 그룹 버튼 */}
-							<button
-								onClick={goToNextGroup}
-								disabled={endPage === totalPages || disabled}
-								className={`p-2 rounded-md cursor-pointer ${
-									endPage === totalPages || disabled
-										? 'text-[#cccccc] cursor-not-allowed'
-										: 'text-[#333333] neu-raised'
-								}`}
-								aria-label="다음 그룹으로 이동">
-								<ChevronRight size={14} />
-							</button>
+								{/* 다음 그룹 버튼 */}
+								<button
+									onClick={goToNextGroup}
+									disabled={endPage === totalPages || disabled}
+									className={`p-2 rounded-md cursor-pointer ${
+										endPage === totalPages || disabled
+											? 'text-[#cccccc] cursor-not-allowed'
+											: 'text-[#333333] neu-raised'
+									}`}
+									aria-label="다음 그룹으로 이동">
+									<ChevronRight size={14} />
+								</button>
 
-							{/* 마지막 페이지 버튼 */}
-							<button
-								onClick={goToLastPage}
-								disabled={currentPage === totalPages || disabled}
-								className={`p-2 rounded-md cursor-pointer ${
-									currentPage === totalPages || disabled
-										? 'text-[#cccccc] cursor-not-allowed'
-										: 'text-[#333333] neu-raised'
-								}`}
-								aria-label="마지막 페이지로 이동">
-								<ChevronsRight size={14} />
-							</button>
+								{/* 마지막 페이지 버튼 */}
+								<button
+									onClick={goToLastPage}
+									disabled={currentPage === totalPages || disabled}
+									className={`p-2 rounded-md cursor-pointer ${
+										currentPage === totalPages || disabled
+											? 'text-[#cccccc] cursor-not-allowed'
+											: 'text-[#333333] neu-raised'
+									}`}
+									aria-label="마지막 페이지로 이동">
+									<ChevronsRight size={14} />
+								</button>
 							</nav>
 						</div>
 					</div>
@@ -246,4 +264,4 @@ const Pagination = <T extends Record<string, unknown>>({
 	);
 };
 
-export default Pagination; 
+export default Pagination;

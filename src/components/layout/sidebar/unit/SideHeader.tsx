@@ -10,6 +10,7 @@ import {
 	headerCollapsedAtom,
 } from '@/store/sidebar';
 import { SearchBar } from '@/components/layout/sidebar/unit/SearchBar';
+import { MenuSearchBar } from '@/components/layout/sidebar/unit/MenuSearchBar';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -43,7 +44,7 @@ export function SideHeader() {
 				className={`bg-gradient-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
 					isHeaderCollapsed
 						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0'
-						: 'max-h-[180px] p-4 pt-3 opacity-100'
+						: 'max-h-[220px] p-4 pt-3 opacity-100'
 				}`}>
 				{/* 로고 영역 */}
 				<div
@@ -66,9 +67,12 @@ export function SideHeader() {
 					</div>
 				</div>
 
-				{/* 현장검색 영역 - 컴팩트하게 가로로 늘리고 세로를 줄임 */}
-				<div className={`px-1 ${isHeaderCollapsed ? 'h-0' : ''}`}>
+				{/* 검색 영역 */}
+				<div className={`px-1 space-y-2 ${isHeaderCollapsed ? 'h-0' : ''}`}>
+					{/* 현장검색 */}
 					<SearchBar />
+					{/* 메뉴검색 */}
+					<MenuSearchBar />
 				</div>
 			</div>
 		</div>

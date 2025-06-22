@@ -4,10 +4,7 @@ export interface Option {
 	disabled?: boolean;
 }
 
-// 모드 전환을 위한 타입 추가
-export type SelectMode = 'dropdown' | 'combobox';
-
-// 정렬 방향을 위한 타입 추가
+// 정렬 방향을 위한 타입
 export type SortDirection = 'asc' | 'desc';
 
 export interface BaseFieldProps {
@@ -17,12 +14,10 @@ export interface BaseFieldProps {
 	className?: string;
 }
 
-// 모드 전환 가능한 셀렉트 필드용 베이스 타입
+// 기본 셀렉트 필드용 베이스 타입
 export interface BaseSelectProps extends BaseFieldProps {
 	options: Option[];
 	maxHeight?: number;
-	mode?: SelectMode; // 기본값: 'dropdown'
-	onModeChange?: (mode: SelectMode) => void;
 }
 
 // Field 컴포넌트용 (type 필수)
@@ -38,14 +33,8 @@ export interface FieldTextProps extends BaseFieldProps {
 	showClearButton?: boolean;
 }
 
-export interface FieldMultiSelectProps extends BaseSelectProps {
-	type: 'multi-select';
-	value?: string[];
-	onChange?: (value: string[]) => void;
-}
-
-export interface FieldFilterSelectProps extends BaseSelectProps {
-	type: 'filter-select';
+export interface FieldSelectProps extends BaseSelectProps {
+	type: 'select';
 	value?: string;
 	onChange?: (value: string) => void;
 }
@@ -72,12 +61,7 @@ export interface FieldTextComponentProps extends BaseFieldProps {
 	showClearButton?: boolean;
 }
 
-export interface FieldMultiSelectComponentProps extends BaseSelectProps {
-	value?: string[];
-	onChange?: (value: string[]) => void;
-}
-
-export interface FieldFilterSelectComponentProps extends BaseSelectProps {
+export interface FieldSelectComponentProps extends BaseSelectProps {
 	value?: string;
 	onChange?: (value: string) => void;
 }
@@ -93,6 +77,5 @@ export interface FieldSortSelectComponentProps extends BaseFieldProps {
 
 export type FieldProps =
 	| FieldTextProps
-	| FieldMultiSelectProps
-	| FieldFilterSelectProps
-	| FieldSortSelectProps; 
+	| FieldSelectProps
+	| FieldSortSelectProps;

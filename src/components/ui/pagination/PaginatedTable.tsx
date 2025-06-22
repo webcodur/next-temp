@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '@/components/ui/table/table';
+import { SmartTable } from '@/components/ui/smartTable/SmartTable';
 import { PaginatedTableProps } from './pagination.types';
 import { usePaginationState } from './usePaginationState';
 import { usePaginationData } from './usePaginationData';
@@ -15,7 +15,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	className,
 	rowClassName,
 	isFetching = false,
-	
+
 	// 페이지네이션 props
 	currentPage: externalCurrentPage,
 	pageSize: externalPageSize,
@@ -23,7 +23,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	onPageSizeChange: externalOnPageSizeChange,
 	pageSizeOptions = [5, 10, 20, 50],
 	groupSize = 5,
-	itemName = "항목",
+	itemName = '항목',
 	disabled = false,
 	showPagination = true,
 }: PaginatedTableProps<T>) => {
@@ -52,15 +52,19 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	});
 
 	// 페이지네이션 표시 여부 결정
-	const shouldShowPagination = showPagination && (paginationData.totalPages > 1 || externalOnPageSizeChange);
+	const shouldShowPagination =
+		showPagination &&
+		(paginationData.totalPages > 1 || externalOnPageSizeChange);
 
 	// 페이지 크기 선택기 표시 여부
-	const showPageSizeSelector = !!(externalOnPageSizeChange || !externalCurrentPage);
+	const showPageSizeSelector = !!(
+		externalOnPageSizeChange || !externalCurrentPage
+	);
 
 	return (
 		<div>
 			{/* 테이블 렌더링 */}
-			<Table
+			<SmartTable
 				data={paginationData.isLoading ? null : paginationData.paginatedData}
 				columns={columns}
 				className={className}
@@ -103,4 +107,4 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	);
 };
 
-export default PaginatedTable; 
+export default PaginatedTable;

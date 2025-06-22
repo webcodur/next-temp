@@ -5,7 +5,10 @@ import {
 	Focus,
 	Layers,
 } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useAtom } from 'jotai';
+import { recentMenusAtom } from '@/store/sidebar';
 import type { TopItem } from '@/components/layout/sidebar/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,11 +22,13 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { BotMenu } from '../types';
 
 /**
  * 사이드바 우측 패널 Props 타입
  */
 interface SideRPanelProps {
+	topKey: string; // 현재 선택된 Top 메뉴 키
 	topData: TopItem; // 현재 선택된 Top 메뉴 데이터
 	midMenu?: string; // 현재 선택된 Mid 메뉴 키 (선택 사항)
 	midExpanded: Set<string>; // 펼쳐진 Mid 메뉴들의 키 집합
@@ -44,6 +49,7 @@ interface SideRPanelProps {
 
 // #region side_Rpanel: 사이드바 우측 패널 컴포넌트
 export function SideRPanel({
+	topKey,
 	topData,
 	midExpanded,
 	singleOpenMode,
@@ -53,16 +59,54 @@ export function SideRPanel({
 	onCollapseAll,
 }: SideRPanelProps) {
 	const pathname = usePathname();
-	const router = useRouter();
+	const [recentMenus, setRecentMenus] = useAtom(recentMenusAtom);
 
-	// botMenu 클릭 처리 - 즉시 페이지 이동 (상태는 useEffect에서 자동 처리)
-	const handleBotMenuClick = (href: string) => {
-		router.push(href);
+	// 최근 접속 메뉴에 추가하는 함수
+	const addToRecentMenus = (midKey: string, botItem: BotMenu) => {
+		console.log('사이드바 직접 클릭 기록:', { topKey, midKey, botItem }); // 디버깅용
+
+		const recentMenuData = {
+			type: 'bot' as const,
+			topKey,
+			midKey: midKey || '',
+			item: {
+				key: botItem.key,
+				'kor-name': botItem['kor-name'],
+				'eng-name': botItem['eng-name'],
+				href: botItem.href,
+				description: botItem.description,
+			},
+			accessedAt: Date.now(),
+		};
+
+		// 기존 항목 중에서 같은 href를 가진 항목 제거
+		const filteredRecents = recentMenus.filter(
+			(recent) => recent.item.href !== botItem.href
+		);
+
+		// 새 항목을 맨 앞에 추가하고 최대 10개까지만 유지
+		const updatedRecents = [recentMenuData, ...filteredRecents].slice(0, 10);
+
+		console.log('업데이트된 최근 메뉴 (사이드바):', updatedRecents); // 디버깅용
+
+		setRecentMenus(updatedRecents);
+
+		// localStorage에 즉시 저장 (jotai atomWithStorage가 비동기일 수 있으므로)
+		try {
+			localStorage.setItem('recentMenus', JSON.stringify(updatedRecents));
+		} catch (error) {
+			console.error('최근 메뉴 저장 실패 (사이드바):', error);
+		}
+	};
+
+	// botMenu 클릭 처리 - 최근 접속 메뉴에 기록
+	const handleBotMenuClick = (midKey: string, botItem: BotMenu) => {
+		addToRecentMenus(midKey, botItem);
 	};
 
 	// 현재 경로가 midItem의 botItems 중 하나와 일치하는지 확인하는 함수
-	const isMidMenuActive = (midItem: typeof topData.midItems[string]) => {
-		return midItem.botItems.some(botItem => pathname === botItem.href);
+	const isMidMenuActive = (midItem: (typeof topData.midItems)[string]) => {
+		return midItem.botItems.some((botItem) => pathname === botItem.href);
 	};
 
 	return (
@@ -98,7 +142,7 @@ export function SideRPanel({
 
 					{/* 가운데: Top 메뉴 타이틀 */}
 					<h2 className="flex-1 text-base font-bold text-center text-foreground">
-						{topData.label} <span className="text-sm">메뉴</span>
+						{topData['kor-name']} <span className="text-sm">메뉴</span>
 					</h2>
 
 					{/* 우측: 전체 열기/닫기 버튼들 - 수직 배치 */}
@@ -148,13 +192,13 @@ export function SideRPanel({
 										variant="outline"
 										onClick={() => onMidClick(midKey)}
 										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !neu-flat !bg-white !text-black !border-none hover:ring-2 hover:ring-border/60 hover:shadow-lg ${
-											isMidMenuActive(midItem) 
-												? '!bg-[#a0a0a0] !text-black !font-bold !shadow-none' 
+											isMidMenuActive(midItem)
+												? '!bg-[#a0a0a0] !text-black !font-bold !shadow-none'
 												: ''
 										}`}>
 										<span
 											className={`flex-1 text-sm font-medium text-left truncate`}>
-											{midItem.label}
+											{midItem['kor-name']}
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
@@ -208,22 +252,27 @@ export function SideRPanel({
 															className="absolute w-1 h-1 rounded-full bg-muted-foreground/40"
 															style={{ left: '19px', top: '17.5px' }}></div>
 
-														{/* 메뉴 아이템 */}
-														<button
-															onClick={() => handleBotMenuClick(botItem.href)}
+														{/* 메뉴 아이템 - Link 태그로 변경 */}
+														<Link
+															href={botItem.href}
+															onClick={() =>
+																handleBotMenuClick(midKey, botItem)
+															}
 															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left neu-flat group hover:pr-2 !transition-none ${
-																isActive ? '!bg-[#a0a0a0] !text-black font-bold !shadow-none' : ''
+																isActive
+																	? '!bg-[#a0a0a0] !text-black font-bold !shadow-none'
+																	: ''
 															}`}
 															style={{
 																width: 'calc(100% - 1rem)', // ml-4를 고려한 정확한 width 계산
 															}}>
 															{/* 아이템 라벨 */}
 															<span className="flex-1 truncate">
-																{botItem.label}
+																{botItem['kor-name']}
 															</span>
 															{/* 호버 시 우측 점 인디케이터 */}
 															<div className="w-2 h-2 rounded-full bg-muted-foreground/60 opacity-0 group-hover:opacity-100 !transition-none" />
-														</button>
+														</Link>
 													</div>
 												);
 											})}

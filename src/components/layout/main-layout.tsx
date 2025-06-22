@@ -12,6 +12,9 @@ import Footer from './footer/Footer';
 import { SideToggleMain } from './sidebar/unit/SideToggleMain';
 import { SideToggleHead } from './sidebar/unit/SideToggleHead';
 
+// hooks
+import { useSidebarKeyboard } from './sidebar/hooks';
+
 // data
 import { defaults, animations } from '@/data/sidebarConfig';
 
@@ -23,6 +26,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 	const pathname = usePathname();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+	// 키보드 단축키 활성화
+	useSidebarKeyboard();
 
 	// 페이지 변경 시 스크롤 최상단으로 이동
 	useEffect(() => {

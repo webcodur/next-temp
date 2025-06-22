@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Car, Shield } from 'lucide-react';
 import Tabs from '@/components/ui/tabs/Tabs';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
-import VehicleSearchFilter from '@/unit/parking/VehicleSearchFilter';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
 import BarrierGrid from '@/unit/parking/BarrierGrid';
 import {
@@ -137,18 +136,16 @@ export default function Home() {
 				</div>
 
 				{/* 탭 메뉴 */}
-				<Tabs tabs={tabs} variant="default" align="start" size="md" forceRemount={true}>
+				<Tabs
+					tabs={tabs}
+					variant="default"
+					align="start"
+					size="md"
+					forceRemount={true}>
 					{/* 입출차 관리 탭 */}
 					<div className="space-y-4">
 						{/* 차량 상세정보 */}
 						<VehicleDetailCard vehicle={selectedVehicle} />
-
-						{/* 검색 필터 */}
-						<VehicleSearchFilter
-							filters={filters}
-							onFiltersChange={handleFiltersChange}
-							onSearch={handleSearch}
-						/>
 
 						{/* 차량 목록 테이블 */}
 						<VehicleListTable
@@ -159,6 +156,8 @@ export default function Home() {
 							onLoadMore={handleLoadMore}
 							hasMore={hasMore}
 							isLoading={isLoading}
+							onFiltersChange={handleFiltersChange}
+							onSearch={handleSearch}
 						/>
 					</div>
 

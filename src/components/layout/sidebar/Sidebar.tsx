@@ -52,6 +52,7 @@ export function Sidebar() {
 				<div className="flex flex-1 border-t border-border/50">
 					<SideLPanel topMenu={topMenu} onTopClick={handleTopClick} />
 					<SideRPanel
+						topKey={topMenu}
 						topData={topData}
 						midMenu={midMenu}
 						midExpanded={midExpanded}

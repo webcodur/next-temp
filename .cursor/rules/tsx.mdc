@@ -1,0 +1,68 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+# React 컴포넌트 리팩토링 룰북
+
+## Import 순서
+
+1. React 관련
+2. 외부 라이브러리
+3. 내부 유틸/상수
+4. 컴포넌트
+5. 타입
+
+## Type 정의
+
+- Props 인터페이스: `컴포넌트명 + Props` 네이밍
+- 공통 타입은 별도 파일 분리
+
+## 컴포넌트 구성 영역
+
+1. **State** - `useState`, `useReducer`
+2. **Refs** - `useRef`
+3. **Effects** - `useEffect`, `useLayoutEffect`
+4. **Callbacks** - `useCallback`
+5. **Memoized Values** - `useMemo`
+6. **Custom Hooks** - 커스텀 훅
+7. **Event Handlers** - 이벤트 핸들러
+8. **Utils** - 내부 유틸 함수
+9. **Early Returns** - 조건부 early return
+10. **Render Variables** - 렌더링 변수
+11. **JSX Return** - JSX 반환
+
+### Region 분류
+
+- 각 영역이 5줄 이상일 때 region 주석으로 분류
+
+## Event Handler
+
+- `handle` 접두사 사용
+- Props 전달 함수는 `useCallback` 메모이제이션
+
+## JSX 작성
+
+- 조건부 렌더링은 별도 변수로 분리
+- early return 패턴 활용
+
+### 속성 순서
+
+1. key
+2. ref
+3. className
+4. 이벤트 핸들러
+5. 나머지 props
+
+## 성능 최적화
+
+- `useCallback`: Props 전달 함수만
+- `useMemo`: 비싼 계산 결과만
+- `React.memo`: 실제 성능 이슈 있을 때만
+
+## 스타일링
+
+- 조건부 className: `clsx` 사용
+- 뉴모피즘 디자인 시스템 클래스 우선
+- 클래스 조합: 기본 → 조건부 → 동적 → 외부 순서

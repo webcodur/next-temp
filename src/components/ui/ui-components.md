@@ -11,7 +11,7 @@
 컴포넌트는 menuData.ts의 lab 섹션 구조에 따라 분류된다.
 
 - basicElements: 기본 요소
-- inputFeedback: 입력 및 피드백  
+- inputFeedback: 입력 및 피드백
 - layoutNavigation: 레이아웃 및 네비게이션
 - advancedData: 고급 및 데이터
 - etc: 기타
@@ -126,11 +126,23 @@
 - 컴포넌트: `src/components/ui/field/Field.tsx`
 - 페이지: `src/app/lab/ui-check/field/page.tsx`
 
-#### 구현 세부사항  
+#### 구현 세부사항
 
-- 기능: 텍스트 입력, 다중 선택, 검색 필터링, 정렬 선택 (Select 기능 통합)
-- 구현 방식: 자체 구현 + 고도화된 Select 로직
+- 기능: 텍스트 입력, 기본 셀렉트박스, 정렬 선택 (간소화된 단일 선택 구조)
+- 구현 방식: 자체 구현 + 기본 Select 로직
 - 활용 라이브러리: React, Tailwind
+
+#### 제공 컴포넌트
+
+- `FieldText`: 텍스트 입력 필드 (검색 아이콘 지원)
+- `FieldSelect`: 기본 드롭다운 셀렉트 (단일 선택)
+- `FieldSortSelect`: 정렬 방향 토글 지원 셀렉트
+
+#### 주요 특징
+
+- 콤보박스 및 멀티셀렉트 기능 제거로 단순화
+- 뉴모피즘 디자인 기반 스타일링
+- 일관된 필드 레이블 및 에러 상태 지원
 
 #### 2.2.2 Datepicker
 

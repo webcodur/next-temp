@@ -1,29 +1,29 @@
 'use client';
 
-import { X, Building2, MapPin } from 'lucide-react';
+import { X, Menu, ChevronRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button/Button';
-import { useSidebarSearch } from '@/components/layout/sidebar/hooks';
+import { useMenuSearch } from '@/components/layout/sidebar/hooks';
+import { menuData } from '@/data/menuData';
 
 /**
- * 사이드바 검색바 컴포넌트
- * - 현장 검색 기능을 제공하는 입력 필드
+ * 메뉴 검색 컴포넌트
+ * - midMenu와 botMenu 검색 기능 제공
  * - 드롭다운 형태의 검색 결과 표시
- * - 검색어 없을 시 최근 접속 현장 10개 표시
+ * - 검색어 없을 시 최근 접속 메뉴 10개 표시
  * - 키보드 네비게이션 지원
  */
 
-// #region 현장 검색 컴포넌트
-export function SearchBar() {
+// #region 메뉴 검색 컴포넌트
+export function MenuSearchBar() {
 	const {
 		searchQuery,
 		searchResults,
-		recentSites,
+		recentMenus,
 		handleSearchChange,
 		handleSearchClear,
-		handleSearchSubmit,
 		handleResultSelect,
-	} = useSidebarSearch();
+	} = useMenuSearch();
 
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const searchRef = useRef<HTMLDivElement>(null);
@@ -56,9 +56,7 @@ export function SearchBar() {
 	 * 키보드 이벤트 처리
 	 */
 	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			handleSearchSubmit();
-		} else if (e.key === 'Escape') {
+		if (e.key === 'Escape') {
 			setIsDropdownOpen(false);
 		}
 	};
@@ -72,7 +70,7 @@ export function SearchBar() {
 	};
 
 	/**
-	 * 검색 결과 또는 최근 접속 현장 렌더링
+	 * 검색 결과 또는 최근 접속 메뉴 렌더링
 	 */
 	const renderDropdownContent = () => {
 		if (!isDropdownOpen) return null;
@@ -87,25 +85,31 @@ export function SearchBar() {
 						</div>
 					) : (
 						<div className="py-1">
-							{searchResults.map((site, index) => (
+							{searchResults.map((result, index) => (
 								<div
-									key={`${site.id}-${index}`}
+									key={`${result.type}-${result.topKey}-${result.midKey}-${index}`}
 									className="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
-									onClick={() => handleResultSelect(site)}>
+									onClick={() => handleResultSelect(result)}>
 									<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-										<Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
-										<div className="flex flex-col min-w-0 flex-1">
-											<span className="text-sm text-gray-800 font-medium truncate">
-												{site.name}
+										<div className="flex items-center gap-1 whitespace-nowrap">
+											<span className="text-sm text-gray-700 font-medium">
+												{menuData[result.topKey]?.['kor-name'] || result.topKey}
 											</span>
-											<div className="flex items-center gap-1 text-xs text-gray-500">
-												<MapPin className="w-3 h-3" />
-												<span className="truncate">{site.address}</span>
-											</div>
-											{site.description && (
-												<span className="text-xs text-gray-400 truncate">
-													{site.description}
-												</span>
+											<ChevronRight className="w-3 h-3 text-gray-400" />
+											<span className="text-sm text-gray-600">
+												{menuData[result.topKey]?.midItems[result.midKey]?.[
+													'kor-name'
+												] || result.midKey}
+											</span>
+											{result.type === 'bot' && (
+												<>
+													<ChevronRight className="w-3 h-3 text-gray-400" />
+													<span className="text-sm text-gray-800 font-medium">
+														{(result.item as import('../types').BotMenu)[
+															'kor-name'
+														] || result.item['kor-name']}
+													</span>
+												</>
 											)}
 										</div>
 									</div>
@@ -117,41 +121,41 @@ export function SearchBar() {
 			);
 		}
 
-		// 검색어가 없을 때: 최근 접속 현장 표시
+		// 검색어가 없을 때: 최근 접속 메뉴 표시
 		return (
 			<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-[9999] backdrop-blur-sm">
-				{recentSites.length === 0 ? (
+				{recentMenus.length === 0 ? (
 					<div className="p-3 text-gray-500 text-sm text-center">
-						최근 접속한 현장이 없습니다
+						최근 접속한 메뉴가 없습니다
 					</div>
 				) : (
 					<div className="py-1">
 						<div className="px-3 py-1 text-xs text-gray-400 font-medium border-b border-gray-100">
-							최근 접속 현장
+							최근 접속 메뉴
 						</div>
-						{recentSites.map((site, index) => (
+						{recentMenus.map((recent, index) => (
 							<div
-								key={`recent-${site.id}-${index}`}
+								key={`recent-${recent.item.href}-${index}`}
 								className="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
-								onClick={() => handleResultSelect(site)}>
+								onClick={() => handleResultSelect(recent)}>
 								<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-									<span className="text-xs text-gray-400 font-mono min-w-[24px]">
-										{index + 1}/{recentSites.length}
-									</span>
-									<Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
-									<div className="flex flex-col min-w-0 flex-1">
-										<span className="text-sm text-gray-800 font-medium truncate">
-											{site.name}
+									<div className="flex items-center gap-1 whitespace-nowrap">
+										<span className="text-xs text-gray-400 font-mono min-w-[24px]">
+											{index + 1}/{recentMenus.length}
 										</span>
-										<div className="flex items-center gap-1 text-xs text-gray-500">
-											<MapPin className="w-3 h-3" />
-											<span className="truncate">{site.address}</span>
-										</div>
-										{site.description && (
-											<span className="text-xs text-gray-400 truncate">
-												{site.description}
-											</span>
-										)}
+										<span className="text-sm text-gray-700 font-medium">
+											{menuData[recent.topKey]?.['kor-name'] || recent.topKey}
+										</span>
+										<ChevronRight className="w-3 h-3 text-gray-400" />
+										<span className="text-sm text-gray-600">
+											{menuData[recent.topKey]?.midItems[recent.midKey]?.[
+												'kor-name'
+											] || recent.midKey}
+										</span>
+										<ChevronRight className="w-3 h-3 text-gray-400" />
+										<span className="text-sm text-gray-800 font-medium">
+											{recent.item['kor-name']}
+										</span>
 									</div>
 								</div>
 							</div>
@@ -166,10 +170,10 @@ export function SearchBar() {
 		<div ref={searchRef} className="relative">
 			{/* 검색 입력 필드 */}
 			<div className="relative">
-				<Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+				<Menu className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
 				<input
 					type="text"
-					placeholder="현장 검색..."
+					placeholder="메뉴 검색..."
 					value={searchQuery}
 					onChange={(e) => handleSearchChange(e.target.value)}
 					onFocus={handleInputFocus}
