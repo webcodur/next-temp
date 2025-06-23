@@ -44,7 +44,7 @@ export function Breadcrumb() {
 						if (botItem.href === pathname) {
 							setCurrentTopMenu(topKey);
 							setCurrentMidMenu(midKey);
-							setCurrentBotMenu(botItem.label);
+							setCurrentBotMenu(botItem['kor-name']);
 							return;
 						}
 					}
@@ -68,14 +68,14 @@ export function Breadcrumb() {
 
 	if (currentTopMenu && menuData[currentTopMenu]) {
 		breadcrumbItems.push({
-			label: menuData[currentTopMenu].label,
+			label: menuData[currentTopMenu]['kor-name'],
 			href: '#',
 			isHome: false,
 		});
 
 		if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
 			breadcrumbItems.push({
-				label: menuData[currentTopMenu].midItems[currentMidMenu].label,
+				label: menuData[currentTopMenu].midItems[currentMidMenu]['kor-name'],
 				href: '#',
 				isHome: false,
 			});

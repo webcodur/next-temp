@@ -27,9 +27,9 @@ export function getAllBotMenuPaths(): BotMenuPath[] {
 				paths.push({
 					topKey,
 					midKey,
-					topLabel: topItem.label,
-					midLabel: midItem.label,
-					botLabel: botItem.label,
+					topLabel: topItem['kor-name'],
+					midLabel: midItem['kor-name'],
+					botLabel: botItem['kor-name'],
 					href: botItem.href,
 					description: botItem.description || '',
 				});
