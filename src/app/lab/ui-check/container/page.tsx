@@ -6,13 +6,13 @@ import {
   InsetContainer,
   FlatContainer,
   CircleContainer
-} from '@/components/ui/neumorphic';
+} from '@/components/ui/neumorphicContainer';
 
 export default function NeumorphicPage() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col gap-8 p-8">
+    <div className="flex flex-col gap-8 p-8 min-h-screen bg-white">
       <div className="text-2xl font-bold">뉴모피즘 컴포넌트</div>
       
       {/* 양각 컨테이너 */}
@@ -103,13 +103,13 @@ export default function NeumorphicPage() {
         <div className="flex justify-center">
           <CircleContainer>
             <div className="text-center">
-              <div className="text-2xl font-bold mb-2">{count}</div>
+              <div className="mb-2 text-2xl font-bold">{count}</div>
               <div className="text-sm">카운트</div>
             </div>
           </CircleContainer>
         </div>
         
-        <div className="flex justify-center gap-4">
+        <div className="flex gap-4 justify-center">
           <button 
             className="px-3 py-1 bg-blue-100 rounded"
             onClick={() => setCount(prev => prev + 1)}

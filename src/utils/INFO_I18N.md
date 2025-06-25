@@ -1,0 +1,219 @@
+# 다국어(i18n) 시스템 가이드
+
+## 개요
+
+이 프로젝트에서는 클라이언트 기반의 다국어 시스템을 구현했다. 별도 서버 설정 없이 브라우저에서 언어를 감지하고 전환할 수 있다.
+
+## 지원 언어
+
+- **한국어** (ko) - 기본 언어
+- **영어** (en)
+- **아랍어** (ar)
+
+## 파일 구조
+
+```
+src/
+├── lib/i18n.ts              # 언어 설정 및 메타데이터
+├── hooks/useI18n.ts          # i18n 관련 훅들
+├── locales/                  # 언어팩 JSON 파일
+│   ├── ko.json              # 한국어 메시지
+│   ├── en.json              # 영어 메시지
+│   └── ar.json              # 아랍어 메시지
+└── components/ui/language-switcher/
+    └── LanguageSwitcher.tsx  # 언어 전환 컴포넌트
+```
+
+## 사용법
+
+### 1. 번역 훅 사용하기
+
+```tsx
+import { useTranslations } from '@/hooks/useI18n';
+
+function MyComponent() {
+  const t = useTranslations('common');
+  
+  return (
+    <div>
+      <h1>{t('loading')}</h1>
+      <button>{t('save')}</button>
+    </div>
+  );
+}
+```
+
+### 2. 네임스페이스별 번역
+
+```tsx
+// 여러 섹션의 메시지 사용
+const tCommon = useTranslations('common');
+const tNav = useTranslations('nav');
+const tForms = useTranslations('forms');
+
+return (
+  <div>
+    <button>{tCommon('save')}</button>
+    <nav>{tNav('parking')}</nav>
+    <input placeholder={tForms('email')} />
+  </div>
+);
+```
+
+### 3. 언어 전환기 사용
+
+```tsx
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
+
+function Header() {
+  return (
+    <header>
+      <h1>My App</h1>
+      <LanguageSwitcher variant="header" />
+    </header>
+  );
+}
+```
+
+### 4. 현재 언어 정보 가져오기
+
+```tsx
+import { useLocale } from '@/hooks/useI18n';
+
+function MyComponent() {
+  const { currentLocale, localeMetadata, changeLocale } = useLocale();
+  
+  return (
+    <div>
+      <p>현재 언어: {localeMetadata.name}</p>
+      <p>텍스트 방향: {localeMetadata.dir}</p>
+      <button onClick={() => changeLocale('en')}>
+        영어로 변경
+      </button>
+    </div>
+  );
+}
+```
+
+## 언어팩 구조
+
+각 언어 파일은 다음과 같은 구조를 갖는다:
+
+```json
+{
+  "common": {
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소"
+  },
+  "nav": {
+    "parking": "주차",
+    "community": "커뮤니티"
+  },
+  "forms": {
+    "email": "이메일",
+    "password": "비밀번호"
+  }
+}
+```
+
+## 새 언어 추가하기
+
+### 1. 언어 설정 추가
+
+`src/lib/i18n.ts`에서:
+
+```typescript
+export const locales = ['ko', 'en', 'ar', 'ja'] as const; // 일본어 추가
+
+export const localeMetadata = {
+  // ... 기존 언어들
+  ja: {
+    name: '日本語',
+    flag: '🇯🇵',
+    dir: 'ltr' as const,
+  },
+};
+```
+
+### 2. 언어팩 파일 생성
+
+`src/locales/ja.json` 파일을 생성하고 번역 추가:
+
+```json
+{
+  "common": {
+    "loading": "読み込み中...",
+    "save": "保存"
+  }
+}
+```
+
+## 메시지 키 추가하기
+
+### 1. 모든 언어 파일에 키 추가
+
+새로운 메시지를 추가할 때는 모든 언어 파일에 동일한 키를 추가해야 한다:
+
+```json
+// ko.json
+{
+  "common": {
+    "newMessage": "새 메시지"
+  }
+}
+
+// en.json
+{
+  "common": {
+    "newMessage": "New Message"
+  }
+}
+
+// ar.json
+{
+  "common": {
+    "newMessage": "رسالة جديدة"
+  }
+}
+```
+
+### 2. 컴포넌트에서 사용
+
+```tsx
+const t = useTranslations('common');
+return <div>{t('newMessage')}</div>;
+```
+
+## 특징
+
+### 1. 자동 언어 감지
+- 브라우저 언어 감지
+- localStorage에 사용자 선택 저장
+
+### 2. RTL 언어 지원
+- 아랍어 등 RTL 언어의 텍스트 방향 자동 처리
+- `dir` 속성 자동 설정
+
+### 3. 폰트 시스템 연동
+- 언어별 자동 폰트 적용
+- Unicode 범위 기반 멀티언어 폰트 시스템
+
+### 4. 뉴모피즘 디자인 적용
+- 언어 전환기에 뉴모피즘 스타일 적용
+- 일관된 디자인 시스템 유지
+
+## 테스트 페이지
+
+- **폰트 테스트**: `/lab/ui-check/font-test`
+  - 언어별 폰트 시스템과 i18n이 함께 적용된 페이지
+  
+- **i18n 테스트**: `/lab/ui-check/i18n-test`
+  - 다국어 메시지와 언어 전환 기능 테스트 페이지
+
+## 주의사항
+
+1. **키 일관성**: 모든 언어 파일에서 동일한 키 구조를 유지해야 한다
+2. **페이지 리로드**: 언어 변경 시 페이지가 자동으로 리로드된다
+3. **폰트 최적화**: 멀티언어 폰트 시스템과 함께 사용하여 최적의 가독성을 제공한다
+4. **RTL 대응**: 아랍어 등 RTL 언어 사용 시 레이아웃이 자동으로 조정된다 

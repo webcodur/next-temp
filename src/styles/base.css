@@ -1,26 +1,77 @@
 * {
 	@apply border-border;
 }
+
+html {
+	height: 100%;
+	font-family:
+		'MultiLang',
+		'Pretendard',
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		sans-serif;
+}
+
 body {
 	@apply bg-background text-foreground;
 	font-family:
+		'MultiLang',
 		'Pretendard',
+		system-ui,
 		-apple-system,
 		BlinkMacSystemFont,
-		system-ui,
 		sans-serif;
 	margin: 0;
 	padding: 0;
+	overflow-x: hidden;
 }
-html {
-	height: 100%;
+
+/* #region RTL 지원 */
+[dir='rtl'] {
+	direction: rtl;
 }
+
+[dir='rtl'] .overflow-y-auto {
+	direction: rtl;
+}
+
+[dir='rtl'] .overflow-y-auto > * {
+	direction: ltr;
+}
+/* #endregion */
+
+/* #region 공통 스크롤바 스타일 */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(156, 163, 175, 0.5);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(107, 114, 128, 0.7);
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(156, 163, 175, 0.5) rgba(0, 0, 0, 0.05);
+}
+/* #endregion */
 
 /* 버튼과 링크의 즉각적 hover */
 /* button:hover,
 a:hover,
 [role="button"]:hover {
-  transition: none !important;
+	transition: none !important;
 } */
 
 /* #region 자동 foreground 시스템 */

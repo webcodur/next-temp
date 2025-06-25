@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
 
 export function Header() {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
@@ -12,10 +13,10 @@ export function Header() {
 	const breadcrumbMargin = isCollapsed ? 'ml-[50px]' : 'ml-0';
 
 	return (
-		<header className="flex items-center justify-between h-16 px-6 border-b bg-card border-border">
+		<header className="flex justify-between items-center px-6 h-16 border-b bg-card border-border">
 			{/* Left Section */}
 			<div
-				className={`flex items-center gap-4 transition-all duration-300 ${breadcrumbMargin}`}>
+				className={`flex gap-4 items-center transition-all duration-300 ${breadcrumbMargin}`}>
 				<button className="p-2 rounded-lg lg:hidden hover:bg-accent">
 					<Menu className="w-5 h-5" />
 				</button>
@@ -23,7 +24,9 @@ export function Header() {
 			</div>
 
 			{/* Right Section */}
-			<div className="flex items-center gap-4"></div>
+			<div className="flex gap-4 items-center">
+				<LanguageSwitcher variant="header" />
+			</div>
 		</header>
 	);
 }

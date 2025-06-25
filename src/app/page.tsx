@@ -16,8 +16,11 @@ import {
 	generateMockVehicleEntries,
 	mockBarriers,
 } from '@/data/mockParkingData';
+import { useTranslations } from '@/hooks/useI18n';
 
 export default function Home() {
+	const t = useTranslations();
+
 	// #region 상태 관리
 	const [vehicles, setVehicles] = useState<VehicleEntry[]>([]);
 	const [barriers, setBarriers] = useState<ParkingBarrier[]>(mockBarriers);
@@ -110,12 +113,12 @@ export default function Home() {
 	const tabs = [
 		{
 			id: 'vehicles',
-			label: '입출차 관리',
+			label: t('주차_입출차관리'),
 			icon: <Car size={16} />,
 		},
 		{
 			id: 'barriers',
-			label: '차단기 제어',
+			label: t('주차_차단기제어'),
 			icon: <Shield size={16} />,
 		},
 	];
@@ -128,10 +131,10 @@ export default function Home() {
 				{/* 헤더 */}
 				<div className="mb-6">
 					<h1 className="mb-1 text-2xl font-bold text-gray-800">
-						주차관제 시스템
+						{t('주차_시스템제목')}
 					</h1>
 					<p className="text-sm text-gray-600">
-						실시간 입출차 현황 및 차단기 제어
+						{t('주차_시스템설명')}
 					</p>
 				</div>
 

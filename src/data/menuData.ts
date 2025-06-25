@@ -572,6 +572,20 @@ export const menuData: MenuData = {
 						description: '폼 필드 컴포넌트 테스트',
 					},
 					{
+						key: 'font-test',
+						'kor-name': '폰트테스트',
+						'eng-name': 'Font Test',
+						href: '/lab/ui-check/font-test',
+						description: '언어별 폰트 시스템 테스트',
+					},
+					{
+						key: 'i18n-test',
+						'kor-name': '다국어테스트',
+						'eng-name': 'I18n Test',
+						href: '/lab/ui-check/i18n-test',
+						description: '다국어(i18n) 시스템 테스트',
+					},
+					{
 						key: 'infinite-scroll',
 						'kor-name': '무한스크롤',
 						'eng-name': 'Infinite Scroll',

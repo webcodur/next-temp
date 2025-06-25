@@ -7,6 +7,12 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			fontFamily: {
+				multilang: ['MultiLang', 'system-ui', 'sans-serif'],
+				pretendard: ['Pretendard', 'system-ui', 'sans-serif'],
+				inter: ['Inter', 'system-ui', 'sans-serif'],
+				cairo: ['Cairo', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				// 얼룩무늬 효과를 위한 회색 확장 (현재 사용하지 않음 - 기본 gray-50 사용)
 				// gray: {
@@ -101,6 +107,14 @@ module.exports = {
 					'-ms-overflow-style': 'none',
 					'scrollbar-width': 'none',
 					'&::-webkit-scrollbar': { display: 'none' },
+				},
+				'.text-rtl': {
+					'direction': 'rtl',
+					'text-align': 'right',
+				},
+				'.text-ltr': {
+					'direction': 'ltr',
+					'text-align': 'left',
 				},
 			});
 		},
