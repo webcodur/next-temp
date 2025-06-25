@@ -80,7 +80,7 @@ export function SearchBar() {
 		// 검색어가 있을 때: 검색 결과 표시
 		if (searchQuery.trim()) {
 			return (
-				<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-[9999] backdrop-blur-sm">
+				<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-9999 backdrop-blur-xs">
 					{searchResults.length === 0 ? (
 						<div className="p-3 text-gray-500 text-sm text-center">
 							검색 결과가 없습니다
@@ -93,7 +93,7 @@ export function SearchBar() {
 									className="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
 									onClick={() => handleResultSelect(site)}>
 									<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-										<Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
+										<Building2 className="w-4 h-4 text-gray-400 shrink-0" />
 										<div className="flex flex-col min-w-0 flex-1">
 											<span className="text-sm text-gray-800 font-medium truncate">
 												{site.name}
@@ -119,7 +119,7 @@ export function SearchBar() {
 
 		// 검색어가 없을 때: 최근 접속 현장 표시
 		return (
-			<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-[9999] backdrop-blur-sm">
+			<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-9999 backdrop-blur-xs">
 				{recentSites.length === 0 ? (
 					<div className="p-3 text-gray-500 text-sm text-center">
 						최근 접속한 현장이 없습니다
@@ -138,7 +138,7 @@ export function SearchBar() {
 									<span className="text-xs text-gray-400 font-mono min-w-[24px]">
 										{index + 1}/{recentSites.length}
 									</span>
-									<Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
+									<Building2 className="w-4 h-4 text-gray-400 shrink-0" />
 									<div className="flex flex-col min-w-0 flex-1">
 										<span className="text-sm text-gray-800 font-medium truncate">
 											{site.name}
@@ -174,7 +174,7 @@ export function SearchBar() {
 					onChange={(e) => handleSearchChange(e.target.value)}
 					onFocus={handleInputFocus}
 					onKeyDown={handleKeyDown}
-					className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-lg neu-flat focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300"
+					className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300"
 				/>
 				{searchQuery && (
 					<Button

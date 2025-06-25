@@ -12,10 +12,10 @@ export default function NotFound() {
 	const handleRefresh = () => window.location.reload();
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-var(--background) via-var(--muted/20) to-var(--background) flex items-center justify-center p-4">
+		<div className="min-h-screen bg-linear-to-br from-var(--background) via-var(--muted/20) to-var(--background) flex items-center justify-center p-4">
 			<div className="w-full max-w-4xl">
 				{/* #region 메인 컨테이너 */}
-				<RaisedContainer className="p-12 rounded-3xl backdrop-blur-sm">
+				<RaisedContainer className="p-12 rounded-3xl backdrop-blur-xs">
 					<div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2">
 						
 						{/* #region 좌측: 404 시각적 표현 */}

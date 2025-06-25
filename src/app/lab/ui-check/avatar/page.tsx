@@ -14,7 +14,7 @@ const AvatarPage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 아바타 */}
-					<section className="p-6 bg-white rounded-lg shadow-sm">
+					<section className="p-6 bg-white rounded-lg shadow-xs">
 						<h2 className="mb-4 text-xl font-semibold">기본 아바타</h2>
 						<div className="flex items-center space-x-4">
 							<Avatar>
@@ -28,7 +28,7 @@ const AvatarPage = () => {
 					</section>
 
 					{/* 사이즈 변형 */}
-					<section className="p-6 bg-white rounded-lg shadow-sm">
+					<section className="p-6 bg-white rounded-lg shadow-xs">
 						<h2 className="mb-4 text-xl font-semibold">사이즈 변형</h2>
 						<div className="flex items-center space-x-4">
 							<Avatar className="w-8 h-8">
@@ -50,7 +50,7 @@ const AvatarPage = () => {
 					</section>
 
 					{/* 사용 예시 */}
-					<section className="p-6 bg-white rounded-lg shadow-sm">
+					<section className="p-6 bg-white rounded-lg shadow-xs">
 						<h2 className="mb-4 text-xl font-semibold">사용 예시</h2>
 						<div className="space-y-4">
 							<div className="flex items-center space-x-3">

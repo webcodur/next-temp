@@ -1,6 +1,163 @@
-/* 뉴모피즘 통합 5종 패턴 */
+/**
+ * 📋 DESIGN SYSTEM CSS - 전체 구조 요약
+ * 
+ * 1. 폰트 정의 (4개 폰트)
+ *    - MultiLang: 한국어(Pretendard), 아랍어(Cairo), 영어(DMSerifText)
+ *    - Pretendard: 한국어 전용
+ * 
+ * 2. CSS 변수 정의 (20개+ 변수)
+ *    - 핵심 색상: background, foreground, primary, secondary 등
+ *    - 뉴모피즘 전용: neu-light, neu-dark, neu-offset, neu-blur
+ *    - 기타: radius, input, ring, popover, accent 등
+ * 
+ * 3. 기본 스타일 (5개 설정)
+ *    - html: 폰트, 스크롤 동작
+ *    - body: 배경, 색상, 폰트 렌더링
+ *    - 보더 색상, 박스 사이징
+ *    - 스크롤바 숨기기, RTL/LTR 텍스트
+ * 
+ * 4. 뉴모피즘 시스템 (6개 핵심 클래스)
+ *    - neu-flat: 평면 스타일 (컨테이너, 패널)
+ *    - neu-raised: 양각 스타일 (버튼, 인터랙티브 요소)
+ *    - neu-inset: 음각 스타일 (활성/선택 상태)
+ *    - neu-icon: 아이콘 상태 (active/inactive)
+ *    - sidebar-shadow: 사이드바 전용 음영
+ *    - 보조 클래스: neu-hover, neu-flat-focus
+ * 
+ * 5. 애니메이션 (7개 키프레임)
+ *    - fadeIn, slideDown/Up: 기본 전환
+ *    - fadeFlow, tripleFlow: 특수 플로우 효과
+ *    - animate-fadeIn, animate-slide-down/up: 적용 클래스
+ */
 
-/* #region - 1. neu-flat - 평면 (컨테이너, 패널) */
+/* #region 1. 폰트 정의 */
+@font-face {
+	font-family: 'MultiLang';
+	src: url('/fonts/Pretendard.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range:
+		U+AC00-D7AF, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+}
+
+@font-face {
+	font-family: 'MultiLang';
+	src: url('/fonts/Cairo.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	unicode-range:
+		U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+	font-family: 'MultiLang';
+	src: url('/fonts/DMSerifText.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+		U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+		U+FFFD;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/Pretendard.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+/* #endregion */
+
+/* #region 2. CSS 변수 정의 */
+:root {
+	/* 핵심 색상 변수 */
+	--background: 0 0% 100%;
+	--foreground: 0 0% 3.9%;
+	--card: 0 0% 100%;
+	--card-foreground: 0 0% 3.9%;
+	--muted: 0 0% 96.1%;
+	--muted-foreground: 0 0% 45.1%;
+	--border: 0 0% 89.8%;
+	--primary: 0 0% 9%;
+	--primary-rgb: 23, 23, 23;
+	--primary-foreground: 0 0% 3.9%;
+	--secondary: 0 0% 96.1%;
+	--secondary-foreground: 0 0% 9%;
+	--destructive: 0 84.2% 60.2%;
+	--destructive-foreground: 0 0% 98%;
+
+	/* 뉴모피즘 전용 변수 */
+	--neu-light: 255, 255, 255, 0.9;
+	--neu-dark: 0, 0, 0, 0.08;
+	--neu-offset: 3px;
+	--neu-blur: 6px;
+
+	/* 기타 */
+	--radius: 0.5rem;
+	--input: 0 0% 89.8%;
+	--ring: 0 0% 3.9%;
+	--popover: 0 0% 100%;
+	--popover-foreground: 0 0% 3.9%;
+	--accent: 0 0% 96.1%;
+	--accent-foreground: 0 0% 9%;
+}
+/* #endregion */
+
+/* #region 3. 기본 스타일 */
+html {
+	font-family: 'MultiLang', 'Pretendard', system-ui, sans-serif;
+	scroll-behavior: smooth;
+}
+
+body {
+	background: hsl(var(--background));
+	color: hsl(var(--foreground));
+	font-feature-settings:
+		'rlig' 1,
+		'calt' 1;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	border-color: hsl(var(--border));
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* 스크롤바 숨기기 */
+.scrollbar-hide {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}
+
+/* RTL/LTR 텍스트 */
+.text-rtl {
+	direction: rtl;
+	text-align: right;
+}
+
+.text-ltr {
+	direction: ltr;
+	text-align: left;
+}
+/* #endregion */
+
+/* #region 4. 뉴모피즘 시스템 */
+/* 4-1. neu-flat - 평면 (컨테이너, 패널) */
 .neu-flat {
 	background: linear-gradient(
 		135deg,
@@ -72,9 +229,8 @@
 			calc(var(--neu-blur) * 0.6) rgba(var(--neu-light));
 	transition: all 0.15s ease-in-out;
 }
-/* #endregion */
 
-/* #region - 2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */
+/* 4-2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */
 .neu-raised {
 	background: linear-gradient(
 		135deg,
@@ -117,9 +273,8 @@
 		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light));
 }
-/* #endregion */
 
-/* #region - 3. neu-inset - 음각 (활성/선택 상태) */
+/* 4-3. neu-inset - 음각 (활성/선택 상태) */
 .neu-inset {
 	background: linear-gradient(
 		135deg,
@@ -165,9 +320,8 @@
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
 		0 0 0 1px hsl(var(--primary) / 0.4);
 }
-/* #endregion */
 
-/* #region - 4. neu-icon - 아이콘 */
+/* 4-4. neu-icon - 아이콘 */
 .neu-icon-active {
 	color: hsl(var(--primary));
 	filter: drop-shadow(0 2px 4px rgba(var(--primary-rgb), 0.3));
@@ -183,15 +337,94 @@
 	color: hsl(var(--foreground));
 	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
-/* #endregion */
 
-/* #region - 5. sidebar-shadow -사이드바 전용 강화된 우측 음영 */
+/* 4-5. sidebar-shadow - 사이드바 전용 강화된 우측 음영 */
 .sidebar-shadow {
 	box-shadow:
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
 		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
 			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
-		/* 우측 모서리 강화 음영 */ 8px 0 20px rgba(0, 0, 0, 0.15),
+		8px 0 20px rgba(0, 0, 0, 0.15),
 		12px 0 30px rgba(0, 0, 0, 0.08);
+}
+/* #endregion */
+
+/* #region 5. 애니메이션 */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fadeIn {
+	animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideDown {
+	0% {
+		height: 0;
+		opacity: 0;
+	}
+	100% {
+		height: var(--radix-collapsible-content-height);
+		opacity: 1;
+	}
+}
+
+@keyframes slideUp {
+	0% {
+		height: var(--radix-collapsible-content-height);
+		opacity: 1;
+	}
+	100% {
+		height: 0;
+		opacity: 0;
+	}
+}
+
+@keyframes fadeFlow {
+	0% {
+		opacity: 0.1;
+	}
+	15% {
+		opacity: 0.9;
+	}
+	25% {
+		opacity: 0.1;
+	}
+	25.1% {
+		opacity: 0.1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+
+@keyframes tripleFlow {
+	0% {
+		opacity: 0.3;
+	}
+	15% {
+		opacity: 0.8;
+	}
+	20% {
+		opacity: 0.3;
+	}
+	100% {
+		opacity: 0.3;
+	}
+}
+
+.animate-slide-down {
+	animation: slideDown 250ms ease-out;
+}
+
+.animate-slide-up {
+	animation: slideUp 200ms ease-in;
 }
 /* #endregion */

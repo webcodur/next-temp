@@ -14,7 +14,7 @@ const ButtonPage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 버튼 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">기본 버튼</h2>
 						<div className="space-x-4">
 							<Button>기본 버튼</Button>
@@ -23,7 +23,7 @@ const ButtonPage = () => {
 					</section>
 
 					{/* 사이즈 variants */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">사이즈 변형</h2>
 						<div className="space-x-4 flex items-center">
 							<Button className="px-3 py-1 text-sm">Small</Button>
@@ -33,7 +33,7 @@ const ButtonPage = () => {
 					</section>
 
 					{/* 클릭 이벤트 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">인터랙션</h2>
 						<div className="space-x-4">
 							<Button onClick={() => alert('버튼이 클릭되었습니다!')}>

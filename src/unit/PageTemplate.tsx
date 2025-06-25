@@ -16,7 +16,7 @@ export function PageTemplate({ menuInfo }: PageTemplateProps) {
 			</div>
 
 			{/* 페이지 콘텐츠 */}
-			<div className="border rounded-lg shadow-sm bg-card text-card-foreground">
+			<div className="border rounded-lg shadow-xs bg-card text-card-foreground">
 				<div className="flex flex-col space-y-1.5 p-6">
 					<h3 className="text-2xl font-semibold leading-none tracking-tight">
 						기능 준비 중

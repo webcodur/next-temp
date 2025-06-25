@@ -51,7 +51,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
           
           {/* 드롭다운 메뉴 */}
           <div 
-            className="absolute right-0 z-20 mt-2 w-48 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg neu-flat focus:outline-none"
+            className="absolute right-0 z-20 mt-2 w-48 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg neu-flat focus:outline-hidden"
             role="menu"
             aria-orientation="vertical"
           >

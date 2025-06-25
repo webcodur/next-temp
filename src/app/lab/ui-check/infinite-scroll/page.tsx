@@ -37,7 +37,7 @@ export default function Page() {
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} isLoading={isLoading}>
         <ul className="space-y-2">
           {items.map(item => (
-            <li key={item} className="p-4 bg-white shadow rounded">
+            <li key={item} className="p-4 bg-white shadow-sm rounded">
               {item}
             </li>
           ))}

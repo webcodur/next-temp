@@ -1,8 +1,8 @@
 export const FIELD_STYLES = {
-	container: 'neu-flat focus:outline-none transition-all duration-200',
+	container: 'neu-flat focus:outline-hidden transition-all duration-200',
 	dropdown: 'bg-white/98 backdrop-blur-md',
 	button: 'neu-raised',
-	input: 'neu-inset focus:outline-none',
+	input: 'neu-inset focus:outline-hidden',
 } as const;
 
 export const FIELD_CONSTANTS = {

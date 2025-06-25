@@ -76,7 +76,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 					className="overflow-y-scroll flex-1 bg-gray-50">
 					<Header />
 					<div className="flex flex-1 justify-center items-center px-6 py-8">
-						<div className="container p-8 mx-auto w-full max-w-7xl bg-white rounded-lg border border-gray-100 shadow-sm min-h-96 min-w-96">
+						<div className="container p-8 mx-auto w-full max-w-7xl bg-white rounded-lg border border-gray-100 shadow-xs min-h-96 min-w-96">
 							{children}
 						</div>
 					</div>

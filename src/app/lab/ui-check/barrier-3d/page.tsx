@@ -72,7 +72,7 @@ export default function Barrier3DPage() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
 					<div className="flex justify-center mb-4">
 						<BarrierDiagonalView
 							width={220}
@@ -90,7 +90,7 @@ export default function Barrier3DPage() {
 					</div>
 				</div>
 
-				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
 					<div className="flex justify-center mb-4">
 						<BarrierDriverView
 							width={220}
@@ -108,7 +108,7 @@ export default function Barrier3DPage() {
 					</div>
 				</div>
 
-				<div className="p-6 border border-gray-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100">
+				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
 					<div className="flex justify-center mb-4">
 						<BarrierSecurityView
 							width={220}

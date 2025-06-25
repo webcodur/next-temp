@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({
 		<AnimatePresence>
 			{isOpen && (
 				<motion.div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+					className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs"
 					onMouseDown={handleOutsideClick}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
@@ -54,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({
 						exit={{ scale: 0.9, opacity: 0 }}
 						transition={{ duration: 0.2 }}>
 						<div className="flex items-center justify-between p-6 border-b border-gray-200">
-							<h2 className="flex-grow text-xl font-semibold text-center text-gray-900">
+							<h2 className="grow text-xl font-semibold text-center text-gray-900">
 								{title}
 							</h2>
 							<button

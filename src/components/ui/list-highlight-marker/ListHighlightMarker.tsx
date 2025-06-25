@@ -55,7 +55,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 			onMouseEnter={disabled ? undefined : onMouseEnter}
 			onMouseLeave={disabled ? undefined : onMouseLeave}>
 			<div className="flex flex-1 gap-2 items-center min-w-0">
-				<span className="flex-shrink-0 text-xs text-gray-400">
+				<span className="shrink-0 text-xs text-gray-400">
 					{index + 1}/{totalCount}
 				</span>
 				<div className="flex-1 truncate">{children}</div>

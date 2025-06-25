@@ -89,7 +89,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					{/* 테이블 헤더 - 고정 */}
-					<div className="flex-shrink-0 bg-gray-50 border-b border-gray-200">
+					<div className="shrink-0 bg-gray-50 border-b border-gray-200">
 						<div className="flex text-xs font-medium text-gray-600">
 							<div className="px-2 py-1 w-16 text-left">순번</div>
 							<div className="px-2 py-1 w-32 text-left">차량구분</div>

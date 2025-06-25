@@ -49,20 +49,16 @@ export default function LoginPage() {
 	// 이미 로그인된 경우 로딩 표시
 	if (isAuthenticated) {
 		return (
-			<div className="min-h-screen flex items-center justify-center bg-background p-4">
-				<div className="text-center">
-					<div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-					<p className="text-muted-foreground">홈으로 이동 중...</p>
-				</div>
+			<div className="p-4 text-center">
+				<div className="mx-auto mb-4 w-8 h-8 rounded-full border-2 animate-spin border-primary border-t-transparent"></div>
+				<p className="text-muted-foreground">홈으로 이동 중...</p>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-background p-4">
-			<div className="w-full max-w-md">
-				<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-			</div>
+		<div className="p-4 w-full max-w-md">
+			<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
 		</div>
 	);
 }

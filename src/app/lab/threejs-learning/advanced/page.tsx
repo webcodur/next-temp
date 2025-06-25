@@ -401,7 +401,7 @@ export default function AdvancedPage() {
 						<h4 className="mb-2 font-semibold text-gray-800">🎓 학습 진행도</h4>
 						<div className="w-full h-2 bg-gray-200 rounded-full">
 							<div 
-								className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
+								className="h-2 bg-linear-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
 								style={{ width: '100%' }}
 							></div>
 						</div>
@@ -443,7 +443,7 @@ export default function AdvancedPage() {
 
 				{/* 다음 단계 안내 */}
 				<div className="mt-6 space-y-4">
-					<div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-purple-400">
+					<div className="p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-purple-400">
 						<h4 className="font-semibold text-purple-800">🚀 다음 학습 방향</h4>
 						<div className="mt-2 space-y-1 text-sm text-purple-700">
 							<p>• <strong>WebXR:</strong> VR/AR 경험 개발</p>

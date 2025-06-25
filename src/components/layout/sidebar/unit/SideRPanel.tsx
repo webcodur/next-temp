@@ -111,7 +111,7 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex overflow-hidden flex-col flex-1 h-full bg-gradient-to-b from-background/50 to-background/30">
+			<div className="flex overflow-hidden flex-col flex-1 h-full bg-linear-to-b from-background/50 to-background/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
@@ -191,9 +191,9 @@ export function SideRPanel({
 									<Button
 										variant="outline"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !border-none hover:ring-2 hover:ring-border/60 transition-all duration-200 ${
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! hover:ring-2 hover:ring-border/60 transition-all duration-200 ${
 											isMidMenuActive(midItem)
-												? 'neu-inset !text-primary font-bold'
+												? 'neu-inset text-primary! font-bold'
 												: 'neu-flat hover:shadow-lg'
 										}`}>
 										<span
@@ -202,7 +202,7 @@ export function SideRPanel({
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
-											className={`w-4 h-4 transform flex-shrink-0 ${
+											className={`w-4 h-4 transform shrink-0 ${
 												midExpanded.has(midKey) ? 'rotate-180' : ''
 											}`}
 										/>
@@ -260,7 +260,7 @@ export function SideRPanel({
 															}
 															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 ${
 																isActive
-																	? 'neu-inset !text-primary font-bold'
+																	? 'neu-inset text-primary! font-bold'
 																	: 'neu-flat'
 															}`}
 															style={{
@@ -271,7 +271,7 @@ export function SideRPanel({
 																{botItem['kor-name']}
 															</span>
 															{/* 호버 시 우측 점 인디케이터 */}
-															<div className="w-2 h-2 rounded-full bg-muted-foreground/60 opacity-0 group-hover:opacity-100 !transition-none" />
+															<div className="w-2 h-2 rounded-full bg-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-none!" />
 														</Link>
 													</div>
 												);

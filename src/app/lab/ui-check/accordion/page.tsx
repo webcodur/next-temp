@@ -14,7 +14,7 @@ const AccordionPage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 아코디언 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">기본 아코디언</h2>
 						<Accordion title="기본 아코디언" defaultOpen={true}>
 							<div className="p-4 bg-gray-100 rounded-lg">
@@ -28,7 +28,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 상태 텍스트가 있는 아코디언 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">상태 텍스트 아코디언</h2>
 						<Accordion 
 							title="설정 옵션" 
@@ -60,7 +60,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 비활성화된 아코디언 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">비활성화된 아코디언</h2>
 						<Accordion 
 							title="비활성화된 섹션" 
@@ -76,7 +76,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 아코디언 그룹 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">아코디언 그룹</h2>
 						<AccordionGroup>
 							<Accordion title="첫 번째 섹션" defaultOpen={true}>
@@ -111,7 +111,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 기능 설명 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">주요 기능</h2>
 						<ul className="space-y-2 text-gray-600">
 							<li>• 뉴모피즘 디자인 적용</li>

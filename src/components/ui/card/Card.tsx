@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 const Card = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement> & {
-		variant?: 'default' | 'outline' | 'elevated';
+		variant?: 'default' | 'outline-solid' | 'elevated';
 		hoverEffect?: boolean;
 	}
 >(({ className, variant = 'default', hoverEffect = false, ...props }, ref) => (
@@ -14,7 +14,7 @@ const Card = React.forwardRef<
 		className={cn(
 			'rounded-lg bg-card text-card-foreground',
 			variant === 'default' && 'neu-flat',
-			variant === 'outline' && 'neu-flat border-2',
+			variant === 'outline-solid' && 'neu-flat border-2',
 			variant === 'elevated' && 'neu-raised',
 			hoverEffect && 'neu-raised',
 			className
@@ -104,7 +104,7 @@ const CardAction = React.forwardRef<
 	<button
 		ref={ref}
 		className={cn(
-			'neu-raised inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-sm text-muted-foreground backdrop-blur-sm',
+			'neu-raised inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-sm text-muted-foreground backdrop-blur-xs',
 			className
 		)}
 		{...props}

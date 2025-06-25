@@ -6,7 +6,7 @@ interface FieldToggleButtonProps {
 	label?: string;
 	pressed?: boolean;
 	onChange?: (pressed: boolean) => void;
-	variant?: 'default' | 'outline' | 'ghost';
+	variant?: 'default' | 'outline-solid' | 'ghost';
 	size?: 'sm' | 'md' | 'lg';
 	disabled?: boolean;
 	className?: string;
@@ -36,9 +36,9 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 		default: pressed
 			? 'neu-inset bg-gray-200 text-gray-800 shadow-inner'
 			: 'neu-raised bg-gray-50 text-gray-700 shadow-md hover:shadow-lg',
-		outline: pressed
+		'outline-solid': pressed
 			? 'neu-inset bg-gray-100 text-gray-800 border border-gray-300 shadow-inner'
-			: 'neu-flat bg-gray-50 text-gray-700 border border-gray-200 shadow-sm hover:shadow-md',
+			: 'neu-flat bg-gray-50 text-gray-700 border border-gray-200 shadow-xs hover:shadow-md',
 		ghost: pressed
 			? 'bg-gray-200 text-gray-800'
 			: 'bg-transparent text-gray-700 hover:bg-gray-100',
@@ -60,7 +60,7 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 				disabled={disabled}
 				className={`
 					inline-flex items-center justify-center font-medium rounded-xl
-					transition-all duration-200 focus:outline-none focus:neu-inset
+					transition-all duration-200 focus:outline-hidden focus:neu-inset
 					${sizeStyles[size]}
 					${variantStyles[variant]}
 					${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}

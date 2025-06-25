@@ -30,7 +30,7 @@ const renderCustomYearMonthHeader = ({
 	return (
 		<div className="flex justify-center items-center px-2 py-2 space-x-2">
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-none transition-all duration-200"
+				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all duration-200"
 				value={date.getFullYear()}
 				onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}>
 				{years.map((year) => (
@@ -41,7 +41,7 @@ const renderCustomYearMonthHeader = ({
 			</select>
 
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-none transition-all duration-200"
+				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all duration-200"
 				value={date.getMonth()}
 				onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}>
 				{months.map((month) => (
@@ -103,7 +103,7 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						locale={ko}
 						disabled={disabled}
 						renderCustomHeader={renderCustomYearMonthHeader}
-						popperClassName="!z-[9999]"
+						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
 							w-full h-8 px-3 py-2 pl-10 text-sm font-medium
@@ -159,7 +159,7 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							locale={ko}
 							disabled={disabled}
 							renderCustomHeader={renderCustomYearMonthHeader}
-							popperClassName="!z-[9999]"
+							popperClassName="z-9999!"
 							wrapperClassName="w-full"
 							className={`
 								w-full h-8 px-3 py-2 pl-10 text-sm font-medium
@@ -195,7 +195,7 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							locale={ko}
 							disabled={disabled}
 							renderCustomHeader={renderCustomYearMonthHeader}
-							popperClassName="!z-[9999]"
+							popperClassName="z-9999!"
 							wrapperClassName="w-full"
 							className={`
 								w-full h-8 px-3 py-2 pl-10 text-sm font-medium
@@ -248,7 +248,7 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						locale={ko}
 						disabled={disabled}
 						renderCustomHeader={renderCustomYearMonthHeader}
-						popperClassName="!z-[9999]"
+						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
 						w-full h-8 px-3 py-2 pl-10 text-sm font-medium
@@ -296,7 +296,7 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						locale={ko}
 						disabled={disabled}
 						renderCustomHeader={renderCustomYearMonthHeader}
-						popperClassName="!z-[9999]"
+						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
 						w-full h-8 px-3 py-2 pl-10 text-sm font-medium

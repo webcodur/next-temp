@@ -50,7 +50,7 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 			</div>
 
 			<div
-				className={`flex min-h-[2rem] ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
+				className={`flex min-h-8 ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
 				{options.map((option) => {
 					const isSelected = option.value === value;
 					const isDisabled = disabled || option.disabled;

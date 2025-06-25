@@ -51,7 +51,7 @@ const TooltipButton = ({
 			<TooltipTrigger
 				onMouseEnter={delayProps.onMouseEnter}
 				onMouseLeave={delayProps.onMouseLeave}
-				className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-md shadow-sm hover:bg-gray-50">
+				className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-md shadow-xs hover:bg-gray-50">
 				<Icon className="w-4 h-4" />
 				<span>{label}</span>
 			</TooltipTrigger>

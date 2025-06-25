@@ -142,7 +142,7 @@ const Pagination = <T extends Record<string, unknown>>({
 					{/* 좌우 정보 영역을 위한 기본 레이아웃 - 높이만 차지 */}
 					<div className="flex items-center justify-between min-h-[36px] relative">
 						{/* 왼쪽 정보 표시 */}
-						<div className="flex-shrink-0">
+						<div className="shrink-0">
 							{totalItems > 0 && (
 								<div className="text-[#666666] text-sm">
 									총 {totalItems}개의 {itemName} 중{' '}
@@ -153,7 +153,7 @@ const Pagination = <T extends Record<string, unknown>>({
 						</div>
 
 						{/* 오른쪽 페이지 크기 선택 */}
-						<div className="flex-shrink-0">
+						<div className="shrink-0">
 							{(externalOnPageSizeChange || !externalCurrentPage) && (
 								<div className="flex items-center text-sm">
 									<span className="mr-2">페이지당 항목:</span>

@@ -233,7 +233,7 @@ export default function AnimationsPage() {
 								onChange={(e) => setSpeed(parseFloat(e.target.value))}
 								className="flex-1"
 							/>
-							<span className="text-sm font-mono min-w-[3rem]">{speed.toFixed(1)}x</span>
+							<span className="text-sm font-mono min-w-12">{speed.toFixed(1)}x</span>
 						</div>
 					</div>
 				</div>

@@ -41,7 +41,7 @@ export function SideHeader() {
 		<div className="flex flex-col select-none pt-[30px]">
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
-				className={`bg-gradient-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
+				className={`bg-linear-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
 					isHeaderCollapsed
 						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0'
 						: 'max-h-[220px] p-4 pt-3 opacity-100'
@@ -56,7 +56,7 @@ export function SideHeader() {
 							onClick={handleLogoClick}
 							className="flex items-center justify-center gap-3 p-2 select-none neu-raised rounded-xl">
 							{/* 로고 아이콘 */}
-							<div className="flex items-center justify-center flex-shrink-0">
+							<div className="flex items-center justify-center shrink-0">
 								<Building2 className="w-6 h-6 neu-icon-active" />
 							</div>
 							{/* 타이틀 텍스트 */}

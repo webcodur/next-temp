@@ -90,7 +90,7 @@ const TabsPage: React.FC = () => {
 								</div>
 								<button
 									onClick={() => setNotifications(!notifications)}
-									className="focus:outline-none">
+									className="focus:outline-hidden">
 									<div className={cn("w-14 h-7 rounded-full relative neu-inset transition-all duration-200")}>
 										<div
 											className={cn(
@@ -114,7 +114,7 @@ const TabsPage: React.FC = () => {
 								</div>
 								<button
 									onClick={() => setDarkMode(!darkMode)}
-									className="focus:outline-none">
+									className="focus:outline-hidden">
 									<div className={cn("w-14 h-7 rounded-full relative neu-inset transition-all duration-200")}>
 										<div
 											className={cn(

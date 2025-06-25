@@ -15,7 +15,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 		<div className="p-4 bg-white rounded-2xl neu-flat">
 			<div className="flex flex-col gap-4 lg:flex-row">
 				{/* 차량 이미지 영역 */}
-				<div className="flex-shrink-0">
+				<div className="shrink-0">
 					<div className="overflow-hidden relative w-full h-96 bg-gray-50 rounded-xl lg:w-80 neu-inset">
 						{!imageError ? (
 							<Image

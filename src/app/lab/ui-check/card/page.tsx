@@ -38,7 +38,7 @@ export default function CardPage() {
 							</CardFooter>
 						</Card>
 
-						<Card variant="outline">
+						<Card variant="outline-solid">
 							<CardHeader>
 								<CardTitle>아웃라인 카드</CardTitle>
 								<CardDescription>테두리가 강조된 카드입니다.</CardDescription>
@@ -86,7 +86,7 @@ export default function CardPage() {
 							</CardContent>
 						</Card>
 
-						<Card variant="outline" hoverEffect>
+						<Card variant="outline-solid" hoverEffect>
 							<CardHeader>
 								<CardTitle>아웃라인 + 호버</CardTitle>
 								<CardDescription>아웃라인 + 호버 효과</CardDescription>

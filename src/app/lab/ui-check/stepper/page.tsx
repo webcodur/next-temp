@@ -24,7 +24,7 @@ const Step1 = ({ isCompleted, onComplete, onUnComplete }: {
         <label className="block mb-2 text-sm font-medium">이름</label>
         <input 
           type="text" 
-          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-none"
+          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-hidden"
           placeholder="이름을 입력하세요"
         />
       </div>
@@ -32,7 +32,7 @@ const Step1 = ({ isCompleted, onComplete, onUnComplete }: {
         <label className="block mb-2 text-sm font-medium">이메일</label>
         <input 
           type="email" 
-          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-none"
+          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-hidden"
           placeholder="이메일을 입력하세요"
         />
       </div>

@@ -14,7 +14,7 @@ const BadgePage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 배지 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">기본 배지</h2>
 						<div className="space-x-4 flex items-center">
 							<Badge>Default</Badge>
@@ -25,7 +25,7 @@ const BadgePage = () => {
 					</section>
 
 					{/* 스타일 변형 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">스타일 변형</h2>
 						<div className="space-x-4 flex items-center">
 							<Badge className="text-xs">Small Text</Badge>
@@ -35,7 +35,7 @@ const BadgePage = () => {
 					</section>
 
 					{/* 사용 예시 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">사용 예시</h2>
 						<div className="space-y-4">
 							<div className="flex items-center space-x-2">

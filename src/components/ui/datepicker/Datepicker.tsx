@@ -100,10 +100,10 @@ export function DateRangePicker({
 					scrollableYearDropdown={scrollableYearDropdown}
 					showMonthYearPicker={showMonthYearPicker}
 					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-none focus:ring-0"
+					className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-hidden focus:ring-0"
 				/>
 			</div>
-			<span className="flex-shrink-0 text-sm">~</span>
+			<span className="shrink-0 text-sm">~</span>
 			<div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
 				<DatePicker
 					selected={endDate ?? undefined}
@@ -119,7 +119,7 @@ export function DateRangePicker({
 					scrollableYearDropdown={scrollableYearDropdown}
 					showMonthYearPicker={showMonthYearPicker}
 					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-none focus:ring-0"
+					className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-hidden focus:ring-0"
 				/>
 			</div>
 		</div>
@@ -187,7 +187,7 @@ export function SingleDatePicker({
 				scrollableYearDropdown={scrollableYearDropdown}
 				showMonthYearPicker={showMonthYearPicker}
 				renderCustomHeader={renderCustomYearMonthHeader}
-				className={`box-border px-2 py-1 rounded border neu-inset focus:outline-none focus:ring-0 ${className}`}
+				className={`box-border px-2 py-1 rounded border neu-inset focus:outline-hidden focus:ring-0 ${className}`}
 			/>
 		</div>
 	);

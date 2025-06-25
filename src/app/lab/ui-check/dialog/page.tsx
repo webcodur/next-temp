@@ -38,7 +38,7 @@ const DialogPage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">기본 다이얼로그</h2>
 						<Button onClick={() => setBasicOpen(true)}>
 							기본 다이얼로그 열기
@@ -46,7 +46,7 @@ const DialogPage = () => {
 					</section>
 
 					{/* 변형 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">변형 다이얼로그</h2>
 						<div className="space-x-4">
 							<Button onClick={() => openVariantDialog('success')}>
@@ -65,7 +65,7 @@ const DialogPage = () => {
 					</section>
 
 					{/* 사이즈 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">사이즈 변형</h2>
 						<div className="space-x-4">
 							<Button onClick={() => openSizeDialog('sm')}>Small</Button>
@@ -76,7 +76,7 @@ const DialogPage = () => {
 					</section>
 
 					{/* 폼 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-sm">
+					<section className="bg-white rounded-lg p-6 shadow-xs">
 						<h2 className="text-xl font-semibold mb-4">폼 다이얼로그</h2>
 						<Button onClick={() => setFormOpen(true)}>
 							복잡한 폼 다이얼로그 열기
