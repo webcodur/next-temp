@@ -191,10 +191,10 @@ export function SideRPanel({
 									<Button
 										variant="outline"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !neu-flat !bg-white !text-black !border-none hover:ring-2 hover:ring-border/60 hover:shadow-lg ${
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 !border-none hover:ring-2 hover:ring-border/60 transition-all duration-200 ${
 											isMidMenuActive(midItem)
-												? '!bg-[#a0a0a0] !text-black !font-bold !shadow-none'
-												: ''
+												? 'neu-inset !text-primary font-bold'
+												: 'neu-flat hover:shadow-lg'
 										}`}>
 										<span
 											className={`flex-1 text-sm font-medium text-left truncate`}>
@@ -258,10 +258,10 @@ export function SideRPanel({
 															onClick={() =>
 																handleBotMenuClick(midKey, botItem)
 															}
-															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left neu-flat group hover:pr-2 !transition-none ${
+															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 ${
 																isActive
-																	? '!bg-[#a0a0a0] !text-black font-bold !shadow-none'
-																	: ''
+																	? 'neu-inset !text-primary font-bold'
+																	: 'neu-flat'
 															}`}
 															style={{
 																width: 'calc(100% - 1rem)', // ml-4를 고려한 정확한 width 계산

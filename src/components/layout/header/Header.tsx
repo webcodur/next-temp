@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { ProfileButton } from '@/components/layout/header/ProfileButton';
 
 export function Header() {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
@@ -26,6 +27,7 @@ export function Header() {
 			{/* Right Section */}
 			<div className="flex gap-4 items-center">
 				<LanguageSwitcher variant="header" />
+				<ProfileButton />
 			</div>
 		</header>
 	);
