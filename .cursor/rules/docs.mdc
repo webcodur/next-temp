@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+프로젝트에 문서를 추가하는 경우 /docs 에 추가
+
+.cursor/rules/markdown.mdc 의 마크다운 문서 작성 문법 참고
+
+
+

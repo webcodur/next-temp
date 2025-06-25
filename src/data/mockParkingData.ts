@@ -27,6 +27,12 @@ export const parseCarAllowType = (type: number): string => {
 	return carType?.name || '미분류';
 };
 
+// 모든 차량 타입에 대해 통일된 메탈릭 번호판 사용 (레거시 지원용)
+export const getPlateTypeByCarType = () => {
+	// 더 이상 사용하지 않지만 호환성을 위해 유지
+	return 'metallic';
+};
+
 // Mock 입출차 데이터 생성
 export const generateMockVehicleEntries = (count: number): VehicleEntry[] => {
 	const mockData: VehicleEntry[] = [];
@@ -41,7 +47,9 @@ export const generateMockVehicleEntries = (count: number): VehicleEntry[] => {
 
 	for (let i = 0; i < count; i++) {
 		const isEntry = Math.random() > 0.5;
-		const carType = Math.floor(Math.random() * 9) + 1;
+		// 다양한 차량 타입을 고르게 생성 (흰색 번호판 타입 포함)
+		const carTypes = [1, 2, 3, 4, 5, 7, 8, 9, 6, 99, 100, 101];
+		const carType = carTypes[Math.floor(Math.random() * carTypes.length)];
 		const baseTime = new Date();
 		baseTime.setHours(baseTime.getHours() - Math.floor(Math.random() * 12));
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Car } from 'lucide-react';
+import { Car, Check } from 'lucide-react';
 import { VehicleEntry } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
+import { LicensePlate } from '@/components/ui/license-plate';
 
 interface VehicleDetailCardProps {
 	vehicle: VehicleEntry | null;
@@ -10,6 +11,18 @@ interface VehicleDetailCardProps {
 
 const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 	const [imageError, setImageError] = useState(false);
+	const [copiedPlate, setCopiedPlate] = useState<string | null>(null);
+
+	// 번호판 복사 핸들러
+	const handlePlateClick = async (plateNumber: string) => {
+		try {
+			await navigator.clipboard.writeText(plateNumber);
+			setCopiedPlate(plateNumber);
+			setTimeout(() => setCopiedPlate(null), 2000);
+		} catch (error) {
+			console.error('번호판 복사 실패:', error);
+		}
+	};
 
 	return (
 		<div className="p-4 bg-white rounded-2xl neu-flat">
@@ -39,23 +52,59 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 					{vehicle ? (
 						<div className="space-y-2">
 							{/* 차량번호 및 상태 */}
-							<div className="flex gap-2 items-center">
-								<div
-									className={`px-2 py-1 rounded text-xs font-medium ${
-										vehicle.status === 1
-											? 'bg-blue-100 text-blue-700 border border-blue-200'
-											: 'bg-green-100 text-green-700 border border-green-200'
-									}`}>
-									{vehicle.status === 1 ? '입차' : '출차'}
+							<div className="flex flex-col gap-4">
+								{/* 상태 태그 */}
+								<div className="flex justify-start">
+									<div
+										className={`px-3 py-1 rounded-lg text-sm font-medium neu-raised ${
+											vehicle.status === 1
+												? 'bg-blue-100 text-blue-700 border border-blue-200'
+												: 'bg-green-100 text-green-700 border border-green-200'
+										}`}>
+										{vehicle.status === 1 ? '입차' : '출차'}
+									</div>
 								</div>
-								<h2 className="text-4xl font-bold tracking-wider text-gray-800">
-									{vehicle.car_number}
+
+								{/* 번호판 */}
+								<div className="flex items-center gap-4">
+									<div className="relative">
+										<LicensePlate
+											plateNumber={vehicle.car_number}
+											size="xl"
+											interactive
+											onClick={() => handlePlateClick(vehicle.car_number)}
+										/>
+										{copiedPlate === vehicle.car_number && (
+											<div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-lg text-xs neu-raised animate-fadeIn shadow-lg">
+												<Check size={12} className="inline mr-1" />
+												복사됨
+											</div>
+										)}
+									</div>
 									{vehicle.modify_car_number && (
-										<span className="ml-4 text-3xl text-orange-600">
-											→ {vehicle.modify_car_number}
-										</span>
+										<>
+											<span className="text-2xl font-bold text-orange-600">
+												→
+											</span>
+											<div className="relative">
+												<LicensePlate
+													plateNumber={vehicle.modify_car_number}
+													size="xl"
+													interactive
+													onClick={() =>
+														handlePlateClick(vehicle.modify_car_number!)
+													}
+												/>
+												{copiedPlate === vehicle.modify_car_number && (
+													<div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-lg text-xs neu-raised animate-fadeIn shadow-lg">
+														<Check size={12} className="inline mr-1" />
+														복사됨
+													</div>
+												)}
+											</div>
+										</>
 									)}
-								</h2>
+								</div>
 							</div>
 
 							{/* 차량 구분 */}

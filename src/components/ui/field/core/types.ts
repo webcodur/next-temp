@@ -42,9 +42,30 @@ export interface FieldTextComponentProps extends FieldBaseProps {
 	onChange: (value: string) => void;
 	onEnterPress?: () => void;
 	onClear?: () => void;
-	inputType?: 'text' | 'email' | 'tel' | 'url';
-	size?: 'sm' | 'md' | 'lg';
+	showSearchIcon?: boolean;
 	showClearButton?: boolean;
+}
+
+export interface FieldPasswordComponentProps extends FieldBaseProps {
+	placeholder?: string;
+	value: string;
+	onChange: (value: string) => void;
+	onEnterPress?: () => void;
+	onClear?: () => void;
+	showClearButton?: boolean;
+	showStrengthIndicator?: boolean;
+	minLength?: number;
+}
+
+export interface FieldEmailComponentProps extends FieldBaseProps {
+	placeholder?: string;
+	value: string;
+	onChange: (value: string) => void;
+	onEnterPress?: () => void;
+	onClear?: () => void;
+	showClearButton?: boolean;
+	showValidation?: boolean;
+	allowedDomains?: string[];
 }
 
 // Select Field Types
@@ -104,6 +125,32 @@ export interface FieldSortSelectProps extends FieldBaseProps {
 	categoryName?: string;
 }
 
+export interface FieldPasswordProps extends FieldBaseProps {
+	type: 'password';
+	placeholder?: string;
+	value: string;
+	onChange: (value: string) => void;
+	onEnterPress?: () => void;
+	onClear?: () => void;
+	size?: 'sm' | 'md' | 'lg';
+	showClearButton?: boolean;
+	showStrengthIndicator?: boolean;
+	minLength?: number;
+}
+
+export interface FieldEmailProps extends FieldBaseProps {
+	type: 'email';
+	placeholder?: string;
+	value: string;
+	onChange: (value: string) => void;
+	onEnterPress?: () => void;
+	onClear?: () => void;
+	size?: 'sm' | 'md' | 'lg';
+	showClearButton?: boolean;
+	showValidation?: boolean;
+	allowedDomains?: string[];
+}
+
 export interface FieldDatePickerProps extends FieldBaseProps {
 	type: 'datepicker';
 	placeholder?: string;
@@ -128,4 +175,6 @@ export type FieldProps =
 	| FieldTextProps
 	| FieldSelectProps
 	| FieldSortSelectProps
+	| FieldPasswordProps
+	| FieldEmailProps
 	| FieldDatePickerProps;

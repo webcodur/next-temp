@@ -1,22 +1,20 @@
 'use client';
 
 import React, { ChangeEvent, KeyboardEvent } from 'react';
-import { Type } from 'lucide-react';
+import { Search, X, Type } from 'lucide-react';
 import { FieldTextComponentProps } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
-import { ClearButton } from '../shared/ClearButton';
 
 export const FieldText: React.FC<FieldTextComponentProps> = ({
 	label,
-	placeholder,
+	placeholder = '텍스트를 입력하세요',
 	value,
 	onChange,
 	onEnterPress,
 	onClear,
-	inputType = 'text',
-	className = '',
-	size = 'sm',
+	showSearchIcon = false,
 	showClearButton = true,
+	className = '',
 	disabled = false,
 }) => {
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,45 +32,43 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 		onClear?.();
 	};
 
-	const sizeStyles = {
-		sm: 'px-3 py-2 text-sm h-8',
-		md: 'px-4 py-2.5 text-sm h-10',
-		lg: 'px-4 py-3 text-base h-11',
-	};
+	// 아이콘 결정: showSearchIcon이 true면 Search, 아니면 기본 Type 아이콘
+	const LeftIcon = showSearchIcon ? Search : Type;
 
 	return (
 		<div className={`space-y-1 ${className}`}>
-			{label && (
-				<label className="block mb-1 text-sm font-medium text-gray-800">
-					{label}
-				</label>
-			)}
+			{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 			<div className="relative">
-				<Type className="absolute left-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2" />
+				<LeftIcon className={FIELD_STYLES.leftIcon} />
 
 				<input
-					type={inputType}
+					type="text"
 					placeholder={placeholder}
 					value={value}
 					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					disabled={disabled}
-					spellCheck={false}
-					autoComplete="off"
 					className={`
 						w-full
 						${FIELD_STYLES.container}
-						${sizeStyles[size]}
+						${FIELD_STYLES.height}
+						${FIELD_STYLES.padding}
+						${FIELD_STYLES.text}
 						pl-10
-						${showClearButton && value ? 'pr-10' : 'pr-3'}
-						font-medium
-						placeholder-gray-700 text-gray-800
-						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
+						${showClearButton && value ? 'pr-10' : ''}
+						${disabled ? FIELD_STYLES.disabled : ''}
 					`}
 				/>
 
-				{showClearButton && value && <ClearButton onClick={handleClear} />}
+				{showClearButton && value && (
+					<button
+						onClick={handleClear}
+						className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
+						type="button">
+						<X className="h-3 w-3" />
+					</button>
+				)}
 			</div>
 		</div>
 	);

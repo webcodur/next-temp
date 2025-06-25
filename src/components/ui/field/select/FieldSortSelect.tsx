@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { ArrowUpDown, ChevronDown } from 'lucide-react';
 import { FieldSortSelectComponentProps } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
+import { useSelectLogic } from '../shared/useSelectLogic';
 
 export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	label,
@@ -18,12 +19,20 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	sortDirection = 'asc',
 	onSortDirectionChange,
 }) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const selectedOption = options.find((option) => option.value === value);
+	const {
+		isOpen,
+		setIsOpen,
+		highlightedIndex,
+		containerRef,
+		selectedOption,
+		handleOptionSelect,
+	} = useSelectLogic(options, value, onChange);
 
 	const handleSelect = (selectedValue: string) => {
-		onChange?.(selectedValue);
-		setIsOpen(false);
+		const option = options.find((opt) => opt.value === selectedValue);
+		if (option) {
+			handleOptionSelect(option);
+		}
 	};
 
 	const handleSortToggle = (e: React.MouseEvent) => {
@@ -38,19 +47,15 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	};
 
 	return (
-		<div className={`relative space-y-1 ${className}`}>
-			{label && (
-				<label className="block text-sm font-medium text-gray-800 mb-1">
-					{label}
-				</label>
-			)}
+		<div ref={containerRef} className={`relative space-y-1 ${className}`}>
+			{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 			<div className="relative">
 				<button
 					type="button"
 					onClick={handleSortToggle}
 					disabled={disabled}
-					className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 transition-colors hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-60 z-10">
+					className={`${FIELD_STYLES.sortIcon} ${disabled ? FIELD_STYLES.disabled : ''} z-10`}>
 					<ArrowUpDown className="h-4 w-4" />
 				</button>
 
@@ -61,11 +66,11 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					className={`
 						w-full text-left
 						${FIELD_STYLES.container}
-						px-3 py-2 text-sm h-8
+						${FIELD_STYLES.height}
+						${FIELD_STYLES.padding}
+						${FIELD_STYLES.text}
 						pl-10 pr-10
-						font-medium
-						${selectedOption ? 'text-gray-800' : 'text-gray-700 placeholder-gray-700'}
-						${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
+						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 					`}>
 					<span className="flex flex-1 items-center">
 						<span className={selectedOption ? 'font-medium' : ''}>
@@ -80,7 +85,8 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 
 					<ChevronDown
 						className={`
-							absolute right-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2 transition-transform duration-200
+							${FIELD_STYLES.rightIcon}
+							transition-transform
 							${isOpen ? 'rotate-180' : ''}
 						`}
 					/>
@@ -91,6 +97,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					options={options}
 					selectedValue={value}
 					onSelect={handleSelect}
+					highlightedIndex={highlightedIndex}
 					maxHeight={maxHeight}
 				/>
 			</div>

@@ -7,6 +7,7 @@ interface SelectDropdownProps {
 	options: Option[];
 	selectedValue?: string;
 	onSelect: (value: string) => void;
+	highlightedIndex?: number;
 	maxHeight: number;
 }
 
@@ -15,6 +16,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 	options,
 	selectedValue,
 	onSelect,
+	highlightedIndex = -1,
 	maxHeight,
 }) => {
 	if (!isOpen) return null;
@@ -25,25 +27,40 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 		}
 	};
 
+	const totalCount = options.length;
+
 	return (
 		<div className="absolute right-0 left-0 top-full z-50 mt-1">
 			<div
-				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg border border-gray-200 shadow-lg neu-flat`}
+				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg neu-flat`}
 				style={{ maxHeight: `${maxHeight}px` }}>
-				<ul className="overflow-y-auto">
-					{options.map((option) => (
-						<li
-							key={option.value}
-							onClick={() => handleOptionClick(option)}
-							className={`
-								cursor-pointer px-3 py-1.5 text-xs font-medium transition-all duration-150
-								neu-hover
-								${option.disabled ? 'cursor-not-allowed text-gray-400 opacity-60' : 'text-gray-800'}
-								${selectedValue === option.value ? 'font-bold text-primary' : ''}
-							`}>
-							{option.label}
-						</li>
-					))}
+				<ul
+					className={FIELD_STYLES.dropdownScroll}
+					style={{ maxHeight: `${maxHeight}px` }}>
+					{options.map((option, index) => {
+						const isSelected = selectedValue === option.value;
+						const isHighlighted = highlightedIndex === index;
+						const numberLabel = `${index + 1}/${totalCount}`;
+
+						return (
+							<li
+								key={option.value}
+								onClick={() => handleOptionClick(option)}
+								className={`
+									${FIELD_STYLES.dropdownOption}
+									${option.disabled ? FIELD_STYLES.dropdownOptionDisabled : ''}
+									${isSelected ? FIELD_STYLES.dropdownOptionSelected : ''}
+									${isHighlighted && !isSelected ? FIELD_STYLES.dropdownOptionHighlighted : ''}
+								`}>
+								<div className="flex items-center justify-between">
+									<span>{option.label}</span>
+									<span className="text-xs text-gray-400 font-mono ml-2">
+										{numberLabel}
+									</span>
+								</div>
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		</div>

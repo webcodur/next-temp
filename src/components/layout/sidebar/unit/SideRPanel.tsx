@@ -111,7 +111,7 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider>
-			<div className="flex overflow-hidden flex-col flex-1 h-full bg-linear-to-b from-background/50 to-background/30">
+			<div className="flex overflow-hidden flex-col flex-1 h-full bg-gradient-to-b from-background/30 to-background/10 border-l border-border/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
@@ -191,10 +191,10 @@ export function SideRPanel({
 									<Button
 										variant="outline"
 										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! hover:ring-2 hover:ring-border/60 transition-all duration-200 ${
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! transition-all duration-200 ${
 											isMidMenuActive(midItem)
 												? 'neu-inset text-primary! font-bold'
-												: 'neu-flat hover:shadow-lg'
+												: 'neu-flat'
 										}`}>
 										<span
 											className={`flex-1 text-sm font-medium text-left truncate`}>

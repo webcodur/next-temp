@@ -7,7 +7,7 @@ import { ko } from 'date-fns/locale';
 import { Calendar } from 'lucide-react';
 import { FieldDatePickerComponentProps } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
-import { ClearButton } from '../shared/ClearButton';
+import { X } from 'lucide-react';
 
 // #region 커스텀 헤더 구성 함수
 interface CustomHeaderProps {
@@ -30,7 +30,7 @@ const renderCustomYearMonthHeader = ({
 	return (
 		<div className="flex justify-center items-center px-2 py-2 space-x-2">
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all duration-200"
+				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all"
 				value={date.getFullYear()}
 				onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}>
 				{years.map((year) => (
@@ -41,7 +41,7 @@ const renderCustomYearMonthHeader = ({
 			</select>
 
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all duration-200"
+				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all"
 				value={date.getMonth()}
 				onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}>
 				{months.map((month) => (
@@ -113,7 +113,14 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 						`}
 					/>
-					{value && <ClearButton onClick={handleClear} />}
+					{value && (
+						<button
+							onClick={handleClear}
+							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							type="button">
+							<X className="h-3 w-3" />
+						</button>
+					)}
 				</div>
 			</div>
 		);
@@ -169,7 +176,14 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 								${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 							`}
 						/>
-						{startDate && <ClearButton onClick={handleStartClear} />}
+						{startDate && (
+							<button
+								onClick={handleStartClear}
+								className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+								type="button">
+								<X className="h-3 w-3" />
+							</button>
+						)}
 					</div>
 
 					<div
@@ -205,7 +219,14 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 								${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 							`}
 						/>
-						{endDate && <ClearButton onClick={handleEndClear} />}
+						{endDate && (
+							<button
+								onClick={handleEndClear}
+								className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+								type="button">
+								<X className="h-3 w-3" />
+							</button>
+						)}
 					</div>
 				</div>
 			</div>
@@ -258,7 +279,14 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 					`}
 					/>
-					{value && <ClearButton onClick={handleClear} />}
+					{value && (
+						<button
+							onClick={handleClear}
+							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							type="button">
+							<X className="h-3 w-3" />
+						</button>
+					)}
 				</div>
 			</div>
 		);
@@ -306,7 +334,14 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
 					`}
 					/>
-					{value && <ClearButton onClick={handleClear} />}
+					{value && (
+						<button
+							onClick={handleClear}
+							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							type="button">
+							<X className="h-3 w-3" />
+						</button>
+					)}
 				</div>
 			</div>
 		);

@@ -3,11 +3,12 @@ export { Field } from './core/Field';
 
 // Individual Components
 export { FieldText } from './text/FieldText';
+export { FieldPassword } from './text/FieldPassword';
+export { FieldEmail } from './text/FieldEmail';
 export { FieldSelect } from './select/FieldSelect';
 export { FieldSortSelect } from './select/FieldSortSelect';
 
 // Shared Components
-export { ClearButton } from './shared/ClearButton';
 export { SortIndicator } from './shared/SortIndicator';
 export { SelectDropdown } from './select/SelectDropdown';
 
@@ -20,9 +21,13 @@ export type {
 	SortDirection,
 	FieldBaseProps,
 	FieldTextComponentProps,
+	FieldPasswordComponentProps,
+	FieldEmailComponentProps,
 	FieldSelectComponentProps,
 	FieldSortSelectComponentProps,
 	FieldTextProps,
+	FieldPasswordProps,
+	FieldEmailProps,
 	FieldSelectProps,
 	FieldSortSelectProps,
 	FieldProps,

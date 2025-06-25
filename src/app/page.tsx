@@ -133,9 +133,7 @@ export default function Home() {
 					<h1 className="mb-1 text-2xl font-bold text-gray-800">
 						{t('주차_시스템제목')}
 					</h1>
-					<p className="text-sm text-gray-600">
-						{t('주차_시스템설명')}
-					</p>
+					<p className="text-sm text-gray-600">{t('주차_시스템설명')}</p>
 				</div>
 
 				{/* 탭 메뉴 */}

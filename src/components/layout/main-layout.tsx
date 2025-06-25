@@ -2,9 +2,9 @@
 
 import { ReactNode, useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
-import { isAuthenticatedAtom } from '@/store/auth';
+// import { isAuthenticatedAtom } from '@/store/auth'; // 백엔드 연결 전까지 임시 주석처리
 
 // components
 import { Sidebar } from './sidebar/Sidebar';
@@ -25,20 +25,20 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
-	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
+	// const [isAuthenticated] = useAtom(isAuthenticatedAtom); // 백엔드 연결 전까지 임시 주석처리
 	const pathname = usePathname();
-	const router = useRouter();
+	// const router = useRouter(); // 백엔드 연결 전까지 임시 주석처리
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	// 키보드 단축키 활성화
 	useSidebarKeyboard();
 
-	// 인증 체크 및 리다이렉트
-	useEffect(() => {
+	// 인증 체크 및 리다이렉트 - 백엔드 연결 전까지 임시 주석처리
+	/* useEffect(() => {
 		if (!isAuthenticated && pathname !== '/login') {
 			router.push('/login');
 		}
-	}, [isAuthenticated, pathname, router]);
+	}, [isAuthenticated, pathname, router]); */
 
 	// 페이지 변경 시 스크롤 최상단으로 이동
 	useEffect(() => {
@@ -47,17 +47,17 @@ export function MainLayout({ children }: MainLayoutProps) {
 		}
 	}, [pathname]);
 
-	// 로그인하지 않은 경우 빈 화면 표시 (리다이렉트 중)
-	if (!isAuthenticated && pathname !== '/login') {
+	// 로그인하지 않은 경우 빈 화면 표시 (리다이렉트 중) - 백엔드 연결 전까지 임시 주석처리
+	/* if (!isAuthenticated && pathname !== '/login') {
 		return (
-			<div className="flex items-center justify-center h-screen bg-background">
+			<div className="flex justify-center items-center h-screen bg-background">
 				<div className="text-center">
-					<div className="w-8 h-8 mx-auto mb-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+					<div className="mx-auto mb-4 w-8 h-8 rounded-full border-2 animate-spin border-primary border-t-transparent"></div>
 					<p className="text-muted-foreground">로그인 페이지로 이동 중...</p>
 				</div>
 			</div>
 		);
-	}
+	} */
 
 	return (
 		<div className="flex h-screen bg-background">

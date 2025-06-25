@@ -70,6 +70,14 @@
 	font-style: normal;
 	font-display: swap;
 }
+
+@font-face {
+	font-family: 'HY헤드라인M';
+	src: url('/fonts/fe-font.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
 /* #endregion */
 
 /* #region 2. CSS 변수 정의 */
@@ -338,8 +346,14 @@ body {
 	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-/* 4-5. sidebar-shadow - 사이드바 전용 강화된 우측 음영 */
-.sidebar-shadow {
+/* 4-5. sidebar-container - 사이드바 전용 컨테이너 (hover 효과 없음) */
+.sidebar-container {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card) / 0.9),
+		hsl(var(--muted) / 0.7)
+	);
+	border: 1px solid hsl(var(--border) / 0.4);
 	box-shadow:
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
 		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
@@ -426,5 +440,50 @@ body {
 
 .animate-slide-up {
 	animation: slideUp 200ms ease-in;
+}
+/* #endregion */
+
+/* #region 6. 필드 드롭다운 스크롤바 */
+.field-dropdown-scroll {
+	/* WebKit 브라우저용 스크롤바 스타일링 */
+	scrollbar-width: thin;
+	scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.field-dropdown-scroll::-webkit-scrollbar {
+	width: 6px;
+}
+
+.field-dropdown-scroll::-webkit-scrollbar-track {
+	background: #f3f4f6;
+	border-radius: 3px;
+}
+
+.field-dropdown-scroll::-webkit-scrollbar-thumb {
+	background: #d1d5db;
+	border-radius: 3px;
+	transition: background-color 0.2s ease;
+}
+
+.field-dropdown-scroll::-webkit-scrollbar-thumb:hover {
+	background: #9ca3af;
+}
+
+.field-dropdown-scroll::-webkit-scrollbar-corner {
+	background: #f3f4f6;
+}
+/* #endregion */
+
+/* #region 7. 텍스트 그림자 유틸리티 */
+.text-shadow-sm {
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.text-shadow {
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.text-shadow-lg {
+	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 /* #endregion */

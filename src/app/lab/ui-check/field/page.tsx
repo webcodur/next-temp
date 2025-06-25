@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import {
 	FieldText,
+	FieldPassword,
+	FieldEmail,
 	FieldSelect,
 	FieldSortSelect,
 	FieldDatePicker,
@@ -12,6 +14,8 @@ import {
 
 export default function FieldPage() {
 	const [textValue, setTextValue] = useState('');
+	const [passwordValue, setPasswordValue] = useState('');
+	const [emailValue, setEmailValue] = useState('');
 	const [selectValue, setSelectValue] = useState('');
 	const [sortValue, setSortValue] = useState('');
 
@@ -27,13 +31,24 @@ export default function FieldPage() {
 	// #endregion
 
 	const tagOptions: Option[] = [
-		{ value: 'design', label: '디자인' },
-		{ value: 'development', label: '개발' },
-		{ value: 'marketing', label: '마케팅' },
-		{ value: 'planning', label: '기획' },
-		{ value: 'hr', label: '인사' },
-		{ value: 'finance', label: '재무' },
-		{ value: 'operations', label: '운영' },
+		{ value: 'design', label: '디자인팀' },
+		{ value: 'development', label: '개발팀' },
+		{ value: 'frontend', label: '프론트엔드팀' },
+		{ value: 'backend', label: '백엔드팀' },
+		{ value: 'devops', label: 'DevOps팀' },
+		{ value: 'qa', label: 'QA팀' },
+		{ value: 'marketing', label: '마케팅팀' },
+		{ value: 'planning', label: '기획팀' },
+		{ value: 'product', label: '프로덕트팀' },
+		{ value: 'hr', label: '인사팀' },
+		{ value: 'finance', label: '재무팀' },
+		{ value: 'operations', label: '운영팀' },
+		{ value: 'sales', label: '영업팀' },
+		{ value: 'support', label: '고객지원팀' },
+		{ value: 'security', label: '보안팀' },
+		{ value: 'legal', label: '법무팀' },
+		{ value: 'data', label: '데이터팀' },
+		{ value: 'research', label: '연구개발팀' },
 	];
 
 	const sortOptions: Option[] = [
@@ -41,6 +56,12 @@ export default function FieldPage() {
 		{ value: 'date', label: '날짜순' },
 		{ value: 'priority', label: '우선순위' },
 		{ value: 'status', label: '상태순' },
+		{ value: 'department', label: '부서순' },
+		{ value: 'position', label: '직급순' },
+		{ value: 'salary', label: '연봉순' },
+		{ value: 'experience', label: '경력순' },
+		{ value: 'rating', label: '평점순' },
+		{ value: 'performance', label: '성과순' },
 	];
 
 	return (
@@ -64,6 +85,33 @@ export default function FieldPage() {
 								onChange={setTextValue}
 							/>
 
+							{/* 검색 필드 */}
+							<FieldText
+								label="검색어"
+								placeholder="검색어 입력"
+								value={textValue}
+								onChange={setTextValue}
+								showSearchIcon={true}
+							/>
+
+							{/* 비밀번호 필드 */}
+							<FieldPassword
+								label="비밀번호"
+								placeholder="비밀번호 입력"
+								value={passwordValue}
+								onChange={setPasswordValue}
+								showStrengthIndicator={true}
+							/>
+
+							{/* 이메일 필드 */}
+							<FieldEmail
+								label="이메일 주소"
+								placeholder="이메일 입력"
+								value={emailValue}
+								onChange={setEmailValue}
+								showValidation={true}
+							/>
+
 							{/* 기본 셀렉트 */}
 							<FieldSelect
 								label="소속 부서"
@@ -71,6 +119,7 @@ export default function FieldPage() {
 								options={tagOptions}
 								value={selectValue}
 								onChange={setSelectValue}
+								maxHeight={150}
 							/>
 
 							{/* 정렬 셀렉트 */}
@@ -82,6 +131,7 @@ export default function FieldPage() {
 								onChange={setSortValue}
 								sortDirection={sortDirection}
 								onSortDirectionChange={setSortDirection}
+								maxHeight={120}
 							/>
 						</div>
 					</section>

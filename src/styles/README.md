@@ -2,117 +2,199 @@
 
 ## 📁 참고 파일
 
-- **색상 변수**: [src/styles/variables.css](variables.css)
+- **통합 스타일**: [src/styles/design-system.css](design-system.css)
 - **전역 스타일**: [src/styles/globals.css](globals.css)
 - **Tailwind 설정**: [tailwind.config.js](../../tailwind.config.js)
-- **뉴모피즘 스타일**: [src/styles/neumorphism/](neumorphism/)
+- **스타일 가이드**: [src/styles/README.md](README.md)
 
 ## 🎨 핵심 원칙
 
-이 프로젝트는 화이트 테마 기반의 뉴모피즘 디자인 시스템을 사용한다. 모든 색상은 CSS 변수를 기반으로 하며, 투명도와 그라데이션을 적극 활용하여 깊이감을 표현한다.
+이 프로젝트는 **Tailwind 4.0 + 화이트 테마 뉴모피즘** 디자인 시스템을 사용한다.
+모든 스타일이 `design-system.css` 하나에 통합되어 있다.
 
-뉴모피즘의 핵심인 음양각 처리를 통해 UI 요소들이 실제로 튀어나오거나 눌린 듯한 효과를 구현한다. 양각은 기본 상태의 버튼과 인터랙티브 요소에, 음각은 활성화되거나 선택된 상태에 적용한다.
+### 🏗️ 아키텍처 특징
 
-## 🔧 통합 패턴 시스템
+- **Tailwind 4.0**: @import 'tailwindcss' 방식
+- **폰트 시스템**: MultiLang(다국어) + Pretendard(한국어)
+- **CSS 변수**: HSL 기반 색상 시스템
+- **뉴모피즘**: 사전 정의된 핵심 클래스들
 
-디자인 일관성을 위해 세 가지 기본 패턴으로 통합했다. 평면 스타일은 컨테이너와 패널에, 양각은 버튼과 인터랙티브 요소에, 음각은 활성 상태 표현에 사용한다.
+## 📐 뉴모피즘 시스템
 
-### 뉴모피즘 음양각 시스템
+### 기본 3종 패턴
 
-- `neu-flat` - 평면 (컨테이너, 패널)
-- `neu-raised` - 양각 (버튼, 인터랙티브 요소)
-- `neu-inset` - 음각 (활성/선택된 상태)
-
-아이콘도 두 가지 상태로 단순화했다. 비활성 상태는 회색 톤으로, 활성 상태는 프라이머리 색상과 스케일 효과를 적용한다.
-
-### 아이콘 상태 패턴
-
-- `neu-icon-inactive` - 비활성 아이콘 (회색)
-- `neu-icon-active` - 활성 아이콘 (primary + scale)
-
-모든 애니메이션과 상태 변화는 사전 정의된 클래스에서 자동 처리되므로, 개발자가 별도로 트랜지션이나 호버 효과를 작성할 필요가 없다.
-
-## 💡 사용 원칙
-
-버튼은 활성 상태에 따라 음각과 양각을 구분해서 사용하고, 컨테이너는 평면 스타일로 통일한다. 아이콘은 상태에 따라 두 가지 클래스만 사용한다.
-
-### 색상 우선순위
-
-1. CSS 변수 우선 사용
-2. 필요시 컴포넌트에서 직접 정의
-3. Tailwind 유틸리티 클래스 활용
-
-## 📄 파일별 역할
-
-### `globals.css`
-
-- **역할**: 모든 CSS 파일의 진입점
-- **내용**: 다른 CSS 파일들을 import하고 Tailwind 지시어 포함
-
-### `variables.css`
-
-- **역할**: 프로젝트 전체에서 사용하는 CSS 변수 정의
-- **내용**: 색상값, 뉴모피즘 전용 변수, 기본 테마 설정
-
-### `base.css`
-
-- **역할**: 기본 HTML 요소 스타일과 유틸리티 클래스
-- **내용**: HTML 기본 스타일, 자동 foreground 시스템
-
-### `components.css`
-
-- **역할**: 재사용 가능한 컴포넌트 단축 클래스
-- **내용**: 버튼, 카드, 텍스트 클래스 등
-
-### `neumorphism/base.css`
-
-- **역할**: 5가지 핵심 뉴모피즘 패턴 정의
-- **내용**: neu-flat, neu-raised, neu-inset, neu-icon-active, neu-icon-inactive
-
-## 🔧 사용법
-
-개발자는 **단 5개의 클래스**만 기억하면 된다:
-
-### 1. 컨테이너와 패널
-
-```jsx
-<div className="neu-flat p-4 rounded-lg">기본 컨테이너</div>
+```css
+.neu-flat       /* 평면 - 기본 컨테이너, 패널 */
+.neu-raised     /* 양각 - 기본 버튼, 클릭 가능한 요소 */
+.neu-inset      /* 음각 - 활성/선택된 상태 */
 ```
 
-### 2. 버튼과 인터랙티브 요소
+### 아이콘 상태 (2종)
 
-```jsx
-<button className="neu-raised px-4 py-2 rounded-md">기본 버튼</button>
+```css
+.neu-icon-inactive /* 비활성 아이콘 (회색) */
+.neu-icon-active   /* 활성 아이콘 (primary + drop-shadow) */
 ```
 
-### 3. 활성/선택 상태
+### 보조 클래스
 
-```jsx
-<button className={isActive ? 'neu-inset' : 'neu-raised'}>토글 버튼</button>
+```css
+.neu-hover          /* 호버 시 inset 효과 */
+.neu-flat-focus     /* 드롭다운 열릴 때 포커스 유지 */
+.sidebar-container  /* 사이드바 전용 (hover 효과 없는 컨테이너) */
 ```
 
-### 4. 아이콘 상태
+## 🎨 색상 시스템
+
+### CSS 변수 (HSL 기반)
+
+```css
+/* 핵심 색상 */
+--background: 0 0% 100%;
+--foreground: 0 0% 3.9%;
+--primary: 0 0% 9%;
+--primary-rgb: 23, 23, 23;
+
+/* 뉴모피즘 전용 */
+--neu-light: 255, 255, 255, 0.9;
+--neu-dark: 0, 0, 0, 0.08;
+--neu-offset: 3px;
+--neu-blur: 6px;
+```
+
+### 사용 원칙
+
+1. **HSL 함수 사용**: `hsl(var(--primary))`
+2. **투명도 슬래시 표기**: `hsl(var(--background) / 0.9)`
+3. **RGBA 직접 사용**: `rgba(var(--primary-rgb), 0.1)`
+
+## 🎭 애니메이션 시스템
+
+### 기본 애니메이션
+
+```css
+.animate-fadeIn      /* 페이드인 + 슬라이드업 */
+.animate-slide-down  /* Radix Collapsible용 */
+.animate-slide-up    /* Radix Collapsible용 */
+```
+
+### 트랜지션 원칙
+
+- **모든 상태 변화**: `transition: all 0.15s ease-in-out`
+- **호버 효과**: 즉각적인 변화 (사용자 규칙)
+- **GPU 가속**: transform 속성 우선 사용
+
+## 🔧 사용법 (엄격한 규칙)
+
+### 1. 일반 컨테이너는 `neu-flat`
+
+```jsx
+<div className="neu-flat p-6 rounded-lg">모든 컨테이너, 패널, 카드</div>
+```
+
+### 2. 사이드바 등 특수 컨테이너는 전용 클래스
+
+```jsx
+<aside className="sidebar-container">
+	/* hover 효과가 없는 안정적인 컨테이너 */
+</aside>
+```
+
+### 3. 버튼은 상태에 따라 양각/음각
+
+```jsx
+<button className={isActive ? 'neu-inset' : 'neu-raised'}>상태별 버튼</button>
+```
+
+### 4. 아이콘은 2가지 상태만
 
 ```jsx
 <Icon className={isActive ? 'neu-icon-active' : 'neu-icon-inactive'} />
 ```
 
-### 5. 컴포넌트에서 조건부 사용
+### 5. 특수 효과는 보조 클래스
 
 ```jsx
+<button className="neu-flat neu-hover">호버 시 inset 효과</button>
+```
+
+### 6. 조건부 스타일링 패턴
+
+```jsx
+const containerClass = `neu-flat ${isOpen ? 'neu-flat-focus' : ''}`;
 const buttonClass = isSelected
-	? 'neu-inset bg-primary/5 text-primary'
+	? 'neu-inset text-primary'
 	: 'neu-raised hover:scale-[1.01]';
 ```
 
-## ⚠️ 엄격한 규칙
+## 📦 활용 가능한 라이브러리
 
-1. **음양각 3종류와 아이콘 2상태만 사용** - 커스텀 박스섀도우 금지
-2. **커스텀 애니메이션 작성 금지** - 기본 제공 트랜지션 사용
-3. **모든 컴포넌트는 동일한 패턴** - 일관성 강제
-4. **하드코딩 색상 금지** - CSS 변수 우선 사용
+### 🎭 애니메이션 & 인터랙션
 
-## 📝 마이그레이션 가이드
+- **framer-motion**: 고급 애니메이션, 제스처, 레이아웃 애니메이션
+- **@dnd-kit/core, @dnd-kit/sortable**: 드래그 앤 드롭, 정렬 기능
+
+### 🧩 UI 컴포넌트
+
+- **@radix-ui/react-\***: 접근성 기반 무뇌 UI 컴포넌트 (Avatar, Collapsible, Slot, Tooltip)
+- **lucide-react**: 일관된 아이콘 시스템
+- **sonner**: 토스트 알림
+
+### 📊 데이터 시각화
+
+- **@tanstack/react-table**: 테이블, 데이터 그리드
+- **recharts**: 차트, 그래프
+- **three**: 3D 그래픽, WebGL
+
+### 📝 에디터 & 폼
+
+- **@tinymce/tinymce-react**: 리치 텍스트 에디터
+- **react-hook-form**: 폼 상태 관리
+- **react-datepicker, react-day-picker**: 날짜 선택
+- **zod**: 스키마 검증
+
+### 🔧 상태 & 유틸리티
+
+- **jotai**: 원자적 상태 관리
+- **@tanstack/react-query**: 서버 상태 관리
+- **clsx, tailwind-merge**: CSS 클래스 조합
+- **class-variance-authority**: 컴포넌트 변형 관리
+- **date-fns**: 날짜 유틸리티
+
+## 🎯 스타일링 통합 팁
+
+### Radix UI + 뉴모피즘
+
+```jsx
+<RadixDialog.Content className="neu-flat p-6">
+  <RadixDialog.Title className="neu-icon-active">
+```
+
+### Framer Motion + 상태 전환
+
+```jsx
+<motion.button
+  className={isPressed ? 'neu-inset' : 'neu-raised'}
+  whileTap={{ scale: 0.98 }}
+>
+```
+
+### 조건부 애니메이션
+
+```jsx
+<div className={`neu-flat ${isVisible ? 'animate-fadeIn' : ''}`}>
+```
+
+## ⚠️ 금지 사항
+
+1. **커스텀 box-shadow 작성 금지** - 뉴모피즘 클래스만 사용
+2. **하드코딩 색상 금지** - CSS 변수 우선
+3. **커스텀 transition 금지** - 기본 제공 사용
+4. **neu-\* 클래스 조합 금지** - 각각 독립적 사용
+5. **Tailwind 3.x 문법 사용 금지** - 4.0 문법 준수
+6. **컨테이너에 hover 효과 적용 금지** - 필요시 전용 클래스 사용
+
+## 📝 마이그레이션 체크리스트
 
 기존 코드에서 새 패턴으로 변경:
 
@@ -120,14 +202,19 @@ const buttonClass = isSelected
 // ❌ 기존 방식
 <div className="neumorphic shadow-neumorphism bg-gray-100" />
 <button className="neumorphic-button hover:scale-105" />
+<aside className="neu-flat"> /* hover 효과가 있는 사이드바 */
 
 // ✅ 새로운 방식
 <div className="neu-flat" />
 <button className="neu-raised" />
+<aside className="sidebar-container"> /* hover 효과 없는 안정적인 사이드바 */
 ```
 
 ## 🎯 성능 최적화
 
-- CSS 파일 크기 **70% 감소** (중복 제거)
-- 클래스 선택 복잡도 **90% 감소** (5개만 기억)
+- CSS 파일 **통합** (design-system.css 하나로 관리)
+- 클래스 선택 복잡도 **최소화** (핵심 클래스만 사용)
 - 애니메이션 성능 **자동 최적화** (GPU 가속 활용)
+- **hover 효과 최적화** (필요한 요소에만 적용)
+
+프로젝트에 문서 추가 시 `/docs` 디렉토리에 배치한다.

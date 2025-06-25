@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import React from 'react';
+import { ChevronDown, List } from 'lucide-react';
 import { FieldSelectComponentProps } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
+import { useSelectLogic } from '../shared/useSelectLogic';
 
 export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 	label,
@@ -17,14 +18,14 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 	disabled = false,
 	className = '',
 }) => {
-	const [isOpen, setIsOpen] = useState(false);
-
-	const selectedOption = options.find((option) => option.value === value);
-
-	const handleSelect = (selectedValue: string) => {
-		onChange?.(selectedValue);
-		setIsOpen(false);
-	};
+	const {
+		isOpen,
+		setIsOpen,
+		highlightedIndex,
+		containerRef,
+		selectedOption,
+		handleOptionSelect,
+	} = useSelectLogic(options, value, onChange);
 
 	const toggleDropdown = () => {
 		if (!disabled) {
@@ -32,13 +33,16 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 		}
 	};
 
+	const handleSelect = (selectedValue: string) => {
+		const option = options.find((opt) => opt.value === selectedValue);
+		if (option) {
+			handleOptionSelect(option);
+		}
+	};
+
 	return (
-		<div className={`relative space-y-1 ${className}`}>
-			{label && (
-				<label className="block text-sm font-medium text-gray-800 mb-1">
-					{label}
-				</label>
-			)}
+		<div ref={containerRef} className={`relative space-y-1 ${className}`}>
+			{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 			<div className="relative">
 				<button
@@ -48,18 +52,15 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 					className={`
 						w-full text-left
 						${FIELD_STYLES.container}
-						px-3 py-2 text-sm h-8
-						${leftIcon ? 'pl-10' : 'pl-3'}
-						pr-10
-						font-medium
-						${selectedOption ? 'text-gray-800' : 'text-gray-700 placeholder-gray-700'}
-						${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
+						${FIELD_STYLES.height}
+						${FIELD_STYLES.padding}
+						${FIELD_STYLES.text}
+						pl-10 pr-10
+						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 					`}>
-					{leftIcon && (
-						<span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700">
-							{leftIcon}
-						</span>
-					)}
+					<span className={FIELD_STYLES.leftIcon}>
+						{leftIcon || <List className="w-4 h-4" />}
+					</span>
 
 					<span className="block truncate">
 						{selectedOption ? selectedOption.label : placeholder}
@@ -67,7 +68,8 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 
 					<ChevronDown
 						className={`
-							absolute right-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2 transition-transform duration-200
+							${FIELD_STYLES.rightIcon}
+							transition-transform
 							${isOpen ? 'rotate-180' : ''}
 						`}
 					/>
@@ -78,6 +80,7 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 					options={options}
 					selectedValue={value}
 					onSelect={handleSelect}
+					highlightedIndex={highlightedIndex}
 					maxHeight={maxHeight}
 				/>
 			</div>

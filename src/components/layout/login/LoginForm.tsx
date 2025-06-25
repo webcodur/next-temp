@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { FieldEmail, FieldPassword } from '@/components/ui/field';
+import { Lock } from 'lucide-react';
 
 interface LoginFormData {
 	email: string;
 	password: string;
+	rememberMe: boolean;
 }
 
 interface LoginFormProps {
@@ -19,10 +20,11 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	const [formData, setFormData] = useState<LoginFormData>({
 		email: '',
 		password: '',
+		rememberMe: false,
 	});
-	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState<Partial<LoginFormData>>({});
 
+	// #region 검증 로직
 	const validateForm = () => {
 		const newErrors: Partial<LoginFormData> = {};
 
@@ -41,13 +43,14 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
+	// #endregion
 
+	// #region 이벤트 핸들러
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-
-		if (!validateForm()) return;
-
-		onSubmit(formData);
+		if (validateForm()) {
+			onSubmit(formData);
+		}
 	};
 
 	const handleEmailChange = (value: string) => {
@@ -64,8 +67,14 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		}
 	};
 
+	const toggleRememberMe = () => {
+		setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
+	};
+	// #endregion
+
 	return (
 		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-flat bg-background">
+			{/* 헤더 */}
 			<div className="mb-8 text-center">
 				<div className="flex justify-center items-center mx-auto mb-4 w-16 h-16 rounded-full neu-raised">
 					<Lock className="w-8 h-8 text-primary" />
@@ -74,65 +83,66 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 				<p className="text-muted-foreground">계정에 로그인하세요</p>
 			</div>
 
+			{/* 폼 */}
 			<form onSubmit={handleSubmit} className="space-y-6">
+				{/* 이메일 필드 */}
 				<div className="space-y-1">
-					<div className="relative">
-						<Mail className="absolute left-3 top-1/2 z-10 w-4 h-4 transform -translate-y-1/2 text-muted-foreground" />
-						<Field
-							type="text"
-							placeholder="이메일을 입력하세요"
-							value={formData.email}
-							onChange={handleEmailChange}
-							inputType="email"
-							className="pl-10"
-						/>
-					</div>
+					<FieldEmail
+						placeholder="이메일을 입력하세요"
+						value={formData.email}
+						onChange={handleEmailChange}
+						showValidation={false}
+						showClearButton={true}
+					/>
 					{errors.email && (
 						<p className="text-sm text-destructive">{errors.email}</p>
 					)}
 				</div>
 
+				{/* 비밀번호 필드 */}
 				<div className="space-y-1">
-					<div className="relative">
-						<Lock className="absolute left-3 top-1/2 z-10 w-4 h-4 transform -translate-y-1/2 text-muted-foreground" />
-						<input
-							type={showPassword ? 'text' : 'password'}
-							placeholder="비밀번호를 입력하세요"
-							value={formData.password}
-							onChange={(e) => handlePasswordChange(e.target.value)}
-							className="pr-10 pl-10 w-full h-11 rounded-lg neu-inset bg-background text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20"
-						/>
-						<button
-							type="button"
-							onClick={() => setShowPassword(!showPassword)}
-							className="absolute right-3 top-1/2 transition-colors transform -translate-y-1/2 text-muted-foreground hover:text-foreground">
-							{showPassword ? (
-								<EyeOff className="w-4 h-4" />
-							) : (
-								<Eye className="w-4 h-4" />
-							)}
-						</button>
-					</div>
+					<FieldPassword
+						placeholder="비밀번호를 입력하세요"
+						value={formData.password}
+						onChange={handlePasswordChange}
+						showStrengthIndicator={false}
+						showClearButton={false}
+						minLength={6}
+					/>
 					{errors.password && (
 						<p className="text-sm text-destructive">{errors.password}</p>
 					)}
 				</div>
 
+				{/* 추가 옵션 */}
 				<div className="flex justify-between items-center">
-					<label className="flex items-center space-x-2 cursor-pointer group">
+					<label
+						className="flex items-center space-x-2 cursor-pointer group"
+						onClick={toggleRememberMe}>
 						<div className="relative">
-							<input type="checkbox" className="sr-only peer" />
-							<div className="flex justify-center items-center w-4 h-4 rounded transition-all duration-200 neu-inset bg-background peer-checked:neu-raised peer-checked:bg-primary">
-								<svg
-									className="w-3 h-3 text-white opacity-0 transition-opacity duration-200 peer-checked:opacity-100"
-									fill="currentColor"
-									viewBox="0 0 20 20">
-									<path
-										fillRule="evenodd"
-										d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-										clipRule="evenodd"
-									/>
-								</svg>
+							<input
+								type="checkbox"
+								className="sr-only"
+								checked={formData.rememberMe}
+								onChange={toggleRememberMe}
+							/>
+							<div
+								className={`
+								flex justify-center items-center w-4 h-4 rounded transition-all duration-200
+								${formData.rememberMe ? 'neu-raised bg-primary' : 'neu-inset bg-background'}
+							`}>
+								{formData.rememberMe && (
+									<svg
+										className="w-3 h-3 text-white"
+										fill="currentColor"
+										viewBox="0 0 20 20">
+										<path
+											fillRule="evenodd"
+											d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								)}
 							</div>
 						</div>
 						<span className="text-sm text-muted-foreground">
@@ -147,10 +157,12 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 					</button>
 				</div>
 
+				{/* 로그인 버튼 */}
 				<Button type="submit" className="w-full h-11" disabled={isLoading}>
 					{isLoading ? '로그인 중...' : '로그인'}
 				</Button>
 
+				{/* 회원가입 링크 */}
 				<div className="text-center">
 					<span className="text-sm text-muted-foreground">
 						계정이 없으신가요?{' '}

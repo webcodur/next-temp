@@ -2,22 +2,24 @@
 
 ## 개요
 
-3단계 계층 구조를 가진 사이드바 시스템이다. Top → Mid → Bot 메뉴 구조로 구성되어 있으며, 콜랩스 기능과 상태 관리를 포함한다.
+3단계 계층 구조를 가진 사이드바 시스템이다. Top → Mid → Bot 메뉴 구조로 구성되어 있으며, 접힘/펼침 기능, 검색 기능, 최근 메뉴 기록을 포함한다.
 
 ## 디렉토리 구조
 
 ```
 sidebar/
-├── sidebar.tsx         # 메인 사이드바 컴포넌트
-├── config.ts          # 기본 설정값과 스타일
-├── hooks.ts           # 상태 관리 훅
-├── types.ts           # 타입 정의
-├── data.ts            # 메뉴 데이터
-├── unit/              # UI 컴포넌트 단위들
-│   ├── SidebarHeader.tsx        # 헤더 영역
-│   ├── SidebarLeftColumn.tsx    # 좌측 컬럼 (Top 메뉴)
-│   └── SidebarRightColumn.tsx   # 우측 컬럼 (Mid/Bot 메뉴)
-└── sidebar.md         # 이 문서
+├── Sidebar.tsx            # 메인 사이드바 컴포넌트
+├── hooks.ts               # 상태 관리 및 검색 훅들
+├── types.ts               # 타입 정의
+├── sidebar.md             # 이 문서
+└── unit/                  # UI 컴포넌트 단위들
+    ├── SideHeader.tsx          # 헤더 영역 (브랜드, 토글)
+    ├── SideLPanel.tsx          # 좌측 패널 (Top 메뉴)
+    ├── SideRPanel.tsx          # 우측 패널 (Mid/Bot 메뉴)
+    ├── SearchBar.tsx           # 사이트 검색
+    ├── MenuSearchBar.tsx       # 메뉴 검색
+    ├── SideToggleHead.tsx      # 헤더 토글 버튼
+    └── SideToggleMain.tsx      # 메인 토글 버튼
 ```
 
 ## 아키텍처 구조
@@ -26,161 +28,219 @@ sidebar/
 
 ```
 ┌─────────────────────────────────────┐
-│                Header               │ ← 브랜드/타이틀 영역
+│              SideHeader             │ ← 브랜드/타이틀, 토글 버튼
 ├─────────────┬───────────────────────┤
+│ SideLPanel  │      SideRPanel       │
 │             │                       │
-│  Top Menu   │    Mid Menu           │ ← 주요 카테고리
+│  Top Menu   │    타이틀 및 제어     │ ← 단일/다중 모드, 전체 열기/닫기
 │             │                       │
-│  [Dashboard]│  ┌─ Overview          │
-│  [Analytics]│  ├─ Reports           │
-│  [Users]    │  └─ ...               │
-│  [Content]  │                       │
-│  [Settings] │    Bot Menu           │ ← 세부 링크들
+│  [커뮤니티]  │  ┌─ 사용자상태등록    │
+│  [시설서비스] │  ├─ 예약관리          │
+│  [출입관리]  │  └─ 출입관리          │
+│  [방문차량]  │                       │
+│  [소통관리]  │    Bot Menu           │ ← 실제 네비게이션 링크
 │             │  ┌─ 메인 대시보드     │
-│             │  ├─ 실시간 모니터링   │
-│  [User]     │  └─ 알림 센터         │
+│  [마이]     │  ├─ 사용자 목록       │
 └─────────────┴───────────────────────┘
 ```
 
 ### 상태 관리 구조
 
 ```typescript
-// 핵심 상태
+// 핵심 상태 (hooks.ts)
 {
   topMenu: string,          // 선택된 top 메뉴
   midMenu: string,          // 선택된 mid 메뉴
   midExpanded: Set<string>, // 확장된 mid 메뉴들
-  isCollapsed: boolean      // 사이드바 숨김 여부
+  singleOpenMode: boolean,  // 단일/다중 열기 모드
+  isCollapsed: boolean      // 사이드바 숨김 여부 (전역)
+}
+
+// 검색 상태
+{
+  menuSearchQuery: string,     // 메뉴 검색어
+  menuSearchResults: [],       // 메뉴 검색 결과
+  siteSearchQuery: string,     // 사이트 검색어
+  siteSearchResults: [],       // 사이트 검색 결과
+  recentMenus: [],            // 최근 접속 메뉴
+  recentSites: []             // 최근 접속 사이트
 }
 ```
 
 ## 핵심 컴포넌트
 
-### 1. Sidebar (메인 컴포넌트)
+### 1. Sidebar.tsx (메인 컴포넌트)
 
-- 전체 사이드바 레이아웃 관리
-- 토글 버튼 제공
-- 하위 컴포넌트들 조합
+- 전체 사이드바 레이아웃 관리 (`sidebar-container` 클래스 사용)
+- 하위 컴포넌트들 조합 및 상태 전달
+- 접힘/펼침 애니메이션 처리
 
-### 2. SidebarHeader
+### 2. SideHeader.tsx
 
-- 브랜드명과 설명 표시
-- 토글 버튼 공간 확보
+- 브랜드명 표시 ("Meerkat Hub")
+- 헤더 토글 버튼 (SideToggleHead 포함)
+- 상단 고정 영역
 
-### 3. SidebarLeftColumn (Top 메뉴)
+### 3. SideLPanel.tsx (좌측 패널)
 
-- 아이콘 기반 top 메뉴 버튼들
-- 하단 사용자 아바타
+- Top 메뉴 버튼들 (아이콘 + 라벨)
+- 사용자 프로필 영역 (하단)
 - 활성 상태 시각적 표시
 
-### 4. SidebarRightColumn (Mid/Bot 메뉴)
+### 4. SideRPanel.tsx (우측 패널)
 
-- 선택된 top 메뉴의 하위 항목들
-- 아코디언 형태 확장/축소
-- 실제 네비게이션 링크
+- 타이틀 및 제어 버튼 영역
+  - 단일/다중 모드 토글
+  - 전체 열기/닫기 버튼
+- Mid/Bot 메뉴 계층 표시
+- Collapsible 기반 확장/축소
+- 트리 형태 시각적 연결선
+
+### 5. 검색 컴포넌트들
+
+- **SearchBar.tsx**: 사이트 검색 (전체 사이트 목록)
+- **MenuSearchBar.tsx**: 메뉴 검색 (현재 메뉴 내)
 
 ## 데이터 구조
 
-### MenuData 타입
+### MenuData 타입 (types.ts)
 
 ```typescript
+interface BotMenu {
+	key: string;
+	'kor-name': string;
+	'eng-name': string;
+	href: string;
+	description?: string;
+	icon?: LucideIcon;
+}
+
+interface MidMenu {
+	key: string;
+	'kor-name': string;
+	'eng-name': string;
+	icon?: LucideIcon;
+	botItems: BotMenu[];
+}
+
+interface TopItem {
+	icon: LucideIcon;
+	key: string;
+	'kor-name': string;
+	'eng-name': string;
+	color: string;
+	midItems: Record<string, MidMenu>;
+}
+
 interface MenuData {
-	[topKey: string]: {
-		icon: LucideIcon;
-		label: string;
-		color: string;
-		midItems: {
-			[midKey: string]: {
-				label: string;
-				botItems: {
-					label: string;
-					href: string;
-				}[];
-			};
-		};
-	};
+	[key: string]: TopItem;
 }
 ```
 
-### 메뉴 항목 예시
+### 실제 메뉴 항목들
 
-- **dashboard**: 대시보드 (개요, 리포트)
-- **analytics**: 분석 (트래픽, 성능)
-- **users**: 사용자 (관리, 활동)
-- **content**: 콘텐츠 (문서, 발행)
-- **settings**: 설정 (시스템, 연동)
+- **community**: 커뮤니티 (사용자상태등록, 예약관리, 주민소통)
+- **facilities**: 시설/서비스 (커뮤니티, 시설서비스, 출입관리)
+- **access**: 출입관리 (출입관리)
+- **vehicle**: 방문차량 관리
+- **communication**: 소통관리
+- **my**: 마이페이지
 
 ## 상호작용 플로우
 
-### Top 메뉴 클릭 시
+### Top 메뉴 클릭 시 (handleTopClick)
 
-1. `handleTopClick(topKey)` 실행
-2. `topMenu` 상태 업데이트
-3. 해당 top의 첫 번째 mid 메뉴 자동 선택
-4. `midExpanded` 상태 초기화
+1. `setTopMenu(topKey)` 실행
+2. 모든 Mid 메뉴 접기 (`setMidExpanded(new Set())`)
+3. `setMidMenu('')` 초기화
+4. 새로운 Top 메뉴의 우측 패널 표시
 
-### Mid 메뉴 클릭 시
+### Mid 메뉴 클릭 시 (handleMidClick)
 
-1. `handleMidClick(midKey)` 실행
-2. 아코디언 토글 (확장/축소)
-3. `midMenu` 상태 업데이트
-4. Bot 메뉴 항목들 표시/숨김
+1. 단일 모드: 하나만 열고 나머지 닫기
+2. 다중 모드: 토글 방식 (개별 제어)
+3. `setMidMenu(midKey)` 업데이트
+4. Bot 메뉴들 표시/숨김
 
-### 사이드바 토글 시
+### 모드 전환 (handleSingleOpenToggle)
 
-1. `setIsCollapsed(!isCollapsed)` 실행
-2. Transform 애니메이션으로 슬라이드
-3. 토글 버튼 아이콘 변경
+1. `setSingleOpenMode(!singleOpenMode)`
+2. useEffect에서 자동으로 midExpanded 상태 조정
+3. 단일 모드 → 현재 선택된 것만 유지
+4. 다중 모드 → 기존 상태 유지
+
+### URL 기반 자동 선택
+
+1. `usePathname()` 변경 감지
+2. 현재 URL과 매칭되는 메뉴 탐색
+3. 해당 Top/Mid 메뉴 자동 선택 및 확장
+4. 최근 메뉴에 자동 기록
+
+## 기능별 훅 (hooks.ts)
+
+### 1. useSidebarMenu()
+
+- 메뉴 상태 관리 및 이벤트 핸들러
+- URL 기반 자동 메뉴 선택
+- 단일/다중 모드 처리
+
+### 2. useSidebarSearch()
+
+- 사이트 검색 기능
+- 최근 접속 사이트 관리
+- 검색 결과 드롭다운
+
+### 3. useMenuSearch()
+
+- 메뉴 검색 기능
+- 최근 접속 메뉴 관리
+- 실시간 검색 결과
+
+### 4. useSidebarKeyboard()
+
+- 키보드 단축키 (Cmd/Ctrl + /)
+- 사이드바 토글 기능
 
 ## 스타일링 구성
 
-### 디자인 토큰 (config.ts)
+### 뉴모피즘 클래스 사용
 
-- `sidebarWidth`: 300px
-- `leftColumnWidth`: 64px (16 Tailwind units)
-- `buttonSize`: 48px × 48px
-- `headerHeight`: 73px
+- **Sidebar**: `sidebar-container` (hover 효과 없는 컨테이너)
+- **Mid 메뉴**: `neu-flat` → `neu-inset` (활성 시)
+- **Bot 메뉴**: `neu-flat` → `neu-inset` (활성 시)
+- **아이콘**: `neu-icon-inactive` → `neu-icon-active`
 
-### 색상 시스템
+### 레이아웃 설정
 
-- 배경: `bg-muted/70`
-- 활성 상태: 각 메뉴별 색상 (blue, green, purple 등)
-- 호버: `hover:bg-accent`
-- 경계선: `border-border`
+- 전체 너비: sidebarConfig의 `sidebarWidth`
+- 좌측 패널: 고정 비율
+- 우측 패널: 가변 비율
+- 접힘/펼침: transform 애니메이션
 
-## 반응형 동작
+## 확장 기능
 
-### 데스크톱
+### 검색 시스템
 
-- 고정 너비 300px
-- 항상 visible (토글로 숨김 가능)
+- 실시간 검색 결과
+- 최근 검색 기록
+- 키보드 네비게이션 지원
 
-### 모바일 (추후 확장 시)
+### 최근 접속 기록
 
-- 오버레이 모드
-- 스와이프 제스처 지원 고려
-- 터치 친화적 버튼 크기
+- localStorage 기반 영구 저장
+- 최대 10개 항목 유지
+- 자동 중복 제거
 
-## 확장 가능성
+### 애니메이션
 
-### 추가 기능 고려사항
-
-- 북마크/즐겨찾기 기능
-- 검색 기능
-- 메뉴 커스터마이징
-- 다국어 지원
-- 테마 변경
-
-### 성능 최적화
-
-- 메뉴 데이터 lazy loading
-- 아이콘 번들 최적화
-- 메모이제이션 적용 가능
+- Collapsible 기반 확장/축소
+- 순차적 Bot 메뉴 등장 애니메이션
+- GPU 가속 transform 사용
 
 ## 사용법
 
 ```tsx
-import { Sidebar } from './components/layout/sidebar/sidebar';
+import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 
 // 메인 레이아웃에서 사용
 <MainLayout>
@@ -191,7 +251,26 @@ import { Sidebar } from './components/layout/sidebar/sidebar';
 
 ## 의존성
 
+- **jotai**: 전역 상태 관리
 - **lucide-react**: 아이콘 라이브러리
-- **React hooks**: useState 상태 관리
-- **Tailwind CSS**: 스타일링
-- **TypeScript**: 타입 안정성
+- **@radix-ui/react-collapsible**: 확장/축소 UI
+- **@radix-ui/react-tooltip**: 툴팁
+- **next/navigation**: 라우팅 및 pathname 추적
+- **design-system.css**: 뉴모피즘 스타일링
+
+## 성능 최적화
+
+### 메모이제이션
+
+- 검색 결과 캐싱
+- 컴포넌트 렌더링 최적화
+
+### 상태 관리
+
+- jotai를 통한 효율적인 전역 상태
+- 필요한 컴포넌트만 리렌더링
+
+### 애니메이션
+
+- GPU 가속 transform 사용
+- 순차적 애니메이션으로 부드러운 UX

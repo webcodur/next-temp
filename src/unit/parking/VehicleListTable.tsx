@@ -3,6 +3,7 @@ import InfiniteScroll from '@/components/ui/infinite-scroll/InfiniteScroll';
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
+import { LicensePlate } from '@/components/ui/license-plate';
 
 interface VehicleListTableProps {
 	vehicles: VehicleEntry[];
@@ -89,11 +90,11 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					{/* 테이블 헤더 - 고정 */}
-					<div className="shrink-0 bg-gray-50 border-b border-gray-200">
+					<div className="bg-gray-50 border-b border-gray-200 shrink-0">
 						<div className="flex text-xs font-medium text-gray-600">
 							<div className="px-2 py-1 w-16 text-left">순번</div>
 							<div className="px-2 py-1 w-32 text-left">차량구분</div>
-							<div className="px-2 py-1 w-24 text-left">차량번호</div>
+							<div className="px-2 py-1 w-40 text-left">차량번호</div>
 							<div className="px-2 py-1 w-20 text-left">입출차</div>
 							<div className="flex-1 px-2 py-1 text-left">이용시간</div>
 						</div>
@@ -111,7 +112,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 									<div
 										key={`${vehicle.id}_${vehicle.status}_${index}`}
 										onClick={() => handleRowClick(vehicle)}
-										className={`flex border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors text-xs ${
+										className={`flex items-center border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors text-xs py-2 ${
 											selectedVehicle?.id === vehicle.id &&
 											selectedVehicle?.status === vehicle.status
 												? 'bg-blue-100'
@@ -141,13 +142,20 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												)}
 											</div>
 										</div>
-										<div className="px-2 py-1 w-24">
-											<div className="font-medium text-gray-800">
-												{vehicle.car_number}
+										<div className="px-2 py-1 w-40">
+											<div className="flex flex-col gap-1">
+												<LicensePlate
+													plateNumber={vehicle.car_number}
+													size="sm"
+												/>
 												{vehicle.modify_car_number && (
-													<div className="text-xs text-orange-600">
-														→ {vehicle.modify_car_number}
-													</div>
+													<>
+														<span className="text-xs text-orange-600">→</span>
+														<LicensePlate
+															plateNumber={vehicle.modify_car_number}
+															size="sm"
+														/>
+													</>
 												)}
 											</div>
 										</div>
