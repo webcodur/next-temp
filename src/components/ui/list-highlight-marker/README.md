@@ -23,6 +23,7 @@
 ## 사용법
 
 ### 기본 사용
+
 ```tsx
 import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
 
@@ -36,6 +37,7 @@ import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
 ```
 
 ### 키보드 네비게이션
+
 ```tsx
 <ListHighlightMarker
   index={index}
@@ -67,6 +69,7 @@ import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
 ## 활용 예시
 
 ### FieldSelect에서 사용
+
 드롭다운 옵션에 얼룩무늬 패턴과 하이라이트 효과 적용:
 
 ```tsx
@@ -82,6 +85,7 @@ import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
 ```
 
 ### Table에서 사용
+
 테이블 행에 전역 얼룩무늬 스타일 적용:
 
 ```tsx
@@ -98,4 +102,4 @@ className={cn(
 - **기본**: 얼룩무늬 배경 (짝수/홀수 번갈아가며)
 - **호버**: 좌측 바 힌트 + 그림자
 - **활성**: 좌측 강조 바 + 그림자 + 링
-- **비활성**: 반투명 + 커서 비활성화 
+- **비활성**: 반투명 + 커서 비활성화

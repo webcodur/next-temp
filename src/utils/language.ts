@@ -1,54 +1,30 @@
-// 언어별 문자 범위 정의
-const UNICODE_RANGES = {
-  korean: /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/,
-  arabic: /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/,
-  latin: /[\u0000-\u007F\u0080-\u00FF\u0100-\u017F\u0180-\u024F]/,
-} as const;
-
-// RTL 언어 목록
-const RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur'];
-
 /**
- * 텍스트에서 주요 언어를 감지한다
+ * 텍스트에 아랍어가 포함되어 있는지 확인한다
+ * RTL 텍스트 방향 처리용
  */
-export const detectLanguage = (text: string): 'ko' | 'ar' | 'en' | 'mixed' => {
-  const koreanChars = (text.match(UNICODE_RANGES.korean) || []).length;
-  const arabicChars = (text.match(UNICODE_RANGES.arabic) || []).length;
-  const latinChars = (text.match(UNICODE_RANGES.latin) || []).length;
-
-  const total = koreanChars + arabicChars + latinChars;
-  
-  if (total === 0) return 'en';
-  
-  const koreanRatio = koreanChars / total;
-  const arabicRatio = arabicChars / total;
-  
-  if (koreanRatio > 0.3) return 'ko';
-  if (arabicRatio > 0.3) return 'ar';
-  if (koreanRatio > 0.1 || arabicRatio > 0.1) return 'mixed';
-  
-  return 'en';
+export const isRTL = (text: string): boolean => {
+  // 아랍어 문자 범위 체크
+  return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
 };
 
 /**
- * 언어 코드가 RTL인지 확인한다
+ * 폰트 웨이트별 클래스명을 반환한다
+ * Pretendard 서브셋 폰트의 다양한 웨이트 지원용
  */
-export const isRTL = (lang: string): boolean => {
-  return RTL_LANGUAGES.includes(lang);
-};
-
-/**
- * 언어에 따른 적절한 폰트 클래스를 반환한다
- */
-export const getFontClass = (lang: 'ko' | 'ar' | 'en' | 'mixed'): string => {
-  const fontMap = {
-    ko: 'font-pretendard',
-    ar: 'font-cairo text-rtl',
-    en: 'font-inter',
-    mixed: 'font-multilang',
+export const getFontWeightClass = (weight: number): string => {
+  const weightMap: Record<number, string> = {
+    100: 'font-thin',
+    200: 'font-extralight', 
+    300: 'font-light',
+    400: 'font-normal',
+    500: 'font-medium',
+    600: 'font-semibold',
+    700: 'font-bold',
+    800: 'font-extrabold',
+    900: 'font-black',
   };
   
-  return fontMap[lang];
+  return weightMap[weight] || 'font-normal';
 };
 
 /**

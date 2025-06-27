@@ -146,14 +146,14 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 											<div className="flex flex-col gap-1">
 												<LicensePlate
 													plateNumber={vehicle.car_number}
-													size="sm"
+													width="120px"
 												/>
 												{vehicle.modify_car_number && (
 													<>
 														<span className="text-xs text-orange-600">→</span>
 														<LicensePlate
 															plateNumber={vehicle.modify_car_number}
-															size="sm"
+															width="120px"
 														/>
 													</>
 												)}
