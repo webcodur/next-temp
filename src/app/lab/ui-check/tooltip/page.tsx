@@ -129,6 +129,40 @@ export default function TooltipPage() {
 				</section>
 
 				<section className="space-y-4">
+					<h2 className="text-xl font-semibold">다중 줄 툴팁 예시</h2>
+					<div className="flex flex-wrap gap-4">
+						<TooltipButton
+							icon={Info}
+							label="긴 텍스트 툴팁"
+							content="이것은 매우 긴 텍스트가 포함된 툴팁입니다. 자동으로 줄바꿈이 되어 두 줄 이상으로 표시됩니다."
+						/>
+						<TooltipButton
+							icon={HelpCircle}
+							label="HTML 구조 툴팁"
+							content={
+								<div className="space-y-1">
+									<div className="font-semibold">단계별 안내</div>
+									<div className="text-xs">1. 첫 번째 단계</div>
+									<div className="text-xs">2. 두 번째 단계</div>
+								</div>
+							}
+							variant="info"
+						/>
+						<TooltipButton
+							icon={Settings}
+							label="줄바꿈 포함 툴팁"
+							content={
+								<>
+									첫 번째 줄입니다.<br />
+									두 번째 줄입니다.<br />
+									세 번째 줄까지 가능합니다.
+								</>
+							}
+						/>
+					</div>
+				</section>
+
+				<section className="space-y-4">
 					<h2 className="text-xl font-semibold">툴팁 위치</h2>
 					<div className="flex flex-wrap gap-4">
 						<TooltipButton
@@ -188,6 +222,86 @@ export default function TooltipPage() {
 						<div>
 							<h3 className="mb-2 text-lg font-medium">코드 복사 버튼</h3>
 							<CodeExample />
+						</div>
+
+						<div>
+							<h3 className="mb-2 text-lg font-medium">Portal 오버플로우 테스트</h3>
+							<p className="mb-4 text-sm text-gray-600">
+								다음 예시들은 툴팁이 Portal을 통해 레이아웃 제약 없이 올바르게 표시되는지 테스트합니다.
+							</p>
+							
+							{/* overflow: hidden 테스트 */}
+							<div className="mb-6">
+								<h4 className="mb-2 text-sm font-medium">Overflow Hidden 컨테이너</h4>
+								<div className="relative p-4 bg-gray-100 rounded-lg overflow-hidden h-32">
+									<p className="mb-2 text-xs text-gray-600">
+										이 컨테이너는 overflow: hidden 설정이 되어 있습니다.
+									</p>
+									<div className="absolute bottom-2 right-2">
+										<Tooltip>
+											<TooltipTrigger className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">
+												오른쪽 하단 툴팁
+											</TooltipTrigger>
+											<TooltipContent side="top" className="max-w-xs">
+												Portal을 통해 overflow: hidden 제약을 넘어서 표시됩니다.
+											</TooltipContent>
+										</Tooltip>
+									</div>
+								</div>
+							</div>
+
+							{/* 스크롤 영역 테스트 */}
+							<div className="mb-6">
+								<h4 className="mb-2 text-sm font-medium">스크롤 영역 내부</h4>
+								<div className="h-24 p-4 bg-gray-50 rounded-lg overflow-y-auto">
+									<div className="space-y-4 h-48">
+										<p className="text-xs text-gray-600">스크롤 가능한 영역입니다.</p>
+										<div className="flex justify-center">
+											<Tooltip>
+												<TooltipTrigger className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">
+													중간 위치 툴팁
+												</TooltipTrigger>
+												<TooltipContent side="right" className="max-w-xs">
+													스크롤 영역 내부에서도 Portal을 통해 올바르게 표시됩니다.
+												</TooltipContent>
+											</Tooltip>
+										</div>
+										<div className="text-center">
+											<Tooltip>
+												<TooltipTrigger className="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600">
+													하단 툴팁
+												</TooltipTrigger>
+												<TooltipContent side="top" className="max-w-xs">
+													스크롤해야 보이는 영역의 툴팁도 Portal을 통해 표시됩니다.
+												</TooltipContent>
+											</Tooltip>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							{/* 화면 경계 테스트 */}
+							<div className="mb-6">
+								<h4 className="mb-2 text-sm font-medium">화면 경계 근처</h4>
+								<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+									<Tooltip>
+										<TooltipTrigger className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+											왼쪽 경계
+										</TooltipTrigger>
+										<TooltipContent side="right" className="max-w-xs">
+											화면 왼쪽 경계 근처에서도 Portal을 통해 올바르게 표시됩니다.
+										</TooltipContent>
+									</Tooltip>
+									<Tooltip>
+										<TooltipTrigger className="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600">
+											오른쪽 경계
+										</TooltipTrigger>
+										<TooltipContent side="left" className="max-w-xs">
+											화면 오른쪽 경계 근처에서도 Portal을 통해 올바르게 표시됩니다.
+										</TooltipContent>
+									</Tooltip>
+								</div>
+							</div>
 						</div>
 
 						<div>

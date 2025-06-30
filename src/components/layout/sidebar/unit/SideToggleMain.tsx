@@ -45,7 +45,9 @@ export function SideToggleMain() {
 				zIndex: 50,
 			}}
 			className="flex items-center justify-center transition-all duration-300 border-r-2 rounded-bl-lg rounded-br-lg cursor-pointer bg-muted border-y border-border border-r-border hover:bg-primary/20 group"
-			onClick={() => {
+			onClick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
 				void handleMainToggle();
 			}}
 			title={isMainCollapsed ? '사이드바 열기' : '사이드바 닫기'}>

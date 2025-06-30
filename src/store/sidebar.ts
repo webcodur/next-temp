@@ -10,9 +10,13 @@ export const headerToggleVisibleAtom = atom<boolean>(true);
 export const currentTopMenuAtom = atom<string>('');
 export const currentMidMenuAtom = atom<string>('');
 export const currentBotMenuAtom = atom<string>('');
+
+// Hydration-safe: 초기화 시 localStorage 읽지 않음
 export const singleOpenModeAtom = atomWithStorage<boolean>(
 	'singleOpenMode',
-	false
+	false,
+	undefined,
+	{ getOnInit: false }
 );
 
 // 메뉴 검색 관련 atom들
@@ -33,7 +37,7 @@ export const menuSearchResultsAtom = atom<
 >([]);
 export const menuSearchActiveAtom = atom<boolean>(false);
 
-// 최근 접속 메뉴 관련 atom들
+// 최근 접속 메뉴 관련 atom들 - Hydration-safe
 export const recentMenusAtom = atomWithStorage<
 	Array<{
 		type: 'bot';
@@ -48,7 +52,7 @@ export const recentMenusAtom = atomWithStorage<
 		};
 		accessedAt: number;
 	}>
->('recentMenus', []);
+>('recentMenus', [], undefined, { getOnInit: false });
 
 // 현장 검색 관련 atom들
 export const siteSearchQueryAtom = atom<string>('');
@@ -63,7 +67,7 @@ export const siteSearchResultsAtom = atom<
 >([]);
 export const siteSearchActiveAtom = atom<boolean>(false);
 
-// 최근 접속 현장 관련 atom들
+// 최근 접속 현장 관련 atom들 - Hydration-safe
 export const recentSitesAtom = atomWithStorage<
 	Array<{
 		id: string;
@@ -72,4 +76,4 @@ export const recentSitesAtom = atomWithStorage<
 		description?: string;
 		accessedAt: number;
 	}>
->('recentSites', []);
+>('recentSites', [], undefined, { getOnInit: false });

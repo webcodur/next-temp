@@ -44,7 +44,11 @@ export function SideToggleHead() {
 					borderTopRightRadius: '24px',
 				}}
 				className="flex items-center justify-center flex-1 transition-all duration-300 rounded-bl-lg rounded-br-lg cursor-pointer hover:bg-primary/20 group"
-				onClick={handleHeadToggle}
+				onClick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					handleHeadToggle();
+				}}
 				title={isHeadCollapsed ? '헤더 펼치기' : '헤더 접기'}>
 				<Minus className="w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110" />
 			</div>

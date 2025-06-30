@@ -32,7 +32,12 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 					return (
 						<button
 							key={topKey}
-							onClick={() => onTopClick(topKey)}
+							type="button"
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								onTopClick(topKey);
+							}}
 							className={`w-full h-12 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group ${
 								isActive ? 'neu-inset' : 'neu-raised'
 							}`}>

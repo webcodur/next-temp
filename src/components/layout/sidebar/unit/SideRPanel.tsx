@@ -8,6 +8,7 @@ import {
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
+import { useState, useEffect, useRef } from 'react';
 import { recentMenusAtom } from '@/store/sidebar';
 import type { TopItem } from '@/components/layout/sidebar/types';
 import { Button } from '@/components/ui/button';
@@ -60,6 +61,65 @@ export function SideRPanel({
 }: SideRPanelProps) {
 	const pathname = usePathname();
 	const [recentMenus, setRecentMenus] = useAtom(recentMenusAtom);
+	
+	// Hydration 에러 방지: 클라이언트 마운트 완료 후에만 조건부 렌더링 활성화
+	const [isMounted, setIsMounted] = useState(false);
+	
+	// 툴팁 상태 관리
+	const [tooltipOpen, setTooltipOpen] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+	const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	// 툴팁 표시 제어
+	const handleTooltipMouseEnter = () => {
+		setIsHovering(true);
+		if (tooltipTimeoutRef.current) {
+			clearTimeout(tooltipTimeoutRef.current);
+		}
+		setTooltipOpen(true);
+	};
+
+	const handleTooltipMouseLeave = () => {
+		setIsHovering(false);
+		if (tooltipTimeoutRef.current) {
+			clearTimeout(tooltipTimeoutRef.current);
+		}
+		setTooltipOpen(false);
+	};
+
+	const handleModeToggleClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log(`[UI] 모드 토글 버튼 클릭: ${singleOpenMode ? '단일' : '다중'} 모드`);
+		
+		// 클릭 시 툴팁을 잠깐 닫고 다시 열기
+		setTooltipOpen(false);
+		
+		// 모드 변경
+		onSingleOpenToggle();
+		
+		// 마우스가 여전히 위에 있으면 300ms 후 툴팁 다시 표시
+		if (isHovering) {
+			tooltipTimeoutRef.current = setTimeout(() => {
+				if (isHovering) {
+					setTooltipOpen(true);
+				}
+			}, 300);
+		}
+	};
+
+	// 컴포넌트 언마운트 시 타이머 정리
+	useEffect(() => {
+		return () => {
+			if (tooltipTimeoutRef.current) {
+				clearTimeout(tooltipTimeoutRef.current);
+			}
+		};
+	}, []);
 
 	// 최근 접속 메뉴에 추가하는 함수
 	const addToRecentMenus = (midKey: string, botItem: BotMenu) => {
@@ -110,32 +170,46 @@ export function SideRPanel({
 	};
 
 	return (
-		<TooltipProvider>
+		<TooltipProvider delayDuration={0}>
 			<div className="flex overflow-hidden flex-col flex-1 h-full bg-gradient-to-b from-background/30 to-background/10 border-l border-border/30">
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
 					<div className="flex items-center">
-						<Tooltip>
+						<Tooltip open={tooltipOpen}>
 							<TooltipTrigger asChild>
 								<Button
+									type="button"
 									variant="ghost"
 									size="icon"
-									onClick={onSingleOpenToggle}
-									className="w-6 h-6 rounded-md hover:bg-muted/40">
-									{singleOpenMode ? (
-										<Focus className="w-4 h-4 neu-icon-active" />
+									onClick={handleModeToggleClick}
+									onMouseEnter={handleTooltipMouseEnter}
+									onMouseLeave={handleTooltipMouseLeave}
+									className={`w-6 h-6 rounded-md transition-all duration-150 cursor-pointer ${
+										isMounted && singleOpenMode 
+											? 'bg-primary/10 hover:bg-primary/20' 
+											: 'hover:bg-muted/40'
+									}`}>
+									{isMounted && singleOpenMode ? (
+										<Focus className="w-4 h-4 neu-icon-active cursor-pointer" />
 									) : (
-										<Layers className="w-4 h-4 neu-icon-inactive" />
+										<Layers className="w-4 h-4 neu-icon-inactive hover:text-primary cursor-pointer" />
 									)}
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">
-								<p>
-									{singleOpenMode
-										? '단일 패널 열기 모드'
-										: '다중 패널 열기 모드'}
-								</p>
+								<div className="text-center">
+									<div className="font-medium">
+										{isMounted && singleOpenMode
+											? '단일 패널 모드'
+											: '다중 패널 모드'}
+									</div>
+									<div className="text-xs opacity-80">
+										{isMounted && singleOpenMode
+											? '(다중 패널 모드로 전환)'
+											: '(단일 패널 모드로 전환)'}
+									</div>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</div>
@@ -151,15 +225,23 @@ export function SideRPanel({
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
+									type="button"
 									variant="ghost"
 									size="icon"
-									onClick={onCollapseAll}
-									className="w-6 h-5 rounded-md hover:bg-muted/40">
-									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive" />
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										void onCollapseAll?.();
+									}}
+									className="w-6 h-5 rounded-md hover:bg-muted/40 hover:scale-105 transition-all duration-150 cursor-pointer">
+									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
 								</Button>
 							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<p>전체 메뉴 접기</p>
+							<TooltipContent side="right">
+								<div className="text-center">
+									<div className="font-medium">전체 메뉴 접기</div>
+									<div className="text-xs opacity-80">모든 하위 메뉴 닫기</div>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 
@@ -167,15 +249,23 @@ export function SideRPanel({
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
+									type="button"
 									variant="ghost"
 									size="icon"
-									onClick={onExpandAll}
-									className="w-6 h-5 rounded-md hover:bg-muted/40">
-									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive" />
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										void onExpandAll?.();
+									}}
+									className="w-6 h-5 rounded-md hover:bg-muted/40 hover:scale-105 transition-all duration-150 cursor-pointer">
+									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
 								</Button>
 							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<p>전체 메뉴 펼치기</p>
+							<TooltipContent side="right">
+								<div className="text-center">
+									<div className="font-medium">전체 메뉴 펼치기</div>
+									<div className="text-xs opacity-80">모든 하위 메뉴 열기</div>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</div>
@@ -189,9 +279,14 @@ export function SideRPanel({
 								{/* Mid 메뉴 헤더 (클릭 가능) */}
 								<CollapsibleTrigger asChild>
 									<Button
+										type="button"
 										variant="outline"
-										onClick={() => onMidClick(midKey)}
-										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! transition-all duration-200 ${
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+											onMidClick(midKey);
+										}}
+										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! transition-all duration-200 cursor-pointer ${
 											isMidMenuActive(midItem)
 												? 'neu-inset text-primary! font-bold'
 												: 'neu-flat'
@@ -202,7 +297,7 @@ export function SideRPanel({
 										</span>
 										{/* 펼침/접힘 표시 화살표 */}
 										<ChevronDown
-											className={`w-4 h-4 transform shrink-0 ${
+											className={`w-4 h-4 transform shrink-0 cursor-pointer ${
 												midExpanded.has(midKey) ? 'rotate-180' : ''
 											}`}
 										/>
@@ -258,7 +353,7 @@ export function SideRPanel({
 															onClick={() =>
 																handleBotMenuClick(midKey, botItem)
 															}
-															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 ${
+															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 cursor-pointer ${
 																isActive
 																	? 'neu-inset text-primary! font-bold'
 																	: 'neu-flat'

@@ -34,16 +34,13 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 	children,
 }) => {
 	const isActive = isHighlighted || isHovered || isSelected;
-	const isEven = index % 2 === 0;
 
-	// 전역 CSS 클래스 조합
+	// 새로운 마커 클래스 조합
 	const itemClasses = cn(
-		'list-item-zebra',
-		isEven ? 'list-item-even' : 'list-item-odd',
+		'marker-item',
 		{
-			'list-item-active': isActive && !disabled,
-			'list-item-disabled': disabled,
-			'list-item-hover': !isActive && !disabled,
+			'marker-active': isActive && !disabled,
+			'marker-disabled': disabled,
 		},
 		className
 	);
@@ -55,7 +52,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 			onMouseEnter={disabled ? undefined : onMouseEnter}
 			onMouseLeave={disabled ? undefined : onMouseLeave}>
 			<div className="flex flex-1 gap-2 items-center min-w-0">
-				<span className="shrink-0 text-xs text-gray-400">
+				<span className="text-xs text-gray-400 shrink-0">
 					{index + 1}/{totalCount}
 				</span>
 				<div className="flex-1 truncate">{children}</div>

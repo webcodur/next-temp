@@ -80,9 +80,9 @@ export function SearchBar() {
 		// 검색어가 있을 때: 검색 결과 표시
 		if (searchQuery.trim()) {
 			return (
-				<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-9999 backdrop-blur-xs">
+				<div className="overflow-y-auto absolute right-0 left-0 top-full mt-1 max-h-64 bg-white rounded-lg border border-gray-200 shadow-xl neu-flat z-9999 backdrop-blur-xs">
 					{searchResults.length === 0 ? (
-						<div className="p-3 text-gray-500 text-sm text-center">
+						<div className="p-3 text-sm text-center text-gray-500">
 							검색 결과가 없습니다
 						</div>
 					) : (
@@ -90,16 +90,16 @@ export function SearchBar() {
 							{searchResults.map((site, index) => (
 								<div
 									key={`${site.id}-${index}`}
-									className="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
+									className="px-3 py-2 border-b border-gray-100 transition-colors cursor-pointer hover:bg-gray-50 last:border-b-0"
 									onClick={() => handleResultSelect(site)}>
-									<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-										<Building2 className="w-4 h-4 text-gray-400 shrink-0" />
-										<div className="flex flex-col min-w-0 flex-1">
-											<span className="text-sm text-gray-800 font-medium truncate">
+									<div className="flex overflow-x-auto gap-2 items-center scrollbar-hide">
+										<Building2 className="w-4 h-4 text-gray-400 cursor-pointer shrink-0" />
+										<div className="flex flex-col flex-1 min-w-0">
+											<span className="text-sm font-medium text-gray-800 truncate">
 												{site.name}
 											</span>
-											<div className="flex items-center gap-1 text-xs text-gray-500">
-												<MapPin className="w-3 h-3" />
+											<div className="flex gap-1 items-center text-xs text-gray-500">
+												<MapPin className="w-3 h-3 cursor-pointer" />
 												<span className="truncate">{site.address}</span>
 											</div>
 											{site.description && (
@@ -119,32 +119,32 @@ export function SearchBar() {
 
 		// 검색어가 없을 때: 최근 접속 현장 표시
 		return (
-			<div className="absolute top-full left-0 right-0 mt-1 bg-white neu-flat border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-9999 backdrop-blur-xs">
+			<div className="overflow-y-auto absolute right-0 left-0 top-full mt-1 max-h-64 bg-white rounded-lg border border-gray-200 shadow-xl neu-flat z-9999 backdrop-blur-xs">
 				{recentSites.length === 0 ? (
-					<div className="p-3 text-gray-500 text-sm text-center">
+					<div className="p-3 text-sm text-center text-gray-500">
 						최근 접속한 현장이 없습니다
 					</div>
 				) : (
 					<div className="py-1">
-						<div className="px-3 py-1 text-xs text-gray-400 font-medium border-b border-gray-100">
+						<div className="px-3 py-1 text-xs font-medium text-gray-400 border-b border-gray-100">
 							최근 접속 현장
 						</div>
 						{recentSites.map((site, index) => (
 							<div
 								key={`recent-${site.id}-${index}`}
-								className="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
+								className="px-3 py-2 border-b border-gray-100 transition-colors cursor-pointer hover:bg-gray-50 last:border-b-0"
 								onClick={() => handleResultSelect(site)}>
-								<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+								<div className="flex overflow-x-auto gap-2 items-center scrollbar-hide">
 									<span className="text-xs text-gray-400 font-mono min-w-[24px]">
 										{index + 1}/{recentSites.length}
 									</span>
-									<Building2 className="w-4 h-4 text-gray-400 shrink-0" />
-									<div className="flex flex-col min-w-0 flex-1">
-										<span className="text-sm text-gray-800 font-medium truncate">
+									<Building2 className="w-4 h-4 text-gray-400 cursor-pointer shrink-0" />
+									<div className="flex flex-col flex-1 min-w-0">
+										<span className="text-sm font-medium text-gray-800 truncate">
 											{site.name}
 										</span>
-										<div className="flex items-center gap-1 text-xs text-gray-500">
-											<MapPin className="w-3 h-3" />
+										<div className="flex gap-1 items-center text-xs text-gray-500">
+											<MapPin className="w-3 h-3 cursor-pointer" />
 											<span className="truncate">{site.address}</span>
 										</div>
 										{site.description && (
@@ -166,7 +166,7 @@ export function SearchBar() {
 		<div ref={searchRef} className="relative">
 			{/* 검색 입력 필드 */}
 			<div className="relative">
-				<Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+				<Building2 className="absolute left-3 top-1/2 w-4 h-4 text-gray-400 transform -translate-y-1/2 cursor-text" />
 				<input
 					type="text"
 					placeholder="현장 검색..."
@@ -174,15 +174,15 @@ export function SearchBar() {
 					onChange={(e) => handleSearchChange(e.target.value)}
 					onFocus={handleInputFocus}
 					onKeyDown={handleKeyDown}
-					className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300"
+					className="py-2 pr-10 pl-10 w-full text-sm rounded-lg border border-gray-200 neu-flat focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300"
 				/>
 				{searchQuery && (
 					<Button
 						variant="ghost"
 						size="icon"
 						onClick={handleClear}
-						className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 hover:bg-gray-100">
-						<X className="h-3 w-3" />
+						className="absolute right-2 top-1/2 w-6 h-6 transform -translate-y-1/2 cursor-pointer hover:bg-gray-100">
+						<X className="w-3 h-3 cursor-pointer" />
 					</Button>
 				)}
 			</div>
