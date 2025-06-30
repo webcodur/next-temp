@@ -37,7 +37,8 @@
 /* 1-1. MultiLang 폰트 - 한국어(Pretendard 서브셋) */
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Black.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Black.subset.woff2')
+		format('woff2');
 	font-weight: 900;
 	font-style: normal;
 	font-display: swap;
@@ -47,7 +48,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraBold.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraBold.subset.woff2')
+		format('woff2');
 	font-weight: 800;
 	font-style: normal;
 	font-display: swap;
@@ -57,7 +59,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Bold.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Bold.subset.woff2')
+		format('woff2');
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
@@ -67,7 +70,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-SemiBold.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-SemiBold.subset.woff2')
+		format('woff2');
 	font-weight: 600;
 	font-style: normal;
 	font-display: swap;
@@ -77,7 +81,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Medium.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Medium.subset.woff2')
+		format('woff2');
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
@@ -87,7 +92,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2')
+		format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -97,7 +103,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Light.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Light.subset.woff2')
+		format('woff2');
 	font-weight: 300;
 	font-style: normal;
 	font-display: swap;
@@ -107,7 +114,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraLight.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraLight.subset.woff2')
+		format('woff2');
 	font-weight: 200;
 	font-style: normal;
 	font-display: swap;
@@ -117,7 +125,8 @@
 
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/ko/woff2-subset/Pretendard-Thin.subset.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Thin.subset.woff2')
+		format('woff2');
 	font-weight: 100;
 	font-style: normal;
 	font-display: swap;
@@ -564,47 +573,5 @@ body {
 
 .text-shadow-lg {
 	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-/* #endregion */
-
-/* #region 8. 리스트 마커 시스템 (Tailwind 호환) */
-@layer components {
-	/* 8-1. 기본 마커 아이템 */
-	.marker-item {
-		position: relative;
-		padding: 12px 16px;
-		transition: all 0.15s ease-in-out;
-		cursor: pointer;
-		border-left: 4px solid transparent; /* 기본 투명 테두리 */
-	}
-
-	/* 8-2. 얼룩무늬 패턴 */
-	.marker-item:nth-child(even) {
-		background-color: #ffffff;
-	}
-
-	.marker-item:nth-child(odd) {
-		background-color: #f6f6f6;
-	}
-
-	/* 8-3. 호버 효과 - 강력한 선택자 + 직접 색상 */
-	div.marker-item:hover:not(.marker-active):not(.marker-disabled) {
-		border-left-color: #333333;
-		transform: translateX(4px);
-		background-color: #f0f0f0;
-	}
-
-	/* 8-4. 활성 상태 - 선택된 항목 */
-	.marker-active {
-		background: linear-gradient(90deg, rgba(23, 23, 23, 0.08) 0%, rgba(23, 23, 23, 0.05) 20%, #ffffff 100%);
-		color: #171717;
-	}
-
-	/* 8-5. 비활성화 상태 */
-	.marker-disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-		background-color: #f6f6f6;
-	}
 }
 /* #endregion */

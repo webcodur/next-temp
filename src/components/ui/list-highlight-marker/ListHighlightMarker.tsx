@@ -1,19 +1,17 @@
 'use client';
 
 import React from 'react';
+import { Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 //#region Types
 export interface ListHighlightMarkerProps {
 	index: number; // 인덱스 (0부터 시작)
 	totalCount: number; // 총 아이템 수
-	isSelected?: boolean; // 선택됨 여부
+	isSelected?: boolean; // 선택됨 여부 (active 상태)
 	isHighlighted?: boolean; // 하이라이트됨 여부 (키보드 네비게이션)
-	isHovered?: boolean; // 호버됨 여부
 	disabled?: boolean; // 비활성화 여부
 	onClick?: () => void; // 클릭 핸들러
-	onMouseEnter?: () => void; // 마우스 엔터 핸들러
-	onMouseLeave?: () => void; // 마우스 리브 핸들러
 	className?: string; // 커스텀 클래스명
 	children: React.ReactNode;
 }
@@ -25,37 +23,74 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 	totalCount,
 	isSelected = false,
 	isHighlighted = false,
-	isHovered = false,
 	disabled = false,
 	onClick,
-	onMouseEnter,
-	onMouseLeave,
 	className = '',
 	children,
 }) => {
-	const isActive = isHighlighted || isHovered || isSelected;
-
-	// 새로운 마커 클래스 조합
-	const itemClasses = cn(
-		'marker-item',
-		{
-			'marker-active': isActive && !disabled,
-			'marker-disabled': disabled,
-		},
-		className
-	);
+	const isActive = isSelected || isHighlighted;
 
 	return (
 		<div
-			className={itemClasses}
-			onClick={disabled ? undefined : onClick}
-			onMouseEnter={disabled ? undefined : onMouseEnter}
-			onMouseLeave={disabled ? undefined : onMouseLeave}>
-			<div className="flex flex-1 gap-2 items-center min-w-0">
-				<span className="text-xs text-gray-400 shrink-0">
-					{index + 1}/{totalCount}
-				</span>
-				<div className="flex-1 truncate">{children}</div>
+			className={cn(
+				// 기본 스타일
+				'relative flex items-center gap-3 px-4 py-3 cursor-pointer group',
+				'transition-all duration-150 ease-in-out',
+
+				// 호버 효과: 왼쪽 색상 바 + 우측 transform + 배경 (non-active만)
+				!isActive &&
+					'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-gray-50/50',
+
+				// active 효과: 배경 색상 유지
+				isActive && 'bg-primary/5 border-l-4 border-l-primary translate-x-1',
+
+				// 비활성화 상태
+				disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
+
+				className
+			)}
+			onClick={disabled ? undefined : onClick}>
+			{/* 왼쪽 순번 표시 */}
+			<span
+				className={cn(
+					'text-xs shrink-0 min-w-[40px] transition-colors duration-150',
+					isActive ? 'text-gray-700' : 'text-gray-400'
+				)}>
+				{index + 1}/{totalCount}
+			</span>
+
+			{/* 메인 콘텐츠 */}
+			<div
+				className={cn(
+					'flex-1 min-w-0 transition-colors duration-150',
+					isActive && 'text-gray-900'
+				)}>
+				{children}
+			</div>
+
+			{/* 우측 아이콘 - hover와 active 상태에 따라 변화 */}
+			<div className="relative w-4 h-4 shrink-0">
+				{/* Plus 아이콘 - hover 시에만 보임 (active가 아닐 때) */}
+				<Plus
+					className={cn(
+						'absolute inset-0 w-4 h-4 text-gray-400 transition-all duration-200',
+						'opacity-0 scale-75',
+						!isActive && 'group-hover:opacity-100 group-hover:scale-100'
+					)}
+					strokeWidth={2}
+				/>
+
+				{/* Check 아이콘 - active 상태에서만 보임 */}
+				<Check
+					className={cn(
+						'absolute inset-0 w-4 h-4 text-primary transition-all duration-200',
+						'transform',
+						isActive
+							? 'opacity-100 scale-100 rotate-0'
+							: 'opacity-0 scale-75 rotate-45'
+					)}
+					strokeWidth={2.5}
+				/>
 			</div>
 		</div>
 	);

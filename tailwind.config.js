@@ -8,6 +8,24 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			colors: {
+				// Design System 색상 연결
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
+				primary: {
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))',
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
+				},
+				border: 'hsl(var(--border))',
+			},
 			fontFamily: {
 				// 다국어 자동 선택 폰트 (서브셋 최적화)
 				multilang: ['MultiLang', 'system-ui', 'sans-serif'],
@@ -34,7 +52,7 @@ module.exports = {
 			},
 			// 사이드바 메뉴 애니메이션 설정
 			animation: {
-				'fadeIn': 'fadeIn 0.3s ease-out',
+				fadeIn: 'fadeIn 0.3s ease-out',
 				'slide-down': 'slideDown 0.2s ease-out',
 				'slide-up': 'slideUp 0.2s ease-out',
 			},
@@ -45,10 +63,16 @@ module.exports = {
 				},
 				slideDown: {
 					'0%': { height: '0px', opacity: '0' },
-					'100%': { height: 'var(--radix-collapsible-content-height)', opacity: '1' },
+					'100%': {
+						height: 'var(--radix-collapsible-content-height)',
+						opacity: '1',
+					},
 				},
 				slideUp: {
-					'0%': { height: 'var(--radix-collapsible-content-height)', opacity: '1' },
+					'0%': {
+						height: 'var(--radix-collapsible-content-height)',
+						opacity: '1',
+					},
 					'100%': { height: '0px', opacity: '0' },
 				},
 			},

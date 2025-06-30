@@ -572,6 +572,13 @@ export const menuData: MenuData = {
 						description: '폼 필드 컴포넌트 테스트',
 					},
 					{
+						key: 'flip-text',
+						'kor-name': '플립텍스트',
+						'eng-name': 'Flip Text',
+						href: '/lab/ui-check/flip-text',
+						description: '텍스트 회전 애니메이션 컴포넌트 테스트',
+					},
+					{
 						key: 'font-test',
 						'kor-name': '폰트테스트',
 						'eng-name': 'Font Test',
