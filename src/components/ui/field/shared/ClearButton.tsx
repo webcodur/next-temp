@@ -9,8 +9,8 @@ interface ClearButtonProps {
 export const ClearButton: React.FC<ClearButtonProps> = ({ onClick }) => (
 	<button
 		onClick={onClick}
-		className={`absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800 ${FIELD_STYLES.button}`}
+		className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 		type="button">
-		<X className="h-3 w-3" />
+		<X className="w-3 h-3" />
 	</button>
 );

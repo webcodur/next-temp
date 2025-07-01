@@ -47,14 +47,14 @@ const Modal: React.FC<ModalProps> = ({
 		<AnimatePresence>
 			{isOpen && (
 				<motion.div
-					className="flex fixed inset-0 z-50 justify-center items-center bg-black/30 backdrop-blur-xs"
+					className="flex fixed inset-0 z-50 justify-center items-center bg-black/50 backdrop-blur-xs"
 					onMouseDown={handleOutsideClick}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.2 }}>
 					<motion.div
-						className={`overflow-y-auto relative w-full bg-white rounded-lg shadow-lg ${maxWidth} max-h-[90vh]`}
+						className={`overflow-y-auto relative w-full bg-background rounded-lg shadow-lg ${maxWidth} max-h-[90vh]`}
 						initial={{ scale: 0.9, opacity: 0 }}
 						animate={{ scale: 1, opacity: 1 }}
 						exit={{ scale: 0.9, opacity: 0 }}
@@ -63,14 +63,14 @@ const Modal: React.FC<ModalProps> = ({
 						<button
 							type="button"
 							onClick={onClose}
-							className="absolute top-4 right-4 z-10 text-2xl text-gray-900 cursor-pointer hover:text-red-600">
+							className="absolute top-4 right-4 z-10 text-2xl text-foreground cursor-pointer hover:text-destructive">
 							&times;
 						</button>
 						
 						{/* 타이틀이 있는 경우에만 헤더 영역 렌더링 */}
 						{title && (
-							<div className="p-6 pb-4 border-b border-gray-200">
-								<h2 className="text-xl font-semibold text-center text-gray-900">
+							<div className="p-6 pb-4 border-b border-border">
+								<h2 className="text-xl font-semibold text-center text-foreground">
 									{title}
 								</h2>
 							</div>

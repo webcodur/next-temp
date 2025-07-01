@@ -138,13 +138,13 @@ const Pagination = <T extends Record<string, unknown>>({
 
 			{/* 페이지네이션 UI */}
 			{shouldShowPagination && (
-				<div className="mt-6 text-[#333333]">
+				<div className="mt-6 text-foreground">
 					{/* 좌우 정보 영역을 위한 기본 레이아웃 - 높이만 차지 */}
 					<div className="flex items-center justify-between min-h-[36px] relative">
 						{/* 왼쪽 정보 표시 */}
 						<div className="shrink-0">
 							{totalItems > 0 && (
-								<div className="text-[#666666] text-sm">
+								<div className="text-muted-foreground text-sm">
 									총 {totalItems}개의 {itemName} 중{' '}
 									{(currentPage - 1) * pageSize + 1}-
 									{Math.min(currentPage * pageSize, totalItems)}개 표시
@@ -161,7 +161,7 @@ const Pagination = <T extends Record<string, unknown>>({
 										value={pageSize}
 										onChange={handlePageSizeChange}
 										disabled={disabled || disablePageSizeChange}
-										className={`bg-white cursor-pointer border border-[#dddddd] text-[#333333] rounded-md py-1 focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] m-0 p-0 ${
+										className={`bg-background cursor-pointer border border-border text-foreground rounded-md py-1 focus:border-primary focus:ring-1 focus:ring-primary m-0 p-0 ${
 											disabled || disablePageSizeChange
 												? 'opacity-50 cursor-not-allowed'
 												: ''
@@ -188,8 +188,8 @@ const Pagination = <T extends Record<string, unknown>>({
 									disabled={currentPage === 1 || disabled}
 									className={`p-2 rounded-md cursor-pointer ${
 										currentPage === 1 || disabled
-											? 'text-[#cccccc] cursor-not-allowed'
-											: 'text-[#333333] neu-raised'
+											? 'text-muted-foreground/50 cursor-not-allowed'
+											: 'text-foreground neu-raised'
 									}`}
 									aria-label="첫 페이지로 이동">
 									<ChevronsLeft size={14} />
@@ -201,8 +201,8 @@ const Pagination = <T extends Record<string, unknown>>({
 									disabled={startPage === 1 || disabled}
 									className={`p-2 rounded-md cursor-pointer ${
 										startPage === 1 || disabled
-											? 'text-[#cccccc] cursor-not-allowed'
-											: 'text-[#333333] neu-raised'
+											? 'text-muted-foreground/50 cursor-not-allowed'
+											: 'text-foreground neu-raised'
 									}`}
 									aria-label="이전 그룹으로 이동">
 									<ChevronLeft size={14} />
@@ -217,10 +217,10 @@ const Pagination = <T extends Record<string, unknown>>({
 											disabled={disabled}
 											className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
 												pageNumber === currentPage
-													? 'bg-[#2563eb] text-white'
+													? 'bg-primary text-primary-foreground'
 													: disabled
-														? 'text-[#cccccc] cursor-not-allowed'
-														: 'text-[#333333] neu-raised'
+														? 'text-muted-foreground/50 cursor-not-allowed'
+														: 'text-foreground neu-raised'
 											}`}
 											aria-current={
 												pageNumber === currentPage ? 'page' : undefined
@@ -236,8 +236,8 @@ const Pagination = <T extends Record<string, unknown>>({
 									disabled={endPage === totalPages || disabled}
 									className={`p-2 rounded-md cursor-pointer ${
 										endPage === totalPages || disabled
-											? 'text-[#cccccc] cursor-not-allowed'
-											: 'text-[#333333] neu-raised'
+											? 'text-muted-foreground/50 cursor-not-allowed'
+											: 'text-foreground neu-raised'
 									}`}
 									aria-label="다음 그룹으로 이동">
 									<ChevronRight size={14} />
@@ -249,8 +249,8 @@ const Pagination = <T extends Record<string, unknown>>({
 									disabled={currentPage === totalPages || disabled}
 									className={`p-2 rounded-md cursor-pointer ${
 										currentPage === totalPages || disabled
-											? 'text-[#cccccc] cursor-not-allowed'
-											: 'text-[#333333] neu-raised'
+											? 'text-muted-foreground/50 cursor-not-allowed'
+											: 'text-foreground neu-raised'
 									}`}
 									aria-label="마지막 페이지로 이동">
 									<ChevronsRight size={14} />

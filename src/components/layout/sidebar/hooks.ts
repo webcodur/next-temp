@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import {
@@ -129,7 +129,7 @@ export function useSidebarMenu() {
 			// 단일 → 다중 모드: 기존 상태 유지 (별도 처리 불필요)
 			console.log(`[사이드바] 다중 모드 전환: 기존 상태 유지`);
 		}
-	}, [singleOpenMode, isMounted]); // midMenu 의존성 제거 - 무한 루프 방지
+	}, [singleOpenMode, midExpanded, midMenu, isMounted]);
 
 	// #region top 메뉴 클릭 핸들러
 	/**
@@ -462,7 +462,7 @@ export function useSidebarKeyboard() {
 	const delay = (ms: number) =>
 		new Promise((resolve) => setTimeout(resolve, ms));
 
-	const handleKeyboardToggle = async () => {
+	const handleKeyboardToggle = useCallback(async () => {
 		if (isMainCollapsed) {
 			// 오프닝 시퀀스: 사이드바 펼치기 → 대기 → 헤더 토글 표시
 			setSidebarCollapsed(false);
@@ -474,7 +474,7 @@ export function useSidebarKeyboard() {
 			await delay(animations.headerToggleDuration);
 			setSidebarCollapsed(true);
 		}
-	};
+	}, [isMainCollapsed, setSidebarCollapsed, setHeaderToggleVisible]);
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -492,7 +492,7 @@ export function useSidebarKeyboard() {
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [isMainCollapsed, setSidebarCollapsed, setHeaderToggleVisible]);
+	}, [handleKeyboardToggle]);
 }
 // #endregion
 

@@ -7,7 +7,7 @@ export interface Option {
 export type SortDirection = 'asc' | 'desc';
 
 // #region Datepicker Types
-export type DatePickerType = 'single' | 'range' | 'datetime' | 'month';
+export type DatePickerType = 'single' | 'range' | 'datetime' | 'dateTime' | 'time' | 'month';
 
 export interface FieldDatePickerComponentProps extends FieldBaseProps {
 	placeholder?: string;

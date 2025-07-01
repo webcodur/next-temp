@@ -12,7 +12,7 @@ export interface StepperProps {
 // #region Main Component
 export const Stepper: React.FC<StepperProps> = ({ children, className = '' }) => {
   return (
-    <div className={`neu-flat bg-white rounded-lg p-6 shadow-inner ${className}`}>
+    <div className={`neu-flat bg-background rounded-lg p-6 shadow-inner ${className}`}>
       {children}
     </div>
   );

@@ -28,13 +28,17 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`inline-flex gap-2 items-center text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 neu-raised hover:neu-inset ${
+        className={`inline-flex gap-2 items-center text-sm font-medium text-foreground rounded-lg transition-all duration-200 neu-raised hover:neu-inset ${
           variant === 'header' ? 'p-2' : 'px-3 py-2'
         }`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <Globe size={16} />
+        {variant === 'header' ? (
+          <span className="text-lg">{currentMeta.flag}</span>
+        ) : (
+          <Globe size={16} />
+        )}
         {variant !== 'header' && (
           <>
             <span className="hidden sm:inline">{currentMeta.name}</span>
@@ -76,8 +80,8 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
                     className={`
                       group flex items-center gap-3 w-full px-4 py-2 text-sm text-left
                       ${isActive 
-                        ? 'font-medium text-blue-700 bg-blue-50' 
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'font-medium text-primary bg-primary/10' 
+                        : 'text-foreground hover:bg-muted'
                       }
                       transition-colors duration-150
                     `}
@@ -87,7 +91,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
                     <span className="text-lg">{meta.flag}</span>
                     <span className="flex-1">{meta.name}</span>
                     {isActive && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div className="w-2 h-2 bg-primary rounded-full" />
                     )}
                   </button>
                 );

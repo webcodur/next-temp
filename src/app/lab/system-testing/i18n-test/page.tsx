@@ -12,7 +12,7 @@ export default function I18nTestPage() {
       {/* #region 헤더 */}
       <div className="text-center">
         <h1 className="mb-4 text-3xl font-bold">다국어 시스템 테스트</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           언어팩 시스템과 언어 전환 기능을 테스트합니다.
         </p>
         <div className="flex justify-center mt-4">
@@ -27,11 +27,11 @@ export default function I18nTestPage() {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="font-medium">현재 언어:</span>
-            <span className="text-blue-600">{currentLocale}</span>
+            <span className="text-primary">{currentLocale}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-medium">지원 언어:</span>
-            <span className="text-gray-600">{supportedLocales.join(', ')}</span>
+            <span className="text-muted-foreground">{supportedLocales.join(', ')}</span>
           </div>
         </div>
       </div>
@@ -57,12 +57,12 @@ export default function I18nTestPage() {
       <div className="p-6 rounded-lg neu-flat">
         <h3 className="mb-4 text-lg font-semibold">메뉴 메시지</h3>
         <div className="flex flex-wrap gap-3">
-          <span className="px-3 py-2 bg-blue-100 text-blue-800 rounded-full text-sm">{t('메뉴_주차')}</span>
-          <span className="px-3 py-2 bg-green-100 text-green-800 rounded-full text-sm">{t('메뉴_커뮤니티')}</span>
-          <span className="px-3 py-2 bg-purple-100 text-purple-800 rounded-full text-sm">{t('메뉴_공지사항')}</span>
-          <span className="px-3 py-2 bg-orange-100 text-orange-800 rounded-full text-sm">{t('메뉴_계정')}</span>
-          <span className="px-3 py-2 bg-red-100 text-red-800 rounded-full text-sm">{t('메뉴_설정')}</span>
-          <span className="px-3 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm">{t('메뉴_연구소')}</span>
+          <span className="px-3 py-2 bg-primary/10 text-primary rounded-full text-sm">{t('메뉴_주차')}</span>
+          <span className="px-3 py-2 bg-green-500/10 text-green-600 rounded-full text-sm">{t('메뉴_커뮤니티')}</span>
+          <span className="px-3 py-2 bg-purple-500/10 text-purple-600 rounded-full text-sm">{t('메뉴_공지사항')}</span>
+          <span className="px-3 py-2 bg-orange-500/10 text-orange-600 rounded-full text-sm">{t('메뉴_계정')}</span>
+          <span className="px-3 py-2 bg-red-500/10 text-red-600 rounded-full text-sm">{t('메뉴_설정')}</span>
+          <span className="px-3 py-2 bg-indigo-500/10 text-indigo-600 rounded-full text-sm">{t('메뉴_연구소')}</span>
         </div>
       </div>
       {/* #endregion */}
@@ -72,22 +72,22 @@ export default function I18nTestPage() {
         <h3 className="mb-4 text-lg font-semibold">폼 메시지</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               {t('폼_이메일')}
             </label>
             <input 
               type="email" 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary"
               placeholder={t('폼_이메일')}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               {t('폼_비밀번호')}
             </label>
             <input 
               type="password" 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary"
               placeholder={t('폼_비밀번호')}
             />
           </div>
@@ -105,11 +105,11 @@ export default function I18nTestPage() {
         <h3 className="mb-4 text-lg font-semibold">폰트 테스트 메시지</h3>
         <div className="space-y-3">
           <p className="text-lg font-semibold">{t('폰트테스트_제목')}</p>
-          <p className="text-gray-600">{t('폰트테스트_설명')}</p>
+          <p className="text-muted-foreground">{t('폰트테스트_설명')}</p>
           <div className="flex gap-2 text-sm">
-            <span className="px-2 py-1 bg-gray-100 rounded">{t('폰트테스트_언어_한국어')}</span>
-            <span className="px-2 py-1 bg-gray-100 rounded">{t('폰트테스트_언어_영어')}</span>
-            <span className="px-2 py-1 bg-gray-100 rounded">{t('폰트테스트_언어_아랍어')}</span>
+            <span className="px-2 py-1 bg-muted rounded">{t('폰트테스트_언어_한국어')}</span>
+            <span className="px-2 py-1 bg-muted rounded">{t('폰트테스트_언어_영어')}</span>
+            <span className="px-2 py-1 bg-muted rounded">{t('폰트테스트_언어_아랍어')}</span>
           </div>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function I18nTestPage() {
         <div className="text-lg font-multilang leading-relaxed">
           {t('폰트테스트_샘플_혼합')}
         </div>
-        <div className="mt-4 text-sm text-gray-500">
+        <div className="mt-4 text-sm text-muted-foreground">
           위 텍스트는 한국어, 영어, 아랍어가 혼합된 예시로, 각 언어에 맞는 폰트가 자동으로 적용됩니다.
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function I18nTestPage() {
             </button>
           </div>
           <div className="space-y-3">
-            <select className="w-full p-3 border border-gray-300 rounded-lg">
+            <select className="w-full p-3 border border-border rounded-lg">
               <option>{t('공통_선택')}</option>
               <option>{t('페이지_홈')}</option>
               <option>{t('페이지_프로필')}</option>
@@ -148,7 +148,7 @@ export default function I18nTestPage() {
             <input 
               type="text" 
               placeholder={t('공통_검색')}
-              className="w-full p-3 border border-gray-300 rounded-lg"
+              className="w-full p-3 border border-border rounded-lg"
             />
           </div>
         </div>

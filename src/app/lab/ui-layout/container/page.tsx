@@ -12,7 +12,7 @@ export default function NeumorphicPage() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-screen bg-white">
+    <div className="flex flex-col gap-8 p-8 min-h-screen bg-background">
       <div className="text-2xl font-bold">뉴모피즘 컴포넌트</div>
       
       {/* 양각 컨테이너 */}
@@ -69,13 +69,13 @@ export default function NeumorphicPage() {
           <p>현재 카운트: {count}</p>
           <div className="flex gap-2 mt-4">
             <button 
-              className="px-3 py-1 bg-blue-100 rounded"
+              className="px-3 py-1 bg-primary/10 rounded"
               onClick={() => setCount(prev => prev + 1)}
             >
               증가
             </button>
             <button 
-              className="px-3 py-1 bg-gray-100 rounded"
+              className="px-3 py-1 bg-muted rounded"
               onClick={() => setCount(prev => prev - 1)}
             >
               감소
@@ -111,7 +111,7 @@ export default function NeumorphicPage() {
         
         <div className="flex gap-4 justify-center">
           <button 
-            className="px-3 py-1 bg-blue-100 rounded"
+            className="px-3 py-1 bg-primary/10 rounded"
             onClick={() => setCount(prev => prev + 1)}
           >
             증가 (+1)
@@ -123,7 +123,7 @@ export default function NeumorphicPage() {
             감소 (-1)
           </button>
           <button 
-            className="px-3 py-1 bg-gray-100 rounded"
+            className="px-3 py-1 bg-muted rounded"
             onClick={() => setCount(0)}
           >
             리셋

@@ -63,5 +63,10 @@
   "주차_시스템제목": "Parking Control System",
   "주차_시스템설명": "Real-time vehicle entry/exit status and barrier control",
   "주차_입출차관리": "Vehicle Management",
-  "주차_차단기제어": "Barrier Control"
+  "주차_차단기제어": "Barrier Control",
+  "테마_다크모드": "Dark Mode",
+  "테마_라이트모드": "Light Mode",
+  "테마_테마변경": "Change Theme",
+  "테마_현재다크": "Current: Dark Mode",
+  "테마_현재라이트": "Current: Light Mode"
 } 

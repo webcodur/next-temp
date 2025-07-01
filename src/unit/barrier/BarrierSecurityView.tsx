@@ -29,10 +29,10 @@ const BarrierSecurityView: React.FC<BarrierSecurityViewProps> = ({
 		<div className="flex flex-col items-center gap-2">
 			{showTitle && (
 				<div className="text-center">
-					<h3 className="text-base font-semibold text-gray-800">
+					<h3 className="text-base font-semibold text-foreground">
 						보안카메라 시점
 					</h3>
-					<p className="text-xs text-gray-600">모니터링 최적화 각도</p>
+					<p className="text-xs text-muted-foreground">모니터링 최적화 각도</p>
 				</div>
 			)}
 

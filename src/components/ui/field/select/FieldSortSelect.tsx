@@ -56,7 +56,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					onClick={handleSortToggle}
 					disabled={disabled}
 					className={`${FIELD_STYLES.sortIcon} ${disabled ? FIELD_STYLES.disabled : ''} z-10`}>
-					<ArrowUpDown className="h-4 w-4" />
+					<ArrowUpDown className="neu-icon-inactive hover:neu-icon-active w-4 h-4" />
 				</button>
 
 				<button
@@ -71,13 +71,14 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 						${FIELD_STYLES.text}
 						pl-10 pr-10
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
+						${isOpen ? 'neu-flat-focus' : ''}
 					`}>
 					<span className="flex flex-1 items-center">
-						<span className={selectedOption ? 'font-medium' : ''}>
+						<span className={`font-multilang ${selectedOption ? 'font-medium' : ''}`}>
 							{selectedOption ? selectedOption.label : placeholder}
 						</span>
 						{selectedOption && (
-							<span className="ml-2 text-xs text-gray-400">
+							<span className="font-multilang ml-2 text-xs text-muted-foreground">
 								{sortDirection === 'asc' ? '오름차순' : '내림차순'}
 							</span>
 						)}
@@ -86,6 +87,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					<ChevronDown
 						className={`
 							${FIELD_STYLES.rightIcon}
+							neu-icon-inactive hover:neu-icon-active
 							transition-transform
 							${isOpen ? 'rotate-180' : ''}
 						`}

@@ -23,8 +23,8 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 
 	return (
 		<div
-			className={`${styles.leftColWidth} h-full bg-linear-to-b from-muted/90 to-secondary/95 border-r border-border/70 shrink-0`}>
-			<div className="w-[80px] px-2 py-3 space-y-2.5">
+			className={`${styles.leftColWidth} h-full neu-flat border-r border-border/20 shrink-0`}>
+			<div className="w-full px-2 py-3 space-y-2.5 flex flex-col items-center">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = topMenu === topKey;

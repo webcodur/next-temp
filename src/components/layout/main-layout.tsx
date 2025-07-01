@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
+import { initThemeAtom } from '@/store/theme';
 // import { isAuthenticatedAtom } from '@/store/auth'; // 백엔드 연결 전까지 임시 주석처리
 
 // components
@@ -22,9 +23,15 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [, initTheme] = useAtom(initThemeAtom);
 	// const [isAuthenticated] = useAtom(isAuthenticatedAtom); // 백엔드 연결 전까지 임시 주석처리
 	// const router = useRouter(); // 백엔드 연결 전까지 임시 주석처리
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+	// 테마 초기화
+	useEffect(() => {
+		initTheme();
+	}, [initTheme]);
 
 	// 키보드 단축키 활성화
 	useSidebarKeyboard();
@@ -66,7 +73,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 				
 				{/* Header 영역 - 절대 위치 */}
 				<div 
-					className="absolute top-0 right-0 z-10 bg-white border-b border-gray-200"
+					className="absolute top-0 right-0 z-10 border-b bg-background border-border"
 					style={{
 						left: isCollapsed ? '0px' : `${defaults.sidebarWidth}px`,
 						transition: `left ${animations.sidebarDuration}ms ease-in-out`,
@@ -77,7 +84,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 				{/* 컨텐츠 전용 스크롤 영역 - 전체 화면 높이에서 중앙 정렬 */}
 				<div
 					ref={scrollContainerRef}
-					className="flex overflow-y-auto flex-col justify-center items-center h-screen bg-gray-50">
+					className="flex overflow-y-auto flex-col justify-center items-center pt-16 h-screen bg-muted/30">
           <div className="max-w-[1440px] mx-auto px-6 w-full">
             {children}
           </div>

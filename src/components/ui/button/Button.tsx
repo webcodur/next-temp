@@ -5,16 +5,20 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
 	{
 		variants: {
 			variant: {
-				default: 'neu-raised bg-primary text-primary-foreground',
-				destructive: 'neu-raised bg-destructive text-destructive-foreground',
-				outline: 'neu-flat border border-input bg-background',
-				secondary: 'neu-raised bg-secondary text-secondary-foreground',
-				ghost: 'neu-flat hover:bg-accent hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 hover:underline',
+				default: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]',
+				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02]',
+				success: 'neu-raised bg-success text-success-foreground hover:scale-[1.02]',
+				warning: 'neu-raised bg-warning text-warning-foreground hover:scale-[1.02]',
+				accent: 'neu-raised bg-accent text-accent-foreground hover:scale-[1.02]',
+				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50',
+				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02]',
+				ghost: 'neu-flat hover:bg-muted text-foreground neu-hover',
+				link: 'text-primary underline-offset-4 hover:underline hover:text-accent transition-colors',
+				inset: 'neu-inset bg-muted text-primary hover:bg-muted/80',
 			},
 			size: {
 				default: 'h-9 px-4 py-2',

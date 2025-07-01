@@ -72,12 +72,11 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	// #endregion
 
 	return (
-		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-flat bg-background">
-			
-      {/* 헤더 */}
+		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-flat">
+			{/* 헤더 */}
 			<div className="mb-8 text-center">
-				<h1 className="mb-2 text-2xl font-bold text-foreground">로그인</h1>
-				<p className="text-muted-foreground">계정에 로그인하세요</p>
+				<h1 className="mb-2 text-2xl font-bold font-multilang text-foreground">로그인</h1>
+				<p className="font-multilang text-muted-foreground">계정에 로그인하세요</p>
 			</div>
 
 			{/* 폼 */}
@@ -92,7 +91,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 						showClearButton={true}
 					/>
 					{errors.email && (
-						<p className="text-sm text-destructive">{errors.email}</p>
+						<p className="text-sm font-multilang text-destructive">{errors.email}</p>
 					)}
 				</div>
 
@@ -107,7 +106,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 						minLength={6}
 					/>
 					{errors.password && (
-						<p className="text-sm text-destructive">{errors.password}</p>
+						<p className="text-sm font-multilang text-destructive">{errors.password}</p>
 					)}
 				</div>
 
@@ -126,11 +125,11 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 							<div
 								className={`
 								flex justify-center items-center w-4 h-4 rounded transition-all duration-200
-								${formData.rememberMe ? 'neu-raised bg-primary' : 'neu-inset bg-background'}
+								${formData.rememberMe ? 'neu-inset bg-primary' : 'neu-raised bg-card'}
 							`}>
 								{formData.rememberMe && (
 									<svg
-										className="w-3 h-3 text-white"
+										className="w-3 h-3 neu-icon-active text-primary-foreground"
 										fill="currentColor"
 										viewBox="0 0 20 20">
 										<path
@@ -142,31 +141,35 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 								)}
 							</div>
 						</div>
-						<span className="text-sm text-muted-foreground">
+						<span className="text-sm font-multilang text-muted-foreground">
 							로그인 상태 유지
 						</span>
 					</label>
 
 					<button
 						type="button"
-						className="text-sm text-primary hover:underline">
+						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-accent-foreground hover:underline">
 						비밀번호 찾기
 					</button>
 				</div>
 
 				{/* 로그인 버튼 */}
-				<Button type="submit" className="w-full h-11" disabled={isLoading}>
+				<Button 
+					type="submit" 
+					className="w-full h-11 font-multilang" 
+					disabled={isLoading}
+				>
 					{isLoading ? '로그인 중...' : '로그인'}
 				</Button>
 
 				{/* 회원가입 링크 */}
 				<div className="text-center">
-					<span className="text-sm text-muted-foreground">
+					<span className="text-sm font-multilang text-muted-foreground">
 						계정이 없으신가요?{' '}
 					</span>
 					<button
 						type="button"
-						className="text-sm text-primary hover:underline">
+						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-accent-foreground hover:underline">
 						회원가입
 					</button>
 				</div>

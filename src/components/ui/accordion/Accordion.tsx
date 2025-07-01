@@ -35,20 +35,20 @@ export const Accordion: React.FC<AccordionProps> = ({
 	};
 
 	return (
-		<div className={`neu-flat bg-gray-50 rounded-2xl ${className}`}>
+		<div className={`neu-flat bg-muted rounded-2xl ${className}`}>
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
-				className={`flex items-center justify-between p-4 bg-white cursor-pointer neu-raised rounded-2xl transition-colors ${
+				className={`flex items-center justify-between p-4 bg-background cursor-pointer neu-raised rounded-2xl transition-colors ${
 					disabled 
 						? 'cursor-not-allowed opacity-60' 
-						: 'hover:bg-gray-50'
+						: 'hover:bg-muted'
 				} ${headerClassName}`}>
-				<h2 className="text-sm font-medium text-gray-900">{title}</h2>
+				<h2 className="text-sm font-medium text-foreground">{title}</h2>
 				<div className="flex items-center gap-3">
 					{/* 상태 텍스트 */}
 					{statusText && (
-						<span className="text-xs font-medium text-gray-500">
+						<span className="text-xs font-medium text-muted-foreground">
 							{statusText}
 						</span>
 					)}

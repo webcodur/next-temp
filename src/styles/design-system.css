@@ -2,35 +2,39 @@
 /* Pretendard 서브셋 폰트는 @font-face로 직접 정의하므로 CSS 파일 import 불필요 */
 
 /**
- * 📋 DESIGN SYSTEM CSS - 전체 구조 요약
+ * 🚗 TESLA BLACK/WHITE DESIGN SYSTEM - 완전한 무채색 그레이스케일
+ * 
+ * 🎨 테마 철학: 테슬라 차량 대시보드의 미니멀리즘 구현
+ *    - 100% 무채색 (HSL Hue: 0, Saturation: 0%)
+ *    - 오직 밝기(Lightness)로만 계층 구분
+ *    - 부드럽고 즉각적인 인터랙션
+ * 
+ * 📐 시스템 구조:
  * 
  * 1. 폰트 정의 (4개 폰트)
  *    - MultiLang: 한국어(Pretendard), 아랍어(Cairo), 영어(DMSerifText)
  *    - Pretendard: 한국어 전용
  * 
- * 2. CSS 변수 정의 (20개+ 변수)
- *    - 핵심 색상: background, foreground, primary, secondary 등
+ * 2. CSS 변수 - 완전한 무채색 시스템
+ *    - 라이트 테마: Primary 20% (순수 다크 그레이)
+ *    - 다크 테마: Primary 85% (순수 라이트 그레이)
  *    - 뉴모피즘 전용: neu-light, neu-dark, neu-offset, neu-blur
- *    - 기타: radius, input, ring, popover, accent 등
  * 
- * 3. 기본 스타일 (5개 설정)
- *    - html: 폰트, 스크롤 동작
- *    - body: 배경, 색상, 폰트 렌더링
- *    - 보더 색상, 박스 사이징
+ * 3. 기본 스타일 (테슬라 최적화)
+ *    - 부드러운 폰트 렌더링 + 성능 최적화
  *    - 스크롤바 숨기기, RTL/LTR 텍스트
  * 
- * 4. 뉴모피즘 시스템 (6개 핵심 클래스)
- *    - neu-flat: 평면 스타일 (컨테이너, 패널)
- *    - neu-raised: 양각 스타일 (버튼, 인터랙티브 요소)
- *    - neu-inset: 음각 스타일 (활성/선택 상태)
+ * 4. 뉴모피즘 시스템 (테슬라 스타일)
+ *    - neu-flat: 평면 (컨테이너, 패널)
+ *    - neu-raised: 양각 (버튼, 터치 요소)
+ *    - neu-inset: 음각 (활성/선택 상태)
  *    - neu-icon: 아이콘 상태 (active/inactive)
- *    - sidebar-shadow: 사이드바 전용 음영
- *    - 보조 클래스: neu-hover, neu-flat-focus
+ *    - 보조: neu-hover, neu-flat-focus, sidebar-container
  * 
- * 5. 애니메이션 (7개 키프레임)
- *    - fadeIn, slideDown/Up: 기본 전환
- *    - fadeFlow, tripleFlow: 특수 플로우 효과
- *    - animate-fadeIn, animate-slide-down/up: 적용 클래스
+ * 5. 애니메이션 (테슬라 스타일 최적화)
+ *    - 즉각적인 호버 반응 (0.15s ease-out)
+ *    - 부드러운 전환 효과 (0.25s cubic-bezier)
+ *    - GPU 가속 transform 우선 사용
  */
 
 /* #region 1. 폰트 정의 */
@@ -287,37 +291,91 @@
 /* #endregion */
 
 /* #region 2. CSS 변수 정의 */
+/* #region 2. CSS 변수 정의 - 테마 시스템 */
 :root {
-	/* 핵심 색상 변수 */
+	/* 라이트 테마 - 기본값 */
 	--background: 0 0% 100%;
-	--foreground: 0 0% 3.9%;
-	--card: 0 0% 100%;
-	--card-foreground: 0 0% 3.9%;
-	--muted: 0 0% 96.1%;
-	--muted-foreground: 0 0% 45.1%;
-	--border: 0 0% 89.8%;
-	--primary: 0 0% 9%;
-	--primary-rgb: 23, 23, 23;
-	--primary-foreground: 0 0% 3.9%;
-	--secondary: 0 0% 96.1%;
-	--secondary-foreground: 0 0% 9%;
-	--destructive: 0 84.2% 60.2%;
+	--foreground: 0 0% 5%;
+	--card: 0 0% 98%;
+	--card-foreground: 0 0% 10%;
+	--muted: 0 0% 94%;
+	--muted-foreground: 0 0% 40%;
+	--border: 0 0% 88%;
+	
+	/* 강조 색상 - 순수 블랙 그레이스케일 */
+	--primary: 0 0% 20%;           /* 순수 다크 그레이 */
+	--primary-rgb: 51, 51, 51;
+	--primary-foreground: 0 0% 98%;
+	--secondary: 0 0% 30%;         /* 미드 그레이 */
+	--secondary-foreground: 0 0% 98%;
+	--accent: 0 0% 40%;            /* 라이트 그레이 */
+	--accent-foreground: 0 0% 98%;
+	
+	/* 상태 색상 */
+	--destructive: 0 72% 51%;
 	--destructive-foreground: 0 0% 98%;
-
-	/* 뉴모피즘 전용 변수 */
-	--neu-light: 255, 255, 255, 0.9;
-	--neu-dark: 0, 0, 0, 0.15;
-	--neu-offset: 4px;
-	--neu-blur: 8px;
+	--warning: 38 92% 50%;
+	--warning-foreground: 0 0% 98%;
+  
+	--success: 142 71% 45%;
+	--success-foreground: 0 0% 98%;
+	
+	/* 뉴모피즘 라이트 테마 - 테슬라 미니멀 스타일 */
+	--neu-light: 255, 255, 255, 0.95;  /* 더 밝고 선명한 하이라이트 */
+	--neu-dark: 0, 0, 0, 0.08;          /* 더 섬세한 그림자 */
+	--neu-offset: 3px;                  /* 더 절제된 오프셋 */
+	--neu-blur: 6px;                    /* 더 부드러운 블러 */
+	--neu-inset-light: 0, 0, 0, 0.15;   /* 더 명확한 inset 그림자 (0.06 → 0.15) */
+	--neu-inset-dark: 255, 255, 255, 0.6; /* 더 균형잡힌 inset 하이라이트 (0.8 → 0.6) */
 
 	/* 기타 */
 	--radius: 0.5rem;
-	--input: 0 0% 89.8%;
-	--ring: 0 0% 3.9%;
+	--input: 0 0% 92%;
+	--ring: 0 0% 20%;              /* 순수 다크 그레이 링 */
 	--popover: 0 0% 100%;
-	--popover-foreground: 0 0% 3.9%;
-	--accent: 0 0% 96.1%;
-	--accent-foreground: 0 0% 9%;
+	--popover-foreground: 0 0% 5%;
+}
+
+/* 다크 테마 */
+:root.dark {
+	--background: 0 0% 8%;         /* 순수 다크 그레이 */
+	--foreground: 0 0% 95%;
+	--card: 0 0% 12%;
+	--card-foreground: 0 0% 90%;
+	--muted: 0 0% 18%;
+	--muted-foreground: 0 0% 65%;
+	--border: 0 0% 25%;
+	
+	/* 강조 색상 - 순수 화이트 그레이스케일 */
+	--primary: 0 0% 85%;           /* 순수 라이트 그레이 */
+	--primary-rgb: 217, 217, 217;
+	--primary-foreground: 0 0% 8%;
+	--secondary: 0 0% 70%;         /* 밝은 그레이 */
+	--secondary-foreground: 0 0% 8%;
+	--accent: 0 0% 60%;            /* 소프트 그레이 */
+	--accent-foreground: 0 0% 8%;
+	
+	/* 상태 색상 */
+	--destructive: 0 72% 60%;
+	--destructive-foreground: 0 0% 95%;
+	--warning: 38 92% 60%;
+	--warning-foreground: 0 0% 8%;
+	--success: 142 71% 55%;
+	--success-foreground: 0 0% 8%;
+	
+	/* 뉴모피즘 다크 테마 - 테슬라 미니멀 스타일 */
+	--neu-light: 255, 255, 255, 0.05;  /* 더 부드러운 하이라이트 */
+	--neu-dark: 0, 0, 0, 0.35;          /* 더 절제된 그림자 */
+	--neu-offset: 2px;                  /* 더 섬세한 오프셋 */
+	--neu-blur: 5px;                    /* 더 부드러운 블러 */
+	--neu-inset-light: 0, 0, 0, 0.6;    /* 더 명확한 inset 그림자 (0.5 → 0.6) */
+	--neu-inset-dark: 255, 255, 255, 0.08; /* 더 명확한 inset 하이라이트 (0.02 → 0.08) */
+
+	/* 기타 */
+	--input: 0 0% 20%;
+	--ring: 0 0% 85%;              /* 순수 라이트 그레이 링 */
+	--popover: 0 0% 12%;
+	--popover-foreground: 0 0% 95%;
 }
 /* #endregion */
 
@@ -371,19 +429,34 @@ body {
 /* #endregion */
 
 /* #region 4. 뉴모피즘 시스템 */
-/* 4-1. neu-flat - 평면 (컨테이너, 패널) */
+/* 4-1. neu-flat - 평면 (컨테이너, 패널) - 테슬라 스타일 */
 .neu-flat {
 	background: linear-gradient(
 		135deg,
 		hsl(var(--card) / 0.9),
 		hsl(var(--muted) / 0.7)
 	);
-	border: 1px solid hsl(var(--border) / 0.4);
+	/* border 제거하고 shadow만 사용 */
 	box-shadow:
+		/* 우하단 메인 그림자 */
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		/* 좌상단 하이라이트 */
 		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
-			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
-	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 상단 그림자 */
+		0 calc(var(--neu-offset) * -0.3) calc(var(--neu-blur) * 0.4) rgba(var(--neu-light)),
+		/* 하단 그림자 */
+		0 calc(var(--neu-offset) * 0.8) calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
+		/* 좌측 그림자 */
+		calc(var(--neu-offset) * -0.3) 0 calc(var(--neu-blur) * 0.4) rgba(var(--neu-light)),
+		/* 우측 그림자 */
+		calc(var(--neu-offset) * 0.8) 0 calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark));
+	/* 테슬라 스타일: 부드러운 전환 + GPU 가속 */
+	transition: 
+		transform 0.15s ease-out,
+		box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: transform, box-shadow;
 }
 
 .neu-flat:hover {
@@ -392,7 +465,7 @@ body {
 		hsl(var(--card) / 0.95),
 		hsl(var(--muted) / 0.75)
 	);
-	border: 1px solid hsl(var(--border) / 0.6);
+	/* border 제거하고 shadow만 사용 */
 }
 
 .neu-flat:focus {
@@ -402,13 +475,21 @@ body {
 		hsl(var(--muted) / 0.85),
 		hsl(var(--card) / 0.75)
 	);
-	border: 1px solid hsl(var(--primary) / 0.3);
+	/* border 제거하고 shadow만 사용 */
 	box-shadow:
-		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-			rgba(var(--neu-dark)),
+		/* 내부 우하단 그림자 */
+		inset var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		/* 내부 좌상단 하이라이트 */
 		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
 			var(--neu-blur) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.3);
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 하단 하이라이트 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 우측 하이라이트 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 }
 
 /* 자식 요소 포커스 시 부모 컨테이너 반응이 필요한 곳에만 사용 */
@@ -419,13 +500,21 @@ body {
 		hsl(var(--muted) / 0.85),
 		hsl(var(--card) / 0.75)
 	);
-	border: 1px solid hsl(var(--primary) / 0.3);
+	/* border 제거하고 shadow만 사용 */
 	box-shadow:
-		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-			rgba(var(--neu-dark)),
+		/* 내부 우하단 그림자 */
+		inset var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		/* 내부 좌상단 하이라이트 */
 		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
 			var(--neu-blur) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.3);
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 하단 하이라이트 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 우측 하이라이트 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 }
 
 /* 드롭다운이 열려있을 때 포커스 상태 유지 */
@@ -436,13 +525,21 @@ body {
 		hsl(var(--muted) / 0.85),
 		hsl(var(--card) / 0.75)
 	);
-	border: 1px solid hsl(var(--primary) / 0.3);
+	/* border 제거하고 shadow만 사용 */
 	box-shadow:
-		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-			rgba(var(--neu-dark)),
+		/* 내부 우하단 그림자 */
+		inset var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		/* 내부 좌상단 하이라이트 */
 		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
 			var(--neu-blur) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.3);
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 하단 하이라이트 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 우측 하이라이트 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 }
 
 /* 호버 시 inset 효과 */
@@ -453,41 +550,79 @@ body {
 		hsl(var(--card) / 0.7)
 	);
 	box-shadow:
+		/* 내부 우하단 그림자 */
 		inset calc(var(--neu-offset) * 0.6) calc(var(--neu-offset) * 0.6)
 			calc(var(--neu-blur) * 0.6) rgba(var(--neu-dark)),
+		/* 내부 좌상단 하이라이트 */
 		inset calc(var(--neu-offset) * -0.6) calc(var(--neu-offset) * -0.6)
-			calc(var(--neu-blur) * 0.6) rgba(var(--neu-light));
+			calc(var(--neu-blur) * 0.6) rgba(var(--neu-light)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.3) calc(var(--neu-blur) * 0.4) rgba(var(--neu-dark)),
+		/* 내부 하단 하이라이트 */
+		inset 0 calc(var(--neu-offset) * -0.3) calc(var(--neu-blur) * 0.4) rgba(var(--neu-light)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.3) 0 calc(var(--neu-blur) * 0.4) rgba(var(--neu-dark)),
+		/* 내부 우측 하이라이트 */
+		inset calc(var(--neu-offset) * -0.3) 0 calc(var(--neu-blur) * 0.4) rgba(var(--neu-light));
 	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 4-2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */
+/* 4-2. neu-raised - 양각 (버튼, 터치 요소) - 테슬라 스타일 */
 .neu-raised {
-	background: linear-gradient(
-		135deg,
-		hsl(var(--card) / 0.9),
-		hsl(var(--muted) / 0.7)
-	);
-	border: 1px solid hsl(var(--border) / 0.4);
-	cursor: pointer;
-	transition: all 0.15s ease-in-out;
-	box-shadow:
-		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur)
-			rgba(var(--neu-light));
-}
-
-.neu-raised:hover {
 	background: linear-gradient(
 		135deg,
 		hsl(var(--card) / 0.95),
 		hsl(var(--muted) / 0.8)
 	);
-	border: 1px solid hsl(var(--primary) / 0.2);
+	/* border 제거하고 shadow만 사용 */
+	cursor: pointer;
+	/* 테슬라 스타일: 즉각적인 반응성 */
+	transition: 
+		transform 0.1s ease-out,
+		box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+		background 0.15s ease-out;
+	will-change: transform, box-shadow;
 	box-shadow:
-		calc(var(--neu-offset) * 1.3) calc(var(--neu-offset) * 1.3)
-			calc(var(--neu-blur) * 1.2) rgba(var(--neu-dark)),
-		calc(var(--neu-offset) * -1.3) calc(var(--neu-offset) * -1.3)
+		/* 우하단 메인 그림자 */
+		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
+		/* 좌상단 하이라이트 */
+		calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur)
+			rgba(var(--neu-light)),
+		/* 상단 하이라이트 */
+		0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-light)),
+		/* 하단 그림자 */
+		0 calc(var(--neu-offset) * 1.2) calc(var(--neu-blur) * 1.2) rgba(var(--neu-dark)),
+		/* 좌측 하이라이트 */
+		calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-light)),
+		/* 우측 그림자 */
+		calc(var(--neu-offset) * 1.2) 0 calc(var(--neu-blur) * 1.2) rgba(var(--neu-dark));
+}
+
+.neu-raised:hover {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--card)),
+		hsl(var(--muted) / 0.9)
+	);
+	/* border 제거하고 shadow만 사용 */
+	/* 테슬라 스타일: 미세한 리프트 효과 */
+	transform: translateY(-1px);
+	box-shadow:
+		/* 우하단 강화된 그림자 */
+		calc(var(--neu-offset) * 1.2) calc(var(--neu-offset) * 1.2)
+			calc(var(--neu-blur) * 1.1) rgba(var(--neu-dark)),
+		/* 좌상단 강화된 하이라이트 */
+		calc(var(--neu-offset) * -1.2) calc(var(--neu-offset) * -1.2)
 			calc(var(--neu-blur) * 1.2) rgba(var(--neu-light)),
+		/* 상단 강화된 하이라이트 */
+		0 calc(var(--neu-offset) * -0.8) calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
+		/* 하단 강화된 그림자 */
+		0 calc(var(--neu-offset) * 1.5) calc(var(--neu-blur) * 1.5) rgba(var(--neu-dark)),
+		/* 좌측 강화된 하이라이트 */
+		calc(var(--neu-offset) * -0.8) 0 calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
+		/* 우측 강화된 그림자 */
+		calc(var(--neu-offset) * 1.5) 0 calc(var(--neu-blur) * 1.5) rgba(var(--neu-dark)),
+		/* 전체 확산 그림자 */
 		0 4px 12px rgba(var(--primary-rgb), 0.1);
 }
 
@@ -497,75 +632,198 @@ body {
 		hsl(var(--muted) / 0.8),
 		hsl(var(--card) / 0.85)
 	);
+	/* 테슬라 스타일: 즉각적인 눌림 효과 */
+	transform: translateY(1px);
+	transition: all 0.05s ease-in;
 	box-shadow:
+		/* 내부 우하단 그림자 */
 		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
 			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
+		/* 내부 좌상단 하이라이트 */
 		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
-			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light));
+			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.4) calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 하단 하이라이트 */
+		inset 0 calc(var(--neu-offset) * -0.4) calc(var(--neu-blur) * 0.5) rgba(var(--neu-light)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.4) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-dark)),
+		/* 내부 우측 하이라이트 */
+		inset calc(var(--neu-offset) * -0.4) 0 calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
 }
 
 /* 4-3. neu-inset - 음각 (활성/선택 상태) */
 .neu-inset {
 	background: linear-gradient(
 		135deg,
-		hsl(var(--muted) / 0.85),
-		hsl(var(--card) / 0.75)
+		hsl(var(--muted) / 0.9),
+		hsl(var(--card) / 0.8)
 	);
-	border: 1px solid hsl(var(--primary) / 0.2);
+	/* border 제거하고 shadow만 사용 */
 	color: hsl(var(--primary));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
+		/* 내부 우하단 그림자 */
 		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-			rgba(var(--neu-dark)),
+			rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
 		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
-			var(--neu-blur) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.2);
+			var(--neu-blur) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.6) calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.6) calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.6) 0 calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.6) 0 calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-dark));
 }
 
 .neu-inset:hover {
 	background: linear-gradient(
 		135deg,
-		hsl(var(--muted) / 0.9),
-		hsl(var(--card) / 0.8)
+		hsl(var(--muted) / 0.95),
+		hsl(var(--card) / 0.85)
 	);
+	/* border 제거하고 shadow만 사용 */
 	box-shadow:
-		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
-			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
-		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
-			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.3);
+		/* 내부 우하단 그림자 */
+		inset calc(var(--neu-offset) * 0.9) calc(var(--neu-offset) * 0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
+		inset calc(var(--neu-offset) * -0.9) calc(var(--neu-offset) * -0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark));
 }
 
 .neu-inset:focus {
 	outline: none;
 	background: linear-gradient(
 		135deg,
+		hsl(var(--muted) / 0.95),
+		hsl(var(--card) / 0.85)
+	);
+	/* border 제거하고 shadow만 사용 */
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset calc(var(--neu-offset) * 0.9) calc(var(--neu-offset) * 0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
+		inset calc(var(--neu-offset) * -0.9) calc(var(--neu-offset) * -0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark));
+}
+
+/* 4-4. neu-inset-shadow - shadow만 있는 inset (border 없음) */
+.neu-inset-shadow {
+	background: linear-gradient(
+		135deg,
 		hsl(var(--muted) / 0.9),
 		hsl(var(--card) / 0.8)
 	);
+	border: none;  /* border 제거 */
+	color: hsl(var(--primary));
+	transition: all 0.15s ease-in-out;
 	box-shadow:
-		inset calc(var(--neu-offset) * 0.8) calc(var(--neu-offset) * 0.8)
-			calc(var(--neu-blur) * 0.8) rgba(var(--neu-dark)),
-		inset calc(var(--neu-offset) * -0.8) calc(var(--neu-offset) * -0.8)
-			calc(var(--neu-blur) * 0.8) rgba(var(--neu-light)),
-		0 0 0 1px hsl(var(--primary) / 0.4);
+		/* 내부 우하단 그림자 */
+		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+			rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
+		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+			var(--neu-blur) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.6) calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.6) calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.6) 0 calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.6) 0 calc(var(--neu-blur) * 0.7) rgba(var(--neu-inset-dark));
 }
 
-/* 4-4. neu-icon - 아이콘 */
+.neu-inset-shadow:hover {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.95),
+		hsl(var(--card) / 0.85)
+	);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset calc(var(--neu-offset) * 0.9) calc(var(--neu-offset) * 0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
+		inset calc(var(--neu-offset) * -0.9) calc(var(--neu-offset) * -0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark));
+}
+
+.neu-inset-shadow:focus {
+	outline: none;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.95),
+		hsl(var(--card) / 0.85)
+	);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset calc(var(--neu-offset) * 0.9) calc(var(--neu-offset) * 0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-light)),
+		/* 내부 좌상단 더 어두운 그림자 */
+		inset calc(var(--neu-offset) * -0.9) calc(var(--neu-offset) * -0.9)
+			calc(var(--neu-blur) * 0.9) rgba(var(--neu-inset-dark)),
+		/* 내부 상단 그림자 */
+		inset 0 calc(var(--neu-offset) * 0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 하단 그림자 */
+		inset 0 calc(var(--neu-offset) * -0.5) calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark)),
+		/* 내부 좌측 그림자 */
+		inset calc(var(--neu-offset) * 0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-light)),
+		/* 내부 우측 그림자 */
+		inset calc(var(--neu-offset) * -0.5) 0 calc(var(--neu-blur) * 0.6) rgba(var(--neu-inset-dark));
+}
+
+/* 4-5. neu-icon - 아이콘 (테슬라 스타일) */
 .neu-icon-active {
 	color: hsl(var(--primary));
-	filter: drop-shadow(0 2px 4px rgba(var(--primary-rgb), 0.3));
-	transition: all 0.15s ease-in-out;
+	filter: drop-shadow(0 1px 3px rgba(var(--primary-rgb), 0.2));  /* 더 섬세한 드롭 섀도우 */
+	transition: 
+		color 0.15s ease-out,
+		filter 0.15s ease-out,
+		transform 0.1s ease-out;  /* transform 추가 */
 }
 
 .neu-icon-inactive {
-	color: hsl(var(--foreground) / 0.7);
-	transition: all 0.15s ease-in-out;
+	color: hsl(var(--foreground) / 0.8);  /* 0.6 → 0.8로 진하게 */
+	transition: 
+		color 0.15s ease-out,
+		filter 0.15s ease-out,
+		transform 0.1s ease-out;
 }
 
 .neu-icon-inactive:hover {
-	color: hsl(var(--foreground));
-	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+	color: hsl(var(--foreground) / 0.9);  /* 더 부드러운 호버 */
+	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));  /* 더 섬세한 호버 섀도우 */
+	transform: translateY(-0.5px);  /* 테슬라 스타일: 미세한 리프트 */
 }
 
 /* 4-5. sidebar-container - 사이드바 전용 컨테이너 (hover 효과 없음) */
@@ -665,47 +923,47 @@ body {
 }
 /* #endregion */
 
-/* #region 6. 필드 드롭다운 스크롤바 */
+/* #region 6. 필드 드롭다운 스크롤바 - 테마 대응 */
 .field-dropdown-scroll {
-	/* WebKit 브라우저용 스크롤바 스타일링 */
+	/* 테슬라 스타일: 테마 변수 사용한 스크롤바 */
 	scrollbar-width: thin;
-	scrollbar-color: #d1d5db #f3f4f6;
+	scrollbar-color: hsl(var(--border)) hsl(var(--muted));
 }
 
 .field-dropdown-scroll::-webkit-scrollbar {
-	width: 6px;
+	width: 5px;  /* 더 세련된 폭 */
 }
 
 .field-dropdown-scroll::-webkit-scrollbar-track {
-	background: #f3f4f6;
+	background: hsl(var(--muted));  /* 테마 변수 사용 */
 	border-radius: 3px;
 }
 
 .field-dropdown-scroll::-webkit-scrollbar-thumb {
-	background: #d1d5db;
+	background: hsl(var(--border));  /* 테마 변수 사용 */
 	border-radius: 3px;
-	transition: background-color 0.2s ease;
+	transition: background-color 0.15s ease-out;  /* 테슬라 스타일 전환 */
 }
 
 .field-dropdown-scroll::-webkit-scrollbar-thumb:hover {
-	background: #9ca3af;
+	background: hsl(var(--muted-foreground) / 0.6);  /* 테마 변수 사용 */
 }
 
 .field-dropdown-scroll::-webkit-scrollbar-corner {
-	background: #f3f4f6;
+	background: hsl(var(--muted));  /* 테마 변수 사용 */
 }
 /* #endregion */
 
-/* #region 7. 텍스트 그림자 유틸리티 */
+/* #region 7. 텍스트 그림자 유틸리티 - 테슬라 미니멀 스타일 */
 .text-shadow-sm {
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);  /* 더 섬세한 섀도우 */
 }
 
 .text-shadow {
-	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.15);  /* 절제된 깊이감 */
 }
 
 .text-shadow-lg {
-	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	text-shadow: 0 8px 25px rgba(0, 0, 0, 0.06), 0 3px 10px rgba(0, 0, 0, 0.04);  /* 부드러운 확산 */
 }
 /* #endregion */

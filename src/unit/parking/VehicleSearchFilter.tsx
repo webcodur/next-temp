@@ -24,13 +24,13 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 	};
 
 	return (
-		<div className="bg-white border rounded-lg p-1.5 mb-1.5">
+		<div className="bg-background border border-border rounded-lg p-1.5 mb-1.5">
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-1.5">
 				{/* 차량유형 선택 */}
 				<select
 					value={filters.car_type || ''}
 					onChange={(e) => handleFilterChange('car_type', e.target.value)}
-					className="rounded px-2 py-1 bg-gray-50 border border-gray-200 focus:outline-hidden focus:border-blue-400 text-xs">
+					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
 					<option value="">차량유형선택</option>
 					<option value="0">미인식</option>
 					{carAllowTypes.map((type) => (
@@ -47,7 +47,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 				<select
 					value={filters.in_out_status || ''}
 					onChange={(e) => handleFilterChange('in_out_status', e.target.value)}
-					className="rounded px-2 py-1 bg-gray-50 border border-gray-200 focus:outline-hidden focus:border-blue-400 text-xs">
+					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
 					<option value="">입/출차 선택</option>
 					<option value="1">입차</option>
 					<option value="2">출차</option>
@@ -59,7 +59,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 					onChange={(e) =>
 						handleFilterChange('entrance_status', e.target.value)
 					}
-					className="rounded px-2 py-1 bg-gray-50 border border-gray-200 focus:outline-hidden focus:border-blue-400 text-xs">
+					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
 					<option value="">통행입구 선택</option>
 					<option value="입구A">입구A</option>
 					<option value="입구B">입구B</option>
@@ -74,13 +74,13 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 					value={filters.keyword || ''}
 					onChange={(e) => handleFilterChange('keyword', e.target.value)}
 					onKeyPress={handleKeyPress}
-					className="rounded px-2 py-1 bg-white border border-gray-200 focus:outline-hidden focus:border-blue-400 placeholder-gray-400 text-xs"
+					className="rounded px-2 py-1 bg-background border border-border focus:outline-hidden focus:border-primary placeholder-muted-foreground text-xs"
 				/>
 
 				{/* 검색 버튼 */}
 				<button
 					onClick={onSearch}
-					className="rounded px-3 py-1 bg-orange-500 text-white font-medium hover:bg-orange-600 transition-colors text-xs">
+					className="rounded px-3 py-1 bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors text-xs">
 					검색
 				</button>
 			</div>

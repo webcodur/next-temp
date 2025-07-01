@@ -43,7 +43,7 @@ const StepperPopup: React.FC<StepperPopupProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80"
       onClick={onClose}
     >
       <div
@@ -51,10 +51,10 @@ const StepperPopup: React.FC<StepperPopupProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-neutral-800">전체 단계</h3>
+          <h3 className="text-lg font-semibold text-foreground">전체 단계</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded neu-flat hover:neu-inset text-neutral-500"
+            className="p-1 rounded neu-flat hover:neu-inset text-muted-foreground"
           >
             ✕
           </button>
@@ -84,24 +84,24 @@ const StepperPopup: React.FC<StepperPopupProps> = ({
                   isViewing 
                     ? 'neu-raised text-primary' 
                     : isCompleted 
-                      ? 'neu-inset text-neutral-700' 
+                      ? 'neu-inset text-foreground' 
                       : isCurrent 
                         ? 'neu-raised text-primary' 
-                        : 'neu-flat text-neutral-400'
+                        : 'neu-flat text-muted-foreground'
                 }`}>
                   {isCompleted ? '✓' : stepNumber}
                 </div>
                 <div className="flex-1">
                   <div className={`text-sm font-medium ${
-                    isViewing || isCurrent ? 'text-primary' : 'text-neutral-700'
+                    isViewing || isCurrent ? 'text-primary' : 'text-foreground'
                   }`}>
                     {step}
                   </div>
                   {isViewing && (
-                    <div className="text-xs text-neutral-500">현재 보고 있는 단계</div>
+                    <div className="text-xs text-muted-foreground">현재 보고 있는 단계</div>
                   )}
                   {isCurrent && stepNumber !== viewStep && (
-                    <div className="text-xs text-neutral-500">현재 진행 단계</div>
+                    <div className="text-xs text-muted-foreground">현재 진행 단계</div>
                   )}
                 </div>
               </div>

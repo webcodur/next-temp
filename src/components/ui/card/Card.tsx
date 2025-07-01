@@ -131,9 +131,9 @@ const CardBadge = React.forwardRef<
 			variant === 'default' && 'bg-muted text-muted-foreground',
 			variant === 'primary' && 'bg-primary text-primary-foreground',
 			variant === 'secondary' && 'bg-secondary text-secondary-foreground',
-			variant === 'success' && 'bg-green-100 text-green-800',
-			variant === 'warning' && 'bg-yellow-100 text-yellow-800',
-			variant === 'danger' && 'bg-red-100 text-red-800',
+			variant === 'success' && 'bg-green-500/10 text-green-600',
+			variant === 'warning' && 'bg-yellow-500/10 text-yellow-600',
+			variant === 'danger' && 'bg-red-500/10 text-red-600',
 			className
 		)}
 		{...props}

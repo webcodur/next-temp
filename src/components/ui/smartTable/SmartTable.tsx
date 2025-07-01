@@ -163,19 +163,19 @@ export function SmartTable<T extends Record<string, any>>({
 
 	// 헤더 스타일 설정
 	const headerClasses = cn(
-		'bg-gray-50',
-		'border-b border-gray-200',
+		'bg-muted',
+		'border-b border-border',
 		'neu-flat'
 	);
 
 	// 바디 스타일 설정
-	const bodyClasses = cn('bg-white');
+	const bodyClasses = cn('bg-background');
 
 	// 테이블 로우 스타일 설정 (높이 고정, 전역 얼룩무늬 스타일 사용)
 	const getRowClasses = (item: T | null, index: number) => {
 		const isEven = index % 2 === 0;
 		const baseClasses = cn(
-			'border-b border-gray-200',
+			'border-b border-border',
 			isEven ? 'list-item-even' : 'list-item-odd',
 			'h-10', // 컴팩트 모드 고정
 			// 좌측 accent 바 hover 효과 (즉시 적용)

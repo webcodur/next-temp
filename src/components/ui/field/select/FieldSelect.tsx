@@ -57,18 +57,20 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 						${FIELD_STYLES.text}
 						pl-10 pr-10
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
+						${isOpen ? 'neu-flat-focus' : ''}
 					`}>
-					<span className={FIELD_STYLES.leftIcon}>
+					<span className={`${FIELD_STYLES.leftIcon} neu-icon-inactive`}>
 						{leftIcon || <List className="w-4 h-4" />}
 					</span>
 
-					<span className="block truncate">
+					<span className="font-multilang block truncate">
 						{selectedOption ? selectedOption.label : placeholder}
 					</span>
 
 					<ChevronDown
 						className={`
 							${FIELD_STYLES.rightIcon}
+							neu-icon-inactive hover:neu-icon-active
 							transition-transform
 							${isOpen ? 'rotate-180' : ''}
 						`}

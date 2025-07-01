@@ -30,27 +30,27 @@ const variantConfig = {
 	default: {
 		icon: null,
 		iconColor: '',
-		borderColor: 'border-gray-200',
+		borderColor: 'border-border',
 	},
 	success: {
 		icon: CheckCircle,
-		iconColor: 'text-green-500',
-		borderColor: 'border-green-200',
+		iconColor: 'text-green-600',
+		borderColor: 'border-green-500/20',
 	},
 	warning: {
 		icon: AlertTriangle,
-		iconColor: 'text-yellow-500',
-		borderColor: 'border-yellow-200',
+		iconColor: 'text-yellow-600',
+		borderColor: 'border-yellow-500/20',
 	},
 	error: {
 		icon: AlertCircle,
-		iconColor: 'text-red-500',
-		borderColor: 'border-red-200',
+		iconColor: 'text-red-600',
+		borderColor: 'border-red-500/20',
 	},
 	info: {
 		icon: Info,
-		iconColor: 'text-blue-500',
-		borderColor: 'border-blue-200',
+		iconColor: 'text-primary',
+		borderColor: 'border-primary/20',
 	},
 };
 
@@ -104,7 +104,7 @@ export const Dialog: React.FC<DialogProps> = ({
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.2 }}
-					className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black bg-opacity-50"
+					className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/50"
 					onClick={handleOverlayClick}
 				>
 					<motion.div
@@ -114,24 +114,20 @@ export const Dialog: React.FC<DialogProps> = ({
 						transition={{ duration: 0.2 }}
 						className={`
 							relative w-full ${sizeClasses[size]}
-							bg-white rounded-2xl shadow-xl
+							bg-background rounded-2xl shadow-xl
 							border-2 ${variantInfo.borderColor}
 							${className}
 						`}
-						style={{
-							backgroundColor: 'white',
-							opacity: 1
-						}}
 					>
 						{/* Header */}
 						{(title || showCloseButton) && (
-							<div className="flex items-center justify-between p-6 border-b border-gray-100">
+							<div className="flex items-center justify-between p-6 border-b border-border">
 								<div className="flex items-center space-x-3">
 									{IconComponent && (
 										<IconComponent className={`w-6 h-6 ${variantInfo.iconColor}`} />
 									)}
 									{title && (
-										<h2 className="text-xl font-semibold text-gray-900">
+										<h2 className="text-xl font-semibold text-foreground">
 											{title}
 										</h2>
 									)}
@@ -139,7 +135,7 @@ export const Dialog: React.FC<DialogProps> = ({
 								{showCloseButton && (
 									<button
 										onClick={onClose}
-										className="p-2 text-gray-400 hover:text-gray-600 neu-raised rounded-lg transition-colors"
+										className="p-2 text-muted-foreground hover:text-foreground neu-raised rounded-lg transition-colors"
 									>
 										<X className="w-5 h-5" />
 									</button>
@@ -156,7 +152,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
 						{/* Footer */}
 						{footer && (
-							<div className="px-6 py-4 border-t border-gray-100">
+							<div className="px-6 py-4 border-t border-border">
 								{footer}
 							</div>
 						)}
@@ -183,7 +179,7 @@ export const DialogTitle: React.FC<{ children: React.ReactNode; className?: stri
 	children,
 	className = '',
 }) => (
-	<h3 className={`text-lg font-medium text-gray-900 ${className}`}>
+	<h3 className={`text-lg font-medium text-foreground ${className}`}>
 		{children}
 	</h3>
 );
@@ -192,7 +188,7 @@ export const DialogDescription: React.FC<{ children: React.ReactNode; className?
 	children,
 	className = '',
 }) => (
-	<p className={`text-sm text-gray-600 mt-2 ${className}`}>
+	<p className={`text-sm text-muted-foreground mt-2 ${className}`}>
 		{children}
 	</p>
 );

@@ -40,7 +40,7 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 			{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 			<div className="relative">
-				<LeftIcon className={FIELD_STYLES.leftIcon} />
+				<LeftIcon className={`${FIELD_STYLES.leftIcon} neu-icon-inactive`} />
 
 				<input
 					type="text"
@@ -66,7 +66,7 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 						onClick={handleClear}
 						className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 						type="button">
-						<X className="h-3 w-3" />
+						<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 					</button>
 				)}
 			</div>

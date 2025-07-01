@@ -34,11 +34,11 @@ sidebar/
 │             │                       │
 │  Top Menu   │    타이틀 및 제어     │ ← 단일/다중 모드, 전체 열기/닫기
 │             │                       │
-│  [커뮤니티]  │  ┌─ 사용자상태등록    │
-│  [시설서비스] │  ├─ 예약관리          │
-│  [출입관리]  │  └─ 출입관리          │
-│  [방문차량]  │                       │
-│  [소통관리]  │    Bot Menu           │ ← 실제 네비게이션 링크
+│ [커뮤니티]  │  ┌─ 사용자상태등록    │
+│ [시설서비스]│  ├─ 예약관리          │
+│ [출입관리]  │  └─ 출입관리          │
+│ [방문차량]  │                       │
+│ [소통관리]  │    Bot Menu           │ ← 실제 네비게이션 링크
 │             │  ┌─ 메인 대시보드     │
 │  [마이]     │  ├─ 사용자 목록       │
 └─────────────┴───────────────────────┘
@@ -107,33 +107,33 @@ sidebar/
 
 ```typescript
 interface BotMenu {
-	key: string;
-	'kor-name': string;
-	'eng-name': string;
-	href: string;
-	description?: string;
-	icon?: LucideIcon;
+  key: string;
+  'kor-name': string;
+  'eng-name': string;
+  href: string;
+  description?: string;
+  icon?: LucideIcon;
 }
 
 interface MidMenu {
-	key: string;
-	'kor-name': string;
-	'eng-name': string;
-	icon?: LucideIcon;
-	botItems: BotMenu[];
+  key: string;
+  'kor-name': string;
+  'eng-name': string;
+  icon?: LucideIcon;
+  botItems: BotMenu[];
 }
 
 interface TopItem {
-	icon: LucideIcon;
-	key: string;
-	'kor-name': string;
-	'eng-name': string;
-	color: string;
-	midItems: Record<string, MidMenu>;
+  icon: LucideIcon;
+  key: string;
+  'kor-name': string;
+  'eng-name': string;
+  color: string;
+  midItems: Record<string, MidMenu>;
 }
 
 interface MenuData {
-	[key: string]: TopItem;
+  [key: string]: TopItem;
 }
 ```
 
@@ -244,8 +244,8 @@ import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 
 // 메인 레이아웃에서 사용
 <MainLayout>
-	<Sidebar />
-	<main>...</main>
+  <Sidebar />
+  <main>...</main>
 </MainLayout>;
 ```
 
@@ -270,7 +270,7 @@ import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 - jotai를 통한 효율적인 전역 상태
 - 필요한 컴포넌트만 리렌더링
 
-### 애니메이션
+### 애니메이션 구성방식
 
 - GPU 가속 transform 사용
 - 순차적 애니메이션으로 부드러운 UX

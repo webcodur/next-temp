@@ -111,9 +111,9 @@ export function SideHeader() {
 					{/* 통합 검색 버튼 */}
 					<button
 						onClick={handleSearchOpen}
-						className="flex gap-3 items-center p-3 w-full rounded-lg border border-gray-200 neu-flat neu-hover group">
-						<Search className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
-						<span className="text-sm text-gray-500 group-hover:text-gray-700">
+						className="flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group">
+						<Search className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+						<span className="text-sm text-muted-foreground group-hover:text-foreground">
 							현장 · 메뉴 검색
 						</span>
 					</button>

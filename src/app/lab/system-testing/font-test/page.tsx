@@ -30,7 +30,7 @@ export default function FontTestPage() {
 
 			<div className="text-center">
 				<h1 className="mb-4 text-3xl font-bold">폰트 시스템 테스트</h1>
-				<p className="text-gray-600">
+				<p className="text-muted-foreground">
 					font-multilang 클래스로 모든 언어 폰트가 자동 적용되는지 확인합니다.
 				</p>
 			</div>
@@ -65,7 +65,7 @@ export default function FontTestPage() {
 					value={customText}
 					onChange={(e) => setCustomText(e.target.value)}
 					placeholder="원하는 텍스트를 입력하세요..."
-					className="p-4 w-full rounded-lg border border-gray-300 resize-none focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+					className="p-4 w-full rounded-lg border border-border resize-none focus:outline-hidden focus:ring-2 focus:ring-primary"
 					rows={4}
 				/>
 			</div>
@@ -77,17 +77,17 @@ export default function FontTestPage() {
 				<div className="space-y-6">
 					{/* MultiLang 폰트 (권장) */}
 					<div>
-						<label className="text-sm font-medium text-gray-600 mb-2 block">
+						<label className="text-sm font-medium text-muted-foreground mb-2 block">
 							✅ font-multilang (권장) - 모든 언어 자동 처리
 						</label>
 						<p
-							className={`font-multilang text-lg p-4 border rounded bg-green-50 ${
+							className={`font-multilang text-lg p-4 border rounded bg-green-500/10 ${
 								hasArabicText ? 'text-right' : 'text-left'
 							}`}
 							dir={hasArabicText ? 'rtl' : 'ltr'}>
 							{currentText}
 						</p>
-						<p className="text-xs text-gray-500 mt-1">
+						<p className="text-xs text-muted-foreground mt-1">
 							한글은 Pretendard, 영어는 Inter, 아랍어는 Cairo가 자동 적용됩니다.
 						</p>
 					</div>
@@ -95,7 +95,7 @@ export default function FontTestPage() {
 					{/* 개별 폰트 비교 */}
 					<div className="grid gap-4 md:grid-cols-3">
 						<div>
-							<label className="text-sm font-medium text-gray-600 mb-2 block">
+							<label className="text-sm font-medium text-muted-foreground mb-2 block">
 								font-pretendard (한국어)
 							</label>
 							<p className="font-pretendard text-lg p-3 border rounded">
@@ -103,7 +103,7 @@ export default function FontTestPage() {
 							</p>
 						</div>
 						<div>
-							<label className="text-sm font-medium text-gray-600 mb-2 block">
+							<label className="text-sm font-medium text-muted-foreground mb-2 block">
 								font-inter (영어)
 							</label>
 							<p className="font-inter text-lg p-3 border rounded">
@@ -111,7 +111,7 @@ export default function FontTestPage() {
 							</p>
 						</div>
 						<div>
-							<label className="text-sm font-medium text-gray-600 mb-2 block">
+							<label className="text-sm font-medium text-muted-foreground mb-2 block">
 								font-cairo (아랍어)
 							</label>
 							<p className="font-cairo text-lg p-3 border rounded">
@@ -122,7 +122,7 @@ export default function FontTestPage() {
 
 					{/* Pretendard 웨이트 테스트 */}
 					<div>
-						<label className="text-sm font-medium text-gray-600 mb-2 block">
+						<label className="text-sm font-medium text-muted-foreground mb-2 block">
 							Pretendard 웨이트 테스트 (100-900)
 						</label>
 						<div className="grid gap-2">
@@ -138,7 +138,7 @@ export default function FontTestPage() {
 								{ weight: 'font-black', label: 'Black (900)' },
 							].map(({ weight, label }) => (
 								<div key={weight} className="p-2 border rounded">
-									<div className="text-xs text-gray-500 mb-1">{label}</div>
+									<div className="text-xs text-muted-foreground mb-1">{label}</div>
 									<p className={`font-pretendard text-lg ${weight}`}>
 										가나다라마바사 ABCDEFG 123456
 									</p>
@@ -160,7 +160,7 @@ export default function FontTestPage() {
 					dir={hasArabicText ? 'rtl' : 'ltr'}>
 					{currentText}
 				</div>
-				<div className="mt-4 text-sm text-gray-500">
+				<div className="mt-4 text-sm text-muted-foreground">
 					위 텍스트는 font-multilang 클래스로 각 문자에 최적화된 폰트가 자동 적용됩니다.
 				</div>
 			</div>

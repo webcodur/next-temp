@@ -25,11 +25,11 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 	};
 
 	return (
-		<div className="p-4 bg-white rounded-2xl neu-flat">
+		<div className="p-4 bg-background rounded-2xl neu-flat">
 			<div className="flex flex-col gap-4 lg:flex-row">
 				{/* 차량 이미지 영역 */}
 				<div className="shrink-0">
-					<div className="overflow-hidden relative w-full h-96 bg-gray-50 rounded-xl lg:w-80 neu-inset">
+					<div className="overflow-hidden relative w-full h-96 bg-muted rounded-xl lg:w-80 neu-inset">
 						{!imageError ? (
 							<Image
 								src="/temp-car-img.png"
@@ -41,7 +41,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 						) : (
 							<div className="flex justify-center items-center w-full h-full">
 								{/* 차량 아이콘을 이미지 섹션 전체에 표시 */}
-								<Car className="w-48 h-48 text-gray-500" strokeWidth={1} />
+								<Car className="w-48 h-48 text-muted-foreground" strokeWidth={1} />
 							</div>
 						)}
 					</div>
@@ -58,8 +58,8 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 									<div
 										className={`px-3 py-1 rounded-lg text-sm font-medium neu-raised ${
 											vehicle.status === 1
-												? 'bg-blue-100 text-blue-700 border border-blue-200'
-												: 'bg-green-100 text-green-700 border border-green-200'
+												? 'bg-primary/10 text-primary border border-primary/20'
+												: 'bg-green-500/10 text-green-600 border border-green-500/20'
 										}`}>
 										{vehicle.status === 1 ? '입차' : '출차'}
 									</div>
@@ -77,7 +77,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 											/>
 										</div>
 										{copiedPlate === vehicle.car_number && (
-											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-500 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-600 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
 												<Check size={12} className="inline mr-1" />
 												복사됨
 											</div>
@@ -98,7 +98,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 													/>
 												</div>
 												{copiedPlate === vehicle.modify_car_number && (
-													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-500 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-600 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
 														<Check size={12} className="inline mr-1" />
 														복사됨
 													</div>
@@ -111,10 +111,10 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 
 							{/* 차량 구분 */}
 							<div className="flex flex-col gap-1 items-center text-center">
-								<span className="text-sm font-medium text-gray-600">
+								<span className="text-sm font-medium text-muted-foreground">
 									차량구분
 								</span>
-								<div className="text-sm font-semibold text-gray-800">
+								<div className="text-sm font-semibold text-foreground">
 									{parseCarAllowType(vehicle.type)}
 									{vehicle.modify_car_type && (
 										<span className="ml-2 text-orange-600">
@@ -123,7 +123,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 									)}
 								</div>
 								{(vehicle.address_1depth || vehicle.address_2depth) && (
-									<div className="text-sm text-gray-600">
+									<div className="text-sm text-muted-foreground">
 										{vehicle.address_1depth} {vehicle.address_2depth}
 									</div>
 								)}
@@ -131,19 +131,19 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 
 							{/* 시간 정보 */}
 							<div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-2">
-								<div className="p-3 text-center bg-gray-50 rounded-lg border">
-									<div className="mb-1 text-xs text-gray-600">
+								<div className="p-3 text-center bg-muted rounded-lg border border-border">
+									<div className="mb-1 text-xs text-muted-foreground">
 										{vehicle.status === 1 ? '입차시간' : '출차시간'}
 									</div>
-									<div className="text-sm font-semibold text-gray-800">
+									<div className="text-sm font-semibold text-foreground">
 										{vehicle.use_time}
 									</div>
 								</div>
 
 								{vehicle.device_name && (
-									<div className="p-3 text-center bg-gray-50 rounded-lg border">
-										<div className="mb-1 text-xs text-gray-600">통행입구</div>
-										<div className="text-sm font-semibold text-gray-800">
+									<div className="p-3 text-center bg-muted rounded-lg border border-border">
+										<div className="mb-1 text-xs text-muted-foreground">통행입구</div>
+										<div className="text-sm font-semibold text-foreground">
 											{vehicle.device_name}
 										</div>
 									</div>
@@ -162,7 +162,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 						</div>
 					) : (
 						<div className="flex justify-center items-center h-full">
-							<div className="text-center text-gray-500">
+							<div className="text-center text-muted-foreground">
 								<div className="mb-2 text-base font-medium">
 									차량을 선택해주세요
 								</div>

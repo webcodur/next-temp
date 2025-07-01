@@ -154,7 +154,6 @@ export default function AnimationsPage() {
 		// #endregion
 
 		return () => {
-			const mount = mountRef.current; // ref 값을 변수로 복사
 			if (mount && renderer.domElement) {
 				mount.removeChild(renderer.domElement);
 			}
@@ -186,43 +185,43 @@ export default function AnimationsPage() {
 
 	return (
 		<div className="p-8 space-y-8">
-			<div className="neu-flat p-6 rounded-xl">
-				<h1 className="text-3xl font-bold mb-4">4단계: 애니메이션</h1>
-				<p className="text-gray-600 mb-6">
+			<div className="p-6 rounded-xl neu-flat">
+				<h1 className="mb-4 text-3xl font-bold">4단계: 애니메이션</h1>
+				<p className="mb-6 text-gray-600">
 					시간 기반 애니메이션으로 3D 객체에 생동감을 부여해보자
 				</p>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 				{/* 3D 뷰어 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">실습: 애니메이션 실험실</h2>
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold">실습: 애니메이션 실험실</h2>
 					<div 
 						ref={mountRef} 
-						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
+						className="overflow-hidden mb-4 rounded-lg border border-gray-200"
 					/>
 					
 					{/* 재생 컨트롤 */}
-					<div className="neu-inset p-4 rounded-lg space-y-3">
-						<div className="flex items-center justify-between">
+					<div className="p-4 space-y-3 rounded-lg neu-inset">
+						<div className="flex justify-between items-center">
 							<span className="text-sm font-semibold">재생 컨트롤</span>
 							<div className="flex gap-2">
 								<button
 									onClick={togglePlayPause}
-									className="neu-raised px-4 py-2 rounded-lg text-sm font-semibold hover:neu-inset transition-all"
+									className="px-4 py-2 text-sm font-semibold rounded-lg transition-all neu-raised hover:neu-inset"
 								>
 									{isPlaying ? '⏸️ 정지' : '▶️ 재생'}
 								</button>
 								<button
 									onClick={resetAnimation}
-									className="neu-raised px-4 py-2 rounded-lg text-sm font-semibold hover:neu-inset transition-all"
+									className="px-4 py-2 text-sm font-semibold rounded-lg transition-all neu-raised hover:neu-inset"
 								>
 									🔄 리셋
 								</button>
 							</div>
 						</div>
 						
-						<div className="flex items-center gap-3">
+						<div className="flex gap-3 items-center">
 							<span className="text-sm">속도:</span>
 							<input
 								type="range"
@@ -233,14 +232,14 @@ export default function AnimationsPage() {
 								onChange={(e) => setSpeed(parseFloat(e.target.value))}
 								className="flex-1"
 							/>
-							<span className="text-sm font-mono min-w-12">{speed.toFixed(1)}x</span>
+							<span className="font-mono text-sm min-w-12">{speed.toFixed(1)}x</span>
 						</div>
 					</div>
 				</div>
 
 				{/* 애니메이션 선택 패널 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">애니메이션 타입</h2>
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold">애니메이션 타입</h2>
 					<div className="space-y-3">
 						{(Object.keys(animationData) as AnimationType[]).map((type) => {
 							const data = animationData[type];
@@ -252,11 +251,11 @@ export default function AnimationsPage() {
 									onClick={() => setSelectedAnimation(type)}
 									className={`w-full p-4 rounded-lg text-left transition-all ${
 										isSelected 
-											? 'neu-inset bg-blue-50' 
+											? 'bg-blue-50 neu-inset' 
 											: 'neu-raised hover:neu-inset'
 									}`}
 								>
-									<h3 className="font-semibold text-sm mb-1">{data.name}</h3>
+									<h3 className="mb-1 text-sm font-semibold">{data.name}</h3>
 									<p className="text-xs text-gray-600">
 										{data.description}
 									</p>
@@ -266,8 +265,8 @@ export default function AnimationsPage() {
 					</div>
 
 					{/* 현재 애니메이션 정보 */}
-					<div className="mt-6 neu-inset p-4 rounded-lg">
-						<h4 className="font-semibold text-blue-600 mb-2">
+					<div className="p-4 mt-6 rounded-lg neu-inset">
+						<h4 className="mb-2 font-semibold text-blue-600">
 							현재: {animationData[selectedAnimation].name}
 						</h4>
 						<p className="text-sm text-gray-600">
@@ -278,11 +277,11 @@ export default function AnimationsPage() {
 			</div>
 
 			{/* 이론 설명 */}
-			<div className="neu-flat p-6 rounded-xl">
-				<h2 className="text-xl font-semibold mb-4">애니메이션 기초 이론</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div className="p-6 rounded-xl neu-flat">
+				<h2 className="mb-4 text-xl font-semibold">애니메이션 기초 이론</h2>
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-blue-600">⏰ 시간 기반 애니메이션</h3>
+						<h3 className="mb-2 text-lg font-semibold text-blue-600">⏰ 시간 기반 애니메이션</h3>
 						<p className="text-sm text-gray-600">
 							<code>Clock</code>을 사용해 일정한 속도로 애니메이션을 구현한다. 
 							프레임레이트에 관계없이 동일한 속도를 유지한다.
@@ -290,7 +289,7 @@ export default function AnimationsPage() {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-green-600">🔄 requestAnimationFrame</h3>
+						<h3 className="mb-2 text-lg font-semibold text-green-600">🔄 requestAnimationFrame</h3>
 						<p className="text-sm text-gray-600">
 							브라우저의 리프레시 레이트에 맞춰 애니메이션을 실행한다. 
 							부드럽고 효율적인 애니메이션을 위해 필수다.
@@ -298,7 +297,7 @@ export default function AnimationsPage() {
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-purple-600">📊 수학 함수 활용</h3>
+						<h3 className="mb-2 text-lg font-semibold text-purple-600">📊 수학 함수 활용</h3>
 						<p className="text-sm text-gray-600">
 							<code>Math.sin()</code>, <code>Math.cos()</code> 등을 사용해 
 							자연스러운 움직임 패턴을 만든다.
@@ -308,31 +307,31 @@ export default function AnimationsPage() {
 
 				{/* 코드 팁 */}
 				<div className="mt-6 space-y-4">
-					<div className="bg-gray-50 p-4 rounded-lg">
-						<h4 className="font-semibold text-gray-800 mb-2">🔧 기본 애니메이션 패턴</h4>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+					<div className="p-4 bg-gray-50 rounded-lg">
+						<h4 className="mb-2 font-semibold text-gray-800">🔧 기본 애니메이션 패턴</h4>
+						<div className="grid grid-cols-1 gap-4 text-xs md:grid-cols-2">
 							<div>
-								<h5 className="font-semibold mb-1">회전:</h5>
+								<h5 className="mb-1 font-semibold">회전:</h5>
 								<code className="text-gray-600">mesh.rotation.y = time * speed</code>
 							</div>
 							<div>
-								<h5 className="font-semibold mb-1">진동:</h5>
+								<h5 className="mb-1 font-semibold">진동:</h5>
 								<code className="text-gray-600">mesh.position.x = Math.sin(time) * amplitude</code>
 							</div>
 							<div>
-								<h5 className="font-semibold mb-1">원형 운동:</h5>
+								<h5 className="mb-1 font-semibold">원형 운동:</h5>
 								<code className="text-gray-600">x = Math.cos(time) * radius</code>
 							</div>
 							<div>
-								<h5 className="font-semibold mb-1">펄스:</h5>
+								<h5 className="mb-1 font-semibold">펄스:</h5>
 								<code className="text-gray-600">scale = 1 + Math.sin(time * freq) * 0.2</code>
 							</div>
 						</div>
 					</div>
 
-					<div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+					<div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
 						<h4 className="font-semibold text-yellow-800">💡 실습 제안</h4>
-						<p className="text-sm text-yellow-700 mt-1">
+						<p className="mt-1 text-sm text-yellow-700">
 							각 애니메이션을 실행해보고 속도를 조절해보자. 
 							여러 애니메이션을 조합하면 더욱 복잡하고 흥미로운 움직임을 만들 수 있다.
 						</p>

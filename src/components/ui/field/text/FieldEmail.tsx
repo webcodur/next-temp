@@ -83,7 +83,7 @@ export const FieldEmail: React.FC<FieldEmailComponentProps> = ({
 						pl-10
 						${showClearButton && value ? 'pr-10' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						${showValidation && value && !validation.isValid ? 'border-red-300 focus:border-red-500' : ''}
+						${showValidation && value && !validation.isValid ? 'border-destructive focus:border-destructive' : ''}
 					`}
 				/>
 
@@ -100,13 +100,13 @@ export const FieldEmail: React.FC<FieldEmailComponentProps> = ({
 			{showValidation && value && (
 				<div className="flex gap-2 items-center mt-1">
 					{validation.isValid ? (
-						<Check className="w-4 h-4 text-green-600" />
+						<Check className="neu-icon-active w-4 h-4 text-success" />
 					) : (
-						<AlertCircle className="w-4 h-4 text-red-600" />
+						<AlertCircle className="neu-icon-active w-4 h-4 text-destructive" />
 					)}
 					<span
-						className={`text-xs font-medium ${
-							validation.isValid ? 'text-green-600' : 'text-red-600'
+						className={`font-multilang text-xs font-medium ${
+							validation.isValid ? 'text-success' : 'text-destructive'
 						}`}>
 						{validation.message}
 					</span>

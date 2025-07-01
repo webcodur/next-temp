@@ -1,6 +1,6 @@
 export const FIELD_STYLES = {
-	// 기본 컨테이너 (모든 필드 공통)
-	container: 'neu-flat focus:neu-inset focus:outline-hidden transition-all',
+	// 기본 컨테이너 (모든 필드 공통) - 뉴모피즘 + 테마 완전 대응
+	container: 'neu-flat focus:neu-inset focus:outline-hidden transition-all bg-card text-card-foreground border-border',
 
 	// 높이 통일 (모든 필드 동일)
 	height: 'h-10',
@@ -8,40 +8,40 @@ export const FIELD_STYLES = {
 	// 패딩 통일
 	padding: 'px-3 py-2',
 
-	// 텍스트 스타일
-	text: 'text-sm font-medium placeholder-gray-600 text-gray-800',
+	// 텍스트 스타일 - 테마 완전 대응
+	text: 'font-multilang text-sm font-medium placeholder:text-muted-foreground text-foreground',
 
-	// 아이콘 위치
+	// 아이콘 위치 - 테마 완전 대응
 	leftIcon:
-		'absolute left-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2',
+		'neu-icon-inactive absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
 	rightIcon:
-		'absolute right-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2',
+		'neu-icon-inactive absolute right-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
 
-	// 정렬 아이콘 (인터렉션 강조)
+	// 정렬 아이콘 (인터렉션 강조) - 테마 완전 대응
 	sortIcon:
-		'absolute left-3 top-1/2 w-4 h-4 text-gray-700 transform -translate-y-1/2 transition-all cursor-pointer hover:text-blue-600 hover:scale-110 hover:drop-shadow-lg active:scale-95 active:text-blue-700',
+		'neu-icon-inactive absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all cursor-pointer hover:neu-icon-active hover:scale-110 active:scale-95',
 
-	// 드롭다운 (보더 더욱 강화)
+	// 드롭다운 - 뉴모피즘 + 테마 완전 대응
 	dropdown:
-		'bg-white backdrop-blur-md border-2 border-gray-400 shadow-xl ring-1 ring-gray-200',
+		'neu-raised bg-popover text-popover-foreground border border-border shadow-lg backdrop-blur-md',
 
 	// 드롭다운 스크롤 영역
 	dropdownScroll: 'overflow-y-auto field-dropdown-scroll',
 
-	// 드롭다운 옵션
+	// 드롭다운 옵션 - 테마 완전 대응
 	dropdownOption:
-		'cursor-pointer px-3 py-2 text-sm font-medium transition-all neu-hover',
-	dropdownOptionSelected: 'bg-blue-50 text-blue-700 font-bold neu-inset',
-	dropdownOptionHighlighted: 'bg-gray-50 neu-raised',
-	dropdownOptionDisabled: 'cursor-not-allowed text-gray-400 opacity-60',
+		'font-multilang cursor-pointer px-3 py-2 text-sm font-medium transition-all neu-hover text-foreground hover:bg-muted',
+	dropdownOptionSelected: 'neu-inset bg-primary text-primary-foreground font-bold',
+	dropdownOptionHighlighted: 'neu-raised bg-muted text-muted-foreground',
+	dropdownOptionDisabled: 'cursor-not-allowed text-muted-foreground opacity-60',
 
-	// 버튼들
+	// 버튼들 - 뉴모피즘 완전 대응
 	button: 'neu-raised',
 	clearButton:
-		'flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800',
+		'neu-raised flex items-center justify-center w-5 h-5 rounded-full bg-muted text-muted-foreground transition-all hover:bg-muted/80 hover:text-foreground',
 
-	// 레이블
-	label: 'block mb-1 text-sm font-medium text-gray-800',
+	// 레이블 - 테마 완전 대응
+	label: 'font-multilang block mb-1 text-sm font-medium text-foreground',
 
 	// 비활성화 상태
 	disabled: 'opacity-60 cursor-not-allowed',

@@ -32,7 +32,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 	return (
 		<div className="absolute right-0 left-0 top-full z-50 mt-1">
 			<div
-				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg neu-flat`}
+				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg`}
 				style={{ maxHeight: `${maxHeight}px` }}>
 				<ul
 					className={FIELD_STYLES.dropdownScroll}
@@ -53,8 +53,8 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 									${isHighlighted && !isSelected ? FIELD_STYLES.dropdownOptionHighlighted : ''}
 								`}>
 								<div className="flex items-center justify-between">
-									<span>{option.label}</span>
-									<span className="text-xs text-gray-400 font-mono ml-2">
+									<span className="font-multilang">{option.label}</span>
+									<span className="font-multilang text-xs text-muted-foreground font-mono ml-2">
 										{numberLabel}
 									</span>
 								</div>

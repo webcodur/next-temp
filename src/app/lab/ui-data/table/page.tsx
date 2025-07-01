@@ -217,9 +217,9 @@ export default function TablePage() {
 
 			<div className="mb-10">
 				<h2 className="mb-4 text-xl font-semibold">자동 처리 테이블</h2>
-				<div className="p-4 mb-4 bg-blue-50 rounded-lg neu-flat">
-					<h3 className="mb-2 font-semibold text-blue-800">🚀 간소화된 기능</h3>
-					<ul className="space-y-1 text-sm text-blue-700">
+				<div className="p-4 mb-4 bg-primary/5 rounded-lg neu-flat">
+					<h3 className="mb-2 font-semibold text-primary">🚀 간소화된 기능</h3>
+					<ul className="space-y-1 text-sm text-muted-foreground">
 						<li>
 							• <strong>자동 로딩 감지</strong>: data가 null/undefined이면
 							자동으로 &quot;로딩 중...&quot; 표시
@@ -293,7 +293,7 @@ export default function TablePage() {
 			<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
 				<div>
 					<h2 className="mb-4 text-xl font-semibold">조건부 스타일링</h2>
-					<p className="mb-4 text-sm text-gray-600">
+					<p className="mb-4 text-sm text-muted-foreground">
 						rowClassName으로 비활성 사용자를 흐리게 표시 (3행 고정)
 					</p>
 					<SmartTable
@@ -308,7 +308,7 @@ export default function TablePage() {
 
 				<div>
 					<h2 className="mb-4 text-xl font-semibold">기본 페이지 크기</h2>
-					<p className="mb-4 text-sm text-gray-600">
+					<p className="mb-4 text-sm text-muted-foreground">
 						pageSize 미지정 시 기본 10행으로 표시
 					</p>
 					<SmartTable data={users} columns={columns} />
@@ -322,7 +322,7 @@ export default function TablePage() {
 				<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 					<div>
 						<h3 className="mb-2 font-semibold">2행 고정</h3>
-						<p className="mb-4 text-sm text-gray-600">
+						<p className="mb-4 text-sm text-muted-foreground">
 							데이터가 많아도 2행만 표시, 로딩/빈 상태도 2행 높이 유지
 						</p>
 						<SmartTable data={users} columns={columns} pageSize={2} />
@@ -330,7 +330,7 @@ export default function TablePage() {
 
 					<div>
 						<h3 className="mb-2 font-semibold">빈 데이터 (3행 높이)</h3>
-						<p className="mb-4 text-sm text-gray-600">
+						<p className="mb-4 text-sm text-muted-foreground">
 							데이터가 없어도 3행 높이로 고정
 						</p>
 						<SmartTable data={[]} columns={columns} pageSize={3} />
@@ -338,7 +338,7 @@ export default function TablePage() {
 
 					<div>
 						<h3 className="mb-2 font-semibold">로딩 상태 (4행 높이)</h3>
-						<p className="mb-4 text-sm text-gray-600">
+						<p className="mb-4 text-sm text-muted-foreground">
 							로딩 중에도 4행 높이로 고정
 						</p>
 						<SmartTable data={null} columns={columns} pageSize={4} />

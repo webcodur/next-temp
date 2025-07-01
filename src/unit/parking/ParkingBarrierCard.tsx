@@ -29,10 +29,10 @@ const ParkingBarrierCard: React.FC<ParkingBarrierCardProps> = ({
 	};
 
 	return (
-		<div className="p-2 bg-white neu-flat rounded-xl">
+		<div className="p-2 bg-background neu-flat rounded-xl">
 			{/* 차단기 이름 */}
 			<div className="mb-1">
-				<h3 className="text-xs font-medium text-center text-gray-800 truncate px-1">
+				<h3 className="text-xs font-medium text-center text-foreground truncate px-1">
 					{barrier.name}
 				</h3>
 			</div>

@@ -46,7 +46,7 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 		<div className={`relative ${className}`}>
 			<div className="flex items-center justify-between h-6">
 				{label && (
-					<label className="text-sm font-medium text-gray-700 leading-6">
+					<label className="text-sm font-medium text-foreground leading-6">
 						{label}
 					</label>
 				)}
@@ -71,13 +71,13 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 					<div
 						className={`w-6 h-6 flex items-center justify-center rounded-md transition-all duration-200 border focus-within:neu-inset ${
 							isChecked || indeterminate
-								? 'neu-inset bg-white border-gray-400 shadow-inner'
-								: 'neu-raised bg-white border-gray-300 shadow-md hover:shadow-lg'
+								? 'neu-inset bg-background border-border shadow-inner'
+								: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'
 						}`}>
 						{indeterminate ? (
-							<Minus className="w-4 h-4 text-gray-900" />
+							<Minus className="w-4 h-4 text-foreground" />
 						) : isChecked ? (
-							<Check className="w-4 h-4 text-gray-900" />
+							<Check className="w-4 h-4 text-foreground" />
 						) : null}
 					</div>
 				</div>

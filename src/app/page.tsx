@@ -126,14 +126,14 @@ export default function Home() {
 
 	// #region 렌더링
 	return (
-		<div className="p-4 min-h-screen bg-gray-50">
+		<div className="p-4 min-h-screen bg-background">
 			<div className="mx-auto max-w-7xl">
 				{/* 헤더 */}
 				<div className="mb-6">
-					<h1 className="mb-1 text-2xl font-bold text-gray-800">
+					<h1 className="mb-1 text-2xl font-bold text-foreground">
 						{t('주차_시스템제목')}
 					</h1>
-					<p className="text-sm text-gray-600">{t('주차_시스템설명')}</p>
+					<p className="text-sm text-muted-foreground">{t('주차_시스템설명')}</p>
 				</div>
 
 				{/* 탭 메뉴 */}

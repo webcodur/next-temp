@@ -54,7 +54,7 @@ const Tabs = React.forwardRef<
 			ref={ref}
 			className={cn(
 				'relative overflow-hidden rounded-2xl neu-flat transition-all duration-200', 
-				variant === 'filled' && 'bg-slate-50',
+				variant === 'filled' && 'bg-muted',
 				className
 			)}
 			{...props}
@@ -70,8 +70,8 @@ const Tabs = React.forwardRef<
 								'relative px-6 mx-1 rounded-lg font-medium transition-all duration-200',
 								sizeClasses[size],
 								activeId === tab.id 
-									? 'text-gray-700 neu-inset' 
-									: 'text-gray-600 hover:text-gray-800 neu-raised'
+									? 'text-foreground neu-inset' 
+									: 'text-muted-foreground hover:text-foreground neu-raised'
 							)}
 						>
 							{tab.icon && (

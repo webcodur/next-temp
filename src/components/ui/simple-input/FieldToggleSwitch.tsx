@@ -60,7 +60,7 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 		<div className={`relative ${className}`}>
 			<div className="flex justify-between items-center h-6">
 				{label && (
-					<label className="text-sm font-medium leading-6 text-gray-700">
+					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
 					</label>
 				)}
@@ -84,12 +84,12 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 					<div
 						className={`${currentSize.track} relative rounded-full transition-all duration-200 border focus-within:neu-inset ${
 							checked
-								? 'neu-inset bg-blue-100 border-blue-300 shadow-inner'
-								: 'neu-flat bg-gray-100 border-gray-300 shadow-xs hover:shadow-md'
+								? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
+								: 'neu-flat bg-muted border-border shadow-xs hover:shadow-md'
 						}`}>
 						<div
-							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-white border border-gray-200 rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
-								checked ? 'border-blue-200' : 'border-gray-300'
+							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-background border border-border rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
+								checked ? 'border-primary/20' : 'border-border'
 							}`}
 						/>
 					</div>

@@ -30,7 +30,7 @@ const renderCustomYearMonthHeader = ({
 	return (
 		<div className="flex justify-center items-center px-2 py-2 space-x-2">
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all"
+				className="font-multilang px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all bg-card text-card-foreground border-border"
 				value={date.getFullYear()}
 				onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}>
 				{years.map((year) => (
@@ -41,7 +41,7 @@ const renderCustomYearMonthHeader = ({
 			</select>
 
 			<select
-				className="px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all"
+				className="font-multilang px-2 py-1 text-sm rounded neu-flat focus:neu-inset focus:outline-hidden transition-all bg-card text-card-foreground border-border"
 				value={date.getMonth()}
 				onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}>
 				{months.map((month) => (
@@ -82,17 +82,10 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 
 		return (
 			<div className={`space-y-1 ${className}`}>
-				{label && (
-					<label className="block text-sm font-medium text-gray-800 mb-1">
-						{label}
-					</label>
-				)}
+				{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 				<div className="relative w-full">
-					<Calendar
-						className="absolute left-3 top-1/2 w-4 h-4 text-gray-800 transform -translate-y-1/2 z-10"
-						style={{ color: '#1f2937' }}
-					/>
+					<Calendar className={`${FIELD_STYLES.leftIcon} neu-icon-inactive z-10`} />
 					<DatePicker
 						selected={value ?? undefined}
 						onChange={(date) => onChange?.(date)}
@@ -106,19 +99,22 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
-							w-full h-8 px-3 py-2 pl-10 text-sm font-medium
+							w-full
 							${FIELD_STYLES.container}
-							placeholder-gray-700 text-gray-800
+							${FIELD_STYLES.height}
+							${FIELD_STYLES.padding}
+							${FIELD_STYLES.text}
+							pl-10
 							${value ? 'pr-10' : 'pr-3'}
-							${disabled ? 'opacity-60 cursor-not-allowed' : ''}
+							${disabled ? FIELD_STYLES.disabled : ''}
 						`}
 					/>
 					{value && (
 						<button
 							onClick={handleClear}
-							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 							type="button">
-							<X className="h-3 w-3" />
+							<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 						</button>
 					)}
 				</div>
@@ -141,18 +137,11 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 
 		return (
 			<div className={`space-y-1 ${className}`}>
-				{label && (
-					<label className="block text-sm font-medium text-gray-800 mb-1">
-						{label}
-					</label>
-				)}
+				{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 				<div className="flex items-center w-full">
 					<div className="relative flex-1">
-						<Calendar
-							className="absolute left-3 top-1/2 w-4 h-4 text-gray-800 transform -translate-y-1/2 z-10"
-							style={{ color: '#1f2937' }}
-						/>
+						<Calendar className={`${FIELD_STYLES.leftIcon} neu-icon-inactive z-10`} />
 						<DatePicker
 							selected={startDate ?? undefined}
 							onChange={(date) => onStartDateChange?.(date)}
@@ -169,34 +158,32 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							popperClassName="z-9999!"
 							wrapperClassName="w-full"
 							className={`
-								w-full h-8 px-3 py-2 pl-10 text-sm font-medium
+								w-full
 								${FIELD_STYLES.container}
-								placeholder-gray-700 text-gray-800
+								${FIELD_STYLES.height}
+								${FIELD_STYLES.padding}
+								${FIELD_STYLES.text}
+								pl-10
 								${startDate ? 'pr-10' : 'pr-3'}
-								${disabled ? 'opacity-60 cursor-not-allowed' : ''}
+								${disabled ? FIELD_STYLES.disabled : ''}
 							`}
 						/>
 						{startDate && (
 							<button
 								onClick={handleStartClear}
-								className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+								className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 								type="button">
-								<X className="h-3 w-3" />
+								<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 							</button>
 						)}
 					</div>
 
-					<div
-						className="flex items-center justify-center text-sm text-gray-500 px-3"
-						style={{ width: '40px' }}>
+					<div className="flex items-center justify-center font-multilang text-sm text-muted-foreground px-3" style={{ width: '40px' }}>
 						~
 					</div>
 
 					<div className="relative flex-1">
-						<Calendar
-							className="absolute left-3 top-1/2 w-4 h-4 text-gray-800 transform -translate-y-1/2 z-10"
-							style={{ color: '#1f2937' }}
-						/>
+						<Calendar className={`${FIELD_STYLES.leftIcon} neu-icon-inactive z-10`} />
 						<DatePicker
 							selected={endDate ?? undefined}
 							onChange={(date) => onEndDateChange?.(date)}
@@ -206,25 +193,29 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							minDate={startDate ?? undefined}
 							dateFormat={dateFormat || 'yyyy-MM-dd'}
 							placeholderText="종료일"
+							maxDate={maxDate ?? undefined}
 							locale={ko}
 							disabled={disabled}
 							renderCustomHeader={renderCustomYearMonthHeader}
 							popperClassName="z-9999!"
 							wrapperClassName="w-full"
 							className={`
-								w-full h-8 px-3 py-2 pl-10 text-sm font-medium
+								w-full
 								${FIELD_STYLES.container}
-								placeholder-gray-700 text-gray-800
+								${FIELD_STYLES.height}
+								${FIELD_STYLES.padding}
+								${FIELD_STYLES.text}
+								pl-10
 								${endDate ? 'pr-10' : 'pr-3'}
-								${disabled ? 'opacity-60 cursor-not-allowed' : ''}
+								${disabled ? FIELD_STYLES.disabled : ''}
 							`}
 						/>
 						{endDate && (
 							<button
 								onClick={handleEndClear}
-								className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+								className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 								type="button">
-								<X className="h-3 w-3" />
+								<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 							</button>
 						)}
 					</div>
@@ -234,10 +225,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 	}
 	// #endregion
 
-	// #region 날짜 + 시간 선택
-	if (datePickerType === 'datetime') {
-		const inputDateFormat = dateFormat || `yyyy-MM-dd ${timeFormat}`;
-
+	// #region 날짜와 시간 선택
+	if (datePickerType === 'dateTime') {
 		const handleClear = (e: React.MouseEvent) => {
 			e.stopPropagation();
 			onChange?.(null);
@@ -245,25 +234,18 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 
 		return (
 			<div className={`space-y-1 ${className}`}>
-				{label && (
-					<label className="block text-sm font-medium text-gray-800 mb-1">
-						{label}
-					</label>
-				)}
+				{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 				<div className="relative w-full">
-					<Calendar
-						className="absolute left-3 top-1/2 w-4 h-4 text-gray-800 transform -translate-y-1/2 z-10"
-						style={{ color: '#1f2937' }}
-					/>
+					<Calendar className={`${FIELD_STYLES.leftIcon} neu-icon-inactive z-10`} />
 					<DatePicker
 						selected={value ?? undefined}
 						onChange={(date) => onChange?.(date)}
 						showTimeSelect
 						timeFormat={timeFormat}
 						timeIntervals={timeIntervals}
-						dateFormat={inputDateFormat}
-						placeholderText={placeholder || '날짜 시간 선택'}
+						dateFormat={`${dateFormat || 'yyyy-MM-dd'} ${timeFormat}`}
+						placeholderText={placeholder || '날짜와 시간 선택'}
 						minDate={minDate ?? undefined}
 						maxDate={maxDate ?? undefined}
 						locale={ko}
@@ -272,19 +254,22 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
-						w-full h-8 px-3 py-2 pl-10 text-sm font-medium
-						${FIELD_STYLES.container}
-						placeholder-gray-700 text-gray-800
-						${value ? 'pr-10' : 'pr-3'}
-						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
-					`}
+							w-full
+							${FIELD_STYLES.container}
+							${FIELD_STYLES.height}
+							${FIELD_STYLES.padding}
+							${FIELD_STYLES.text}
+							pl-10
+							${value ? 'pr-10' : 'pr-3'}
+							${disabled ? FIELD_STYLES.disabled : ''}
+						`}
 					/>
 					{value && (
 						<button
 							onClick={handleClear}
-							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 							type="button">
-							<X className="h-3 w-3" />
+							<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 						</button>
 					)}
 				</div>
@@ -293,8 +278,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 	}
 	// #endregion
 
-	// #region 월별 선택
-	if (datePickerType === 'month') {
+	// #region 시간만 선택
+	if (datePickerType === 'time') {
 		const handleClear = (e: React.MouseEvent) => {
 			e.stopPropagation();
 			onChange?.(null);
@@ -302,44 +287,40 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 
 		return (
 			<div className={`space-y-1 ${className}`}>
-				{label && (
-					<label className="block text-sm font-medium text-gray-800 mb-1">
-						{label}
-					</label>
-				)}
+				{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 				<div className="relative w-full">
-					<Calendar
-						className="absolute left-3 top-1/2 w-4 h-4 text-gray-800 transform -translate-y-1/2 z-10"
-						style={{ color: '#1f2937' }}
-					/>
+					<Calendar className={`${FIELD_STYLES.leftIcon} neu-icon-inactive z-10`} />
 					<DatePicker
 						selected={value ?? undefined}
 						onChange={(date) => onChange?.(date)}
-						showMonthYearPicker
-						dateFormat={dateFormat || 'yyyy년 MM월'}
-						placeholderText={placeholder || '월 선택'}
-						minDate={minDate ?? undefined}
-						maxDate={maxDate ?? undefined}
+						showTimeSelect
+						showTimeSelectOnly
+						timeIntervals={timeIntervals}
+						timeCaption="시간"
+						dateFormat={timeFormat}
+						placeholderText={placeholder || '시간 선택'}
 						locale={ko}
 						disabled={disabled}
-						renderCustomHeader={renderCustomYearMonthHeader}
 						popperClassName="z-9999!"
 						wrapperClassName="w-full"
 						className={`
-						w-full h-8 px-3 py-2 pl-10 text-sm font-medium
-						${FIELD_STYLES.container}
-						placeholder-gray-700 text-gray-800
-						${value ? 'pr-10' : 'pr-3'}
-						${disabled ? 'opacity-60 cursor-not-allowed' : ''}
-					`}
+							w-full
+							${FIELD_STYLES.container}
+							${FIELD_STYLES.height}
+							${FIELD_STYLES.padding}
+							${FIELD_STYLES.text}
+							pl-10
+							${value ? 'pr-10' : 'pr-3'}
+							${disabled ? FIELD_STYLES.disabled : ''}
+						`}
 					/>
 					{value && (
 						<button
 							onClick={handleClear}
-							className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 border border-gray-300 text-gray-600 transition-all hover:bg-gray-200 hover:border-gray-400 hover:text-gray-800"
+							className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
 							type="button">
-							<X className="h-3 w-3" />
+							<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
 						</button>
 					)}
 				</div>

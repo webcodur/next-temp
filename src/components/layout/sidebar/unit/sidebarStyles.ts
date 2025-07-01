@@ -5,13 +5,13 @@
  */
 
 // 공통 토글 버튼 기본 스타일
-export const toggleButtonBase = "flex justify-center items-center bg-white transition-all duration-300 cursor-pointer group";
+export const toggleButtonBase = "flex justify-center items-center bg-background transition-all duration-300 cursor-pointer group";
 
 // 공통 border 스타일 
-export const toggleButtonBorder = "border border-gray-200";
+export const toggleButtonBorder = "border border-border";
 
 // 공통 hover 효과
-export const toggleButtonHover = "hover:bg-gray-50";
+export const toggleButtonHover = "hover:bg-muted";
 
 // 공통 아이콘 스타일
 export const toggleButtonIcon = "w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110";
@@ -23,7 +23,7 @@ export const mainToggleButton = `${toggleButtonBase} ${toggleButtonBorder} ${tog
 export const headToggleContainer = "h-[30px] flex transition-all duration-300";
 
 // 헤드 토글 좌측 구분선 영역 (border 제거)
-export const headToggleLeftDivider = "w-[50px] bg-white";
+export const headToggleLeftDivider = "w-[50px] bg-background";
 
 // 헤드 토글 버튼 영역 (border 제거)
 export const headToggleButton = `${toggleButtonBase} flex-1`;

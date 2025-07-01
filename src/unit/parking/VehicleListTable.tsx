@@ -64,13 +64,13 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	};
 
 	return (
-		<div className="p-2 bg-white rounded-xl neu-flat">
+		<div className="p-2 bg-background rounded-xl neu-flat">
 			{/* 헤더 */}
 			<div className="flex justify-between items-center mb-2">
-				<h2 className="text-sm font-semibold text-gray-800">
+				<h2 className="text-sm font-semibold text-foreground">
 					금일 입출차 현황
 				</h2>
-				<div className="text-xs text-gray-600">
+				<div className="text-xs text-muted-foreground">
 					총 {filteredVehicles.length}건
 				</div>
 			</div>
@@ -86,12 +86,12 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 
 			{/* 테이블 - 고정 높이 500px로 제한 */}
 			<div
-				className="bg-white rounded-lg border border-gray-200 neu-inset"
+				className="bg-background rounded-lg border border-border neu-inset"
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					{/* 테이블 헤더 - 고정 */}
-					<div className="bg-gray-50 border-b border-gray-200 shrink-0">
-						<div className="flex text-xs font-medium text-gray-600">
+					<div className="bg-muted border-b border-border shrink-0">
+						<div className="flex text-xs font-medium text-muted-foreground">
 							<div className="px-2 py-1 w-16 text-left">순번</div>
 							<div className="px-2 py-1 w-32 text-left">차량구분</div>
 							<div className="px-2 py-1 w-40 text-left">차량번호</div>
@@ -112,22 +112,22 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 									<div
 										key={`${vehicle.id}_${vehicle.status}_${index}`}
 										onClick={() => handleRowClick(vehicle)}
-										className={`flex items-center border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors text-xs py-2 ${
+										className={`flex items-center border-b border-border hover:bg-muted cursor-pointer transition-colors text-xs py-2 ${
 											selectedVehicle?.id === vehicle.id &&
 											selectedVehicle?.status === vehicle.status
-												? 'bg-blue-100'
+												? 'bg-primary/10'
 												: vehicle.is_black === 'Y'
-													? 'bg-red-50'
+													? 'bg-red-500/10'
 													: ''
 										}`}>
-										<div className="px-2 py-1 w-16 text-gray-800">
+										<div className="px-2 py-1 w-16 text-foreground">
 											{(filteredVehicles.length - index)
 												.toString()
 												.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 										</div>
 										<div className="px-2 py-1 w-32">
 											<div>
-												<div className="font-medium text-gray-800">
+												<div className="font-medium text-foreground">
 													{parseCarAllowType(vehicle.type)}
 													{vehicle.modify_car_type && (
 														<span className="ml-1 text-orange-600">
@@ -136,7 +136,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 													)}
 												</div>
 												{(vehicle.address_1depth || vehicle.address_2depth) && (
-													<div className="text-xs text-gray-500">
+													<div className="text-xs text-muted-foreground">
 														{vehicle.address_1depth} {vehicle.address_2depth}
 													</div>
 												)}
@@ -164,19 +164,19 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												<span
 													className={`inline-flex px-1 py-0.5 rounded text-xs font-medium ${
 														vehicle.status === 1
-															? 'bg-blue-100 text-blue-700'
-															: 'bg-green-100 text-green-700'
+															? 'bg-primary/10 text-primary'
+															: 'bg-green-500/10 text-green-600'
 													}`}>
 													{vehicle.status === 1 ? '입차' : '출차'}
 												</span>
 												{vehicle.device_name && (
-													<div className="text-xs text-gray-500">
+													<div className="text-xs text-muted-foreground">
 														{vehicle.device_name}
 													</div>
 												)}
 											</div>
 										</div>
-										<div className="flex-1 px-2 py-1 text-gray-800">
+										<div className="flex-1 px-2 py-1 text-foreground">
 											{vehicle.use_time}
 										</div>
 									</div>

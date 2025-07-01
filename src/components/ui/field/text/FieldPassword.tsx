@@ -53,11 +53,11 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 
 		const levels = [
 			{ level: 0, text: '', color: '' },
-			{ level: 1, text: '매우 약함', color: 'text-red-600' },
-			{ level: 2, text: '약함', color: 'text-orange-600' },
-			{ level: 3, text: '보통', color: 'text-yellow-600' },
-			{ level: 4, text: '강함', color: 'text-blue-600' },
-			{ level: 5, text: '매우 강함', color: 'text-green-600' },
+			{ level: 1, text: '매우 약함', color: 'text-destructive' },
+			{ level: 2, text: '약함', color: 'text-warning' },
+			{ level: 3, text: '보통', color: 'text-accent-foreground' },
+			{ level: 4, text: '강함', color: 'text-primary' },
+			{ level: 5, text: '매우 강함', color: 'text-success' },
 		];
 
 		return levels[score];
@@ -107,7 +107,7 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 						type="button"
 						onClick={togglePasswordVisibility}
 						disabled={disabled}
-						className="p-0.5 text-gray-700 hover:text-gray-900 transition-colors neu-icon-inactive hover:neu-icon-active">
+						className="p-0.5 text-muted-foreground hover:text-foreground transition-colors neu-icon-inactive hover:neu-icon-active">
 						{showPassword ? (
 							<EyeOff className="w-4 h-4" />
 						) : (
@@ -120,25 +120,25 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 			{showStrengthIndicator && value && (
 				<div className="mt-2">
 					<div className="flex gap-2 items-center">
-						<div className="overflow-hidden flex-1 h-1 bg-gray-200 rounded-full">
+						<div className="overflow-hidden flex-1 h-1 bg-muted rounded-full">
 							<div
 								className={`h-full transition-all ${
 									passwordStrength.level === 1
-										? 'w-1/5 bg-red-500'
+										? 'w-1/5 bg-destructive'
 										: passwordStrength.level === 2
-											? 'w-2/5 bg-orange-500'
+											? 'w-2/5 bg-warning'
 											: passwordStrength.level === 3
-												? 'w-3/5 bg-yellow-500'
+												? 'w-3/5 bg-accent'
 												: passwordStrength.level === 4
-													? 'w-4/5 bg-blue-500'
+													? 'w-4/5 bg-primary'
 													: passwordStrength.level === 5
-														? 'w-full bg-green-500'
+														? 'w-full bg-success'
 														: 'w-0'
 								}`}
 							/>
 						</div>
 						{passwordStrength.text && (
-							<span className={`text-xs font-medium ${passwordStrength.color}`}>
+							<span className={`font-multilang text-xs font-medium ${passwordStrength.color}`}>
 								{passwordStrength.text}
 							</span>
 						)}

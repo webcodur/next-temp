@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Modal from '@/components/ui/modal/Modal';
+import Image from 'next/image';
 
 export interface CarouselProps {
 	images: string[];
@@ -16,9 +17,14 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 	const [isDragging, setIsDragging] = useState<boolean>(false);
 	const [isPointerDown, setIsPointerDown] = useState<boolean>(false);
 
-	const handlePrev = () =>
-		setIndex((prev) => (prev - 1 + images.length) % images.length);
-	const handleNext = () => setIndex((prev) => (prev + 1) % images.length);
+	const handlePrev = useCallback(
+		() => setIndex((prev) => (prev - 1 + images.length) % images.length),
+		[images.length]
+	);
+	const handleNext = useCallback(
+		() => setIndex((prev) => (prev + 1) % images.length),
+		[images.length]
+	);
 
 	const handleImageClick = () => {
 		// 드래그 중이었다면 클릭 무시
@@ -89,36 +95,43 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 
 	// 이미지가 없으면 빈 div 반환
 	if (!images.length)
-		return <div className="w-full h-64 bg-gray-200 rounded-md"></div>;
+		return <div className="w-full h-64 bg-muted rounded-md"></div>;
 
 	return (
 		<>
 			<div className="overflow-hidden relative w-full rounded-lg neu-raised aspect-video">
 				<AnimatePresence mode="wait">
-					<motion.img
-						key={index}
-						src={images[index]}
-						alt={`슬라이드 이미지 ${index + 1}`}
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.5 }}
-						className="object-cover w-full h-full cursor-pointer hover:scale-105 select-none"
-						onClick={handleImageClick}
-						onMouseDown={handleMouseDown}
-						style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-					/>
+					{(() => {
+						const MotionImage = motion(Image);
+						return (
+							<MotionImage
+								key={index}
+								src={images[index]}
+								alt={`슬라이드 이미지 ${index + 1}`}
+								fill
+								unoptimized
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.5 }}
+								className="object-cover w-full h-full cursor-pointer hover:scale-105 select-none"
+								onClick={handleImageClick}
+								onMouseDown={handleMouseDown}
+								style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+							/>
+						);
+					})()}
 				</AnimatePresence>
 
 				<button
 					onClick={handlePrev}
-					className="absolute left-2 top-1/2 p-2 text-white bg-gray-800 bg-opacity-50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-opacity-70">
+					className="absolute left-2 top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
 					<ChevronLeft size={24} />
 				</button>
 
 				<button
 					onClick={handleNext}
-					className="absolute right-2 top-1/2 p-2 text-white bg-gray-800 bg-opacity-50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-opacity-70">
+					className="absolute right-2 top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
 					<ChevronRight size={24} />
 				</button>
 
@@ -128,7 +141,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 							key={idx}
 							onClick={() => setIndex(idx)}
 							className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-110 ${
-								idx === index ? 'bg-white' : 'bg-gray-400 neu-raised'
+								idx === index ? 'bg-primary' : 'bg-muted-foreground neu-raised'
 							}`}
 							aria-label={`슬라이드 ${idx + 1}로 이동`}
 						/>
@@ -142,23 +155,26 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 				title={`이미지 ${index + 1} / ${images.length}`}
 				maxWidth="max-w-5xl">
 				<div className="flex justify-center items-center">
-					<img
+					<Image
 						src={images[index]}
 						alt={`원본 이미지 ${index + 1}`}
+						width={1024}
+						height={768}
+						unoptimized
 						className="max-w-full max-h-[70vh] object-contain rounded-lg"
 					/>
 				</div>
 				<div className="flex justify-center mt-4 space-x-4">
 					<button
 						onClick={handlePrev}
-						className="px-4 py-2 bg-gray-200 rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
+						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
 						disabled={images.length <= 1}>
 						<ChevronLeft size={20} className="inline mr-1" />
 						이전
 					</button>
 					<button
 						onClick={handleNext}
-						className="px-4 py-2 bg-gray-200 rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
+						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
 						disabled={images.length <= 1}>
 						다음
 						<ChevronRight size={20} className="inline ml-1" />

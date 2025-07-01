@@ -3,11 +3,11 @@ export const defaults = {
 	topMenu: 'parking',
 	midMenu: 'facility',
 	sidebarWidth: 300, // botMenu 텍스트 여유 공간 확보를 위해 증가 (286 → 300)
-	leftColumnWidth: 96,
+	leftColumnWidth: 80, // 96 → 80으로 줄임
 };
 
 export const styles = {
-	leftColWidth: 'w-[96px]',
+	leftColWidth: 'w-[80px]', // 96px → 80px로 줄임
 	buttonSize: 'w-14 h-14',
 	avatarSize: 'w-12 h-12',
 	headerHeight: 'h-[70px]',

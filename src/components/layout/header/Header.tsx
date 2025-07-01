@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
 
 export function Header() {
@@ -21,8 +22,9 @@ export function Header() {
 			</div>
 
 			{/* Right Section */}
-			<div className="flex gap-4 items-center">
+			<div className="flex gap-3 items-center">
 				<LanguageSwitcher variant="header" />
+				<ThemeToggle variant="icon" showLabel={false} />
 				<ProfileButton />
 			</div>
 		</header>

@@ -34,9 +34,9 @@ const TooltipContent = React.forwardRef<
 	) => {
 		const variantClasses = {
 			default: 'bg-primary text-primary-foreground',
-			info: 'bg-blue-500 text-black',
-			warning: 'bg-amber-500 text-black',
-			error: 'bg-red-500 text-black',
+			info: 'bg-primary text-primary-foreground',
+			warning: 'bg-amber-600 text-background',
+			error: 'bg-red-600 text-background',
 		};
 
 		return (
@@ -63,9 +63,9 @@ const TooltipContent = React.forwardRef<
 								className={cn(
 									'fill-current',
 									variant === 'default' && 'fill-primary',
-									variant === 'info' && 'fill-blue-500',
-									variant === 'warning' && 'fill-amber-500',
-									variant === 'error' && 'fill-red-500'
+									variant === 'info' && 'fill-primary',
+									variant === 'warning' && 'fill-amber-600',
+									variant === 'error' && 'fill-red-600'
 								)}
 								width={10}
 								height={5}
