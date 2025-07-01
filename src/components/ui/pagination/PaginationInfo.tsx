@@ -18,11 +18,15 @@ export const PaginationInfo: React.FC<PaginationInfoProps> = ({
 		return null;
 	}
 
-	const { start, end } = calculateDisplayRange(currentPage, pageSize, totalItems);
+	const { start, end } = calculateDisplayRange(
+		currentPage,
+		pageSize,
+		totalItems
+	);
 
 	return (
-		<div className="text-[#666666] text-sm">
+		<div className="text-muted-foreground text-sm">
 			총 {totalItems}개의 {itemName} 중 {start}-{end}개 표시
 		</div>
 	);
-}; 
+};

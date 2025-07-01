@@ -51,15 +51,15 @@ const StepNode: React.FC<StepNodeProps> = ({
 			return 'neu-raised text-primary border-2 border-primary/20';
 		}
 		if (isCompleted) {
-			return 'neu-inset text-neutral-700 hover:neu-raised cursor-pointer';
+			return 'neu-inset text-foreground/80 hover:neu-raised cursor-pointer';
 		}
 		if (isCurrent) {
 			return 'neu-raised text-primary';
 		}
 		if (stepNumber === currentStep + 1) {
-			return 'neu-flat text-neutral-600 border border-neutral-200';
+			return 'neu-flat text-muted-foreground border border-border';
 		}
-		return 'neu-flat text-neutral-400';
+		return 'neu-flat text-muted-foreground/60';
 	};
 
 	return (
@@ -79,7 +79,7 @@ const StepLine: React.FC<StepLineProps> = ({ isCompleted }) => {
 	return (
 		<div className="flex-1 h-1 mx-2 sm:mx-4 min-w-[30px] sm:min-w-[40px] max-w-[60px] sm:max-w-[80px] neu-inset rounded-full overflow-hidden">
 			<div
-				className={`h-full transition-all duration-300 ${isCompleted ? 'bg-primary' : 'bg-neutral-300'}`}
+				className={`h-full transition-all duration-300 ${isCompleted ? 'bg-primary' : 'bg-muted'}`}
 				style={{
 					width: isCompleted ? '100%' : '0%',
 				}}

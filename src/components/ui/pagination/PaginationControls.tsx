@@ -1,5 +1,10 @@
 import React from 'react';
-import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
+import {
+	ChevronsLeft,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsRight,
+} from 'lucide-react';
 import { PaginationNavigation } from './pagination.types';
 
 interface PaginationControlsProps extends PaginationNavigation {
@@ -30,11 +35,10 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 				disabled={currentPage === 1 || disabled}
 				className={`p-2 rounded-md cursor-pointer ${
 					currentPage === 1 || disabled
-						? 'text-[#cccccc] cursor-not-allowed'
-						: 'text-[#333333] neu-raised'
+						? 'text-muted-foreground cursor-not-allowed'
+						: 'text-foreground neu-raised'
 				}`}
-				aria-label="첫 페이지로 이동"
-			>
+				aria-label="첫 페이지로 이동">
 				<ChevronsLeft size={14} />
 			</button>
 
@@ -44,11 +48,10 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 				disabled={startPage === 1 || disabled}
 				className={`p-2 rounded-md cursor-pointer ${
 					startPage === 1 || disabled
-						? 'text-[#cccccc] cursor-not-allowed'
-						: 'text-[#333333] neu-raised'
+						? 'text-muted-foreground cursor-not-allowed'
+						: 'text-foreground neu-raised'
 				}`}
-				aria-label="이전 그룹으로 이동"
-			>
+				aria-label="이전 그룹으로 이동">
 				<ChevronLeft size={14} />
 			</button>
 
@@ -61,13 +64,12 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 						disabled={disabled}
 						className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
 							pageNumber === currentPage
-								? 'bg-[#2563eb] text-white'
+								? 'bg-primary text-primary-foreground'
 								: disabled
-								? 'text-[#cccccc] cursor-not-allowed'
-								: 'text-[#333333] neu-raised'
+									? 'text-muted-foreground cursor-not-allowed'
+									: 'text-foreground neu-raised'
 						}`}
-						aria-current={pageNumber === currentPage ? 'page' : undefined}
-					>
+						aria-current={pageNumber === currentPage ? 'page' : undefined}>
 						{pageNumber}
 					</button>
 				))}
@@ -79,11 +81,10 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 				disabled={endPage === totalPages || disabled}
 				className={`p-2 rounded-md cursor-pointer ${
 					endPage === totalPages || disabled
-						? 'text-[#cccccc] cursor-not-allowed'
-						: 'text-[#333333] neu-raised'
+						? 'text-muted-foreground cursor-not-allowed'
+						: 'text-foreground neu-raised'
 				}`}
-				aria-label="다음 그룹으로 이동"
-			>
+				aria-label="다음 그룹으로 이동">
 				<ChevronRight size={14} />
 			</button>
 
@@ -93,13 +94,12 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 				disabled={currentPage === totalPages || disabled}
 				className={`p-2 rounded-md cursor-pointer ${
 					currentPage === totalPages || disabled
-						? 'text-[#cccccc] cursor-not-allowed'
-						: 'text-[#333333] neu-raised'
+						? 'text-muted-foreground cursor-not-allowed'
+						: 'text-foreground neu-raised'
 				}`}
-				aria-label="마지막 페이지로 이동"
-			>
+				aria-label="마지막 페이지로 이동">
 				<ChevronsRight size={14} />
 			</button>
 		</nav>
 	);
-}; 
+};

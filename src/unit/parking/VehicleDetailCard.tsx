@@ -41,7 +41,10 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 						) : (
 							<div className="flex justify-center items-center w-full h-full">
 								{/* 차량 아이콘을 이미지 섹션 전체에 표시 */}
-								<Car className="w-48 h-48 text-muted-foreground" strokeWidth={1} />
+								<Car
+									className="w-48 h-48 text-muted-foreground"
+									strokeWidth={1}
+								/>
 							</div>
 						)}
 					</div>
@@ -59,7 +62,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 										className={`px-3 py-1 rounded-lg text-sm font-medium neu-raised ${
 											vehicle.status === 1
 												? 'bg-primary/10 text-primary border border-primary/20'
-												: 'bg-green-500/10 text-green-600 border border-green-500/20'
+												: 'bg-success/10 text-success border border-success/20'
 										}`}>
 										{vehicle.status === 1 ? '입차' : '출차'}
 									</div>
@@ -68,7 +71,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 								{/* 번호판 */}
 								<div className="flex gap-4 justify-center items-center">
 									<div className="relative">
-										<div 
+										<div
 											className="cursor-pointer"
 											onClick={() => handlePlateClick(vehicle.car_number)}>
 											<LicensePlate
@@ -77,7 +80,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 											/>
 										</div>
 										{copiedPlate === vehicle.car_number && (
-											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-600 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
 												<Check size={12} className="inline mr-1" />
 												복사됨
 											</div>
@@ -85,20 +88,20 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 									</div>
 									{vehicle.modify_car_number && (
 										<>
-											<span className="text-2xl font-bold text-orange-600">
-												→
-											</span>
+											<span className="text-2xl font-bold text-warning">→</span>
 											<div className="relative">
-												<div 
+												<div
 													className="cursor-pointer hover:scale-[1.02] transition-transform"
-													onClick={() => handlePlateClick(vehicle.modify_car_number!)}>
+													onClick={() =>
+														handlePlateClick(vehicle.modify_car_number!)
+													}>
 													<LicensePlate
 														plateNumber={vehicle.modify_car_number}
 														width="320px"
 													/>
 												</div>
 												{copiedPlate === vehicle.modify_car_number && (
-													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-white bg-green-600 rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
 														<Check size={12} className="inline mr-1" />
 														복사됨
 													</div>
@@ -117,7 +120,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 								<div className="text-sm font-semibold text-foreground">
 									{parseCarAllowType(vehicle.type)}
 									{vehicle.modify_car_type && (
-										<span className="ml-2 text-orange-600">
+										<span className="ml-2 text-warning">
 											→ {parseCarAllowType(vehicle.modify_car_type)}
 										</span>
 									)}
@@ -142,7 +145,9 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 
 								{vehicle.device_name && (
 									<div className="p-3 text-center bg-muted rounded-lg border border-border">
-										<div className="mb-1 text-xs text-muted-foreground">통행입구</div>
+										<div className="mb-1 text-xs text-muted-foreground">
+											통행입구
+										</div>
 										<div className="text-sm font-semibold text-foreground">
 											{vehicle.device_name}
 										</div>
@@ -153,8 +158,8 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 							{/* 특별 표시 */}
 							{vehicle.is_black === 'Y' && (
 								<div className="flex gap-2 justify-center items-center mt-3">
-									<div className="w-2 h-2 bg-red-500 rounded-full"></div>
-									<span className="text-sm font-medium text-red-600">
+									<div className="w-2 h-2 bg-destructive rounded-full"></div>
+									<span className="text-sm font-medium text-destructive">
 										블랙리스트 차량
 									</span>
 								</div>

@@ -279,7 +279,9 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 					<div className="grid w-full grid-cols-2 gap-2 px-1">
 						{/* 좌측 컬럼: 운행 모드 */}
 						<div className="flex flex-col items-center gap-1">
-							<h4 className="text-xs font-medium text-gray-600">운행모드</h4>
+							<h4 className="text-xs font-medium text-muted-foreground">
+								운행모드
+							</h4>
 							<div ref={dropdownRef} className="relative">
 								<button
 									onClick={(e) => {
@@ -322,10 +324,10 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 													handleOperationModeChange(mode);
 													setIsDropdownOpen(false);
 												}}
-												className={`w-full flex items-center gap-2 px-2 py-1 text-xs hover:bg-gray-50 transition-colors ${
+												className={`w-full flex items-center gap-2 px-2 py-1 text-xs hover:bg-muted/50 transition-colors ${
 													operationMode === mode
-														? 'bg-blue-50 text-blue-600'
-														: 'text-gray-700'
+														? 'bg-primary/10 text-primary'
+														: 'text-foreground/80'
 												}`}>
 												{getOperationModeIcon(mode, 'w-4 h-4')}
 												<span className="font-medium">{label}</span>
@@ -338,7 +340,9 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 
 						{/* 우측 컬럼: 차단기 개폐 */}
 						<div className="flex flex-col items-center gap-1">
-							<h4 className="text-xs font-medium text-gray-600">차단기 개폐</h4>
+							<h4 className="text-xs font-medium text-muted-foreground">
+								차단기 개폐
+							</h4>
 							<button
 								onClick={handleToggleWithDelay}
 								disabled={!onToggle || isButtonDisabled}

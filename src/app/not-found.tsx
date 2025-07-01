@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Home, ArrowLeft, RefreshCw } from 'lucide-react';
-import { RaisedContainer } from '@/components/ui/neumorphicContainer';
 
 export default function NotFound() {
 	const router = useRouter();
@@ -14,10 +13,8 @@ export default function NotFound() {
 	return (
 		<div className="flex justify-center items-center p-4 min-h-screen">
 			<div className="w-full max-w-md text-center">
-				
 				{/* #region 메인 컨테이너 */}
-				<RaisedContainer className="p-8 space-y-8 rounded-2xl">
-					
+				<div className="neu-raised p-8 space-y-8 rounded-2xl">
 					{/* 404 숫자 */}
 					<div className="space-y-4">
 						<h1 className="text-9xl font-bold font-multilang text-primary">
@@ -32,35 +29,31 @@ export default function NotFound() {
 							페이지를 찾을 수 없습니다
 						</h2>
 						<p className="leading-relaxed font-multilang text-foreground/70">
-							요청하신 페이지가 존재하지 않거나<br />
+							요청하신 페이지가 존재하지 않거나
+							<br />
 							이동되었을 수 있습니다.
 						</p>
 					</div>
 
 					{/* 액션 버튼 */}
 					<div className="space-y-3">
-						<Button
-							onClick={handleGoHome}
-							className="w-full neu-raised"
-						>
+						<Button onClick={handleGoHome} className="w-full neu-raised">
 							<Home size={18} className="mr-2" />
 							홈으로 이동
 						</Button>
-						
+
 						<div className="flex gap-3">
 							<Button
 								onClick={handleGoBack}
 								variant="outline"
-								className="flex-1 neu-raised"
-							>
+								className="flex-1 neu-raised">
 								<ArrowLeft size={18} className="mr-2" />
 								이전 페이지
 							</Button>
 							<Button
 								onClick={handleRefresh}
 								variant="outline"
-								className="flex-1 neu-raised"
-							>
+								className="flex-1 neu-raised">
 								<RefreshCw size={18} className="mr-2" />
 								새로고침
 							</Button>
@@ -73,10 +66,8 @@ export default function NotFound() {
 							Error Code: 404
 						</p>
 					</div>
-
-				</RaisedContainer>
+				</div>
 				{/* #endregion */}
-
 			</div>
 		</div>
 	);

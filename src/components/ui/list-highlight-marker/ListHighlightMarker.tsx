@@ -39,7 +39,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 
 				// 호버 효과: 왼쪽 색상 바 + 우측 transform + 배경 (non-active만)
 				!isActive &&
-					'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-gray-50/50',
+					'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-muted/50',
 
 				// active 효과: 배경 색상 유지
 				isActive && 'bg-primary/5 border-l-4 border-l-primary translate-x-1',
@@ -54,7 +54,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 			<span
 				className={cn(
 					'text-xs shrink-0 min-w-[40px] transition-colors duration-150',
-					isActive ? 'text-gray-700' : 'text-gray-400'
+					isActive ? 'text-foreground/80' : 'text-muted-foreground'
 				)}>
 				{index + 1}/{totalCount}
 			</span>
@@ -63,7 +63,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 			<div
 				className={cn(
 					'flex-1 min-w-0 transition-colors duration-150',
-					isActive && 'text-gray-900'
+					isActive && 'text-foreground'
 				)}>
 				{children}
 			</div>
@@ -73,7 +73,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 				{/* Plus 아이콘 - hover 시에만 보임 (active가 아닐 때) */}
 				<Plus
 					className={cn(
-						'absolute inset-0 w-4 h-4 text-gray-400 transition-all duration-200',
+						'absolute inset-0 w-4 h-4 text-muted-foreground transition-all duration-200',
 						'opacity-0 scale-75',
 						!isActive && 'group-hover:opacity-100 group-hover:scale-100'
 					)}

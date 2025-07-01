@@ -14,11 +14,11 @@ const PLATE_STYLES = {
 	// 번호판 전체 비율: 이미지 너비 + 텍스트 영역을 고려한 적절한 비율
 	ASPECT_RATIO: '2.8 / 1', // 기존 3:1에서 약간 조정
 	COLORS: {
-		background: '#ffffff',
-		border: '#000000',
-		leftPanel: '#003876', // 파란색 영역
-		borderLight: '#e5e5e5',
-		borderDark: '#999999',
+		background: 'hsl(var(--background))',
+		border: 'hsl(var(--foreground))',
+		leftPanel: 'hsl(var(--primary))', // 파란색 영역
+		borderLight: 'hsl(var(--border))',
+		borderDark: 'hsl(var(--muted))',
 	},
 	FONTS: {
 		korean: 'HY헤드라인M, Arial Black, Arial, sans-serif',
@@ -73,16 +73,16 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 		// 볼륨감 있는 배경 그라데이션
 		background: `
 			linear-gradient(145deg, 
-				#ffffff 0%, 
-				#f8f8f8 25%, 
-				#ffffff 50%, 
-				#f5f5f5 75%, 
-				#f0f0f0 100%
+				hsl(var(--background)) 0%, 
+				hsl(var(--card)) 25%, 
+				hsl(var(--background)) 50%, 
+				hsl(var(--muted) / 0.5) 75%, 
+				hsl(var(--muted) / 0.3) 100%
 			)
 		`,
 		// 다중 테두리로 두께감 연출
-		border: '0.1em solid #2b2929',
-		outline: '0.05em solid #666666',
+		border: `0.1em solid ${PLATE_STYLES.COLORS.border}`,
+		outline: `0.05em solid ${PLATE_STYLES.COLORS.borderDark}`,
 		outlineOffset: '0.05em',
 		aspectRatio: PLATE_STYLES.ASPECT_RATIO,
 		borderRadius: '0.3em',
@@ -119,7 +119,7 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 		alignItems: 'center',
 		justifyContent: 'center',
 		// 이미지 컨테이너 자체에 배경색 적용 (깨짐 방지)
-		backgroundColor: '#f8f8f8',
+		backgroundColor: PLATE_STYLES.COLORS.background,
 	};
 
 	// 🎯 텍스트 영역: 이미지 영역을 제외한 나머지 공간

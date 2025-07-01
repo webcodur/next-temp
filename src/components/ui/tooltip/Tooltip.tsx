@@ -35,8 +35,8 @@ const TooltipContent = React.forwardRef<
 		const variantClasses = {
 			default: 'bg-primary text-primary-foreground',
 			info: 'bg-primary text-primary-foreground',
-			warning: 'bg-amber-600 text-background',
-			error: 'bg-red-600 text-background',
+			warning: 'bg-warning text-warning-foreground',
+			error: 'bg-destructive text-destructive-foreground',
 		};
 
 		return (
@@ -64,8 +64,8 @@ const TooltipContent = React.forwardRef<
 									'fill-current',
 									variant === 'default' && 'fill-primary',
 									variant === 'info' && 'fill-primary',
-									variant === 'warning' && 'fill-amber-600',
-									variant === 'error' && 'fill-red-600'
+									variant === 'warning' && 'fill-warning',
+									variant === 'error' && 'fill-destructive'
 								)}
 								width={10}
 								height={5}
@@ -79,4 +79,10 @@ const TooltipContent = React.forwardRef<
 );
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, TooltipPortal };
+export {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+	TooltipProvider,
+	TooltipPortal,
+};

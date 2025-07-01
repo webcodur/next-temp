@@ -162,11 +162,7 @@ export function SmartTable<T extends Record<string, any>>({
 	);
 
 	// 헤더 스타일 설정
-	const headerClasses = cn(
-		'bg-muted',
-		'border-b border-border',
-		'neu-flat'
-	);
+	const headerClasses = cn('bg-muted', 'border-b border-border', 'neu-flat');
 
 	// 바디 스타일 설정
 	const bodyClasses = cn('bg-background');
@@ -217,7 +213,7 @@ export function SmartTable<T extends Record<string, any>>({
 
 		return cn(
 			'px-4 py-2', // 컴팩트 모드 고정
-			'border-r border-gray-200 last:border-r-0', // 세로선 항상 표시
+			'border-r border-border last:border-r-0', // 세로선 항상 표시
 			alignClasses[column.align || 'left']
 		);
 	};
@@ -225,9 +221,9 @@ export function SmartTable<T extends Record<string, any>>({
 	// 헤더 셀 스타일 설정 (무조건 가운데 정렬, 컴팩트 모드 고정)
 	const getHeaderCellClasses = () => {
 		return cn(
-			'font-medium text-sm text-gray-700',
+			'font-medium text-sm text-foreground',
 			'px-4 py-2 text-center', // 컴팩트 모드 고정
-			'border-r border-gray-200 last:border-r-0' // 세로선 항상 표시
+			'border-r border-border last:border-r-0' // 세로선 항상 표시
 		);
 	};
 
@@ -236,8 +232,8 @@ export function SmartTable<T extends Record<string, any>>({
 		'overflow-x-auto',
 		'neu-flat',
 		'rounded-lg', // rounded 항상 적용
-		'border border-gray-200',
-		'bg-white',
+		'border border-border',
+		'bg-background',
 		className
 	);
 
@@ -331,7 +327,7 @@ export function SmartTable<T extends Record<string, any>>({
 						<tr>
 							<td
 								colSpan={columns.length}
-								className="text-center text-gray-500 align-middle"
+								className="text-center text-muted-foreground align-middle"
 								style={{ height: `${messageRowHeight}px` }}>
 								<div className="flex justify-center items-center h-full">
 									로딩 중...
@@ -342,7 +338,7 @@ export function SmartTable<T extends Record<string, any>>({
 						<tr>
 							<td
 								colSpan={columns.length}
-								className="text-center text-gray-500 align-middle"
+								className="text-center text-muted-foreground align-middle"
 								style={{ height: `${messageRowHeight}px` }}>
 								<div className="flex justify-center items-center h-full">
 									{emptyMessage}

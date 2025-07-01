@@ -34,18 +34,18 @@ const variantConfig = {
 	},
 	success: {
 		icon: CheckCircle,
-		iconColor: 'text-green-600',
-		borderColor: 'border-green-500/20',
+		iconColor: 'text-success',
+		borderColor: 'border-success/20',
 	},
 	warning: {
 		icon: AlertTriangle,
-		iconColor: 'text-yellow-600',
-		borderColor: 'border-yellow-500/20',
+		iconColor: 'text-warning',
+		borderColor: 'border-warning/20',
 	},
 	error: {
 		icon: AlertCircle,
-		iconColor: 'text-red-600',
-		borderColor: 'border-red-500/20',
+		iconColor: 'text-destructive',
+		borderColor: 'border-destructive/20',
 	},
 	info: {
 		icon: Info,
@@ -105,8 +105,7 @@ export const Dialog: React.FC<DialogProps> = ({
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.2 }}
 					className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/50"
-					onClick={handleOverlayClick}
-				>
+					onClick={handleOverlayClick}>
 					<motion.div
 						initial={{ scale: 0.9, opacity: 0 }}
 						animate={{ scale: 1, opacity: 1 }}
@@ -117,14 +116,15 @@ export const Dialog: React.FC<DialogProps> = ({
 							bg-background rounded-2xl shadow-xl
 							border-2 ${variantInfo.borderColor}
 							${className}
-						`}
-					>
+						`}>
 						{/* Header */}
 						{(title || showCloseButton) && (
 							<div className="flex items-center justify-between p-6 border-b border-border">
 								<div className="flex items-center space-x-3">
 									{IconComponent && (
-										<IconComponent className={`w-6 h-6 ${variantInfo.iconColor}`} />
+										<IconComponent
+											className={`w-6 h-6 ${variantInfo.iconColor}`}
+										/>
 									)}
 									{title && (
 										<h2 className="text-xl font-semibold text-foreground">
@@ -135,8 +135,7 @@ export const Dialog: React.FC<DialogProps> = ({
 								{showCloseButton && (
 									<button
 										onClick={onClose}
-										className="p-2 text-muted-foreground hover:text-foreground neu-raised rounded-lg transition-colors"
-									>
+										className="p-2 text-muted-foreground hover:text-foreground neu-raised rounded-lg transition-colors">
 										<X className="w-5 h-5" />
 									</button>
 								)}
@@ -144,17 +143,11 @@ export const Dialog: React.FC<DialogProps> = ({
 						)}
 
 						{/* Content */}
-						{children && (
-							<div className="p-6">
-								{children}
-							</div>
-						)}
+						{children && <div className="p-6">{children}</div>}
 
 						{/* Footer */}
 						{footer && (
-							<div className="px-6 py-4 border-t border-border">
-								{footer}
-							</div>
+							<div className="px-6 py-4 border-t border-border">{footer}</div>
 						)}
 					</motion.div>
 				</motion.div>
@@ -166,38 +159,34 @@ export const Dialog: React.FC<DialogProps> = ({
 };
 
 // 편의 함수들
-export const DialogHeader: React.FC<{ children: React.ReactNode; className?: string }> = ({
-	children,
-	className = '',
-}) => (
-	<div className={`mb-4 ${className}`}>
-		{children}
-	</div>
+export const DialogHeader: React.FC<{
+	children: React.ReactNode;
+	className?: string;
+}> = ({ children, className = '' }) => (
+	<div className={`mb-4 ${className}`}>{children}</div>
 );
 
-export const DialogTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({
-	children,
-	className = '',
-}) => (
+export const DialogTitle: React.FC<{
+	children: React.ReactNode;
+	className?: string;
+}> = ({ children, className = '' }) => (
 	<h3 className={`text-lg font-medium text-foreground ${className}`}>
 		{children}
 	</h3>
 );
 
-export const DialogDescription: React.FC<{ children: React.ReactNode; className?: string }> = ({
-	children,
-	className = '',
-}) => (
+export const DialogDescription: React.FC<{
+	children: React.ReactNode;
+	className?: string;
+}> = ({ children, className = '' }) => (
 	<p className={`text-sm text-muted-foreground mt-2 ${className}`}>
 		{children}
 	</p>
 );
 
-export const DialogFooter: React.FC<{ children: React.ReactNode; className?: string }> = ({
-	children,
-	className = '',
-}) => (
-	<div className={`flex justify-end space-x-3 ${className}`}>
-		{children}
-	</div>
-); 
+export const DialogFooter: React.FC<{
+	children: React.ReactNode;
+	className?: string;
+}> = ({ children, className = '' }) => (
+	<div className={`flex justify-end space-x-3 ${className}`}>{children}</div>
+);

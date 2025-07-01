@@ -117,7 +117,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 											selectedVehicle?.status === vehicle.status
 												? 'bg-primary/10'
 												: vehicle.is_black === 'Y'
-													? 'bg-red-500/10'
+													? 'bg-destructive/10'
 													: ''
 										}`}>
 										<div className="px-2 py-1 w-16 text-foreground">
@@ -130,7 +130,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												<div className="font-medium text-foreground">
 													{parseCarAllowType(vehicle.type)}
 													{vehicle.modify_car_type && (
-														<span className="ml-1 text-orange-600">
+														<span className="ml-1 text-warning">
 															→{parseCarAllowType(vehicle.modify_car_type)}
 														</span>
 													)}
@@ -150,7 +150,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												/>
 												{vehicle.modify_car_number && (
 													<>
-														<span className="text-xs text-orange-600">→</span>
+														<span className="text-xs text-warning">→</span>
 														<LicensePlate
 															plateNumber={vehicle.modify_car_number}
 															width="120px"
@@ -165,7 +165,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 													className={`inline-flex px-1 py-0.5 rounded text-xs font-medium ${
 														vehicle.status === 1
 															? 'bg-primary/10 text-primary'
-															: 'bg-green-500/10 text-green-600'
+															: 'bg-success/10 text-success'
 													}`}>
 													{vehicle.status === 1 ? '입차' : '출차'}
 												</span>

@@ -12,11 +12,11 @@ import {
 	sidebarCollapsedAtom,
 } from '@/store/sidebar';
 import SearchModal from './SearchModal';
-import { 
-	getHeadToggleContainerStyles, 
-	headToggleLeftDivider, 
+import {
+	getHeadToggleContainerStyles,
+	headToggleLeftDivider,
 	getHeadToggleButtonStyles,
-	toggleButtonIcon 
+	toggleButtonIcon,
 } from './sidebarStyles';
 
 /**
@@ -32,7 +32,8 @@ export function SideHeader() {
 	const [, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
-	const [isHeaderCollapsed, setIsHeaderCollapsed] = useAtom(headerCollapsedAtom);
+	const [isHeaderCollapsed, setIsHeaderCollapsed] =
+		useAtom(headerCollapsedAtom);
 	const [isMainCollapsed] = useAtom(sidebarCollapsedAtom);
 
 	// 검색 모달 상태
@@ -68,7 +69,7 @@ export function SideHeader() {
 			<div className={getHeadToggleContainerStyles(!isMainCollapsed)}>
 				{/* 좌측 빈 공간 (메인 토글 버튼과 시각적 균형) */}
 				<div className={headToggleLeftDivider}></div>
-				
+
 				{/* 헤드 토글 버튼 */}
 				<div
 					className={getHeadToggleButtonStyles()}
@@ -80,7 +81,7 @@ export function SideHeader() {
 
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
-				className={`bg-linear-to-r from-card/50 via-background/70 to-card/40 border-t border-border/30 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
+				className={`neu-flat border-t border-border/30 border-b border-border/60 transition-all duration-300 ${
 					isHeaderCollapsed
 						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0 border-t-0'
 						: 'max-h-[220px] p-4 pt-3 opacity-100'
@@ -93,7 +94,7 @@ export function SideHeader() {
 						<Link
 							href="/"
 							onClick={handleLogoClick}
-							className="flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-flat border-none group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+							className="flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300">
 							{/* 로고 아이콘 */}
 							<div className="flex justify-center items-center shrink-0">
 								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-primary group-hover:scale-105" />
@@ -121,9 +122,9 @@ export function SideHeader() {
 			</div>
 
 			{/* 검색 모달 */}
-			<SearchModal 
-				isOpen={isSearchModalOpen} 
-				onClose={() => setIsSearchModalOpen(false)} 
+			<SearchModal
+				isOpen={isSearchModalOpen}
+				onClose={() => setIsSearchModalOpen(false)}
 			/>
 		</div>
 	);

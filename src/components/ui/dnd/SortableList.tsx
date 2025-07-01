@@ -29,16 +29,15 @@ const SortableItem: React.FC<Item> = ({ id, name }) => {
 	const style: React.CSSProperties = {
 		transform: CSS.Transform.toString(transform),
 		transition,
-		padding: 8,
-		border: '1px solid #ccc',
-		borderRadius: 4,
-		background: '#fff',
-		marginBottom: 8,
-		cursor: 'grab',
 	};
 
 	return (
-		<li ref={setNodeRef} style={style} {...attributes} {...listeners}>
+		<li
+			ref={setNodeRef}
+			style={style}
+			className="p-2 border border-border rounded bg-background mb-2 cursor-grab"
+			{...attributes}
+			{...listeners}>
 			{name}
 		</li>
 	);

@@ -80,7 +80,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 				{/* 검색 버튼 */}
 				<button
 					onClick={onSearch}
-					className="rounded px-3 py-1 bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors text-xs">
+					className="rounded px-3 py-1 bg-warning text-warning-foreground font-medium hover:bg-warning/80 transition-colors text-xs">
 					검색
 				</button>
 			</div>

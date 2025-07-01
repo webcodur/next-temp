@@ -75,7 +75,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 
 			{/* 페이지네이션 UI */}
 			{shouldShowPagination && (
-				<div className="mt-6 text-[#333333]">
+				<div className="mt-6 text-foreground">
 					<div className="flex items-center justify-between">
 						<PaginationInfo
 							totalItems={paginationData.totalItems}

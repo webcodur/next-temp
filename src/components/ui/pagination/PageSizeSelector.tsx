@@ -38,10 +38,9 @@ export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
 					value={pageSize}
 					onChange={handlePageSizeChange}
 					disabled={disabled}
-					className={`bg-white cursor-pointer border border-[#dddddd] text-[#333333] rounded-md py-1 focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] m-0 p-0 ${
+					className={`bg-background cursor-pointer border border-border text-foreground rounded-md py-1 focus:border-primary focus:ring-1 focus:ring-primary m-0 p-0 ${
 						disabled ? 'opacity-50 cursor-not-allowed' : ''
-					}`}
-				>
+					}`}>
 					{pageSizeOptions.map((size) => (
 						<option key={size} value={size} className="cursor-pointer">
 							{size}
@@ -51,4 +50,4 @@ export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
 			</div>
 		</div>
 	);
-}; 
+};
