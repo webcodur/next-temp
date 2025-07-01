@@ -29,25 +29,25 @@ const DialogPage = () => {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-50 p-8">
-			<div className="max-w-4xl mx-auto">
+		<div className="p-8 min-h-screen">
+			<div className="mx-auto max-w-4xl">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-gray-900 mb-4">Dialog 컴포넌트</h1>
+					<h1 className="mb-4 text-3xl font-bold">Dialog 컴포넌트</h1>
 					<p className="text-gray-600">고급 다이얼로그 (복잡한 폼/인터랙션) 컴포넌트 테스트</p>
 				</div>
 
 				<div className="space-y-8">
 					{/* 기본 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-xs">
-						<h2 className="text-xl font-semibold mb-4">기본 다이얼로그</h2>
+					<section className="p-6 bg-white rounded-lg shadow-xs">
+						<h2 className="mb-4 text-xl font-semibold">기본 다이얼로그</h2>
 						<Button onClick={() => setBasicOpen(true)}>
 							기본 다이얼로그 열기
 						</Button>
 					</section>
 
 					{/* 변형 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-xs">
-						<h2 className="text-xl font-semibold mb-4">변형 다이얼로그</h2>
+					<section className="p-6 bg-white rounded-lg shadow-xs">
+						<h2 className="mb-4 text-xl font-semibold">변형 다이얼로그</h2>
 						<div className="space-x-4">
 							<Button onClick={() => openVariantDialog('success')}>
 								성공 다이얼로그
@@ -65,8 +65,8 @@ const DialogPage = () => {
 					</section>
 
 					{/* 사이즈 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-xs">
-						<h2 className="text-xl font-semibold mb-4">사이즈 변형</h2>
+					<section className="p-6 bg-white rounded-lg shadow-xs">
+						<h2 className="mb-4 text-xl font-semibold">사이즈 변형</h2>
 						<div className="space-x-4">
 							<Button onClick={() => openSizeDialog('sm')}>Small</Button>
 							<Button onClick={() => openSizeDialog('md')}>Medium</Button>
@@ -76,8 +76,8 @@ const DialogPage = () => {
 					</section>
 
 					{/* 폼 다이얼로그 */}
-					<section className="bg-white rounded-lg p-6 shadow-xs">
-						<h2 className="text-xl font-semibold mb-4">폼 다이얼로그</h2>
+					<section className="p-6 bg-white rounded-lg shadow-xs">
+						<h2 className="mb-4 text-xl font-semibold">폼 다이얼로그</h2>
 						<Button onClick={() => setFormOpen(true)}>
 							복잡한 폼 다이얼로그 열기
 						</Button>
@@ -148,34 +148,34 @@ const DialogPage = () => {
 					<form className="space-y-4">
 						<div className="grid grid-cols-2 gap-4">
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label className="block mb-2 text-sm font-medium text-gray-700">
 									이름
 								</label>
 								<input
 									type="text"
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 									placeholder="이름을 입력하세요"
 								/>
 							</div>
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label className="block mb-2 text-sm font-medium text-gray-700">
 									이메일
 								</label>
 								<input
 									type="email"
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 									placeholder="이메일을 입력하세요"
 								/>
 							</div>
 						</div>
 						
 						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-2">
+							<label className="block mb-2 text-sm font-medium text-gray-700">
 								자기소개
 							</label>
 							<textarea
 								rows={4}
-								className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+								className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 								placeholder="간단한 자기소개를 작성해주세요"
 							/>
 						</div>

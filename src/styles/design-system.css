@@ -188,9 +188,9 @@
 
 	/* 뉴모피즘 전용 변수 */
 	--neu-light: 255, 255, 255, 0.9;
-	--neu-dark: 0, 0, 0, 0.08;
-	--neu-offset: 3px;
-	--neu-blur: 6px;
+	--neu-dark: 0, 0, 0, 0.15;
+	--neu-offset: 4px;
+	--neu-blur: 8px;
 
 	/* 기타 */
 	--radius: 0.5rem;
@@ -265,7 +265,7 @@ body {
 		var(--neu-offset) var(--neu-offset) var(--neu-blur) rgba(var(--neu-dark)),
 		calc(var(--neu-offset) * -0.5) calc(var(--neu-offset) * -0.5)
 			calc(var(--neu-blur) * 0.5) rgba(var(--neu-light));
-	transition: all 0.15s ease-in-out;
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .neu-flat:hover {
@@ -277,8 +277,24 @@ body {
 	border: 1px solid hsl(var(--border) / 0.6);
 }
 
-.neu-flat:focus,
-.neu-flat:focus-within {
+.neu-flat:focus {
+	outline: none;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--muted) / 0.85),
+		hsl(var(--card) / 0.75)
+	);
+	border: 1px solid hsl(var(--primary) / 0.3);
+	box-shadow:
+		inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+			rgba(var(--neu-dark)),
+		inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+			var(--neu-blur) rgba(var(--neu-light)),
+		0 0 0 1px hsl(var(--primary) / 0.3);
+}
+
+/* 자식 요소 포커스 시 부모 컨테이너 반응이 필요한 곳에만 사용 */
+.neu-flat-with-focus:focus-within {
 	outline: none;
 	background: linear-gradient(
 		135deg,
@@ -323,7 +339,7 @@ body {
 			calc(var(--neu-blur) * 0.6) rgba(var(--neu-dark)),
 		inset calc(var(--neu-offset) * -0.6) calc(var(--neu-offset) * -0.6)
 			calc(var(--neu-blur) * 0.6) rgba(var(--neu-light));
-	transition: all 0.15s ease-in-out;
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 4-2. neu-raised - 양각 (기본 버튼, 인터랙티브 요소) */

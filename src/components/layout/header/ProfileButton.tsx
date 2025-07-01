@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
 
@@ -69,8 +68,8 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		return (
 			<button
 				onClick={() => router.push('/login')}
-				className={`px-4 py-2 rounded-lg neu-raised text-primary font-medium hover:neu-inset transition-all duration-200 ${className}`}>
-				로그인
+				className={`p-2 rounded-lg neu-raised text-primary hover:neu-inset transition-all duration-200 ${className}`}>
+				<User className="w-5 h-5" />
 			</button>
 		);
 	}
@@ -80,15 +79,10 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 			{/* 프로필 버튼 */}
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className="flex items-center gap-2 p-2 rounded-lg neu-flat hover:neu-raised transition-all duration-200">
-				<Avatar className="w-8 h-8">
-					<AvatarImage src={user.avatar} alt={user.name} />
-					<AvatarFallback className="bg-primary/10 text-primary font-medium">
-						{user.name.charAt(0)}
-					</AvatarFallback>
-				</Avatar>
+				className="flex items-center gap-1 p-2 rounded-lg neu-raised hover:neu-inset transition-all duration-200">
+				<User className="w-5 h-5 text-muted-foreground" />
 				<ChevronDown
-					className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+					className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${
 						isOpen ? 'rotate-180' : ''
 					}`}
 				/>
@@ -100,12 +94,9 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					{/* 사용자 정보 */}
 					<div className="p-3 border-b border-border/50">
 						<div className="flex items-center gap-3">
-							<Avatar className="w-10 h-10">
-								<AvatarImage src={user.avatar} alt={user.name} />
-								<AvatarFallback className="bg-primary/10 text-primary font-medium">
-									{user.name.charAt(0)}
-								</AvatarFallback>
-							</Avatar>
+							<div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+								<User className="w-5 h-5 text-primary" />
+							</div>
 							<div className="flex-1 min-w-0">
 								<p className="text-sm font-medium text-foreground truncate">
 									{user.name}

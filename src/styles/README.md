@@ -39,9 +39,10 @@
 ### 보조 클래스
 
 ```css
-.neu-hover          /* 호버 시 inset 효과 */
-.neu-flat-focus     /* 드롭다운 열릴 때 포커스 유지 */
-.sidebar-container  /* 사이드바 전용 (hover 효과 없는 컨테이너) */
+.neu-hover              /* 호버 시 inset 효과 */
+.neu-flat-focus         /* 드롭다운 열릴 때 포커스 유지 */
+.neu-flat-with-focus    /* 자식 요소 포커스 시 부모도 반응 */
+.sidebar-container      /* 사이드바 전용 (hover 효과 없는 컨테이너) */
 ```
 
 ## 🎨 색상 시스템
@@ -90,6 +91,16 @@
 
 ```jsx
 <div className="neu-flat p-6 rounded-lg">모든 컨테이너, 패널, 카드</div>
+```
+
+### 1-1. 자식 포커스 반응이 필요한 컨테이너는 `neu-flat-with-focus`
+
+```jsx
+<div className="neu-flat-with-focus p-4 rounded-lg">
+  {/* 입력 필드나 버튼이 포커스될 때 부모도 반응해야 하는 복합 컴포넌트 */}
+  <label>이메일</label>
+  <input type="email" />
+</div>
 ```
 
 ### 2. 사이드바 등 특수 컨테이너는 전용 클래스
@@ -193,6 +204,7 @@ const buttonClass = isSelected
 4. **neu-\* 클래스 조합 금지** - 각각 독립적 사용
 5. **Tailwind 3.x 문법 사용 금지** - 4.0 문법 준수
 6. **컨테이너에 hover 효과 적용 금지** - 필요시 전용 클래스 사용
+7. **neu-flat에 focus-within 의존 금지** - 필요시 neu-flat-with-focus 사용
 
 ## 📝 마이그레이션 체크리스트
 
@@ -203,11 +215,14 @@ const buttonClass = isSelected
 <div className="neumorphic shadow-neumorphism bg-gray-100" />
 <button className="neumorphic-button hover:scale-105" />
 <aside className="neu-flat"> /* hover 효과가 있는 사이드바 */
+<div className="neu-flat"> /* focus-within 의존하는 탭 컨테이너 */
 
-// ✅ 새로운 방식
+// ✅ 새로운 방식  
 <div className="neu-flat" />
 <button className="neu-raised" />
 <aside className="sidebar-container"> /* hover 효과 없는 안정적인 사이드바 */
+<div className="neu-flat"> /* 단순 컨테이너는 그대로 */
+<div className="neu-flat-with-focus"> /* 자식 포커스 반응이 필요한 곳만 */
 ```
 
 ## 🎯 성능 최적화

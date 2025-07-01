@@ -6,7 +6,7 @@
 
 ## 디렉토리 구조
 
-```
+```text
 sidebar/
 ├── Sidebar.tsx            # 메인 사이드바 컴포넌트
 ├── hooks.ts               # 상태 관리 및 검색 훅들
@@ -26,7 +26,7 @@ sidebar/
 
 ### 메뉴 계층 구조
 
-```
+```text
 ┌─────────────────────────────────────┐
 │              SideHeader             │ ← 브랜드/타이틀, 토글 버튼
 ├─────────────┬───────────────────────┤
@@ -273,4 +273,5 @@ import { Sidebar } from '@/components/layout/sidebar/Sidebar';
 ### 애니메이션
 
 - GPU 가속 transform 사용
+- 순차적 애니메이션으로 부드러운 UX
 - 순차적 애니메이션으로 부드러운 UX

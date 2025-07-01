@@ -3,7 +3,7 @@
 import { useAtom } from 'jotai';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
-import { getMainToggleStyles, toggleButtonIcon } from './styles';
+import { getMainToggleStyles, toggleButtonIcon } from './sidebarStyles';
 
 /**
  * 사이드바 메인 토글 버튼 컴포넌트

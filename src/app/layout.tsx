@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { MainLayout } from '@/components/layout/main-layout';
-import { Providers } from '@/providers/Providers';
+import { Provider } from 'jotai';
 
 export const metadata: Metadata = {
 	title: 'HUB-NEW',
@@ -16,9 +16,9 @@ export default function RootLayout({
 	return (
 		<html lang="ko" className="font-multilang" suppressHydrationWarning>
 			<body className="min-h-screen bg-gray-50">
-				<Providers>
+				<Provider>
 					<MainLayout>{children}</MainLayout>
-				</Providers>
+				</Provider>
 			</body>
 		</html>
 	);

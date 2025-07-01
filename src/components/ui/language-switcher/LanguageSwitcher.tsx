@@ -28,13 +28,19 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex gap-2 items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
+        className={`inline-flex gap-2 items-center text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 neu-raised hover:neu-inset ${
+          variant === 'header' ? 'p-2' : 'px-3 py-2'
+        }`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <Globe size={16} />
-        <span className="hidden sm:inline">{currentMeta.name}</span>
-        <span className="sm:hidden">{currentMeta.flag}</span>
+        {variant !== 'header' && (
+          <>
+            <span className="hidden sm:inline">{currentMeta.name}</span>
+            <span className="sm:hidden">{currentMeta.flag}</span>
+          </>
+        )}
         <ChevronDown 
           size={14} 
           className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}

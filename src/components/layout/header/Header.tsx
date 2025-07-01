@@ -1,6 +1,5 @@
 'use client';
 
-import { Menu } from 'lucide-react';
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
@@ -18,9 +17,6 @@ export function Header() {
 			{/* Left Section */}
 			<div
 				className={`flex gap-4 items-center transition-all duration-300 ${breadcrumbMargin}`}>
-				<button className="p-2 rounded-lg lg:hidden hover:bg-accent">
-					<Menu className="w-5 h-5" />
-				</button>
 				<Breadcrumb />
 			</div>
 

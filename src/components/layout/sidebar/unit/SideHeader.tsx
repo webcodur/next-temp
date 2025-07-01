@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useAtom } from 'jotai';
-import { Building2, Minus } from 'lucide-react';
+import { Building2, Minus, Search } from 'lucide-react';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
@@ -10,14 +11,13 @@ import {
 	headerCollapsedAtom,
 	sidebarCollapsedAtom,
 } from '@/store/sidebar';
-import { SearchBar } from '@/components/layout/sidebar/unit/SearchBar';
-import { MenuSearchBar } from '@/components/layout/sidebar/unit/MenuSearchBar';
+import SearchModal from './SearchModal';
 import { 
 	getHeadToggleContainerStyles, 
 	headToggleLeftDivider, 
 	getHeadToggleButtonStyles,
 	toggleButtonIcon 
-} from './styles';
+} from './sidebarStyles';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -35,6 +35,9 @@ export function SideHeader() {
 	const [isHeaderCollapsed, setIsHeaderCollapsed] = useAtom(headerCollapsedAtom);
 	const [isMainCollapsed] = useAtom(sidebarCollapsedAtom);
 
+	// 검색 모달 상태
+	const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
 	/**
 	 * 로고 클릭 시 메뉴 상태 초기화
 	 * - 홈으로 이동하면서 모든 메뉴 선택 해제
@@ -50,6 +53,13 @@ export function SideHeader() {
 	 */
 	const handleHeadToggle = () => {
 		setIsHeaderCollapsed(!isHeaderCollapsed);
+	};
+
+	/**
+	 * 검색 모달 열기
+	 */
+	const handleSearchOpen = () => {
+		setIsSearchModalOpen(true);
 	};
 
 	return (
@@ -83,13 +93,13 @@ export function SideHeader() {
 						<Link
 							href="/"
 							onClick={handleLogoClick}
-							className="flex items-center justify-center gap-3 p-2 select-none neu-raised rounded-xl">
+							className="flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-flat border-none group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
 							{/* 로고 아이콘 */}
-							<div className="flex items-center justify-center shrink-0">
-								<Building2 className="w-6 h-6 neu-icon-active" />
+							<div className="flex justify-center items-center shrink-0">
+								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-primary group-hover:scale-105" />
 							</div>
 							{/* 타이틀 텍스트 */}
-							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px]">
+							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-primary/90">
 								건물 타이틀
 							</div>
 						</Link>
@@ -97,13 +107,24 @@ export function SideHeader() {
 				</div>
 
 				{/* 검색 영역 */}
-				<div className={`px-1 space-y-2 ${isHeaderCollapsed ? 'h-0' : ''}`}>
-					{/* 현장검색 */}
-					<SearchBar />
-					{/* 메뉴검색 */}
-					<MenuSearchBar />
+				<div className={`px-1 ${isHeaderCollapsed ? 'h-0' : ''}`}>
+					{/* 통합 검색 버튼 */}
+					<button
+						onClick={handleSearchOpen}
+						className="flex gap-3 items-center p-3 w-full rounded-lg border border-gray-200 neu-flat neu-hover group">
+						<Search className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
+						<span className="text-sm text-gray-500 group-hover:text-gray-700">
+							현장 · 메뉴 검색
+						</span>
+					</button>
 				</div>
 			</div>
+
+			{/* 검색 모달 */}
+			<SearchModal 
+				isOpen={isSearchModalOpen} 
+				onClose={() => setIsSearchModalOpen(false)} 
+			/>
 		</div>
 	);
 }
