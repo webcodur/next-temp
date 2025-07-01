@@ -2,20 +2,27 @@
 
 import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { Building2 } from 'lucide-react';
+import { Building2, Minus } from 'lucide-react';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
 	currentBotMenuAtom,
 	headerCollapsedAtom,
+	sidebarCollapsedAtom,
 } from '@/store/sidebar';
 import { SearchBar } from '@/components/layout/sidebar/unit/SearchBar';
 import { MenuSearchBar } from '@/components/layout/sidebar/unit/MenuSearchBar';
+import { 
+	getHeadToggleContainerStyles, 
+	headToggleLeftDivider, 
+	getHeadToggleButtonStyles,
+	toggleButtonIcon 
+} from './styles';
 
 /**
  * 사이드바 헤더 컴포넌트
  * - 사이드바 상단에 위치하는 헤더 영역
- * - 로고, 타이틀, 검색바를 포함
+ * - 로고, 타이틀, 검색바, 헤드 토글 버튼을 포함
  * - 접힘/펼침 기능으로 공간 절약 가능
  */
 
@@ -25,7 +32,8 @@ export function SideHeader() {
 	const [, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
-	const [isHeaderCollapsed] = useAtom(headerCollapsedAtom);
+	const [isHeaderCollapsed, setIsHeaderCollapsed] = useAtom(headerCollapsedAtom);
+	const [isMainCollapsed] = useAtom(sidebarCollapsedAtom);
 
 	/**
 	 * 로고 클릭 시 메뉴 상태 초기화
@@ -37,13 +45,34 @@ export function SideHeader() {
 		setCurrentBotMenu('');
 	};
 
+	/**
+	 * 헤드 토글 버튼 클릭 핸들러
+	 */
+	const handleHeadToggle = () => {
+		setIsHeaderCollapsed(!isHeaderCollapsed);
+	};
+
 	return (
-		<div className="flex flex-col select-none pt-[30px]">
+		<div className="flex flex-col select-none">
+			{/* 헤드 토글 버튼 영역 */}
+			<div className={getHeadToggleContainerStyles(!isMainCollapsed)}>
+				{/* 좌측 빈 공간 (메인 토글 버튼과 시각적 균형) */}
+				<div className={headToggleLeftDivider}></div>
+				
+				{/* 헤드 토글 버튼 */}
+				<div
+					className={getHeadToggleButtonStyles()}
+					onClick={handleHeadToggle}
+					title={isHeaderCollapsed ? '헤더 펼치기' : '헤더 접기'}>
+					<Minus className={toggleButtonIcon} />
+				</div>
+			</div>
+
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
-				className={`bg-linear-to-r from-card/50 via-background/70 to-card/40 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
+				className={`bg-linear-to-r from-card/50 via-background/70 to-card/40 border-t border-border/30 border-b border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.08)] transition-all duration-300 ${
 					isHeaderCollapsed
-						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0'
+						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0 border-t-0'
 						: 'max-h-[220px] p-4 pt-3 opacity-100'
 				}`}>
 				{/* 로고 영역 */}
