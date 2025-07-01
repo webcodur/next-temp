@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
 	SingleDatePicker,
 	DateRangePicker,
+	TimeOnlyPicker,
 } from '@/components/ui/datepicker/Datepicker';
 
 export default function DatepickerPage() {
@@ -13,6 +14,8 @@ export default function DatepickerPage() {
 	const [singleDate, setSingleDate] = React.useState<Date | null>(null);
 	const [dateTimeValue, setDateTimeValue] = React.useState<Date | null>(null);
 	const [monthYearDate, setMonthYearDate] = React.useState<Date | null>(null);
+	const [timeOnlyValue, setTimeOnlyValue] = React.useState<Date | null>(null);
+	const [workTimeValue, setWorkTimeValue] = React.useState<Date | null>(null);
 
 	return (
 		<div className="container py-10">
@@ -72,6 +75,48 @@ export default function DatepickerPage() {
 							선택된 날짜/시간:{' '}
 							{dateTimeValue ? dateTimeValue.toLocaleString() : '없음'}
 						</p>
+					</div>
+				</section>
+
+				{/* 시간 전용 선택기 */}
+				<section>
+					<h2 className="mb-4 text-2xl font-semibold">시간 전용 선택기</h2>
+					<div className="flex flex-col space-y-6">
+						<div>
+							<p className="mb-2 font-medium">기본 시간 선택 (30분 간격)</p>
+							<TimeOnlyPicker
+								selected={timeOnlyValue}
+								onChange={setTimeOnlyValue}
+							/>
+							<p className="mt-2 text-sm text-gray-600">
+								선택된 시간:{' '}
+								{timeOnlyValue ? timeOnlyValue.toLocaleTimeString('ko-KR', { 
+									hour: '2-digit', 
+									minute: '2-digit',
+									hour12: false 
+								}) : '없음'}
+							</p>
+						</div>
+
+						<div>
+							<p className="mb-2 font-medium">근무 시간 선택 (15분 간격, 9시-18시 제한)</p>
+							<TimeOnlyPicker
+								selected={workTimeValue}
+								onChange={setWorkTimeValue}
+								timeIntervals={15}
+								placeholderText="근무 시간 선택"
+								minTime={new Date(new Date().setHours(9, 0, 0, 0))}
+								maxTime={new Date(new Date().setHours(18, 0, 0, 0))}
+							/>
+							<p className="mt-2 text-sm text-gray-600">
+								선택된 근무 시간:{' '}
+								{workTimeValue ? workTimeValue.toLocaleTimeString('ko-KR', { 
+									hour: '2-digit', 
+									minute: '2-digit',
+									hour12: false 
+								}) : '없음'}
+							</p>
+						</div>
 					</div>
 				</section>
 

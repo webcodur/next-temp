@@ -8,7 +8,6 @@ import { sidebarCollapsedAtom } from '@/store/sidebar';
 // components
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
-import Footer from './footer/Footer';
 import { SideToggleMain } from './sidebar/unit/SideToggleMain';
 
 // hooks
@@ -62,16 +61,26 @@ export function MainLayout({ children }: MainLayoutProps) {
 					transition: `margin-left ${animations.sidebarDuration}ms ease-in-out`,
 				}}
 				className="flex overflow-hidden flex-col flex-1 h-screen">
+				
+				
+				
+				{/* Header 영역 - 절대 위치 */}
+				<div 
+					className="absolute top-0 right-0 z-10 bg-white border-b border-gray-200"
+					style={{
+						left: isCollapsed ? '0px' : `${defaults.sidebarWidth}px`,
+						transition: `left ${animations.sidebarDuration}ms ease-in-out`,
+					}}>
+					<Header />
+				</div>
+
+				{/* 컨텐츠 전용 스크롤 영역 - 전체 화면 높이에서 중앙 정렬 */}
 				<div
 					ref={scrollContainerRef}
-					className="overflow-y-scroll flex-1 bg-gray-50">
-					<Header />
-					<div className="flex flex-1 justify-center items-center px-6 py-8">
-						<div className="container p-8 mx-auto w-full max-w-7xl bg-white rounded-lg border border-gray-100 shadow-xs min-h-96 min-w-96">
-							{children}
-						</div>
-					</div>
-					<Footer />
+					className="flex overflow-y-auto flex-col justify-center items-center h-screen bg-gray-50">
+          <div className="max-w-[1440px] mx-auto px-6 w-full">
+            {children}
+          </div>
 				</div>
 			</main>
 		</div>

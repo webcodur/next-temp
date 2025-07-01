@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FieldEmail, FieldPassword } from '@/components/ui/field';
-import { Lock } from 'lucide-react';
 
 interface LoginFormData {
 	email: string;
@@ -74,11 +73,9 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 
 	return (
 		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-flat bg-background">
-			{/* 헤더 */}
+			
+      {/* 헤더 */}
 			<div className="mb-8 text-center">
-				<div className="flex justify-center items-center mx-auto mb-4 w-16 h-16 rounded-full neu-raised">
-					<Lock className="w-8 h-8 text-primary" />
-				</div>
 				<h1 className="mb-2 text-2xl font-bold text-foreground">로그인</h1>
 				<p className="text-muted-foreground">계정에 로그인하세요</p>
 			</div>

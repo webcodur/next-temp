@@ -103,7 +103,7 @@ export function DateRangePicker({
 					className="box-border px-2 py-1 w-36 rounded border neu-inset focus:outline-hidden focus:ring-0"
 				/>
 			</div>
-			<span className="shrink-0 text-sm">~</span>
+			<span className="text-sm shrink-0">~</span>
 			<div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
 				<DatePicker
 					selected={endDate ?? undefined}
@@ -187,6 +187,53 @@ export function SingleDatePicker({
 				scrollableYearDropdown={scrollableYearDropdown}
 				showMonthYearPicker={showMonthYearPicker}
 				renderCustomHeader={renderCustomYearMonthHeader}
+				className={`box-border px-2 py-1 rounded border neu-inset focus:outline-hidden focus:ring-0 ${className}`}
+			/>
+		</div>
+	);
+}
+// #endregion
+
+// #region 시간 전용 선택기 컴포넌트
+export type TimeOnlyPickerProps = {
+	selected: Date | null;
+	onChange: (time: Date | null) => void;
+	timeFormat?: string;
+	timeIntervals?: number;
+	placeholderText?: string;
+	className?: string;
+	minTime?: Date;
+	maxTime?: Date;
+};
+
+export function TimeOnlyPicker({
+	selected,
+	onChange,
+	timeFormat = 'HH:mm',
+	timeIntervals = 30,
+	placeholderText = '시간 선택',
+	className = '',
+	minTime,
+	maxTime,
+}: TimeOnlyPickerProps) {
+	const handleTimeChange = (time: Date | null) => {
+		onChange(time);
+	};
+
+	return (
+		<div style={{ width: 'fit-content', minWidth: 'fit-content' }}>
+			<DatePicker
+				selected={selected ?? undefined}
+				onChange={handleTimeChange}
+				showTimeSelect
+				showTimeSelectOnly
+				timeIntervals={timeIntervals}
+				timeFormat={timeFormat}
+				dateFormat={timeFormat}
+				placeholderText={placeholderText}
+				minTime={minTime}
+				maxTime={maxTime}
+				locale={ko}
 				className={`box-border px-2 py-1 rounded border neu-inset focus:outline-hidden focus:ring-0 ${className}`}
 			/>
 		</div>

@@ -158,13 +158,131 @@
 		U+FFFD;
 }
 
-/* 1-4. HY헤드라인M 폰트 */
+/* 1-4. Pretendard 폰트 (MultiLang과 동일, fallback용) */
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Black.subset.woff2')
+		format('woff2');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraBold.subset.woff2')
+		format('woff2');
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Bold.subset.woff2')
+		format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-SemiBold.subset.woff2')
+		format('woff2');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Medium.subset.woff2')
+		format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2')
+		format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Light.subset.woff2')
+		format('woff2');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-ExtraLight.subset.woff2')
+		format('woff2');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	src: url('/fonts/ko/woff2-subset/Pretendard-Thin.subset.woff2')
+		format('woff2');
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* 1-5. Inter 폰트 (영어용) */
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/DMSerifText.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* 1-6. Cairo 폰트 (아랍어용) */
+@font-face {
+	font-family: 'Cairo';
+	src: url('/fonts/Cairo.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* 1-7. HY헤드라인M 폰트 */
 @font-face {
 	font-family: 'HY헤드라인M';
 	src: url('/fonts/fe-font.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
+}
+/* #endregion */
+
+/* #region 1-8. 폰트 클래스 명시적 정의 */
+.font-multilang {
+	font-family: 'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif !important;
+}
+
+.font-pretendard {
+	font-family: 'Pretendard', 'MultiLang', system-ui, sans-serif !important;
+}
+
+.font-inter {
+	font-family: 'Inter', 'MultiLang', system-ui, sans-serif !important;
+}
+
+.font-cairo {
+	font-family: 'Cairo', 'MultiLang', system-ui, sans-serif !important;
 }
 /* #endregion */
 
