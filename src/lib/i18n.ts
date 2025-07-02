@@ -9,17 +9,17 @@ export const defaultLocale: Locale = 'ko';
 export const localeMetadata = {
   ko: {
     name: '한국어',
-    flag: '한',
+    flag: '/icons/flags/KR.svg',
     dir: 'ltr' as const,
   },
   en: {
     name: 'English',
-    flag: 'A',
+    flag: '/icons/flags/UK.svg',
     dir: 'ltr' as const,
   },
   ar: {
-    name: 'العربية',
-    flag: 'ع',
+    name: 'العربية (GCC)',
+    flag: '/icons/flags/GCC.svg',
     dir: 'rtl' as const,
   },
 } as const; 

@@ -7,8 +7,8 @@ import {
 	DialogTitle, 
 	DialogDescription, 
 	DialogFooter 
-} from '@/components/ui/dialog/Dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/ui-layout/dialog/Dialog';
+import { Button } from '@/components/ui/ui-input/button';
 
 const DialogPage = () => {
 	const [basicOpen, setBasicOpen] = useState(false);

@@ -15,7 +15,6 @@ export const menuData: MenuData = {
 		key: 'parking',
 		'kor-name': '주차',
 		'eng-name': 'Parking',
-		color: 'bg-primary',
 		midItems: {
 			facility: {
 				key: 'facility',
@@ -157,7 +156,6 @@ export const menuData: MenuData = {
 		key: 'community',
 		'kor-name': '커뮤니티',
 		'eng-name': 'Community',
-		color: 'bg-success',
 		midItems: {
 			facilities: {
 				key: 'facilities',
@@ -250,7 +248,6 @@ export const menuData: MenuData = {
 		key: 'announcement',
 		'kor-name': '공지사항',
 		'eng-name': 'Announcement',
-		color: 'bg-orange-500',
 		midItems: {
 			notices: {
 				key: 'notices',
@@ -315,7 +312,6 @@ export const menuData: MenuData = {
 		key: 'account',
 		'kor-name': '계정',
 		'eng-name': 'Account',
-		color: 'bg-accent',
 		midItems: {
 			management: {
 				key: 'management',
@@ -380,7 +376,6 @@ export const menuData: MenuData = {
 		key: 'settings',
 		'kor-name': '설정',
 		'eng-name': 'Settings',
-		color: 'bg-muted',
 		midItems: {
 			system: {
 				key: 'system',
@@ -473,7 +468,6 @@ export const menuData: MenuData = {
 		key: 'lab',
 		'kor-name': '연구소',
 		'eng-name': 'Laboratory',
-		color: 'bg-secondary',
 		midItems: {
 			'ui-layout': {
 				key: 'ui-layout',

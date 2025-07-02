@@ -1,6 +1,6 @@
 import React from 'react';
-import ParkingBarrier3D from '@/components/ui/barrier/Barrier3d';
-import { OperationMode } from '@/components/ui/barrier/constants';
+import ParkingBarrier3D from '@/components/ui/ui-3d/barrier/Barrier3d';
+import { OperationMode } from '@/components/ui/ui-3d/barrier/constants';
 
 interface BarrierDriverViewProps {
 	width?: number;

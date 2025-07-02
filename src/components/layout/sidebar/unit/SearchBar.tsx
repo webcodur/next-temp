@@ -2,7 +2,7 @@
 
 import { X, Building2, MapPin } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button/Button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { useSidebarSearch } from '@/components/layout/sidebar/hooks';
 
 /**

@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { FieldCheckbox } from '@/components/ui/simple-input/FieldCheckbox';
-import { FieldToggleButton } from '@/components/ui/simple-input/FieldToggleButton';
-import { FieldToggleSwitch } from '@/components/ui/simple-input/FieldToggleSwitch';
-import { FieldRadioGroup } from '@/components/ui/simple-input/FieldRadioGroup';
+import { FieldCheckbox } from '@/components/ui/ui-input/simple-input/FieldCheckbox';
+import { FieldToggleButton } from '@/components/ui/ui-input/simple-input/FieldToggleButton';
+import { FieldToggleSwitch } from '@/components/ui/ui-input/simple-input/FieldToggleSwitch';
+import { FieldRadioGroup } from '@/components/ui/ui-input/simple-input/FieldRadioGroup';
 
 export default function SimpleInputPage() {
 	const [checkboxStates, setCheckboxStates] = useState({

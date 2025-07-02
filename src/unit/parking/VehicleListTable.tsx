@@ -1,9 +1,9 @@
 import React from 'react';
-import InfiniteScroll from '@/components/ui/infinite-scroll/InfiniteScroll';
+import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScroll';
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import { LicensePlate } from '@/components/ui/license-plate';
+import { LicensePlate } from '@/components/ui/system-testing/license-plate';
 
 interface VehicleListTableProps {
 	vehicles: VehicleEntry[];

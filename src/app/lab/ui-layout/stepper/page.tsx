@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { StepperCore } from '@/components/ui/stepper';
+import { StepperCore } from '@/components/ui/ui-layout/stepper';
 
 //#region Constants
 const STEPS = [

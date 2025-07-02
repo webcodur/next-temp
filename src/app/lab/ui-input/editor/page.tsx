@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 
 // 클라이언트에서만 로드되도록 동적 임포트
 const Editor = dynamic(
-  () => import('@/components/ui/editor/markdown-editor').then(mod => mod.Editor),
+  () => import('@/components/ui/ui-input/editor/markdown-editor').then(mod => mod.Editor),
   { ssr: false }
 )
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import InfiniteScroll from '@/components/ui/infinite-scroll/InfiniteScroll';
+import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScroll';
 
 const PAGE_SIZE = 20;
 

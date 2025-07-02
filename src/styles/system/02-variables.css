@@ -1,0 +1,85 @@
+/* 라이트 테마 */
+:root {
+	/* 라이트 테마 - 기본값 */
+	--background: 0 0% 98%;
+	--foreground: 0 0% 5%;
+	--card: 0 0% 100%;
+	--card-foreground: 0 0% 10%;
+	--muted: 0 0% 94%;
+	--muted-foreground: 0 0% 40%;
+	--border: 0 0% 88%;
+	
+	/* 강조 색상 - 순수 블랙 그레이스케일 */
+	--primary: 0 0% 20%;           /* 순수 다크 그레이 */
+	--primary-rgb: 51, 51, 51;
+	--primary-foreground: 0 0% 98%;
+	--secondary: 0 0% 30%;         /* 미드 그레이 */
+	--secondary-foreground: 0 0% 98%;
+	--accent: 0 0% 40%;            /* 라이트 그레이 */
+	--accent-foreground: 0 0% 98%;
+	
+	/* 상태 색상 */
+	--destructive: 0 72% 51%;
+	--destructive-foreground: 0 0% 98%;
+	--warning: 38 92% 50%;
+	--warning-foreground: 0 0% 8%;
+	--success: 142 71% 45%;
+	--success-foreground: 0 0% 98%;
+	
+	/* 뉴모피즘 라이트 테마 - 테슬라 미니멀 스타일 */
+	--nm-light-rgba: 255, 255, 255, 0.95;  /* 더 밝고 선명한 하이라이트 */
+	--nm-dark-rgba: 0, 0, 0, 0.08;          /* 더 섬세한 그림자 */
+	--nm-offset: 3px;                  /* 더 절제된 오프셋 */
+	--nm-blur: 6px;                    /* 더 부드러운 블러 */
+	--nm-inset-light-rgba: 0, 0, 0, 0.15;   /* 더 명확한 inset 그림자 (0.06 → 0.15) */
+	--nm-inset-dark-rgba: 255, 255, 255, 0.6; /* 더 균형잡힌 inset 하이라이트 (0.8 → 0.6) */
+
+	/* 기타 */
+	--radius: 0.5rem;
+	--input: 0 0% 92%;
+	--ring: 0 0% 20%;              /* 순수 다크 그레이 링 */
+	--popover: 0 0% 100%;
+	--popover-foreground: 0 0% 5%;
+}
+
+/* 다크 테마 */
+:root.dark {
+	--background: 0 0% 8%;         /* 순수 다크 그레이 */
+	--foreground: 0 0% 95%;
+	--card: 0 0% 12%;
+	--card-foreground: 0 0% 90%;
+	--muted: 0 0% 18%;
+	--muted-foreground: 0 0% 65%;
+	--border: 0 0% 25%;
+	
+	/* 강조 색상 - 순수 화이트 그레이스케일 */
+	--primary: 0 0% 85%;           /* 순수 라이트 그레이 */
+	--primary-rgb: 217, 217, 217;
+	--primary-foreground: 0 0% 8%;
+	--secondary: 0 0% 70%;         /* 밝은 그레이 */
+	--secondary-foreground: 0 0% 8%;
+	--accent: 0 0% 60%;            /* 소프트 그레이 */
+	--accent-foreground: 0 0% 8%;
+	
+	/* 상태 색상 */
+	--destructive: 0 72% 60%;
+	--destructive-foreground: 0 0% 95%;
+	--warning: 38 92% 60%;
+	--warning-foreground: 0 0% 8%;
+	--success: 142 71% 55%;
+	--success-foreground: 0 0% 8%;
+	
+	/* 뉴모피즘 다크 테마 - 테슬라 미니멀 스타일 */
+	--nm-light-rgba: 255, 255, 255, 0.05;  /* 더 부드러운 하이라이트 */
+	--nm-dark-rgba: 0, 0, 0, 0.35;          /* 더 절제된 그림자 */
+	--nm-offset: 2px;                  /* 더 섬세한 오프셋 */
+	--nm-blur: 5px;                    /* 더 부드러운 블러 */
+	--nm-inset-light-rgba: 0, 0, 0, 0.6;    /* 더 명확한 inset 그림자 (0.5 → 0.6) */
+	--nm-inset-dark-rgba: 255, 255, 255, 0.08; /* 더 명확한 inset 하이라이트 (0.02 → 0.08) */
+
+	/* 기타 */
+	--input: 0 0% 20%;
+	--ring: 0 0% 85%;              /* 순수 라이트 그레이 링 */
+	--popover: 0 0% 12%;
+	--popover-foreground: 0 0% 95%;
+}

@@ -3,8 +3,8 @@
 import { useAtom } from 'jotai';
 import { Moon, Sun, Palette, Eye, EyeOff, Settings } from 'lucide-react';
 import { themeAtom } from '@/store/theme';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle';
+import { Button } from '@/components/ui/ui-input/button';
 
 export default function ThemeTestPage() {
 	const [theme] = useAtom(themeAtom);
@@ -147,10 +147,10 @@ export default function ThemeTestPage() {
 					</div>
 					<div className="space-y-2">
 						<div className="text-muted-foreground">뉴모피즘:</div>
-						<div>--neu-light: <span className="text-primary">밝은 그림자</span></div>
-						<div>--neu-dark: <span className="text-primary">어두운 그림자</span></div>
-						<div>--neu-offset: <span className="text-primary">그림자 거리</span></div>
-						<div>--neu-blur: <span className="text-primary">그림자 블러</span></div>
+						<div>--nm-light-rgba: <span className="text-primary">밝은 그림자</span></div>
+						<div>--nm-dark-rgba: <span className="text-primary">어두운 그림자</span></div>
+						<div>--nm-offset: <span className="text-primary">그림자 거리</span></div>
+						<div>--nm-blur: <span className="text-primary">그림자 블러</span></div>
 					</div>
 				</div>
 			</div>

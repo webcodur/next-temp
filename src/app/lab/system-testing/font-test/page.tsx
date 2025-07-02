@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { isRTL } from '@/utils/language';
-import { Button } from '@/components/ui/button/Button';
-import { LanguageSwitcher } from '@/components/ui/language-switcher/LanguageSwitcher';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 export default function FontTestPage() {
 	const [selectedText, setSelectedText] = useState<
 		'korean' | 'english' | 'arabic' | 'mixed'

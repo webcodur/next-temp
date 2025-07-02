@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ko" className="font-multilang" suppressHydrationWarning>
-			<body className="min-h-screen bg-background">
+			<body>
 				<Provider>
 					<MainLayout>{children}</MainLayout>
 				</Provider>

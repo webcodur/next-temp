@@ -23,8 +23,8 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 
 	return (
 		<div
-			className={`${styles.leftColWidth} h-full neu-flat border-r border-border/20 shrink-0`}>
-			<div className="w-full px-2 py-3 space-y-2.5 flex flex-col items-center">
+			className={`${styles.leftColWidth} h-full border-r border-border/20 shrink-0`}>
+			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = topMenu === topKey;
@@ -38,9 +38,7 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 								e.stopPropagation();
 								onTopClick(topKey);
 							}}
-							className={`w-full h-12 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group ${
-								isActive ? 'neu-inset' : 'neu-raised'
-							}`}>
+							className={`w-full h-12 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group ${isActive ? 'neu-inset' : 'neu-raised'}`}>
 							{/* Top 메뉴 아이콘 */}
 							<topItem.icon
 								className={`w-6 h-6 transition-all duration-200 ${

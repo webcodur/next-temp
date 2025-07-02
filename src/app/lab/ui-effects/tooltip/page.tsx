@@ -7,7 +7,7 @@ import {
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '@/components/ui/tooltip/Tooltip';
+} from '@/components/ui/ui-effects/tooltip/Tooltip';
 import { toast } from 'sonner';
 
 // 툴팁 지연 표시 예시를 위한 커스텀 훅
@@ -340,7 +340,7 @@ export default function TooltipPage() {
                 TooltipContent,
                 TooltipProvider,
                 TooltipTrigger,
-              } from '@/components/ui/tooltip/Tooltip';
+              } from '@/components/ui/ui-effects/tooltip/Tooltip';
 
               <TooltipProvider>
                 <Tooltip>

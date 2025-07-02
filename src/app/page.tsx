@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Car, Shield } from 'lucide-react';
-import Tabs from '@/components/ui/tabs/Tabs';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
 import BarrierGrid from '@/unit/parking/BarrierGrid';

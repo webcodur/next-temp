@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
+import { ListHighlightMarker } from '@/components/ui/ui-data/list-highlight-marker';
 import {
 	Star,
 	User,
@@ -247,7 +247,7 @@ export default function ListHighlightMarkerPage() {
 					<section className="p-6 rounded-lg neu-flat">
 						<h3 className="mb-4 text-lg font-semibold text-gray-800">사용법</h3>
 						<div className="overflow-x-auto p-4 font-mono text-sm text-green-400 bg-gray-800 rounded-lg">
-							<pre>{`import { ListHighlightMarker } from '@/components/ui/list-highlight-marker';
+							<pre>{`import { ListHighlightMarker } from '@/components/ui/ui-data/list-highlight-marker';
 
 // 기본 사용
 <ListHighlightMarker

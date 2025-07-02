@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Car, Check } from 'lucide-react';
 import { VehicleEntry } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import { LicensePlate } from '@/components/ui/license-plate';
+import { LicensePlate } from '@/components/ui/system-testing/license-plate';
 
 interface VehicleDetailCardProps {
 	vehicle: VehicleEntry | null;

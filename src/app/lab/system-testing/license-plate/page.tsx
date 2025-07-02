@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import LicensePlate from '@/components/ui/license-plate/LicensePlate';
+import LicensePlate from '@/components/ui/system-testing/license-plate/LicensePlate';
 
 export default function LicensePlatePage() {
 	const plateNumbers = ['123가4567', '45나8901', '678다2345', '90라6789'];

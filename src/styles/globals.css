@@ -4,13 +4,23 @@
 @config '../../tailwind.config.js';
 
 /*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+  globals.css — 프로젝트 전역 스타일 초기화
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+  • PostCSS 단계에서 '@/...' 별칭은 CSS에서 해석되지 않으므로 CSS 파일은 상대경로를 유지하고,
+    JS/TS 코드에서는 절대경로 import를 권장한다.
+
+  • Tailwind v4는 기본 border 색상을 글자색(currentColor)으로 상속한다. v3 기본값(#e5e7eb)과 달라
+    기존 UI가 흐릿해질 수 있으므로, @layer base 블록에서 모든 요소의 border-color를
+    --color-gray-200(없으면 currentColor)로 강제 지정해 호환성을 확보한다.
+    └ 만약 v4 디자인을 그대로 따르거나 요소마다 border-* 클래스를 명시한다면
+      이 보정 레이어를 삭제해도 된다.
+
+  • @layer base: 프로젝트 전역(Reset/Normalize) 레이어.
+  - 모든 요소·의사 요소의 border-color를 Tailwind 3.x 기본값(#e5e7eb)과 동일한
+    `--color-gray-200`(없을 경우 currentcolor)로 초기화한다.
+  - 디자인 시스템의 HSL 변수 기반 색상 체계에 맞춰 border 색상도 CSS 변수로 관리한다.
 */
+
 @layer base {
 	*,
 	::after,

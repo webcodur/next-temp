@@ -41,7 +41,6 @@ export interface TopItem {
 	key: string; // 메뉴 키 (고유 식별자)
 	'kor-name': string; // 한국어 표시명
 	'eng-name': string; // 영어 표시명 (다국어 처리용)
-	color: string; // 테마 색상
 	midItems: Record<string, MidMenu>; // 하위 Mid 메뉴 목록 (키-값 쌍)
 }
 

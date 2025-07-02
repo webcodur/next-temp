@@ -1,9 +1,10 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
@@ -11,115 +12,189 @@ import {
 } from '@/store/sidebar';
 import { menuData } from '@/data/menuData';
 import { siteData } from '@/data/siteData';
+import clsx from 'clsx';
+
+// #region BreadcrumbItem 컴포넌트
+interface BreadcrumbItemProps {
+	label: string;
+	isCurrent?: boolean;
+}
+
+const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
+	<span
+		className={`truncate ${
+			isCurrent
+				? 'text-foreground font-medium'
+				: 'text-muted-foreground hover:text-foreground transition-colors'
+		}`}
+	>
+		{label}
+	</span>
+);
+// #endregion
 
 export function Breadcrumb() {
+	// #region 상태 및 훅 초기화
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [currentMidMenu, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [currentBotMenu, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
 	const pathname = usePathname();
 
+	const [isCollapsed, setIsCollapsed] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	// #endregion
+
 	// #region 페이지 경로 변경 시 breadcrumb 업데이트
 	useEffect(() => {
-		// 실제 페이지 이동이 발생했을 때만 breadcrumb 업데이트
-		// pathname을 기반으로 적절한 breadcrumb 설정
-		const updateBreadcrumbFromPath = () => {
-			// 예시: /dashboard/analytics/reports 같은 경로에서 breadcrumb 추출
-			const pathSegments = pathname.split('/').filter(Boolean);
+		const pathSegments = pathname.split('/').filter(Boolean);
 
-			if (pathSegments.length === 0) {
-				// 홈 페이지인 경우 breadcrumb 초기화
-				setCurrentTopMenu('');
-				setCurrentMidMenu('');
-				setCurrentBotMenu('');
-				return;
-			}
+		if (pathSegments.length === 0) {
+			setCurrentTopMenu('');
+			setCurrentMidMenu('');
+			setCurrentBotMenu('');
+			return;
+		}
 
-			// 경로에서 메뉴 정보를 찾아서 breadcrumb 업데이트
-			// 실제 프로젝트에서는 경로와 메뉴 구조의 매핑이 필요
-			// 여기서는 예시로 구현
-			for (const [topKey, topItem] of Object.entries(menuData)) {
-				for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
-					for (const botItem of midItem.botItems) {
-						// href와 현재 pathname이 일치하는지 확인
-						if (botItem.href === pathname) {
-							setCurrentTopMenu(topKey);
-							setCurrentMidMenu(midKey);
-							setCurrentBotMenu(botItem['kor-name']);
-							return;
-						}
+		for (const [topKey, topItem] of Object.entries(menuData)) {
+			for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
+				for (const botItem of midItem.botItems) {
+					if (botItem.href === pathname) {
+						setCurrentTopMenu(topKey);
+						setCurrentMidMenu(midKey);
+						setCurrentBotMenu(botItem['kor-name']);
+						return;
 					}
 				}
 			}
-		};
-
-		updateBreadcrumbFromPath();
+		}
 	}, [pathname, setCurrentTopMenu, setCurrentMidMenu, setCurrentBotMenu]);
 	// #endregion
 
-	// #region breadcrumb 아이템 생성
-	const breadcrumbItems = [
-		// 현장명칭은 항상 첫 번째
-		{
-			label: siteData.name,
-			href: '/',
-			isHome: true,
-		},
-	];
+	// #region 브레드크럼 아이템 생성
+	const getBreadcrumbItems = () => {
+		const items = [{ label: siteData.name, href: '/' }];
 
-	if (currentTopMenu && menuData[currentTopMenu]) {
-		breadcrumbItems.push({
-			label: menuData[currentTopMenu]['kor-name'],
-			href: '#',
-			isHome: false,
-		});
-
-		if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
-			breadcrumbItems.push({
-				label: menuData[currentTopMenu].midItems[currentMidMenu]['kor-name'],
+		if (currentTopMenu && menuData[currentTopMenu]) {
+			items.push({
+				label: menuData[currentTopMenu]['kor-name'],
 				href: '#',
-				isHome: false,
 			});
 
-			if (currentBotMenu) {
-				breadcrumbItems.push({
-					label: currentBotMenu,
+			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
+				items.push({
+					label: menuData[currentTopMenu].midItems[currentMidMenu]['kor-name'],
 					href: '#',
-					isHome: false,
+				});
+
+				if (currentBotMenu) {
+					const botItem = menuData[currentTopMenu].midItems[
+						currentMidMenu
+					].botItems.find(item => item['kor-name'] === currentBotMenu);
+					if (botItem) {
+						items.push({ label: currentBotMenu, href: botItem.href });
+					}
+				}
+			}
+		}
+		// 경로가 갱신되지 않았을 경우, pathname에서 임시 이름 생성
+		if (items.length === 1 && pathname !== '/') {
+			const pageName =
+				pathname.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || '';
+			if (pageName) {
+				items.push({
+					label: pageName.charAt(0).toUpperCase() + pageName.slice(1),
+					href: pathname,
 				});
 			}
 		}
-	}
+
+		return items;
+	};
+
+	const breadcrumbItems = getBreadcrumbItems();
 	// #endregion
 
-	// breadcrumb 아이템이 없으면 전역 페이지 표시
-	if (breadcrumbItems.length === 0) {
+	// #region 너비 감지를 위한 레이아웃 이펙트
+	useEffect(() => {
+		const checkScreenSize = () => {
+			setIsCollapsed(window.innerWidth < 1500);
+		};
+
+		checkScreenSize(); // 초기 렌더링 시 체크
+		window.addEventListener('resize', checkScreenSize);
+
+		return () => window.removeEventListener('resize', checkScreenSize);
+	}, []);
+	// #endregion
+
+	if (breadcrumbItems.length <= 1) {
 		return (
-			<div className="flex items-center gap-2">
-				<h2 className="text-lg font-semibold text-foreground">홈</h2>
-			</div>
+			<h2 className="text-lg font-semibold text-foreground truncate">
+				{breadcrumbItems.length > 0 ? breadcrumbItems[0].label : '홈'}
+			</h2>
 		);
 	}
 
-	return (
-		<div className="flex items-center gap-2">
-			<h2 className="text-lg font-semibold text-foreground">
+	const Separator = () => (
+		<ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+	);
+
+	const renderFullBreadcrumb = () => (
+		<div className="flex items-center gap-2 min-w-0">
+			<h2 className="text-lg font-semibold text-foreground truncate">
 				{breadcrumbItems[0].label}
 			</h2>
-			{breadcrumbItems.length > 1 && (
-				<>
-					<ChevronRight className="w-4 h-4 text-muted-foreground" />
-					<div className="flex items-center gap-1 text-sm text-muted-foreground">
-						{breadcrumbItems.slice(1).map((item, index) => (
-							<div key={index} className="flex items-center gap-1">
-								{index > 0 && <span>/</span>}
-								<span className="hover:text-foreground transition-colors cursor-pointer">
-									{item.label}
-								</span>
-							</div>
-						))}
+			<div className="flex items-center gap-2 overflow-hidden">
+				{breadcrumbItems.slice(1).map((item, index) => (
+					<div key={index} className="flex items-center gap-2 flex-shrink-0">
+						<Separator />
+						<BreadcrumbItem
+							label={item.label}
+							isCurrent={index === breadcrumbItems.length - 2}
+						/>
 					</div>
-				</>
-			)}
+				))}
+			</div>
 		</div>
+	);
+
+	const renderCollapsedBreadcrumb = () => (
+		<DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+			<DropdownMenu.Trigger className="neu-raised hover:neu-inset transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium">
+				<span>메뉴 경로</span>
+				<ChevronRight
+					className={clsx(
+						'w-4 h-4 text-muted-foreground transition-transform duration-200',
+						isDropdownOpen && 'rotate-90',
+					)}
+				/>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Portal>
+				<DropdownMenu.Content
+					align="start"
+					sideOffset={5}
+					className="neu-flat bg-background rounded-lg p-2 min-w-[180px] shadow-lg animate-fadeIn z-50"
+				>
+					{breadcrumbItems.map((item, index) => (
+						<DropdownMenu.Item
+							key={index}
+							className={`text-sm px-2 py-1.5 rounded-md cursor-pointer hover:neu-inset focus:outline-none transition-colors ${
+								index === breadcrumbItems.length - 1
+									? 'text-foreground font-medium'
+									: 'text-muted-foreground'
+							}`}
+						>
+							{item.label}
+						</DropdownMenu.Item>
+					))}
+				</DropdownMenu.Content>
+			</DropdownMenu.Portal>
+		</DropdownMenu.Root>
+	);
+
+	return (
+		<nav aria-label="Breadcrumb" className="w-full">
+			{isCollapsed ? renderCollapsedBreadcrumb() : renderFullBreadcrumb()}
+		</nav>
 	);
 }

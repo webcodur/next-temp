@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import PaginatedTable from '@/components/ui/pagination/PaginatedTable';
-import { SmartTableColumn } from '@/components/ui/smartTable/SmartTable';
+import PaginatedTable from '@/components/ui/ui-data/pagination/PaginatedTable';
+import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 
 // 목업 데이터 타입 (인덱스 시그니처 추가)
 interface User extends Record<string, unknown> {

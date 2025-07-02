@@ -6,7 +6,7 @@ import {
 	InsetContainer,
 	FlatContainer,
 	CircleContainer,
-} from '@/components/ui/neumorphicContainer';
+} from '@/components/ui/ui-layout/neumorphicContainer';
 
 export default function NeumorphicPage() {
 	const [count, setCount] = useState(0);

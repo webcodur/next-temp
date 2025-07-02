@@ -1,0 +1,48 @@
+/* #region 3. 기본 스타일 */
+html {
+	font-family: 'MultiLang', 'Pretendard', system-ui, sans-serif;
+	scroll-behavior: smooth;
+}
+
+body {
+	background: hsl(var(--background));
+	color: hsl(var(--foreground));
+	font-feature-settings:
+		'rlig' 1,
+		'calt' 1;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	border-color: hsl(var(--border));
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* 스크롤바 숨기기 */
+.scrollbar-hide {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}
+
+/* RTL/LTR 텍스트 */
+.text-rtl {
+	direction: rtl;
+	text-align: right;
+}
+
+.text-ltr {
+	direction: ltr;
+	text-align: left;
+}
+/* #endregion */ 

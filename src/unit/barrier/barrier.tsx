@@ -6,4 +6,4 @@ export { default as BarrierSecurityView } from './BarrierSecurityView';
 export type {
 	OperationMode,
 	ViewAngle,
-} from '@/components/ui/barrier/constants';
+} from '@/components/ui/ui-3d/barrier/constants';

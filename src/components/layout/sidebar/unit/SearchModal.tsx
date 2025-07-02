@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Building2, MapPin, Menu, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button/Button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { useSidebarSearch, useMenuSearch } from '@/components/layout/sidebar/hooks';
 import { menuData } from '@/data/menuData';
-import { Modal } from '@/components/ui/modal';
+import { Modal } from '@/components/ui/ui-layout/modal';
 
 // 타입 정의
 type SiteResult = {

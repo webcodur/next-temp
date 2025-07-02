@@ -1,13 +1,19 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { sidebarCollapsedAtom } from '@/store/sidebar';
+import {
+	sidebarCollapsedAtom,
+	rPanelWidthAtom,
+	isResizingAtom,
+	isResizeHandleHoveredAtom,
+} from '@/store/sidebar';
 import { useSidebarMenu } from '@/components/layout/sidebar/hooks';
 import { menuData } from '@/data/menuData';
 import { SideHeader } from '@/components/layout/sidebar/unit/SideHeader';
 import { SideLPanel } from '@/components/layout/sidebar/unit/SideLPanel';
 import { SideRPanel } from '@/components/layout/sidebar/unit/SideRPanel';
 import { defaults } from '@/data/sidebarConfig';
+import { ResizeHandle } from './unit/ResizeHandle';
 
 /**
  * 사이드바 메인 컴포넌트
@@ -18,6 +24,13 @@ import { defaults } from '@/data/sidebarConfig';
 export function Sidebar() {
 	// 사이드바 접힘 상태 관리
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [rPanelWidth] = useAtom(rPanelWidthAtom);
+	const [isResizing] = useAtom(isResizingAtom);
+	const [isHovered] = useAtom(isResizeHandleHoveredAtom);
+
+	const sidebarWidth = defaults.leftColumnWidth + rPanelWidth;
+	const showResizeIndicator = isResizing || isHovered;
+	const transitionClass = isResizing ? 'transition-transform' : 'transition-all';
 
 	// 사이드바 메뉴 상태 및 핸들러 관리
 	const {
@@ -38,11 +51,12 @@ export function Sidebar() {
 	return (
 		<aside
 			style={{
-				width: `${defaults.sidebarWidth}px`,
+				width: `${sidebarWidth}px`,
 			}}
-			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container rounded-r-3xl will-change-transform transition-transform duration-200 ease-in-out ${
+			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container rounded-r-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
-			} z-40`}>
+			} z-40 border-r-2 ${showResizeIndicator ? 'border-blue-500' : 'border-transparent'}`}>
+			{!isCollapsed && <ResizeHandle />}
 			<div className="flex flex-col h-full">
 				{/* 사이드바 헤더 영역 */}
 				<SideHeader />

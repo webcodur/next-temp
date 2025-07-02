@@ -1,28 +1,29 @@
 import {
-	ChevronDown,
 	ChevronsDown,
 	ChevronsUp,
 	Focus,
 	Layers,
+	Minus,
+	Plus,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
 import { useState, useEffect, useRef } from 'react';
-import { recentMenusAtom } from '@/store/sidebar';
+import { recentMenusAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import type { TopItem } from '@/components/layout/sidebar/types';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/ui-input/button';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '@/components/ui/tooltip/Tooltip';
+} from '@/components/ui/ui-effects/tooltip/Tooltip';
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/ui/ui-layout/collapsible';
 import { BotMenu } from '../types';
 
 /**
@@ -61,6 +62,22 @@ export function SideRPanel({
 }: SideRPanelProps) {
 	const pathname = usePathname();
 	const [recentMenus, setRecentMenus] = useAtom(recentMenusAtom);
+	const [rPanelWidth] = useAtom(rPanelWidthAtom);
+	const [isResizing] = useAtom(isResizingAtom);
+	
+	// 전체 펼침/접힘 상태 확인
+	const allMidKeys = Object.keys(topData.midItems);
+	const areAllExpanded =
+		allMidKeys.length > 0 && allMidKeys.every((key) => midExpanded.has(key));
+
+	// 제목 클릭 핸들러: 전체 펼침/접힘 토글
+	const handleTitleClick = () => {
+		if (areAllExpanded) {
+			onCollapseAll?.();
+		} else {
+			onExpandAll?.();
+		}
+	};
 	
 	// Hydration 에러 방지: 클라이언트 마운트 완료 후에만 조건부 렌더링 활성화
 	const [isMounted, setIsMounted] = useState(false);
@@ -171,7 +188,9 @@ export function SideRPanel({
 
 	return (
 		<TooltipProvider delayDuration={0}>
-			<div className="flex overflow-hidden flex-col flex-1 h-full bg-gradient-to-b from-background/30 to-background/10 border-l border-border/30">
+			<div
+				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 border-l border-border/30 pr-4 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}`}
+				style={{ width: `${rPanelWidth}px` }}>
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
@@ -191,9 +210,9 @@ export function SideRPanel({
 											: 'hover:bg-muted/40'
 									}`}>
 									{isMounted && singleOpenMode ? (
-										<Focus className="w-4 h-4 neu-icon-active cursor-pointer" />
+										<Focus className="w-4 h-4 cursor-pointer neu-icon-active" />
 									) : (
-										<Layers className="w-4 h-4 neu-icon-inactive hover:text-primary cursor-pointer" />
+										<Layers className="w-4 h-4 cursor-pointer neu-icon-inactive hover:text-primary" />
 									)}
 								</Button>
 							</TooltipTrigger>
@@ -215,7 +234,9 @@ export function SideRPanel({
 					</div>
 
 					{/* 가운데: Top 메뉴 타이틀 */}
-					<h2 className="flex-1 text-base font-bold text-center text-foreground">
+					<h2
+						className="flex-1 text-base font-bold text-center cursor-pointer text-foreground"
+						onClick={handleTitleClick}>
 						{topData['kor-name']} <span className="text-sm">메뉴</span>
 					</h2>
 
@@ -233,7 +254,7 @@ export function SideRPanel({
 										e.stopPropagation();
 										void onCollapseAll?.();
 									}}
-									className="w-6 h-5 rounded-md hover:bg-muted/40 hover:scale-105 transition-all duration-150 cursor-pointer">
+									className="w-6 h-5 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
 									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
 								</Button>
 							</TooltipTrigger>
@@ -257,7 +278,7 @@ export function SideRPanel({
 										e.stopPropagation();
 										void onExpandAll?.();
 									}}
-									className="w-6 h-5 rounded-md hover:bg-muted/40 hover:scale-105 transition-all duration-150 cursor-pointer">
+									className="w-6 h-5 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
 									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
 								</Button>
 							</TooltipTrigger>
@@ -295,28 +316,28 @@ export function SideRPanel({
 											className={`flex-1 text-sm font-medium text-left truncate`}>
 											{midItem['kor-name']}
 										</span>
-										{/* 펼침/접힘 표시 화살표 */}
-										<ChevronDown
-											className={`w-4 h-4 transform shrink-0 cursor-pointer ${
-												midExpanded.has(midKey) ? 'rotate-180' : ''
-											}`}
-										/>
+										{/* 펼침/접힘 표시 아이콘 */}
+										{midExpanded.has(midKey) ? (
+											<Minus className="w-4 h-4 cursor-pointer shrink-0" />
+										) : (
+											<Plus className="w-4 h-4 cursor-pointer shrink-0" />
+										)}
 									</Button>
 								</CollapsibleTrigger>
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
 									<div className="overflow-hidden relative mr-1 ml-1 min-w-0">
-										{/* 메인 수직 점선 - midMenu 하단에서 마지막 botMenu 중앙까지 */}
+										{/* 메인 수직선 - z-index를 낮게 설정하여 배경에 배치 */}
 										<div
-											className="absolute left-0 w-0.5 border-l-2 border-dashed border-muted-foreground/30"
+											className="absolute left-2 w-0.5 border-l-2 border-solid border-muted-foreground/25 z-0"
 											style={{
 												top: '0px',
 												height: `${(midItem.botItems.length - 1) * 44 + 18}px`,
 											}}></div>
 
 										{/* 트리 컨테이너 */}
-										<div className="overflow-hidden space-y-0">
+										<div className="overflow-hidden relative z-10 space-y-0">
 											{midItem.botItems.map((botItem, index) => {
 												const isActive = pathname === botItem.href;
 
@@ -333,33 +354,31 @@ export function SideRPanel({
 																? `${index * 50}ms`
 																: `${(midItem.botItems.length - index - 1) * 30}ms`,
 														}}>
-														{/* 수평 점선 연결선 */}
+														{/* 수평 연결선 - 길이를 줄여서 메뉴 아이템과 겹치지 않도록 */}
 														<div
-															className="absolute h-0.5 border-t-2 border-dashed border-muted-foreground/30"
+															className="absolute h-0.5 border-t-2 border-solid border-muted-foreground/25 z-0"
 															style={{
-																left: '4px',
+																left: '8px',
 																top: '18px',
-																width: '14px',
+																width: '10px',
 															}}></div>
 
-														{/* 수평선 종료점 (봇메뉴 앞) */}
+														{/* 수평선 종료점 (봇메뉴 앞) - 위치 조정하여 잘리지 않도록 */}
 														<div
-															className="absolute w-1 h-1 rounded-full bg-muted-foreground/40"
+															className="absolute z-0 w-1 h-1 rounded-full bg-muted-foreground/30"
 															style={{ left: '19px', top: '17.5px' }}></div>
 
-														{/* 메뉴 아이템 - Link 태그로 변경 */}
+														{/* 메뉴 아이템 - z-index를 높게 설정하고 불투명 배경 적용 */}
 														<Link
 															href={botItem.href}
 															onClick={() =>
 																handleBotMenuClick(midKey, botItem)
 															}
-															className={`relative flex items-center justify-between ml-3 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 cursor-pointer ${
+															className={`relative flex items-center justify-between ml-7 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 cursor-pointer z-20 ${
 																isActive
-																	? 'neu-inset text-primary! font-bold'
-																	: 'neu-flat'
-															}`}
+																	? 'neu-inset text-primary! font-bold bg-background':'neu-flat bg-background/95 backdrop-blur-sm'}`}
 															style={{
-																width: 'calc(100% - 1rem)', // ml-4를 고려한 정확한 width 계산
+																width: 'calc(100% - 1.75rem)', // ml-7을 고려한 정확한 width 계산
 															}}>
 															{/* 아이템 라벨 */}
 															<span className="flex-1 truncate">

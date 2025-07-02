@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Accordion, AccordionGroup } from '@/components/ui/accordion';
+import { Accordion, AccordionGroup } from '@/components/ui/ui-layout/accordion';
 
 const AccordionPage = () => {
 	return (

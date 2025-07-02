@@ -1,5 +1,5 @@
 'use client';
-import Tabs, { Tab } from '@/components/ui/tabs/Tabs';
+import Tabs, { Tab } from '@/components/ui/ui-layout/tabs/Tabs';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 

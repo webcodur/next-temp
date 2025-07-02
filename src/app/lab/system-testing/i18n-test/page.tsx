@@ -1,6 +1,6 @@
 'use client';
 
-import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher';
 import { useLocale, useTranslations } from '@/hooks/useI18n';
 
 export default function I18nTestPage() {

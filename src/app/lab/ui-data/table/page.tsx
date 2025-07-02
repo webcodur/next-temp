@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import {
 	SmartTable,
 	SmartTableColumn,
-} from '@/components/ui/smartTable/SmartTable';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge/index';
+} from '@/components/ui/ui-data/smartTable/SmartTable';
+import { Button } from '@/components/ui/ui-input/button';
+import { Badge } from '@/components/ui/ui-effects/badge/index';
 import { Pencil, Trash2 } from 'lucide-react';
 
 // 예제용 사용자 데이터 타입
@@ -201,7 +201,7 @@ export default function TablePage() {
 			<h1 className="mb-6 text-2xl font-bold">간소화된 테이블 컴포넌트</h1>
 
 			<div className="flex flex-wrap gap-4 mb-6">
-				<Button onClick={simulateLoading} className="neu-raised">
+				<Button onClick={simulateLoading} className="neu-raised" variant="outline">
 					로딩 시뮬레이션
 				</Button>
 				<Button
@@ -217,7 +217,7 @@ export default function TablePage() {
 
 			<div className="mb-10">
 				<h2 className="mb-4 text-xl font-semibold">자동 처리 테이블</h2>
-				<div className="p-4 mb-4 bg-primary/5 rounded-lg neu-flat">
+				<div className="p-4 mb-4 rounded-lg bg-primary/5 neu-flat">
 					<h3 className="mb-2 font-semibold text-primary">🚀 간소화된 기능</h3>
 					<ul className="space-y-1 text-sm text-muted-foreground">
 						<li>

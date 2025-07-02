@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
+import clsx from 'clsx';
 
 interface ProfileButtonProps {
 	className?: string;
@@ -68,18 +69,18 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		return (
 			<button
 				onClick={() => router.push('/login')}
-				className={`p-2 rounded-lg neu-raised text-primary hover:neu-inset transition-all duration-200 ${className}`}>
+				className={clsx('text-primary', className)}>
 				<User className="w-5 h-5" />
 			</button>
 		);
 	}
 
 	return (
-		<div className={`relative ${className}`} ref={dropdownRef}>
+		<div className="relative" ref={dropdownRef}>
 			{/* 프로필 버튼 */}
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className="flex items-center gap-1 p-2 rounded-lg neu-raised hover:neu-inset transition-all duration-200">
+				className={clsx('flex items-center gap-1', className)}>
 				<User className="w-5 h-5 text-muted-foreground" />
 				<ChevronDown
 					className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${
