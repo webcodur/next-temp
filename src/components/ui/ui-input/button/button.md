@@ -5,7 +5,7 @@
 ## 사용법
 
 ```tsx
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // 기본 사용
 <Button>클릭하세요</Button>
@@ -37,4 +37,4 @@ import { Button } from '@/components/ui/button';
 - 뉴모피즘 디자인 (`neu-raised` → `neu-inset`)
 - 호버 및 활성 상태 애니메이션
 - 접근성 지원
-- 커스텀 스타일링 가능
+- 커스텀 스타일링 가능 

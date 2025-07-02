@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/ui-input/button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 const ButtonPage = () => {
 	return (

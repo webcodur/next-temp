@@ -53,7 +53,7 @@ export function Sidebar() {
 			style={{
 				width: `${sidebarWidth}px`,
 			}}
-			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container rounded-r-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${
+			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-r-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
 			} z-40 border-r-2 ${showResizeIndicator ? 'border-blue-500' : 'border-transparent'}`}>
 			{!isCollapsed && <ResizeHandle />}

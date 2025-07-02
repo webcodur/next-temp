@@ -11,7 +11,7 @@
 ## 사용법
 
 ```tsx
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ui-effects/avatar/Avatar';
 
 // 기본 사용
 <Avatar>
@@ -31,4 +31,4 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 - Radix UI Avatar 기반
 - 이미지 로드 실패 시 자동 Fallback
 - 접근성 지원
-- 커스텀 스타일링 가능
+- 커스텀 스타일링 가능 

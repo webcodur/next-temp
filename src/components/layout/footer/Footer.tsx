@@ -2,7 +2,7 @@
 
 export default function Footer() {
 	return (
-		<footer className="bg-muted border-t border-border text-muted-foreground py-20 mt-[150px]">
+		<footer className="bg-surface-3 border-t border-border text-muted-foreground py-20 mt-[150px]">
 			<div className="container max-w-2xl px-6 mx-auto">
 				{/* 로고 및 소개 - 중앙 정렬 */}
 				<div className="mb-6 text-center">

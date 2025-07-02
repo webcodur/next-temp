@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FlipText } from '@/components/ui/ui-effects/flip-text';
-import { Button } from '@/components/ui/ui-input/button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { Variants } from 'framer-motion';
 
 export default function FlipTextPage() {

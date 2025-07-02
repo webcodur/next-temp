@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { Moon, Sun, Palette, Eye, EyeOff, Settings } from 'lucide-react';
 import { themeAtom } from '@/store/theme';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle';
-import { Button } from '@/components/ui/ui-input/button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 export default function ThemeTestPage() {
 	const [theme] = useAtom(themeAtom);

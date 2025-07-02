@@ -12,7 +12,7 @@ import { useAtom } from 'jotai';
 import { useState, useEffect, useRef } from 'react';
 import { recentMenusAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import type { TopItem } from '@/components/layout/sidebar/types';
-import { Button } from '@/components/ui/ui-input/button';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import {
 	Tooltip,
 	TooltipContent,

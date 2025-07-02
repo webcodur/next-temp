@@ -8,6 +8,8 @@ import { initThemeAtom } from '@/store/theme';
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
 import { SideToggleMain } from './sidebar/unit/SideToggleMain';
+import Footer from './footer/Footer';
+
 // hooks
 import { useSidebarKeyboard } from './sidebar/hooks';
 // data
@@ -35,25 +37,22 @@ export function MainLayout({ children }: MainLayoutProps) {
 	useSidebarKeyboard();
 
 	return (
-		<div className="flex h-screen bg-background overflow-hidden" suppressHydrationWarning>
+		<div className="flex overflow-scroll h-screen bg-surface-2" suppressHydrationWarning>
 			<SideToggleMain />
 			<Sidebar />
-
 			<main
 				style={{
 					marginLeft: isCollapsed ? '0px' : `${sidebarWidth}px`,
 					transition: isResizing ? 'none' : `margin-left ${animations.sidebarDuration}ms ease-in-out`,
 				}}
-				className="flex flex-col flex-1">
-
-      <Header />
-				<div
-					ref={scrollContainerRef}
-					className="flex-1 overflow-y-auto">
-          <div className="max-w-[1440px] mx-auto px-6 w-full py-6">
-            {children}
-          </div>
+				className="flex flex-col flex-1 bg-surface-1">
+				<Header />
+				<div ref={scrollContainerRef} className="flex-1">
+					<div className="max-w-[1440px] mx-auto px-6 w-full py-6">
+						{children}
+					</div>
 				</div>
+				<Footer />
 			</main>
 		</div>
 	);

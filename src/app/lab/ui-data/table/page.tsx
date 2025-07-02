@@ -5,8 +5,8 @@ import {
 	SmartTable,
 	SmartTableColumn,
 } from '@/components/ui/ui-data/smartTable/SmartTable';
-import { Button } from '@/components/ui/ui-input/button';
-import { Badge } from '@/components/ui/ui-effects/badge/index';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import { Badge } from '@/components/ui/ui-effects/badge/Badge';
 import { Pencil, Trash2 } from 'lucide-react';
 
 // 예제용 사용자 데이터 타입

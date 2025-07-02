@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ui-effects/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/ui-effects/avatar/Avatar';
 
 const AvatarPage = () => {
 	return (

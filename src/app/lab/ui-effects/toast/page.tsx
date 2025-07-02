@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import { Button } from '@/components/ui/ui-input/button';
+import React from 'react';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { ToastProvider, toast } from '@/components/ui/ui-effects/toast/ToastProvider';
 
 export default function ToastPage() {

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Badge } from '@/components/ui/ui-effects/badge';
+import { Badge } from '@/components/ui/ui-effects/badge/Badge';
 
 const BadgePage = () => {
 	return (

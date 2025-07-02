@@ -30,7 +30,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={clsx(
-          'inline-flex items-center justify-center text-sm font-medium text-foreground',
+          'inline-flex justify-center items-center text-sm font-medium text-foreground',
           className
         )}
         aria-expanded={isOpen}
@@ -49,7 +49,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
         <>
           {/* 오버레이 - 불투명 배경 */}
           <div 
-            className="fixed inset-0 z-10 bg-black/20 backdrop-blur-sm" 
+            className="fixed inset-0 z-10 backdrop-blur-sm bg-black/20" 
             onClick={() => setIsOpen(false)}
           />
           
@@ -72,7 +72,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
                       setIsOpen(false);
                     }}
                     className={clsx(
-                      'group flex items-center justify-center w-full px-4 py-3 text-sm transition-colors duration-150',
+                      'flex justify-center items-center px-4 py-3 w-full text-sm transition-colors duration-150 group',
                       isActive ? 'bg-primary/10' : 'hover:bg-muted'
                     )}
                     role="menuitem"
