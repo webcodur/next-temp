@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-	RaisedContainer,
-	InsetContainer,
-	FlatContainer,
-	CircleContainer,
-} from '@/components/ui/ui-layout/neumorphicContainer';
+import { RaisedContainer } from '@/components/ui/ui-layout/neumorphicContainer/RaisedContainer';
+import { InsetContainer } from '@/components/ui/ui-layout/neumorphicContainer/InsetContainer';
+import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/FlatContainer';
+import { CircleContainer } from '@/components/ui/ui-layout/neumorphicContainer/CircleContainer';
 
 export default function NeumorphicPage() {
 	const [count, setCount] = useState(0);

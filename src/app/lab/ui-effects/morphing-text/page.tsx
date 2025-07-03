@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { MorphingText } from '@/components/ui/ui-effects/morphing-text';
+import { MorphingText } from '@/components/ui/ui-effects/morphing-text/MorphingText';
 
 export default function MorphingTextDemo() {
   const [currentExample, setCurrentExample] = useState(0);
@@ -164,7 +164,7 @@ export default function MorphingTextDemo() {
       <div className="p-6 rounded-lg neu-flat">
         <h2 className="mb-4 text-xl font-semibold font-multilang">사용법</h2>
         <div className="overflow-x-auto p-4 font-mono text-sm bg-gray-50 rounded-lg">
-          <pre>{`import { MorphingText } from '@/components/ui/ui-effects/morphing-text';
+          <pre>{`import { MorphingText } from '@/components/ui/ui-effects/morphing-text/MorphingText';
 
 // 기본 자동 순환
 <MorphingText 

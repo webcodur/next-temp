@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FieldEmail, FieldPassword } from '@/components/ui/ui-input/field';
+import { FieldEmail } from '@/components/ui/ui-input/field/text/FieldEmail';
+import { FieldPassword } from '@/components/ui/ui-input/field/text/FieldPassword';
 import { Button } from '@/components/ui/ui-input/button/Button';
 
 interface LoginFormData {

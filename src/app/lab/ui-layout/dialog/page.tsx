@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-	Dialog,
-	DialogHeader,
-	DialogTitle,
-	DialogDescription,
+import { 
+	Dialog, 
+	DialogHeader, 
+	DialogTitle, 
+	DialogDescription, 
 	DialogFooter,
 } from '@/components/ui/ui-layout/dialog/Dialog';
 import { Button } from '@/components/ui/ui-input/button/Button';

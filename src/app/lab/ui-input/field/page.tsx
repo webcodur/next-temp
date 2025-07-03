@@ -1,16 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import {
-	FieldText,
-	FieldPassword,
-	FieldEmail,
-	FieldSelect,
-	FieldSortSelect,
-	FieldDatePicker,
-	Option,
-	SortDirection,
-} from '@/components/ui/ui-input/field';
+import { FieldText } from '@/components/ui/ui-input/field/text/FieldText';
+import { FieldPassword } from '@/components/ui/ui-input/field/text/FieldPassword';
+import { FieldEmail } from '@/components/ui/ui-input/field/text/FieldEmail';
+import { FieldSelect } from '@/components/ui/ui-input/field/select/FieldSelect';
+import { FieldSortSelect } from '@/components/ui/ui-input/field/select/FieldSortSelect';
+import { FieldDatePicker } from '@/components/ui/ui-input/field/datepicker/FieldDatePicker';
+import { Option, SortDirection } from '@/components/ui/ui-input/field/core/types';
 
 export default function FieldPage() {
 	const [textValue, setTextValue] = useState('');

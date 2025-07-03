@@ -5,7 +5,7 @@ import { X, Building2, MapPin, Menu, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { useSidebarSearch, useMenuSearch } from '@/components/layout/sidebar/hooks';
 import { menuData } from '@/data/menuData';
-import { Modal } from '@/components/ui/ui-layout/modal';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // 타입 정의
 type SiteResult = {

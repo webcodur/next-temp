@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { ToastProvider, toast } from '@/components/ui/ui-effects/toast/ToastProvider';
+import { ToastProvider, toast } from '@/components/ui/ui-effects/toast/Toast';
 
 export default function ToastPage() {
   return (

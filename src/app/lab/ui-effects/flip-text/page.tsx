@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FlipText } from '@/components/ui/ui-effects/flip-text';
+import { FlipText } from '@/components/ui/ui-effects/flip-text/FlipText';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Variants } from 'framer-motion';
 
