@@ -38,8 +38,8 @@ const TabsPage: React.FC = () => {
 	const [darkMode, setDarkMode] = useState(false);
 
 	return (
-		<div className="min-h-screen p-8 bg-gray-100">
-			<div className="max-w-4xl mx-auto">
+		<div className="p-8 min-h-screen bg-gray-100">
+			<div className="mx-auto max-w-4xl">
 				<h1 className="mb-8 text-3xl font-bold text-center text-gray-700">
 					음양각 뉴모피즘 탭
 				</h1>
@@ -79,7 +79,7 @@ const TabsPage: React.FC = () => {
 						</h2>
 						<div className="space-y-5">
 							{/* 알림 토글 */}
-							<div className="flex items-center justify-between p-5 transition-all duration-200 rounded-lg neu-flat hover:neu-raised">
+							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
 								<div>
 									<span className="font-medium text-gray-700">알림 활성화</span>
 									<p className="mt-1 text-sm text-gray-500">
@@ -91,7 +91,7 @@ const TabsPage: React.FC = () => {
 								<button
 									onClick={() => setNotifications(!notifications)}
 									className="focus:outline-hidden">
-									<div className={cn("w-14 h-7 rounded-full relative neu-inset transition-all duration-200")}>
+									<div className={cn("relative w-14 h-7 rounded-full transition-all duration-200 neu-inset")}>
 										<div
 											className={cn(
 												"w-6 h-6 rounded-full absolute top-0.5 neu-raised transition-all duration-300",
@@ -103,7 +103,7 @@ const TabsPage: React.FC = () => {
 							</div>
 
 							{/* 다크모드 토글 */}
-							<div className="flex items-center justify-between p-5 transition-all duration-200 rounded-lg neu-flat hover:neu-raised">
+							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
 								<div>
 									<span className="font-medium text-gray-700">다크 모드</span>
 									<p className="mt-1 text-sm text-gray-500">
@@ -115,7 +115,7 @@ const TabsPage: React.FC = () => {
 								<button
 									onClick={() => setDarkMode(!darkMode)}
 									className="focus:outline-hidden">
-									<div className={cn("w-14 h-7 rounded-full relative neu-inset transition-all duration-200")}>
+									<div className={cn("relative w-14 h-7 rounded-full transition-all duration-200 neu-inset")}>
 										<div
 											className={cn(
 												"w-6 h-6 rounded-full absolute top-0.5 neu-raised transition-all duration-300",
@@ -127,7 +127,7 @@ const TabsPage: React.FC = () => {
 							</div>
 
 							{/* 추가 설정 항목 */}
-							<div className="p-5 transition-all duration-200 rounded-lg neu-flat hover:neu-raised">
+							<div className="p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
 								<h3 className="mb-3 font-medium text-gray-700">
 									현재 설정 상태
 								</h3>
@@ -136,7 +136,7 @@ const TabsPage: React.FC = () => {
 										<span>알림:</span>
 										<span
 											className={
-												notifications ? 'text-green-600 font-medium' : 'text-red-500 font-medium'
+												notifications ? 'font-medium text-green-600' : 'font-medium text-red-500'
 											}>
 											{notifications ? 'ON' : 'OFF'}
 										</span>
@@ -144,7 +144,7 @@ const TabsPage: React.FC = () => {
 									<div className="flex justify-between">
 										<span>다크 모드:</span>
 										<span
-											className={darkMode ? 'text-blue-600 font-medium' : 'text-red-500 font-medium'}>
+											className={darkMode ? 'font-medium text-blue-600' : 'font-medium text-red-500'}>
 											{darkMode ? 'ON' : 'OFF'}
 										</span>
 									</div>
@@ -159,21 +159,21 @@ const TabsPage: React.FC = () => {
 							사용자 프로필
 						</h2>
 						<div className="flex flex-col items-center space-y-6 md:flex-row md:items-start md:space-y-0 md:space-x-6">
-							<div className="flex items-center justify-center w-24 h-24 transition-all duration-200 rounded-full neu-raised hover:scale-105">
+							<div className="flex justify-center items-center w-24 h-24 rounded-full transition-all duration-200 neu-raised hover:scale-105">
 								<span className="text-3xl font-bold text-gray-600">김</span>
 							</div>
-							<div className="flex-1 w-full space-y-4">
-								<div className="p-4 transition-all duration-200 rounded-lg neu-inset">
+							<div className="flex-1 space-y-4 w-full">
+								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
 									<label className="text-sm text-gray-500">이름</label>
 									<p className="text-lg font-medium text-gray-700">김개발자</p>
 								</div>
-								<div className="p-4 transition-all duration-200 rounded-lg neu-inset">
+								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
 									<label className="text-sm text-gray-500">이메일</label>
 									<p className="text-lg font-medium text-gray-700">
 										dev@example.com
 									</p>
 								</div>
-								<div className="p-4 transition-all duration-200 rounded-lg neu-inset">
+								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
 									<label className="text-sm text-gray-500">가입일</label>
 									<p className="text-lg font-medium text-gray-700">
 										2024년 1월 15일

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Accordion, AccordionGroup } from '@/components/ui/ui-layout/accordion';
+import { Accordion, AccordionGroup } from '@/components/ui/ui-layout/accordion/Accordion';
 
 const AccordionPage = () => {
 	return (
@@ -14,10 +14,10 @@ const AccordionPage = () => {
 
 				<div className="space-y-8">
 					{/* 기본 아코디언 */}
-					<section className="p-6 bg-card rounded-lg neu-flat">
+					<section className="p-6 rounded-lg bg-card neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground">기본 아코디언</h2>
 						<Accordion title="기본 아코디언" defaultOpen={true}>
-							<div className="p-4 bg-muted rounded-lg">
+							<div className="p-4 rounded-lg bg-muted">
 								<p className="text-foreground">
 									이것은 기본 아코디언 콘텐츠입니다. 
 									뉴모피즘 디자인이 적용되어 있으며 부드러운 애니메이션으로 
@@ -28,7 +28,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 상태 텍스트가 있는 아코디언 */}
-					<section className="p-6 bg-card rounded-lg neu-flat">
+					<section className="p-6 rounded-lg bg-card neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground">상태 텍스트 아코디언</h2>
 						<Accordion 
 							title="설정 옵션" 
@@ -60,14 +60,14 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 비활성화된 아코디언 */}
-					<section className="p-6 bg-card rounded-lg neu-flat">
+					<section className="p-6 rounded-lg bg-card neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground">비활성화된 아코디언</h2>
 						<Accordion 
 							title="비활성화된 섹션" 
 							statusText="접근 불가" 
 							disabled={true}
 						>
-							<div className="p-4 bg-muted rounded-lg">
+							<div className="p-4 rounded-lg bg-muted">
 								<p className="text-muted-foreground">
 									이 콘텐츠는 비활성화되어 있어 접근할 수 없습니다.
 								</p>
@@ -76,11 +76,11 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 아코디언 그룹 */}
-					<section className="p-6 bg-card rounded-lg neu-flat">
+					<section className="p-6 rounded-lg bg-card neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground">아코디언 그룹</h2>
 						<AccordionGroup>
 							<Accordion title="첫 번째 섹션" defaultOpen={true}>
-								<div className="p-4 bg-primary/5 rounded-lg">
+								<div className="p-4 rounded-lg bg-primary/5">
 									<h3 className="mb-2 font-semibold text-primary">첫 번째 섹션</h3>
 									<p className="text-foreground">
 										첫 번째 섹션의 콘텐츠입니다. 다양한 정보를 담을 수 있습니다.
@@ -111,7 +111,7 @@ const AccordionPage = () => {
 					</section>
 
 					{/* 기능 설명 */}
-					<section className="p-6 bg-card rounded-lg neu-flat">
+					<section className="p-6 rounded-lg bg-card neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground">주요 기능</h2>
 						<ul className="space-y-2 text-muted-foreground">
 							<li>• 뉴모피즘 디자인 적용</li>

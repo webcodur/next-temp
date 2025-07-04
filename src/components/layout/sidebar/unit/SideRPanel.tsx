@@ -23,7 +23,7 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@/components/ui/ui-layout/collapsible';
+} from '@/components/ui/ui-layout/collapsible/Collapsible';
 import { BotMenu } from '../types';
 
 /**
