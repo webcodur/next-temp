@@ -52,7 +52,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
 								<div
 									className="absolute top-1/2 left-1/2 w-1.5 h-1.5 rounded-full transform -translate-x-1/2 -translate-y-1/2"
 									style={{
-										background: 'hsl(var(--primary) / 0.8)',
+										background: 'hsl(var(--brand) / 0.8)',
 										boxShadow: 'inset 0 0 2px rgba(var(--nm-dark-rgba))',
 									}}
 								/>

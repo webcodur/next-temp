@@ -64,6 +64,21 @@ module.exports = {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))',
 				},
+				// 브랜드 포인트 색상
+				brand: {
+					DEFAULT: 'hsl(var(--brand))',
+					0: 'hsl(var(--brand-0))',
+					1: 'hsl(var(--brand-1))',
+					2: 'hsl(var(--brand-2))',
+					3: 'hsl(var(--brand-3))',
+					4: 'hsl(var(--brand-4))',
+					5: 'hsl(var(--brand-5))',
+					6: 'hsl(var(--brand-6))',
+					7: 'hsl(var(--brand-7))',
+					8: 'hsl(var(--brand-8))',
+					9: 'hsl(var(--brand-9))',
+					foreground: 'hsl(var(--brand-foreground))',
+				},
 			},
 			fontFamily: {
 				// 다국어 자동 선택 폰트 (서브셋 최적화)

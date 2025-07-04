@@ -46,7 +46,7 @@ const InfiniteScroll: FC<InfiniteScrollProps> = ({
 					className="flex justify-center py-3 border-t border-border">
 					{isLoading ? (
 						<div className="flex items-center gap-2 text-muted-foreground">
-							<div className="w-4 h-4 border-2 border-border border-t-primary rounded-full animate-spin"></div>
+							<div className="w-4 h-4 border-2 border-border border-t-brand rounded-full animate-spin"></div>
 							<span className="text-xs">데이터 로딩 중...</span>
 						</div>
 					) : (

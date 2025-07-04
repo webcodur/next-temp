@@ -35,7 +35,7 @@ const SortableItem: React.FC<Item> = ({ id, name }) => {
 		<li
 			ref={setNodeRef}
 			style={style}
-			className="p-2 border border-border rounded bg-background mb-2 cursor-grab"
+			className="p-2 border border-border rounded bg-background mb-2 cursor-grab hover:border-brand hover:bg-brand/10"
 			{...attributes}
 			{...listeners}>
 			{name}

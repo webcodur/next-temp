@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils';
 
 // 그라데이션 배경과 원형용 그림자
 const BACKGROUND = 'linear-gradient(135deg, hsl(var(--card) / 0.95), hsl(var(--muted) / 0.8))';
-const CIRCLE_LIGHT_SIDE = 'rgba(0, 0, 0, 0.05)';
-const CIRCLE_SHADE_SIDE = 'rgba(0, 0, 0, 0.15)';
-const CIRCLE_INSET_LIGHT_SIDE = 'rgba(0, 0, 0, 0.06)';
-const CIRCLE_INSET_SHADE_SIDE = 'rgba(0, 0, 0, 0.2)';
+const CIRCLE_LIGHT_SIDE = 'hsl(var(--brand) / 0.12)';
+const CIRCLE_SHADE_SIDE = 'hsl(var(--brand) / 0.28)';
+const CIRCLE_INSET_LIGHT_SIDE = 'hsl(var(--brand) / 0.15)';
+const CIRCLE_INSET_SHADE_SIDE = 'hsl(var(--brand) / 0.35)';
 
 type CircleContainerProps = {
   children: React.ReactNode;

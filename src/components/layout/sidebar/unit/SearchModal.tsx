@@ -144,7 +144,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 					onChange={(e) => handleSiteChangeWithFocus(e.target.value)}
 					onCompositionStart={handleCompositionStart}
 					onCompositionEnd={handleSiteCompositionEnd}
-					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
 				/>
 				{siteQuery && (
 					<Button
@@ -244,7 +244,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 					onChange={(e) => handleMenuChangeWithFocus(e.target.value)}
 					onCompositionStart={handleCompositionStart}
 					onCompositionEnd={handleMenuCompositionEnd}
-					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
 				/>
 				{menuQuery && (
 					<Button

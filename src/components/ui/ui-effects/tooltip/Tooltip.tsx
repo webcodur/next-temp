@@ -11,7 +11,7 @@ const TooltipPortal = TooltipPrimitive.Portal;
 type TooltipContentProps = React.ComponentPropsWithoutRef<
 	typeof TooltipPrimitive.Content
 > & {
-	variant?: 'default' | 'info' | 'warning' | 'error';
+	variant?: 'default' | 'brand' | 'info' | 'warning' | 'error';
 	noArrow?: boolean;
 	container?: HTMLElement | null;
 };
@@ -34,6 +34,7 @@ const TooltipContent = React.forwardRef<
 	) => {
 		const variantClasses = {
 			default: 'bg-primary text-primary-foreground',
+			brand: 'bg-brand text-brand-foreground',
 			info: 'bg-primary text-primary-foreground',
 			warning: 'bg-warning text-warning-foreground',
 			error: 'bg-destructive text-destructive-foreground',
@@ -63,6 +64,7 @@ const TooltipContent = React.forwardRef<
 								className={cn(
 									'fill-current',
 									variant === 'default' && 'fill-primary',
+									variant === 'brand' && 'fill-brand',
 									variant === 'info' && 'fill-primary',
 									variant === 'warning' && 'fill-warning',
 									variant === 'error' && 'fill-destructive'

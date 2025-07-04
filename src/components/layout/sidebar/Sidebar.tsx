@@ -55,7 +55,7 @@ export function Sidebar() {
 			}}
 			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-r-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${
 				isCollapsed ? '-translate-x-full' : 'translate-x-0'
-			} z-40 border-r-2 ${showResizeIndicator ? 'border-blue-500' : 'border-transparent'}`}>
+			} z-40 border-r-2 ${showResizeIndicator ? 'border-brand' : 'border-transparent'}`}>
 			{!isCollapsed && <ResizeHandle />}
 			<div className="flex flex-col h-full">
 				{/* 사이드바 헤더 영역 */}

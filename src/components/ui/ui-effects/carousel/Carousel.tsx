@@ -125,13 +125,13 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 
 				<button
 					onClick={handlePrev}
-					className="absolute left-2 top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
+					className="absolute left-2 top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
 					<ChevronLeft size={24} />
 				</button>
 
 				<button
 					onClick={handleNext}
-					className="absolute right-2 top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
+					className="absolute right-2 top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
 					<ChevronRight size={24} />
 				</button>
 
@@ -141,7 +141,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 							key={idx}
 							onClick={() => setIndex(idx)}
 							className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-110 ${
-								idx === index ? 'bg-primary' : 'bg-muted-foreground neu-raised'
+								idx === index ? 'bg-brand' : 'bg-muted-foreground neu-raised'
 							}`}
 							aria-label={`슬라이드 ${idx + 1}로 이동`}
 						/>

@@ -64,7 +64,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
 						disabled={disabled}
 						className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
 							pageNumber === currentPage
-								? 'bg-primary text-primary-foreground'
+								? 'bg-brand text-brand-foreground'
 								: disabled
 									? 'text-muted-foreground cursor-not-allowed'
 									: 'text-foreground neu-raised'

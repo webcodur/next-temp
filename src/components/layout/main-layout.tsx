@@ -4,6 +4,7 @@ import { ReactNode, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import { initThemeAtom } from '@/store/theme';
+import { initBrandColorAtom } from '@/store/brand';
 // components
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
@@ -24,6 +25,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 	const [rPanelWidth] = useAtom(rPanelWidthAtom);
 	const [isResizing] = useAtom(isResizingAtom);
 	const [, initTheme] = useAtom(initThemeAtom);
+	const [, initBrandColor] = useAtom(initBrandColorAtom);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const sidebarWidth = defaults.leftColumnWidth + rPanelWidth;
@@ -31,7 +33,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 	// 테마 초기화
 	useEffect(() => {
 		initTheme();
-	}, [initTheme]);
+		initBrandColor();
+	}, [initTheme, initBrandColor]);
 
 	// 키보드 단축키 활성화
 	useSidebarKeyboard();

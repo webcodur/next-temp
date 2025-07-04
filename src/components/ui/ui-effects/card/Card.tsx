@@ -14,7 +14,7 @@ const Card = React.forwardRef<
 		className={cn(
 			'rounded-lg bg-card text-card-foreground',
 			variant === 'default' && 'neu-flat',
-			variant === 'outline-solid' && 'neu-flat border-2',
+			variant === 'outline-solid' && 'neu-flat border-2 border-brand',
 			variant === 'elevated' && 'neu-raised',
 			hoverEffect && 'neu-raised',
 			className

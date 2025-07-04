@@ -14,6 +14,7 @@ const buttonVariants = cva(
 				success: 'neu-raised bg-success text-success-foreground hover:scale-[1.02]',
 				warning: 'neu-raised bg-warning text-warning-foreground hover:scale-[1.02]',
 				accent: 'neu-raised bg-accent text-accent-foreground hover:scale-[1.02]',
+				brand: 'neu-raised bg-brand text-brand-foreground hover:scale-[1.02]',
 				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50',
 				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02]',
 				ghost: 'neu-flat hover:bg-muted text-foreground neu-hover',

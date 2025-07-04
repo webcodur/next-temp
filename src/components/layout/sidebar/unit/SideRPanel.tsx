@@ -206,13 +206,13 @@ export function SideRPanel({
 									onMouseLeave={handleTooltipMouseLeave}
 									className={`w-6 h-6 rounded-md transition-all duration-150 cursor-pointer ${
 										isMounted && singleOpenMode 
-											? 'bg-primary/10 hover:bg-primary/20' 
+											? 'bg-brand/10 hover:bg-brand/20' 
 											: 'hover:bg-muted/40'
 									}`}>
 									{isMounted && singleOpenMode ? (
 										<Focus className="w-4 h-4 cursor-pointer neu-icon-active" />
 									) : (
-										<Layers className="w-4 h-4 cursor-pointer neu-icon-inactive hover:text-primary" />
+										<Layers className="w-4 h-4 cursor-pointer neu-icon-inactive hover:text-brand" />
 									)}
 								</Button>
 							</TooltipTrigger>
@@ -309,7 +309,7 @@ export function SideRPanel({
 										}}
 										className={`w-full justify-between h-auto py-2.5 px-2 rounded-lg group min-w-0 border-none! transition-all duration-200 cursor-pointer ${
 											isMidMenuActive(midItem)
-												? 'neu-inset text-primary! font-bold'
+												? 'neu-inset text-brand! font-bold'
 												: 'neu-flat'
 										}`}>
 										<span
@@ -376,7 +376,7 @@ export function SideRPanel({
 															}
 															className={`relative flex items-center justify-between ml-7 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 cursor-pointer z-20 ${
 																isActive
-																	? 'neu-inset text-primary! font-bold bg-background':'neu-flat bg-background/95 backdrop-blur-sm'}`}
+																	? 'neu-inset text-brand! font-bold bg-background':'neu-flat bg-background/95 backdrop-blur-sm'}`}
 															style={{
 																width: 'calc(100% - 1.75rem)', // ml-7을 고려한 정확한 width 계산
 															}}>

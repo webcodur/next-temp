@@ -49,7 +49,7 @@ export function FlipText({
 						variants={variants || defaultVariants}
 						transition={{ duration, delay: i * delayMultiple }}
 						className={cn(
-							'origin-center drop-shadow-sm inline-block',
+							'origin-center drop-shadow-sm inline-block text-brand',
 							className
 						)}
 						{...props}>

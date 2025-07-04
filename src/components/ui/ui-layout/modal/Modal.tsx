@@ -63,13 +63,13 @@ const Modal: React.FC<ModalProps> = ({
 						<button
 							type="button"
 							onClick={onClose}
-							className="absolute top-4 right-4 z-10 text-2xl text-foreground cursor-pointer hover:text-destructive">
+							className="absolute top-4 right-4 z-10 text-2xl text-foreground cursor-pointer hover:text-brand transition-colors">
 							&times;
 						</button>
 						
 						{/* 타이틀이 있는 경우에만 헤더 영역 렌더링 */}
 						{title && (
-							<div className="p-6 pb-4 border-b border-border">
+							<div className="p-6 pb-4 border-b border-brand/40">
 								<h2 className="text-xl font-semibold text-center text-foreground">
 									{title}
 								</h2>

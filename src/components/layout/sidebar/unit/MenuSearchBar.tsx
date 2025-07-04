@@ -243,7 +243,7 @@ export function MenuSearchBar() {
 									value={searchQuery}
 									onChange={(e) => handleSearchChange(e.target.value)}
 									onKeyDown={handleKeyDown}
-									className="w-full pl-10 pr-10 py-2 text-sm border border-border rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+									className="w-full pl-10 pr-10 py-2 text-sm border border-border rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
 								/>
 								{searchQuery && (
 									<Button

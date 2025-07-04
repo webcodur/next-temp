@@ -75,7 +75,7 @@ export function ResizeHandle() {
 		>
 			<GripVertical
 				className={`h-6 w-auto transition-colors duration-200 ${
-					isActive ? 'text-blue-500' : 'text-border/70'
+					isActive ? 'text-brand' : 'text-border/70'
 				}`}
 			/>
 		</div>

@@ -97,10 +97,10 @@ export function SideHeader() {
 							className="flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300">
 							{/* 로고 아이콘 */}
 							<div className="flex justify-center items-center shrink-0">
-								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-primary group-hover:scale-105" />
+								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-brand group-hover:scale-105" />
 							</div>
 							{/* 타이틀 텍스트 */}
-							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-primary/90">
+							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-brand/90">
 								건물 타이틀
 							</div>
 						</Link>
@@ -113,7 +113,7 @@ export function SideHeader() {
 					<button
 						onClick={handleSearchOpen}
 						className="flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group">
-						<Search className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+						<Search className="w-4 h-4 text-muted-foreground group-hover:text-brand" />
 						<span className="text-sm text-muted-foreground group-hover:text-foreground">
 							현장 · 메뉴 검색
 						</span>

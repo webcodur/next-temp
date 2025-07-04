@@ -6,6 +6,7 @@ import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
 import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
+import { BrandColorPicker } from '@/components/layout/header/BrandColorPicker';
 import clsx from 'clsx';
 
 export function Header() {
@@ -31,6 +32,8 @@ export function Header() {
 			<div className="flex gap-3 items-center">
 				{/* 언어 선택 */}
 				<LanguageSwitcher variant="header" className={flagButton} />
+				{/* 브랜드 컬러 픽커 */}
+				<BrandColorPicker className={squareButton} />
 				{/* 테마 토글 */}
 				<ThemeToggle variant="icon" showLabel={false} className={squareButton} />
 				{/* 프로필 버튼 */}

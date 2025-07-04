@@ -158,7 +158,7 @@
 		/* 우측 강화된 그림자 */
 		calc(var(--nm-offset) * 1.5) 0 calc(var(--nm-blur) * 1.5) rgba(var(--nm-dark-rgba)),
 		/* 전체 확산 그림자 */
-		0 4px 12px rgba(var(--primary-rgb), 0.1);
+		0 4px 12px hsl(var(--brand) / 0.1);
 }
 
 .neu-raised:active {
@@ -186,7 +186,7 @@
 .neu-inset {
 	/* 부드러운 border + 음각 shadow */
 	border: 1px solid hsl(var(--border) / 0.4);
-	color: hsl(var(--primary));
+	color: hsl(var(--brand));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		/* 내부 우하단 그림자 */
@@ -249,7 +249,7 @@
 /* 4-4. neu-inset-shadow - shadow만 있는 inset (border 없음) */
 .neu-inset-shadow {
 	border: none;  /* border 제거 */
-	color: hsl(var(--primary));
+	color: hsl(var(--brand));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		/* 내부 우하단 그림자 */
@@ -307,8 +307,8 @@
 
 /* 4-5. neu-icon - 아이콘 (테슬라 스타일) */
 .neu-icon-active {
-	color: hsl(var(--primary));
-	filter: drop-shadow(0 1px 3px rgba(var(--primary-rgb), 0.2));  /* 더 섬세한 드롭 섀도우 */
+	color: hsl(var(--brand));
+	filter: drop-shadow(0 1px 3px hsla(var(--brand), 0.2));  /* brand 컬러 섀도우 */
 	transition: 
 		color 0.15s ease-out,
 		filter 0.15s ease-out,

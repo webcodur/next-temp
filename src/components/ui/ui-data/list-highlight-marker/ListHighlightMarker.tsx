@@ -39,10 +39,10 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 
 				// 호버 효과: 왼쪽 색상 바 + 우측 transform + 배경 (non-active만)
 				!isActive &&
-					'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-muted/50',
+					'hover:border-l-4 hover:border-l-brand hover:translate-x-1 hover:bg-brand/5',
 
 				// active 효과: 배경 색상 유지
-				isActive && 'bg-primary/5 border-l-4 border-l-primary translate-x-1',
+				isActive && 'bg-brand/5 border-l-4 border-l-brand translate-x-1',
 
 				// 비활성화 상태
 				disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
@@ -83,7 +83,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 				{/* Check 아이콘 - active 상태에서만 보임 */}
 				<Check
 					className={cn(
-						'absolute inset-0 w-4 h-4 text-primary transition-all duration-200',
+						'absolute inset-0 w-4 h-4 text-brand transition-all duration-200',
 						'transform',
 						isActive
 							? 'opacity-100 scale-100 rotate-0'

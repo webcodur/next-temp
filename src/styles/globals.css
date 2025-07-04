@@ -30,3 +30,16 @@
 		border-color: var(--color-gray-200, currentcolor);
 	}
 }
+
+/* --- brand scrollbar --- */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+::-webkit-scrollbar-thumb {
+	background: hsl(var(--brand) / 0.6);
+	border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: hsl(var(--brand));
+}

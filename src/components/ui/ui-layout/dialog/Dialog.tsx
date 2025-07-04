@@ -30,7 +30,7 @@ const variantConfig = {
 	default: {
 		icon: null,
 		iconColor: '',
-		borderColor: 'border-border',
+		borderColor: 'border-brand/20',
 	},
 	success: {
 		icon: CheckCircle,
@@ -49,8 +49,8 @@ const variantConfig = {
 	},
 	info: {
 		icon: Info,
-		iconColor: 'text-primary',
-		borderColor: 'border-primary/20',
+		iconColor: 'text-brand',
+		borderColor: 'border-brand/20',
 	},
 };
 

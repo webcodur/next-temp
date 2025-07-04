@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import NestedTabs, { TopTab } from '@/components/ui/ui-layout/nested-tabs/NestedTabs';
+import NestedTabs from '@/components/ui/ui-layout/nested-tabs/NestedTabs';
+import type { TopTab } from '@/components/ui/ui-layout/nested-tabs/NestedTabs';
 import { Settings, BarChart2, User, Server, Activity, Eye } from 'lucide-react';
 
-// 샘플 컨텐츠 컴포넌트
-const SampleContent = ({ title, children }: { title: string, children?: React.ReactNode }) => (
-  <div className="p-4 rounded-lg bg-muted/50">
-    <h3 className="mb-2 text-lg font-semibold text-foreground">{title}</h3>
-    <div className="text-muted-foreground">{children || '샘플 컨텐츠 영역입니다.'}</div>
+const SampleContent = ({ title }: { title: string }) => (
+  <div>
+    <h3 className="text-lg font-semibold">{title}</h3>
+    <p>이것은 {title} 탭의 샘플 콘텐츠입니다.</p>
   </div>
 );
 
@@ -34,65 +34,14 @@ const nestedTabsData: TopTab[] = [
 ];
 
 const NestedTabsPage = () => {
-	return (
-		<div className="p-8 min-h-screen font-sans bg-background">
-			<div className="mx-auto max-w-6xl">
-				<div className="mb-8">
-					<h1 className="mb-4 text-3xl font-bold text-foreground">NestedTabs 컴포넌트</h1>
-					<p className="text-muted-foreground">2단계 중첩 탭 기능을 제공하는 컴포넌트 테스트</p>
-				</div>
-
-				<div className="space-y-12">
-					{/* 기본 중첩 탭 */}
-					<section>
-						<h2 className="mb-4 text-xl font-semibold text-foreground">기본 중첩 탭</h2>
-						<div className="p-6 rounded-lg bg-card neu-flat">
-							<NestedTabs tabs={nestedTabsData} />
-						</div>
-					</section>
-
-					{/* Filled variant & Center-aligned */}
-					<section>
-						<h2 className="mb-4 text-xl font-semibold text-foreground">Filled Variant / Center Align / LG Size</h2>
-						<div className="p-6 rounded-lg bg-card neu-flat">
-							<NestedTabs 
-								tabs={nestedTabsData} 
-								variant="filled" 
-								align="center"
-								size="lg"
-							/>
-						</div>
-					</section>
-					
-					{/* End-aligned */}
-					<section>
-						<h2 className="mb-4 text-xl font-semibold text-foreground">End Align / SM Size</h2>
-						<div className="p-6 rounded-lg bg-card neu-flat">
-							<NestedTabs 
-								tabs={nestedTabsData} 
-								align="end"
-								size="sm"
-							/>
-						</div>
-					</section>
-					
-					<section>
-						<h2 className="mb-4 text-xl font-semibold text-foreground">주요 기능</h2>
-						<div className="p-6 rounded-lg bg-card neu-flat">
-							<ul className="space-y-2 list-disc list-inside text-muted-foreground">
-								<li>2단계 중첩 구조 지원</li>
-								<li>1, 2단계 탭 상태 독립적 관리</li>
-								<li>아이콘 및 텍스트 레이블 지원</li>
-								<li>`variant`, `align`, `size` props를 통한 유연한 스타일링</li>
-								<li>뉴모피즘 디자인 시스템 적용</li>
-								<li>`useMemo`를 통한 렌더링 최적화</li>
-							</ul>
-						</div>
-					</section>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-6">Nested Tabs</h1>
+      <div className="max-w-4xl mx-auto">
+        <NestedTabs tabs={nestedTabsData} />
+      </div>
+    </div>
+  );
 };
 
 export default NestedTabsPage; 

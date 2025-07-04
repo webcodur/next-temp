@@ -153,7 +153,7 @@ const DialogPage = () => {
 								</label>
 								<input
 									type="text"
-									className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									className="px-3 py-2 w-full rounded-lg border border-brand focus:ring-2 focus:ring-brand focus:border-transparent"
 									placeholder="이름을 입력하세요"
 								/>
 							</div>
@@ -163,7 +163,7 @@ const DialogPage = () => {
 								</label>
 								<input
 									type="email"
-									className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+									className="px-3 py-2 w-full rounded-lg border border-brand focus:ring-2 focus:ring-brand focus:border-transparent"
 									placeholder="이메일을 입력하세요"
 								/>
 							</div>
@@ -175,7 +175,7 @@ const DialogPage = () => {
 							</label>
 							<textarea
 								rows={4}
-								className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+								className="px-3 py-2 w-full rounded-lg border border-brand focus:ring-2 focus:ring-brand focus:border-transparent"
 								placeholder="간단한 자기소개를 작성해주세요"
 							/>
 						</div>

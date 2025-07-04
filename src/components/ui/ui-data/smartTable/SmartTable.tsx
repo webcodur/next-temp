@@ -175,7 +175,7 @@ export function SmartTable<T extends Record<string, any>>({
 			isEven ? 'list-item-even' : 'list-item-odd',
 			'h-10', // 컴팩트 모드 고정
 			// 좌측 accent 바 hover 효과 (즉시 적용)
-			'border-l-4 border-l-transparent hover:border-l-primary hover:bg-primary/5'
+			'border-l-4 border-l-transparent hover:border-l-brand hover:bg-brand/5'
 		);
 
 		if (item === null) {
@@ -301,7 +301,7 @@ export function SmartTable<T extends Record<string, any>>({
 													'transition-opacity',
 													sortConfig.key === column.id &&
 														sortConfig.direction === 'asc'
-														? 'text-primary opacity-100'
+														? 'text-brand opacity-100'
 														: 'opacity-30'
 												)}
 											/>
@@ -311,7 +311,7 @@ export function SmartTable<T extends Record<string, any>>({
 													'transition-opacity',
 													sortConfig.key === column.id &&
 														sortConfig.direction === 'desc'
-														? 'text-primary opacity-100'
+														? 'text-brand opacity-100'
 														: 'opacity-30'
 												)}
 											/>

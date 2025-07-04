@@ -67,7 +67,7 @@ export const Editor = ({
         padding: 20px;
         margin: 0;
       }
-      a { color: hsl(var(--primary)); }
+      a { color: hsl(var(--brand)); }
       h1, h2, h3, h4, h5, h6 { color: hsl(var(--foreground)); }
       p { margin: 8px 0; }
       

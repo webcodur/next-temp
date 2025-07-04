@@ -29,7 +29,7 @@ export default function Footer() {
 								href="https://meerkat.day/"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-foreground transition-colors hover:text-primary">
+								className="text-foreground transition-colors hover:text-brand">
 								공식 홈페이지
 							</a>
 						</div>
@@ -45,7 +45,7 @@ export default function Footer() {
 								href="https://blog.naver.com/7meerkat"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-foreground transition-colors hover:text-primary">
+								className="text-foreground transition-colors hover:text-brand">
 								블로그
 							</a>
 						</div>

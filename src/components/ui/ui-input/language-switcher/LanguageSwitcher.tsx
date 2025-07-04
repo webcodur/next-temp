@@ -73,7 +73,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
                     }}
                     className={clsx(
                       'flex justify-center items-center px-4 py-3 w-full text-sm transition-colors duration-150 group',
-                      isActive ? 'bg-primary/10' : 'hover:bg-muted'
+                      isActive ? 'bg-brand/10' : 'hover:bg-muted'
                     )}
                     role="menuitem"
                     dir={meta.dir}

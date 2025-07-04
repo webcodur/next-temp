@@ -56,7 +56,7 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 			{ level: 1, text: '매우 약함', color: 'text-destructive' },
 			{ level: 2, text: '약함', color: 'text-warning' },
 			{ level: 3, text: '보통', color: 'text-accent-foreground' },
-			{ level: 4, text: '강함', color: 'text-primary' },
+			{ level: 4, text: '강함', color: 'text-brand' },
 			{ level: 5, text: '매우 강함', color: 'text-success' },
 		];
 
@@ -139,7 +139,7 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 											: passwordStrength.level === 3
 												? 'w-3/5 bg-accent'
 												: passwordStrength.level === 4
-													? 'w-4/5 bg-primary'
+													? 'w-4/5 bg-brand'
 													: passwordStrength.level === 5
 														? 'w-full bg-success'
 														: 'w-0'

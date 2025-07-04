@@ -161,7 +161,7 @@ const Pagination = <T extends Record<string, unknown>>({
 										value={pageSize}
 										onChange={handlePageSizeChange}
 										disabled={disabled || disablePageSizeChange}
-										className={`bg-background cursor-pointer border border-border text-foreground rounded-md py-1 focus:border-primary focus:ring-1 focus:ring-primary m-0 p-0 ${
+										className={`bg-background cursor-pointer border border-border text-foreground rounded-md py-1 focus:border-brand focus:ring-1 focus:ring-brand m-0 p-0 ${
 											disabled || disablePageSizeChange
 												? 'opacity-50 cursor-not-allowed'
 												: ''
@@ -217,7 +217,7 @@ const Pagination = <T extends Record<string, unknown>>({
 											disabled={disabled}
 											className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
 												pageNumber === currentPage
-													? 'bg-primary text-primary-foreground'
+													? 'bg-brand text-brand-foreground'
 													: disabled
 														? 'text-muted-foreground/50 cursor-not-allowed'
 														: 'text-foreground neu-raised'

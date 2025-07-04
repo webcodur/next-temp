@@ -48,13 +48,13 @@ const StepNode: React.FC<StepNodeProps> = ({
 }) => {
 	const getNodeClasses = () => {
 		if (isViewing) {
-			return 'neu-raised text-primary border-2 border-primary/20';
+			return 'neu-raised text-brand border-2 border-brand/20';
 		}
 		if (isCompleted) {
 			return 'neu-inset text-foreground/80 hover:neu-raised cursor-pointer';
 		}
 		if (isCurrent) {
-			return 'neu-raised text-primary';
+			return 'neu-raised text-brand';
 		}
 		if (stepNumber === currentStep + 1) {
 			return 'neu-flat text-muted-foreground border border-border';
@@ -79,7 +79,7 @@ const StepLine: React.FC<StepLineProps> = ({ isCompleted }) => {
 	return (
 		<div className="flex-1 h-1 mx-2 sm:mx-4 min-w-[30px] sm:min-w-[40px] max-w-[60px] sm:max-w-[80px] neu-inset rounded-full overflow-hidden">
 			<div
-				className={`h-full transition-all duration-300 ${isCompleted ? 'bg-primary' : 'bg-muted'}`}
+				className={`h-full transition-all duration-300 ${isCompleted ? 'bg-brand' : 'bg-muted'}`}
 				style={{
 					width: isCompleted ? '100%' : '0%',
 				}}
@@ -100,7 +100,7 @@ const StepName: React.FC<StepNameProps> = ({
 		<div className="text-center">
 			<div
 				className={`text-xs font-medium px-2 py-1 rounded ${
-					isActive ? 'text-primary bg-primary/5' : 'text-neutral-600'
+					isActive ? 'text-brand bg-brand/5' : 'text-neutral-600'
 				}`}>
 				{label}
 			</div>
@@ -243,7 +243,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 								{idx < visibleSteps.length - 1 && (
 									<div className="flex overflow-hidden mx-auto w-1 h-8 rounded-full sm:hidden neu-inset">
 										<div
-											className={`w-full transition-all duration-300 ${isStepCompleted(stepNumber) ? 'bg-primary' : 'bg-neutral-300'}`}
+											className={`w-full transition-all duration-300 ${isStepCompleted(stepNumber) ? 'bg-brand' : 'bg-neutral-300'}`}
 											style={{
 												height: isStepCompleted(stepNumber) ? '100%' : '0%',
 											}}
@@ -293,7 +293,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 										key={idx}
 										className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${
 											isViewing
-												? 'neu-inset bg-primary/5'
+												? 'neu-inset bg-brand/5'
 												: isClickable
 													? 'neu-flat hover:neu-raised'
 													: 'opacity-60 cursor-not-allowed neu-flat'
@@ -307,11 +307,11 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 										<div
 											className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${
 												isViewing
-													? 'neu-raised text-primary'
+													? 'neu-raised text-brand'
 													: isCompleted
 														? 'neu-inset text-neutral-700'
 														: isCurrent
-															? 'neu-raised text-primary'
+															? 'neu-raised text-brand'
 															: 'neu-flat text-neutral-400'
 											}`}>
 											{isCompleted ? '✓' : stepNumber}
@@ -320,7 +320,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 											<div
 												className={`text-sm font-medium ${
 													isViewing || isCurrent
-														? 'text-primary'
+														? 'text-brand'
 														: 'text-neutral-700'
 												}`}>
 												{step}

@@ -73,7 +73,7 @@ const StepperPopup: React.FC<StepperPopupProps> = ({
                 key={idx}
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${
                   isViewing 
-                    ? 'neu-inset bg-primary/5' 
+                    ? 'neu-inset bg-brand/5' 
                     : isClickable 
                       ? 'neu-flat hover:neu-raised' 
                       : 'neu-flat opacity-60 cursor-not-allowed'
@@ -82,18 +82,18 @@ const StepperPopup: React.FC<StepperPopupProps> = ({
               >
                 <div className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${
                   isViewing 
-                    ? 'neu-raised text-primary' 
+                    ? 'neu-raised text-brand' 
                     : isCompleted 
                       ? 'neu-inset text-foreground' 
                       : isCurrent 
-                        ? 'neu-raised text-primary' 
+                        ? 'neu-raised text-brand' 
                         : 'neu-flat text-muted-foreground'
                 }`}>
                   {isCompleted ? '✓' : stepNumber}
                 </div>
                 <div className="flex-1">
                   <div className={`text-sm font-medium ${
-                    isViewing || isCurrent ? 'text-primary' : 'text-foreground'
+                    isViewing || isCurrent ? 'text-brand' : 'text-foreground'
                   }`}>
                     {step}
                   </div>

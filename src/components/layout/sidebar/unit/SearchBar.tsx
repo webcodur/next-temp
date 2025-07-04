@@ -174,7 +174,7 @@ export function SearchBar() {
 					onChange={(e) => handleSearchChange(e.target.value)}
 					onFocus={handleInputFocus}
 					onKeyDown={handleKeyDown}
-					className="py-2 pr-10 pl-10 w-full text-sm rounded-lg border border-border neu-flat focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+					className="py-2 pr-10 pl-10 w-full text-sm rounded-lg border border-border neu-flat focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
 				/>
 				{searchQuery && (
 					<Button

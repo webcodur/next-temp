@@ -25,7 +25,7 @@ const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
 		className={`truncate ${
 			isCurrent
 				? 'text-foreground font-medium'
-				: 'text-muted-foreground hover:text-foreground transition-colors'
+				: 'text-muted-foreground hover:text-brand transition-colors'
 		}`}
 	>
 		{label}

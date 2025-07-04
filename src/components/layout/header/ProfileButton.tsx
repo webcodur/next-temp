@@ -69,7 +69,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		return (
 			<button
 				onClick={() => router.push('/login')}
-				className={clsx('text-primary', className)}>
+				className={clsx('text-brand', className)}>
 				<User className="w-5 h-5" />
 			</button>
 		);
@@ -95,8 +95,8 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					{/* 사용자 정보 */}
 					<div className="p-3 border-b border-border/50">
 						<div className="flex items-center gap-3">
-							<div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-								<User className="w-5 h-5 text-primary" />
+							<div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+								<User className="w-5 h-5 text-brand" />
 							</div>
 							<div className="flex-1 min-w-0">
 								<p className="text-sm font-medium text-foreground truncate">
@@ -113,14 +113,14 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					<div className="p-1">
 						<button
 							onClick={handleProfile}
-							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-accent/50 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-brand/10 transition-colors">
 							<User className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground">프로필</span>
 						</button>
 
 						<button
 							onClick={handleSettings}
-							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-accent/50 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-brand/10 transition-colors">
 							<Settings className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground">설정</span>
 						</button>

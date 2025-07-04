@@ -14,7 +14,7 @@ export const toggleButtonBorder = "border border-border";
 export const toggleButtonHover = "hover:bg-muted";
 
 // 공통 아이콘 스타일
-export const toggleButtonIcon = "w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-primary group-hover:scale-110";
+export const toggleButtonIcon = "w-4 h-4 transition-all duration-200 text-muted-foreground group-hover:text-brand group-hover:scale-110";
 
 // 메인 토글 버튼 (좌측 상단 고정)
 export const mainToggleButton = `${toggleButtonBase} ${toggleButtonBorder} ${toggleButtonHover} rounded-br-lg`;
