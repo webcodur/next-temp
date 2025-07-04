@@ -1,19 +1,105 @@
 // #region Imports
 import React from 'react';
+import StepIndicator from './StepIndicator';
+import ContentArea from './ContentArea';
+import Navigation from './Navigation';
 // #endregion
 
 // #region Types
 export interface StepperProps {
-  children: React.ReactNode;
+  steps: string[];
+  currentStep: number;
+  viewStep?: number;
+  completedSteps?: number[];
+  onChange?: (step: number) => void;
+  onAdvance?: () => void;
+  onCompleteStep?: (step: number) => void;
+  onUnCompleteStep?: (step: number) => void;
+  children?: React.ReactNode;
+  renderStep?: (
+    stepNumber: number,
+    isCompleted: boolean,
+    onComplete: () => void,
+    onUnComplete: () => void
+  ) => React.ReactNode;
+  maxVisibleSteps?: number;
+  title?: string;
   className?: string;
 }
 // #endregion
 
 // #region Main Component
-export const Stepper: React.FC<StepperProps> = ({ children, className = '' }) => {
+export const Stepper: React.FC<StepperProps> = ({
+  steps,
+  currentStep,
+  viewStep = currentStep,
+  completedSteps = [],
+  onChange,
+  onAdvance,
+  onCompleteStep,
+  onUnCompleteStep,
+  children,
+  renderStep,
+  maxVisibleSteps = 4,
+  title = '단계별 진행',
+  className = '',
+}) => {
+  if (!steps || steps.length === 0) return null;
+
+  const isStepCompleted = (stepNumber: number) => {
+    return completedSteps.includes(stepNumber);
+  };
+
+  const handleStepClick = (stepNumber: number) => {
+    if (stepNumber <= currentStep || isStepCompleted(stepNumber)) {
+      onChange?.(stepNumber);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (viewStep > 1) {
+      onChange?.(viewStep - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (viewStep < steps.length) {
+      onChange?.(viewStep + 1);
+    }
+  };
+
   return (
-    <div className={`neu-flat bg-background rounded-lg p-6 shadow-inner ${className}`}>
-      {children}
+    <div className={`p-6 space-y-8 w-full rounded-lg shadow-inner neu-flat bg-background ${className}`}>
+      <StepIndicator
+        steps={steps}
+        currentStep={currentStep}
+        viewStep={viewStep}
+        completedSteps={completedSteps}
+        onStepClick={handleStepClick}
+        maxVisibleSteps={maxVisibleSteps}
+        title={title}
+      />
+
+      <ContentArea>
+        {children}
+        {renderStep &&
+          renderStep(
+            viewStep,
+            isStepCompleted(viewStep),
+            () => onCompleteStep?.(viewStep),
+            () => onUnCompleteStep?.(viewStep)
+          )}
+      </ContentArea>
+
+      <Navigation
+        currentStep={currentStep}
+        viewStep={viewStep}
+        totalSteps={steps.length}
+        completedSteps={completedSteps}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+        onAdvance={onAdvance}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { StepperCore } from '@/components/ui/ui-layout/stepper';
+import { Stepper } from '@/components/ui/ui-layout/stepper/Stepper';
 
 //#region Constants
 const STEPS = [
@@ -24,7 +24,7 @@ const Step1 = ({ isCompleted, onComplete, onUnComplete }: {
         <label className="block mb-2 text-sm font-medium">이름</label>
         <input 
           type="text" 
-          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-hidden"
+          className="p-3 w-full rounded-lg border-0 neu-inset focus:outline-hidden"
           placeholder="이름을 입력하세요"
         />
       </div>
@@ -32,7 +32,7 @@ const Step1 = ({ isCompleted, onComplete, onUnComplete }: {
         <label className="block mb-2 text-sm font-medium">이메일</label>
         <input 
           type="email" 
-          className="w-full p-3 border-0 rounded-lg neu-inset focus:outline-hidden"
+          className="p-3 w-full rounded-lg border-0 neu-inset focus:outline-hidden"
           placeholder="이메일을 입력하세요"
         />
       </div>
@@ -67,11 +67,11 @@ const Step2 = ({ isCompleted, onComplete, onUnComplete }: {
       <div>
         <label className="block mb-2 text-sm font-medium">알림 설정</label>
         <div className="space-y-2">
-          <label className="flex items-center gap-2">
+          <label className="flex gap-2 items-center">
             <input type="checkbox" className="rounded neu-inset" />
             <span>이메일 알림</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex gap-2 items-center">
             <input type="checkbox" className="rounded neu-inset" />
             <span>SMS 알림</span>
           </label>
@@ -171,50 +171,57 @@ const StepperPage = () => {
     }
   };
 
-  const renderStep = (stepNumber: number, isCompleted: boolean) => {
-    const handleComplete = () => {
-      if (!completedSteps.includes(stepNumber)) {
-        setCompletedSteps([...completedSteps, stepNumber]);
-      }
-    };
+  const handleCompleteStep = (step: number) => {
+    if (!completedSteps.includes(step)) {
+      setCompletedSteps([...completedSteps, step].sort((a,b)=> a-b));
+    }
+  };
 
-    const handleUnComplete = () => {
-      setCompletedSteps(completedSteps.filter(step => step !== stepNumber));
-    };
-
+  const handleUnCompleteStep = (step: number) => {
+    setCompletedSteps(completedSteps.filter(s => s !== step));
+  };
+  
+  const renderStep = (
+    stepNumber: number, 
+    isCompleted: boolean, 
+    onComplete: () => void, 
+    onUnComplete: () => void
+  ) => {
     const stepComponents = {
       1: Step1,
       2: Step2,
       3: Step3,
-      4: Step4
+      4: Step4,
     };
 
     const StepComponent = stepComponents[stepNumber as keyof typeof stepComponents];
-    
+
     return StepComponent ? (
-      <StepComponent 
+      <StepComponent
         isCompleted={isCompleted}
-        onComplete={handleComplete}
-        onUnComplete={handleUnComplete}
+        onComplete={onComplete}
+        onUnComplete={onUnComplete}
       />
     ) : null;
   };
 
   return (
-    <div className="min-h-screen p-8 bg-background">
-      <div className="max-w-6xl mx-auto">
+    <div className="p-8 min-h-screen bg-background">
+      <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <h1 className="mb-2 text-3xl font-bold text-neutral-800">스테퍼 컴포넌트 테스트</h1>
           <p className="text-neutral-600">새로운 컴포넌트 구조로 리팩토링된 스테퍼를 테스트합니다.</p>
         </div>
 
-        <StepperCore
+        <Stepper
           steps={STEPS}
           currentStep={currentStep}
           viewStep={viewStep}
           completedSteps={completedSteps}
           onChange={handleStepChange}
           onAdvance={handleAdvanceStep}
+          onCompleteStep={handleCompleteStep}
+          onUnCompleteStep={handleUnCompleteStep}
           renderStep={renderStep}
           maxVisibleSteps={4}
           title="회원가입 프로세스"
