@@ -4,12 +4,14 @@ import { Car, Check } from 'lucide-react';
 import { VehicleEntry } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { LicensePlate } from '@/components/ui/system-testing/license-plate';
+import { useTranslations } from '@/hooks/useI18n';
 
 interface VehicleDetailCardProps {
 	vehicle: VehicleEntry | null;
 }
 
 const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
+	const t = useTranslations();
 	const [imageError, setImageError] = useState(false);
 	const [copiedPlate, setCopiedPlate] = useState<string | null>(null);
 
@@ -64,7 +66,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 												? 'bg-primary/10 text-primary border border-primary/20'
 												: 'bg-success/10 text-success border border-success/20'
 										}`}>
-										{vehicle.status === 1 ? '입차' : '출차'}
+										{vehicle.status === 1 ? t('주차_상태_입차') : t('주차_상태_출차')}
 									</div>
 								</div>
 
@@ -81,7 +83,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 										</div>
 										{copiedPlate === vehicle.car_number && (
 											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
-												<Check size={12} className="inline mr-1" />
+												<Check size={12} className="inline me-1" />
 												복사됨
 											</div>
 										)}
@@ -102,7 +104,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 												</div>
 												{copiedPlate === vehicle.modify_car_number && (
 													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
-														<Check size={12} className="inline mr-1" />
+														<Check size={12} className="inline me-1" />
 														복사됨
 													</div>
 												)}
@@ -120,7 +122,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 								<div className="text-sm font-semibold text-foreground">
 									{parseCarAllowType(vehicle.type)}
 									{vehicle.modify_car_type && (
-										<span className="ml-2 text-warning">
+										<span className="ms-2 text-warning">
 											→ {parseCarAllowType(vehicle.modify_car_type)}
 										</span>
 									)}

@@ -113,14 +113,14 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					<div className="p-1">
 						<button
 							onClick={handleProfile}
-							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-brand/10 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
 							<User className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground">프로필</span>
 						</button>
 
 						<button
 							onClick={handleSettings}
-							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-brand/10 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
 							<Settings className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground">설정</span>
 						</button>
@@ -129,7 +129,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 
 						<button
 							onClick={handleLogout}
-							className="flex items-center gap-3 w-full p-2 text-left rounded-md hover:bg-destructive/10 text-destructive transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-destructive/10 text-destructive transition-colors">
 							<LogOut className="w-4 h-4" />
 							<span className="text-sm">로그아웃</span>
 						</button>

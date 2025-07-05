@@ -156,7 +156,7 @@ const Pagination = <T extends Record<string, unknown>>({
 						<div className="shrink-0">
 							{(externalOnPageSizeChange || !externalCurrentPage) && (
 								<div className="flex items-center text-sm">
-									<span className="mr-2">페이지당 항목:</span>
+									<span className="me-2">페이지당 항목:</span>
 									<select
 										value={pageSize}
 										onChange={handlePageSizeChange}

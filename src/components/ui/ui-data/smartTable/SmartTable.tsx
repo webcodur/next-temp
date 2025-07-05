@@ -206,9 +206,9 @@ export function SmartTable<T extends Record<string, any>>({
 	// 셀 스타일 설정 (세로선 항상 표시, 컴팩트 모드 고정)
 	const getCellClasses = (column: SmartTableColumn<T>) => {
 		const alignClasses = {
-			left: 'text-left',
+			left: 'text-start',
 			center: 'text-center',
-			right: 'text-right',
+			right: 'text-end',
 		};
 
 		return cn(
@@ -294,7 +294,7 @@ export function SmartTable<T extends Record<string, any>>({
 								<div className="flex justify-center items-center">
 									<span>{column.header}</span>
 									{column.sortable && (
-										<span className="flex flex-col ml-1">
+										<span className="flex flex-col ms-1">
 											<ChevronUp
 												size={12}
 												className={cn(

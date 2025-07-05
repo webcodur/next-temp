@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useAtom } from 'jotai';
 import { LoginForm } from '@/components/layout/login/LoginForm';
 import { loginAtom } from '@/store/auth';
+import { useTranslations } from '@/hooks/useI18n';
 // import { isAuthenticatedAtom } from '@/store/auth'; // 백엔드 연결 전까지 임시 주석처리
 
 interface LoginFormData {
@@ -16,6 +17,7 @@ interface LoginFormData {
 export default function LoginPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [, login] = useAtom(loginAtom);
+	const t = useTranslations();
 	// const [isAuthenticated] = useAtom(isAuthenticatedAtom); // 백엔드 연결 전까지 임시 주석처리
 	// const router = useRouter(); // 백엔드 연결 전까지 임시 주석처리
 
@@ -45,15 +47,15 @@ export default function LoginPage() {
 			if (result.success) {
 				console.log('로그인 성공:', result.user);
 				// router.push('/'); // 백엔드 연결 전까지 임시 주석처리
-				alert('로그인 성공! (개발 모드 - 자동 이동 비활성화)');
+			alert(t('로그인_메시지_성공개발모드'));
 			} else {
 				console.error('로그인 실패:', result.error);
 				// TODO: 에러 토스트 표시
-				alert(result.error || '로그인에 실패했습니다.');
+			alert(result.error || t('로그인_메시지_실패'));
 			}
 		} catch (error) {
 			console.error('로그인 처리 중 오류:', error);
-			alert('로그인 처리 중 오류가 발생했습니다.');
+		alert(t('로그인_메시지_오류발생'));
 		} finally {
 			setIsLoading(false);
 		}
@@ -64,7 +66,7 @@ export default function LoginPage() {
 		return (
 			<div className="p-4 text-center">
 				<div className="mx-auto mb-4 w-8 h-8 rounded-full border-2 animate-spin border-primary border-t-transparent"></div>
-				<p className="text-muted-foreground">홈으로 이동 중...</p>
+				<p className="text-muted-foreground">{t('로그인_메시지_이동중')}</p>
 			</div>
 		);
 	} */

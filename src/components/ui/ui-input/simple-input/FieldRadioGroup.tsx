@@ -65,7 +65,7 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 							role="radio"
 							aria-checked={isSelected}>
 							<div
-								className={`w-6 h-6 flex items-center justify-center rounded-full mr-3 border transition-all duration-200 focus-within:neu-inset ${
+								className={`w-6 h-6 flex items-center justify-center rounded-full me-3 border transition-all duration-200 focus-within:neu-inset ${
 									isSelected
 										? 'neu-inset bg-background border-border shadow-inner'
 										: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'

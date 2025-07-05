@@ -55,8 +55,8 @@ export const FieldText: React.FC<FieldTextComponentProps> = ({
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						pl-10
-						${showClearButton && value ? 'pr-10' : ''}
+						ps-10
+						${showClearButton && value ? 'pe-10' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
 					`}
 				/>

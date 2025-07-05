@@ -99,8 +99,8 @@ export const FieldEmail: React.FC<FieldEmailComponentProps> = ({
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						pl-10
-						${showClearButton && value ? 'pr-10' : ''}
+						ps-10
+						${showClearButton && value ? 'pe-10' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
 						${showValidation && value && !validation.isValid ? 'border-destructive focus:border-destructive' : ''}
 					`}

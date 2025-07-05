@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Building2, MapPin, Menu, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { useSidebarSearch, useMenuSearch } from '@/components/layout/sidebar/hooks';
-import { menuData } from '@/data/menuData';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { useTranslations } from '@/hooks/useI18n';
 
 // 타입 정의
 type SiteResult = {
@@ -22,10 +22,7 @@ type MenuResult = {
 	midKey: string;
 	item: {
 		key: string;
-		'kor-name': string;
-		'eng-name': string;
 		href?: string;
-		description?: string;
 	};
 };
 
@@ -36,6 +33,7 @@ interface SearchModalProps {
 
 const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 	const [activeTab, setActiveTab] = useState<'site' | 'menu'>('site');
+	const t = useTranslations();
 	
 	// 포커스 유지를 위한 ref들
 	const siteInputRef = useRef<HTMLInputElement>(null);
@@ -144,7 +142,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 					onChange={(e) => handleSiteChangeWithFocus(e.target.value)}
 					onCompositionStart={handleCompositionStart}
 					onCompositionEnd={handleSiteCompositionEnd}
-					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
+					className="py-3 pe-12 ps-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
 				/>
 				{siteQuery && (
 					<Button
@@ -244,7 +242,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 					onChange={(e) => handleMenuChangeWithFocus(e.target.value)}
 					onCompositionStart={handleCompositionStart}
 					onCompositionEnd={handleMenuCompositionEnd}
-					className="py-3 pr-12 pl-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
+					className="py-3 pe-12 ps-12 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
 				/>
 				{menuQuery && (
 					<Button
@@ -277,17 +275,17 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 										<Menu className="w-4 h-4 text-muted-foreground shrink-0" />
 										<div className="flex flex-wrap gap-1 items-center">
 											<span className="text-sm font-medium text-foreground">
-												{menuData[result.topKey]?.['kor-name'] || result.topKey}
+												{t(`메뉴_${result.topKey}`)}
 											</span>
 											<ChevronRight className="w-3 h-3 text-muted-foreground" />
 											<span className="text-sm text-muted-foreground">
-												{menuData[result.topKey]?.midItems[result.midKey]?.['kor-name'] || result.midKey}
+												{t(`메뉴_${result.midKey}`)}
 											</span>
 											{result.type === 'bot' && (
 												<>
 													<ChevronRight className="w-3 h-3 text-muted-foreground" />
 													<span className="text-sm font-medium text-foreground">
-														{result.item['kor-name']}
+														{t(`메뉴_${result.item.key}`)}
 													</span>
 												</>
 											)}
@@ -319,15 +317,15 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 										<Menu className="w-4 h-4 text-muted-foreground shrink-0" />
 										<div className="flex flex-wrap gap-1 items-center">
 											<span className="text-sm font-medium text-foreground">
-												{menuData[recent.topKey]?.['kor-name'] || recent.topKey}
+												{t(`메뉴_${recent.topKey}`)}
 											</span>
 											<ChevronRight className="w-3 h-3 text-muted-foreground" />
 											<span className="text-sm text-muted-foreground">
-												{menuData[recent.topKey]?.midItems[recent.midKey]?.['kor-name'] || recent.midKey}
+												{t(`메뉴_${recent.midKey}`)}
 											</span>
 											<ChevronRight className="w-3 h-3 text-muted-foreground" />
 											<span className="text-sm font-medium text-foreground">
-												{recent.item['kor-name']}
+												{t(`메뉴_${recent.item.key}`)}
 											</span>
 										</div>
 									</div>

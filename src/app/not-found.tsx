@@ -3,9 +3,11 @@
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { useRouter } from 'next/navigation';
 import { Home, ArrowLeft, RefreshCw } from 'lucide-react';
+import { useTranslations } from '@/hooks/useI18n';
 
 export default function NotFound() {
 	const router = useRouter();
+	const t = useTranslations();
 	const handleGoHome = () => router.push('/');
 	const handleGoBack = () => router.back();
 	const handleRefresh = () => window.location.reload();
@@ -23,42 +25,42 @@ export default function NotFound() {
 						<div className="mx-auto w-24 h-1 rounded-full bg-primary/20"></div>
 					</div>
 
-					{/* 메시지 */}
-					<div className="space-y-4">
-						<h2 className="text-2xl font-bold font-multilang text-primary">
-							페이지를 찾을 수 없습니다
-						</h2>
-						<p className="leading-relaxed font-multilang text-foreground/70">
-							요청하신 페이지가 존재하지 않거나
-							<br />
-							이동되었을 수 있습니다.
-						</p>
-					</div>
+									{/* 메시지 */}
+				<div className="space-y-4">
+					<h2 className="text-2xl font-bold font-multilang text-primary">
+						{t('페이지_에러_페이지없음')}
+					</h2>
+					<p className="leading-relaxed font-multilang text-foreground/70">
+						{t('페이지_에러_페이지없음설명1')}
+						<br />
+						{t('페이지_에러_페이지없음설명2')}
+					</p>
+				</div>
 
-					{/* 액션 버튼 */}
-					<div className="space-y-3">
-						<Button onClick={handleGoHome} className="w-full neu-raised">
-							<Home size={18} className="mr-2" />
-							홈으로 이동
+									{/* 액션 버튼 */}
+				<div className="space-y-3">
+					<Button onClick={handleGoHome} className="w-full neu-raised">
+						<Home size={18} className="me-2" />
+						{t('페이지_버튼_홈으로이동')}
+					</Button>
+
+					<div className="flex gap-3">
+						<Button
+							onClick={handleGoBack}
+							variant="outline"
+							className="flex-1 neu-raised">
+							<ArrowLeft size={18} className="me-2" />
+							{t('페이지_버튼_이전페이지')}
 						</Button>
-
-						<div className="flex gap-3">
-							<Button
-								onClick={handleGoBack}
-								variant="outline"
-								className="flex-1 neu-raised">
-								<ArrowLeft size={18} className="mr-2" />
-								이전 페이지
-							</Button>
-							<Button
-								onClick={handleRefresh}
-								variant="outline"
-								className="flex-1 neu-raised">
-								<RefreshCw size={18} className="mr-2" />
-								새로고침
-							</Button>
-						</div>
+						<Button
+							onClick={handleRefresh}
+							variant="outline"
+							className="flex-1 neu-raised">
+							<RefreshCw size={18} className="me-2" />
+							{t('페이지_버튼_새로고침')}
+						</Button>
 					</div>
+				</div>
 
 					{/* 추가 정보 */}
 					<div className="pt-4 border-t border-foreground/10">

@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { isRTL } from '@/utils/language';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
+import { useTranslations } from '@/hooks/useI18n';
+
 export default function FontTestPage() {
+	const t = useTranslations();
 	const [selectedText, setSelectedText] = useState<
 		'korean' | 'english' | 'arabic' | 'mixed'
 	>('korean');
@@ -12,10 +15,10 @@ export default function FontTestPage() {
 
 	// 샘플 텍스트들
 	const sampleTexts = {
-		korean: '안녕하세요! 한국어 텍스트입니다. 가나다라마바사아자차카타파하.',
-		english: 'Hello! This is English text. The quick brown fox jumps over the lazy dog.',
-		arabic: 'مرحبا! هذا نص عربي. النص العربي يُكتب من اليمين إلى اليسار.',
-		mixed: 'Mixed 텍스트 مختلط - Hello 안녕하세요 مرحبا 123 ABC 가나다',
+		korean: t('폰트테스트_샘플_한국어'),
+		english: t('폰트테스트_샘플_영어'),
+		arabic: t('폰트테스트_샘플_아랍어'),
+		mixed: t('폰트테스트_샘플_혼합'),
 	};
 
 	const currentText = customText || sampleTexts[selectedText];
@@ -29,15 +32,15 @@ export default function FontTestPage() {
 			</div>
 
 			<div className="text-center">
-				<h1 className="mb-4 text-3xl font-bold">폰트 시스템 테스트</h1>
-				<p className="text-muted-foreground">
-					font-multilang 클래스로 모든 언어 폰트가 자동 적용되는지 확인합니다.
+				<h1 className="mb-4 text-3xl font-bold font-multilang">{t('폰트테스트_제목')}</h1>
+				<p className="text-muted-foreground font-multilang">
+					{t('폰트테스트_설명')}
 				</p>
 			</div>
 
 			{/* #region 샘플 텍스트 선택 */}
 			<div className="p-6 rounded-lg neu-flat">
-				<h3 className="mb-4 text-lg font-semibold">샘플 텍스트 선택</h3>
+				<h3 className="mb-4 text-lg font-semibold font-multilang">{t('폰트테스트_샘플텍스트선택')}</h3>
 				<div className="flex flex-wrap gap-3">
 					{Object.entries(sampleTexts).map(([key]) => (
 						<Button
@@ -47,11 +50,11 @@ export default function FontTestPage() {
 								setSelectedText(key as 'korean' | 'english' | 'arabic' | 'mixed');
 								setCustomText('');
 							}}
-							className="capitalize">
-							{key === 'korean' && '한국어'}
-							{key === 'english' && '영어'}
-							{key === 'arabic' && '아랍어'}
-							{key === 'mixed' && '혼합'}
+							className="capitalize font-multilang">
+							{key === 'korean' && t('폰트테스트_언어_한국어')}
+							{key === 'english' && t('폰트테스트_언어_영어')}
+							{key === 'arabic' && t('폰트테스트_언어_아랍어')}
+							{key === 'mixed' && t('폰트테스트_언어_혼합')}
 						</Button>
 					))}
 				</div>
@@ -60,12 +63,12 @@ export default function FontTestPage() {
 
 			{/* #region 커스텀 텍스트 입력 */}
 			<div className="p-6 rounded-lg neu-flat">
-				<h3 className="mb-4 text-lg font-semibold">커스텀 텍스트 입력</h3>
+				<h3 className="mb-4 text-lg font-semibold font-multilang">{t('폰트테스트_커스텀텍스트입력')}</h3>
 				<textarea
 					value={customText}
 					onChange={(e) => setCustomText(e.target.value)}
-					placeholder="원하는 텍스트를 입력하세요..."
-					className="p-4 w-full rounded-lg border border-border resize-none focus:outline-hidden focus:ring-2 focus:ring-primary"
+					placeholder={t('폰트테스트_플레이스홀더')}
+					className="p-4 w-full rounded-lg border border-border resize-none focus:outline-hidden focus:ring-2 focus:ring-primary font-multilang"
 					rows={4}
 				/>
 			</div>
@@ -73,46 +76,46 @@ export default function FontTestPage() {
 
 			{/* #region 폰트 시스템 비교 */}
 			<div className="p-6 rounded-lg neu-flat">
-				<h3 className="mb-4 text-lg font-semibold">폰트 시스템 비교</h3>
+				<h3 className="mb-4 text-lg font-semibold font-multilang">{t('폰트테스트_폰트미리보기')}</h3>
 				<div className="space-y-6">
 					{/* MultiLang 폰트 (권장) */}
 					<div>
-						<label className="text-sm font-medium text-muted-foreground mb-2 block">
-							✅ font-multilang (권장) - 모든 언어 자동 처리
+						<label className="text-sm font-medium text-muted-foreground mb-2 block font-multilang">
+							{t('폰트테스트_권장폰트')}
 						</label>
 						<p
 							className={`font-multilang text-lg p-4 border rounded bg-green-500/10 ${
-								hasArabicText ? 'text-right' : 'text-left'
+								hasArabicText ? 'text-end' : 'text-start'
 							}`}
 							dir={hasArabicText ? 'rtl' : 'ltr'}>
 							{currentText}
 						</p>
-						<p className="text-xs text-muted-foreground mt-1">
-							한글은 Pretendard, 영어는 Inter, 아랍어는 Cairo가 자동 적용됩니다.
+						<p className="text-xs text-muted-foreground mt-1 font-multilang">
+							{t('폰트테스트_자동적용설명')}
 						</p>
 					</div>
 
 					{/* 개별 폰트 비교 */}
 					<div className="grid gap-4 md:grid-cols-3">
 						<div>
-							<label className="text-sm font-medium text-muted-foreground mb-2 block">
-								font-pretendard (한국어)
+							<label className="text-sm font-medium text-muted-foreground mb-2 block font-multilang">
+								{t('폰트테스트_개별폰트_한국어')}
 							</label>
 							<p className="font-pretendard text-lg p-3 border rounded">
 								{currentText}
 							</p>
 						</div>
 						<div>
-							<label className="text-sm font-medium text-muted-foreground mb-2 block">
-								font-inter (영어)
+							<label className="text-sm font-medium text-muted-foreground mb-2 block font-multilang">
+								{t('폰트테스트_개별폰트_영어')}
 							</label>
 							<p className="font-inter text-lg p-3 border rounded">
 								{currentText}
 							</p>
 						</div>
 						<div>
-							<label className="text-sm font-medium text-muted-foreground mb-2 block">
-								font-cairo (아랍어)
+							<label className="text-sm font-medium text-muted-foreground mb-2 block font-multilang">
+								{t('폰트테스트_개별폰트_아랍어')}
 							</label>
 							<p className="font-cairo text-lg p-3 border rounded">
 								{currentText}
@@ -122,25 +125,25 @@ export default function FontTestPage() {
 
 					{/* Pretendard 웨이트 테스트 */}
 					<div>
-						<label className="text-sm font-medium text-muted-foreground mb-2 block">
-							Pretendard 웨이트 테스트 (100-900)
+						<label className="text-sm font-medium text-muted-foreground mb-2 block font-multilang">
+							{t('폰트테스트_웨이트테스트')}
 						</label>
 						<div className="grid gap-2">
 							{[
-								{ weight: 'font-thin', label: 'Thin (100)' },
-								{ weight: 'font-extralight', label: 'ExtraLight (200)' },
-								{ weight: 'font-light', label: 'Light (300)' },
-								{ weight: 'font-normal', label: 'Regular (400)' },
-								{ weight: 'font-medium', label: 'Medium (500)' },
-								{ weight: 'font-semibold', label: 'SemiBold (600)' },
-								{ weight: 'font-bold', label: 'Bold (700)' },
-								{ weight: 'font-extrabold', label: 'ExtraBold (800)' },
-								{ weight: 'font-black', label: 'Black (900)' },
+								{ weight: 'font-thin', label: t('폰트테스트_웨이트_Thin') },
+								{ weight: 'font-extralight', label: t('폰트테스트_웨이트_ExtraLight') },
+								{ weight: 'font-light', label: t('폰트테스트_웨이트_Light') },
+								{ weight: 'font-normal', label: t('폰트테스트_웨이트_Regular') },
+								{ weight: 'font-medium', label: t('폰트테스트_웨이트_Medium') },
+								{ weight: 'font-semibold', label: t('폰트테스트_웨이트_SemiBold') },
+								{ weight: 'font-bold', label: t('폰트테스트_웨이트_Bold') },
+								{ weight: 'font-extrabold', label: t('폰트테스트_웨이트_ExtraBold') },
+								{ weight: 'font-black', label: t('폰트테스트_웨이트_Black') },
 							].map(({ weight, label }) => (
 								<div key={weight} className="p-2 border rounded">
-									<div className="text-xs text-muted-foreground mb-1">{label}</div>
+									<div className="text-xs text-muted-foreground mb-1 font-multilang">{label}</div>
 									<p className={`font-pretendard text-lg ${weight}`}>
-										가나다라마바사 ABCDEFG 123456
+										{t('폰트테스트_웨이트샘플')}
 									</p>
 								</div>
 							))}
@@ -152,16 +155,16 @@ export default function FontTestPage() {
 
 			{/* #region 실제 적용 결과 */}
 			<div className="p-8 rounded-lg neu-inset">
-				<h3 className="mb-4 text-lg font-semibold">실제 적용 결과</h3>
+				<h3 className="mb-4 text-lg font-semibold font-multilang">{t('폰트테스트_실제적용결과')}</h3>
 				<div
 					className={`text-xl leading-relaxed font-multilang ${
-						hasArabicText ? 'text-right' : 'text-left'
+						hasArabicText ? 'text-end' : 'text-start'
 					}`}
 					dir={hasArabicText ? 'rtl' : 'ltr'}>
 					{currentText}
 				</div>
-				<div className="mt-4 text-sm text-muted-foreground">
-					위 텍스트는 font-multilang 클래스로 각 문자에 최적화된 폰트가 자동 적용됩니다.
+				<div className="mt-4 text-sm text-muted-foreground font-multilang">
+					{t('폰트테스트_설명노트')}
 				</div>
 			</div>
 			{/* #endregion */}

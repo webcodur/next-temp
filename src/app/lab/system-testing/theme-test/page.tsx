@@ -5,9 +5,11 @@ import { Moon, Sun, Palette, Eye, EyeOff, Settings } from 'lucide-react';
 import { themeAtom } from '@/store/theme';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { useTranslations } from '@/hooks/useI18n';
 
 export default function ThemeTestPage() {
 	const [theme] = useAtom(themeAtom);
+	const t = useTranslations();
 
 	const colors = [
 		{ name: 'Primary', class: 'bg-primary text-primary-foreground' },
@@ -32,25 +34,25 @@ export default function ThemeTestPage() {
 			<div className="p-6 rounded-lg neu-flat">
 				<div className="flex justify-between items-center mb-4">
 					<h1 className="text-3xl font-bold text-foreground font-multilang">
-						🎨 블랙&화이트 테마 시스템 테스트
+						{t('테마테스트_제목')}
 					</h1>
 					<div className="flex gap-4 items-center">
 						<div className="text-sm text-muted-foreground">
-							현재 테마: <span className="font-semibold text-primary">{theme}</span>
+							{t('테마테스트_현재테마')} <span className="font-semibold text-primary">{theme}</span>
 						</div>
 						<ThemeToggle variant="button" />
 					</div>
 				</div>
 				<p className="text-muted-foreground font-multilang">
-					다크/라이트 모드 전환과 뉴모피즘 디자인 시스템의 가시성을 테스트합니다.
+					{t('테마테스트_설명')}
 				</p>
 			</div>
 
 			{/* 색상 팔레트 */}
 			<div className="p-6 rounded-lg neu-flat">
 				<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">
-					<Palette className="inline mr-2" size={20} />
-					색상 팔레트 - 가시성 개선
+					<Palette className="inline me-2" size={20} />
+					{t('테마테스트_색상팔레트')}
 				</h2>
 				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 					{colors.map((color) => (
@@ -67,8 +69,8 @@ export default function ThemeTestPage() {
 			{/* 뉴모피즘 요소들 */}
 			<div className="p-6 rounded-lg neu-flat">
 				<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">
-					<Eye className="inline mr-2" size={20} />
-					뉴모피즘 시스템
+					<Eye className="inline me-2" size={20} />
+					{t('테마테스트_뉴모피즘시스템')}
 				</h2>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					{neuElements.map((element) => (
@@ -90,8 +92,8 @@ export default function ThemeTestPage() {
 			{/* 버튼 variants */}
 			<div className="p-6 rounded-lg neu-flat">
 				<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">
-					<Settings className="inline mr-2" size={20} />
-					버튼 Variants
+					<Settings className="inline me-2" size={20} />
+					{t('테마테스트_버튼variants')}
 				</h2>
 				<div className="flex flex-wrap gap-3">
 					<Button variant="default">Default</Button>
@@ -110,24 +112,24 @@ export default function ThemeTestPage() {
 			{/* 인터랙티브 테스트 */}
 			<div className="p-6 rounded-lg neu-flat">
 				<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">
-					<EyeOff className="inline mr-2" size={20} />
-					인터랙션 테스트
+					<EyeOff className="inline me-2" size={20} />
+					{t('테마테스트_인터랙션테스트')}
 				</h2>
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 					{/* 아이콘 버튼들 */}
 					<div className="neu-raised p-4 rounded-lg cursor-pointer hover:scale-[1.02] transition-all">
 						<Moon className="mx-auto mb-2 neu-icon-active" size={24} />
-						<p className="text-sm text-center font-multilang">아이콘 Active</p>
+						<p className="text-sm text-center font-multilang">{t('테마테스트_아이콘활성')}</p>
 					</div>
 					
 					<div className="p-4 rounded-lg cursor-pointer neu-flat neu-hover">
 						<Sun className="mx-auto mb-2 neu-icon-inactive" size={24} />
-						<p className="text-sm text-center font-multilang">아이콘 Inactive + Hover</p>
+						<p className="text-sm text-center font-multilang">{t('테마테스트_아이콘비활성')}</p>
 					</div>
 					
 					<div className="p-4 rounded-lg neu-inset">
 						<Palette className="mx-auto mb-2 neu-icon-active" size={24} />
-						<p className="text-sm text-center font-multilang">선택된 상태</p>
+						<p className="text-sm text-center font-multilang">{t('테마테스트_선택된상태')}</p>
 					</div>
 				</div>
 			</div>
@@ -135,22 +137,22 @@ export default function ThemeTestPage() {
 			{/* 테마별 CSS 변수 표시 */}
 			<div className="p-6 rounded-lg neu-flat">
 				<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">
-					CSS 변수 (현재 {theme} 모드)
+					{t('테마테스트_CSS변수').replace('{theme}', theme)}
 				</h2>
 				<div className="grid grid-cols-1 gap-4 font-mono text-sm md:grid-cols-2">
 					<div className="space-y-2">
-						<div className="text-muted-foreground">핵심 색상:</div>
-						<div>--background: <span className="text-primary">배경색</span></div>
-						<div>--foreground: <span className="text-primary">텍스트</span></div>
-						<div>--primary: <span className="text-primary">주요 강조</span></div>
-						<div>--accent: <span className="text-accent">액센트</span></div>
+						<div className="text-muted-foreground">{t('테마테스트_핵심색상')}</div>
+						<div>--background: <span className="text-primary">{t('테마테스트_배경색')}</span></div>
+						<div>--foreground: <span className="text-primary">{t('테마테스트_텍스트')}</span></div>
+						<div>--primary: <span className="text-primary">{t('테마테스트_주요강조')}</span></div>
+						<div>--accent: <span className="text-accent">{t('테마테스트_액센트')}</span></div>
 					</div>
 					<div className="space-y-2">
-						<div className="text-muted-foreground">뉴모피즘:</div>
-						<div>--nm-light-rgba: <span className="text-primary">밝은 그림자</span></div>
-						<div>--nm-dark-rgba: <span className="text-primary">어두운 그림자</span></div>
-						<div>--nm-offset: <span className="text-primary">그림자 거리</span></div>
-						<div>--nm-blur: <span className="text-primary">그림자 블러</span></div>
+						<div className="text-muted-foreground">{t('테마테스트_뉴모피즘')}</div>
+						<div>--nm-light-rgba: <span className="text-primary">{t('테마테스트_밝은그림자')}</span></div>
+						<div>--nm-dark-rgba: <span className="text-primary">{t('테마테스트_어두운그림자')}</span></div>
+						<div>--nm-offset: <span className="text-primary">{t('테마테스트_그림자거리')}</span></div>
+						<div>--nm-blur: <span className="text-primary">{t('테마테스트_그림자블러')}</span></div>
 					</div>
 				</div>
 			</div>

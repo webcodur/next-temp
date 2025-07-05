@@ -18,6 +18,7 @@ import {
 	getHeadToggleButtonStyles,
 	toggleButtonIcon,
 } from './sidebarStyles';
+import { useTranslations } from '@/hooks/useI18n';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -38,6 +39,9 @@ export function SideHeader() {
 
 	// 검색 모달 상태
 	const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+	// 다국어 지원
+	const t = useTranslations();
 
 	/**
 	 * 로고 클릭 시 메뉴 상태 초기화
@@ -74,7 +78,7 @@ export function SideHeader() {
 				<div
 					className={getHeadToggleButtonStyles()}
 					onClick={handleHeadToggle}
-					title={isHeaderCollapsed ? '헤더 펼치기' : '헤더 접기'}>
+					title={isHeaderCollapsed ? t('사이드바_헤더_펼치기') : t('사이드바_헤더_접기')}>
 					<Minus className={toggleButtonIcon} />
 				</div>
 			</div>
@@ -101,7 +105,7 @@ export function SideHeader() {
 							</div>
 							{/* 타이틀 텍스트 */}
 							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-brand/90">
-								건물 타이틀
+								{t('사이드바_헤더_건물타이틀')}
 							</div>
 						</Link>
 					</div>
@@ -115,7 +119,7 @@ export function SideHeader() {
 						className="flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group">
 						<Search className="w-4 h-4 text-muted-foreground group-hover:text-brand" />
 						<span className="text-sm text-muted-foreground group-hover:text-foreground">
-							현장 · 메뉴 검색
+							{t('사이드바_헤더_통합검색')}
 						</span>
 					</button>
 				</div>

@@ -11,7 +11,6 @@ import {
 import { useCallback, useEffect, useRef } from 'react';
 import { defaults } from '@/data/sidebarConfig';
 import { GripVertical } from 'lucide-react';
-
 export function ResizeHandle() {
 	const setRPanelWidth = useSetAtom(rPanelWidthAtom);
 	const setIsResizing = useSetAtom(isResizingAtom);
@@ -24,6 +23,7 @@ export function ResizeHandle() {
 		(e: MouseEvent) => {
 			if (!isResizing.current) return;
 
+			// 사이드바 내부에서 우측 패널 크기 조정
 			let newWidth = e.clientX - defaults.leftColumnWidth;
 
 			if (newWidth < R_PANEL_MIN_WIDTH) newWidth = R_PANEL_MIN_WIDTH;
@@ -68,7 +68,7 @@ export function ResizeHandle() {
 
 	return (
 		<div
-			className="absolute top-0 right-0 h-full w-4 cursor-col-resize z-50 flex items-center justify-center"
+			className="absolute top-0 end-0 h-full w-4 cursor-col-resize z-50 flex items-center justify-center"
 			onMouseDown={handleMouseDown}
 			onMouseEnter={() => setIsResizeHandleHovered(true)}
 			onMouseLeave={() => setIsResizeHandleHovered(false)}

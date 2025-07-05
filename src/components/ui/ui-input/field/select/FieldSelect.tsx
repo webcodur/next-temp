@@ -50,12 +50,12 @@ export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
 					onClick={toggleDropdown}
 					disabled={disabled}
 					className={`
-						w-full text-left
+						w-full text-start
 						${FIELD_STYLES.container}
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						pl-10 pr-10
+						ps-10 pe-10
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 						${isOpen ? 'neu-flat-focus' : ''}
 					`}>

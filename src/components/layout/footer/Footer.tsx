@@ -1,6 +1,9 @@
 'use client';
 
+import { useTranslations } from '@/hooks/useI18n';
+
 export default function Footer() {
+	const t = useTranslations();
 	return (
 		<footer className="bg-surface-3 border-t border-border text-muted-foreground py-20 mt-[150px]">
 			<div className="container max-w-2xl px-6 mx-auto">
@@ -30,7 +33,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-foreground transition-colors hover:text-brand">
-								공식 홈페이지
+							{t('푸터_링크_공식홈페이지')}
 							</a>
 						</div>
 
@@ -46,7 +49,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-foreground transition-colors hover:text-brand">
-								블로그
+							{t('푸터_링크_블로그')}
 							</a>
 						</div>
 					</div>
@@ -55,15 +58,15 @@ export default function Footer() {
 				<div className="mb-6 text-center">
 					<div className="max-w-lg mx-auto space-y-1 text-sm">
 						<p>
-							<span>본사: </span>
+							<span>{t('푸터_주소_본사')} </span>
 							<span className="text-foreground">
-								경기도 시흥시 배곧2로 82 서울대학교 미래모빌리티연구센터 506호
+								{t('푸터_주소_본사상세')}
 							</span>
 						</p>
 						<p>
-							<span>제조: </span>
+							<span>{t('푸터_주소_제조')} </span>
 							<span className="text-foreground">
-								경기도 시흥시 서울대학로 59-21 로얄밸리스테크노 622호
+								{t('푸터_주소_제조상세')}
 							</span>
 						</p>
 					</div>
@@ -75,13 +78,13 @@ export default function Footer() {
 				{/* 회사 정보 및 저작권 */}
 				<div className="text-xs text-center">
 					<p>
-						(주)세븐미어캣 | 대표이사: 주명규 | 사업자등록번호: 786-86-01451
+						{t('푸터_회사정보')}
 					</p>
 					<p className="mt-1">
 						©Copyright {new Date().getFullYear()}. All Right Reserved.
 					</p>
 					<p className="mt-1 text-muted-foreground/70">
-						현재 보시는 화면은 PC에 최적화 되어 있습니다.
+						{t('푸터_알림_PC최적화')}
 					</p>
 				</div>
 			</div>

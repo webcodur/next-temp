@@ -96,8 +96,8 @@ export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						pl-10
-						${showClearButton && value ? 'pr-20' : 'pr-12'}
+						ps-10
+						${showClearButton && value ? 'pe-20' : 'pe-12'}
 						${disabled ? FIELD_STYLES.disabled : ''}
 					`}
 				/>

@@ -4,6 +4,7 @@ import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { LicensePlate } from '@/components/ui/system-testing/license-plate';
+import { useTranslations } from '@/hooks/useI18n';
 
 interface VehicleListTableProps {
 	vehicles: VehicleEntry[];
@@ -28,6 +29,8 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	onFiltersChange,
 	onSearch,
 }) => {
+	const t = useTranslations();
+	
 	// 필터링된 차량 목록
 	const filteredVehicles = vehicles.filter((vehicle) => {
 		// 차량유형 필터
@@ -64,14 +67,14 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	};
 
 	return (
-		<div className="p-2 bg-background rounded-xl neu-flat">
+		<div className="p-2 rounded-xl bg-background neu-flat">
 			{/* 헤더 */}
 			<div className="flex justify-between items-center mb-2">
 				<h2 className="text-sm font-semibold text-foreground">
-					금일 입출차 현황
+					{t('주차_테이블_제목_금일입출차현황')}
 				</h2>
 				<div className="text-xs text-muted-foreground">
-					총 {filteredVehicles.length}건
+					{t('주차_테이블_총건수').replace('{count}', filteredVehicles.length.toString())}
 				</div>
 			</div>
 
@@ -86,17 +89,17 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 
 			{/* 테이블 - 고정 높이 500px로 제한 */}
 			<div
-				className="bg-background rounded-lg border border-border neu-inset"
+				className="rounded-lg border bg-background border-border neu-inset"
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					{/* 테이블 헤더 - 고정 */}
-					<div className="bg-muted border-b border-border shrink-0">
+					<div className="border-b bg-muted border-border shrink-0">
 						<div className="flex text-xs font-medium text-muted-foreground">
-							<div className="px-2 py-1 w-16 text-left">순번</div>
-							<div className="px-2 py-1 w-32 text-left">차량구분</div>
-							<div className="px-2 py-1 w-40 text-left">차량번호</div>
-							<div className="px-2 py-1 w-20 text-left">입출차</div>
-							<div className="flex-1 px-2 py-1 text-left">이용시간</div>
+							<div className="px-2 py-1 w-16 text-start">{t('주차_테이블_헤더_순번')}</div>
+							<div className="px-2 py-1 w-32 text-start">{t('주차_테이블_헤더_차량구분')}</div>
+							<div className="px-2 py-1 w-40 text-start">{t('주차_테이블_헤더_차량번호')}</div>
+							<div className="px-2 py-1 w-20 text-start">{t('주차_테이블_헤더_입출차')}</div>
+							<div className="flex-1 px-2 py-1 text-start">{t('주차_테이블_헤더_이용시간')}</div>
 						</div>
 					</div>
 
@@ -130,7 +133,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												<div className="font-medium text-foreground">
 													{parseCarAllowType(vehicle.type)}
 													{vehicle.modify_car_type && (
-														<span className="ml-1 text-warning">
+														<span className="ms-1 text-warning">
 															→{parseCarAllowType(vehicle.modify_car_type)}
 														</span>
 													)}
@@ -167,7 +170,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 															? 'bg-primary/10 text-primary'
 															: 'bg-success/10 text-success'
 													}`}>
-													{vehicle.status === 1 ? '입차' : '출차'}
+													{vehicle.status === 1 ? t('주차_상태_입차') : t('주차_상태_출차')}
 												</span>
 												{vehicle.device_name && (
 													<div className="text-xs text-muted-foreground">

@@ -2,49 +2,52 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { useTranslations } from '@/hooks/useI18n';
 
 type GeometryType = 'box' | 'sphere' | 'cylinder' | 'cone' | 'plane' | 'torus';
 
-const geometryData = {
-	box: {
-		name: '정육면체',
-		description: '가장 기본적인 3D 도형. 건물, 상자 등에 활용',
-		create: () => new THREE.BoxGeometry(1, 1, 1),
-		color: 0xff6b6b,
-	},
-	sphere: {
-		name: '구',
-		description: '완전한 원형. 행성, 공 등에 활용',
-		create: () => new THREE.SphereGeometry(1, 32, 16),
-		color: 0x4ecdc4,
-	},
-	cylinder: {
-		name: '원기둥',
-		description: '기둥 형태. 파이프, 기둥 등에 활용',
-		create: () => new THREE.CylinderGeometry(1, 1, 2, 32),
-		color: 0x45b7d1,
-	},
-	cone: {
-		name: '원뿔',
-		description: '뾰족한 형태. 나무, 산 등에 활용',
-		create: () => new THREE.ConeGeometry(1, 2, 32),
-		color: 0xf9ca24,
-	},
-	plane: {
-		name: '평면',
-		description: '2D 면. 바닥, 벽 등에 활용',
-		create: () => new THREE.PlaneGeometry(2, 2),
-		color: 0x6c5ce7,
-	},
-	torus: {
-		name: '토러스',
-		description: '도넛 형태. 링, 타이어 등에 활용',
-		create: () => new THREE.TorusGeometry(1, 0.3, 16, 100),
-		color: 0xfd79a8,
-	},
-};
-
 export default function GeometriesPage() {
+	const t = useTranslations();
+	
+	const geometryData = {
+		box: {
+			name: t('3D_정육면체'),
+			description: t('3D_정육면체설명'),
+			create: () => new THREE.BoxGeometry(1, 1, 1),
+			color: 0xff6b6b,
+		},
+		sphere: {
+			name: t('3D_구'),
+			description: t('3D_구설명'),
+			create: () => new THREE.SphereGeometry(1, 32, 16),
+			color: 0x4ecdc4,
+		},
+		cylinder: {
+			name: t('3D_원기둥'),
+			description: t('3D_원기둥설명'),
+			create: () => new THREE.CylinderGeometry(1, 1, 2, 32),
+			color: 0x45b7d1,
+		},
+		cone: {
+			name: t('3D_원뿔'),
+			description: t('3D_원뿔설명'),
+			create: () => new THREE.ConeGeometry(1, 2, 32),
+			color: 0xf9ca24,
+		},
+		plane: {
+			name: t('3D_평면'),
+			description: t('3D_평면설명'),
+			create: () => new THREE.PlaneGeometry(2, 2),
+			color: 0x6c5ce7,
+		},
+		torus: {
+			name: t('3D_토러스'),
+			description: t('3D_토러스설명'),
+			create: () => new THREE.TorusGeometry(1, 0.3, 16, 100),
+			color: 0xfd79a8,
+		},
+	};
+
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
 	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -134,16 +137,16 @@ export default function GeometriesPage() {
 	return (
 		<div className="p-8 space-y-8">
 			<div className="neu-flat p-6 rounded-xl">
-				<h1 className="text-3xl font-bold mb-4">2단계: 기본 도형</h1>
+				<h1 className="text-3xl font-bold mb-4">{t('3D_도형제목')}</h1>
 				<p className="text-gray-600 mb-6">
-					다양한 Geometry를 사용해 기본 3D 도형들을 만들어보자
+					{t('3D_도형설명')}
 				</p>
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 				{/* 3D 뷰어 */}
 				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">실습: 도형 갤러리</h2>
+					<h2 className="text-xl font-semibold mb-4">{t('3D_실습갤러리')}</h2>
 					<div 
 						ref={mountRef} 
 						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
@@ -162,7 +165,7 @@ export default function GeometriesPage() {
 
 				{/* 도형 선택 패널 */}
 				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">도형 선택</h2>
+					<h2 className="text-xl font-semibold mb-4">{t('3D_도형선택')}</h2>
 					<div className="grid grid-cols-2 gap-3">
 						{(Object.keys(geometryData) as GeometryType[]).map((type) => {
 							const data = geometryData[type];
@@ -195,39 +198,26 @@ export default function GeometriesPage() {
 
 			{/* 이론 설명 */}
 			<div className="neu-flat p-6 rounded-xl">
-				<h2 className="text-xl font-semibold mb-4">Geometry 이해하기</h2>
+				<h2 className="text-xl font-semibold mb-4">{t('3D_도형이해')}</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					<div>
-						<h3 className="text-lg font-semibold mb-2 text-blue-600">🔧 Geometry란?</h3>
-						<p className="text-sm text-gray-600">
-							3D 객체의 형태와 구조를 정의하는 데이터다. 
-							점(vertices), 면(faces), UV 좌표 등을 포함한다.
+					<div className="p-4 bg-blue-50 rounded-lg">
+						<h3 className="font-semibold text-blue-800 mb-2">📦 {t('3D_정육면체')}</h3>
+						<p className="text-sm text-blue-600">
+							{t('3D_정육면체설명')}
 						</p>
 					</div>
-
-					<div>
-						<h3 className="text-lg font-semibold mb-2 text-green-600">🎨 Material과의 관계</h3>
-						<p className="text-sm text-gray-600">
-							Geometry는 형태만 정의하고, Material이 색상과 질감을 담당한다.
-							Mesh = Geometry + Material
+					<div className="p-4 bg-green-50 rounded-lg">
+						<h3 className="font-semibold text-green-800 mb-2">🌍 {t('3D_구')}</h3>
+						<p className="text-sm text-green-600">
+							{t('3D_구설명')}
 						</p>
 					</div>
-
-					<div>
-						<h3 className="text-lg font-semibold mb-2 text-purple-600">⚡ 성능 고려사항</h3>
-						<p className="text-sm text-gray-600">
-							복잡한 도형일수록 더 많은 연산이 필요하다.
-							LOD(Level of Detail) 기법으로 최적화할 수 있다.
+					<div className="p-4 bg-purple-50 rounded-lg">
+						<h3 className="font-semibold text-purple-800 mb-2">🏛️ {t('3D_원기둥')}</h3>
+						<p className="text-sm text-purple-600">
+							{t('3D_원기둥설명')}
 						</p>
 					</div>
-				</div>
-
-				<div className="mt-6 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-					<h4 className="font-semibold text-blue-800">💡 실습 팁</h4>
-					<p className="text-sm text-blue-700 mt-1">
-						각 도형의 매개변수를 변경해보며 다양한 형태를 만들어보자. 
-						예: BoxGeometry(width, height, depth)
-					</p>
 				</div>
 			</div>
 		</div>

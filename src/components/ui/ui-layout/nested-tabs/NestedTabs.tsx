@@ -92,7 +92,7 @@ const NestedTabs = React.forwardRef<
 									: 'text-muted-foreground hover:text-brand neu-raised'
 							)}
 						>
-							{tab.icon && <span className="inline-block mr-2">{tab.icon}</span>}
+							{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
 							<span className="relative z-10">{tab.label}</span>
 						</button>
 					))}
@@ -115,7 +115,7 @@ const NestedTabs = React.forwardRef<
 										: 'text-muted-foreground hover:text-brand neu-raised'
 								)}
 							>
-								{subTab.icon && <span className="inline-block mr-2">{subTab.icon}</span>}
+								{subTab.icon && <span className="inline-block me-2">{subTab.icon}</span>}
 								<span className="relative z-10">{subTab.label}</span>
 							</button>
 						))}

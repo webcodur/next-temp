@@ -17,7 +17,7 @@ export function LanguageSwitcher({ variant = 'header', className = '' }: Languag
 
   const currentMeta = localeMetadata[currentLocale];
   
-  const baseClasses = 'relative inline-block text-left';
+  const baseClasses = 'relative inline-block text-start';
   const variantClasses = {
     header: 'text-sm',
     sidebar: 'w-full text-sm',

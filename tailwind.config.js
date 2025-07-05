@@ -16,14 +16,14 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
-				
+
 				// 레이아웃 계층 전용
 				surface: {
 					1: 'hsl(var(--surface-1))',
 					2: 'hsl(var(--surface-2))',
 					3: 'hsl(var(--surface-3))',
 				},
-				
+
 				// 강조 색상 - 가시성 개선
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
@@ -37,7 +37,7 @@ module.exports = {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',
 				},
-				
+
 				// 상태 색상
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -51,7 +51,7 @@ module.exports = {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))',
 				},
-				
+
 				// 기타
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',

@@ -4,6 +4,7 @@ import { LucideIcon } from 'lucide-react';
  * 사이드바 관련 타입 정의 파일
  * - 메뉴 구조, 상태, 검색 관련 타입들을 정의
  * - 3단계 메뉴 구조: Top > Mid > Bot
+ * - 언어팩 시스템 사용으로 다국어 텍스트는 key를 통해 처리
  */
 
 // #region 사이드바 메뉴 타입 정의
@@ -12,11 +13,8 @@ import { LucideIcon } from 'lucide-react';
  * - 실제 페이지로 이동하는 링크 메뉴
  */
 export interface BotMenu {
-	key: string; // 메뉴 키 (고유 식별자)
-	'kor-name': string; // 한국어 표시명 (검색 및 표현용)
-	'eng-name': string; // 영어 표시명 (다국어 처리용)
+	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	href: string; // 페이지 경로
-	description?: string; // 메뉴 설명 (선택사항)
 	icon?: LucideIcon; // 아이콘 (선택사항)
 }
 
@@ -25,9 +23,7 @@ export interface BotMenu {
  * - Bot 메뉴들을 그룹화하는 카테고리
  */
 export interface MidMenu {
-	key: string; // 메뉴 키 (고유 식별자)
-	'kor-name': string; // 한국어 표시명
-	'eng-name': string; // 영어 표시명 (다국어 처리용)
+	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	icon?: LucideIcon; // 아이콘 (선택사항)
 	botItems: BotMenu[]; // 하위 Bot 메뉴 목록
 }
@@ -38,9 +34,7 @@ export interface MidMenu {
  */
 export interface TopItem {
 	icon: LucideIcon; // 메뉴 아이콘 (필수)
-	key: string; // 메뉴 키 (고유 식별자)
-	'kor-name': string; // 한국어 표시명
-	'eng-name': string; // 영어 표시명 (다국어 처리용)
+	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	midItems: Record<string, MidMenu>; // 하위 Mid 메뉴 목록 (키-값 쌍)
 }
 

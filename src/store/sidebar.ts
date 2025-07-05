@@ -5,7 +5,9 @@ import { defaults } from '@/data/sidebarConfig';
 export const R_PANEL_MIN_WIDTH = 180;
 export const R_PANEL_MAX_WIDTH = 500;
 
-export const rPanelWidthAtom = atom(defaults.sidebarWidth - defaults.leftColumnWidth);
+export const rPanelWidthAtom = atom(
+	defaults.sidebarWidth - defaults.leftColumnWidth
+);
 export const isResizingAtom = atom(false);
 export const isResizeHandleHoveredAtom = atom(false);
 
@@ -27,7 +29,7 @@ export const singleOpenModeAtom = atomWithStorage<boolean>(
 	{ getOnInit: false }
 );
 
-// 메뉴 검색 관련 atom들
+// 메뉴 검색 관련 atom들 - 언어팩 시스템 사용
 export const menuSearchQueryAtom = atom<string>('');
 export const menuSearchResultsAtom = atom<
 	Array<{
@@ -36,16 +38,13 @@ export const menuSearchResultsAtom = atom<
 		midKey: string;
 		item: {
 			key: string;
-			'kor-name': string;
-			'eng-name': string;
 			href?: string;
-			description?: string;
 		};
 	}>
 >([]);
 export const menuSearchActiveAtom = atom<boolean>(false);
 
-// 최근 접속 메뉴 관련 atom들 - Hydration-safe
+// 최근 접속 메뉴 관련 atom들 - Hydration-safe, 언어팩 시스템 사용
 export const recentMenusAtom = atomWithStorage<
 	Array<{
 		type: 'bot';
@@ -53,10 +52,7 @@ export const recentMenusAtom = atomWithStorage<
 		midKey: string;
 		item: {
 			key: string;
-			'kor-name': string;
-			'eng-name': string;
 			href: string;
-			description?: string;
 		};
 		accessedAt: number;
 	}>

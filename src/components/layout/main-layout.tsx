@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import { initThemeAtom } from '@/store/theme';
 import { initBrandColorAtom } from '@/store/brand';
+import { useLocale } from '@/hooks/useI18n';
 // components
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
@@ -26,6 +27,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 	const [isResizing] = useAtom(isResizingAtom);
 	const [, initTheme] = useAtom(initThemeAtom);
 	const [, initBrandColor] = useAtom(initBrandColorAtom);
+	const { isRTL } = useLocale();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	const sidebarWidth = defaults.leftColumnWidth + rPanelWidth;
@@ -39,15 +41,18 @@ export function MainLayout({ children }: MainLayoutProps) {
 	// 키보드 단축키 활성화
 	useSidebarKeyboard();
 
+	// 논리적 속성으로 마진 스타일 계산
+	const mainStyle = {
+		marginInlineStart: isCollapsed ? '0px' : `${sidebarWidth}px`,
+		transition: isResizing ? 'none' : `margin-inline-start ${animations.sidebarDuration}ms ease-in-out`,
+	};
+
 	return (
-		<div className="flex overflow-scroll h-screen bg-surface-2" suppressHydrationWarning>
+		<div className="flex overflow-scroll h-screen bg-surface-2" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<SideToggleMain />
 			<Sidebar />
 			<main
-				style={{
-					marginLeft: isCollapsed ? '0px' : `${sidebarWidth}px`,
-					transition: isResizing ? 'none' : `margin-left ${animations.sidebarDuration}ms ease-in-out`,
-				}}
+				style={mainStyle}
 				className="flex flex-col flex-1 bg-surface-1">
 				<Header />
 				<div ref={scrollContainerRef} className="flex-1">
@@ -60,3 +65,4 @@ export function MainLayout({ children }: MainLayoutProps) {
 		</div>
 	);
 }
+ 

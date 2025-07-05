@@ -6,25 +6,26 @@ import {
 } from '@/types/parking';
 
 // 차량 유형 매핑 데이터
+// 언어팩 키: 주차_차량유형_* 시리즈
 export const carAllowTypes: CarAllowType[] = [
-	{ sub_type: 1, name: '입주차' },
-	{ sub_type: 2, name: '정기권차' },
-	{ sub_type: 3, name: '방문차' },
-	{ sub_type: 4, name: '임대차' },
-	{ sub_type: 5, name: '업무차' },
-	{ sub_type: 6, name: '미등록' },
-	{ sub_type: 7, name: '상가차' },
-	{ sub_type: 8, name: '발권차량' },
-	{ sub_type: 9, name: '입주차(차감)' },
-	{ sub_type: 99, name: '오인식' },
-	{ sub_type: 100, name: '미인식 차량' },
-	{ sub_type: 101, name: '개인 이동수단' },
+	{ sub_type: 1, name: '입주차' }, // t('주차_차량유형_입주차')
+	{ sub_type: 2, name: '정기권차' }, // t('주차_차량유형_정기권차')
+	{ sub_type: 3, name: '방문차' }, // t('주차_차량유형_방문차')
+	{ sub_type: 4, name: '임대차' }, // t('주차_차량유형_임대차')
+	{ sub_type: 5, name: '업무차' }, // t('주차_차량유형_업무차')
+	{ sub_type: 6, name: '미등록' }, // t('주차_차량유형_미등록')
+	{ sub_type: 7, name: '상가차' }, // t('주차_차량유형_상가차')
+	{ sub_type: 8, name: '발권차량' }, // t('주차_차량유형_발권차량')
+	{ sub_type: 9, name: '입주차(차감)' }, // t('주차_차량유형_입주차차감')
+	{ sub_type: 99, name: '오인식' }, // t('주차_차량유형_오인식')
+	{ sub_type: 100, name: '미인식 차량' }, // t('주차_차량유형_미인식차량')
+	{ sub_type: 101, name: '개인 이동수단' }, // t('주차_차량유형_개인이동수단')
 ];
 
 // 차량 유형 파싱 함수
 export const parseCarAllowType = (type: number): string => {
 	const carType = carAllowTypes.find((t) => t.sub_type === type);
-	return carType?.name || '미분류';
+	return carType?.name || '미분류'; // t('주차_차량유형_미분류')
 };
 
 // 모든 차량 타입에 대해 통일된 메탈릭 번호판 사용 (레거시 지원용)
@@ -72,28 +73,29 @@ export const generateMockVehicleEntries = (count: number): VehicleEntry[] => {
 };
 
 // Mock 차단기 데이터
+// 언어팩 키: 주차_차단기_* 시리즈
 export const mockBarriers: ParkingBarrier[] = [
 	{
 		id: 'barrier-01',
-		name: '정문출입차단기1',
+		name: '정문출입차단기1', // t('주차_차단기_정문1')
 		isOpen: false,
 		operationMode: 'auto-operation',
 	},
 	{
 		id: 'barrier-02',
-		name: '정문출입차단기2',
+		name: '정문출입차단기2', // t('주차_차단기_정문2')
 		isOpen: true,
 		operationMode: 'auto-operation',
 	},
 	{
 		id: 'barrier-03',
-		name: '후문출입차단기1',
+		name: '후문출입차단기1', // t('주차_차단기_후문1')
 		isOpen: false,
 		operationMode: 'always-open',
 	},
 	{
 		id: 'barrier-04',
-		name: '후문출입차단기2',
+		name: '후문출입차단기2', // t('주차_차단기_후문2') - 언어팩에 추가 필요
 		isOpen: false,
 		operationMode: 'bypass',
 	},

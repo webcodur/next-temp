@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { MorphingText } from '@/components/ui/ui-effects/morphing-text/MorphingText';
+import { useTranslations } from '@/hooks/useI18n';
 
 export default function MorphingTextDemo() {
+  const t = useTranslations();
   const [currentExample, setCurrentExample] = useState(0);
   const [manualIndex, setManualIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
@@ -11,20 +13,20 @@ export default function MorphingTextDemo() {
   // 예제 데이터 세트
   const examples = [
     {
-      title: "다국어 인사말",
+      title: t('모핑텍스트_다국어인사말'),
       texts: ["안녕하세요", "Hello", "مرحبا", "Bonjour", "Hola"]
     },
     {
-      title: "주차 시스템 메시지",
-      texts: ["차량 진입", "Vehicle Entry", "دخول المركبة", "출차 완료", "Exit Complete"]
+      title: t('모핑텍스트_주차시스템메시지'),
+      texts: [t('모핑텍스트_차량진입'), "Vehicle Entry", "دخول المركبة", t('모핑텍스트_출차완료'), "Exit Complete"]
     },
     {
-      title: "상태 메시지",
-      texts: ["로딩중...", "Loading...", "تحميل...", "처리중...", "Processing..."]
+      title: t('모핑텍스트_상태메시지'),
+      texts: [t('모핑텍스트_로딩중'), "Loading...", "تحميل...", t('모핑텍스트_처리중'), "Processing..."]
     },
     {
-      title: "대형 헤드라인",
-      texts: ["SMART PARKING", "스마트 주차", "موقف ذكي", "INNOVATION", "혁신"]
+      title: t('모핑텍스트_대형헤드라인'),
+      texts: ["SMART PARKING", t('모핑텍스트_스마트주차'), "موقف ذكي", "INNOVATION", t('모핑텍스트_혁신')]
     }
   ];
 
@@ -32,15 +34,15 @@ export default function MorphingTextDemo() {
     <div className="p-6 space-y-8 min-h-screen">
       {/* 헤더 */}
       <div className="p-6 rounded-lg neu-flat">
-        <h1 className="mb-2 text-3xl font-bold font-multilang">Morphing Text 테스트</h1>
+        <h1 className="mb-2 text-3xl font-bold font-multilang">{t('모핑텍스트_제목')}</h1>
         <p className="text-muted-foreground font-multilang">
-          동적 텍스트 모핑 애니메이션 컴포넌트를 테스트한다.
+          {t('모핑텍스트_설명')}
         </p>
       </div>
 
       {/* 예제 선택 */}
       <div className="p-6 rounded-lg neu-flat">
-        <h2 className="mb-4 text-xl font-semibold font-multilang">예제 선택</h2>
+        <h2 className="mb-4 text-xl font-semibold font-multilang">{t('모핑텍스트_예제선택')}</h2>
         <div className="flex flex-wrap gap-3">
           {examples.map((example, index) => (
             <button
@@ -75,19 +77,19 @@ export default function MorphingTextDemo() {
           </div>
 
           <div className="space-y-2 text-sm text-muted-foreground font-multilang">
-            <p><strong>텍스트:</strong> {examples[currentExample].texts.join(' → ')}</p>
+            <p><strong>{t('모핑텍스트_텍스트')}</strong> {examples[currentExample].texts.join(' → ')}</p>
           </div>
         </div>
       </div>
 
       {/* 수동 제어 테스트 */}
       <div className="p-6 rounded-lg neu-flat">
-        <h2 className="mb-6 text-xl font-semibold font-multilang">수동 제어 테스트</h2>
+        <h2 className="mb-6 text-xl font-semibold font-multilang">{t('모핑텍스트_수동제어테스트')}</h2>
         
         <div className="space-y-6">
           {/* 자동재생 토글 */}
           <div className="flex gap-4 items-center">
-            <span className="font-multilang">자동 순환:</span>
+            <span className="font-multilang">{t('모핑텍스트_자동순환')}</span>
             <button
               onClick={() => setIsAutoPlay(!isAutoPlay)}
               className={`px-4 py-2 rounded-lg font-multilang transition-all ${
@@ -100,7 +102,7 @@ export default function MorphingTextDemo() {
 
           {/* 수동 인덱스 제어 */}
           <div className="space-y-3">
-            <span className="font-multilang">수동 텍스트 선택:</span>
+            <span className="font-multilang">{t('모핑텍스트_수동텍스트선택')}</span>
             <div className="flex flex-wrap gap-2">
               {examples[currentExample].texts.map((text, index) => (
                 <button
@@ -131,7 +133,7 @@ export default function MorphingTextDemo() {
               }}
             />
             <p className="mt-4 text-sm text-muted-foreground font-multilang">
-              현재 인덱스: {manualIndex} | 자동재생: {isAutoPlay ? '활성' : '비활성'}
+              {t('모핑텍스트_현재인덱스')} {manualIndex} | {t('모핑텍스트_자동재생')} {isAutoPlay ? t('모핑텍스트_활성') : t('모핑텍스트_비활성')}
             </p>
           </div>
         </div>
@@ -139,11 +141,11 @@ export default function MorphingTextDemo() {
 
       {/* 추가 예제 */}
       <div className="p-6 rounded-lg neu-flat">
-        <h2 className="mb-6 text-xl font-semibold font-multilang">다양한 언어 조합</h2>
+        <h2 className="mb-6 text-xl font-semibold font-multilang">{t('모핑텍스트_다양한언어조합')}</h2>
         <div className="space-y-8">
           <div className="text-center">
             <p className="mb-4 text-sm text-muted-foreground font-multilang">
-              한국어 + 영어 + 아랍어
+              {t('모핑텍스트_한국어영어아랍어')}
             </p>
             <MorphingText
               texts={["안녕하세요", "Hello", "مرحبا"]}
@@ -151,10 +153,10 @@ export default function MorphingTextDemo() {
           </div>
           <div className="text-center">
             <p className="mb-4 text-sm text-muted-foreground font-multilang">
-              시스템 메시지
+              {t('모핑텍스트_시스템메시지')}
             </p>
             <MorphingText
-              texts={["시스템 준비중", "System Ready", "النظام جاهز", "완료", "Complete"]}
+              texts={[t('모핑텍스트_시스템준비중'), "System Ready", "النظام جاهز", t('모핑텍스트_완료'), "Complete"]}
             />
           </div>
         </div>
@@ -162,7 +164,7 @@ export default function MorphingTextDemo() {
 
       {/* 사용법 가이드 */}
       <div className="p-6 rounded-lg neu-flat">
-        <h2 className="mb-4 text-xl font-semibold font-multilang">사용법</h2>
+        <h2 className="mb-4 text-xl font-semibold font-multilang">{t('모핑텍스트_사용법')}</h2>
         <div className="overflow-x-auto p-4 font-mono text-sm bg-gray-50 rounded-lg">
           <pre>{`import { MorphingText } from '@/components/ui/ui-effects/morphing-text/MorphingText';
 

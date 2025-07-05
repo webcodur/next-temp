@@ -25,6 +25,7 @@ import {
 	CollapsibleTrigger,
 } from '@/components/ui/ui-layout/collapsible/Collapsible';
 import { BotMenu } from '../types';
+import { useTranslations } from '@/hooks/useI18n';
 
 /**
  * 사이드바 우측 패널 Props 타입
@@ -64,6 +65,7 @@ export function SideRPanel({
 	const [recentMenus, setRecentMenus] = useAtom(recentMenusAtom);
 	const [rPanelWidth] = useAtom(rPanelWidthAtom);
 	const [isResizing] = useAtom(isResizingAtom);
+	const t = useTranslations();
 	
 	// 전체 펼침/접힘 상태 확인
 	const allMidKeys = Object.keys(topData.midItems);
@@ -148,10 +150,7 @@ export function SideRPanel({
 			midKey: midKey || '',
 			item: {
 				key: botItem.key,
-				'kor-name': botItem['kor-name'],
-				'eng-name': botItem['eng-name'],
 				href: botItem.href,
-				description: botItem.description,
 			},
 			accessedAt: Date.now(),
 		};
@@ -189,7 +188,7 @@ export function SideRPanel({
 	return (
 		<TooltipProvider delayDuration={0}>
 			<div
-				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 border-l border-border/30 pr-4 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}`}
+				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 border-s border-border/30 pe-4 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}`}
 				style={{ width: `${rPanelWidth}px` }}>
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
@@ -220,13 +219,13 @@ export function SideRPanel({
 								<div className="text-center">
 									<div className="font-medium">
 										{isMounted && singleOpenMode
-											? '단일 패널 모드'
-											: '다중 패널 모드'}
+											? t('사이드바_단일패널모드')
+											: t('사이드바_다중패널모드')}
 									</div>
 									<div className="text-xs opacity-80">
 										{isMounted && singleOpenMode
-											? '(다중 패널 모드로 전환)'
-											: '(단일 패널 모드로 전환)'}
+											? t('사이드바_다중전환')
+											: t('사이드바_단일전환')}
 									</div>
 								</div>
 							</TooltipContent>
@@ -237,7 +236,7 @@ export function SideRPanel({
 					<h2
 						className="flex-1 text-base font-bold text-center cursor-pointer text-foreground"
 						onClick={handleTitleClick}>
-						{topData['kor-name']} <span className="text-sm">메뉴</span>
+						{t(`메뉴_${topKey}`)} <span className="text-sm">{t('공통_메뉴')}</span>
 					</h2>
 
 					{/* 우측: 전체 열기/닫기 버튼들 - 수직 배치 */}
@@ -260,8 +259,8 @@ export function SideRPanel({
 							</TooltipTrigger>
 							<TooltipContent side="right">
 								<div className="text-center">
-									<div className="font-medium">전체 메뉴 접기</div>
-									<div className="text-xs opacity-80">모든 하위 메뉴 닫기</div>
+									<div className="font-medium">{t('사이드바_전체접기')}</div>
+									<div className="text-xs opacity-80">{t('사이드바_모든하위닫기')}</div>
 								</div>
 							</TooltipContent>
 						</Tooltip>
@@ -284,8 +283,8 @@ export function SideRPanel({
 							</TooltipTrigger>
 							<TooltipContent side="right">
 								<div className="text-center">
-									<div className="font-medium">전체 메뉴 펼치기</div>
-									<div className="text-xs opacity-80">모든 하위 메뉴 열기</div>
+									<div className="font-medium">{t('사이드바_전체펼치기')}</div>
+									<div className="text-xs opacity-80">{t('사이드바_모든하위열기')}</div>
 								</div>
 							</TooltipContent>
 						</Tooltip>
@@ -313,8 +312,8 @@ export function SideRPanel({
 												: 'neu-flat'
 										}`}>
 										<span
-											className={`flex-1 text-sm font-medium text-left truncate`}>
-											{midItem['kor-name']}
+											className={`flex-1 text-sm font-medium text-start truncate`}>
+											{t(`메뉴_${midKey}`)}
 										</span>
 										{/* 펼침/접힘 표시 아이콘 */}
 										{midExpanded.has(midKey) ? (
@@ -327,7 +326,7 @@ export function SideRPanel({
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="overflow-hidden relative mr-1 ml-1 min-w-0">
+									<div className="overflow-hidden relative me-1 ms-1 min-w-0">
 										{/* 메인 수직선 - z-index를 낮게 설정하여 배경에 배치 */}
 										<div
 											className="absolute left-2 w-0.5 border-l-2 border-solid border-muted-foreground/25 z-0"
@@ -374,15 +373,15 @@ export function SideRPanel({
 															onClick={() =>
 																handleBotMenuClick(midKey, botItem)
 															}
-															className={`relative flex items-center justify-between ml-7 pl-3 py-2 text-sm rounded-md text-left group hover:pr-2 transition-all duration-200 cursor-pointer z-20 ${
+															className={`relative flex items-center justify-between ms-7 ps-3 py-2 text-sm rounded-md text-start group hover:pe-2 transition-all duration-200 cursor-pointer z-20 ${
 																isActive
 																	? 'neu-inset text-brand! font-bold bg-background':'neu-flat bg-background/95 backdrop-blur-sm'}`}
 															style={{
-																width: 'calc(100% - 1.75rem)', // ml-7을 고려한 정확한 width 계산
+																width: 'calc(100% - 1.75rem)', // ms-7을 고려한 정확한 width 계산
 															}}>
 															{/* 아이템 라벨 */}
 															<span className="flex-1 truncate">
-																{botItem['kor-name']}
+																{t(`메뉴_${botItem.key}`)}
 															</span>
 															{/* 호버 시 우측 점 인디케이터 */}
 															<div className="w-2 h-2 rounded-full bg-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-none!" />

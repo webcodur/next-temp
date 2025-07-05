@@ -13,7 +13,7 @@ export function Header() {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 
 	// 사이드바 상태에 따른 브레드크럼브 위치 조정
-	const breadcrumbMargin = isCollapsed ? 'ml-[50px]' : 'ml-0';
+	const breadcrumbMargin = isCollapsed ? 'ms-[50px]' : 'ms-0';
 
 	// 헤더 버튼 스타일
 	const buttonBase = 'h-9 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';

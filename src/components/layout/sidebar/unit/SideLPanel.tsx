@@ -23,7 +23,7 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 
 	return (
 		<div
-			className={`${styles.leftColWidth} h-full border-r border-border/20 shrink-0`}>
+			className={`${styles.leftColWidth} h-full border-e border-border/20 shrink-0`}>
 			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];

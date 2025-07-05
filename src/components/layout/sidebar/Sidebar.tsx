@@ -14,6 +14,7 @@ import { SideLPanel } from '@/components/layout/sidebar/unit/SideLPanel';
 import { SideRPanel } from '@/components/layout/sidebar/unit/SideRPanel';
 import { defaults } from '@/data/sidebarConfig';
 import { ResizeHandle } from './unit/ResizeHandle';
+import { useLocale } from '@/hooks/useI18n';
 
 /**
  * 사이드바 메인 컴포넌트
@@ -27,10 +28,16 @@ export function Sidebar() {
 	const [rPanelWidth] = useAtom(rPanelWidthAtom);
 	const [isResizing] = useAtom(isResizingAtom);
 	const [isHovered] = useAtom(isResizeHandleHoveredAtom);
+	const { isRTL } = useLocale();
 
 	const sidebarWidth = defaults.leftColumnWidth + rPanelWidth;
 	const showResizeIndicator = isResizing || isHovered;
 	const transitionClass = isResizing ? 'transition-transform' : 'transition-all';
+
+	// RTL 모드에 따른 transform 방향 조정
+	const transformClass = isCollapsed 
+		? (isRTL ? 'translate-x-full' : '-translate-x-full')  // RTL: 오른쪽으로 숨김, LTR: 왼쪽으로 숨김
+		: 'translate-x-0';
 
 	// 사이드바 메뉴 상태 및 핸들러 관리
 	const {
@@ -53,9 +60,7 @@ export function Sidebar() {
 			style={{
 				width: `${sidebarWidth}px`,
 			}}
-			className={`fixed left-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-r-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${
-				isCollapsed ? '-translate-x-full' : 'translate-x-0'
-			} z-40 border-r-2 ${showResizeIndicator ? 'border-brand' : 'border-transparent'}`}>
+			className={`fixed start-0 top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-e-3xl will-change-transform ${transitionClass} duration-200 ease-in-out ${transformClass} z-40 border-e-2 ${showResizeIndicator ? 'border-brand' : 'border-transparent'}`}>
 			{!isCollapsed && <ResizeHandle />}
 			<div className="flex flex-col h-full">
 				{/* 사이드바 헤더 영역 */}

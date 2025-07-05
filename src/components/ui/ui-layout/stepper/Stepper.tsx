@@ -3,6 +3,7 @@ import React from 'react';
 import StepIndicator from './StepIndicator';
 import ContentArea from './ContentArea';
 import Navigation from './Navigation';
+import { useTranslations } from '@/hooks/useI18n';
 // #endregion
 
 // #region Types
@@ -41,9 +42,12 @@ export const Stepper: React.FC<StepperProps> = ({
   children,
   renderStep,
   maxVisibleSteps = 4,
-  title = '단계별 진행',
+  title,
   className = '',
 }) => {
+  const t = useTranslations();
+  const defaultTitle = title || t('스테퍼_제목_단계별진행');
+  
   if (!steps || steps.length === 0) return null;
 
   const isStepCompleted = (stepNumber: number) => {
@@ -77,7 +81,7 @@ export const Stepper: React.FC<StepperProps> = ({
         completedSteps={completedSteps}
         onStepClick={handleStepClick}
         maxVisibleSteps={maxVisibleSteps}
-        title={title}
+        title={defaultTitle}
       />
 
       <ContentArea>

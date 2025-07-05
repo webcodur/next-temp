@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { useTranslations } from '@/hooks/useI18n';
 
 type AdvancedFeature = 'texture' | 'particles' | 'postprocessing' | 'shadows' | 'fog' | 'loader';
 
@@ -64,40 +65,8 @@ class ParticleSystem {
 	}
 }
 
-const advancedFeatures = {
-	texture: {
-		name: '텍스처 매핑',
-		description: '2D 이미지를 3D 표면에 입혀 사실적인 재질을 만든다',
-		instruction: '회전하는 텍스처 큐브를 확인해보세요',
-	},
-	particles: {
-		name: '파티클 시스템',
-		description: '수많은 작은 점들로 눈, 불, 연기 등의 효과를 만든다',
-		instruction: '떠오르는 파티클들을 관찰해보세요',
-	},
-	postprocessing: {
-		name: '후처리 효과',
-		description: '렌더링 후 블룸, 블러 등의 시각 효과를 추가한다',
-		instruction: '글로우 효과가 적용된 장면을 확인해보세요',
-	},
-	shadows: {
-		name: '그림자 시스템',
-		description: '실시간 그림자를 렌더링해 입체감을 높인다',
-		instruction: '움직이는 객체의 그림자를 관찰해보세요',
-	},
-	fog: {
-		name: '안개 효과',
-		description: '거리에 따라 객체가 흐려지는 대기 효과를 만든다',
-		instruction: '원거리 객체들이 안개에 가려지는 것을 확인해보세요',
-	},
-	loader: {
-		name: '모델 로딩',
-		description: 'GLTF, OBJ 등의 3D 모델 파일을 로드한다',
-		instruction: '복잡한 3D 모델이 로드되는 과정을 확인해보세요',
-	},
-};
-
 export default function AdvancedPage() {
+	const t = useTranslations();
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
 	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -107,6 +76,39 @@ export default function AdvancedPage() {
 	
 	const [selectedFeature, setSelectedFeature] = useState<AdvancedFeature>('texture');
 	const [isLoading, setIsLoading] = useState(false);
+
+	const advancedFeatures = {
+		texture: {
+			name: t('3D_텍스처매핑'),
+			description: t('3D_텍스처매핑설명'),
+			instruction: t('3D_텍스처매핑가이드'),
+		},
+		particles: {
+			name: t('3D_파티클시스템'),
+			description: t('3D_파티클시스템설명'),
+			instruction: t('3D_파티클시스템가이드'),
+		},
+		postprocessing: {
+			name: t('3D_후처리효과'),
+			description: t('3D_후처리효과설명'),
+			instruction: t('3D_후처리효과가이드'),
+		},
+		shadows: {
+			name: t('3D_그림자시스템'),
+			description: t('3D_그림자시스템설명'),
+			instruction: t('3D_그림자시스템가이드'),
+		},
+		fog: {
+			name: t('3D_안개효과'),
+			description: t('3D_안개효과설명'),
+			instruction: t('3D_안개효과가이드'),
+		},
+		loader: {
+			name: t('3D_모델로딩'),
+			description: t('3D_모델로딩설명'),
+			instruction: t('3D_모델로딩가이드'),
+		},
+	};
 
 	useEffect(() => {
 		if (!mountRef.current) return;
@@ -329,22 +331,22 @@ export default function AdvancedPage() {
 	return (
 		<div className="p-8 space-y-8">
 			<div className="p-6 rounded-xl neu-flat">
-				<h1 className="mb-4 text-3xl font-bold">6단계: 고급 기능</h1>
-				<p className="mb-6 text-gray-600">
-					Three.js의 고급 기능들로 더욱 사실적이고 복잡한 3D 장면을 만들어보자
+				<h1 className="mb-4 text-3xl font-bold font-multilang">{t('3D_고급기능제목')}</h1>
+				<p className="mb-6 text-gray-600 font-multilang">
+					{t('3D_고급기능설명')}
 				</p>
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 				{/* 3D 뷰어 */}
 				<div className="p-6 rounded-xl neu-flat">
-					<h2 className="mb-4 text-xl font-semibold">실습: 고급 기능 체험</h2>
+					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_고급실습')}</h2>
 					
 					{isLoading && (
 						<div className="flex items-center justify-center h-[600px] border border-gray-200 rounded-lg">
 							<div className="text-center">
 								<div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 border-blue-500 animate-spin"></div>
-								<p className="text-gray-600">로딩 중...</p>
+								<p className="text-gray-600 font-multilang">{t('3D_고급로딩')}</p>
 							</div>
 						</div>
 					)}
@@ -356,13 +358,13 @@ export default function AdvancedPage() {
 					
 					{/* 현재 기능 설명 */}
 					<div className="p-4 rounded-lg neu-inset">
-						<h3 className="mb-2 text-lg font-semibold text-purple-600">
+						<h3 className="mb-2 text-lg font-semibold text-purple-600 font-multilang">
 							{currentFeature.name}
 						</h3>
-						<p className="mb-2 text-sm text-gray-600">
+						<p className="mb-2 text-sm text-gray-600 font-multilang">
 							{currentFeature.description}
 						</p>
-						<p className="text-sm font-semibold text-green-600">
+						<p className="text-sm font-semibold text-green-600 font-multilang">
 							💡 {currentFeature.instruction}
 						</p>
 					</div>
@@ -370,7 +372,7 @@ export default function AdvancedPage() {
 
 				{/* 기능 선택 패널 */}
 				<div className="p-6 rounded-xl neu-flat">
-					<h2 className="mb-4 text-xl font-semibold">고급 기능</h2>
+					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_고급기능')}</h2>
 					<div className="space-y-3">
 						{(Object.keys(advancedFeatures) as AdvancedFeature[]).map((feature) => {
 							const data = advancedFeatures[feature];
@@ -381,14 +383,14 @@ export default function AdvancedPage() {
 									key={feature}
 									onClick={() => changeFeature(feature)}
 									disabled={isLoading}
-									className={`w-full p-4 rounded-lg text-left transition-all ${
+									className={`w-full p-4 rounded-lg text-start transition-all ${
 										isActive 
 											? 'bg-purple-50 neu-inset' 
 											: 'neu-raised hover:neu-inset'
 									} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
 								>
-									<h3 className="mb-1 text-sm font-semibold">{data.name}</h3>
-									<p className="text-xs text-gray-600">
+									<h3 className="mb-1 text-sm font-semibold font-multilang">{data.name}</h3>
+									<p className="text-xs text-gray-600 font-multilang">
 										{data.description}
 									</p>
 								</button>
@@ -398,15 +400,15 @@ export default function AdvancedPage() {
 
 					{/* 학습 진행도 */}
 					<div className="p-4 mt-6 rounded-lg neu-inset">
-						<h4 className="mb-2 font-semibold text-gray-800">🎓 학습 진행도</h4>
+						<h4 className="mb-2 font-semibold text-gray-800 font-multilang">{t('3D_학습진행도')}</h4>
 						<div className="w-full h-2 bg-gray-200 rounded-full">
 							<div 
 								className="h-2 bg-linear-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
 								style={{ width: '100%' }}
 							></div>
 						</div>
-						<p className="mt-2 text-xs text-gray-600">
-							축하합니다! 모든 3D 기초 과정을 완료했습니다.
+						<p className="mt-2 text-xs text-gray-600 font-multilang">
+							{t('3D_학습완료')}
 						</p>
 					</div>
 				</div>
@@ -414,29 +416,26 @@ export default function AdvancedPage() {
 
 			{/* 이론 설명 */}
 			<div className="p-6 rounded-xl neu-flat">
-				<h2 className="mb-4 text-xl font-semibold">고급 기능 심화 이론</h2>
+				<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_심화이론')}</h2>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<div>
-						<h3 className="mb-2 text-lg font-semibold text-purple-600">🖼️ 텍스처 시스템</h3>
-						<p className="text-sm text-gray-600">
-							UV 매핑을 통해 2D 이미지를 3D 표면에 적용한다. 
-							Diffuse, Normal, Specular 등 다양한 맵 타입이 있다.
+						<h3 className="mb-2 text-lg font-semibold text-purple-600 font-multilang">{t('3D_텍스처시스템')}</h3>
+						<p className="text-sm text-gray-600 font-multilang">
+							{t('3D_텍스처시스템설명')}
 						</p>
 					</div>
 
 					<div>
-						<h3 className="mb-2 text-lg font-semibold text-yellow-600">✨ 파티클 효과</h3>
-						<p className="text-sm text-gray-600">
-							수천 개의 점으로 자연 현상을 시뮬레이션한다. 
-							BufferGeometry로 성능을 최적화할 수 있다.
+						<h3 className="mb-2 text-lg font-semibold text-yellow-600 font-multilang">{t('3D_파티클효과')}</h3>
+						<p className="text-sm text-gray-600 font-multilang">
+							{t('3D_파티클효과설명')}
 						</p>
 					</div>
 
 					<div>
-						<h3 className="mb-2 text-lg font-semibold text-gray-600">🌫️ 그림자와 안개</h3>
-						<p className="text-sm text-gray-600">
-							실시간 그림자와 거리 기반 안개로 사실감을 높인다. 
-							성능과 품질의 균형을 고려해야 한다.
+						<h3 className="mb-2 text-lg font-semibold text-gray-600 font-multilang">{t('3D_그림자안개')}</h3>
+						<p className="text-sm text-gray-600 font-multilang">
+							{t('3D_그림자안개설명')}
 						</p>
 					</div>
 				</div>
@@ -444,22 +443,22 @@ export default function AdvancedPage() {
 				{/* 다음 단계 안내 */}
 				<div className="mt-6 space-y-4">
 					<div className="p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-purple-400">
-						<h4 className="font-semibold text-purple-800">🚀 다음 학습 방향</h4>
+						<h4 className="font-semibold text-purple-800 font-multilang">{t('3D_다음학습')}</h4>
 						<div className="mt-2 space-y-1 text-sm text-purple-700">
-							<p>• <strong>WebXR:</strong> VR/AR 경험 개발</p>
-							<p>• <strong>물리 엔진:</strong> Cannon.js, Ammo.js 연동</p>
-							<p>• <strong>성능 최적화:</strong> LOD, Culling, Instancing</p>
-							<p>• <strong>쉐이더 프로그래밍:</strong> GLSL 커스텀 효과</p>
+							<p className="font-multilang">• {t('3D_WebXR')}</p>
+							<p className="font-multilang">• {t('3D_물리엔진')}</p>
+							<p className="font-multilang">• {t('3D_성능최적화')}</p>
+							<p className="font-multilang">• {t('3D_쉐이더프로그래밍')}</p>
 						</div>
 					</div>
 
 					<div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
-						<h4 className="font-semibold text-green-800">💡 실전 프로젝트 아이디어</h4>
+						<h4 className="font-semibold text-green-800 font-multilang">{t('3D_실전프로젝트')}</h4>
 						<div className="mt-2 space-y-1 text-sm text-green-700">
-							<p>• 3D 제품 전시관 / 포트폴리오 사이트</p>
-							<p>• 인터랙티브 데이터 시각화 대시보드</p>
-							<p>• 미니 게임 또는 교육용 시뮬레이션</p>
-							<p>• 건축 비주얼라이제이션 도구</p>
+							<p className="font-multilang">• {t('3D_제품전시관')}</p>
+							<p className="font-multilang">• {t('3D_데이터시각화')}</p>
+							<p className="font-multilang">• {t('3D_미니게임')}</p>
+							<p className="font-multilang">• {t('3D_건축비주얼')}</p>
 						</div>
 					</div>
 				</div>

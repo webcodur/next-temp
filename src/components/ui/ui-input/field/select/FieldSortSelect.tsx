@@ -64,12 +64,12 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					onClick={toggleDropdown}
 					disabled={disabled}
 					className={`
-						w-full text-left
+						w-full text-start
 						${FIELD_STYLES.container}
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						pl-10 pr-10
+						ps-10 pe-10
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 						${isOpen ? 'neu-flat-focus' : ''}
 					`}>
@@ -80,7 +80,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 						{selectedOption && (
 							<span
 								onClick={handleSortToggle}
-								className="ml-2 text-xs transition-colors cursor-pointer font-multilang text-muted-foreground hover:text-foreground">
+								className="ms-2 text-xs transition-colors cursor-pointer font-multilang text-muted-foreground hover:text-foreground">
 								{sortDirection === 'asc' ? '오름차순' : '내림차순'}
 							</span>
 						)}

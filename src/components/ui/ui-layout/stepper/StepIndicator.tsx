@@ -1,5 +1,6 @@
 //#region Imports
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from '@/hooks/useI18n';
 //#endregion
 
 //#region Types
@@ -117,9 +118,11 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 	completedSteps,
 	onStepClick,
 	maxVisibleSteps = 3,
-	title = '단계별 진행',
+	title,
 	className = '',
 }) => {
+	const t = useTranslations();
+	const defaultTitle = title || t('스테퍼_제목_단계별진행');
 	const [showAllSteps, setShowAllSteps] = useState(false);
 	const [responsiveMaxSteps, setResponsiveMaxSteps] = useState(maxVisibleSteps);
 
@@ -194,12 +197,12 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 			className={`p-6 mx-auto w-full max-w-4xl rounded-lg neu-flat ${className}`}>
 			{/* Title Section */}
 			<div className="flex justify-between items-center p-4 mb-6 rounded-lg neu-inset">
-				<h2 className="text-lg font-semibold text-neutral-800">{title}</h2>
+				<h2 className="text-lg font-semibold text-neutral-800">{defaultTitle}</h2>
 				{shouldCompress && (
 					<button
 						onClick={() => setShowAllSteps(true)}
 						className="p-2 rounded-full neu-flat hover:neu-raised text-neutral-600"
-						title="전체 단계 보기">
+						title={t('스테퍼_버튼_전체단계보기')}>
 						<span className="text-lg">❓</span>
 					</button>
 				)}

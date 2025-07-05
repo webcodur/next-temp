@@ -33,7 +33,7 @@ export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
 	return (
 		<div className="flex items-center w-[170px] justify-end">
 			<div className="flex items-center text-sm">
-				<span className="mr-2">페이지당 항목:</span>
+				<span className="me-2">페이지당 항목:</span>
 				<select
 					value={pageSize}
 					onChange={handlePageSizeChange}

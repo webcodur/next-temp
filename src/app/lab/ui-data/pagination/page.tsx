@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PaginatedTable from '@/components/ui/ui-data/pagination/PaginatedTable';
 import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
+import { useTranslations } from '@/hooks/useI18n';
 
 // 목업 데이터 타입 (인덱스 시그니처 추가)
 interface User extends Record<string, unknown> {
@@ -15,6 +16,8 @@ interface User extends Record<string, unknown> {
 }
 
 const PaginationDemo = () => {
+	const t = useTranslations();
+
 	// #region 상태 관리
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
@@ -46,35 +49,35 @@ const PaginationDemo = () => {
 	const columns: SmartTableColumn<User>[] = [
 		{
 			id: 'id',
-			header: 'ID',
+			header: t('테이블_ID'),
 			accessorKey: 'id',
 			width: '80px',
 			align: 'center',
 		},
 		{
 			id: 'name',
-			header: '이름',
+			header: t('테이블_이름'),
 			accessorKey: 'name',
 			width: '120px',
 			align: 'left',
 		},
 		{
 			id: 'email',
-			header: '이메일',
+			header: t('테이블_이메일'),
 			accessorKey: 'email',
 			width: '200px',
 			align: 'left',
 		},
 		{
 			id: 'department',
-			header: '부서',
+			header: t('페이지네이션_부서'),
 			accessorKey: 'department',
 			width: '100px',
 			align: 'center',
 		},
 		{
 			id: 'status',
-			header: '상태',
+			header: t('테이블_상태'),
 			width: '100px',
 			align: 'center',
 			cell: (user: User) => (
@@ -87,16 +90,16 @@ const PaginationDemo = () => {
 								: 'bg-red-100 text-red-800'
 					}`}>
 					{user.status === 'active'
-						? '활성'
+						? t('테이블_활성')
 						: user.status === 'pending'
-							? '대기중'
-							: '비활성'}
+							? t('페이지네이션_대기중')
+							: t('테이블_비활성')}
 				</span>
 			),
 		},
 		{
 			id: 'joinDate',
-			header: '입사일',
+			header: t('페이지네이션_입사일'),
 			accessorKey: 'joinDate',
 			width: '100px',
 			align: 'center',
@@ -143,21 +146,21 @@ const PaginationDemo = () => {
 	return (
 		<div className="container px-4 py-8 mx-auto">
 			<h1 className="mb-6 text-3xl font-bold">
-				통합 테이블 + 페이지네이션 컴포넌트
+				{t('페이지네이션_제목')}
 			</h1>
 
 			<div className="mb-8">
-				<h2 className="mb-4 text-xl font-semibold">기본 예제 (통합 구조)</h2>
+				<h2 className="mb-4 text-xl font-semibold">{t('페이지네이션_기본예제')}</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
 					<div className="flex gap-4 items-center mb-4">
 						<p className="text-gray-700">
-							현재 페이지: <span className="font-medium">{currentPage}</span>
+							{t('페이지네이션_현재페이지')}: <span className="font-medium">{currentPage}</span>
 						</p>
 						<p className="text-gray-700">
-							페이지 크기: <span className="font-medium">{pageSize}</span>
+							{t('페이지네이션_페이지크기')}: <span className="font-medium">{pageSize}</span>
 						</p>
 						<p className="text-gray-700">
-							총 항목:{' '}
+							{t('페이지네이션_총항목')}:{' '}
 							<span className="font-medium">{userData?.length || 0}</span>
 						</p>
 					</div>
@@ -170,7 +173,7 @@ const PaginationDemo = () => {
 									? 'text-gray-600 bg-gray-300'
 									: 'text-white bg-blue-600 hover:bg-blue-700'
 							}`}>
-							{isDisabled ? '페이지네이션 활성화' : '페이지네이션 비활성화'}
+							{isDisabled ? t('페이지네이션_활성화') : t('페이지네이션_비활성화')}
 						</button>
 
 						<button
@@ -181,7 +184,7 @@ const PaginationDemo = () => {
 									? 'text-gray-600 bg-gray-300 cursor-not-allowed'
 									: 'text-white bg-green-600 hover:bg-green-700'
 							}`}>
-							{isFetching ? '로딩 중...' : '데이터 새로고침'}
+							{isFetching ? t('페이지네이션_로딩중') : t('페이지네이션_데이터새로고침')}
 						</button>
 					</div>
 
@@ -195,7 +198,7 @@ const PaginationDemo = () => {
 						onPageChange={handlePageChange}
 						onPageSizeChange={handlePageSizeChange}
 						pageSizeOptions={[5, 10, 20, 50]}
-						itemName="사용자"
+						itemName={t('페이지네이션_사용자')}
 						disabled={isDisabled}
 					/>
 				</div>
@@ -204,36 +207,27 @@ const PaginationDemo = () => {
 			{/* 자동 관리 모드 예시 */}
 			<div className="mb-8">
 				<h2 className="mb-4 text-xl font-semibold">
-					자동 관리 모드 (내부 상태)
+					{t('페이지네이션_자동관리')}
 				</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
-					<p className="mb-4 text-gray-600">
-						페이지네이션 상태를 외부에서 관리하지 않고 컴포넌트 내부에서 자동
-						관리하는 예시입니다.
-					</p>
-
 					<PaginatedTable
 						data={userData}
 						columns={columns}
 						pageSize={15}
-						itemName="사용자"
+						itemName={t('페이지네이션_사용자')}
 					/>
 				</div>
 			</div>
 
 			{/* 페이지네이션 숨김 예시 */}
 			<div className="mb-8">
-				<h2 className="mb-4 text-xl font-semibold">페이지네이션 숨김 모드</h2>
+				<h2 className="mb-4 text-xl font-semibold">{t('페이지네이션_숨김모드')}</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
-					<p className="mb-4 text-gray-600">
-						페이지네이션 UI를 숨기고 테이블만 표시하는 예시입니다.
-					</p>
-
 					<PaginatedTable
 						data={userData?.slice(0, 5)} // 첫 5개만 표시
 						columns={columns}
 						showPagination={false}
-						itemName="사용자"
+						itemName={t('페이지네이션_사용자')}
 					/>
 				</div>
 			</div>

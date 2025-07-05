@@ -32,7 +32,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
 				</div>
 
 				{events.map((event) => (
-					<li key={event.id} className="relative mb-8 ml-12">
+					<li key={event.id} className="relative mb-8 ms-12">
 						{/* 뉴모피즘 원형 점 - 정확한 중앙 정렬 */}
 						<div className="absolute top-2 -left-8">
 							<div

@@ -2,6 +2,7 @@
 import Tabs, { Tab } from '@/components/ui/ui-layout/tabs/Tabs';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from '@/hooks/useI18n';
 
 // 아이콘 컴포넌트 추가
 const DashboardIcon = () => (
@@ -26,22 +27,23 @@ const ProfileIcon = () => (
 	</svg>
 );
 
-const tabList: Tab[] = [
-	{ id: 'tab1', label: '대시보드', icon: <DashboardIcon /> },
-	{ id: 'tab2', label: '설정', icon: <SettingsIcon /> },
-	{ id: 'tab3', label: '프로필', icon: <ProfileIcon /> },
-];
-
 const TabsPage: React.FC = () => {
+	const t = useTranslations();
 	// 토글 상태 관리
 	const [notifications, setNotifications] = useState(true);
 	const [darkMode, setDarkMode] = useState(false);
 
+	const tabList: Tab[] = [
+		{ id: 'tab1', label: t('탭_대시보드'), icon: <DashboardIcon /> },
+		{ id: 'tab2', label: t('탭_설정'), icon: <SettingsIcon /> },
+		{ id: 'tab3', label: t('탭_프로필'), icon: <ProfileIcon /> },
+	];
+
 	return (
 		<div className="p-8 min-h-screen bg-gray-100">
 			<div className="mx-auto max-w-4xl">
-				<h1 className="mb-8 text-3xl font-bold text-center text-gray-700">
-					음양각 뉴모피즘 탭
+				<h1 className="mb-8 text-3xl font-bold text-center text-gray-700 font-multilang">
+					{t('탭_제목')}
 				</h1>
 
 				<Tabs 
@@ -53,20 +55,20 @@ const TabsPage: React.FC = () => {
 				>
 					{/* 대시보드 탭 */}
 					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700">
-							대시보드 개요
+						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+							{t('탭_대시보드개요')}
 						</h2>
 						<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700">총 방문자</h3>
+								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_총방문자')}</h3>
 								<p className="text-2xl font-bold text-gray-600">12,345</p>
 							</div>
 							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700">월간 매출</h3>
+								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_월간매출')}</h3>
 								<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
 							</div>
 							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700">신규 가입</h3>
+								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_신규가입')}</h3>
 								<p className="text-2xl font-bold text-gray-600">834</p>
 							</div>
 						</div>
@@ -74,18 +76,18 @@ const TabsPage: React.FC = () => {
 
 					{/* 설정 탭 */}
 					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700">
-							시스템 설정
+						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+							{t('탭_시스템설정')}
 						</h2>
 						<div className="space-y-5">
 							{/* 알림 토글 */}
 							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
 								<div>
-									<span className="font-medium text-gray-700">알림 활성화</span>
-									<p className="mt-1 text-sm text-gray-500">
+									<span className="font-medium text-gray-700 font-multilang">{t('탭_알림활성화')}</span>
+									<p className="mt-1 text-sm text-gray-500 font-multilang">
 										{notifications
-											? '알림이 활성화되어 있습니다'
-											: '알림이 비활성화되어 있습니다'}
+											? t('탭_알림활성화됨')
+											: t('탭_알림비활성화됨')}
 									</p>
 								</div>
 								<button
@@ -105,11 +107,11 @@ const TabsPage: React.FC = () => {
 							{/* 다크모드 토글 */}
 							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
 								<div>
-									<span className="font-medium text-gray-700">다크 모드</span>
-									<p className="mt-1 text-sm text-gray-500">
+									<span className="font-medium text-gray-700 font-multilang">{t('탭_다크모드')}</span>
+									<p className="mt-1 text-sm text-gray-500 font-multilang">
 										{darkMode
-											? '다크 모드가 활성화되어 있습니다'
-											: '라이트 모드가 활성화되어 있습니다'}
+											? t('탭_다크모드활성화됨')
+											: t('탭_라이트모드활성화됨')}
 									</p>
 								</div>
 								<button
@@ -128,24 +130,24 @@ const TabsPage: React.FC = () => {
 
 							{/* 추가 설정 항목 */}
 							<div className="p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
-								<h3 className="mb-3 font-medium text-gray-700">
-									현재 설정 상태
+								<h3 className="mb-3 font-medium text-gray-700 font-multilang">
+									{t('탭_현재설정상태')}
 								</h3>
 								<div className="space-y-2 text-sm text-gray-600">
 									<div className="flex justify-between">
-										<span>알림:</span>
+										<span className="font-multilang">{t('탭_알림')}</span>
 										<span
 											className={
 												notifications ? 'font-medium text-green-600' : 'font-medium text-red-500'
 											}>
-											{notifications ? 'ON' : 'OFF'}
+											{notifications ? t('탭_ON') : t('탭_OFF')}
 										</span>
 									</div>
 									<div className="flex justify-between">
-										<span>다크 모드:</span>
+										<span className="font-multilang">{t('탭_다크모드')}:</span>
 										<span
 											className={darkMode ? 'font-medium text-blue-600' : 'font-medium text-red-500'}>
-											{darkMode ? 'ON' : 'OFF'}
+											{darkMode ? t('탭_ON') : t('탭_OFF')}
 										</span>
 									</div>
 								</div>
@@ -155,8 +157,8 @@ const TabsPage: React.FC = () => {
 
 					{/* 프로필 탭 */}
 					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700">
-							사용자 프로필
+						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+							{t('탭_사용자프로필')}
 						</h2>
 						<div className="flex flex-col items-center space-y-6 md:flex-row md:items-start md:space-y-0 md:space-x-6">
 							<div className="flex justify-center items-center w-24 h-24 rounded-full transition-all duration-200 neu-raised hover:scale-105">
@@ -164,19 +166,19 @@ const TabsPage: React.FC = () => {
 							</div>
 							<div className="flex-1 space-y-4 w-full">
 								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500">이름</label>
-									<p className="text-lg font-medium text-gray-700">김개발자</p>
+									<label className="text-sm text-gray-500 font-multilang">{t('탭_이름')}</label>
+									<p className="text-lg font-medium text-gray-700 font-multilang">{t('탭_김개발자')}</p>
 								</div>
 								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500">이메일</label>
-									<p className="text-lg font-medium text-gray-700">
-										dev@example.com
+									<label className="text-sm text-gray-500 font-multilang">{t('탭_이메일')}</label>
+									<p className="text-lg font-medium text-gray-700 font-multilang">
+										{t('탭_이메일주소')}
 									</p>
 								</div>
 								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500">가입일</label>
-									<p className="text-lg font-medium text-gray-700">
-										2024년 1월 15일
+									<label className="text-sm text-gray-500 font-multilang">{t('탭_가입일')}</label>
+									<p className="text-lg font-medium text-gray-700 font-multilang">
+										{t('탭_가입일날짜')}
 									</p>
 								</div>
 							</div>

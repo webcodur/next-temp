@@ -4,7 +4,7 @@ import { X, Search, ChevronRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { useMenuSearch } from '@/components/layout/sidebar/hooks';
-import { menuData } from '@/data/menuData';
+import { useTranslations } from '@/hooks/useI18n';
 
 /**
  * 메뉴 검색 컴포넌트
@@ -16,6 +16,7 @@ import { menuData } from '@/data/menuData';
 
 // #region 메뉴 검색 컴포넌트
 export function MenuSearchBar() {
+	const t = useTranslations();
 	const {
 		searchQuery,
 		searchResults,
@@ -98,10 +99,7 @@ export function MenuSearchBar() {
 		midKey: string;
 		item: {
 			key: string;
-			'kor-name': string;
-			'eng-name': string;
 			href?: string;
-			description?: string;
 		};
 	}) => {
 		handleResultSelect(result);
@@ -130,21 +128,17 @@ export function MenuSearchBar() {
 									<div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
 										<div className="flex items-center gap-1 whitespace-nowrap">
 											<span className="text-sm text-foreground font-medium">
-												{menuData[result.topKey]?.['kor-name'] || result.topKey}
+												{t(`메뉴_${result.topKey}`)}
 											</span>
 											<ChevronRight className="w-3 h-3 text-muted-foreground" />
 											<span className="text-sm text-muted-foreground">
-												{menuData[result.topKey]?.midItems[result.midKey]?.[
-													'kor-name'
-												] || result.midKey}
+												{t(`메뉴_${result.midKey}`)}
 											</span>
 											{result.type === 'bot' && (
 												<>
 													<ChevronRight className="w-3 h-3 text-muted-foreground" />
 													<span className="text-sm text-foreground font-medium">
-														{(result.item as import('../types').BotMenu)[
-															'kor-name'
-														] || result.item['kor-name']}
+														{t(`메뉴_${result.item.key}`)}
 													</span>
 												</>
 											)}
@@ -181,17 +175,15 @@ export function MenuSearchBar() {
 											{index + 1}/{recentMenus.length}
 										</span>
 										<span className="text-sm text-foreground font-medium">
-											{menuData[recent.topKey]?.['kor-name'] || recent.topKey}
+											{t(`메뉴_${recent.topKey}`)}
 										</span>
 										<ChevronRight className="w-3 h-3 text-muted-foreground" />
 										<span className="text-sm text-muted-foreground">
-											{menuData[recent.topKey]?.midItems[recent.midKey]?.[
-												'kor-name'
-											] || recent.midKey}
+											{t(`메뉴_${recent.midKey}`)}
 										</span>
 										<ChevronRight className="w-3 h-3 text-muted-foreground" />
 										<span className="text-sm text-foreground font-medium">
-											{recent.item['kor-name']}
+											{t(`메뉴_${recent.item.key}`)}
 										</span>
 									</div>
 								</div>
@@ -243,7 +235,7 @@ export function MenuSearchBar() {
 									value={searchQuery}
 									onChange={(e) => handleSearchChange(e.target.value)}
 									onKeyDown={handleKeyDown}
-									className="w-full pl-10 pr-10 py-2 text-sm border border-border rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
+									className="w-full ps-10 pe-10 py-2 text-sm border border-border rounded-lg neu-flat focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand"
 								/>
 								{searchQuery && (
 									<Button

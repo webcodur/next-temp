@@ -104,8 +104,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							${FIELD_STYLES.height}
 							${FIELD_STYLES.padding}
 							${FIELD_STYLES.text}
-							pl-10
-							${value ? 'pr-10' : 'pr-3'}
+							ps-10
+							${value ? 'pe-10' : 'pe-3'}
 							${disabled ? FIELD_STYLES.disabled : ''}
 						`}
 					/>
@@ -163,8 +163,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 								${FIELD_STYLES.height}
 								${FIELD_STYLES.padding}
 								${FIELD_STYLES.text}
-								pl-10
-								${startDate ? 'pr-10' : 'pr-3'}
+								ps-10
+								${startDate ? 'pe-10' : 'pe-3'}
 								${disabled ? FIELD_STYLES.disabled : ''}
 							`}
 						/>
@@ -205,8 +205,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 								${FIELD_STYLES.height}
 								${FIELD_STYLES.padding}
 								${FIELD_STYLES.text}
-								pl-10
-								${endDate ? 'pr-10' : 'pr-3'}
+								ps-10
+								${endDate ? 'pe-10' : 'pe-3'}
 								${disabled ? FIELD_STYLES.disabled : ''}
 							`}
 						/>
@@ -259,8 +259,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							${FIELD_STYLES.height}
 							${FIELD_STYLES.padding}
 							${FIELD_STYLES.text}
-							pl-10
-							${value ? 'pr-10' : 'pr-3'}
+							ps-10
+							${value ? 'pe-10' : 'pe-3'}
 							${disabled ? FIELD_STYLES.disabled : ''}
 						`}
 					/>
@@ -310,8 +310,8 @@ export const FieldDatePicker: React.FC<FieldDatePickerComponentProps> = ({
 							${FIELD_STYLES.height}
 							${FIELD_STYLES.padding}
 							${FIELD_STYLES.text}
-							pl-10
-							${value ? 'pr-10' : 'pr-3'}
+							ps-10
+							${value ? 'pe-10' : 'pe-3'}
 							${disabled ? FIELD_STYLES.disabled : ''}
 						`}
 					/>

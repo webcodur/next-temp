@@ -75,7 +75,7 @@ const Tabs = React.forwardRef<
 							)}
 						>
 							{tab.icon && (
-								<span className="inline-block mr-2">
+								<span className="inline-block me-2">
 									{tab.icon}
 								</span>
 							)}

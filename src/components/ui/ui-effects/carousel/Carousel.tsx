@@ -169,7 +169,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 						onClick={handlePrev}
 						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
 						disabled={images.length <= 1}>
-						<ChevronLeft size={20} className="inline mr-1" />
+						<ChevronLeft size={20} className="inline me-1" />
 						이전
 					</button>
 					<button
@@ -177,7 +177,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
 						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
 						disabled={images.length <= 1}>
 						다음
-						<ChevronRight size={20} className="inline ml-1" />
+						<ChevronRight size={20} className="inline ms-1" />
 					</button>
 				</div>
 			</Modal>

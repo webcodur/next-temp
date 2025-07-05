@@ -8,7 +8,7 @@ interface SortIndicatorProps {
 export const SortIndicator: React.FC<SortIndicatorProps> = ({
 	sortDirection,
 }) => (
-	<span className="font-multilang ml-2 text-xs text-muted-foreground">
+	<span className="font-multilang ms-2 text-xs text-muted-foreground">
 		{sortDirection === 'asc' ? '오름차순' : '내림차순'}
 	</span>
 );
