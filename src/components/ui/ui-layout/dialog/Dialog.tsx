@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+import { useLocale } from '@/hooks/useI18n';
 
 export interface DialogProps {
 	isOpen: boolean;
@@ -187,6 +188,12 @@ export const DialogDescription: React.FC<{
 export const DialogFooter: React.FC<{
 	children: React.ReactNode;
 	className?: string;
-}> = ({ children, className = '' }) => (
-	<div className={`flex justify-end space-x-3 ${className}`}>{children}</div>
-);
+}> = ({ children, className = '' }) => {
+	const { isRTL } = useLocale();
+	
+	return (
+		<div className={`flex space-x-3 ${isRTL ? 'justify-start' : 'justify-end'} ${className}`}>
+			{children}
+		</div>
+	);
+};

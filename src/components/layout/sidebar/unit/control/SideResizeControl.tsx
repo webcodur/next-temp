@@ -2,36 +2,37 @@
 
 import { useSetAtom, useAtomValue } from 'jotai';
 import {
-	rPanelWidthAtom,
-	R_PANEL_MIN_WIDTH,
-	R_PANEL_MAX_WIDTH,
+	endPanelWidthAtom,
+	END_PANEL_MIN_WIDTH,
+	END_PANEL_MAX_WIDTH,
 	isResizingAtom,
-	isResizeHandleHoveredAtom,
+	isSideResizeControlHoveredAtom,
 } from '@/store/sidebar';
 import { useCallback, useEffect, useRef } from 'react';
 import { defaults } from '@/data/sidebarConfig';
 import { GripVertical } from 'lucide-react';
-export function ResizeHandle() {
-	const setRPanelWidth = useSetAtom(rPanelWidthAtom);
+
+export function SideResizeControl() {
+	const setEndPanelWidth = useSetAtom(endPanelWidthAtom);
 	const setIsResizing = useSetAtom(isResizingAtom);
-	const setIsResizeHandleHovered = useSetAtom(isResizeHandleHoveredAtom);
+	const setIsSideResizeControlHovered = useSetAtom(isSideResizeControlHoveredAtom);
 	const isResizingState = useAtomValue(isResizingAtom);
-	const isHoveredState = useAtomValue(isResizeHandleHoveredAtom);
+	const isHoveredState = useAtomValue(isSideResizeControlHoveredAtom);
 	const isResizing = useRef(false);
 
 	const handleMouseMove = useCallback(
 		(e: MouseEvent) => {
 			if (!isResizing.current) return;
 
-			// 사이드바 내부에서 우측 패널 크기 조정
-			let newWidth = e.clientX - defaults.leftColumnWidth;
+			// 사이드바 내부에서 끝 패널 크기 조정
+			let newWidth = e.clientX - defaults.startColumnWidth;
 
-			if (newWidth < R_PANEL_MIN_WIDTH) newWidth = R_PANEL_MIN_WIDTH;
-			if (newWidth > R_PANEL_MAX_WIDTH) newWidth = R_PANEL_MAX_WIDTH;
+			if (newWidth < END_PANEL_MIN_WIDTH) newWidth = END_PANEL_MIN_WIDTH;
+			if (newWidth > END_PANEL_MAX_WIDTH) newWidth = END_PANEL_MAX_WIDTH;
 
-			setRPanelWidth(newWidth);
+			setEndPanelWidth(newWidth);
 		},
-		[setRPanelWidth]
+		[setEndPanelWidth]
 	);
 
 	const handleMouseUp = useCallback(() => {
@@ -68,13 +69,28 @@ export function ResizeHandle() {
 
 	return (
 		<div
-			className="absolute top-0 end-0 h-full w-4 cursor-col-resize z-50 flex items-center justify-center"
+			className="flex absolute top-0 z-50 justify-center items-center w-4 h-full end-0 cursor-col-resize"
 			onMouseDown={handleMouseDown}
-			onMouseEnter={() => setIsResizeHandleHovered(true)}
-			onMouseLeave={() => setIsResizeHandleHovered(false)}
+			onMouseEnter={() => setIsSideResizeControlHovered(true)}
+			onMouseLeave={() => setIsSideResizeControlHovered(false)}
 		>
+			{/* 세로선 배경 */}
+			<div
+				className={`absolute -end-0.5 top-0 h-full w-0.5 transition-all duration-200 ${
+					isActive ? 'bg-brand opacity-60' : 'bg-border/20 opacity-40'
+				} blur-[0.5px] shadow-sm`}
+			/>
+			
+			{/* end 측 음영 효과 */}
+			<div
+				className={`absolute -end-1 top-0 h-full w-2 transition-all duration-200 ${
+					isActive ? 'bg-gradient-to-r from-brand/10 to-brand/20' : 'bg-gradient-to-r from-border/5 to-border/10'
+				} blur-sm pointer-events-none`}
+			/>
+			
+			{/* 드래그 핸들 아이콘 */}
 			<GripVertical
-				className={`h-6 w-auto transition-colors duration-200 ${
+				className={`h-6 w-auto transition-colors duration-200 relative z-10 ${
 					isActive ? 'text-brand' : 'text-border/70'
 				}`}
 			/>

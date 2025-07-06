@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import * as THREE from 'three';
 import { CheckCircle, RotateCcw, Zap } from 'lucide-react';
+import { useLocale } from '@/hooks/useI18n';
 import {
 	ParkingBarrier3DProps,
 	COLORS,
@@ -55,6 +56,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	operationMode = 'auto-operation',
 	onOperationModeChange,
 }) => {
+	const { isRTL } = useLocale();
 	// 3D 캔버스와 버튼 간 hover 상태 공유
 	const [isHovering, setIsHovering] = useState(false);
 	// 버튼 비활성화 상태 (1초 딜레이)
@@ -309,7 +311,9 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 
 								{/* 드롭다운 메뉴 */}
 								{isDropdownOpen && (
-									<div className="absolute top-full left-0 mt-1 py-1 neu-flat rounded-lg bg-white shadow-lg border z-10 min-w-[120px]">
+									<div className={`absolute top-full mt-1 py-1 neu-flat rounded-lg bg-white shadow-lg border z-10 min-w-[120px] ${
+										isRTL ? 'right-0' : 'left-0'
+									}`}>
 										{(
 											Object.entries(OPERATION_MODE_NAMES) as [
 												OperationMode,

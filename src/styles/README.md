@@ -21,11 +21,14 @@
 
 ```jsx
 // ✅ 올바른 사용법
-<main className="bg-surface-1"> // 가장 밝은 본문
-  <aside className="bg-surface-2"> // 중간 밝기 사이드바
-    <footer className="bg-surface-3"> // 가장 어두운 푸터
-    </footer>
-  </aside>
+<main className="bg-surface-1">
+	{' '}
+	// 가장 밝은 본문
+	<aside className="bg-surface-2">
+		{' '}
+		// 중간 밝기 사이드바
+		<footer className="bg-surface-3"> // 가장 어두운 푸터</footer>
+	</aside>
 </main>
 ```
 
@@ -69,6 +72,6 @@
 
 **📍 참고 문서:**
 
--   **변수 상세**: `docs/design-system-variables.md`
--   **다크모드 매핑**: `docs/dark-mode-color-mapping.md`
--   **접근성 가이드**: `docs/accessibility-contrast-guide.md` 
+- **변수 상세**: `docs/design-system-variables.md`
+- **다크모드 매핑**: `docs/dark-mode-color-mapping.md`
+- **접근성 가이드**: `docs/accessibility-contrast-guide.md`

@@ -1,154 +1,120 @@
 'use client';
 
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Key, Eye, EyeOff, X } from 'lucide-react';
-import { FieldPasswordComponentProps } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
+import { useLocale } from '@/hooks/useI18n';
 
-export const FieldPassword: React.FC<FieldPasswordComponentProps> = ({
+interface FieldPasswordProps {
+	id: string;
+	label?: string;
+	placeholder?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	className?: string;
+	disabled?: boolean;
+	showClearButton?: boolean;
+	showToggle?: boolean;
+	onFocus?: () => void;
+	onBlur?: () => void;
+	error?: boolean;
+	errorMessage?: string;
+}
+
+const FieldPassword: React.FC<FieldPasswordProps> = ({
+	id,
 	label,
-	placeholder = '비밀번호를 입력하세요',
-	value,
+	placeholder = '',
+	value = '',
 	onChange,
-	onEnterPress,
-	onClear,
 	className = '',
-	showClearButton = true,
 	disabled = false,
-	showStrengthIndicator = false,
-	minLength = 8,
+	showClearButton = true,
+	showToggle = true,
+	onFocus,
+	onBlur,
+	error = false,
+	errorMessage = '',
 }) => {
+	const [isFocused, setIsFocused] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
-
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		onChange(e.target.value);
-	};
-
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && onEnterPress) {
-			onEnterPress();
-		}
-	};
-
-	const handleClear = () => {
-		onChange('');
-		onClear?.();
-	};
-
-	const togglePasswordVisibility = () => {
-		setShowPassword(!showPassword);
-	};
-
-	const getPasswordStrength = (
-		password: string
-	): { level: number; text: string; color: string } => {
-		if (!password) return { level: 0, text: '', color: '' };
-
-		let score = 0;
-		if (password.length >= minLength) score++;
-		if (/[a-z]/.test(password)) score++;
-		if (/[A-Z]/.test(password)) score++;
-		if (/[0-9]/.test(password)) score++;
-		if (/[^A-Za-z0-9]/.test(password)) score++;
-
-		const levels = [
-			{ level: 0, text: '', color: '' },
-			{ level: 1, text: '매우 약함', color: 'text-destructive' },
-			{ level: 2, text: '약함', color: 'text-warning' },
-			{ level: 3, text: '보통', color: 'text-accent-foreground' },
-			{ level: 4, text: '강함', color: 'text-brand' },
-			{ level: 5, text: '매우 강함', color: 'text-success' },
-		];
-
-		return levels[score];
-	};
-
-	const passwordStrength = getPasswordStrength(value);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const { isRTL } = useLocale();
 
 	return (
-		<div className={`space-y-1 ${className}`}>
+		<div className={`relative ${className}`}>
 			{label && (
-				<div className="flex items-center justify-between">
-					<label className={FIELD_STYLES.label}>{label}</label>
-					{showStrengthIndicator && value && passwordStrength.text && (
-						<span className={`font-multilang text-xs font-medium ${passwordStrength.color}`}>
-							{passwordStrength.text}
+				<div className="flex justify-between items-center mb-1">
+					<label htmlFor={id} className={FIELD_STYLES.label}>
+						{label}
+					</label>
+					{error && errorMessage && (
+						<span className="text-xs font-multilang text-destructive">
+							{errorMessage}
 						</span>
 					)}
 				</div>
 			)}
-
 			<div className="relative">
-				<Key className={`${FIELD_STYLES.leftIcon} neu-icon-inactive`} />
-
+				<Key className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
 				<input
+					ref={inputRef}
+					id={id}
 					type={showPassword ? 'text' : 'password'}
 					placeholder={placeholder}
 					value={value}
-					onChange={handleChange}
-					onKeyDown={handleKeyDown}
+					onChange={(e) => onChange?.(e.target.value)}
+					onFocus={() => {
+						setIsFocused(true);
+						onFocus?.();
+					}}
+					onBlur={() => {
+						setIsFocused(false);
+						onBlur?.();
+					}}
 					disabled={disabled}
-					spellCheck={false}
-					autoComplete="new-password"
+					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`
-						w-full
-						${FIELD_STYLES.container}
-						${FIELD_STYLES.height}
-						${FIELD_STYLES.padding}
+						${FIELD_STYLES.container} 
+						${FIELD_STYLES.height} 
+						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
-						ps-10
-						${showClearButton && value ? 'pe-20' : 'pe-12'}
+						${isRTL ? 'pe-20 ps-12' : 'pl-12 pr-20'}
+						${isFocused ? 'ring-2 ring-brand' : ''}
+						${error ? 'ring-2 ring-destructive' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
+						w-full bg-transparent
 					`}
 				/>
-
-				<div className="flex absolute right-3 top-1/2 gap-2 items-center transform -translate-y-1/2">
-					{showClearButton && value && (
+				
+				{/* 토글 & 클리어 버튼 */}
+				<div className={`flex absolute ${isRTL ? 'start-3' : 'end-3'} top-1/2 gap-2 items-center transform -translate-y-1/2`}>
+					{showToggle && (
 						<button
-							onClick={handleClear}
+							type="button"
+							onClick={() => setShowPassword(!showPassword)}
 							className={FIELD_STYLES.clearButton}
-							type="button">
-							<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
+						>
+							{showPassword ? (
+								<Eye className="w-4 h-4" />
+							) : (
+								<EyeOff className="w-4 h-4" />
+							)}
 						</button>
 					)}
-
-					<button
-						type="button"
-						onClick={togglePasswordVisibility}
-						disabled={disabled}
-						className="p-0.5 text-muted-foreground hover:text-foreground transition-colors neu-icon-inactive hover:neu-icon-active">
-						{showPassword ? (
-							<EyeOff className="neu-icon-inactive hover:neu-icon-active w-4 h-4" />
-						) : (
-							<Eye className="neu-icon-inactive hover:neu-icon-active w-4 h-4" />
-						)}
-					</button>
+					{showClearButton && value && (
+						<button
+							type="button"
+							onClick={() => onChange?.('')}
+							className={FIELD_STYLES.clearButton}
+						>
+							<X className="w-3 h-3" />
+						</button>
+					)}
 				</div>
 			</div>
-
-			{showStrengthIndicator && value && (
-				<div className="mt-2">
-					<div className="flex gap-2 items-center">
-						<div className="overflow-hidden flex-1 h-1 bg-muted rounded-full">
-							<div
-								className={`h-full transition-all ${
-									passwordStrength.level === 1
-										? 'w-1/5 bg-destructive'
-										: passwordStrength.level === 2
-											? 'w-2/5 bg-warning'
-											: passwordStrength.level === 3
-												? 'w-3/5 bg-accent'
-												: passwordStrength.level === 4
-													? 'w-4/5 bg-brand'
-													: passwordStrength.level === 5
-														? 'w-full bg-success'
-														: 'w-0'
-								}`}
-							/>
-						</div>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };
+
+export default FieldPassword;

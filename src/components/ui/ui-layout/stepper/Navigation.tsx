@@ -1,5 +1,7 @@
 //#region Imports
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLocale } from '@/hooks/useI18n';
 //#endregion
 
 //#region Types
@@ -26,6 +28,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   onAdvance,
   className = ''
 }) => {
+  const { isRTL } = useLocale();
+  
   const isStepCompleted = (stepNumber: number) => {
     return completedSteps.includes(stepNumber);
   };
@@ -49,13 +53,23 @@ export const Navigation: React.FC<NavigationProps> = ({
         <button
           onClick={onPrevious}
           disabled={!canGoPrevious}
-          className={`px-6 py-2 rounded-lg neu-raised hover:neu-inset ${
+          className={`flex items-center gap-2 px-6 py-2 rounded-lg neu-raised hover:neu-inset ${
             !canGoPrevious 
               ? 'opacity-50 cursor-not-allowed' 
               : 'text-neutral-700'
           }`}
         >
-          ← 이전
+          {isRTL ? (
+            <>
+              <span>이전</span>
+              <ChevronRight className="w-4 h-4" />
+            </>
+          ) : (
+            <>
+              <ChevronLeft className="w-4 h-4" />
+              <span>이전</span>
+            </>
+          )}
         </button>
 
         <div className="text-sm text-neutral-600">
@@ -65,13 +79,23 @@ export const Navigation: React.FC<NavigationProps> = ({
         <button
           onClick={handleNextClick}
           disabled={!canGoNext}
-          className={`px-6 py-2 rounded-lg neu-raised hover:neu-inset ${
+          className={`flex items-center gap-2 px-6 py-2 rounded-lg neu-raised hover:neu-inset ${
             !canGoNext 
               ? 'opacity-50 cursor-not-allowed' 
               : 'text-neutral-700'
           }`}
         >
-          {isLastStep ? '완료' : '다음'} →
+          {isRTL ? (
+            <>
+              <ChevronLeft className="w-4 h-4" />
+              <span>{isLastStep ? '완료' : '다음'}</span>
+            </>
+          ) : (
+            <>
+              <span>{isLastStep ? '완료' : '다음'}</span>
+              <ChevronRight className="w-4 h-4" />
+            </>
+          )}
         </button>
       </div>
     </div>

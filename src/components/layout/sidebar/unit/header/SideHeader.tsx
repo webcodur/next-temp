@@ -11,14 +11,15 @@ import {
 	headerCollapsedAtom,
 	sidebarCollapsedAtom,
 } from '@/store/sidebar';
-import SearchModal from './SearchModal';
+import { userAtom } from '@/store/auth';
+import SearchModal from './searchModal/SearchModal';
 import {
 	getHeadToggleContainerStyles,
 	headToggleLeftDivider,
 	getHeadToggleButtonStyles,
 	toggleButtonIcon,
-} from './sidebarStyles';
-import { useTranslations } from '@/hooks/useI18n';
+} from '../../sidebarStyles';
+import { useTranslations, useLocale } from '@/hooks/useI18n';
 
 /**
  * 사이드바 헤더 컴포넌트
@@ -36,12 +37,17 @@ export function SideHeader() {
 	const [isHeaderCollapsed, setIsHeaderCollapsed] =
 		useAtom(headerCollapsedAtom);
 	const [isMainCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [user] = useAtom(userAtom);
+
+	// 사용자 역할 확인
+	const isAdmin = user?.role === 'admin';
 
 	// 검색 모달 상태
 	const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
 	// 다국어 지원
 	const t = useTranslations();
+	const { isRTL } = useLocale();
 
 	/**
 	 * 로고 클릭 시 메뉴 상태 초기화
@@ -85,10 +91,10 @@ export function SideHeader() {
 
 			{/* 헤더 콘텐츠 - 로고 및 검색 영역 */}
 			<div
-				className={`neu-flat border-t border-border/30 border-b border-border/60 transition-all duration-300 ${
+				className={`neu-flat border-t border-border/30 border-b transition-all duration-300 ${
 					isHeaderCollapsed
-						? 'max-h-0 p-0 overflow-hidden opacity-0 border-b-0 border-t-0'
-						: 'max-h-[220px] p-4 pt-3 opacity-100'
+						? 'overflow-hidden p-0 max-h-0 border-t-0 border-b-0 opacity-0'
+						: 'p-4 pt-3 opacity-100 max-h-[220px]'
 				}`}>
 				{/* 로고 영역 */}
 				<div
@@ -98,7 +104,7 @@ export function SideHeader() {
 						<Link
 							href="/"
 							onClick={handleLogoClick}
-							className="flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300">
+							className={`flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300 ${isRTL ? 'flex-row-reverse' : ''}`}>
 							{/* 로고 아이콘 */}
 							<div className="flex justify-center items-center shrink-0">
 								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-brand group-hover:scale-105" />
@@ -113,13 +119,13 @@ export function SideHeader() {
 
 				{/* 검색 영역 */}
 				<div className={`px-1 ${isHeaderCollapsed ? 'h-0' : ''}`}>
-					{/* 통합 검색 버튼 */}
+					{/* 검색 버튼 - 사용자 역할에 따라 텍스트 변경 */}
 					<button
 						onClick={handleSearchOpen}
-						className="flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group">
-						<Search className="w-4 h-4 text-muted-foreground group-hover:text-brand" />
-						<span className="text-sm text-muted-foreground group-hover:text-foreground">
-							{t('사이드바_헤더_통합검색')}
+						className={`flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group ${isRTL ? 'flex-row-reverse' : ''}`}>
+						<Search className={`w-4 h-4 text-muted-foreground group-hover:text-brand transition-colors duration-200 ${isRTL ? 'scale-x-[-1]' : ''}`} />
+						<span className="text-sm text-muted-foreground group-hover:text-foreground font-multilang">
+							{isAdmin ? t('사이드바_헤더_통합검색') : t('사이드바_헤더_메뉴검색')}
 						</span>
 					</button>
 				</div>

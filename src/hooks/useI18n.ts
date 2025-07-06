@@ -44,6 +44,7 @@ export const useLocale = () => {
 		currentLocale,
 		changeLocale,
 		localeMetadata: localeMetadata[currentLocale],
+		allLocaleMetadata: localeMetadata, // 전체 메타데이터 추가
 		availableLocales: locales,
 		supportedLocales: locales,
 		isRTL: localeMetadata[currentLocale].dir === 'rtl',

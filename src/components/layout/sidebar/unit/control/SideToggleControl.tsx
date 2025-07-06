@@ -3,7 +3,7 @@
 import { useAtom } from 'jotai';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
-import { getMainToggleStyles, toggleButtonIcon } from './sidebarStyles';
+import { getMainToggleStyles, toggleButtonIcon } from '../../sidebarStyles';
 import { useLocale } from '@/hooks/useI18n';
 /**
  * 사이드바 메인 토글 버튼 컴포넌트
@@ -11,7 +11,7 @@ import { useLocale } from '@/hooks/useI18n';
  * - 사이드바 접힘 시에도 계속 표시되어야 함
  * - 단순한 토글 방식으로 즉시 반응
  */
-export function SideToggleMain() {
+export function SideToggleControl() {
 	const [isMainCollapsed, setIsMainCollapsed] = useAtom(sidebarCollapsedAtom);
 	const { isRTL } = useLocale();
 
@@ -46,4 +46,4 @@ export function SideToggleMain() {
 			{getToggleIcon()}
 		</div>
 	);
-}
+} 

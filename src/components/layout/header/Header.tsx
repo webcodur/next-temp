@@ -3,7 +3,7 @@
 import { useAtom } from 'jotai';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
-import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher';
+import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
 import { BrandColorPicker } from '@/components/layout/header/BrandColorPicker';

@@ -1,3 +1,32 @@
+/* #region 전역 스타일 */
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 전역 스타일 초기화
+
+🎯 주요 역할
+┌─ Import 관리     │ design-system.css + Tailwind CSS 통합
+├─ 호환성 보정     │ Tailwind v4 border-color 기본값 조정
+├─ 테마 적용       │ 전체 문서에 테마 변수 적용
+└─ 브랜드 스크롤바 │ 스크롤바 스타일을 브랜드 컬러로 통일
+
+💡 Tailwind v4 변경점
+- 기본 border-color: currentColor (v3: #e5e7eb)
+- @layer base로 전체 요소 border-color 보정
+- 디자인 시스템 변수와 연동해서 테마 대응
+
+🔧 구성 요소
+├─ @import 순서      │ design-system.css → tailwindcss 순서 준수
+├─ @layer base       │ 모든 요소 border-color 초기화
+└─ ::-webkit-scrollbar │ 브랜드 색상 스크롤바 (8px 폭, 4px 모서리)
+
+⚡ 성능 최적화
+- PostCSS 단계에서 '@/' 별칭 해석 불가로 상대경로 유지
+- will-change 속성으로 GPU 가속 최적화
+- CSS 변수 기반 테마 전환으로 런타임 성능 향상
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
 @import './design-system.css';
 @import 'tailwindcss';
 

@@ -1,16 +1,14 @@
 import {
-	ChevronsDown,
-	ChevronsUp,
 	Focus,
 	Layers,
-	Minus,
-	Plus,
+	ChevronsUpDown,
+	ChevronRight,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
 import { useState, useEffect, useRef } from 'react';
-import { recentMenusAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
+import { recentMenusAtom, endPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import type { TopItem } from '@/components/layout/sidebar/types';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import {
@@ -24,13 +22,13 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@/components/ui/ui-layout/collapsible/Collapsible';
-import { BotMenu } from '../types';
+import { BotMenu } from '../../types';
 import { useTranslations } from '@/hooks/useI18n';
 
 /**
- * 사이드바 우측 패널 Props 타입
+ * 사이드바 끝 패널 Props 타입
  */
-interface SideRPanelProps {
+interface SideEndPanelProps {
 	topKey: string; // 현재 선택된 Top 메뉴 키
 	topData: TopItem; // 현재 선택된 Top 메뉴 데이터
 	midMenu?: string; // 현재 선택된 Mid 메뉴 키 (선택 사항)
@@ -43,15 +41,15 @@ interface SideRPanelProps {
 }
 
 /**
- * 사이드바 우측 패널 컴포넌트
+ * 사이드바 끝 패널 컴포넌트
  * - Mid/Bot 메뉴들을 계층적으로 표시
  * - 접힌/펼친 상태 관리 및 애니메이션 처리
  * - 단일/다중 열기 모드 지원
  * - 구현되지 않은 페이지 표시 기능
  */
 
-// #region side_Rpanel: 사이드바 우측 패널 컴포넌트
-export function SideRPanel({
+// #region side_end_panel: 사이드바 끝 패널 컴포넌트
+export function SideEndPanel({
 	topKey,
 	topData,
 	midExpanded,
@@ -60,10 +58,10 @@ export function SideRPanel({
 	onSingleOpenToggle,
 	onExpandAll,
 	onCollapseAll,
-}: SideRPanelProps) {
+}: SideEndPanelProps) {
 	const pathname = usePathname();
 	const [recentMenus, setRecentMenus] = useAtom(recentMenusAtom);
-	const [rPanelWidth] = useAtom(rPanelWidthAtom);
+	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [isResizing] = useAtom(isResizingAtom);
 	const t = useTranslations();
 	
@@ -87,11 +85,23 @@ export function SideRPanel({
 	// 툴팁 상태 관리
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
+	const [expandCollapseTooltipOpen, setExpandCollapseTooltipOpen] = useState(false);
 	const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
+
+	// areAllExpanded 상태가 변경될 때 툴팁을 강제로 닫고 다시 열기
+	useEffect(() => {
+		if (expandCollapseTooltipOpen) {
+			setExpandCollapseTooltipOpen(false);
+			// 짧은 지연 후 다시 열기
+			setTimeout(() => {
+				setExpandCollapseTooltipOpen(true);
+			}, 100);
+		}
+	}, [areAllExpanded, expandCollapseTooltipOpen]);
 
 	// 툴팁 표시 제어
 	const handleTooltipMouseEnter = () => {
@@ -189,7 +199,7 @@ export function SideRPanel({
 		<TooltipProvider delayDuration={0}>
 			<div
 				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 border-s border-border/30 pe-4 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}`}
-				style={{ width: `${rPanelWidth}px` }}>
+				style={{ width: `${endPanelWidth}px` }}>
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
@@ -236,55 +246,41 @@ export function SideRPanel({
 					<h2
 						className="flex-1 text-base font-bold text-center cursor-pointer text-foreground"
 						onClick={handleTitleClick}>
-						{t(`메뉴_${topKey}`)} <span className="text-sm">{t('공통_메뉴')}</span>
+						{t(`메뉴_${topKey}`)} 
+            {/* <span className="text-sm">{t('공통_메뉴')}</span> */}
 					</h2>
 
-					{/* 우측: 전체 열기/닫기 버튼들 - 수직 배치 */}
-					<div className="flex flex-col gap-1">
-						{/* 전체 접기 버튼 */}
-						<Tooltip>
+					{/* 우측: 전체 열기/닫기 버튼 - 상태에 따라 토글 */}
+					<div className="flex items-center">
+						<Tooltip open={expandCollapseTooltipOpen}>
 							<TooltipTrigger asChild>
 								<Button
 									type="button"
 									variant="ghost"
 									size="icon"
+									onMouseEnter={() => setExpandCollapseTooltipOpen(true)}
+									onMouseLeave={() => setExpandCollapseTooltipOpen(false)}
 									onClick={(e) => {
 										e.preventDefault();
 										e.stopPropagation();
-										void onCollapseAll?.();
+										if (areAllExpanded) {
+											void onCollapseAll?.();
+										} else {
+											void onExpandAll?.();
+										}
 									}}
-									className="w-6 h-5 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
-									<ChevronsUp className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
+									className="w-6 h-6 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
+									<ChevronsUpDown className="w-4 h-4 cursor-pointer neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="right">
 								<div className="text-center">
-									<div className="font-medium">{t('사이드바_전체접기')}</div>
-									<div className="text-xs opacity-80">{t('사이드바_모든하위닫기')}</div>
-								</div>
-							</TooltipContent>
-						</Tooltip>
-
-						{/* 전체 펼치기 버튼 */}
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									type="button"
-									variant="ghost"
-									size="icon"
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-										void onExpandAll?.();
-									}}
-									className="w-6 h-5 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
-									<ChevronsDown className="w-3.5 h-3.5 neu-icon-inactive cursor-pointer" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right">
-								<div className="text-center">
-									<div className="font-medium">{t('사이드바_전체펼치기')}</div>
-									<div className="text-xs opacity-80">{t('사이드바_모든하위열기')}</div>
+									<div className="font-medium">
+										{areAllExpanded ? t('사이드바_전체접기') : t('사이드바_전체펼치기')}
+									</div>
+									<div className="text-xs opacity-80">
+										{areAllExpanded ? t('사이드바_모든하위닫기') : t('사이드바_모든하위열기')}
+									</div>
 								</div>
 							</TooltipContent>
 						</Tooltip>
@@ -312,24 +308,22 @@ export function SideRPanel({
 												: 'neu-flat'
 										}`}>
 										<span
-											className={`flex-1 text-sm font-medium text-start truncate`}>
+											className={`flex-1 text-sm font-medium truncate text-start`}>
 											{t(`메뉴_${midKey}`)}
 										</span>
 										{/* 펼침/접힘 표시 아이콘 */}
-										{midExpanded.has(midKey) ? (
-											<Minus className="w-4 h-4 cursor-pointer shrink-0" />
-										) : (
-											<Plus className="w-4 h-4 cursor-pointer shrink-0" />
-										)}
+										<ChevronRight className={`w-4 h-4 cursor-pointer shrink-0 transition-transform duration-200 ${
+											midExpanded.has(midKey) ? 'rotate-90' : 'rotate-0'
+										}`} />
 									</Button>
 								</CollapsibleTrigger>
 
 								{/* Bot 메뉴 목록 (접힌/펼친 콘텐츠) */}
 								<CollapsibleContent className="mt-2 overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-									<div className="overflow-hidden relative me-1 ms-1 min-w-0">
+									<div className="overflow-hidden relative min-w-0 me-1 ms-1">
 										{/* 메인 수직선 - z-index를 낮게 설정하여 배경에 배치 */}
 										<div
-											className="absolute left-2 w-0.5 border-l-2 border-solid border-muted-foreground/25 z-0"
+											className="absolute start-2 w-0.5 border-s-2 border-solid border-muted-foreground/25 z-0"
 											style={{
 												top: '0px',
 												height: `${(midItem.botItems.length - 1) * 44 + 18}px`,
@@ -355,17 +349,18 @@ export function SideRPanel({
 														}}>
 														{/* 수평 연결선 - 길이를 줄여서 메뉴 아이템과 겹치지 않도록 */}
 														<div
-															className="absolute h-0.5 border-t-2 border-solid border-muted-foreground/25 z-0"
+															className="absolute h-0.5 border-t-2 border-solid border-muted-foreground/25 z-0 start-2"
 															style={{
-																left: '8px',
 																top: '18px',
 																width: '10px',
 															}}></div>
 
 														{/* 수평선 종료점 (봇메뉴 앞) - 위치 조정하여 잘리지 않도록 */}
 														<div
-															className="absolute z-0 w-1 h-1 rounded-full bg-muted-foreground/30"
-															style={{ left: '19px', top: '17.5px' }}></div>
+															className="absolute z-0 w-1 h-1 rounded-full bg-muted-foreground/30 start-[19px]"
+															style={{ 
+																top: '17.5px'
+															}}></div>
 
 														{/* 메뉴 아이템 - z-index를 높게 설정하고 불투명 배경 적용 */}
 														<Link
@@ -400,4 +395,4 @@ export function SideRPanel({
 		</TooltipProvider>
 	);
 }
-// #endregion
+// #endregion 

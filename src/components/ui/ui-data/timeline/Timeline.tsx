@@ -1,81 +1,126 @@
 import React from 'react';
+import { useLocale } from '@/hooks/useI18n';
 
-export interface TimelineEvent {
+interface TimelineItem {
 	id: string;
 	title: string;
+	content: string;
 	timestamp: string;
-	description?: string;
+	status?: 'completed' | 'current' | 'upcoming';
+	icon?: React.ReactNode;
 }
 
-export interface TimelineProps {
-	events: TimelineEvent[];
+interface TimelineProps {
+	items: TimelineItem[];
+	orientation?: 'vertical' | 'horizontal';
+	className?: string;
 }
 
-const Timeline: React.FC<TimelineProps> = ({ events }) => {
-	return (
-		<div className="p-6 rounded-lg neu-flat">
-			<ul className="relative">
-				{/* 뉴모피즘 타임라인 라인 - 강화된 음각 홈 */}
-				<div className="absolute top-0 bottom-0 flex justify-center w-2 left-5">
-					<div
-						className="w-0.5 h-full rounded-full"
-						style={{
-							background:
-								'linear-gradient(135deg, hsl(var(--muted) / 0.4), hsl(var(--card) / 0.8))',
-							boxShadow: `
-								inset 2px 0 4px rgba(var(--nm-dark-rgba)),
-								inset -2px 0 4px rgba(var(--nm-light-rgba)),
-								inset 0 2px 2px rgba(var(--nm-dark-rgba))
-							`,
-						}}
-					/>
+const Timeline: React.FC<TimelineProps> = ({
+	items,
+	orientation = 'vertical',
+	className = '',
+}) => {
+	const { isRTL } = useLocale();
+
+	const getStatusColor = (status?: string) => {
+		switch (status) {
+			case 'completed':
+				return 'bg-green-500';
+			case 'current':
+				return 'bg-blue-500';
+			case 'upcoming':
+				return 'bg-gray-300';
+			default:
+				return 'bg-brand';
+		}
+	};
+
+	if (orientation === 'vertical') {
+		return (
+			<div className={`relative ${className}`}>
+				{/* 세로 타임라인 선 */}
+				<div className={`absolute top-0 bottom-0 flex justify-center w-2 ${isRTL ? 'end-5' : 'start-5'}`}>
+					<div className="w-0.5 bg-border"></div>
 				</div>
 
-				{events.map((event) => (
-					<li key={event.id} className="relative mb-8 ms-12">
-						{/* 뉴모피즘 원형 점 - 정확한 중앙 정렬 */}
-						<div className="absolute top-2 -left-8">
-							<div
-								className="w-4 h-4 transition-all duration-200 rounded-full cursor-pointer"
-								style={{
-									background:
-										'linear-gradient(135deg, hsl(var(--card) / 0.95), hsl(var(--muted) / 0.8))',
-									border: '1px solid hsl(var(--border) / 0.6)',
-									boxShadow: `
-										2px 2px 4px rgba(var(--nm-dark-rgba)),
-										-1px -1px 3px rgba(var(--nm-light-rgba)),
-										inset 1px 1px 2px rgba(var(--nm-light-rgba)),
-										inset -1px -1px 2px rgba(var(--nm-dark-rgba))
-									`,
-								}}>
-								{/* 중앙 액센트 점 */}
-								<div
-									className="absolute top-1/2 left-1/2 w-1.5 h-1.5 rounded-full transform -translate-x-1/2 -translate-y-1/2"
-									style={{
-										background: 'hsl(var(--brand) / 0.8)',
-										boxShadow: 'inset 0 0 2px rgba(var(--nm-dark-rgba))',
-									}}
-								/>
+				{/* 타임라인 항목들 */}
+				<div className="space-y-8">
+									{items.map((item) => (
+					<div key={item.id} className="relative">
+							{/* 아이콘 */}
+							<div className={`absolute top-2 ${isRTL ? 'end-8' : 'start-8'}`}>
+								<div className={`w-4 h-4 rounded-full ${getStatusColor(item.status)} flex items-center justify-center`}>
+									{item.icon && (
+										<span className="text-white text-xs">
+											{item.icon}
+										</span>
+									)}
+								</div>
+							</div>
+
+							{/* 시간 표시 점 */}
+							<div className={`absolute top-1/2 ${isRTL ? 'end-1/2' : 'start-1/2'} w-1.5 h-1.5 rounded-full transform -translate-x-1/2 -translate-y-1/2 ${getStatusColor(item.status)}`}></div>
+
+							{/* 콘텐츠 */}
+							<div className={`${isRTL ? 'pe-16' : 'ps-16'} pb-8`}>
+								<div className="neu-flat rounded-lg p-4 bg-background">
+									<div className="flex items-start justify-between mb-2">
+										<h3 className="text-lg font-semibold text-foreground font-multilang">
+											{item.title}
+										</h3>
+										<span className="text-sm text-muted-foreground font-multilang">
+											{item.timestamp}
+										</span>
+									</div>
+									<p className="text-foreground font-multilang">
+										{item.content}
+									</p>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		);
+	}
+
+	// 가로 타임라인
+	return (
+		<div className={`relative ${className}`}>
+			{/* 가로 타임라인 선 */}
+			<div className="absolute top-8 start-0 end-0 h-0.5 bg-border"></div>
+
+			{/* 타임라인 항목들 */}
+			<div className="flex justify-between items-start">
+							{items.map((item) => (
+				<div key={item.id} className="relative flex-1 text-center">
+						{/* 아이콘 */}
+						<div className="relative mb-4">
+							<div className={`w-8 h-8 rounded-full ${getStatusColor(item.status)} flex items-center justify-center mx-auto`}>
+								{item.icon && (
+									<span className="text-white text-sm">
+										{item.icon}
+									</span>
+								)}
 							</div>
 						</div>
 
-						{/* 이벤트 컨테이너 */}
-						<div className="p-4 transition-all duration-200 rounded-lg neu-flat hover:shadow-md">
-							<time className="block mb-2 text-sm font-medium text-muted-foreground">
-								{event.timestamp}
-							</time>
-							<h3 className="mb-1 text-lg font-semibold text-foreground">
-								{event.title}
+						{/* 콘텐츠 */}
+						<div className="neu-flat rounded-lg p-4 bg-background">
+							<h3 className="text-md font-semibold text-foreground font-multilang mb-2">
+								{item.title}
 							</h3>
-							{event.description && (
-								<p className="text-sm leading-relaxed text-muted-foreground">
-									{event.description}
-								</p>
-							)}
+							<p className="text-sm text-foreground font-multilang mb-2">
+								{item.content}
+							</p>
+							<span className="text-xs text-muted-foreground font-multilang">
+								{item.timestamp}
+							</span>
 						</div>
-					</li>
+					</div>
 				))}
-			</ul>
+			</div>
 		</div>
 	);
 };

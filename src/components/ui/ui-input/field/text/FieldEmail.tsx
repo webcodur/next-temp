@@ -1,136 +1,124 @@
 'use client';
 
-import React, { ChangeEvent, KeyboardEvent } from 'react';
-import { Mail, X, Check, AlertCircle } from 'lucide-react';
-import { FieldEmailComponentProps } from '../core/types';
+import React, { useState, useRef } from 'react';
+import { Mail, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
+import { useLocale } from '@/hooks/useI18n';
 
-export const FieldEmail: React.FC<FieldEmailComponentProps> = ({
+interface FieldEmailProps {
+	id: string;
+	label?: string;
+	placeholder?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	className?: string;
+	disabled?: boolean;
+	showClearButton?: boolean;
+	showValidation?: boolean;
+	onFocus?: () => void;
+	onBlur?: () => void;
+	error?: boolean;
+	errorMessage?: string;
+}
+
+const FieldEmail: React.FC<FieldEmailProps> = ({
+	id,
 	label,
-	placeholder = '이메일을 입력하세요',
-	value,
+	placeholder = '',
+	value = '',
 	onChange,
-	onEnterPress,
-	onClear,
 	className = '',
-	showClearButton = true,
 	disabled = false,
-	showValidation = false,
-	allowedDomains = [],
+	showClearButton = true,
+	showValidation = true,
+	onFocus,
+	onBlur,
+	error = false,
+	errorMessage = '',
 }) => {
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		onChange(e.target.value);
-	};
+	const [isFocused, setIsFocused] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const { isRTL } = useLocale();
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && onEnterPress) {
-			onEnterPress();
-		}
-	};
-
-	const handleClear = () => {
-		onChange('');
-		onClear?.();
-	};
-
-	const validateEmail = (email: string) => {
-		if (!email) return { isValid: true, message: '' };
-
+	// 간단한 이메일 유효성 검사
+	const isValidEmail = (email: string) => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		const isFormatValid = emailRegex.test(email);
-
-		if (!isFormatValid) {
-			return { isValid: false, message: '올바른 이메일 형식이 아닙니다' };
-		}
-
-		if (allowedDomains.length > 0) {
-			const domain = email.split('@')[1];
-			if (!allowedDomains.includes(domain)) {
-				return {
-					isValid: false,
-					message: `허용된 도메인: ${allowedDomains.join(', ')}`,
-				};
-			}
-		}
-
-		return { isValid: true, message: '유효한 이메일입니다' };
+		return emailRegex.test(email);
 	};
 
-	const validation = validateEmail(value);
+	const isValid = value ? isValidEmail(value) : true;
 
 	return (
-		<div className={`space-y-1 ${className}`}>
+		<div className={`relative ${className}`}>
 			{label && (
-				<div className="flex items-center justify-between">
-					<label className={FIELD_STYLES.label}>{label}</label>
-					{showValidation && value && validation.message && (
-						<div className="flex gap-2 items-center">
-							{validation.isValid ? (
-								<Check className="neu-icon-active w-4 h-4 text-success" />
-							) : (
-								<AlertCircle className="neu-icon-active w-4 h-4 text-destructive" />
-							)}
-							<span
-								className={`font-multilang text-xs font-medium ${
-									validation.isValid ? 'text-success' : 'text-destructive'
-								}`}>
-								{validation.message}
-							</span>
-						</div>
+				<div className="flex justify-between items-center mb-1">
+					<label htmlFor={id} className={FIELD_STYLES.label}>
+						{label}
+					</label>
+					{error && errorMessage && (
+						<span className="text-xs font-multilang text-destructive">
+							{errorMessage}
+						</span>
 					)}
 				</div>
 			)}
-
 			<div className="relative">
-				<Mail className={`${FIELD_STYLES.leftIcon} neu-icon-inactive`} />
-
+				<Mail className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
 				<input
+					ref={inputRef}
+					id={id}
 					type="email"
 					placeholder={placeholder}
 					value={value}
-					onChange={handleChange}
-					onKeyDown={handleKeyDown}
+					onChange={(e) => onChange?.(e.target.value)}
+					onFocus={() => {
+						setIsFocused(true);
+						onFocus?.();
+					}}
+					onBlur={() => {
+						setIsFocused(false);
+						onBlur?.();
+					}}
 					disabled={disabled}
-					spellCheck={false}
-					autoComplete="email"
+					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`
-						w-full
-						${FIELD_STYLES.container}
-						${FIELD_STYLES.height}
-						${FIELD_STYLES.padding}
+						${FIELD_STYLES.container} 
+						${FIELD_STYLES.height} 
+						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
-						ps-10
-						${showClearButton && value ? 'pe-10' : ''}
+						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
+						${isFocused ? 'ring-2 ring-brand' : ''}
+						${error ? 'ring-2 ring-destructive' : ''}
+						${!isValid ? 'ring-2 ring-red-500' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						${showValidation && value && !validation.isValid ? 'border-destructive focus:border-destructive' : ''}
+						w-full bg-transparent
 					`}
 				/>
-
+				
+				{/* 유효성 검사 아이콘 */}
+				{showValidation && value && (
+					<div className={`${FIELD_STYLES.endIcon} ${showClearButton ? (isRTL ? 'start-10' : 'right-10') : ''}`}>
+						{isValid ? (
+							<CheckCircle className="w-4 h-4 text-green-500" />
+						) : (
+							<AlertCircle className="w-4 h-4 text-red-500" />
+						)}
+					</div>
+				)}
+				
+				{/* 클리어 버튼 */}
 				{showClearButton && value && (
 					<button
-						onClick={handleClear}
-						className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
-						type="button">
-						<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
+						type="button"
+						onClick={() => onChange?.('')}
+						className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton}`}
+					>
+						<X className="w-3 h-3" />
 					</button>
 				)}
 			</div>
-
-			{showValidation && value && (
-				<div className="flex gap-2 items-center mt-1">
-					{validation.isValid ? (
-						<Check className="neu-icon-active w-4 h-4 text-success" />
-					) : (
-						<AlertCircle className="neu-icon-active w-4 h-4 text-destructive" />
-					)}
-					<span
-						className={`font-multilang text-xs font-medium ${
-							validation.isValid ? 'text-success' : 'text-destructive'
-						}`}>
-						{validation.message}
-					</span>
-				</div>
-			)}
 		</div>
 	);
 };
+
+export default FieldEmail;

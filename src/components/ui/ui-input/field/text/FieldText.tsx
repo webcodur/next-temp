@@ -1,75 +1,97 @@
 'use client';
 
-import React, { ChangeEvent, KeyboardEvent } from 'react';
-import { Search, X, Type } from 'lucide-react';
-import { FieldTextComponentProps } from '../core/types';
+import React, { useState, useRef } from 'react';
+import { Search, Type, X } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
+import { useLocale } from '@/hooks/useI18n';
 
-export const FieldText: React.FC<FieldTextComponentProps> = ({
+interface FieldTextProps {
+	id: string;
+	label?: string;
+	placeholder?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	className?: string;
+	disabled?: boolean;
+	showSearchIcon?: boolean;
+	showClearButton?: boolean;
+	maxLength?: number;
+	onFocus?: () => void;
+	onBlur?: () => void;
+}
+
+const FieldText: React.FC<FieldTextProps> = ({
+	id,
 	label,
-	placeholder = '텍스트를 입력하세요',
-	value,
+	placeholder = '',
+	value = '',
 	onChange,
-	onEnterPress,
-	onClear,
-	showSearchIcon = false,
-	showClearButton = true,
 	className = '',
 	disabled = false,
+	showSearchIcon = false,
+	showClearButton = true,
+	maxLength,
+	onFocus,
+	onBlur,
+	...rest
 }) => {
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		onChange(e.target.value);
-	};
+	const [isFocused, setIsFocused] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const { isRTL } = useLocale();
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && onEnterPress) {
-			onEnterPress();
-		}
-	};
-
-	const handleClear = () => {
-		onChange('');
-		onClear?.();
-	};
-
-	// 아이콘 결정: showSearchIcon이 true면 Search, 아니면 기본 Type 아이콘
-	const LeftIcon = showSearchIcon ? Search : Type;
+	const StartIcon = showSearchIcon ? Search : Type;
 
 	return (
-		<div className={`space-y-1 ${className}`}>
-			{label && <label className={FIELD_STYLES.label}>{label}</label>}
-
+		<div className={`relative ${className}`}>
+			{label && (
+				<label htmlFor={id} className={FIELD_STYLES.label}>
+					{label}
+				</label>
+			)}
 			<div className="relative">
-				<LeftIcon className={`${FIELD_STYLES.leftIcon} neu-icon-inactive`} />
-
+				<StartIcon className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
 				<input
+					ref={inputRef}
+					id={id}
 					type="text"
 					placeholder={placeholder}
 					value={value}
-					onChange={handleChange}
-					onKeyDown={handleKeyDown}
+					onChange={(e) => onChange?.(e.target.value)}
+					onFocus={() => {
+						setIsFocused(true);
+						onFocus?.();
+					}}
+					onBlur={() => {
+						setIsFocused(false);
+						onBlur?.();
+					}}
 					disabled={disabled}
+					maxLength={maxLength}
+					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`
-						w-full
-						${FIELD_STYLES.container}
-						${FIELD_STYLES.height}
-						${FIELD_STYLES.padding}
+						${FIELD_STYLES.container} 
+						${FIELD_STYLES.height} 
+						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
-						ps-10
-						${showClearButton && value ? 'pe-10' : ''}
+						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
+						${isFocused ? 'ring-2 ring-brand' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
+						w-full bg-transparent
 					`}
+					{...rest}
 				/>
-
 				{showClearButton && value && (
 					<button
-						onClick={handleClear}
-						className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
-						type="button">
-						<X className="neu-icon-inactive hover:neu-icon-active w-3 h-3" />
+						type="button"
+						onClick={() => onChange?.('')}
+						className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton}`}
+					>
+						<X className="w-3 h-3" />
 					</button>
 				)}
 			</div>
 		</div>
 	);
 };
+
+export default FieldText;

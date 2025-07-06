@@ -1,4 +1,33 @@
 /* #region 3. 기본 스타일 */
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏗️ 기본 HTML 스타일
+
+🎯 핵심 역할
+┌─ 폰트 시스템 적용   │ MultiLang 폰트를 html 요소에 설정
+├─ 테마 변수 적용     │ body에 배경/텍스트 색상 변수 적용
+├─ 폰트 렌더링 최적화 │ 부드러운 폰트 렌더링 + 성능 최적화
+└─ 기본 레이아웃 설정 │ box-sizing, border-color 초기화
+
+🚀 성능 최적화
+├─ text-rendering: optimizeLegibility  │ 텍스트 품질 향상
+├─ -webkit-font-smoothing: antialiased │ 부드러운 폰트 렌더링
+├─ scroll-behavior: smooth             │ 부드러운 스크롤
+└─ font-feature-settings               │ 리가처 + 컨텍스트 대체
+
+🔧 유틸리티 클래스
+┌─ .scrollbar-hide │ 스크롤바 완전 숨기기 (MS + Firefox + Webkit)
+├─ .text-rtl      │ 아랍어 텍스트 방향 (오른쪽 정렬)
+└─ .text-ltr      │ 기본 텍스트 방향 (왼쪽 정렬)
+
+💡 다국어 지원
+- html 요소에 MultiLang 폰트 우선 적용
+- RTL/LTR 텍스트 방향 유틸리티 제공
+- 폰트 기능 설정으로 고급 타이포그래피 지원
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
 html {
 	font-family: 'MultiLang', 'Pretendard', system-ui, sans-serif;
 	scroll-behavior: smooth;

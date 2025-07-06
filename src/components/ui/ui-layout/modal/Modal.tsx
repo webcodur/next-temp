@@ -1,16 +1,19 @@
 'use client';
 
-import React, { ReactNode, useEffect, useCallback } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	title?: string;
 	children: ReactNode;
-	maxWidth?: string;
-	exitByClickOutside?: boolean;
+	className?: string;
+	size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+	showCloseButton?: boolean;
+	closeOnBackdropClick?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -18,71 +21,97 @@ const Modal: React.FC<ModalProps> = ({
 	onClose,
 	title,
 	children,
-	maxWidth = 'max-w-3xl',
-	exitByClickOutside = true,
+	className = '',
+	size = 'md',
+	showCloseButton = true,
+	closeOnBackdropClick = true,
 }) => {
-	const handleEscKey = useCallback(
-		(event: KeyboardEvent) => {
-			if (event.key === 'Escape') onClose();
-		},
-		[onClose]
-	);
+	// ESC 키로 모달 닫기
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape' && isOpen) {
+				onClose();
+			}
+		};
 
-	const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
-		if (event.target === event.currentTarget && exitByClickOutside) onClose();
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, [isOpen, onClose]);
+
+	// 모달이 열렸을 때 body 스크롤 막기
+	useEffect(() => {
+		if (isOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = 'unset';
+		}
+
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, [isOpen]);
+
+	if (!isOpen) return null;
+
+	const sizeClasses = {
+		sm: 'max-w-sm',
+		md: 'max-w-md',
+		lg: 'max-w-lg',
+		xl: 'max-w-xl',
+		full: 'max-w-full w-full h-full',
 	};
 
-	useEffect(() => {
-		if (!isOpen) return;
-		document.addEventListener('keydown', handleEscKey);
-		return () => document.removeEventListener('keydown', handleEscKey);
-	}, [isOpen, handleEscKey]);
+	const handleBackdropClick = (e: React.MouseEvent) => {
+		if (closeOnBackdropClick && e.target === e.currentTarget) {
+			onClose();
+		}
+	};
 
-	// SSR 환경에서는 Portal을 사용하지 않음
-	if (typeof window === 'undefined') {
-		return null;
-	}
+	const modalContent = (
+		<div
+			className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-md bg-black/20"
+			onClick={handleBackdropClick}
+		>
+			<div
+				className={cn(
+					'relative mx-4 w-full rounded-lg shadow-xl bg-background animate-fadeIn',
+					sizeClasses[size],
+					className
+				)}
+			>
+				{/* 닫기 버튼 */}
+				{showCloseButton && (
+					<button
+						onClick={onClose}
+						className="absolute top-4 z-10 text-2xl transition-colors cursor-pointer end-4 text-foreground hover:text-brand">
+						<X size={20} />
+					</button>
+				)}
 
-	return createPortal(
-		<AnimatePresence>
-			{isOpen && (
-				<motion.div
-					className="flex fixed inset-0 z-50 justify-center items-center bg-black/50 backdrop-blur-xs"
-					onMouseDown={handleOutsideClick}
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					exit={{ opacity: 0 }}
-					transition={{ duration: 0.2 }}>
-					<motion.div
-						className={`overflow-y-auto relative w-full bg-background rounded-lg shadow-lg ${maxWidth} max-h-[90vh]`}
-						initial={{ scale: 0.9, opacity: 0 }}
-						animate={{ scale: 1, opacity: 1 }}
-						exit={{ scale: 0.9, opacity: 0 }}
-						transition={{ duration: 0.2 }}>
-						{/* 우상단 고정 닫기 버튼 */}
-						<button
-							type="button"
-							onClick={onClose}
-							className="absolute top-4 right-4 z-10 text-2xl text-foreground cursor-pointer hover:text-brand transition-colors">
-							&times;
-						</button>
-						
-						{/* 타이틀이 있는 경우에만 헤더 영역 렌더링 */}
-						{title && (
-							<div className="p-6 pb-4 border-b border-brand/40">
-								<h2 className="text-xl font-semibold text-center text-foreground">
-									{title}
-								</h2>
-							</div>
-						)}
-						
-						<div className={title ? "p-6" : "p-6 pt-12"}>{children}</div>
-					</motion.div>
-				</motion.div>
-			)}
-		</AnimatePresence>,
-		document.body
+				{/* 제목 */}
+				{title && (
+					<div className="px-6 py-4 border-b border-border">
+						<h2 className="text-xl font-semibold text-foreground font-multilang">
+							{title}
+						</h2>
+					</div>
+				)}
+
+				{/* 내용 */}
+				<div className="px-6 py-4">
+					{children}
+				</div>
+			</div>
+		</div>
 	);
+
+	// Portal을 사용하여 body에 직접 렌더링 (클라이언트에서만)
+	if (typeof window !== 'undefined') {
+		return createPortal(modalContent, document.body);
+	}
+	
+	// 서버 사이드 렌더링 중에는 null 반환
+	return null;
 };
 
 export default Modal;

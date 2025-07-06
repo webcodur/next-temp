@@ -32,7 +32,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 	const finalMaxHeight = Math.max(maxHeight, minHeight);
 
 	return (
-		<div className="absolute right-0 left-0 top-full z-50 mt-1">
+		<div className="absolute start-0 end-0 top-full z-50 mt-1">
 			<div
 				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg`}
 				style={{ maxHeight: `${finalMaxHeight}px` }}>

@@ -1,155 +1,85 @@
-import * as React from 'react';
+import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-// #region 카드 기본 컴포넌트
-const Card = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement> & {
-		variant?: 'default' | 'outline-solid' | 'elevated';
-		hoverEffect?: boolean;
-	}
->(({ className, variant = 'default', hoverEffect = false, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn(
-			'rounded-lg bg-card text-card-foreground',
-			variant === 'default' && 'neu-flat',
-			variant === 'outline-solid' && 'neu-flat border-2 border-brand',
-			variant === 'elevated' && 'neu-raised',
-			hoverEffect && 'neu-raised',
-			className
-		)}
-		{...props}
-	/>
-));
-Card.displayName = 'Card';
+interface CardProps {
+	children: ReactNode;
+	className?: string;
+	variant?: 'flat' | 'raised' | 'inset';
+	title?: string;
+	description?: string;
+	actions?: ReactNode;
+	hover?: boolean;
+	clickable?: boolean;
+	onClick?: () => void;
+}
 
-const CardHeader = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn('flex flex-col space-y-1.5 p-6', className)}
-		{...props}
-	/>
-));
-CardHeader.displayName = 'CardHeader';
+interface CardActionsProps {
+	children: ReactNode;
+	className?: string;
+}
 
-const CardTitle = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-	<h3
-		ref={ref}
-		className={cn(
-			'text-2xl font-semibold leading-none tracking-tight',
-			className
-		)}
-		{...props}
-	/>
-));
-CardTitle.displayName = 'CardTitle';
+const Card: React.FC<CardProps> = ({
+	children,
+	className = '',
+	variant = 'flat',
+	title,
+	description,
+	actions,
+	hover = true,
+	clickable = false,
+	onClick,
+}) => {
+	const variantClasses = {
+		flat: 'neu-flat',
+		raised: 'neu-raised',
+		inset: 'neu-inset',
+	};
 
-const CardDescription = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-	<p
-		ref={ref}
-		className={cn('text-sm text-muted-foreground', className)}
-		{...props}
-	/>
-));
-CardDescription.displayName = 'CardDescription';
+	const baseClasses = cn(
+		'relative p-6 rounded-lg bg-background transition-all duration-200',
+		variantClasses[variant],
+		hover && 'hover:shadow-lg',
+		clickable && 'cursor-pointer hover:neu-raised',
+		className
+	);
 
-const CardContent = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-	<div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
-));
-CardContent.displayName = 'CardContent';
+	return (
+		<div className={baseClasses} onClick={clickable ? onClick : undefined}>
+			{/* 헤더 영역 */}
+			{(title || description) && (
+				<div className="mb-4">
+					{title && (
+						<h3 className="text-lg font-semibold text-foreground font-multilang mb-1">
+							{title}
+						</h3>
+					)}
+					{description && (
+						<p className="text-sm text-muted-foreground font-multilang">
+							{description}
+						</p>
+					)}
+				</div>
+			)}
 
-const CardFooter = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn('flex items-center p-6 pt-0', className)}
-		{...props}
-	/>
-));
-CardFooter.displayName = 'CardFooter';
-// #endregion
+			{/* 메인 콘텐츠 */}
+			<div>{children}</div>
 
-// #region 카드 확장 컴포넌트
-const CardActions = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn('absolute top-2 right-2 flex space-x-1', className)}
-		{...props}
-	/>
-));
-CardActions.displayName = 'CardActions';
-
-const CardAction = React.forwardRef<
-	HTMLButtonElement,
-	React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, ...props }, ref) => (
-	<button
-		ref={ref}
-		className={cn(
-			'neu-raised inline-flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-sm text-muted-foreground backdrop-blur-xs',
-			className
-		)}
-		{...props}
-	/>
-));
-CardAction.displayName = 'CardAction';
-
-const CardBadge = React.forwardRef<
-	HTMLSpanElement,
-	React.HTMLAttributes<HTMLSpanElement> & {
-		variant?:
-			| 'default'
-			| 'primary'
-			| 'secondary'
-			| 'success'
-			| 'warning'
-			| 'danger';
-	}
->(({ className, variant = 'default', ...props }, ref) => (
-	<span
-		ref={ref}
-		className={cn(
-			'inline-flex h-6 items-center rounded-full px-2 text-xs font-medium',
-			variant === 'default' && 'bg-muted text-muted-foreground',
-			variant === 'primary' && 'bg-primary text-primary-foreground',
-			variant === 'secondary' && 'bg-secondary text-secondary-foreground',
-			variant === 'success' && 'bg-success/10 text-success',
-			variant === 'warning' && 'bg-warning/10 text-warning',
-			variant === 'danger' && 'bg-destructive/10 text-destructive',
-			className
-		)}
-		{...props}
-	/>
-));
-CardBadge.displayName = 'CardBadge';
-// #endregion
-
-export {
-	Card,
-	CardHeader,
-	CardFooter,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardActions,
-	CardAction,
-	CardBadge,
+			{/* 액션 버튼들 */}
+			{actions && (
+				<div className="absolute top-2 end-2">
+					{actions}
+				</div>
+			)}
+		</div>
+	);
 };
+
+const CardActions: React.FC<CardActionsProps> = ({ children, className = '' }) => {
+	return (
+		<div className={cn('absolute top-2 end-2 flex space-x-1', className)}>
+			{children}
+		</div>
+	);
+};
+
+export { Card, CardActions };

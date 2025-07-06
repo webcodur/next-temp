@@ -1,43 +1,48 @@
 'use client';
-
+// #region 임포트
 import { useState } from 'react';
-import { FieldEmail } from '@/components/ui/ui-input/field/text/FieldEmail';
-import { FieldPassword } from '@/components/ui/ui-input/field/text/FieldPassword';
+import FieldText from '@/components/ui/ui-input/field/text/FieldText';
+import FieldPassword from '@/components/ui/ui-input/field/text/FieldPassword';
 import { Button } from '@/components/ui/ui-input/button/Button';
 
+// #endregion
+
+// #region 타입
 interface LoginFormData {
-	email: string;
+	username: string;
 	password: string;
 	rememberMe: boolean;
 }
-
 interface LoginFormProps {
 	onSubmit: (data: LoginFormData) => void;
 	isLoading?: boolean;
 }
+// #endregion
 
 export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
+  // #region 상태
 	const [formData, setFormData] = useState<LoginFormData>({
-		email: '',
+		username: '',
 		password: '',
 		rememberMe: false,
 	});
 	const [errors, setErrors] = useState<Partial<LoginFormData>>({});
+  // #endregion
 
 	// #region 검증 로직
 	const validateForm = () => {
 		const newErrors: Partial<LoginFormData> = {};
 
-		if (!formData.email) {
-			newErrors.email = '이메일을 입력해주세요';
-		} else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-			newErrors.email = '올바른 이메일 형식을 입력해주세요';
+		if (!formData.username) {
+			newErrors.username = '아이디를 입력해주세요';
+		} else if (formData.username.length < 2) {
+			newErrors.username = '아이디는 2자 이상 입력해주세요';
 		}
 
 		if (!formData.password) {
 			newErrors.password = '비밀번호를 입력해주세요';
-		} else if (formData.password.length < 6) {
-			newErrors.password = '비밀번호는 6자 이상 입력해주세요';
+		} else if (formData.password.length < 4) {
+			newErrors.password = '비밀번호는 4자 이상 입력해주세요';
 		}
 
 		setErrors(newErrors);
@@ -53,10 +58,10 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		}
 	};
 
-	const handleEmailChange = (value: string) => {
-		setFormData((prev) => ({ ...prev, email: value }));
-		if (errors.email) {
-			setErrors((prev) => ({ ...prev, email: undefined }));
+	const handleUsernameChange = (value: string) => {
+		setFormData((prev) => ({ ...prev, username: value }));
+		if (errors.username) {
+			setErrors((prev) => ({ ...prev, username: undefined }));
 		}
 	};
 
@@ -72,8 +77,9 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	};
 	// #endregion
 
+  // #region 렌더링
 	return (
-		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-flat">
+		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-elevated">
 			{/* 헤더 */}
 			<div className="mb-8 text-center">
 				<h1 className="mb-2 text-2xl font-bold font-multilang text-foreground">로그인</h1>
@@ -82,29 +88,28 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 
 			{/* 폼 */}
 			<form onSubmit={handleSubmit} className="space-y-6">
-				{/* 이메일 필드 */}
+				{/* 아이디 필드 */}
 				<div className="space-y-1">
-					<FieldEmail
-						placeholder="이메일을 입력하세요"
-						value={formData.email}
-						onChange={handleEmailChange}
-						showValidation={false}
+					<FieldText
+						id="username"
+						placeholder="아이디를 입력하세요"
+						value={formData.username}
+						onChange={handleUsernameChange}
 						showClearButton={true}
 					/>
-					{errors.email && (
-						<p className="text-sm font-multilang text-destructive">{errors.email}</p>
+					{errors.username && (
+						<p className="text-sm font-multilang text-destructive">{errors.username}</p>
 					)}
 				</div>
 
 				{/* 비밀번호 필드 */}
 				<div className="space-y-1">
 					<FieldPassword
+						id="password"
 						placeholder="비밀번호를 입력하세요"
 						value={formData.password}
 						onChange={handlePasswordChange}
-						showStrengthIndicator={false}
 						showClearButton={false}
-						minLength={6}
 					/>
 					{errors.password && (
 						<p className="text-sm font-multilang text-destructive">{errors.password}</p>
@@ -126,11 +131,11 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 							<div
 								className={`
 								flex justify-center items-center w-4 h-4 rounded transition-all duration-200
-								${formData.rememberMe ? 'neu-inset bg-brand' : 'neu-raised bg-card'}
+								${formData.rememberMe ? 'neu-flat bg-card' : 'neu-raised bg-card'}
 							`}>
 								{formData.rememberMe && (
 									<svg
-										className="w-3 h-3 neu-icon-active text-brand-foreground"
+										className="w-3 h-3 text-brand"
 										fill="currentColor"
 										viewBox="0 0 20 20">
 										<path
@@ -179,3 +184,4 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		</div>
 	);
 }
+// #endregion

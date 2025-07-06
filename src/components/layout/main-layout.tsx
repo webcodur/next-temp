@@ -2,18 +2,18 @@
 
 import { ReactNode, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { sidebarCollapsedAtom, rPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
+import { sidebarCollapsedAtom, endPanelWidthAtom, isResizingAtom } from '@/store/sidebar';
 import { initThemeAtom } from '@/store/theme';
 import { initBrandColorAtom } from '@/store/brand';
 import { useLocale } from '@/hooks/useI18n';
 // components
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
-import { SideToggleMain } from './sidebar/unit/SideToggleMain';
+import { SideToggleControl } from './sidebar/unit/control/SideToggleControl';
 import Footer from './footer/Footer';
 
 // hooks
-import { useSidebarKeyboard } from './sidebar/hooks';
+import { useSidebarKeyboard } from './sidebar/unit/control/useSidebarKeyboard';
 // data
 import { defaults, animations } from '@/data/sidebarConfig';
 
@@ -23,14 +23,14 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
-	const [rPanelWidth] = useAtom(rPanelWidthAtom);
+	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [isResizing] = useAtom(isResizingAtom);
 	const [, initTheme] = useAtom(initThemeAtom);
 	const [, initBrandColor] = useAtom(initBrandColorAtom);
 	const { isRTL } = useLocale();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-	const sidebarWidth = defaults.leftColumnWidth + rPanelWidth;
+	const sidebarWidth = defaults.startColumnWidth + endPanelWidth;
 
 	// 테마 초기화
 	useEffect(() => {
@@ -49,7 +49,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 	return (
 		<div className="flex overflow-scroll h-screen bg-surface-2" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
-			<SideToggleMain />
+			<SideToggleControl />
 			<Sidebar />
 			<main
 				style={mainStyle}

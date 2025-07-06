@@ -5,101 +5,99 @@ import {
 	ChevronRight,
 	ChevronsRight,
 } from 'lucide-react';
-import { PaginationNavigation } from './pagination.types';
+import { useLocale } from '@/hooks/useI18n';
 
-interface PaginationControlsProps extends PaginationNavigation {
+interface PaginationControlsProps {
 	currentPage: number;
 	totalPages: number;
-	disabled: boolean;
 	onPageChange: (page: number) => void;
+	showFirstLast?: boolean;
+	disabled?: boolean;
 }
 
-export const PaginationControls: React.FC<PaginationControlsProps> = ({
-	pageNumbers,
-	startPage,
-	endPage,
+const PaginationControls: React.FC<PaginationControlsProps> = ({
 	currentPage,
 	totalPages,
-	disabled,
 	onPageChange,
-	goToFirstPage,
-	goToPreviousGroup,
-	goToNextGroup,
-	goToLastPage,
+	showFirstLast = true,
+	disabled = false,
 }) => {
+	const { isRTL } = useLocale();
+
+	const handlePageChange = (page: number) => {
+		if (page >= 1 && page <= totalPages && !disabled) {
+			onPageChange(page);
+		}
+	};
+
+	const isFirstPage = currentPage === 1;
+	const isLastPage = currentPage === totalPages;
+
+	const buttonClasses = `
+		flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md
+		transition-all duration-200 neu-flat hover:neu-raised
+		${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+	`;
+
+	const disabledButtonClasses = `
+		flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md
+		opacity-50 cursor-not-allowed neu-flat
+	`;
+
 	return (
-		<nav className="flex items-center gap-1">
+		<div className="flex items-center space-x-2">
 			{/* 첫 페이지 버튼 */}
+			{showFirstLast && (
+				<button
+					onClick={() => handlePageChange(1)}
+					disabled={disabled || isFirstPage}
+					className={isFirstPage || disabled ? disabledButtonClasses : buttonClasses}
+					aria-label="첫 번째 페이지로 이동"
+				>
+					{isRTL ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />}
+				</button>
+			)}
+
+			{/* 이전 페이지 버튼 */}
 			<button
-				onClick={goToFirstPage}
-				disabled={currentPage === 1 || disabled}
-				className={`p-2 rounded-md cursor-pointer ${
-					currentPage === 1 || disabled
-						? 'text-muted-foreground cursor-not-allowed'
-						: 'text-foreground neu-raised'
-				}`}
-				aria-label="첫 페이지로 이동">
-				<ChevronsLeft size={14} />
+				onClick={() => handlePageChange(currentPage - 1)}
+				disabled={disabled || isFirstPage}
+				className={isFirstPage || disabled ? disabledButtonClasses : buttonClasses}
+				aria-label="이전 페이지로 이동"
+			>
+				{isRTL ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
 			</button>
 
-			{/* 이전 그룹 버튼 */}
-			<button
-				onClick={goToPreviousGroup}
-				disabled={startPage === 1 || disabled}
-				className={`p-2 rounded-md cursor-pointer ${
-					startPage === 1 || disabled
-						? 'text-muted-foreground cursor-not-allowed'
-						: 'text-foreground neu-raised'
-				}`}
-				aria-label="이전 그룹으로 이동">
-				<ChevronLeft size={14} />
-			</button>
-
-			{/* 페이지 번호 버튼 그룹 */}
-			<div className="flex items-center gap-1 mx-1">
-				{pageNumbers.map((pageNumber) => (
-					<button
-						key={pageNumber}
-						onClick={() => !disabled && onPageChange(pageNumber)}
-						disabled={disabled}
-						className={`min-w-[36px] h-9 px-3 rounded-md cursor-pointer ${
-							pageNumber === currentPage
-								? 'bg-brand text-brand-foreground'
-								: disabled
-									? 'text-muted-foreground cursor-not-allowed'
-									: 'text-foreground neu-raised'
-						}`}
-						aria-current={pageNumber === currentPage ? 'page' : undefined}>
-						{pageNumber}
-					</button>
-				))}
+			{/* 페이지 정보 */}
+			<div className="flex items-center px-4 py-2 text-sm font-medium text-muted-foreground">
+				<span className="font-multilang">
+					{currentPage} / {totalPages}
+				</span>
 			</div>
 
-			{/* 다음 그룹 버튼 */}
+			{/* 다음 페이지 버튼 */}
 			<button
-				onClick={goToNextGroup}
-				disabled={endPage === totalPages || disabled}
-				className={`p-2 rounded-md cursor-pointer ${
-					endPage === totalPages || disabled
-						? 'text-muted-foreground cursor-not-allowed'
-						: 'text-foreground neu-raised'
-				}`}
-				aria-label="다음 그룹으로 이동">
-				<ChevronRight size={14} />
+				onClick={() => handlePageChange(currentPage + 1)}
+				disabled={disabled || isLastPage}
+				className={isLastPage || disabled ? disabledButtonClasses : buttonClasses}
+				aria-label="다음 페이지로 이동"
+			>
+				{isRTL ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
 			</button>
 
 			{/* 마지막 페이지 버튼 */}
-			<button
-				onClick={goToLastPage}
-				disabled={currentPage === totalPages || disabled}
-				className={`p-2 rounded-md cursor-pointer ${
-					currentPage === totalPages || disabled
-						? 'text-muted-foreground cursor-not-allowed'
-						: 'text-foreground neu-raised'
-				}`}
-				aria-label="마지막 페이지로 이동">
-				<ChevronsRight size={14} />
-			</button>
-		</nav>
+			{showFirstLast && (
+				<button
+					onClick={() => handlePageChange(totalPages)}
+					disabled={disabled || isLastPage}
+					className={isLastPage || disabled ? disabledButtonClasses : buttonClasses}
+					aria-label="마지막 페이지로 이동"
+				>
+					{isRTL ? <ChevronsLeft size={14} /> : <ChevronsRight size={14} />}
+				</button>
+			)}
+		</div>
 	);
 };
+
+export default PaginationControls;

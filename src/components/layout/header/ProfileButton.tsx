@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown, Shield, UserCheck } from 'lucide-react';
 import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
 import clsx from 'clsx';
 
@@ -75,6 +75,11 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		);
 	}
 
+	// 사용자 역할에 따른 설정
+	const isAdmin = user.role === 'admin';
+	const roleColor = isAdmin ? 'text-orange-500' : 'text-brand';
+	const roleText = isAdmin ? '관리자' : '일반사용자';
+
 	return (
 		<div className="relative" ref={dropdownRef}>
 			{/* 프로필 버튼 */}
@@ -99,12 +104,23 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 								<User className="w-5 h-5 text-brand" />
 							</div>
 							<div className="flex-1 min-w-0">
-								<p className="text-sm font-medium text-foreground truncate">
+								<p className="text-sm font-medium text-foreground truncate font-multilang">
 									{user.name}
 								</p>
-								<p className="text-xs text-muted-foreground truncate">
+								<p className="text-xs text-muted-foreground truncate font-multilang">
 									{user.email}
 								</p>
+								{/* 사용자 역할 표시 */}
+								<div className="flex items-center gap-1 mt-1">
+									{isAdmin ? (
+										<Shield className={`w-3 h-3 ${roleColor}`} />
+									) : (
+										<UserCheck className={`w-3 h-3 ${roleColor}`} />
+									)}
+									<span className={`text-xs font-medium ${roleColor} font-multilang`}>
+										{roleText}
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -115,14 +131,14 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 							onClick={handleProfile}
 							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
 							<User className="w-4 h-4 text-muted-foreground" />
-							<span className="text-sm text-foreground">프로필</span>
+							<span className="text-sm text-foreground font-multilang">프로필</span>
 						</button>
 
 						<button
 							onClick={handleSettings}
 							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
 							<Settings className="w-4 h-4 text-muted-foreground" />
-							<span className="text-sm text-foreground">설정</span>
+							<span className="text-sm text-foreground font-multilang">설정</span>
 						</button>
 
 						<div className="my-1 border-t border-border/50" />
@@ -131,7 +147,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 							onClick={handleLogout}
 							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-destructive/10 text-destructive transition-colors">
 							<LogOut className="w-4 h-4" />
-							<span className="text-sm">로그아웃</span>
+							<span className="text-sm font-multilang">로그아웃</span>
 						</button>
 					</div>
 				</div>

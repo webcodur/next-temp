@@ -1,41 +1,38 @@
-/* @import 규칙은 반드시 모든 다른 CSS 규칙보다 앞에 위치해야 함 */
-/* Pretendard 서브셋 폰트는 @font-face로 직접 정의하므로 CSS 파일 import 불필요 */
+/* #region 디자인 시스템 */
 
-/**
- * 🚗 TESLA BLACK/WHITE DESIGN SYSTEM - 완전한 무채색 그레이스케일
- * 
- * 🎨 테마 철학: 테슬라 차량 대시보드의 미니멀리즘 구현
- *    - 100% 무채색 (HSL Hue: 0, Saturation: 0%)
- *    - 밝기(Lightness)로만 계층 구분
- *    - 부드럽고 즉각적인 인터랙션
- * 
- * 📐 시스템 구조:
- * 
- * 1. 폰트 정의 (4개 폰트)
- *    - MultiLang: 한국어(Pretendard), 아랍어(Cairo), 영어(DMSerifText)
- *    - Pretendard: 한국어 전용
- * 
- * 2. CSS 변수 - 무채색 시스템
- *    - 라이트: Primary 20% (순수 다크 그레이)
- *    - 다크: Primary 85% (순수 라이트 그레이)
- *    - 뉴모피즘: neu-light, neu-dark, neu-offset, neu-blur
- * 
- * 3. 기본 스타일
- *    - 부드러운 폰트 렌더링 + 성능 최적화
- *    - 스크롤바 숨기기, RTL/LTR 텍스트
- * 
- * 4. 뉴모피즘 시스템
- *    - neu-flat: 평면 (컨테이너, 패널)
- *    - neu-raised: 양각 (버튼, 터치 요소)
- *    - neu-inset: 음각 (활성/선택 상태)
- *    - neu-icon: 아이콘 상태 (active/inactive)
- *    - 보조: neu-hover, neu-flat-focus, sidebar-container
- * 
- * 5. 애니메이션
- *    - 즉각 호버 반응 (0.15s ease-out)
- *    - 순차 전환 효과 (0.25s cubic-bezier)
- *    - GPU 가속 transform 우선 사용
- */
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚗 TESLA BLACK/WHITE DESIGN SYSTEM - 완전한 무채색 그레이스케일
+
+🎨 테마 철학
+┌─ 100% 무채색      │ HSL Hue: 0, Saturation: 0%
+├─ 밝기로만 계층구분 │ Lightness만으로 모든 UI 계층 표현
+├─ 테슬라 미니멀리즘 │ 차량 대시보드의 직관적 인터페이스
+└─ 즉각적 반응성    │ 부드럽고 빠른 사용자 인터랙션
+
+📐 시스템 구조
+├─ 01-fonts.css       │ MultiLang 폰트 (한국어/아랍어/영어)
+├─ 02-variables.css    │ 무채색 변수 + 테마 매핑
+├─ 03-base.css         │ 기본 HTML 스타일
+├─ 04-neumorphism.css  │ 뉴모피즘 컴포넌트 시스템
+├─ 05-animations.css   │ 애니메이션 유틸리티
+└─ 06-utilities.css    │ 기타 유틸리티 클래스
+
+🎯 사용 가이드
+┌─ 배경 요소  │ --background, --card, --muted (순차 매핑)
+├─ 텍스트 요소│ --foreground, --primary, --secondary (역순 매핑)
+├─ 뉴모피즘   │ neu-flat (평면), neu-raised (양각), neu-inset (음각)
+└─ 애니메이션 │ 0.15s 즉시 반응, 0.25s 부드러운 전환
+
+💡 라이트/다크 모드
+- 라이트: 밝은 배경(98%) + 어두운 텍스트(5%)
+- 다크: 어두운 배경(8%) + 밝은 텍스트(95%)
+- 배경 요소는 명도 관계 유지, 텍스트는 의미적 역할 유지
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
+/* @import 규칙은 반드시 모든 다른 CSS 규칙보다 앞에 위치해야 함*/
+/* Pretendard 서브셋 폰트는 @font-face로 직접 정의하므로 CSS 파일 import 불필요 */
 
 @import url('../styles/system/01-fonts.css');
 @import url('../styles/system/02-variables.css');

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/hooks/useI18n';
 
 //#region Types
 export interface ListHighlightMarkerProps {
@@ -28,7 +29,21 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 	className = '',
 	children,
 }) => {
+	const { isRTL } = useLocale();
 	const isActive = isSelected || isHighlighted;
+
+	// RTL에 따른 색상 바 위치와 transform 방향 결정
+	const getBorderClass = () => {
+		if (isRTL) {
+			return isActive
+				? 'bg-brand/5 border-r-4 border-r-brand -translate-x-1'
+				: 'hover:border-r-4 hover:border-r-brand hover:-translate-x-1 hover:bg-brand/5';
+		} else {
+			return isActive
+				? 'bg-brand/5 border-l-4 border-l-brand translate-x-1'
+				: 'hover:border-l-4 hover:border-l-brand hover:translate-x-1 hover:bg-brand/5';
+		}
+	};
 
 	return (
 		<div
@@ -37,12 +52,8 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 				'relative flex items-center gap-3 px-4 py-3 cursor-pointer group',
 				'transition-all duration-150 ease-in-out',
 
-				// 호버 효과: 왼쪽 색상 바 + 우측 transform + 배경 (non-active만)
-				!isActive &&
-					'hover:border-l-4 hover:border-l-brand hover:translate-x-1 hover:bg-brand/5',
-
-				// active 효과: 배경 색상 유지
-				isActive && 'bg-brand/5 border-l-4 border-l-brand translate-x-1',
+				// 호버 및 active 효과 (RTL 대응)
+				getBorderClass(),
 
 				// 비활성화 상태
 				disabled && 'opacity-50 cursor-not-allowed pointer-events-none',

@@ -1,29 +1,31 @@
 import { menuData } from '@/data/menuData';
 import { styles } from '@/data/sidebarConfig';
+import { useLocale } from '@/hooks/useI18n';
 
 /**
- * 사이드바 좌측 패널 Props 타입
+ * 사이드바 시작 패널 Props 타입
  */
-interface SideLPanelProps {
+interface SideStartPanelProps {
 	topMenu: string; // 현재 선택된 Top 메뉴 키
 	onTopClick: (topKey: string) => void; // Top 메뉴 클릭 핸들러
 }
 
 /**
- * 사이드바 좌측 패널 컴포넌트
+ * 사이드바 시작 패널 컴포넌트
  * - Top 메뉴들을 세로로 나열하여 표시
  * - 아이콘 형태의 버튼으로 구성
  * - 선택된 메뉴는 활성화 스타일 적용
  */
 
-// #region side_Lpanel: 사이드바 좌측 패널 컴포넌트
-export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
+// #region side_start_panel: 사이드바 시작 패널 컴포넌트
+export function SideStartPanel({ topMenu, onTopClick }: SideStartPanelProps) {
 	// 전체 Top 메뉴 키 목록 추출
 	const topKeys = Object.keys(menuData);
+	const { isRTL } = useLocale();
 
 	return (
 		<div
-			className={`${styles.leftColWidth} h-full border-e border-border/20 shrink-0`}>
+			className={`${styles.startColWidth} h-full border-e border-border/20 shrink-0`}>
 			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
@@ -43,7 +45,7 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 							<topItem.icon
 								className={`w-6 h-6 transition-all duration-200 ${
 									isActive ? 'neu-icon-active' : 'neu-icon-inactive'
-								}`}
+								} ${isRTL ? 'scale-x-[-1]' : ''}`}
 							/>
 						</button>
 					);
@@ -52,4 +54,4 @@ export function SideLPanel({ topMenu, onTopClick }: SideLPanelProps) {
 		</div>
 	);
 }
-// #endregion
+// #endregion 

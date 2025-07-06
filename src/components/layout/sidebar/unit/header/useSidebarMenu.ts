@@ -3,9 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
-import {
-	singleOpenModeAtom,
-} from '@/store/sidebar';
+import { singleOpenModeAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
 import { menuData } from '@/data/menuData';
 
@@ -22,7 +20,7 @@ export function useSidebarMenu() {
 	const [topMenu, setTopMenu] = useState<string>(defaults.topMenu);
 	const [midMenu, setMidMenu] = useState<string>('');
 	const [singleOpenMode, setSingleOpenMode] = useAtom(singleOpenModeAtom);
-	
+
 	// Hydration 에러 방지: 클라이언트 렌더링 완료 후에만 localStorage 기반 상태 활성화
 	const [isMounted, setIsMounted] = useState(false);
 
@@ -34,7 +32,7 @@ export function useSidebarMenu() {
 	// 클라이언트 마운트 감지 및 localStorage 값 로드
 	useEffect(() => {
 		setIsMounted(true);
-		
+
 		// localStorage에서 값 읽어와서 atom 업데이트
 		try {
 			const savedSingleOpenMode = localStorage.getItem('singleOpenMode');
@@ -85,17 +83,20 @@ export function useSidebarMenu() {
 		// 마운트되지 않았으면 기본값 유지 (Hydration 방지)
 		if (!isMounted) return;
 
-		console.log(`[사이드바] 모드 변경 감지: ${singleOpenMode ? '단일' : '다중'} 모드, 현재 midMenu: ${midMenu}`);
-		
+		console.log(
+			`[사이드바] 모드 변경 감지: ${singleOpenMode ? '단일' : '다중'} 모드, 현재 midMenu: ${midMenu}`
+		);
+
 		if (singleOpenMode) {
 			// 다중 → 단일 모드: 현재 선택된 midMenu만 유지하거나 가장 최근에 펼쳐진 메뉴 하나만 유지
 			const currentExpanded = Array.from(midExpanded);
 			if (currentExpanded.length > 1) {
 				// 여러 메뉴가 펼쳐져 있다면 현재 선택된 것 우선, 없으면 첫 번째 유지
-				const keepMenu = midMenu && currentExpanded.includes(midMenu) 
-					? midMenu 
-					: currentExpanded[0];
-				
+				const keepMenu =
+					midMenu && currentExpanded.includes(midMenu)
+						? midMenu
+						: currentExpanded[0];
+
 				setMidExpanded(new Set<string>([keepMenu]));
 				setMidMenu(keepMenu);
 				console.log(`[사이드바] 단일 모드 전환: ${keepMenu} 메뉴만 유지`);
@@ -131,8 +132,11 @@ export function useSidebarMenu() {
 	 * - 다중 모드: 토글 방식으로 개별 제어
 	 */
 	const handleMidClick = (midKey: string) => {
-		console.log(`[사이드바] Mid 메뉴 클릭: ${midKey}, 모드: ${singleOpenMode ? '단일' : '다중'}, 현재 펼쳐진 메뉴:`, Array.from(midExpanded));
-		
+		console.log(
+			`[사이드바] Mid 메뉴 클릭: ${midKey}, 모드: ${singleOpenMode ? '단일' : '다중'}, 현재 펼쳐진 메뉴:`,
+			Array.from(midExpanded)
+		);
+
 		if (singleOpenMode) {
 			// 단일 열기 모드: 클릭한 메뉴만 열고 나머지는 닫기
 			const isCurrentlyOpen = midExpanded.has(midKey);
@@ -155,7 +159,11 @@ export function useSidebarMenu() {
 				// 마지막으로 닫힌 메뉴가 현재 선택된 메뉴라면 초기화
 				if (midMenu === midKey) {
 					const remainingKeys = Array.from(newExpanded);
-					setMidMenu(remainingKeys.length > 0 ? remainingKeys[remainingKeys.length - 1] : '');
+					setMidMenu(
+						remainingKeys.length > 0
+							? remainingKeys[remainingKeys.length - 1]
+							: ''
+					);
 				}
 				console.log(`[사이드바] 다중 모드 - 메뉴 닫기: ${midKey}`);
 			} else {
@@ -165,8 +173,11 @@ export function useSidebarMenu() {
 			}
 			setMidExpanded(newExpanded);
 		}
-		
-		console.log(`[사이드바] 처리 완료 - 선택된 midMenu: ${midKey}, 펼쳐진 메뉴:`, Array.from(midExpanded));
+
+		console.log(
+			`[사이드바] 처리 완료 - 선택된 midMenu: ${midKey}, 펼쳐진 메뉴:`,
+			Array.from(midExpanded)
+		);
 	};
 
 	/**
@@ -175,7 +186,9 @@ export function useSidebarMenu() {
 	 */
 	const handleSingleOpenToggle = () => {
 		const newMode = !singleOpenMode;
-		console.log(`[사이드바] 모드 토글: ${singleOpenMode ? '단일' : '다중'} → ${newMode ? '단일' : '다중'}`);
+		console.log(
+			`[사이드바] 모드 토글: ${singleOpenMode ? '단일' : '다중'} → ${newMode ? '단일' : '다중'}`
+		);
 		setSingleOpenMode(newMode);
 		// 상태 변경은 useEffect에서 자동으로 처리됨
 	};
@@ -192,63 +205,63 @@ export function useSidebarMenu() {
 		const midKeys = Object.keys(topData.midItems);
 		if (midKeys.length === 0) return;
 
-		console.log(`[사이드바] 전체 펼치기 실행: ${singleOpenMode ? '단일' : '다중'} 모드, 메뉴 수: ${midKeys.length}`);
+		console.log(
+			`[사이드바] 전체 펼치기 실행: ${singleOpenMode ? '단일' : '다중'} 모드, 메뉴 수: ${midKeys.length}`
+		);
 
 		if (singleOpenMode) {
 			// 단일 모드: 현재 선택된 메뉴가 있으면 그것을, 없으면 첫 번째 메뉴 열기
-			const targetMenu = midMenu && midKeys.includes(midMenu) ? midMenu : midKeys[0];
+			const targetMenu =
+				midMenu && midKeys.includes(midMenu) ? midMenu : midKeys[0];
 			setMidExpanded(new Set<string>([targetMenu]));
 			setMidMenu(targetMenu);
-			console.log(`[사이드바] 단일 모드 전체 펼치기: ${targetMenu} 메뉴만 열기`);
+			console.log(`[사이드바] 단일 모드 - 펼치기 완료: ${targetMenu}`);
 		} else {
-			// 다중 모드: 순차적으로 메뉴 열기 (100ms 간격)
-			console.log(`[사이드바] 다중 모드 전체 펼치기 시작`);
-			const expandedSet = new Set<string>();
-			for (let i = 0; i < midKeys.length; i++) {
-				expandedSet.add(midKeys[i]);
-				setMidExpanded(new Set(expandedSet));
-				console.log(`[사이드바] 메뉴 열기 (${i + 1}/${midKeys.length}): ${midKeys[i]}`);
-				
-				// 마지막 항목이 아니면 대기
-				if (i < midKeys.length - 1) {
-					await new Promise(resolve => setTimeout(resolve, 100));
-				}
+			// 다중 모드: 애니메이션 효과를 위해 순차적으로 열기
+			const newExpanded = new Set<string>();
+			for (const midKey of midKeys) {
+				newExpanded.add(midKey);
+				setMidExpanded(new Set(newExpanded));
+				// 100ms 간격으로 애니메이션 효과
+				await new Promise((resolve) => setTimeout(resolve, 100));
 			}
-			// 마지막으로 열린 메뉴를 현재 선택으로 설정
+			// 마지막 메뉴를 현재 선택으로 설정
 			setMidMenu(midKeys[midKeys.length - 1]);
-			console.log(`[사이드바] 다중 모드 전체 펼치기 완료`);
+			console.log(
+				`[사이드바] 다중 모드 - 펼치기 완료: ${midKeys.length}개 메뉴`
+			);
 		}
 	};
 
 	/**
 	 * 전체 메뉴 접기
-	 * - 역순으로 순차적으로 모든 Mid 메뉴를 닫음 (애니메이션 효과)
+	 * - 모든 확장된 메뉴를 닫기
 	 */
 	const handleCollapseAll = async () => {
 		const currentExpanded = Array.from(midExpanded);
-		
-		if (currentExpanded.length === 0) {
-			console.log(`[사이드바] 전체 접기: 이미 모든 메뉴가 닫혀있음`);
-			return;
-		}
+		if (currentExpanded.length === 0) return;
 
-		console.log(`[사이드바] 전체 접기 실행: ${currentExpanded.length}개 메뉴 닫기`, currentExpanded);
+		console.log(`[사이드바] 전체 접기 실행: ${currentExpanded.length}개 메뉴`);
 
-		// 현재 펼쳐진 메뉴들을 역순으로 접기 (100ms 간격)
-		for (let i = currentExpanded.length - 1; i >= 0; i--) {
-			const newExpanded = new Set(currentExpanded.slice(0, i));
-			setMidExpanded(newExpanded);
-			console.log(`[사이드바] 메뉴 닫기 (${currentExpanded.length - i}/${currentExpanded.length}): ${currentExpanded[i]}`);
-			
-			// 마지막 항목이 아니면 대기
-			if (i > 0) {
-				await new Promise(resolve => setTimeout(resolve, 100));
+		if (singleOpenMode) {
+			// 단일 모드: 즉시 모든 메뉴 닫기
+			setMidExpanded(new Set<string>());
+			setMidMenu('');
+			console.log(`[사이드바] 단일 모드 - 접기 완료`);
+		} else {
+			// 다중 모드: 애니메이션 효과를 위해 순차적으로 닫기 (역순)
+			const newExpanded = new Set(midExpanded);
+			for (let i = currentExpanded.length - 1; i >= 0; i--) {
+				const midKey = currentExpanded[i];
+				newExpanded.delete(midKey);
+				setMidExpanded(new Set(newExpanded));
+				// 100ms 간격으로 애니메이션 효과
+				await new Promise((resolve) => setTimeout(resolve, 100));
 			}
+			// 모든 메뉴가 닫혔으므로 현재 선택 초기화
+			setMidMenu('');
+			console.log(`[사이드바] 다중 모드 - 접기 완료`);
 		}
-		
-		// 모든 메뉴를 닫았으므로 midMenu도 초기화
-		setMidMenu('');
-		console.log(`[사이드바] 전체 접기 완료: 모든 메뉴 닫힘`);
 	};
 
 	return {
@@ -262,4 +275,4 @@ export function useSidebarMenu() {
 		handleExpandAll,
 		handleCollapseAll,
 	};
-} 
+}

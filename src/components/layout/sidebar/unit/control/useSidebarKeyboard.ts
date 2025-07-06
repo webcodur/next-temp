@@ -2,10 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import {
-	sidebarCollapsedAtom,
-	headerToggleVisibleAtom,
-} from '@/store/sidebar';
+import { sidebarCollapsedAtom, headerToggleVisibleAtom } from '@/store/sidebar';
 import { animations } from '@/data/sidebarConfig';
 
 /**
@@ -51,4 +48,4 @@ export function useSidebarKeyboard() {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	}, [handleKeyboardToggle]);
-} 
+}

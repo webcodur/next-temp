@@ -5,18 +5,20 @@ export const FIELD_STYLES = {
 	padding: 'px-3 py-2',
 	text: 'font-multilang text-sm font-medium placeholder:text-muted-foreground text-foreground',
 	sortIcon:
-		'absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all cursor-pointer hover:neu-icon-active hover:scale-110 active:scale-95 neu-icon-inactive ',
-  leftIcon:
-		'absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
-	rightIcon:
-		'absolute right-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
+		'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all cursor-pointer hover:neu-icon-active hover:scale-110 active:scale-95 neu-icon-inactive ',
+	startIcon:
+		'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
+	endIcon:
+		'absolute end-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
 
 	// 드롭다운
-	dropdown:'neu-raised bg-popover text-popover-foreground border border-border shadow-lg backdrop-blur-md',
+	dropdown:
+		'neu-raised bg-popover text-popover-foreground border border-border shadow-lg backdrop-blur-md',
 	// 드롭다운 스크롤 영역
 	dropdownScroll: 'overflow-y-auto field-dropdown-scroll',
 	// 드롭다운 옵션
-	dropdownOption: 'font-multilang cursor-pointer px-3 py-2 text-sm font-medium transition-all neu-hover text-foreground hover:bg-muted',
+	dropdownOption:
+		'font-multilang cursor-pointer px-3 py-2 text-sm font-medium transition-all neu-hover text-foreground hover:bg-muted',
 	dropdownOptionSelected: 'neu-inset bg-brand text-brand-foreground font-bold',
 	dropdownOptionHighlighted: 'neu-raised bg-muted text-muted-foreground',
 	dropdownOptionDisabled: 'cursor-not-allowed text-muted-foreground opacity-60',
@@ -32,6 +34,16 @@ export const FIELD_STYLES = {
 	// 비활성화 상태
 	disabled: 'opacity-60 cursor-not-allowed',
 } as const;
+
+// RTL 지원 함수
+export const getIconPosition = (isRTL: boolean) => ({
+	startIcon: isRTL
+		? 'absolute end-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all'
+		: 'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
+	endIcon: isRTL
+		? 'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all'
+		: 'absolute end-3 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-all',
+});
 
 export const FIELD_CONSTANTS = {
 	DEFAULT_MAX_HEIGHT: 200,

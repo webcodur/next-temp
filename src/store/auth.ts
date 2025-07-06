@@ -27,32 +27,42 @@ export const loginAtom = atom(
 	async (
 		get,
 		set,
-		{ email, password }: { email: string; password: string }
+		{ username, password }: { username: string; password: string }
 	) => {
 		try {
-			// TODO: 실제 API 호출로 교체
-			console.log('로그인 시도:', { email, password });
+			console.log('로그인 시도:', { username, password });
 
-			// 임시 로그인 처리 (2초 지연)
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			// 임시 로그인 처리 (1초 지연)
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-			// 임시 사용자 데이터
-			const userData: User = {
-				id: '1',
-				name: '김개발자',
-				email: email,
-				avatar: undefined,
-				role: 'admin',
-			};
+			// 운영진 계정 확인
+			const isAdmin = username === 'admin' && password === '1234';
 
-			const token = 'dummy-token-' + Date.now();
+			// 기본 로그인 검증 (데모용)
+			if (isAdmin || (username.length >= 2 && password.length >= 4)) {
+				// 사용자 데이터 설정
+				const userData: User = {
+					id: isAdmin ? 'admin' : username,
+					name: isAdmin ? '관리자' : `${username}님`,
+					email: isAdmin ? 'admin@system.com' : `${username}@example.com`,
+					avatar: undefined,
+					role: isAdmin ? 'admin' : 'user',
+				};
 
-			// 상태 업데이트
-			set(isAuthenticatedAtom, true);
-			set(userAtom, userData);
-			set(accessTokenAtom, token);
+				const token = 'token-' + Date.now();
 
-			return { success: true, user: userData };
+				// 상태 업데이트
+				set(isAuthenticatedAtom, true);
+				set(userAtom, userData);
+				set(accessTokenAtom, token);
+
+				return { success: true, user: userData };
+			} else {
+				return {
+					success: false,
+					error: '아이디 또는 비밀번호가 올바르지 않습니다.',
+				};
+			}
 		} catch (error) {
 			console.error('로그인 실패:', error);
 			return { success: false, error: '로그인에 실패했습니다.' };

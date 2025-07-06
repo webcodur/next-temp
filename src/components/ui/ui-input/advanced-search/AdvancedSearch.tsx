@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { RotateCcw, Search } from 'lucide-react';
 import { Accordion } from '@/components/ui/ui-layout/accordion/Accordion';
+import { useLocale } from '@/hooks/useI18n';
 
 interface AdvancedSearchProps {
 	title?: string;
@@ -25,6 +26,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	showButtons = true,
 	statusText,
 }) => {
+	const { isRTL } = useLocale();
+
 	return (
 		<Accordion title={title} defaultOpen={defaultOpen} statusText={statusText}>
 			<div className="space-y-6">
@@ -33,7 +36,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
 				{/* 버튼 영역 */}
 				{showButtons && (
-					<div className="flex justify-end gap-2">
+					<div className={`flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
 						{/* 리셋 버튼 */}
 						<button
 							onClick={onReset}

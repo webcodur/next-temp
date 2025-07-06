@@ -33,8 +33,8 @@ export default function RTLDemoPage() {
 			content: (
 				<div className="space-y-4">
 					{demoTexts.map((demo, index) => (
-						<div key={index} className="neu-flat p-4 rounded-lg">
-							<h4 className="font-medium text-gray-700 mb-2 font-multilang">{demo.label}</h4>
+						<div key={index} className="p-4 rounded-lg neu-flat">
+							<h4 className="mb-2 font-medium text-gray-700 font-multilang">{demo.label}</h4>
 							<p className="font-multilang" dir="auto">
 								{demo.text}
 							</p>
@@ -48,8 +48,8 @@ export default function RTLDemoPage() {
 			content: (
 				<div className="space-y-4">
 					{demoTexts.map((demo, index) => (
-						<div key={index} className="neu-flat p-4 rounded-lg">
-							<h4 className="font-medium text-gray-700 mb-2 font-multilang">{demo.label}</h4>
+						<div key={index} className="p-4 rounded-lg neu-flat">
+							<h4 className="mb-2 font-medium text-gray-700 font-multilang">{demo.label}</h4>
 							<p className="font-multilang" dir="rtl" style={{ textAlign: 'right' }}>
 								{demo.text}
 							</p>
@@ -63,8 +63,8 @@ export default function RTLDemoPage() {
 			content: (
 				<div className="space-y-4">
 					{demoTexts.map((demo, index) => (
-						<div key={index} className="neu-flat p-4 rounded-lg">
-							<h4 className="font-medium text-gray-700 mb-2 font-multilang">{demo.label}</h4>
+						<div key={index} className="p-4 rounded-lg neu-flat">
+							<h4 className="mb-2 font-medium text-gray-700 font-multilang">{demo.label}</h4>
 							<p className="font-multilang" dir="ltr" style={{ textAlign: 'left' }}>
 								{demo.text}
 							</p>
@@ -87,8 +87,8 @@ export default function RTLDemoPage() {
 			</div>
 
 			{/* 언어 설정 */}
-			<div className="neu-flat p-6 rounded-lg">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">{t('RTL데모_현재언어설정')}</h2>
+			<div className="p-6 rounded-lg neu-flat">
+				<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">{t('RTL데모_현재언어설정')}</h2>
 				<div className="flex flex-wrap gap-4 items-center">
 					<div className="text-gray-700 font-multilang">
 						{t('RTL데모_현재언어')}: <span className="font-medium">{currentLocale}</span>
@@ -123,25 +123,25 @@ export default function RTLDemoPage() {
 			</div>
 
 			{/* 번역 테스트 */}
-			<div className="neu-flat p-6 rounded-lg">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">{t('RTL데모_다국어번역테스트')}</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					<div className="neu-flat p-4 rounded-lg">
-						<p className="font-multilang text-lg">{t('공통_로딩중')}</p>
+			<div className="p-6 rounded-lg neu-flat">
+				<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">{t('RTL데모_다국어번역테스트')}</h2>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+					<div className="p-4 rounded-lg neu-flat">
+						<p className="text-lg font-multilang">{t('공통_로딩중')}</p>
 					</div>
-					<div className="neu-flat p-4 rounded-lg">
-						<p className="font-multilang text-lg">{t('메뉴_주차')}</p>
+					<div className="p-4 rounded-lg neu-flat">
+						<p className="text-lg font-multilang">{t('메뉴_주차')}</p>
 					</div>
-					<div className="neu-flat p-4 rounded-lg">
-						<p className="font-multilang text-lg">{t('공통_검색')}</p>
+					<div className="p-4 rounded-lg neu-flat">
+						<p className="text-lg font-multilang">{t('공통_검색')}</p>
 					</div>
 				</div>
 			</div>
 
 			{/* 텍스트 방향 테스트 */}
 			{testComponents.map((component, index) => (
-				<div key={index} className="neu-flat p-6 rounded-lg">
-					<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">
+				<div key={index} className="p-6 rounded-lg neu-flat">
+					<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">
 						{component.title}
 					</h2>
 					{component.content}
@@ -149,8 +149,8 @@ export default function RTLDemoPage() {
 			))}
 
 			{/* 동적 텍스트 테스트 */}
-			<div className="neu-flat p-6 rounded-lg">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">
+			<div className="p-6 rounded-lg neu-flat">
+				<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">
 					{t('RTL데모_동적텍스트테스트')}
 				</h2>
 				<div className="space-y-4">
@@ -158,23 +158,23 @@ export default function RTLDemoPage() {
 						value={testText}
 						onChange={(e) => setTestText(e.target.value)}
 						placeholder={t('RTL데모_텍스트입력플레이스홀더')}
-						className="w-full p-3 rounded-lg neu-inset font-multilang resize-none"
+						className="p-3 w-full rounded-lg resize-none neu-inset font-multilang"
 						rows={3}
 					/>
 					<div className="space-y-3">
 						<div>
-							<h4 className="font-medium text-gray-700 mb-2 font-multilang">{t('RTL데모_자동방향')}</h4>
-							<div className="neu-flat p-4 rounded-lg">
+							<h4 className="mb-2 font-medium text-gray-700 font-multilang">{t('RTL데모_자동방향')}</h4>
+							<div className="p-4 rounded-lg neu-flat">
 								<p className="font-multilang" dir="auto">
 									{testText}
 								</p>
 							</div>
 						</div>
 						<div>
-							<h4 className="font-medium text-gray-700 mb-2 font-multilang">
+							<h4 className="mb-2 font-medium text-gray-700 font-multilang">
 								{t('RTL데모_아랍어감지RTL')}
 							</h4>
-							<div className="neu-flat p-4 rounded-lg">
+							<div className="p-4 rounded-lg neu-flat">
 								<p
 									className="font-multilang"
 									dir={/[\u0600-\u06FF]/.test(testText) ? 'rtl' : 'ltr'}
@@ -191,34 +191,34 @@ export default function RTLDemoPage() {
 			</div>
 
 			{/* 컴포넌트 내부 텍스트 방향 테스트 */}
-			<div className="neu-flat p-6 rounded-lg">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">
+			<div className="p-6 rounded-lg neu-flat">
+				<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">
 					{t('RTL데모_UI컴포넌트테스트')}
 				</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					<div>
-						<h4 className="font-medium text-gray-700 mb-3 font-multilang">{t('RTL데모_버튼컴포넌트')}</h4>
+						<h4 className="mb-3 font-medium text-gray-700 font-multilang">{t('RTL데모_버튼컴포넌트')}</h4>
 						<div className="space-y-2">
-							<button className="neu-raised px-6 py-3 rounded-lg font-multilang">
+							<button className="px-6 py-3 rounded-lg neu-raised font-multilang">
 								{t('RTL데모_저장버튼')}
 							</button>
-							<button className="neu-raised px-6 py-3 rounded-lg font-multilang">
+							<button className="px-6 py-3 rounded-lg neu-raised font-multilang">
 								{t('RTL데모_취소버튼')}
 							</button>
 						</div>
 					</div>
 					<div>
-						<h4 className="font-medium text-gray-700 mb-3 font-multilang">{t('RTL데모_입력필드')}</h4>
+						<h4 className="mb-3 font-medium text-gray-700 font-multilang">{t('RTL데모_입력필드')}</h4>
 						<div className="space-y-2">
 							<input
 								type="text"
 								placeholder={t('RTL데모_이름플레이스홀더')}
-								className="w-full p-3 rounded-lg neu-inset font-multilang"
+								className="p-3 w-full rounded-lg neu-inset font-multilang"
 							/>
 							<input
 								type="text"
 								placeholder={t('RTL데모_주차번호플레이스홀더')}
-								className="w-full p-3 rounded-lg neu-inset font-multilang"
+								className="p-3 w-full rounded-lg neu-inset font-multilang"
 							/>
 						</div>
 					</div>
@@ -226,26 +226,26 @@ export default function RTLDemoPage() {
 			</div>
 
 			{/* 폰트 렌더링 테스트 */}
-			<div className="neu-flat p-6 rounded-lg">
-				<h2 className="text-xl font-semibold text-gray-800 mb-4 font-multilang">
+			<div className="p-6 rounded-lg neu-flat">
+				<h2 className="mb-4 text-xl font-semibold text-gray-800 font-multilang">
 					{t('RTL데모_폰트렌더링테스트')}
 				</h2>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-					<div className="neu-flat p-4 rounded-lg">
-						<h4 className="font-medium text-gray-700 mb-2 font-multilang">{t('RTL데모_한국어폰트')}</h4>
-						<p className="font-pretendard text-lg">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+					<div className="p-4 rounded-lg neu-flat">
+						<h4 className="mb-2 font-medium text-gray-700 font-multilang">{t('RTL데모_한국어폰트')}</h4>
+						<p className="text-lg font-pretendard">
 							{t('RTL데모_한국어폰트샘플')}
 						</p>
 					</div>
-					<div className="neu-flat p-4 rounded-lg">
-						<h4 className="font-medium text-gray-700 mb-2 font-multilang">{t('RTL데모_영어폰트')}</h4>
-						<p className="font-inter text-lg">
+					<div className="p-4 rounded-lg neu-flat">
+						<h4 className="mb-2 font-medium text-gray-700 font-multilang">{t('RTL데모_영어폰트')}</h4>
+						<p className="text-lg font-inter">
 							{t('RTL데모_영어폰트샘플')}
 						</p>
 					</div>
-					<div className="neu-flat p-4 rounded-lg">
-						<h4 className="font-medium text-gray-700 mb-2 font-multilang">{t('RTL데모_아랍어폰트')}</h4>
-						<p className="font-cairo text-lg" dir="rtl">
+					<div className="p-4 rounded-lg neu-flat">
+						<h4 className="mb-2 font-medium text-gray-700 font-multilang">{t('RTL데모_아랍어폰트')}</h4>
+						<p className="text-lg font-cairo" dir="rtl">
 							{t('RTL데모_아랍어폰트샘플')}
 						</p>
 					</div>

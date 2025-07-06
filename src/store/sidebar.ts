@@ -2,14 +2,14 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { defaults } from '@/data/sidebarConfig';
 
-export const R_PANEL_MIN_WIDTH = 180;
-export const R_PANEL_MAX_WIDTH = 500;
+export const END_PANEL_MIN_WIDTH = 180;
+export const END_PANEL_MAX_WIDTH = 500;
 
-export const rPanelWidthAtom = atom(
-	defaults.sidebarWidth - defaults.leftColumnWidth
+export const endPanelWidthAtom = atom(
+	defaults.sidebarWidth - defaults.startColumnWidth
 );
 export const isResizingAtom = atom(false);
-export const isResizeHandleHoveredAtom = atom(false);
+export const isSideResizeControlHoveredAtom = atom(false);
 
 export const sidebarCollapsedAtom = atom<boolean>(false);
 export const headerCollapsedAtom = atom<boolean>(false);

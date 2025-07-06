@@ -1,187 +1,176 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
-import Image from 'next/image';
+import { useLocale } from '@/hooks/useI18n';
 
-export interface CarouselProps {
-	images: string[];
+interface CarouselProps {
+	items: Array<{
+		id: string;
+		title: string;
+		content: React.ReactNode;
+		thumbnail?: string;
+	}>;
+	autoSlide?: boolean;
+	slideInterval?: number;
+	showThumbnails?: boolean;
+	showDots?: boolean;
+	showArrows?: boolean;
+	className?: string;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images }) => {
-	const [index, setIndex] = useState<number>(0);
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-	const [dragStartX, setDragStartX] = useState<number>(0);
-	const [isDragging, setIsDragging] = useState<boolean>(false);
-	const [isPointerDown, setIsPointerDown] = useState<boolean>(false);
+const Carousel: React.FC<CarouselProps> = ({
+	items,
+	autoSlide = false,
+	slideInterval = 3000,
+	showThumbnails = false,
+	showDots = true,
+	showArrows = true,
+	className = '',
+}) => {
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [isPlaying, setIsPlaying] = useState(autoSlide);
+	const { isRTL } = useLocale();
 
-	const handlePrev = useCallback(
-		() => setIndex((prev) => (prev - 1 + images.length) % images.length),
-		[images.length]
-	);
-	const handleNext = useCallback(
-		() => setIndex((prev) => (prev + 1) % images.length),
-		[images.length]
-	);
-
-	const handleImageClick = () => {
-		// 드래그 중이었다면 클릭 무시
-		if (isDragging) {
-			return;
-		}
-		setIsModalOpen(true);
-	};
-
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
-	};
-
-	const handleMouseDown = (e: React.MouseEvent) => {
-		e.preventDefault();
-		setIsPointerDown(true);
-		setDragStartX(e.clientX);
-		setIsDragging(false);
-	};
-
-	// window 이벤트로 드래그 처리
 	useEffect(() => {
-		const handleMouseMove = (e: MouseEvent) => {
-			if (!isPointerDown) return;
+		if (!isPlaying) return;
 
-			const currentX = e.clientX;
-			const dragDistance = currentX - dragStartX;
+		const interval = setInterval(() => {
+			setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+		}, slideInterval);
 
-			// 10px 이상 움직이면 드래그로 간주
-			if (Math.abs(dragDistance) > 10) {
-				setIsDragging(true);
-			}
-		};
+		return () => clearInterval(interval);
+	}, [isPlaying, slideInterval, items.length]);
 
-		const handleMouseUp = (e: MouseEvent) => {
-			if (!isPointerDown) return;
+	const goToPrevious = () => {
+		setCurrentIndex((prevIndex) => 
+			prevIndex === 0 ? items.length - 1 : prevIndex - 1
+		);
+	};
 
-			setIsPointerDown(false);
+	const goToNext = () => {
+		setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+	};
 
-			if (isDragging) {
-				const currentX = e.clientX;
-				const dragDistance = currentX - dragStartX;
-				const threshold = 50;
+	const goToSlide = (index: number) => {
+		setCurrentIndex(index);
+	};
 
-				if (Math.abs(dragDistance) > threshold) {
-					if (dragDistance > 0) {
-						handlePrev();
-					} else {
-						handleNext();
-					}
-				}
-			}
-
-			// 드래그 상태를 약간 지연 후 리셋 (클릭 이벤트와 충돌 방지)
-			setTimeout(() => setIsDragging(false), 50);
-		};
-
-		if (isPointerDown) {
-			window.addEventListener('mousemove', handleMouseMove);
-			window.addEventListener('mouseup', handleMouseUp);
-		}
-
-		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
-		};
-	}, [isPointerDown, dragStartX, isDragging, handlePrev, handleNext]);
-
-	// 이미지가 없으면 빈 div 반환
-	if (!images.length)
-		return <div className="w-full h-64 bg-muted rounded-md"></div>;
+	const toggleAutoPlay = () => {
+		setIsPlaying(!isPlaying);
+	};
 
 	return (
-		<>
-			<div className="overflow-hidden relative w-full rounded-lg neu-raised aspect-video">
-				<AnimatePresence mode="wait">
-					{(() => {
-						const MotionImage = motion(Image);
-						return (
-							<MotionImage
-								key={index}
-								src={images[index]}
-								alt={`슬라이드 이미지 ${index + 1}`}
-								fill
-								unoptimized
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ duration: 0.5 }}
-								className="object-cover w-full h-full cursor-pointer hover:scale-105 select-none"
-								onClick={handleImageClick}
-								onMouseDown={handleMouseDown}
-								style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-							/>
-						);
-					})()}
-				</AnimatePresence>
+		<div className={`relative w-full max-w-4xl mx-auto neu-flat rounded-lg overflow-hidden ${className}`}>
+			{/* 메인 슬라이드 영역 */}
+			<div className="relative h-96 overflow-hidden">
+				{items.map((item, index) => (
+					<div
+						key={item.id}
+						className={`absolute inset-0 transition-transform duration-500 ${
+							index === currentIndex ? 'translate-x-0' : 
+							index < currentIndex ? '-translate-x-full' : 'translate-x-full'
+						}`}
+					>
+						{item.content}
+					</div>
+				))}
 
-				<button
-					onClick={handlePrev}
-					className="absolute left-2 top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
-					<ChevronLeft size={24} />
-				</button>
-
-				<button
-					onClick={handleNext}
-					className="absolute right-2 top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70">
-					<ChevronRight size={24} />
-				</button>
-
-				<div className="flex absolute bottom-4 left-1/2 space-x-2 transform -translate-x-1/2">
-					{images.map((_, idx) => (
+				{/* 네비게이션 화살표 */}
+				{showArrows && items.length > 1 && (
+					<>
 						<button
-							key={idx}
-							onClick={() => setIndex(idx)}
-							className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-110 ${
-								idx === index ? 'bg-brand' : 'bg-muted-foreground neu-raised'
-							}`}
-							aria-label={`슬라이드 ${idx + 1}로 이동`}
-						/>
-					))}
-				</div>
+							onClick={goToPrevious}
+							className={`absolute ${isRTL ? 'end-2' : 'start-2'} top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
+							{isRTL ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
+						</button>
+						<button
+							onClick={goToNext}
+							className={`absolute ${isRTL ? 'start-2' : 'end-2'} top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
+							{isRTL ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+						</button>
+					</>
+				)}
+
+				{/* 슬라이드 인디케이터 */}
+				{showDots && (
+					<div className={`flex absolute bottom-4 ${isRTL ? 'end-1/2' : 'start-1/2'} space-x-2 transform ${isRTL ? 'translate-x-1/2' : '-translate-x-1/2'}`}>
+						{items.map((_, index) => (
+							<button
+								key={index}
+								onClick={() => goToSlide(index)}
+								className={`w-3 h-3 rounded-full transition-all duration-200 ${
+									index === currentIndex
+										? 'bg-brand neu-inset'
+										: 'bg-background/50 neu-flat hover:bg-background/70'
+								}`}
+							/>
+						))}
+					</div>
+				)}
 			</div>
 
-			<Modal
-				isOpen={isModalOpen}
-				onClose={handleCloseModal}
-				title={`이미지 ${index + 1} / ${images.length}`}
-				maxWidth="max-w-5xl">
-				<div className="flex justify-center items-center">
-					<Image
-						src={images[index]}
-						alt={`원본 이미지 ${index + 1}`}
-						width={1024}
-						height={768}
-						unoptimized
-						className="max-w-full max-h-[70vh] object-contain rounded-lg"
-					/>
+			{/* 썸네일 영역 */}
+			{showThumbnails && (
+				<div className="flex p-4 space-x-2 bg-muted/50 overflow-x-auto">
+					{items.map((item, index) => (
+						<button
+							key={item.id}
+							onClick={() => goToSlide(index)}
+							className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden transition-all duration-200 ${
+								index === currentIndex
+									? 'ring-2 ring-brand neu-inset'
+									: 'neu-flat hover:neu-raised'
+							}`}
+						>
+							{item.thumbnail ? (
+								<img
+									src={item.thumbnail}
+									alt={item.title}
+									className="w-full h-full object-cover"
+								/>
+							) : (
+								<div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+									{index + 1}
+								</div>
+							)}
+						</button>
+					))}
 				</div>
-				<div className="flex justify-center mt-4 space-x-4">
+			)}
+
+			{/* 컨트롤 바 */}
+			<div className="flex items-center justify-between p-4 bg-background border-t border-border">
+				<div className="flex items-center space-x-2">
 					<button
-						onClick={handlePrev}
-						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
-						disabled={images.length <= 1}>
-						<ChevronLeft size={20} className="inline me-1" />
+						onClick={goToPrevious}
+						className="flex items-center px-3 py-1 text-sm rounded-md neu-flat hover:neu-raised transition-all duration-200 text-foreground"
+					>
+						{isRTL ? <ChevronRight size={20} className="inline ms-1" /> : <ChevronLeft size={20} className="inline me-1" />}
 						이전
 					</button>
 					<button
-						onClick={handleNext}
-						className="px-4 py-2 bg-muted rounded-lg transition-all duration-200 neu-raised hover:neu-inset"
-						disabled={images.length <= 1}>
+						onClick={goToNext}
+						className="flex items-center px-3 py-1 text-sm rounded-md neu-flat hover:neu-raised transition-all duration-200 text-foreground"
+					>
 						다음
-						<ChevronRight size={20} className="inline ms-1" />
+						{isRTL ? <ChevronLeft size={20} className="inline ms-1" /> : <ChevronRight size={20} className="inline ms-1" />}
 					</button>
 				</div>
-			</Modal>
-		</>
+
+				<div className="flex items-center space-x-2">
+					<span className="text-sm text-muted-foreground">
+						{currentIndex + 1} / {items.length}
+					</span>
+					<button
+						onClick={toggleAutoPlay}
+						className="px-3 py-1 text-sm rounded-md neu-flat hover:neu-raised transition-all duration-200 text-foreground"
+					>
+						{isPlaying ? '정지' : '재생'}
+					</button>
+				</div>
+			</div>
+		</div>
 	);
 };
 

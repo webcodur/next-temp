@@ -24,8 +24,8 @@ const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
 	<span
 		className={`truncate ${
 			isCurrent
-				? 'text-foreground font-medium'
-				: 'text-muted-foreground hover:text-brand transition-colors'
+				? 'font-medium text-foreground'
+				: 'transition-colors text-muted-foreground hover:text-brand'
 		}`}
 	>
 		{label}
@@ -61,7 +61,7 @@ export function Breadcrumb() {
 					if (botItem.href === pathname) {
 						setCurrentTopMenu(topKey);
 						setCurrentMidMenu(midKey);
-						setCurrentBotMenu(botItem['kor-name']);
+						setCurrentBotMenu(botItem.key);
 						return;
 					}
 				}
@@ -76,20 +76,20 @@ export function Breadcrumb() {
 
 		if (currentTopMenu && menuData[currentTopMenu]) {
 			items.push({
-				label: menuData[currentTopMenu]['kor-name'],
+				label: menuData[currentTopMenu].key,
 				href: '#',
 			});
 
 			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
 				items.push({
-					label: menuData[currentTopMenu].midItems[currentMidMenu]['kor-name'],
+					label: menuData[currentTopMenu].midItems[currentMidMenu].key,
 					href: '#',
 				});
 
 				if (currentBotMenu) {
 					const botItem = menuData[currentTopMenu].midItems[
 						currentMidMenu
-					].botItems.find(item => item['kor-name'] === currentBotMenu);
+					].botItems.find(item => item.key === currentBotMenu);
 					if (botItem) {
 						items.push({ label: currentBotMenu, href: botItem.href });
 					}
@@ -119,34 +119,32 @@ export function Breadcrumb() {
 		const checkScreenSize = () => {
 			setIsCollapsed(window.innerWidth < 1500);
 		};
-
 		checkScreenSize(); // 초기 렌더링 시 체크
 		window.addEventListener('resize', checkScreenSize);
-
 		return () => window.removeEventListener('resize', checkScreenSize);
 	}, []);
 	// #endregion
 
 	if (breadcrumbItems.length <= 1) {
 		return (
-			<h2 className="text-lg font-semibold text-foreground truncate">
+			<h2 className="text-lg font-semibold truncate text-foreground">
 				{breadcrumbItems.length > 0 ? breadcrumbItems[0].label : '홈'}
 			</h2>
 		);
 	}
 
 	const Separator = () => (
-		<ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+		<ChevronRight className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
 	);
 
 	const renderFullBreadcrumb = () => (
-		<div className="flex items-center gap-2 min-w-0">
-			<h2 className="text-lg font-semibold text-foreground truncate">
+		<div className="flex gap-2 items-center min-w-0">
+			<h2 className="text-lg font-semibold truncate text-foreground">
 				{breadcrumbItems[0].label}
 			</h2>
-			<div className="flex items-center gap-2 overflow-hidden">
+			<div className="flex overflow-hidden gap-2 items-center">
 				{breadcrumbItems.slice(1).map((item, index) => (
-					<div key={index} className="flex items-center gap-2 flex-shrink-0">
+					<div key={index} className="flex flex-shrink-0 gap-2 items-center">
 						<Separator />
 						<BreadcrumbItem
 							label={item.label}
@@ -160,7 +158,7 @@ export function Breadcrumb() {
 
 	const renderCollapsedBreadcrumb = () => (
 		<DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-			<DropdownMenu.Trigger className="neu-raised hover:neu-inset transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium">
+			<DropdownMenu.Trigger className="neu-flat hover:neu-inset transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium">
 				<span>메뉴 경로</span>
 				<ChevronRight
 					className={clsx(

@@ -3,14 +3,18 @@ import { X } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 
 interface ClearButtonProps {
-	onClick: (e: React.MouseEvent) => void;
+	onClick: () => void;
+	className?: string;
 }
 
-export const ClearButton: React.FC<ClearButtonProps> = ({ onClick }) => (
-	<button
-		onClick={onClick}
-		className={`${FIELD_STYLES.rightIcon} ${FIELD_STYLES.clearButton}`}
-		type="button">
-		<X className="w-3 h-3" />
-	</button>
-);
+export const ClearButton = ({ onClick, className = '' }: ClearButtonProps) => {
+	return (
+		<button
+			type="button"
+			onClick={onClick}
+			className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton} ${className}`}
+		>
+			<X className="w-3 h-3" />
+		</button>
+	);
+};

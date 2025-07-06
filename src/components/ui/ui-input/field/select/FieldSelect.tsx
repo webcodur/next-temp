@@ -1,91 +1,106 @@
 'use client';
 
-import React from 'react';
-import { ChevronDown, List } from 'lucide-react';
-import { FieldSelectComponentProps } from '../core/types';
+import React, { useState, useRef } from 'react';
+import { List, ChevronDown } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
-import { useSelectLogic } from '../shared/useSelectLogic';
+import { useLocale } from '@/hooks/useI18n';
 
-export const FieldSelect: React.FC<FieldSelectComponentProps> = ({
+interface FieldSelectProps {
+	id: string;
+	label?: string;
+	placeholder?: string;
+	value?: string;
+	onChange?: (value: string) => void;
+	options: Array<{ value: string; label: string }>;
+	className?: string;
+	disabled?: boolean;
+	startIcon?: React.ReactNode;
+	onFocus?: () => void;
+	onBlur?: () => void;
+}
+
+const FieldSelect: React.FC<FieldSelectProps> = ({
+	id,
 	label,
 	placeholder = '선택하세요',
-	value,
+	value = '',
 	onChange,
 	options,
-	maxHeight = 200,
-	leftIcon,
-	disabled = false,
 	className = '',
+	disabled = false,
+	startIcon,
+	onFocus,
+	onBlur,
 }) => {
-	const {
-		isOpen,
-		setIsOpen,
-		highlightedIndex,
-		containerRef,
-		selectedOption,
-		handleOptionSelect,
-	} = useSelectLogic(options, value, onChange);
+	const [isOpen, setIsOpen] = useState(false);
+	const [isFocused, setIsFocused] = useState(false);
+	const selectRef = useRef<HTMLDivElement>(null);
+	const { isRTL } = useLocale();
 
-	const toggleDropdown = () => {
-		if (!disabled) {
-			setIsOpen(!isOpen);
-		}
-	};
+	const selectedOption = options.find(option => option.value === value);
 
-	const handleSelect = (selectedValue: string) => {
-		const option = options.find((opt) => opt.value === selectedValue);
-		if (option) {
-			handleOptionSelect(option);
-		}
+	const handleSelect = (optionValue: string) => {
+		onChange?.(optionValue);
+		setIsOpen(false);
 	};
 
 	return (
-		<div ref={containerRef} className={`relative space-y-1 ${className}`}>
-			{label && <label className={FIELD_STYLES.label}>{label}</label>}
-
-			<div className="relative">
-				<button
-					type="button"
-					onClick={toggleDropdown}
-					disabled={disabled}
+		<div className={`relative ${className}`}>
+			{label && (
+				<label htmlFor={id} className={FIELD_STYLES.label}>
+					{label}
+				</label>
+			)}
+			<div className="relative" ref={selectRef}>
+				<div
 					className={`
-						w-full text-start
 						${FIELD_STYLES.container}
 						${FIELD_STYLES.height}
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
-						ps-10 pe-10
+						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
+						${isFocused ? 'ring-2 ring-brand' : ''}
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
-						${isOpen ? 'neu-flat-focus' : ''}
-					`}>
-					<span className={`${FIELD_STYLES.leftIcon}`}>
-						{leftIcon || <List className="neu-icon-inactive w-4 h-4" />}
+						w-full bg-transparent flex items-center justify-between
+					`}
+					onClick={() => !disabled && setIsOpen(!isOpen)}
+					onFocus={() => {
+						setIsFocused(true);
+						onFocus?.();
+					}}
+					onBlur={() => {
+						setIsFocused(false);
+						onBlur?.();
+					}}
+				>
+					<span className={`${FIELD_STYLES.startIcon}`}>
+						{startIcon || <List className="neu-icon-inactive w-4 h-4" />}
 					</span>
-
-					<span className="font-multilang block truncate">
+					<span className={`${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}>
 						{selectedOption ? selectedOption.label : placeholder}
 					</span>
-
-					<ChevronDown
+					<ChevronDown 
 						className={`
-							${FIELD_STYLES.rightIcon}
-							neu-icon-inactive hover:neu-icon-active
-							transition-transform
+							${FIELD_STYLES.endIcon}
+							w-4 h-4 transition-transform
 							${isOpen ? 'rotate-180' : ''}
 						`}
 					/>
-				</button>
-
-				<SelectDropdown
-					isOpen={isOpen}
-					options={options}
-					selectedValue={value}
-					onSelect={handleSelect}
-					highlightedIndex={highlightedIndex}
-					maxHeight={maxHeight}
-				/>
+				</div>
+				
+				{isOpen && (
+					<SelectDropdown
+						isOpen={isOpen}
+						options={options}
+						selectedValue={value}
+						onSelect={handleSelect}
+						maxHeight={200}
+					/>
+				)}
 			</div>
 		</div>
 	);
 };
+
+export default FieldSelect;
