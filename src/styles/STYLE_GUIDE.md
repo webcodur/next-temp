@@ -71,73 +71,102 @@ flowchart TD
 ### 2. CSS 변수 계층 구조
 
 ```mermaid
-flowchart TD
-    subgraph "🎨 기본 그레이 스케일"
-        A[--gray-0: 100% 순수 흰색]
-        B[--gray-1: 98% 거의 흰색]
-        C[--gray-2: 94% 매우 밝음]
-        D[--gray-3: 88% 밝음]
-        E[--gray-4: 80% 중간 밝음]
-        F[--gray-5: 60% 중간]
-        G[--gray-6: 40% 중간 어둠]
-        H[--gray-7: 30% 어둠]
-        I[--gray-8: 20% 매우 어둠]
-        J[--gray-9: 5% 거의 검정]
+flowchart TB
+    subgraph "🎨 기본 색상 팔레트"
+        direction TB
+        
+        subgraph Gray["그레이스케일 (gray-0 ~ gray-9)"]
+            G0[gray-0: 100% 순수 흰색]
+            G1[gray-1: 98% 거의 흰색]
+            G2[gray-2: 94% 매우 밝음]
+            G3[gray-3: 88% 밝음]
+            G4[gray-4: 80% 중간 밝음]
+            G5[gray-5: 60% 중간]
+            G6[gray-6: 40% 중간 어둠]
+            G7[gray-7: 30% 어둠]
+            G8[gray-8: 20% 매우 어둠]
+            G9[gray-9: 5% 거의 검정]
+        end
+        
+        subgraph Brand["브랜드 스케일 (brand-0 ~ brand-9)"]
+            B0[brand-0: 97% 가장 밝음]
+            B5[brand-5: 55% 기본값]
+            B9[brand-9: 15% 가장 어둠]
+        end
     end
     
-    subgraph "📦 배경 요소 (순차 매핑)"
-        K[--background: gray-1]
-        L[--card: gray-0]
-        M[--muted: gray-2]
-        N[--input: gray-2]
-        O[--border: gray-3]
-        P[--popover: gray-0]
+    subgraph "📦 의미적 변수 레이어"
+        direction TB
+        
+        subgraph BG["배경 요소들"]
+            BG1[background ← gray-1]
+            BG2[card ← gray-0] 
+            BG3[muted ← gray-2]
+            BG4[input ← gray-2]
+            BG5[border ← gray-3]
+            BG6[popover ← gray-0]
+        end
+        
+        subgraph FG["텍스트/UI 요소들"]
+            FG1[foreground ← gray-9]
+            FG2[primary ← gray-8]
+            FG3[secondary ← gray-7]
+            FG4[accent ← gray-6]
+            FG5[muted-foreground ← gray-6]
+        end
+        
+        subgraph NM["뉴모피즘 효과"]
+            NM1[nm-light-rgba: 255,255,255,0.95]
+            NM2[nm-dark-rgba: 0,0,0,0.08]
+            NM3[nm-offset: 3px]
+            NM4[nm-blur: 6px]
+        end
     end
     
-    subgraph "✏️ 텍스트/UI (역순 매핑)"
-        Q[--foreground: gray-9]
-        R[--primary: gray-8]
-        S[--secondary: gray-7]
-        T[--accent: gray-6]
-        U[--muted-foreground: gray-6]
+    subgraph "🎭 컴포넌트 스타일"
+        direction TB
+        
+        subgraph Neu["뉴모피즘 클래스들"]
+            N1[neu-flat]
+            N2[neu-raised]  
+            N3[neu-elevated]
+            N4[neu-flat-brand]
+            N5[neu-raised-brand]
+        end
+        
+        subgraph Theme["테마 토글"]
+            T1[light: 기본 매핑]
+            T2[dark: 그레이 반전 + 브랜드 조정]
+        end
     end
     
-    subgraph "🎨 브랜드 10단계 스케일"
-        V[--brand-0: 97% 가장 밝음]
-        W[--brand-5: 55% 기본값]
-        X[--brand-9: 15% 가장 어둠]
-    end
+    %% 연결 관계
+    Gray --> BG
+    Gray --> FG
+    Brand --> Neu
+    Gray --> NM
     
-    subgraph "🎭 뉴모피즘 변수"
-        Y[--nm-light-rgba: 255,255,255,0.95]
-        Z[--nm-dark-rgba: 0,0,0,0.08]
-        AA[--nm-offset: 3px]
-        BB[--nm-blur: 6px]
-    end
+    BG --> Neu
+    FG --> Neu
+    NM --> Neu
     
-    B --> K
-    A --> L
-    C --> M
-    C --> N
-    D --> O
-    A --> P
+    Gray --> Theme
+    Brand --> Theme
     
-    J --> Q
-    I --> R
-    H --> S
-    G --> T
-    G --> U
+    %% 스타일링
+    style G0 fill:#ffffff,stroke:#ddd
+    style G1 fill:#fafafa,stroke:#ddd
+    style G2 fill:#f0f0f0,stroke:#ddd
+    style G3 fill:#e0e0e0,stroke:#ddd
+    style G6 fill:#666666,color:#fff
+    style G8 fill:#333333,color:#fff
+    style G9 fill:#0d0d0d,color:#fff
     
-    style A fill:#ffffff
-    style B fill:#fafafa
-    style C fill:#f0f0f0
-    style D fill:#e0e0e0
-    style E fill:#cccccc
-    style F fill:#999999
-    style G fill:#666666
-    style H fill:#4d4d4d
-    style I fill:#333333
-    style J fill:#0d0d0d
+    style BG fill:#e3f2fd
+    style FG fill:#fff3e0
+    style NM fill:#e8f5e8
+    style Neu fill:#fce4ec
+    style Theme fill:#f3e5f5
 ```
 
 ### 3. 테마 전환 프로세스
