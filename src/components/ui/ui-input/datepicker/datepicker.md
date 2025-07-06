@@ -1,183 +1,85 @@
-# Datepicker 컴포넌트
+# Datepicker 기능 명세서
 
-다양한 날짜 및 시간 선택 기능을 제공하는 컴포넌트 모음입니다.
+`Datepicker`는 다양한 시나리오에 맞춰 날짜, 시간, 또는 날짜 범위를 선택할 수 있는 유연한 컴포넌트 모음입니다.
 
-## 구성 컴포넌트
+## 1. 컴포넌트 구성
 
-### SingleDatePicker
-단일 날짜 선택을 위한 컴포넌트
+Datepicker는 세 가지 주요 컴포넌트로 구성되어 있으며, 각각 특정 선택 시나리오를 담당합니다.
 
-### DateRangePicker  
-날짜 범위 선택을 위한 컴포넌트
+```mermaid
+graph TD
+    subgraph "Datepicker 모음"
+        A[SingleDatePicker<br/>(단일 날짜/시간 선택)]
+        B[DateRangePicker<br/>(날짜 범위 선택)]
+        C[TimeOnlyPicker<br/>(시간만 선택)]
+    end
 
-### TimeOnlyPicker
-시간만 선택하는 컴포넌트
+    subgraph "주요 기능"
+        Func_A["- 특정 날짜 하나 선택<br/>- 시간 또는 월/년 단위 선택 모드 지원"]
+        Func_B["- 시작일과 종료일 선택<br/>- 예약, 조회 기간 설정에 사용"]
+        Func_C["- 날짜 정보 없이 시간만 선택<br/>- 알람, 영업 시간 설정에 사용"]
+    end
 
-## 주요 특징
-
-- **한국어 지원**: `date-fns/locale/ko` 적용으로 한국어 인터페이스
-- **커스텀 헤더**: 연도/월 드롭다운으로 빠른 탐색
-- **뉴모피즘 디자인**: `neu-inset` 스타일로 일관된 디자인
-- **유연한 포맷**: 날짜, 시간, 날짜+시간 조합 지원
-- **접근성**: 키보드 네비게이션 및 포커스 관리
-
-## 사용법
-
-### 기본 단일 날짜 선택
-
-```tsx
-import { SingleDatePicker } from '@/components/ui/ui-input/datepicker/Datepicker';
-
-const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-<SingleDatePicker
-  selected={selectedDate}
-  onChange={setSelectedDate}
-  placeholderText="날짜를 선택하세요"
-/>
+    A --> Func_A
+    B --> Func_B
+    C --> Func_C
 ```
 
-### 날짜 + 시간 선택
+## 2. 공통 기능 및 특징
 
-```tsx
-<SingleDatePicker
-  selected={selectedDate}
-  onChange={setSelectedDate}
-  showTimeSelect={true}
-  timeFormat="HH:mm"
-  timeIntervals={15}
-  dateFormat="yyyy-MM-dd"
-  placeholderText="날짜 시간 선택"
-/>
+모든 Datepicker 컴포넌트는 사용자 편의를 위한 공통 기능을 공유합니다.
+
+```mermaid
+graph LR
+    subgraph "공통 기능"
+        F1["<B>한국어 지원</B><br/>(요일, 월 표시)"]
+        F2["<B>커스텀 헤더</B><br/>(연/월 빠른 이동 드롭다운)"]
+        F3["<B>유연한 포맷</B><br/>(날짜, 시간, 조합 등)"]
+        F4["<B>접근성</B><br/>(키보드 탐색 지원)"]
+    end
 ```
 
-### 월/년도만 선택
+## 3. `SingleDatePicker`의 동작 모드
 
-```tsx
-<SingleDatePicker
-  selected={selectedMonth}
-  onChange={setSelectedMonth}
-  showMonthYearPicker={true}
-  dateFormat="yyyy-MM"
-  placeholderText="월 선택"
-/>
+`SingleDatePicker`는 `props` 설정에 따라 세 가지 다른 모드로 동작할 수 있습니다.
+
+```mermaid
+flowchart TD
+    Start[SingleDatePicker] --> Cond{"Props 설정 확인"};
+
+    Cond -- "기본 (default)" --> M_Date["<b>날짜 선택 모드</b><br/>달력 UI 제공"];
+    Cond -- "showTimeSelect: true" --> M_DateTime["<b>날짜 & 시간 선택 모드</b><br/>달력과 시간 목록 동시 제공"];
+    Cond -- "showMonthYearPicker: true" --> M_MonthYear["<b>월/년 선택 모드</b><br/>월 선택 그리드 제공"];
+
+    M_Date & M_DateTime & M_MonthYear --> Result[사용자 선택 완료];
 ```
 
-### 날짜 범위 선택
+## 4. `DateRangePicker` 상호작용 흐름
 
-```tsx
-import { DateRangePicker } from '@/components/ui/ui-input/datepicker/Datepicker';
+`DateRangePicker`는 시작일과 종료일을 순차적으로 선택하여 기간을 설정합니다.
 
-const [startDate, setStartDate] = useState<Date | null>(null);
-const [endDate, setEndDate] = useState<Date | null>(null);
+```mermaid
+sequenceDiagram
+    participant User
+    participant DateRangePicker as DRP
 
-<DateRangePicker
-  startDate={startDate}
-  endDate={endDate}
-  onStartDateChange={setStartDate}
-  onEndDateChange={setEndDate}
-/>
+    User->>DRP: 입력 필드 클릭
+    DRP-->>User: 달력 표시
+
+    User->>DRP: 시작일(예: 10일) 클릭
+    DRP->>DRP: 시작일 상태 업데이트
+    DRP-->>User: 10일이 선택된 것으로 표시
+
+    User->>DRP: 종료일(예: 15일) 클릭
+    DRP->>DRP: 종료일 상태 업데이트
+    DRP-->>User: 10일부터 15일까지 범위가<br/>하이라이트된 달력 표시
+    Note right of DRP: 선택 완료, onClose 콜백 호출
 ```
 
-### 시간만 선택
+## 5. 주요 사용 시나리오
 
-```tsx
-import { TimeOnlyPicker } from '@/components/ui/ui-input/datepicker/Datepicker';
-
-const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-
-<TimeOnlyPicker
-  selected={selectedTime}
-  onChange={setSelectedTime}
-  timeFormat="HH:mm"
-  timeIntervals={30}
-  placeholderText="시간 선택"
-/>
-```
-
-## Props
-
-### SingleDatePicker
-
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `selected` | `Date \| null` | - | 선택된 날짜 |
-| `onChange` | `(date: Date \| null) => void` | - | 날짜 변경 콜백 |
-| `dateFormat` | `string` | `'yyyy-MM-dd'` | 날짜 포맷 |
-| `placeholderText` | `string` | `'날짜 선택'` | 플레이스홀더 텍스트 |
-| `minDate` | `Date \| null` | - | 선택 가능한 최소 날짜 |
-| `maxDate` | `Date \| null` | - | 선택 가능한 최대 날짜 |
-| `showTimeSelect` | `boolean` | `false` | 시간 선택 활성화 |
-| `timeFormat` | `string` | `'HH:mm'` | 시간 포맷 |
-| `timeIntervals` | `number` | `30` | 시간 간격 (분) |
-| `showMonthYearPicker` | `boolean` | `false` | 월/년도만 선택 |
-
-### DateRangePicker
-
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `startDate` | `Date \| null` | - | 시작 날짜 |
-| `endDate` | `Date \| null` | - | 종료 날짜 |
-| `onStartDateChange` | `(date: Date \| null) => void` | - | 시작 날짜 변경 콜백 |
-| `onEndDateChange` | `(date: Date \| null) => void` | - | 종료 날짜 변경 콜백 |
-
-### TimeOnlyPicker
-
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `selected` | `Date \| null` | - | 선택된 시간 |
-| `onChange` | `(time: Date \| null) => void` | - | 시간 변경 콜백 |
-| `timeFormat` | `string` | `'HH:mm'` | 시간 포맷 |
-| `timeIntervals` | `number` | `30` | 시간 간격 (분) |
-| `minTime` | `Date` | - | 선택 가능한 최소 시간 |
-| `maxTime` | `Date` | - | 선택 가능한 최대 시간 |
-
-## 커스텀 기능
-
-### 커스텀 헤더
-모든 컴포넌트는 연도/월 드롭다운이 포함된 커스텀 헤더를 사용합니다:
-- 연도: 현재 기준 ±15년 범위
-- 월: 1월~12월 선택 가능
-- 빠른 날짜 탐색 지원
-
-### 스타일링
-- `neu-inset` 클래스로 뉴모피즘 디자인 적용
-- 포커스 시 아웃라인 제거 (`focus:outline-hidden`)
-- 일관된 패딩과 테두리 스타일
-
-## 사용 예시
-
-### 이벤트 일정 선택
-```tsx
-function EventScheduler() {
-  const [eventDate, setEventDate] = useState<Date | null>(null);
-  
-  return (
-    <SingleDatePicker
-      selected={eventDate}
-      onChange={setEventDate}
-      minDate={new Date()} // 오늘 이후만 선택 가능
-      showTimeSelect={true}
-      timeIntervals={15}
-      placeholderText="이벤트 일시 선택"
-    />
-  );
-}
-```
-
-### 보고서 기간 설정
-```tsx
-function ReportPeriod() {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  
-  return (
-    <DateRangePicker
-      startDate={startDate}
-      endDate={endDate}
-      onStartDateChange={setStartDate}
-      onEndDateChange={setEndDate}
-    />
-  );
-}
-``` 
+- **회원 가입**: `SingleDatePicker`를 사용하여 사용자의 생년월일을 입력받습니다.
+- **예약 시스템**: `DateRangePicker`를 사용하여 호텔이나 렌터카의 체크인/체크아웃 날짜를 선택합니다.
+- **알람 설정**: `TimeOnlyPicker`를 사용하여 매일 반복될 알람 시간을 설정합니다.
+- **이벤트 생성**: `SingleDatePicker`의 `showTimeSelect` 옵션을 활성화하여 이벤트가 열리는 정확한 날짜와 시간을 지정합니다.
+- **데이터 조회**: `DateRangePicker`를 사용하여 특정 기간의 판매 실적이나 로그 데이터를 조회할 범위를 설정합니다.

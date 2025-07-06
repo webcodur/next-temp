@@ -1,0 +1,254 @@
+/* neu-flat.css - 평면 컨테이너 클래스 */
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 NEU-FLAT - 평면 컨테이너 스타일 구성
+
+🎨 시각적 특징
+┌─ 평면 베이스     │ 배경과 동일 레벨, 중성적 시각 깊이
+├─ 미세한 경계선   │ border: 1px solid (투명도 0.6)
+├─ 부드러운 그림자 │ 우하단 메인 + 좌상단 하이라이트
+└─ GPU 가속 전환   │ transform, box-shadow 최적화
+
+🔧 구성 요소
+┌─ 기본 상태       │ .neu-flat - 컨테이너, 패널, 카드
+├─ 호버 상태       │ border 강화 + 그림자 증강
+├─ 포커스 상태     │ 내부 inset 그림자 (선택적)
+├─ 특수 변형       │ neu-flat-with-focus, neu-flat-focus
+├─ 브랜드 버전     │ neu-flat-primary (브랜드 칼라 강조)
+└─ RTL 대응        │ [dir='rtl'] 그림자 방향 반전
+
+💡 사용 목적
+- 📋 일반 컨테이너, 패널, 카드
+- 🎯 드롭다운, 모달 배경
+- 📝 폼 필드 컨테이너
+- 📊 데이터 표시 영역
+
+⚡ 성능 최적화
+- will-change: transform, box-shadow
+- cubic-bezier 전환 곡선
+- 0.15s 즉각 반응 + 0.25s 부드러운 전환
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
+/* 4-1. neu-flat - 평면 (컨테이너, 패널) - 테슬라 스타일 */
+.neu-flat {
+	/* 뚜렷한 border + 입체적 그림자 효과 */
+	border: 1px solid hsl(var(--border) / 0.6);
+	box-shadow: 
+		/* 우하단 메인 그림자 */
+		0 0 3px rgba(var(--nm-dark-rgba)),
+		/* 좌상단 하이라이트 (짙은 색상 포함) */ -1px -1px 2px
+			rgba(var(--nm-light-rgba)),
+		inset 1px 1px 0 rgba(var(--nm-dark-rgba), 0.03);
+	/* 테슬라 스타일: 부드러운 전환 + GPU 가속 */
+	transition:
+		transform 0.15s ease-out,
+		box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		border-color 0.25s ease-out;
+	will-change: transform, box-shadow;
+}
+
+.neu-flat:hover {
+	/* 호버 시 border 더 진하게 */
+	border-color: hsl(var(--border) / 0.75);
+	box-shadow: 
+		/* 우하단 강화된 그림자 */
+		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
+		/* 좌상단 강화된 하이라이트 */ -1.5px -1.5px 3px rgba(var(--nm-light-rgba)),
+		inset 1px 1px 0 rgba(var(--nm-dark-rgba), 0.05);
+}
+
+.neu-flat:focus {
+	outline: none;
+	/* 포커스 시 border 가장 진하게 */
+	border-color: hsl(var(--border) / 0.9);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 하이라이트 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+/* 자식 요소 포커스 시 부모 컨테이너 반응이 필요한 곳에만 사용 */
+.neu-flat-with-focus:focus-within {
+	outline: none;
+	/* 포커스 시 border 가장 진하게 */
+	border-color: hsl(var(--border) / 0.9);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 하이라이트 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+/* 드롭다운이 열려있을 때 포커스 상태 유지 */
+.neu-flat-focus {
+	outline: none;
+	/* 포커스 상태 유지 시 border 가장 진하게 */
+	border-color: hsl(var(--border) / 0.9);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 하이라이트 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+/* RTL 뉴모피즘 - neu-flat */
+[dir='rtl'] .neu-flat {
+	box-shadow: 
+		/* 우하단 → 좌하단 메인 그림자 */
+		0 0 3px rgba(var(--nm-dark-rgba)),
+		/* 좌상단 → 우상단 하이라이트 */ 1px -1px 2px rgba(var(--nm-light-rgba)),
+		inset -1px 1px 0 rgba(var(--nm-dark-rgba), 0.03);
+}
+
+[dir='rtl'] .neu-flat:hover {
+	box-shadow: 
+		/* 우하단 → 좌하단 강화된 그림자 */
+		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
+		/* 좌상단 → 우상단 강화된 하이라이트 */ 1.5px -1.5px 3px
+			rgba(var(--nm-light-rgba)),
+		inset -1px 1px 0 rgba(var(--nm-dark-rgba), 0.05);
+}
+
+[dir='rtl'] .neu-flat:focus {
+	box-shadow:
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset var(--nm-offset)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+[dir='rtl'] .neu-flat-with-focus:focus-within {
+	box-shadow:
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset var(--nm-offset)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+[dir='rtl'] .neu-flat-focus {
+	box-shadow:
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset var(--nm-offset)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
+}
+
+/* neu-flat-primary - 브랜드 칼라 강조 평면 */
+.neu-flat-primary {
+	/* 브랜드 칼라 border + 기본 그림자 */
+	border: 1px solid hsl(var(--primary-4) / 0.4);
+	box-shadow: 
+		/* 우하단 메인 그림자 */
+		0 0 3px rgba(var(--nm-dark-rgba)),
+		/* 좌상단 하이라이트 */ -1px -1px 2px rgba(var(--nm-light-rgba)),
+		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-3) / 0.2);
+	transition:
+		transform 0.15s ease-out,
+		box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		border-color 0.25s ease-out;
+	will-change: transform, box-shadow;
+}
+
+.neu-flat-primary:hover {
+	/* 호버 시 브랜드 칼라 강화 */
+	border-color: hsl(var(--primary-5) / 0.6);
+	box-shadow: 
+		/* 우하단 강화된 그림자 */
+		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
+		/* 좌상단 강화된 하이라이트 */ -1.5px -1.5px 3px rgba(var(--nm-light-rgba)),
+		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px
+			hsl(var(--primary-4) / 0.3),
+		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--primary-4) / 0.2);
+}
+
+.neu-flat-primary:focus {
+	outline: none;
+	/* 포커스 시 브랜드 칼라 최고 강도 */
+	border-color: hsl(var(--primary-6) / 0.8);
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
+			rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
+		/* 브랜드 칼라 포커스 링 */ inset 0 0 0 2px hsl(var(--primary-5) / 0.4),
+		/* 브랜드 칼라 외부 포커스 글로우 */ 0 0 8px hsl(var(--primary-5) / 0.3);
+}
+
+/* RTL 브랜드 칼라 버전 */
+[dir='rtl'] .neu-flat-primary {
+	box-shadow: 
+		/* 우하단 메인 그림자 (RTL에서는 좌하단) */
+		0 0 3px rgba(var(--nm-dark-rgba)),
+		/* 좌상단 하이라이트 (RTL에서는 우상단) */ 1px -1px 2px
+			rgba(var(--nm-light-rgba)),
+		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-3) / 0.2);
+}
+
+[dir='rtl'] .neu-flat-primary:hover {
+	box-shadow: 
+		/* 우하단 강화된 그림자 (RTL에서는 좌하단) */
+		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
+		/* 좌상단 강화된 하이라이트 (RTL에서는 우상단) */ 1.5px -1.5px 3px
+			rgba(var(--nm-light-rgba)),
+		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px
+			hsl(var(--primary-4) / 0.3),
+		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--primary-4) / 0.2);
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculateDisplayRange } from './paginationUtils';
+import { calculateDisplayRange } from '../shared/paginationUtils';
 
 interface PaginationInfoProps {
 	totalItems: number;

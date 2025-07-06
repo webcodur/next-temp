@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { ExternalPaginationProps, PaginationHandlers } from './pagination.types';
+import {
+	ExternalPaginationProps,
+	PaginationHandlers,
+} from '../pagination/shared/pagination.types';
 
 interface UsePaginationStateProps extends ExternalPaginationProps {
 	defaultPageSize?: number;
@@ -19,7 +22,9 @@ export const usePaginationState = ({
 }: UsePaginationStateProps = {}): UsePaginationStateReturn => {
 	// 내부 상태 관리
 	const [internalCurrentPage, setInternalCurrentPage] = useState(1);
-	const [internalPageSize, setInternalPageSize] = useState(externalPageSize ?? defaultPageSize);
+	const [internalPageSize, setInternalPageSize] = useState(
+		externalPageSize ?? defaultPageSize
+	);
 
 	// 실제 사용할 값들 (외부 제어 우선)
 	const currentPage = externalCurrentPage ?? internalCurrentPage;
@@ -35,4 +40,4 @@ export const usePaginationState = ({
 		onPageChange,
 		onPageSizeChange,
 	};
-}; 
+};

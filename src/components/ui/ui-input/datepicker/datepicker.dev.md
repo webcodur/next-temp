@@ -1,223 +1,115 @@
-# Datepicker 컴포넌트 기술 문서
+# Datepicker 기술 명세서
 
-## 아키텍처 개요
+이 문서는 `react-datepicker` 라이브러리를 기반으로 구현된 `Datepicker` 컴포넌트 시스템의 내부 아키텍처와 커스터마이징 방식을 설명합니다.
 
-`react-datepicker` 라이브러리를 기반으로 한 날짜/시간 선택 컴포넌트 시스템입니다. 3개의 특화된 컴포넌트로 구성되어 다양한 날짜 선택 요구사항을 충족합니다.
+## 1. 아키텍처: 공통 설정 기반의 특화 컴포넌트
 
-## 핵심 기술 스택
+모든 Datepicker 컴포넌트는 공통 설정을 공유하는 `BaseDatePicker`를 기반으로, 각각의 용도에 맞게 특화된 props를 추가하여 구현됩니다.
 
-### 외부 의존성
-- **react-datepicker**: 메인 날짜 선택 라이브러리
-- **date-fns/locale/ko**: 한국어 로케일 지원
-- **react-datepicker.css**: 기본 스타일시트
+```mermaid
+graph TD
+    subgraph "기반 라이브러리"
+        A[react-datepicker]
+    end
 
-### 설계 원칙
-- **컴포넌트 특화**: 용도별로 분리된 3개 컴포넌트
-- **타입 안정성**: TypeScript로 모든 Props 타입 정의
-- **커스터마이징**: 커스텀 헤더와 스타일 오버라이드
-- **접근성**: 키보드 네비게이션과 포커스 관리
+    subgraph "공통 설정 래퍼 (BaseDatePicker)"
+        B["- 한국어 로케일 (ko)<br/>- 커스텀 헤더 렌더링 함수<br/>- 뉴모피즘 스타일 클래스"]
+    end
 
-## 구현 세부사항
+    subgraph "특화 컴포넌트"
+        C[SingleDatePicker]
+        D[DateRangePicker]
+        E[TimeOnlyPicker]
+    end
 
-### 1. 커스텀 헤더 구현
+    A -- "래핑(Wrap)" --> B
+    B -- "확장(Extend)" --> C & D & E
 
-```typescript
-const renderCustomYearMonthHeader = ({
-  date,
-  changeYear,
-  changeMonth,
-}: CustomHeaderProps) => {
-  const years = Array.from(
-    { length: 30 },
-    (_, i) => new Date().getFullYear() - 15 + i
-  );
-  const months = Array.from({ length: 12 }, (_, i) => i);
-  
-  return (
-    <div className="flex justify-center items-center px-2 py-2 space-x-2">
-      {/* 연도/월 드롭다운 */}
-    </div>
-  );
-};
+    subgraph "특화 Props"
+        P_C["- showTimeSelect<br/>- showMonthYearPicker"]
+        P_D["- selectsStart / selectsEnd<br/>- startDate / endDate"]
+        P_E["- showTimeSelectOnly<br/>- timeIntervals"]
+    end
+
+    C --> P_C
+    D --> P_D
+    E --> P_E
+
+    style B fill:#e3f2fd,stroke:#333
 ```
 
-**특징:**
-- 현재 연도 기준 ±15년 범위의 연도 선택
-- 1-12월 전체 월 선택 지원
-- `neu-inset` 스타일로 일관된 디자인
-- Flexbox 레이아웃으로 반응형 구성
+## 2. 커스텀 헤더 로직
 
-### 2. SingleDatePicker 구현
+빠른 날짜 탐색을 위해 기본 헤더 대신 연/월 드롭다운을 제공하는 커스텀 헤더를 `renderCustomHeader` prop을 통해 렌더링합니다.
 
-가장 범용적인 날짜 선택 컴포넌트로, 다음 기능들을 지원:
+```mermaid
+flowchart TD
+    Start[헤더 렌더링 시] --> A(renderCustomHeader 함수 호출);
+    A --> B["현재 연도 기준<br/>±15년 범위의 연도 배열 생성"];
+    A --> C["1월 ~ 12월<br/>월 배열 생성"];
 
-**동적 포맷 결정:**
-```typescript
-const inputDateFormat =
-  showTimeSelect && dateFormat === 'yyyy-MM-dd'
-    ? `${dateFormat} ${timeFormat}`
-    : dateFormat;
+    subgraph "UI 렌더링"
+        B --> D[연도 선택 드롭다운];
+        C --> E[월 선택 드롭다운];
+    end
+
+    subgraph "이벤트 핸들러"
+        D -- "선택 시" --> F(changeYear 호출);
+        E -- "선택 시" --> G(changeMonth 호출);
+    end
 ```
 
-**핵심 기능:**
-- 기본 날짜 선택
-- 시간 선택 옵션 (`showTimeSelect`)
-- 월/년도만 선택 (`showMonthYearPicker`)
-- 최소/최대 날짜 제한
-- 커스텀 포맷 지원
+## 3. 스타일링 오버라이드 시스템
 
-### 3. DateRangePicker 구현
+Datepicker의 스타일은 `react-datepicker`의 기본 CSS 위에 프로젝트의 커스텀 스타일과 뉴모피즘 클래스를 덮어쓰는 계층 구조로 적용됩니다.
 
-시작/종료 날짜를 쌍으로 관리하는 컴포넌트:
+```mermaid
+graph TD
+    subgraph "스타일 적용 우선순위 (아래로 갈수록 높음)"
+        direction TB
+        L1[react-datepicker/dist/react-datepicker.css<br/>(라이브러리 기본 스타일)]
+        L2[컴포넌트 주입 클래스<br/>(e.g., neu-inset, w-full)]
+        L3[전역 CSS 오버라이드<br/>(e.g., .react-datepicker__header {...})]
+    end
 
-**핵심 로직:**
-```typescript
-<DatePicker
-  selectsStart
-  startDate={startDate ?? undefined}
-  endDate={endDate ?? undefined}
-  // ...
-/>
-<DatePicker
-  selectsEnd
-  minDate={startDate ?? undefined} // 시작 날짜 이후만 선택 가능
-  // ...
-/>
+    L1 --> L2 --> L3
+
+    style L1 fill:#f1f1f1
+    style L2 fill:#e8f5e9
+    style L3 fill:#e3f2fd
 ```
 
-**특징:**
-- 고정 너비 (144px) 레이아웃
-- 시작 날짜 이후만 종료 날짜 선택 가능
-- `~` 구분자로 시각적 연결
-- 양방향 상태 관리
+이를 통해 라이브러리의 기본 구조는 유지하면서, 프로젝트의 디자인 시스템과 일관된 UI를 구현합니다.
 
-### 4. TimeOnlyPicker 구현
+## 4. `DateRangePicker`의 내부 구현
 
-시간만 선택하는 특화 컴포넌트:
+`DateRangePicker`는 실제로는 두 개의 `react-datepicker` 인스턴스를 조합하여 구현됩니다. 각 인스턴스는 시작일과 종료일을 담당하며, 서로의 상태에 영향을 줍니다.
 
-```typescript
-<DatePicker
-  showTimeSelect
-  showTimeSelectOnly
-  timeIntervals={timeIntervals}
-  timeFormat={timeFormat}
-  dateFormat={timeFormat} // 시간 포맷을 날짜 포맷으로도 사용
-  // ...
-/>
+```mermaid
+graph LR
+    subgraph "DateRangePicker"
+        subgraph "시작일 선택기"
+            DS[DatePicker 인스턴스 1]
+            P_DS["- selectsStart: true<br/>- endDate: 현재 종료일"]
+        end
+        subgraph "종료일 선택기"
+            DE[DatePicker 인스턴스 2]
+            P_DE["- selectsEnd: true<br/>- startDate: 현재 시작일<br/>- minDate: 현재 시작일"]
+        end
+    end
+
+    P_DS --> DS
+    P_DE --> DE
+
+    User(사용자) -- "상호작용" --> DS & DE
+    DS & DE -- "onChange" --> ParentState(상위 컴포넌트 상태<br/>startDate, endDate)
 ```
 
-**특징:**
-- `showTimeSelectOnly`로 시간만 표시
-- 커스터마이즈 가능한 시간 간격
-- 최소/최대 시간 제한 지원
+- **`selectsStart`/`selectsEnd`**: `react-datepicker`에 지금 선택하는 날짜가 범위의 시작인지 끝인지를 알려주는 역할을 합니다.
+- **`minDate`**: 종료일 선택기에서는 `minDate`를 현재 선택된 시작일로 설정하여, 시작일보다 이전 날짜를 종료일로 선택하는 것을 방지합니다.
 
-## 스타일링 시스템
+## 5. 성능 및 확장성
 
-### 뉴모피즘 디자인
-모든 입력 필드에 일관된 스타일 적용:
-
-```css
-.neu-inset {
-  /* 뉴모피즘 inset 효과 */
-  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
-}
-```
-
-### 포커스 관리
-```typescript
-className="focus:outline-hidden focus:ring-0"
-```
-- 기본 브라우저 포커스 스타일 제거
-- 커스텀 포커스 스타일로 일관성 유지
-
-### 레이아웃 제어
-```typescript
-style={{ width: 'fit-content', minWidth: 'fit-content' }}
-```
-- 콘텐츠에 맞는 동적 너비
-- 고정 너비가 필요한 경우 명시적 설정
-
-## 국제화 및 접근성
-
-### 한국어 지원
-```typescript
-import { ko } from 'date-fns/locale';
-
-<DatePicker
-  locale={ko}
-  // ...
-/>
-```
-
-### 접근성 기능
-- 키보드 네비게이션 완전 지원
-- 스크린 리더 호환성
-- ARIA 속성 자동 적용 (react-datepicker 내장)
-- 포커스 트랩 및 모달 동작
-
-## 성능 최적화
-
-### 메모이제이션 고려사항
-- 배열 생성 (`years`, `months`)이 매 렌더링마다 발생
-- 향후 `useMemo`로 최적화 가능:
-
-```typescript
-const years = useMemo(
-  () => Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - 15 + i),
-  []
-);
-```
-
-### 이벤트 핸들러
-```typescript
-const handleDateChange = (date: Date | null) => {
-  onChange(date);
-};
-```
-- 간단한 래퍼 함수로 Props 전달
-- 추가 로직 삽입 지점 제공
-
-## 확장성 고려사항
-
-### 커스텀 스타일
-현재 `className` props로 추가 스타일 지원:
-```typescript
-className={`기본스타일 ${className}`}
-```
-
-### 로케일 확장
-다국어 지원을 위한 로케일 Props 추가 가능:
-```typescript
-interface DatePickerProps {
-  locale?: Locale; // date-fns Locale 타입
-}
-```
-
-### 테마 시스템 통합
-CSS 변수를 통한 동적 테마 적용:
-```css
-.datepicker-input {
-  background: var(--input-background);
-  border-color: var(--input-border);
-}
-```
-
-## 알려진 제약사항
-
-1. **react-datepicker CSS 의존성**: 별도 CSS 파일 필요
-2. **고정 스타일**: 일부 내부 스타일 오버라이드 어려움
-3. **번들 크기**: date-fns 전체 로케일 포함 시 크기 증가
-4. **브라우저 호환성**: 일부 구형 브라우저에서 제한적 지원
-
-## 유지보수 가이드
-
-### 업데이트 고려사항
-- `react-datepicker` 버전 업데이트 시 API 변경 확인
-- `date-fns` 로케일 업데이트 시 포맷 변경 검토
-- CSS 오버라이드 스타일이 깨지지 않는지 확인
-
-### 테스트 전략
-- 각 컴포넌트별 단위 테스트
-- 날짜 범위 검증 로직 테스트
-- 접근성 테스트 (키보드, 스크린 리더)
-- 다양한 로케일에서의 포맷 테스트 
+- **메모이제이션**: 커스텀 헤더의 연/월 배열은 `useMemo`를 사용하여 불필요한 재계산을 방지하고 렌더링 성능을 최적화할 수 있습니다.
+- **로케일 확장**: 현재 한국어 로케일이 하드코딩되어 있으나, `locale` prop을 외부에서 주입받도록 수정하면 다국어 환경에 쉽게 대응할 수 있습니다.
+- **CSS 변수**: 향후 테마 시스템과 연동을 위해 `var(--primary-color)` 같은 CSS 변수를 사용하도록 스타일을 리팩토링할 수 있습니다.

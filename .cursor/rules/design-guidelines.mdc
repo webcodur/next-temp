@@ -1,9 +1,13 @@
+---
+alwaysApply: true
+---
+
 # 🎨 통합 디자인 시스템 가이드
 
 ## 1. 📁 참고 파일
 
 - **통합 스타일**: `src/styles/design-system.css`
-- **전역 스타일**: `src/styles/globals.css`  
+- **전역 스타일**: `src/styles/globals.css`
 - **Tailwind 설정**: `tailwind.config.js`
 - **스타일 가이드**: `src/styles/README.md`
 
@@ -104,9 +108,9 @@
 삼항 연산자를 활용하여 조건부 스타일을 간결하게 적용한다.
 
 ```jsx
-const buttonClass = isSelected 
-  ? 'neu-inset text-primary' 
-  : 'neu-raised hover:scale-[1.01]';
+const buttonClass = isSelected
+	? 'neu-inset text-primary'
+	: 'neu-raised hover:scale-[1.01]';
 ```
 
 ### 6.4. 라이브러리 통합
@@ -115,7 +119,7 @@ Radix UI, Framer Motion 등 외부 라이브러리 컴포넌트에 직접 뉴모
 
 ```jsx
 <RadixDialog.Content className="neu-flat p-6 animate-fadeIn">
-  <RadixDialog.Title className="neu-icon-active">제목</RadixDialog.Title>
+	<RadixDialog.Title className="neu-icon-active">제목</RadixDialog.Title>
 </RadixDialog.Content>
 ```
 
@@ -128,7 +132,7 @@ Radix UI, Framer Motion 등 외부 라이브러리 컴포넌트에 직접 뉴모
 
 ### 7.2. 🧩 UI 컴포넌트
 
-- **@radix-ui/react-***: 접근성 기반 UI 프리미티브
+- **@radix-ui/react-\***: 접근성 기반 UI 프리미티브
 - **lucide-react**: 아이콘 시스템
 - **sonner**: 토스트 알림
 

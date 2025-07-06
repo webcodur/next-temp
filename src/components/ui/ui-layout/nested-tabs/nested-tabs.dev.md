@@ -1,57 +1,77 @@
-# NestedTabs 컴포넌트 기술 문서
+# NestedTabs 기술 명세
 
-## 아키텍처 개요
+이 문서는 `NestedTabs` 컴포넌트의 내부 상태 관리 및 콘텐츠 렌더링 결정 과정을 다이어그램 중심으로 설명합니다.
 
-2단계 중첩 구조를 지원하는 탭 시스템입니다. 1단계 탭 선택에 따라 2단계 탭 목록과 콘텐츠가 동적으로 변경됩니다. 상태 관리는 `useState`와 `useMemo`를 사용하여 최적화되었습니다.
+## 1. 상태 관리 및 업데이트 로직
 
-## 핵심 구현
+`NestedTabs`는 `useState`를 사용하여 `activeTopId`와 `activeSubId` 두 가지 상태를 관리합니다. 사용자가 상위 탭을 클릭하면 `handleTopTabClick` 함수가 실행되어 두 상태가 연쇄적으로 업데이트됩니다.
 
-### 상태 관리
+```mermaid
+flowchart TD
+    Start[상위 탭 클릭] --> A(handleTopTabClick 실행);
+    A --> B{setActiveTopId(클릭된_ID)};
+    B --> C{클릭된 상위 탭의<br/>첫 번째 하위 탭 ID 탐색};
+    C --> D{setActiveSubId(찾은_하위탭_ID)};
+    D --> E[리렌더링];
+    E --> End;
 
-2단계 탭의 활성 상태를 각각의 `useState`로 관리합니다.
-
-```typescript
-const [activeTopId, setActiveTopId] = useState<string>(tabs[0]?.id);
-const [activeSubId, setActiveSubId] = useState<string>(tabs[0]?.subTabs[0]?.id);
+    style B fill:#eafaf1
+    style D fill:#fef9e7
 ```
 
-1단계 탭 클릭 시, 하위 2단계 탭의 첫 번째 항목을 기본으로 활성화합니다.
+## 2. 렌더링 콘텐츠 결정 플로우
 
-```typescript
-const handleTopTabClick = (topId: string) => {
-    setActiveTopId(topId);
-    const newTopTab = tabs.find(tab => tab.id === topId);
-    if (newTopTab?.subTabs[0]) {
-        setActiveSubId(newTopTab.subTabs[0].id);
-    }
-};
+화면에 표시될 최종 콘텐츠는 `useMemo` 훅을 사용하여 `activeTopId`와 `activeSubId`가 변경될 때만 재계산됩니다. 이는 불필요한 렌더링을 방지하고 성능을 최적화합니다.
+
+```mermaid
+flowchart TD
+    subgraph "입력 상태"
+        A[tabs 배열]
+        B[activeTopId]
+        C[activeSubId]
+    end
+
+    subgraph "콘텐츠 계산 (useMemo)"
+        B --"에 해당하는"--> F(활성 상위 탭 찾기)
+        A --> F
+
+        C --"에 해당하는"--> G(활성 하위 탭 찾기)
+        F --"의 subTabs 배열에서"--> G
+
+        G --"의 content 반환"--> H[최종 렌더링 콘텐츠]
+    end
+
+    H --> I[UI에 표시]
 ```
 
-### 컨텐츠 렌더링 최적화
+## 3. 하위 컴포넌트 데이터 흐름
 
-`useMemo`를 사용하여 활성 탭이 변경될 때만 관련 컨텐츠를 계산하고 렌더링합니다.
+`NestedTabs` 컴포넌트는 계산된 상태와 데이터를 기반으로 하위 UI 영역(상위 탭, 하위 탭, 콘텐츠)을 렌더링합니다.
 
-```typescript
-const activeTopTab = useMemo(() => 
-    tabs.find(tab => tab.id === activeTopId), 
-    [tabs, activeTopId]
-);
+```mermaid
+graph TD
+    subgraph "상태 및 계산된 데이터"
+        A[activeTopId]
+        B[activeSubId]
+        C[activeTopTab (useMemo)]
+        D[activeSubTabContent (useMemo)]
+    end
 
-const activeSubTabContent = useMemo(() => {
-    return activeTopTab?.subTabs.find(subTab => subTab.id === activeSubId)?.content;
-}, [activeTopTab, activeSubId]);
+    subgraph "UI 영역"
+        E(상위 탭 목록)
+        F(하위 탭 목록)
+        G(콘텐츠 영역)
+    end
+
+    A --> E
+    B & C --> F
+    D --> G
+
+    style E fill:#f1f5f9
+    style F fill:#f1f5f9
+    style G fill:#fef9e7
 ```
 
-## 스타일링 시스템
-
-기존 `Tabs` 컴포넌트와 동일한 `neu-` 접두사를 사용하는 뉴모피즘 스타일 시스템을 따릅니다.
-
-- `neu-flat`: 기본 배경
-- `neu-inset`: 선택된 요소 (눌린 효과)
-- `neu-raised`: 선택 가능한 요소 (올라온 효과)
-
-탭의 정렬, 크기, 변형은 `cn` 유틸리티와 `props`를 통해 동적으로 클래스를 조합하여 적용합니다. 2단계 탭은 가독성을 위해 `sm` 사이즈로 고정되어 있습니다.
-
-## 접근성 고려사항
-
-현재 버전은 기본적인 마우스 클릭 인터랙션에 중점을 두고 있습니다. 향후 키보드 네비게이션(화살표 키 이동, Enter/Space 선택 등) 및 ARIA 속성 지원을 추가하여 접근성을 강화할 계획입니다.
+- **상위 탭 목록**: `activeTopId`를 사용하여 현재 활성화된 탭에 스타일을 적용합니다.
+- **하위 탭 목록**: `activeTopTab` 데이터와 `activeSubId`를 사용하여 현재 활성화된 하위 탭에 스타일을 적용합니다.
+- **콘텐츠 영역**: `activeSubTabContent`에 저장된 React 노드를 직접 렌더링합니다.

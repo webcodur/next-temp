@@ -1,184 +1,163 @@
-# Dialog 컴포넌트 기술 문서
+# Dialog 컴포넌트 기술 명세서
 
-## 아키텍처 개요
+## 1. 아키텍처 개요
 
-Lucide React 아이콘과 Framer Motion을 결합한 고급 다이얼로그 시스템으로, 5가지 의미론적 변형과 4단계 크기 옵션을 제공합니다.
+`Dialog` 컴포넌트는 `React Portal`을 사용하여 DOM의 최상단에 렌더링되며, `Framer Motion`을 통해 애니메이션 효과를 구현합니다. `DialogHeader`, `DialogBody`, `DialogFooter` 같은 헬퍼 컴포넌트와 조합하여 유연한 구조를 만듭니다.
 
-## 핵심 기술 스택
+```mermaid
+graph TD
+    subgraph App
+        A[Dialog 호출<br/>(isOpen=true)]
+    end
 
-### 외부 의존성
-- **lucide-react**: CheckCircle, AlertTriangle, AlertCircle, Info, X 아이콘
-- **framer-motion**: AnimatePresence, motion 컴포넌트
-- **react-dom**: createPortal API
+    subgraph "DOM Root (body 태그)"
+        P[Portal 생성]
+    end
 
-### 설계 원칙
-- **의미론적 디자인**: variant별 아이콘과 색상 매핑
-- **컴포넌트 합성**: 메인 Dialog + 헬퍼 컴포넌트들
-- **Portal 패턴**: DOM 구조와 독립적인 렌더링
-- **상태 기반 애니메이션**: isOpen 상태에 따른 조건부 렌더링
+    subgraph "Dialog 컴포넌트"
+        B(Framer Motion: AnimatePresence)
+        C{Dialog 렌더링}
+        D[Backdrop<br/>(배경)]
+        E[Dialog Content<br/>(콘텐츠 영역)]
+        F[헬퍼 컴포넌트<br/>Header, Body, Footer]
+    end
 
-## 구현 세부사항
-
-### 1. 변형 시스템
-
-```typescript
-const variantConfig = {
-  success: {
-    icon: CheckCircle,
-    iconColor: 'text-success',
-    borderColor: 'border-success/20',
-  },
-  warning: {
-    icon: AlertTriangle,
-    iconColor: 'text-warning', 
-    borderColor: 'border-warning/20',
-  },
-  // ...
-};
+    A --> P
+    P --> B
+    B --> C
+    C --> D
+    C --> E
+    E --> F
 ```
 
-**특징:**
-- 아이콘, 색상, 보더를 일괄 관리
-- 20% 투명도로 부드러운 강조 효과
-- 의미론적 색상 변수 활용
+## 2. 렌더링 및 상태 흐름
 
-### 2. 크기 시스템
+`Dialog`는 `isOpen` prop에 따라 렌더링 여부가 결정됩니다. 컴포넌트가 마운트된 후에만 `Portal`을 통해 렌더링하여 SSR 환경과의 호환성을 보장합니다.
 
-```typescript
-const sizeClasses = {
-  sm: 'max-w-md',   // 448px
-  md: 'max-w-lg',   // 512px  
-  lg: 'max-w-2xl',  // 672px
-  xl: 'max-w-4xl',  // 896px
-};
+```mermaid
+flowchart TD
+    Start[Dialog 마운트] --> IsMounted{mounted 상태인가?};
+    IsMounted -- No --> RenderNull[null 렌더링 후<br/>useEffect로 mounted=true 설정];
+    RenderNull --> IsMounted;
+    IsMounted -- Yes --> IsOpen{isOpen Prop이 true인가?};
+    IsOpen -- No --> Unmount[AnimatePresence로<br/>종료 애니메이션 후 언마운트];
+    IsOpen -- Yes --> RenderDialog[Portal을 통해<br/>Dialog 렌더링];
+    RenderDialog --> HandleEvents[이벤트 핸들러 등록<br/>(ESC, Backdrop 클릭)];
+    HandleEvents --> End[Dialog 표시];
+    Unmount --> End;
 ```
 
-### 3. Portal 렌더링 최적화
+## 3. Variant 및 Size 시스템
 
-```typescript
-const [mounted, setMounted] = useState(false);
+`variant`와 `size` prop은 각각 정해진 아이콘, 색상, 테두리 스타일과 최대 너비 클래스로 매핑됩니다. 이 시스템은 코드 내의 설정 객체를 통해 관리됩니다.
 
-useEffect(() => {
-  setMounted(true);
-}, []);
+```mermaid
+graph TD
+    subgraph "Prop 입력"
+        V["variant Prop<br/>(success, warning, error...)"]
+        S["size Prop<br/>(sm, md, lg, xl)"]
+    end
 
-if (!mounted) return null;
+    subgraph "스타일 매핑 로직"
+        VM{Variant에 따른<br/>스타일 결정}
+        SM{Size에 따른<br/>클래스 결정}
+    end
+
+    subgraph "출력"
+        VI[아이콘 컴포넌트]
+        VC[아이콘/테두리 색상 클래스]
+        SC[max-width 클래스]
+    end
+
+    V --> VM
+    S --> SM
+    VM --> VI
+    VM --> VC
+    SM --> SC
+
+    subgraph "최종 적용"
+        Dialog[Dialog 컨테이너]
+    end
+
+    VI & VC & SC --> Dialog
 ```
 
-**SSR 호환성:**
-- 클라이언트 마운트 확인 후 Portal 렌더링
-- 하이드레이션 불일치 방지
+## 4. 애니메이션 시퀀스
 
-### 4. 이벤트 처리
+`Dialog`는 배경(Backdrop)과 콘텐츠(Content)에 각각 다른 애니메이션을 적용하여 깊이감을 만듭니다. `AnimatePresence`가 `isOpen` 상태에 따라 이 애니메이션들을 제어합니다.
 
-```typescript
-useEffect(() => {
-  if (!isOpen || !closeOnEscape) return;
-  
-  const handleEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
-  };
-  
-  document.addEventListener('keydown', handleEscape);
-  return () => document.removeEventListener('keydown', handleEscape);
-}, [isOpen, closeOnEscape, onClose]);
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant D as Dialog (AnimatePresence)
+    participant B as Backdrop (motion.div)
+    participant C as Content (motion.div)
+
+    U->>D: isOpen = true
+    D->>B: 렌더링 및 애니메이션 (initial -> animate)
+    B->>B: opacity: 0 -> 1
+    D->>C: 렌더링 및 애니메이션 (initial -> animate)
+    C->>C: scale: 0.9, opacity: 0 -><br/>scale: 1, opacity: 1
+
+    U->>D: isOpen = false
+    D->>B: 종료 애니메이션 (exit)
+    B->>B: opacity: 1 -> 0
+    D->>C: 종료 애니메이션 (exit)
+    C->>C: scale: 1, opacity: 1 -><br/>scale: 0.9, opacity: 0
+    Note right of C: 애니메이션 종료 후<br/>DOM에서 제거됨
 ```
 
-## 스타일링 시스템
+## 5. 이벤트 처리 흐름
 
-### 1. 뉴모피즘 통합
+`onClose` 함수는 `closeOnEscape` 또는 `closeOnBackdropClick` prop이 `true`일 때 특정 조건 하에 호출됩니다.
 
-```typescript
-className="p-2 text-muted-foreground hover:text-foreground neu-raised rounded-lg"
+```mermaid
+flowchart TD
+    subgraph "이벤트 발생"
+        A[ESC 키 입력]
+        B[Backdrop 클릭]
+    end
+
+    subgraph "조건 검사"
+        C{isOpen 이고<br/>closeOnEscape: true 인가?}
+        D{isOpen 이고<br/>closeOnBackdropClick: true 인가?}
+    end
+
+    subgraph "액션"
+        E[onClose() 호출]
+    end
+
+    A --> C
+    B --> D
+    C -- Yes --> E
+    D -- Yes --> E
+    C -- No --> F[무시]
+    D -- No --> F
 ```
 
-### 2. 애니메이션 구성
+## 6. 헬퍼 컴포넌트 구조
 
-```typescript
-<motion.div
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  transition={{ duration: 0.2 }}
->
-  <motion.div
-    initial={{ scale: 0.9, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    exit={{ scale: 0.9, opacity: 0 }}
-  >
+`Dialog` 내부는 `DialogHeader`, `DialogBody`, `DialogFooter`를 사용하여 콘텐츠를 의미론적으로 구조화할 수 있습니다. 이들은 단순한 `div` 래퍼로, 기본적인 스타일과 레이아웃을 제공합니다.
+
+```mermaid
+graph TD
+    Dialog[Dialog Content]
+    Dialog --> Header[DialogHeader]
+    Dialog --> Body[DialogBody]
+    Dialog --> Footer[DialogFooter]
+
+    Header --> H_Content["Title, Subtitle 등"]
+    Body --> B_Content["주요 내용, 폼, 텍스트"]
+    Footer --> F_Content["확인/취소 버튼"]
+
+    style Dialog fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style Header fill:#eef,stroke:#333,stroke-width:1px
+    style Body fill:#efe,stroke:#333,stroke-width:1px
+    style Footer fill:#fee,stroke:#333,stroke-width:1px
 ```
 
-**이중 애니메이션:**
-- 백드롭: 투명도만 변경
-- 컨텐츠: 스케일 + 투명도 조합
+## 7. 개선 계획
 
-## 헬퍼 컴포넌트 패턴
-
-```typescript
-export const DialogHeader: React.FC = ({ children, className = '' }) => (
-  <div className={`mb-4 ${className}`}>{children}</div>
-);
-```
-
-**단순한 래퍼 컴포넌트:**
-- 기본 마진/패딩 제공
-- className prop으로 확장성 보장
-- 컴포지션 패턴으로 유연성 확보
-
-## 성능 최적화
-
-### 1. 조건부 렌더링
-- AnimatePresence로 마운트/언마운트 관리
-- isOpen이 false일 때 DOM에서 완전 제거
-
-### 2. 이벤트 리스너 최적화
-- 다이얼로그 열림 상태에서만 ESC 키 리스너 등록
-- useEffect cleanup으로 메모리 누수 방지
-
-### 3. z-index 관리
-```typescript
-className="fixed inset-0 z-9999"
-```
-- 최고 우선순위로 다른 요소와 충돌 방지
-
-## 확장성 고려사항
-
-### 1. 변형 확장
-새로운 variant 추가 시:
-```typescript
-const variantConfig = {
-  // 기존 변형들...
-  custom: {
-    icon: CustomIcon,
-    iconColor: 'text-custom',
-    borderColor: 'border-custom/20',
-  }
-};
-```
-
-### 2. 크기 옵션 확장
-```typescript
-const sizeClasses = {
-  // 기존 크기들...
-  xs: 'max-w-xs',
-  '2xl': 'max-w-5xl',
-};
-```
-
-## 브라우저 호환성
-
-- **Portal**: React 16+ 지원 범위
-- **Framer Motion**: 모던 브라우저
-- **Lucide React**: SVG 기반으로 광범위한 지원
-
-## 알려진 제한사항
-
-1. **포커스 트랩 미완성**: 탭 키로 외부 요소 접근 가능
-2. **중첩 다이얼로그**: z-index 충돌 가능성
-3. **모바일 최적화**: 작은 화면 대응 부족
-
-## 개선 계획
-
-1. **ARIA 속성 추가**: role="dialog", aria-modal 등
-2. **포커스 관리**: focus-trap 라이브러리 통합
-3. **반응형 크기**: 화면 크기별 동적 조정 
+- **포커스 트랩**: `focus-trap` 라이브러리를 통합하여 다이얼로그가 활성화되었을 때 탭 이동을 다이얼로그 내로 제한합니다.
+- **ARIA 속성**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` 등 웹 접근성 속성을 추가하여 스크린 리더 사용성을 개선합니다.
+- **중첩 다이얼로그 관리**: 여러 다이얼로그가 중첩될 때 z-index와 포커스를 관리하는 시스템을 도입합니다.

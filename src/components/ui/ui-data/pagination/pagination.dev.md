@@ -1,97 +1,67 @@
-# Pagination 시스템 기술 문서
+# Pagination 기술 명세
 
-## 아키텍처 개요
+이 문서는 `Pagination` 컴포넌트의 내부 구조와 주요 로직을 설명하여 개발자가 컴포넌트를 이해하고 활용하는 데 도움을 줍니다.
 
-모듈화된 페이지네이션 시스템으로, 독립적인 훅과 컴포넌트들의 조합으로 구성됩니다.
+## 1. 컴포넌트 의존성
 
-## 핵심 훅 시스템
+`Pagination` 컴포넌트는 외부 상태와 핸들러를 Props로 주입받아 동작하는 프레젠테이셔널 컴포넌트입니다. 내부적으로는 UI 아이콘과 다국어 처리를 위해 `lucide-react`와 `useLocale` 훅에 의존합니다.
 
-### usePaginationState
-```typescript
-// 완전한 페이지네이션 상태 관리
-const {
-  currentPage,
-  totalPages,
-  paginatedData,
-  goToPage
-} = usePaginationState(data, itemsPerPage);
+```mermaid
+graph TD
+    subgraph "외부 주입 Props"
+        A[currentPage, totalPages]
+        B[onPageChange, onPageSizeChange]
+        C[기타 옵션: groupSize, itemName 등]
+    end
+
+    subgraph "Pagination.tsx"
+        D{Core Logic}
+    end
+
+    subgraph "내부 의존성"
+        E(lucide-react)
+        F(useLocale Hook)
+    end
+
+    A --> D
+    B --> D
+    C --> D
+
+    D -- "아이콘 렌더링" --> E
+    D -- "RTL 상태 확인" --> F
+
+    style D fill:#e6f3ff,stroke:#333,stroke-width:2px
 ```
 
-### usePaginationNavigation  
-```typescript
-// 네비게이션 로직 처리
-const {
-  visiblePages,
-  canGoPrev,
-  canGoNext
-} = usePaginationNavigation(currentPage, totalPages, maxVisible);
+## 2. 페이지 번호 그룹 생성 플로우차트
+
+`Pagination` 컴포넌트는 `currentPage`와 `groupSize`를 기반으로 사용자에게 보여줄 페이지 번호 배열을 동적으로 계산합니다.
+
+```mermaid
+flowchart TD
+    S[Start] --> I{입력: currentPage, totalPages, groupSize};
+    I --> P1{currentGroup = 천장(currentPage / groupSize)};
+    P1 --> P2{startPage = (currentGroup - 1) * groupSize + 1};
+    P2 --> P3{endPage = 최소값(startPage + groupSize - 1, totalPages)};
+    P3 --> P4[pageNumbers 배열 초기화];
+    P4 --> L1{i = startPage};
+    L1 --> C1{i <= endPage 인가?};
+    C1 -- "Yes" --> E1{pageNumbers에 i 추가};
+    E1 --> F1{i++};
+    F1 --> C1;
+    C1 -- "No" --> G1[페이지 버튼 렌더링];
+    G1 --> End;
 ```
 
-### usePaginationData
-```typescript
-// 데이터 슬라이싱 및 인덱싱
-const {
-  paginatedData,
-  startIndex,
-  endIndex
-} = usePaginationData(data, currentPage, itemsPerPage);
+## 3. 페이지 이동 로직 플로우차트 (다음 그룹)
+
+'다음 그룹' 버튼 클릭 시, 현재 페이지 그룹의 마지막 페이지(`endPage`)가 전체 페이지 수(`totalPages`)보다 작은 경우에만 페이지 이동이 발생합니다.
+
+```mermaid
+flowchart TD
+    S[Start: '다음 그룹' 클릭] --> C{endPage < totalPages 인가?};
+    C -- "Yes" --> P{nextGroupFirstPage = endPage + 1};
+    P --> A[onPageChange(nextGroupFirstPage) 호출];
+    A --> E[End];
+    C -- "No" --> E;
 ```
-
-## 컴포넌트 계층구조
-
-```
-PaginatedTable (최상위 통합)
-├── PaginationControls (완전한 컨트롤)
-│   ├── PaginationInfo (정보 표시)
-│   ├── PageSizeSelector (크기 선택)
-│   └── Pagination (네비게이션)
-└── Table (데이터 표시)
-```
-
-## 타입 시스템
-
-### 제네릭 활용
-```typescript
-interface Column<T> {
-  key: keyof T;
-  header: string;
-  render?: (value: T[keyof T], item: T) => React.ReactNode;
-  sortable?: boolean;
-}
-```
-
-### 페이지네이션 상태
-```typescript
-interface PaginationState {
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-}
-```
-
-## 성능 최적화
-
-### 메모이제이션
-- 컴포넌트 레벨: React.memo
-- 계산 레벨: useMemo  
-- 콜백 레벨: useCallback
-
-### 지연 평가
-```typescript
-const paginatedData = useMemo(() => 
-  data.slice(startIndex, endIndex),
-  [data, startIndex, endIndex]
-);
-```
-
-## 유틸리티 함수
-
-### calculateVisiblePages
-페이지 번호 범위 계산
-
-### getPageInfo  
-현재 페이지 정보 생성
-
-### validatePageNumber
-페이지 번호 유효성 검사 

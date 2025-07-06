@@ -1,0 +1,69 @@
+/* neu-utilities.css - 유틸리티 클래스 */
+
+/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 NEU-UTILITIES - 유틸리티 클래스 구성
+
+🎨 시각적 특징
+┌─ 호버 인터랙션   │ 호버 시 inset 효과 적용
+├─ 보조 기능       │ 기본 클래스에 추가 동작 부여
+├─ 부드러운 전환   │ 0.25s cubic-bezier 고급 전환
+└─ 모듈러 설계     │ 필요에 따라 조합 가능
+
+🔧 구성 요소
+┌─ 호버 효과       │ .neu-hover - 호버 시 inset 그림자
+├─ 내부 그림자     │ 기본 요소에 추가 상호작용
+├─ 조합 가능       │ 다른 neu-* 클래스와 함께 사용
+└─ RTL 대응        │ [dir='rtl'] 그림자 방향 반전
+
+💡 사용 목적
+- 🎯 평면 요소에 호버 효과 추가
+- 📱 커스텀 인터랙션 구현
+- 🔄 상태 전환 효과
+- 🎮 특수 사용자 피드백
+
+⚡ 성능 최적화
+- inset 그림자 최적화
+- cubic-bezier 고급 전환 곡선
+- 0.25s 부드러운 전환
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/
+
+/* 호버 시 inset 효과 */
+.neu-hover:hover {
+	box-shadow:
+		/* 내부 우하단 그림자 */
+		inset calc(var(--nm-offset) * 0.6) calc(var(--nm-offset) * 0.6)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -0.6)
+			calc(var(--nm-offset) * -0.6) calc(var(--nm-blur) * 0.6)
+			rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 하이라이트 */ inset calc(var(--nm-offset) * -0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba));
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* RTL 대응 */
+[dir='rtl'] .neu-hover:hover {
+	box-shadow:
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -0.6) calc(var(--nm-offset) * 0.6)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset calc(var(--nm-offset) * 0.6)
+			calc(var(--nm-offset) * -0.6) calc(var(--nm-blur) * 0.6)
+			rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba));
+}

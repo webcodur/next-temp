@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import PaginatedTable from '@/components/ui/ui-data/pagination/PaginatedTable';
+import DataTable from '@/components/ui/ui-data/data-table/DataTable';
 import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -21,7 +21,6 @@ const PaginationDemo = () => {
 	// #region 상태 관리
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
-	const [isDisabled, setIsDisabled] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
 	const [userData, setUserData] = useState<User[] | null>(null);
 	// #endregion
@@ -129,9 +128,7 @@ const PaginationDemo = () => {
 		setCurrentPage(1);
 	};
 
-	const handleToggleDisabled = () => {
-		setIsDisabled(!isDisabled);
-	};
+
 
 	const handleReloadData = () => {
 		loadData();
@@ -162,16 +159,6 @@ const PaginationDemo = () => {
 
 					<div className="flex gap-4 mb-6">
 						<button
-							onClick={handleToggleDisabled}
-							className={`px-4 py-2 rounded-md ${
-								isDisabled
-									? 'text-gray-600 bg-gray-300'
-									: 'text-white bg-blue-600 hover:bg-blue-700'
-							}`}>
-							{isDisabled ? t('페이지네이션_활성화') : t('페이지네이션_비활성화')}
-						</button>
-
-						<button
 							onClick={handleReloadData}
 							disabled={isFetching}
 							className={`px-4 py-2 rounded-md ${
@@ -184,7 +171,7 @@ const PaginationDemo = () => {
 					</div>
 
 					{/* 통합 테이블 + 페이지네이션 */}
-					<PaginatedTable
+					<DataTable
 						data={userData}
 						columns={columns}
 						isFetching={isFetching}
@@ -194,7 +181,6 @@ const PaginationDemo = () => {
 						onPageSizeChange={handlePageSizeChange}
 						pageSizeOptions={[5, 10, 20, 50]}
 						itemName={t('페이지네이션_사용자')}
-						disabled={isDisabled}
 					/>
 				</div>
 			</div>
@@ -205,7 +191,7 @@ const PaginationDemo = () => {
 					{t('페이지네이션_자동관리')}
 				</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
-					<PaginatedTable
+					<DataTable
 						data={userData}
 						columns={columns}
 						pageSize={15}
@@ -214,18 +200,7 @@ const PaginationDemo = () => {
 				</div>
 			</div>
 
-			{/* 페이지네이션 숨김 예시 */}
-			<div className="mb-8">
-				<h2 className="mb-4 text-xl font-semibold">{t('페이지네이션_숨김모드')}</h2>
-				<div className="p-6 bg-white rounded-lg shadow-md">
-					<PaginatedTable
-						data={userData?.slice(0, 5)} // 첫 5개만 표시
-						columns={columns}
-						showPagination={false}
-						itemName={t('페이지네이션_사용자')}
-					/>
-				</div>
-			</div>
+
 		</div>
 	);
 };

@@ -1,192 +1,95 @@
-# Stepper Component 원리원칙
+# Stepper 기능 명세서
 
-## 개요
+`Stepper`는 여러 단계로 구성된 작업을 순차적으로 안내하고, 사용자의 진행 상황을 시각적으로 표현하는 복합 컴포넌트입니다. 회원 가입, 양식 작성, 설정 과정 등 명확한 순서가 있는 모든 프로세스에 적용할 수 있습니다.
 
-Stepper는 다단계 프로세스를 시각적으로 표현하고 관리하는 컴포넌트
+## 1. 컴포넌트 아키텍처
 
-## 핵심 개념
+`Stepper`는 상태를 표시하는 `StepIndicator`, 콘텐츠를 보여주는 `ContentArea`, 그리고 단계를 이동하는 `Navigation`의 세 부분으로 구성된 제어 컴포넌트(Controlled Component)입니다.
 
-| 국문 | 영문 | 설명 |
-|------|------|------|
-| 스테퍼 | Stepper | 전체 다단계 프로세스 관리자 |
-| 스텝 | Step | 개별 단계 |
-| 진행 단계 | Current Step | 실제로 진행된 단계 |
-| 보기 단계 | View Step | 현재 화면에 표시된 단계 |
-| 완료 목록 | Completed Steps | 완료된 단계들의 집합 |
+```mermaid
+graph TD
+    subgraph "상위 컴포넌트 (상태 관리)"
+        State[currentStep: number<br/>completedSteps: number[]<br/>steps: string[]]
+        Handlers[onNext(), onPrev(), onComplete()]
+    end
 
-## 컴포넌트 구조
+    subgraph "Stepper 컴포넌트 (UI 표시)"
+        A[StepIndicator]
+        B[ContentArea]
+        C[Navigation]
+    end
 
-| 컴포넌트 | 역할 |
-|----------|------|
-| StepContainer | 전체 스테퍼 래퍼 |
-| StepIndicator | 상단 진행 상태 표시 |
-| ContentArea | 단계별 내용 표시 영역 |
-| Navigation | 하단 이동 버튼 영역 |
+    State -- Props 전달 --> Stepper
+    Handlers -- Props 전달 --> C
 
-## 상태 및 액션
+    Stepper -- 구성 --> A & B & C
 
-### 상태
-
-- Pending: 미시작
-- Active: 진행중  
-- Completed: 완료됨
-- Viewing: 현재 화면 표시중
-
-### 액션
-
-- Complete: 현재 단계 완료 처리
-- Uncomplete: 현재 단계 완료 취소
-- Navigate: 특정 단계로 이동
-
-## 핵심 원칙
-
-### 관심사 분리
-
-스테퍼는 전체 진행 상태 관리와 네비게이션을 담당한다. 각 스텝 컴포넌트는 현재 단계의 작업 완료/취소만 담당한다.
-
-### 단방향 데이터 흐름
-
-각 스텝 컴포넌트는 스테퍼 상태에 직접 접근하지 않는다. 완료/취소 콜백을 통해서만 상태 변경을 요청한다.
-
-### 최소 권한 원칙
-
-각 스텝 컴포넌트는 완료 여부와 완료/취소 콜백만 받는다.
-
-## UI 레이아웃
-
-```ASCII ART
-┌─────────────────────────────────────┐
-│      ○ ── ● ── ○ ── ○ ── ○          │
-│   Step1 Step2 Step3 Step4 Step5     │
-├─────────────────────────────────────┤
-│         Step Content Here           │
-├─────────────────────────────────────┤
-│    [Previous]        [Next]         │
-└─────────────────────────────────────┘
+    style State fill:#e3f2fd,stroke:#333
+    style Handlers fill:#e8f5e9,stroke:#333
+    style Stepper fill:#f1f5f9,stroke:#666
 ```
 
-## 단계 표시기 (StepIndicator)
+- **상위 컴포넌트**: 실제 단계 데이터와 현재 진행 상태, 상태 변경 로직을 모두 관리합니다.
+- **`Stepper`**: 전달받은 상태(Props)를 기반으로 UI를 그리는 역할만 담당합니다.
 
-### 구성 요소 명칭
+## 2. 핵심 동작 흐름 (제어 컴포넌트 패턴)
 
-| 국문 | 영문 | 설명 |
-|------|------|------|
-| 단계 노드 | StepNode | 각 단계를 나타내는 원형 요소 |
-| 단계 연결선 | StepLine | 단계 간을 연결하는 선형 요소 |
-| 단계명 | StepName | 단계명을 표시하는 텍스트 요소 |
+사용자가 `Stepper`의 네비게이션 버튼을 클릭하면, `Stepper`는 상태를 직접 바꾸지 않고 상위 컴포넌트에 정의된 핸들러 함수를 호출합니다. 상태 변경의 책임은 전적으로 상위 컴포넌트에 있습니다.
 
-### 단계 노드 (StepNode) 상태별 표현
+```mermaid
+sequenceDiagram
+    participant User
+    participant Navigation
+    participant Parent as 상위 컴포넌트
+    participant StepIndicator
+    participant ContentArea
 
-- 미시작: 빈 원 + 회색 + neu-flat
-- 진행중: 숫자 + primary 색상 + neu-raised  
-- 완료됨: 체크 아이콘 + primary 색상 + neu-inset
-- 보기중: 테두리 강조 + neu-raised
+    User->>Navigation: '다음' 버튼 클릭
+    Navigation->>Parent: onNext() 호출
+    activate Parent
+    Parent->>Parent: currentStep 상태 업데이트 (e.g., 1 -> 2)
+    Parent-->>StepIndicator: 새로운 currentStep(2) 전달
+    Parent-->>ContentArea: 새로운 currentStep(2)에 맞는<br/>콘텐츠(children) 전달
+    deactivate Parent
+    StepIndicator-->>User: 2단계가 활성화된 UI 표시
+    ContentArea-->>User: 2단계 콘텐츠 표시
+```
 
-### 단계 연결선 (StepLine)
+이 구조는 각 단계마다 비동기 데이터 로딩이나 유효성 검사 같은 복잡한 로직을 자유롭게 추가할 수 있는 유연성을 제공합니다.
 
-- 완료된 구간: primary 색상 실선
-- 미완료 구간: 회색 점선
+## 3. 단계 표시기(StepIndicator) 상태
 
-## 네비게이션 바 (Navigation)
+`StepIndicator`는 `currentStep`과 `completedSteps` prop을 조합하여 각 단계의 상태를 세 가지(완료, 현재, 미완료)로 시각화합니다.
 
-### 버튼 스타일
+```mermaid
+graph LR
+    subgraph "입력 Props"
+        A[currentStep: 2]
+        B[completedSteps: [0, 1]]
+    end
 
-- 기본: neu-raised + 12px 패딩
-- 호버: neu-inset
-- 비활성: 투명도 50% + 클릭 불가
+    subgraph "단계별 상태 결정 로직"
+        C{"index < currentStep<br/>(e.g., 단계 0, 1)"} -- Yes --> D[완료 (Completed)]
+        C -- No --> E{"index === currentStep<br/>(e.g., 단계 2)"}
+        E -- Yes --> F[현재 (Current)]
+        E -- No --> G{"index > currentStep<br/>(e.g., 단계 3, 4)"}
+        G -- Yes --> H[미완료 (Pending)]
+    end
 
-### 버튼 텍스트
+    subgraph "UI 표현"
+        IconD[✔ 아이콘]
+        IconF[숫자 '3']
+        IconH[숫자 '4', '5']
+    end
 
-- 이전: "이전" + ChevronLeft 아이콘
-- 다음: "다음" + ChevronRight 아이콘
-- 마지막 단계: "완료" + Check 아이콘
+    A & B --> C
+    D --> IconD
+    F --> IconF
+    H --> IconH
+```
 
-## 반응형 디자인
+## 4. 사용 시나리오
 
-### 데스크톱 (1024px+)
-
-전체 단계 표시, 단계명 전체 표시
-
-### 태블릿 (768px~1023px)
-
-최대 5개 단계 표시, 스크롤 인디케이터
-
-### 모바일 (767px 이하)
-
-현재 단계 중심 3개 표시, 터치 제스처 지원
-
-## 접근성
-
-### 키보드 네비게이션
-
-- Tab: 다음 요소로 이동
-- Shift+Tab: 이전 요소로 이동
-- 좌우 화살표: 단계 간 이동
-
-### 스크린 리더
-
-진행 상태 음성 안내, 단계별 설명 제공
-
-### 시각적 접근성
-
-색상 외 모양으로도 상태 구분, 충분한 대비율 유지
-
-## 동작 원리
-
-### 완료 메커니즘
-
-스텝 컴포넌트가 완료 콜백 호출 → 스테퍼가 완료 목록에 추가 → 다음 단계 진행 허용
-
-### 취소 메커니즘
-
-취소 액션 발생 → 해당 스텝 이후 모든 완료 상태 제거 → 데이터 일관성 보장
-
-### 네비게이션
-
-현재 상태와 완료 여부에 따라 이전/다음 버튼 활성화를 결정한다.
-
-## 디자인 원칙
-
-### 뉴모피즘
-
-- 컨테이너: neu-flat
-- 버튼: neu-raised  
-- 활성 상태: neu-inset
-
-### 아이콘
-
-Lucide 사용, 상태별 시각화로 완료/진행/현재/미래 스텝을 구분한다.
-
-## 금지사항
-
-### 스텝 컴포넌트
-
-- 다른 스텝 상태 정보 접근 금지
-- 직접적인 스텝 이동 금지
-- 전역 상태 참조 금지
-
-### 스테퍼
-
-- 스텝 컴포넌트 내부 로직 개입 금지
-- 애니메이션 사용 금지
-
-## 확장성
-
-### 스텝 추가
-
-기존 인터페이스를 준수하는 컴포넌트 생성 후 매핑 로직에 추가한다.
-
-### 네비게이션 커스터마이징
-
-기본 인터페이스 호환성을 유지하며 네비게이션 컴포넌트를 확장한다.
-
-## 성능 및 테스트
-
-### 렌더링 최적화
-
-메모이제이션으로 불필요한 리렌더링을 방지한다.
-
-### 테스트 방향
-
-- 독립성: 각 스텝 컴포넌트의 독립적 동작과 콜백 호출 검증
-- 통합: 스테퍼 전체 플로우와 네비게이션 로직 검증
+- **온보딩 튜토리얼**: 신규 사용자에게 서비스의 핵심 기능을 단계별로 안내합니다.
+- **다단계 폼**: 긴 양식을 '개인 정보', '주소 입력', '결제 정보' 등 여러 단계로 나누어 사용자의 피로감을 줄입니다.
+- **설치 마법사**: 소프트웨어나 애플리케이션의 설치 과정을 단계별로 안내하고 설정 옵션을 받습니다.

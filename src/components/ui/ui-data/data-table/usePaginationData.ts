@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { calculateTotalPages, sliceDataForPage } from './paginationUtils';
+import {
+	calculateTotalPages,
+	sliceDataForPage,
+} from '../pagination/shared/paginationUtils';
 
 interface UsePaginationDataProps<T> {
 	data: T[] | null | undefined;
@@ -24,10 +27,10 @@ export const usePaginationData = <T>({
 }: UsePaginationDataProps<T>): UsePaginationDataReturn<T> => {
 	// 로딩 상태 결정
 	const isLoading = isFetching || data === undefined || data === null;
-	
+
 	// 실제 데이터 (로딩 중이면 빈 배열)
-	const actualData = useMemo(() => isLoading ? [] : data, [isLoading, data]);
-	
+	const actualData = useMemo(() => (isLoading ? [] : data), [isLoading, data]);
+
 	// 페이지네이션 계산
 	const totalItems = actualData.length;
 	const totalPages = calculateTotalPages(totalItems, pageSize);
@@ -44,4 +47,4 @@ export const usePaginationData = <T>({
 		isLoading,
 		actualData,
 	};
-}; 
+};

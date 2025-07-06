@@ -1,394 +1,87 @@
-# AdvancedSearch 컴포넌트
+# AdvancedSearch 기능 명세서
 
-고급 검색 폼을 위한 아코디언 형태의 컨테이너 컴포넌트입니다.
+`AdvancedSearch`는 다양한 검색 조건을 담을 수 있는 아코디언 형태의 컨테이너 컴포넌트입니다. 복잡한 검색 인터페이스를 깔끔하게 정리하고, 필요할 때만 펼쳐볼 수 있어 화면 공간을 효율적으로 사용할 수 있습니다.
 
-## 주요 특징
+## 1. 컴포넌트 구조
 
-- **아코디언 UI**: 접고 펼치는 검색 영역
-- **그리드 레이아웃**: 반응형 3열 배치
-- **버튼 통합**: 검색/리셋 버튼 내장
-- **뉴모피즘 디자인**: 통일된 스타일링
-- **상태 표시**: 검색 결과 상태 텍스트
+`AdvancedSearch`는 제목과 열기/닫기 상태를 표시하는 `Header`, 사용자가 직접 구성하는 검색 필드들이 들어가는 `Content`, 그리고 검색/리셋 버튼이 위치하는 `Footer`로 구성됩니다.
 
-## 기본 사용법
+```mermaid
+graph TD
+    subgraph "AdvancedSearch 컴포넌트"
+        direction TB
+        Header["<b>Header</b><br/>- 제목(Title)<br/>- 열고 닫기 아이콘<br/>- 상태 텍스트(Status)"]
+        Content["<b>Content (Children)</b><br/>사용자가 정의한<br/>다양한 검색 필드들<br/>(e.g., Input, Datepicker, Select)"]
+        Footer["<b>Footer</b><br/>- 검색 버튼<br/>- 리셋 버튼"]
+    end
+    Header --> Content --> Footer
 
-```tsx
-import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
-
-function MySearchForm() {
-  const [filters, setFilters] = useState({
-    name: '',
-    category: '',
-    dateRange: null
-  });
-
-  const handleSearch = () => {
-    console.log('검색 실행:', filters);
-  };
-
-  const handleReset = () => {
-    setFilters({ name: '', category: '', dateRange: null });
-  };
-
-  return (
-    <AdvancedSearch
-      title="상품 검색"
-      onSearch={handleSearch}
-      onReset={handleReset}
-      statusText="총 150개 결과"
-    >
-      <input
-        type="text"
-        placeholder="상품명"
-        value={filters.name}
-        onChange={(e) => setFilters({...filters, name: e.target.value})}
-        className="p-2 border rounded"
-      />
-      
-      <select
-        value={filters.category}
-        onChange={(e) => setFilters({...filters, category: e.target.value})}
-        className="p-2 border rounded"
-      >
-        <option value="">카테고리 선택</option>
-        <option value="electronics">전자제품</option>
-        <option value="books">도서</option>
-      </select>
-      
-      <input
-        type="date"
-        value={filters.dateRange}
-        onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
-        className="p-2 border rounded"
-      />
-    </AdvancedSearch>
-  );
-}
+    style Header fill:#e3f2fd
+    style Content fill:#fffde7
+    style Footer fill:#e8f5e9
 ```
 
-## Props
+## 2. 핵심 기능
 
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `title` | `string` | `'Advanced Search'` | 아코디언 제목 |
-| `children` | `ReactNode` | - | 검색 필드들 (필수) |
-| `onSearch` | `() => void` | - | 검색 버튼 클릭 핸들러 |
-| `onReset` | `() => void` | - | 리셋 버튼 클릭 핸들러 |
-| `searchLabel` | `string` | `'검색'` | 검색 버튼 텍스트 |
-| `resetLabel` | `string` | `'리셋'` | 리셋 버튼 텍스트 |
-| `defaultOpen` | `boolean` | `true` | 초기 펼침 상태 |
-| `showButtons` | `boolean` | `true` | 버튼 표시 여부 |
-| `statusText` | `string` | - | 상태 텍스트 |
+`AdvancedSearch`는 사용자 편의를 위한 여러 핵심 기능을 내장하고 있습니다.
 
-## 사용 예시
-
-### 사용자 검색
-
-```tsx
-function UserSearch() {
-  const [criteria, setCriteria] = useState({
-    name: '',
-    email: '',
-    role: '',
-    status: '',
-    department: '',
-    joinDate: ''
-  });
-
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSearch = async () => {
-    setIsLoading(true);
-    try {
-      const response = await searchUsers(criteria);
-      setSearchResults(response.data);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleReset = () => {
-    setCriteria({
-      name: '',
-      email: '',
-      role: '',
-      status: '',
-      department: '',
-      joinDate: ''
-    });
-    setSearchResults([]);
-  };
-
-  return (
-    <div className="space-y-6">
-      <AdvancedSearch
-        title="사용자 검색"
-        onSearch={handleSearch}
-        onReset={handleReset}
-        statusText={searchResults.length > 0 ? `총 ${searchResults.length}명` : undefined}
-      >
-        <input
-          type="text"
-          placeholder="이름"
-          value={criteria.name}
-          onChange={(e) => setCriteria({...criteria, name: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        />
-
-        <input
-          type="email"
-          placeholder="이메일"
-          value={criteria.email}
-          onChange={(e) => setCriteria({...criteria, email: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        />
-
-        <select
-          value={criteria.role}
-          onChange={(e) => setCriteria({...criteria, role: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        >
-          <option value="">역할 선택</option>
-          <option value="admin">관리자</option>
-          <option value="user">사용자</option>
-          <option value="manager">매니저</option>
-        </select>
-
-        <select
-          value={criteria.status}
-          onChange={(e) => setCriteria({...criteria, status: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        >
-          <option value="">상태 선택</option>
-          <option value="active">활성</option>
-          <option value="inactive">비활성</option>
-          <option value="pending">대기</option>
-        </select>
-
-        <input
-          type="text"
-          placeholder="부서"
-          value={criteria.department}
-          onChange={(e) => setCriteria({...criteria, department: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        />
-
-        <input
-          type="date"
-          placeholder="입사일"
-          value={criteria.joinDate}
-          onChange={(e) => setCriteria({...criteria, joinDate: e.target.value})}
-          className="w-full p-3 border rounded-lg"
-        />
-      </AdvancedSearch>
-
-      {/* 검색 결과 */}
-      {isLoading && <div>검색 중...</div>}
-      {searchResults.length > 0 && (
-        <div className="space-y-2">
-          {searchResults.map(user => (
-            <div key={user.id} className="p-4 border rounded">
-              <h3>{user.name}</h3>
-              <p>{user.email}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+```mermaid
+graph LR
+    subgraph "주요 기능"
+        F1["<B>아코디언 UI</B><br/>클릭으로 검색 영역<br/>열고 닫기"]
+        F2["<B>반응형 그리드</B><br/>화면 크기에 맞춰<br/>검색 필드 자동 정렬"]
+        F3["<B>버튼 통합</B><br/>검색/리셋 버튼 기본 제공"]
+        F4["<B>상태 표시</B><br/>'총 150개 결과' 등<br/>상태 텍스트 표시 가능"]
+    end
 ```
 
-### 주문 검색
+## 3. 상호작용 흐름
 
-```tsx
-function OrderSearch() {
-  const [filters, setFilters] = useState({
-    orderNumber: '',
-    customerName: '',
-    status: '',
-    startDate: '',
-    endDate: '',
-    minAmount: '',
-    maxAmount: ''
-  });
+사용자가 검색 필드를 채우고 버튼을 클릭하면, `AdvancedSearch`는 외부로 정의된 `onSearch` 또는 `onReset` 함수를 호출합니다. 컴포넌트 자체는 상태를 관리하지 않습니다.
 
-  return (
-    <AdvancedSearch
-      title="주문 검색"
-      onSearch={() => console.log('주문 검색:', filters)}
-      onReset={() => setFilters({
-        orderNumber: '',
-        customerName: '',
-        status: '',
-        startDate: '',
-        endDate: '',
-        minAmount: '',
-        maxAmount: ''
-      })}
-      searchLabel="주문 검색"
-      resetLabel="초기화"
-    >
-      <input
-        type="text"
-        placeholder="주문번호"
-        value={filters.orderNumber}
-        onChange={(e) => setFilters({...filters, orderNumber: e.target.value})}
-        className="p-2 border rounded"
-      />
+```mermaid
+sequenceDiagram
+    participant User
+    participant AdvSearch as AdvancedSearch
+    participant Parent as 상위 컴포넌트
 
-      <input
-        type="text"
-        placeholder="고객명"
-        value={filters.customerName}
-        onChange={(e) => setFilters({...filters, customerName: e.target.value})}
-        className="p-2 border rounded"
-      />
+    User->>AdvSearch: 검색 필드 입력 (e.g., 이름, 날짜)
+    User->>AdvSearch: '검색' 버튼 클릭
+    AdvSearch->>Parent: onSearch() 호출
+    activate Parent
+    Parent->>Parent: API 호출 등 검색 로직 수행
+    Parent-->>AdvSearch: statusText prop 업데이트 (e.g., "검색 완료")
+    deactivate Parent
 
-      <select
-        value={filters.status}
-        onChange={(e) => setFilters({...filters, status: e.target.value})}
-        className="p-2 border rounded"
-      >
-        <option value="">주문 상태</option>
-        <option value="pending">대기중</option>
-        <option value="processing">처리중</option>
-        <option value="shipped">배송중</option>
-        <option value="delivered">배송완료</option>
-        <option value="cancelled">취소</option>
-      </select>
-
-      <input
-        type="date"
-        placeholder="시작일"
-        value={filters.startDate}
-        onChange={(e) => setFilters({...filters, startDate: e.target.value})}
-        className="p-2 border rounded"
-      />
-
-      <input
-        type="date"
-        placeholder="종료일"
-        value={filters.endDate}
-        onChange={(e) => setFilters({...filters, endDate: e.target.value})}
-        className="p-2 border rounded"
-      />
-
-      <input
-        type="number"
-        placeholder="최소 금액"
-        value={filters.minAmount}
-        onChange={(e) => setFilters({...filters, minAmount: e.target.value})}
-        className="p-2 border rounded"
-      />
-    </AdvancedSearch>
-  );
-}
+    User->>AdvSearch: '리셋' 버튼 클릭
+    AdvSearch->>Parent: onReset() 호출
+    activate Parent
+    Parent->>Parent: 검색 필드 상태 초기화
+    deactivate Parent
 ```
 
-### 파일 검색
+## 4. 유연한 콘텐츠 구성 (`children`)
 
-```tsx
-function FileSearch() {
-  const [searchParams, setSearchParams] = useState({
-    filename: '',
-    fileType: '',
-    sizeMin: '',
-    sizeMax: '',
-    createdAfter: '',
-    createdBefore: '',
-    tags: []
-  });
+`children` prop을 통해 어떤 종류의 입력 컴포넌트든 내부에 배치하여 자유롭게 검색 폼을 구성할 수 있습니다.
 
-  return (
-    <AdvancedSearch
-      title="파일 검색"
-      defaultOpen={false}
-      showButtons={true}
-      onSearch={() => performFileSearch(searchParams)}
-      onReset={() => setSearchParams({
-        filename: '',
-        fileType: '',
-        sizeMin: '',
-        sizeMax: '',
-        createdAfter: '',
-        createdBefore: '',
-        tags: []
-      })}
-    >
-      <input
-        type="text"
-        placeholder="파일명"
-        value={searchParams.filename}
-        onChange={(e) => setSearchParams({...searchParams, filename: e.target.value})}
-        className="p-2 border rounded"
-      />
+```mermaid
+graph TD
+    subgraph "Children으로 전달 가능한 컴포넌트 예시"
+        A[SimpleInput]
+        B[Datepicker]
+        C[Select]
+        D[Checkbox]
+        E[...]
+    end
 
-      <select
-        value={searchParams.fileType}
-        onChange={(e) => setSearchParams({...searchParams, fileType: e.target.value})}
-        className="p-2 border rounded"
-      >
-        <option value="">파일 형식</option>
-        <option value="image">이미지</option>
-        <option value="document">문서</option>
-        <option value="video">동영상</option>
-        <option value="audio">오디오</option>
-      </select>
+    A & B & C & D & E --> F(AdvancedSearch 컴포넌트 내부)
 
-      <div className="flex gap-2">
-        <input
-          type="number"
-          placeholder="최소 크기 (MB)"
-          value={searchParams.sizeMin}
-          onChange={(e) => setSearchParams({...searchParams, sizeMin: e.target.value})}
-          className="flex-1 p-2 border rounded"
-        />
-        <input
-          type="number"
-          placeholder="최대 크기 (MB)"
-          value={searchParams.sizeMax}
-          onChange={(e) => setSearchParams({...searchParams, sizeMax: e.target.value})}
-          className="flex-1 p-2 border rounded"
-        />
-      </div>
-    </AdvancedSearch>
-  );
-}
+    style F fill:#f1f5f9, stroke:#333
 ```
 
-## 커스터마이징
+## 5. 사용 시나리오
 
-### 버튼 숨김
-
-```tsx
-<AdvancedSearch
-  showButtons={false}
-  title="필터"
->
-  {/* 검색 필드들 */}
-</AdvancedSearch>
-```
-
-### 커스텀 상태 텍스트
-
-```tsx
-<AdvancedSearch
-  statusText={
-    isLoading ? "검색 중..." : 
-    results.length > 0 ? `${results.length}개 결과 발견` :
-    searched ? "검색 결과가 없습니다" : 
-    undefined
-  }
->
-  {/* 검색 필드들 */}
-</AdvancedSearch>
-```
-
-## 스타일링
-
-- **그리드 레이아웃**: `md:grid-cols-3`로 반응형 3열 배치
-- **뉴모피즘 버튼**: `neu-raised` 클래스 적용
-- **아이콘 통합**: Lucide React 아이콘 사용
-- **색상 시스템**: Primary, Muted 색상 활용 
+- **사용자 관리 페이지**: 이름, 이메일, 역할, 가입일 등 여러 조건으로 사용자를 필터링하여 검색합니다.
+- **전자상거래 사이트**: 상품 카테고리, 가격 범위, 브랜드, 재고 유무 등 상세 조건으로 상품을 검색합니다.
+- **로그 분석 시스템**: 특정 기간, 로그 레벨(Error, Info), 출처(Source) 등으로 방대한 로그 데이터를 필터링합니다.
+- **예약 관리 시스템**: 예약자 이름, 예약 날짜, 객실 타입, 상태(확정, 취소) 등 다양한 조건으로 예약을 조회합니다.

@@ -1,229 +1,88 @@
-# Editor 컴포넌트
+# Editor 기능 명세서
 
-TinyMCE 기반의 리치 텍스트 에디터 컴포넌트입니다.
+`Editor`는 문서를 시각적으로 편집하고 서식을 지정할 수 있는 리치 텍스트 에디터(WYSIWYG)입니다. 워드프로세서처럼 직관적인 인터페이스를 제공하여 누구나 쉽게 콘텐츠를 작성하고 꾸밀 수 있습니다.
 
-## 주요 특징
+## 1. 핵심 특징
 
-- **WYSIWYG 편집**: 실시간 시각적 편집 환경
-- **뉴모피즘 디자인**: `neu-flat` 스타일로 일관된 디자인
-- **다크 모드 지원**: CSS 변수를 활용한 테마 적응
-- **풍부한 플러그인**: 텍스트 포맷팅, 이미지, 테이블, 링크 등
-- **반응형 인터페이스**: 창 크기에 맞는 도구 모음
-- **접근성**: 키보드 네비게이션 및 스크린 리더 지원
+`Editor`는 강력한 기능과 사용자 친화적인 디자인을 결합하여 최적의 콘텐츠 작성 환경을 제공합니다.
 
-## 기본 사용법
-
-```tsx
-import { Editor } from '@/components/ui/ui-input/editor/Editor';
-
-function MyComponent() {
-  const [content, setContent] = useState('');
-
-  return (
-    <Editor
-      value={content}
-      onChange={setContent}
-      placeholder="내용을 입력하세요..."
-    />
-  );
-}
+```mermaid
+graph TD
+    subgraph "Editor 핵심 특징"
+        A["<B>WYSIWYG</B><br/>(보이는 대로 얻는 결과)"]
+        B["<B>풍부한 기능</B><br/>(텍스트 서식, 이미지, 테이블 등)"]
+        C["<B>테마 지원</B><br/>(라이트/다크 모드 자동 전환)"]
+        D["<B>직관적인 UI</B><br/>(메뉴바, 툴바, 상태바)"]
+    end
 ```
 
-## Props
+## 2. 에디터 UI 구성
 
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `value` | `string` | - | 에디터 내용 (필수) |
-| `onChange` | `(content: string) => void` | - | 내용 변경 콜백 (필수) |
-| `placeholder` | `string` | `'내용을 입력하세요...'` | 플레이스홀더 텍스트 |
-| `height` | `number \| string` | `400` | 에디터 높이 |
-| `className` | `string` | - | 추가 CSS 클래스 |
-| `init` | `Record<string, unknown>` | - | TinyMCE 초기화 설정 오버라이드 |
+에디터 인터페이스는 메뉴바, 툴바, 콘텐츠 편집 영역, 상태바의 네 부분으로 명확하게 구분됩니다.
 
-## 주요 기능
-
-### 텍스트 포맷팅
-- 굵게, 기울임, 밑줄, 취소선
-- 글꼴 색상 및 배경색
-- 제목 스타일 (H1~H6)
-- 단락 정렬 (좌, 중앙, 우, 양쪽)
-
-### 목록 및 구조
-- 순서 목록 및 무순서 목록
-- 들여쓰기 및 내어쓰기
-- 인용구 및 코드 블록
-
-### 미디어 삽입
-- 이미지 업로드 및 삽입
-- 미디어 파일 삽입
-- 링크 생성 및 편집
-- 테이블 생성 및 편집
-
-### 도구 및 유틸리티
-- 실행 취소/다시 실행
-- 검색 및 바꾸기
-- 전체 화면 모드
-- HTML 소스 코드 편집
-- 이모티콘 삽입
-
-## 사용 예시
-
-### 기본 에디터
-
-```tsx
-function BlogEditor() {
-  const [content, setContent] = useState('');
-
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">블로그 작성</h1>
-      <Editor
-        value={content}
-        onChange={setContent}
-        height={500}
-        placeholder="블로그 내용을 작성하세요..."
-      />
-    </div>
-  );
-}
+```mermaid
+graph TD
+    subgraph "Editor Layout"
+        direction TB
+        MenuBar[메뉴바: 파일, 편집, 보기 등]
+        ToolBar[툴바: 자주 사용하는 기능 아이콘]
+        ContentArea[콘텐츠 편집 영역<br/>(실제 텍스트와 이미지가 표시되는 공간)]
+        StatusBar[상태바: 단어 수, 확대/축소 등]
+    end
+    MenuBar --> ToolBar --> ContentArea --> StatusBar
 ```
 
-### 높이 조정된 에디터
+## 3. 주요 기능 둘러보기
 
-```tsx
-function CommentEditor() {
-  const [comment, setComment] = useState('');
+에디터의 다양한 기능은 목적에 따라 그룹화되어 툴바와 메뉴바에 배치되어 있습니다.
 
-  return (
-    <Editor
-      value={comment}
-      onChange={setComment}
-      height={200}
-      placeholder="댓글을 입력하세요..."
-      className="border-2 border-gray-200"
-    />
-  );
-}
+### 텍스트 서식
+
+글꼴 스타일, 색상, 정렬, 목록 등 기본적인 텍스트 서식을 지정합니다.
+
+```mermaid
+graph LR
+    subgraph "텍스트 서식 기능"
+        S1[굵게/기울임]
+        S2[글자/배경색]
+        S3[제목/단락 스타일]
+        S4[정렬]
+        S5[목록 (순서/비순서)]
+        S6[들여쓰기]
+    end
 ```
 
-### 커스텀 설정 에디터
+### 미디어 및 객체 삽입
 
-```tsx
-function MinimalEditor() {
-  const [content, setContent] = useState('');
+이미지, 링크, 테이블 등 텍스트 외의 다양한 요소를 문서에 추가할 수 있습니다.
 
-  return (
-    <Editor
-      value={content}
-      onChange={setContent}
-      init={{
-        menubar: false,
-        toolbar: 'bold italic | link | bullist numlist',
-        plugins: ['link', 'lists'],
-        statusbar: false,
-      }}
-    />
-  );
-}
+```mermaid
+graph LR
+    subgraph "삽입 기능"
+        I1[이미지 업로드]
+        I2[웹 링크]
+        I3[테이블]
+        I4[이모티콘]
+        I5[코드 블록]
+        I6[구분선]
+    end
 ```
 
-## 도구 모음 구성
+## 4. 상황별 메뉴 (Context Menu)
 
-### 기본 도구 모음
-- `undo redo`: 실행 취소/다시 실행
-- `blocks`: 블록 형식 (제목, 단락 등)
-- `bold italic`: 굵게/기울임
-- `forecolor backcolor`: 글자색/배경색
-- `alignleft aligncenter alignright alignjustify`: 정렬
-- `bullist numlist`: 목록
-- `outdent indent`: 들여쓰기
-- `removeformat`: 서식 제거
-- `table image link emoticons`: 삽입 도구
-- `code fullscreen help`: 유틸리티
+편집 중인 요소 위에서 마우스 오른쪽 버튼을 클릭하면, 해당 요소에만 적용할 수 있는 전용 메뉴가 나타납니다.
 
-### 빠른 도구 모음
-- **선택 시**: `bold italic | quicklink h2 h3 blockquote`
-- **삽입 시**: `image media table hr`
-
-## 컨텍스트 메뉴
-우클릭 시 나타나는 메뉴:
-- `link`: 링크 편집
-- `image`: 이미지 편집  
-- `table`: 테이블 편집
-
-## 스타일 커스터마이징
-
-### 에디터 컨테이너
-```tsx
-<Editor
-  className="border-4 border-blue-300 shadow-lg"
-  // ...
-/>
+```mermaid
+flowchart TD
+    User[사용자: 마우스 우클릭] --> Target{어떤 요소를 클릭했는가?};
+    Target -- "일반 텍스트" --> Menu_Link[링크 생성/편집];
+    Target -- "이미지" --> Menu_Image[이미지 속성 편집];
+    Target -- "테이블" --> Menu_Table[테이블 속성<br/>(셀, 행, 열 편집)];
 ```
 
-### 내부 콘텐츠 스타일
-```tsx
-<Editor
-  init={{
-    content_style: `
-      body { 
-        font-family: 'Custom Font', serif;
-        font-size: 18px;
-        line-height: 1.8;
-      }
-      h1 { color: #333; }
-      p { margin: 16px 0; }
-    `
-  }}
-  // ...
-/>
-```
+## 5. 사용 시나리오
 
-## 환경 설정
-
-### API 키 설정
-`.env.local` 파일에 TinyMCE API 키를 설정:
-```env
-NEXT_PUBLIC_API_KEY_EDITOR=your_tinymce_api_key_here
-```
-
-### 플러그인 추가
-```tsx
-<Editor
-  init={{
-    plugins: [
-      // 기본 플러그인들...
-      'codesample', // 코드 하이라이팅
-      'hr', // 구분선
-      'pagebreak', // 페이지 나누기
-    ]
-  }}
-  // ...
-/>
-```
-
-## 접근성 기능
-
-- **키보드 단축키**: Ctrl+B (굵게), Ctrl+I (기울임) 등
-- **스크린 리더**: ARIA 라벨 및 역할 자동 설정
-- **포커스 관리**: 도구 모음과 편집 영역 간 탭 네비게이션
-- **고대비 모드**: 시스템 설정에 따른 자동 적응
-
-## 제한사항
-
-- TinyMCE API 키 필요 (상용 라이선스)
-- 인터넷 연결 필요 (CDN 기반)
-- 초기 로딩 시간 존재
-- 모바일에서 일부 기능 제한
-
-## 문제 해결
-
-### 에디터가 로드되지 않는 경우
-1. API 키 확인
-2. 인터넷 연결 상태 확인
-3. 브라우저 콘솔에서 오류 메시지 확인
-
-### 스타일이 적용되지 않는 경우
-1. CSS 변수 정의 확인 (`--foreground`, `--background` 등)
-2. `content_style` 설정 검토
-3. 다크 모드 토글 후 새로고침 
+- **블로그 게시물 작성**: 제목, 본문, 이미지, 인용구를 자유롭게 조합하여 전문적인 블로그 글을 작성합니다.
+- **온라인 쇼핑몰 상품 상세 설명**: 테이블을 이용해 제품 사양을 정리하고, 이미지를 첨부하여 상품을 매력적으로 소개합니다.
+- **위키 또는 지식 베이스 문서 작성**: 링크 기능을 활용하여 여러 문서들을 서로 연결하고, 코드 블록으로 기술적인 내용을 명확하게 전달합니다.
+- **댓글 작성**: 이모티콘과 간단한 텍스트 서식을 사용하여 다른 사용자와의 소통에 생동감을 더합니다.

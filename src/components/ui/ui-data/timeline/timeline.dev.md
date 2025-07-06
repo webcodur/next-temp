@@ -1,55 +1,69 @@
-# Timeline 컴포넌트 기술 문서
+# Timeline 기술 명세
 
-## 아키텍처 개요
+이 문서는 `Timeline` 컴포넌트의 렌더링 로직과 내부 구조를 다이어그램 중심으로 설명하여, 개발자가 컴포넌트의 동작 방식을 시각적으로 이해할 수 있도록 돕습니다.
 
-이벤트 기반 타임라인 시각화 컴포넌트로, 시간순 데이터 표시에 최적화되어 있습니다.
+## 1. 렌더링 로직 분기
 
-## 핵심 구현
+`Timeline` 컴포넌트는 `orientation` prop 값에 따라 'vertical' 또는 'horizontal' 렌더링 함수를 선택적으로 실행합니다.
 
-### 데이터 처리
-```typescript
-const sortedEvents = events.sort((a, b) => 
-  new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-);
+```mermaid
+flowchart TD
+    Start --> A{orientation === 'vertical' ?};
+    A -- "Yes" --> B[세로 타임라인 렌더링];
+    A -- "No" --> C[가로 타임라인 렌더링];
+    B --> End;
+    C --> End;
 ```
 
-### 레이아웃 시스템
-- **Vertical**: Flexbox 세로 배치
-- **Horizontal**: CSS Grid 가로 배치
-- **Responsive**: 화면 크기별 자동 조정
+## 2. 레이아웃 구조
 
-### 상태 관리
-```typescript
-interface TimelineState {
-  selectedEvent?: string;
-  expandedEvents: Set<string>;
-  filterStatus?: EventStatus;
-}
+### 2.1. 세로 타임라인 아이템
+
+세로 타임라인의 각 아이템은 `position: relative` 컨테이너 내부에 아이콘과 콘텐츠를 `position: absolute`와 `padding`을 이용해 배치합니다. 중앙의 타임라인 선은 별도의 `div`로 구현되어 컨테이너 전체를 관통합니다.
+
+```mermaid
+graph TD
+    subgraph "Timeline Item (relative)"
+        direction LR
+        A(아이콘/마커<br/>absolute) -- "좌우 위치" --> B(콘텐츠 영역<br/>padding-start)
+    end
+    C(중앙 타임라인 선<br/>absolute) -- "배경" --> A & B
+
+    style A fill:#f0f8ff,stroke:#333
+    style B fill:#f9f9f9,stroke:#333
+    style C fill:#e6e6e6,stroke:#333,stroke-dasharray: 5 5
 ```
 
-## 스타일링 구조
+### 2.2. 가로 타임라인 아이템
 
-### 이벤트 상태별 색상
-- **completed**: 녹색 계열
-- **current**: 파란색 계열  
-- **upcoming**: 회색 계열
+가로 타임라인은 `flexbox`를 사용하여 전체 너비에 걸쳐 아이템들을 균등하게 배치합니다. 각 아이템은 수직으로 아이콘과 콘텐츠를 배열합니다.
 
-### 연결선 렌더링
-```css
-.timeline-line {
-  position: absolute;
-  background: hsl(var(--border));
-  z-index: 1;
-}
+```mermaid
+graph TD
+    subgraph "Flex Container (justify-between)"
+        direction TB
+        A(Item 1) --> B(Item 2) --> C(Item 3)
+    end
+
+    subgraph "Item (flex-1)"
+        direction TB
+        D(아이콘/마커) --> E(콘텐츠 영역)
+    end
+
+    A & B & C --> Item
+
+    style Item fill:#f0f8ff,stroke:#333
 ```
 
-## 성능 최적화
+## 3. 상태-스타일 매핑
 
-### 가상화
-- 큰 데이터셋에 대한 윈도우 렌더링
-- 스크롤 기반 동적 로딩
+`getStatusColor` 함수는 각 아이템의 `status` prop 값에 따라 CSS 클래스를 반환하여 마커의 색상을 결정합니다. 이는 `switch` 문으로 구현되어 있으며, 기본값으로는 `--primary` 색상 변수를 사용합니다.
 
-### 메모이제이션
-```typescript
-const MemoizedTimelineEvent = React.memo(TimelineEvent);
-``` 
+```mermaid
+graph TD
+    A[item.status] --> B{상태 값?};
+    B -- "'completed'" --> C[bg-green-500];
+    B -- "'current'" --> D[bg-blue-500];
+    B -- "'upcoming'" --> E[bg-gray-300];
+    B -- "기본값 (default)" --> F[bg-primary];
+```
