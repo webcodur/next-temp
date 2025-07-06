@@ -1,33 +1,70 @@
-# Badge 컴포넌트 기술 문서
+# Badge 기술 명세서
 
-## 개요
+이 문서는 `class-variance-authority` (CVA) 라이브러리를 활용하여 구현된 `Badge` 컴포넌트의 내부 스타일링 아키텍처를 설명합니다.
 
-`Badge` 컴포넌트는 `class-variance-authority` (CVA)를 핵심 기술로 사용하여, 다양한 시각적 스타일 변형을 효율적으로 관리한다. 이를 통해 코드의 중복을 최소화하고 유지보수성을 높였다.
+## 1. 핵심 아키텍처: CVA (Class Variance Authority)
 
-## 핵심 의존성
+`Badge` 컴포넌트는 CVA를 사용하여 `variant` prop 값에 따라 동적으로 CSS 클래스를 조합합니다. 이 방식은 코드 중복을 최소화하고 스타일 관리를 매우 효율적으로 만듭니다.
 
-- `class-variance-authority`: 배지의 `variant`에 따른 스타일 조합을 관리하는 데 사용된다.
-- `clsx` 및 `tailwind-merge` (`cn` 유틸리티): CVA가 생성한 클래스와 사용자가 제공하는 추가 클래스를 안전하게 병합한다.
+```mermaid
+flowchart TD
+    subgraph "1. 정의 (badgeVariants.ts)"
+        A[<b>cva() 함수</b><br/>- 기본 스타일 정의<br/>- Variant별 스타일 정의]
+    end
 
-## 구현 플로우
+    subgraph "2. 사용 (Badge.tsx)"
+        B[Badge 컴포넌트에<br/>variant='destructive' 전달] --> C{badgeVariants({ variant: 'destructive' }) 호출};
+        C --> D["기본 스타일 + destructive 스타일<br/>클래스 문자열 생성"];
+    end
 
-1.  **스타일 변형 정의 (`badgeVariants`)**:
-    - `cva` 함수를 사용하여 배지의 공통 기본 스타일과 변형 스타일을 정의한다.
-    - **기본 스타일**: `inline-flex`, `items-center`, `rounded-full`, `border`, `px-2.5`, `py-0.5`, `text-xs`, `font-semibold` 등 모든 배지에 일관되게 적용되는 스타일이다.
-    - **변형 (Variants)**: `variant` prop에 따라 달라지는 스타일을 정의한다.
-        - `default`: 기본 스타일로, `primary` 색상을 사용한다.
-        - `secondary`: `secondary` 색상을 사용한다.
-        - `destructive`: `destructive` 색상을 사용한다.
-        - `outline`: 배경색 없이 테두리만 있는 스타일이다.
-    - `neu-flat` 클래스를 기본적으로 적용하여 뉴모피즘 디자인 통일성을 유지한다.
+    subgraph "3. 최종 결과"
+        E[<div class="기본클래스... destructive클래스...">]
+    end
 
-2.  **컴포넌트 구현 (`Badge`)**:
-    - `Badge` 함수형 컴포넌트는 `className`, `variant`, 그리고 나머지 `div` 엘리먼트 속성들을 `props`로 받는다.
-    - `cn` 유틸리티를 호출하여 `badgeVariants`로부터 계산된 클래스 문자열과 `className` prop으로 받은 추가 클래스를 병합한다.
-    - 최종적으로 계산된 클래스를 가진 `div` 엘리먼트를 렌더링하고, 나머지 `props`를 그대로 전달한다.
+    A --> C
+    D --> E
+```
 
-## 주요 특징
+## 2. `badgeVariants` 객체 구조
 
-- **CVA 기반의 높은 유지보수성**: 새로운 variant를 추가하거나 기존 스타일을 수정할 때, `badgeVariants` 객체만 변경하면 되므로 관리가 매우 용이하다.
-- **타입 안정성**: `VariantProps`를 사용하여 `variant` prop에 허용되는 값들을 타입스크립트로 강제하여 잘못된 사용을 방지한다.
-- **스타일 확장성**: 사용자가 `className` prop을 통해 Tailwind CSS 유틸리티를 추가하여 쉽게 커스터마이징할 수 있다. 
+`badgeVariants`는 `cva` 함수를 통해 생성되며, 세 부분으로 구성됩니다.
+
+```mermaid
+graph TD
+    subgraph "badgeVariants"
+        Base["<b>base</b><br/>'inline-flex items-center rounded-full...'<br/>(모든 배지에 공통으로 적용되는 클래스)"]
+        Variants["<b>variants</b><br/>(variant 값에 따라 선택적으로 적용되는 클래스 맵)"]
+        Default["<b>defaultVariants</b><br/>{ variant: 'default' }<br/>(variant prop이 없을 때 기본으로 사용될 값)"]
+    end
+
+    subgraph "variants 상세"
+        V_Def["<b>default:</b> 'bg-primary text-primary-foreground...'"]
+        V_Sec["<b>secondary:</b> 'bg-secondary text-secondary-foreground...'"]
+        V_Des["<b>destructive:</b> 'bg-destructive text-destructive-foreground...'"]
+        V_Out["<b>outline:</b> 'text-foreground'"]
+    end
+
+    Variants --> V_Def & V_Sec & V_Des & V_Out
+```
+
+## 3. `cn` 유틸리티를 이용한 클래스 병합
+
+`Badge` 컴포넌트는 `cn` 유틸리티 함수를 사용하여 CVA가 생성한 클래스와 사용자가 직접 전달한 `className` prop을 안전하게 병합합니다.
+
+```mermaid
+graph TD
+    A["CVA 생성 클래스<br/>'... bg-primary ...'"]
+    B["사용자 전달 className<br/>'bg-blue-500 m-2'"]
+
+    subgraph "cn(A, B)"
+        C["<b>clsx:</b> 클래스들을 단순 결합<br/>'... bg-primary bg-blue-500 m-2'"]
+        C --> D["<b>tailwind-merge:</b> 충돌하는 클래스 해결<br/>(뒤에 오는 bg-blue-500이 우선)"]
+    end
+
+    E["<b>최종 결과</b><br/>'... m-2 bg-blue-500'"]
+
+    A & B --> C
+    D --> E
+```
+
+`tailwind-merge` 덕분에 사용자가 `bg-primary`와 충돌하는 `bg-blue-500`을 전달해도, 뒤에 온 `bg-blue-500`이 우선 적용되어 예상대로 동작합니다. 이로 인해 스타일 확장이 매우 유연하고 안전해집니다.

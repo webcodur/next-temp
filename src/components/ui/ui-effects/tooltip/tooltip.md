@@ -1,122 +1,85 @@
-# Tooltip 컴포넌트
+# Tooltip 기능 명세서
 
-추가 정보를 제공하거나 기능 힌트를 표시하는 데 사용되는 툴팁 컴포넌트입니다.
+`Tooltip`은 특정 UI 요소 위에 마우스를 올렸을 때, 해당 요소에 대한 추가적인 정보나 도움말을 제공하는 작은 팝업입니다.
 
-## 주요 특징
+## 1. 컴포넌트 구조
 
-- **Portal 기반**: React Portal을 통해 DOM 트리 최상위에 렌더링되어 레이아웃 제약 없음
-- **다양한 variant**: default, info, warning, error 스타일 지원
-- **위치 조정**: top, right, bottom, left 위치 자동 조정
-- **애니메이션**: Framer Motion 기반 부드러운 등장/사라짐 효과
-- **접근성**: Radix UI 기반으로 ARIA 속성 자동 지원
-- **뉴모피즘 디자인**: 프로젝트 디자인 시스템과 일관된 스타일
+`Tooltip`은 네 가지 컴포넌트(`TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`)를 조합하여 사용합니다. 이 구조는 Radix UI의 설계 원칙을 따라 높은 접근성과 유연성을 보장합니다.
 
-## Portal 장점
+```mermaid
+graph TD
+    subgraph "Tooltip 사용 구조"
+        A[TooltipProvider<br/>(전역 설정 및 제스처 감지)]
+        B[Tooltip<br/>(개별 툴팁 인스턴스)]
+        C[TooltipTrigger<br/>(툴팁을 여는 요소, e.g., 버튼, 아이콘)]
+        D[TooltipContent<br/>(실제 표시될 툴팁 내용)]
+    end
 
-툴팁은 `TooltipPortal`을 통해 DOM 트리 최상위에 렌더링됩니다:
+    A --> B --> C & D
+    C -- "Hover/Focus" --> D
 
-- **오버플로우 제약 해결**: `overflow: hidden` 컨테이너에 가려지지 않음
-- **z-index 충돌 방지**: 다른 레이아웃 요소에 가려지지 않음
-- **화면 경계 처리**: 뷰포트 경계에서 자동 위치 조정
-- **스크롤 영역 지원**: 스크롤 가능한 영역 내부에서도 올바른 표시
-
-## 사용법
-
-### 기본 사용법
-
-```tsx
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/ui-effects/tooltip/Tooltip';
-
-function Example() {
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>호버하세요</TooltipTrigger>
-        <TooltipContent>
-          도움말 메시지입니다.
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-}
+    style A fill:#e3f2fd, stroke:#333
 ```
 
-### Variant 사용
+- `TooltipProvider`: 애플리케이션의 최상단에 한 번만 선언하여, 툴팁이 열리고 닫히는 지연 시간 등을 관리합니다.
+- `Tooltip`: 개별 툴팁의 열림/닫힘 상태를 관리하는 컨테이너입니다.
+- `TooltipTrigger`: 이 컴포넌트로 감싸진 요소에 마우스를 올리거나 포커스하면 툴팁이 나타납니다.
+- `TooltipContent`: 툴팁의 실제 콘텐츠 부분으로, 다양한 스타일과 위치 옵션을 가집니다.
 
-```tsx
-<TooltipContent variant="info">
-  정보성 메시지
-</TooltipContent>
+## 2. 핵심 기능
 
-<TooltipContent variant="warning">
-  경고 메시지
-</TooltipContent>
+`Tooltip`은 다양한 환경에서 안정적으로 동작하도록 여러 기능을 내장하고 있습니다.
 
-<TooltipContent variant="error">
-  오류 메시지
-</TooltipContent>
+```mermaid
+graph LR
+    subgraph "주요 기능"
+        F1["<B>Portal 렌더링</B><br/>'overflow:hidden' 등<br/>레이아웃 제약으로부터 자유로움"]
+        F2["<B>자동 위치 조정</B><br/>화면 경계에 닿으면<br/>위치를 자동으로 변경"]
+        F3["<B>다양한 스타일</B><br/>정보, 경고, 오류 등<br/>상황에 맞는 Variant 제공"]
+        F4["<B>높은 접근성</B><br/>키보드 탐색 및<br/>스크린 리더 완벽 지원"]
+    end
 ```
 
-### 위치 조정
+## 3. 위치 및 간격 옵션
 
-```tsx
-<TooltipContent side="top">위쪽 툴팁</TooltipContent>
-<TooltipContent side="right">오른쪽 툴팁</TooltipContent>
-<TooltipContent side="bottom">아래쪽 툴팁</TooltipContent>
-<TooltipContent side="left">왼쪽 툴팁</TooltipContent>
+`side`와 `sideOffset` prop을 사용하여 툴팁이 `TooltipTrigger`를 기준으로 어느 방향에, 얼마나 떨어져서 표시될지 결정할 수 있습니다.
+
+```mermaid
+graph TD
+    subgraph "side: 'top' (기본값)"
+        TC_T[TooltipContent] --> TT_T(TooltipTrigger)
+    end
+    subgraph "side: 'bottom'"
+        TT_B(TooltipTrigger) --> TC_B[TooltipContent]
+    end
+    subgraph "side: 'left'"
+        TC_L[TooltipContent] --- TT_L(TooltipTrigger)
+    end
+    subgraph "side: 'right'"
+        TT_R(TooltipTrigger) --- TC_R[TooltipContent]
+    end
+
+    note right of TC_R
+     <b>sideOffset</b> prop으로
+     Trigger와 Content 사이의
+     간격을 조절할 수 있습니다.
+    end note
 ```
 
-### 커스텀 Portal 컨테이너
+## 4. Variant 별 스타일
 
-```tsx
-<TooltipContent container={customContainer}>
-  특정 컨테이너에 렌더링
-</TooltipContent>
-```
+`variant` prop을 사용하여 툴팁의 목적과 중요도에 따라 다른 스타일을 적용할 수 있습니다.
 
-## Props
+| Variant   | 색상   | 아이콘 예시 | 설명                       |
+| :-------- | :----- | :---------- | :------------------------- |
+| `default` | 회색   | (없음)      | 일반적인 정보 제공         |
+| `info`    | 파란색 | ⓘ           | 추가 정보 또는 안내        |
+| `warning` | 노란색 | ⚠️          | 주의 또는 잠재적 문제 경고 |
+| `error`   | 빨간색 | ⓧ           | 오류 또는 실패 메시지      |
 
-### TooltipContent
+## 5. 주요 사용 시나리오
 
-| Prop | Type | Default | 설명 |
-|------|------|---------|------|
-| `variant` | `'default' \| 'info' \| 'warning' \| 'error'` | `'default'` | 툴팁 스타일 variant |
-| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | 툴팁 표시 위치 |
-| `sideOffset` | `number` | `4` | 트리거로부터의 거리 |
-| `noArrow` | `boolean` | `false` | 화살표 표시 여부 |
-| `container` | `HTMLElement \| null` | `undefined` | Portal 컨테이너 요소 |
-
-## 레이아웃 오버플로우 테스트
-
-다음 상황에서 툴팁이 올바르게 표시되는지 확인하세요:
-
-1. **Overflow Hidden**: `overflow: hidden` 컨테이너 내부
-2. **스크롤 영역**: 스크롤 가능한 영역 내부
-3. **화면 경계**: 뷰포트 경계 근처
-4. **중첩 레이아웃**: 복잡한 레이아웃 구조 내부
-
-## 사용 예시
-
-- 폼 필드 도움말
-- 버튼 기능 설명
-- 아이콘 의미 설명
-- 코드 복사 버튼
-- 설정 옵션 안내
-
-## 접근성
-
-- 키보드 포커스 지원
-- 화면 리더 호환
-- ARIA 속성 자동 적용
-- 적절한 컬러 콘트라스트
-
-## 성능 고려사항
-
-- Portal 사용으로 불필요한 리렌더링 방지
-- 지연 표시로 의도하지 않은 툴팁 표시 방지
-- 메모리 누수 방지를 위한 적절한 정리 
+- **아이콘 버튼 설명**: 텍스트 라벨이 없는 아이콘 버튼(예: 삭제, 편집) 위에 마우스를 올렸을 때, 해당 버튼의 기능을 설명합니다.
+- **폼 필드 가이드**: 복잡한 입력 필드(예: 비밀번호 규칙) 옆의 물음표 아이콘에 마우스를 올렸을 때, 상세한 입력 가이드를 제공합니다.
+- **비활성화된 버튼 사유 설명**: 클릭할 수 없는 버튼 위에 마우스를 올렸을 때, 비활성화된 이유(예: '권한이 없습니다')를 알려줍니다.
+- **유효성 검사 오류**: `error` variant를 사용하여, 유효성 검사에 실패한 입력 필드에 대한 오류 메시지를 표시합니다.

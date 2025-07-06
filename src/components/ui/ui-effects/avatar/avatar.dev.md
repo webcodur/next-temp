@@ -1,30 +1,64 @@
-# Avatar 컴포넌트 기술 문서
+# Avatar 기술 명세서
 
-## 개요
+이 문서는 `Radix UI`의 `Avatar` 프리미티브를 기반으로 구현된 `Avatar` 컴포넌트의 내부 아키텍처와 핵심 동작 원리를 설명합니다.
 
-`Avatar` 컴포넌트는 Radix UI의 `Avatar` 프리미티브를 기반으로 구현되었다. Radix UI가 제공하는 강력한 기능과 접근성을 그대로 활용하면서, 프로젝트의 디자인 시스템에 맞게 스타일을 적용하는 방식으로 제작되었다.
+## 1. 아키텍처: Radix UI 프리미티브 래핑
 
-## 핵심 의존성
+우리 프로젝트의 `Avatar`, `AvatarImage`, `AvatarFallback` 컴포넌트는 Radix UI가 제공하는 동명의 프리미티브 컴포넌트들을 1:1로 감싸는(wrapping) 단순한 구조를 가집니다. 이 구조는 Radix UI의 강력한 기능과 접근성을 그대로 계승하면서, 프로젝트의 디자인 시스템(Tailwind CSS)을 적용하는 것을 목적으로 합니다.
 
-- `react`: 컴포넌트 구현의 기반 라이브러리.
-- `@radix-ui/react-avatar`: 핵심 로직과 접근성을 제공하는 헤드리스 UI 라이브러리.
-- `clsx` 및 `tailwind-merge` (프로젝트의 `cn` 유틸리티 함수): Tailwind CSS 클래스를 조건부로 병합하고 중복을 제거하여 동적 스타일링을 용이하게 한다.
+```mermaid
+graph TD
+    subgraph "프로젝트 컴포넌트"
+        A[Avatar]
+        B[AvatarImage]
+        C[AvatarFallback]
+    end
 
-## 구현 플로우
+    subgraph "Radix UI 프리미티브"
+        D[AvatarPrimitive.Root]
+        E[AvatarPrimitive.Image]
+        F[AvatarPrimitive.Fallback]
+    end
 
-1.  **Radix UI 프리미티브 Import**: `@radix-ui/react-avatar`에서 `Root`, `Image`, `Fallback` 컴포넌트를 가져온다. 이들은 각각 아바타의 컨테이너, 이미지, 대체 콘텐츠 역할을 수행한다.
+    A -- "래핑 & 스타일링" --> D
+    B -- "래핑 & 스타일링" --> E
+    C -- "래핑 & 스타일링" --> F
+```
 
-2.  **컴포넌트 래핑 및 스타일링**:
-    - `Avatar`, `AvatarImage`, `AvatarFallback` 각 컴포넌트를 `React.forwardRef`로 래핑하여 `ref`를 하위 Radix 컴포넌트로 전달할 수 있도록 구현한다. 이는 컴포넌트의 유연성을 높여준다.
-    - `cn` 유틸리티 함수를 사용해 기본 스타일과 사용자가 전달하는 `className`을 병합한다.
-        - `Avatar`: `relative`, `flex`, `rounded-full` 등 컨테이너 스타일을 정의한다.
-        - `AvatarImage`: `aspect-square`, `h-full`, `w-full`로 컨테이너에 꽉 차는 정사각형 이미지를 보장한다.
-        - `AvatarFallback`: `flex`, `items-center`, `justify-center`로 대체 텍스트(예: 이니셜)를 중앙에 위치시킨다.
+## 2. 핵심 기능: Fallback 지연 표시 메커니즘
 
-3.  **Prop 전달**: 각 컴포넌트는 `...props`를 통해 전달받은 모든 추가 속성을 그대로 하위 Radix 컴포넌트에 전달한다. 이로써 Radix `Avatar`가 지원하는 모든 API를 사용할 수 있다.
+Radix UI의 `Avatar`는 `delayMs`라는 prop을 제공하여, 이미지 로딩이 지연될 때 `Fallback` 콘텐츠가 너무 성급하게 나타나는 것을 방지합니다.
 
-## 주요 특징
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as Avatar
+    participant I as Image
+    participant F as Fallback
 
-- **헤드리스 UI 활용**: 기능(Logic)은 Radix UI에 위임하고, 표현(View)에만 집중하여 코드 복잡성을 최소화했다.
-- **스타일 확장성**: `className` prop을 통해 모든 컴포넌트의 스타일을 쉽게 커스터마이징할 수 있다.
-- **접근성 내장**: Radix UI를 사용함으로써 키보드 네비게이션, ARIA 속성 등 웹 접근성 표준을 자동으로 준수한다. 
+    U->>A: 페이지 로드
+    A->>I: 이미지 로딩 시작
+    Note right of I: (느린 네트워크 상황 가정)
+    A->>A: delayMs (e.g., 600ms) 타이머 시작
+
+    alt 이미지가 delayMs 내에 로딩 성공
+        I-->>A: 로딩 성공
+        A-->>F: Fallback 표시 안 함
+        A-->>I: Image 표시
+    else 이미지가 delayMs 후에도 로딩 중
+        A-->>A: 타이머 종료
+        A-->>F: Fallback 표시 시작
+        I-->>A: (나중에) 로딩 성공
+        F-->>A: Fallback 숨김
+        A-->>I: Image 표시
+    end
+```
+
+이 메커니즘은 불필요한 UI 깜빡임(flickering)을 막아 사용자 경험을 크게 향상시킵니다.
+
+## 3. `forwardRef`를 이용한 유연성 확보
+
+모든 `Avatar` 관련 컴포넌트는 `React.forwardRef`를 사용하여 구현되었습니다. 이를 통해 `ref`를 내부의 Radix 프리미티브 DOM 요소로 직접 전달할 수 있습니다.
+
+- **목적**: 다른 라이브러리(예: `Framer Motion`으로 애니메이션을 주거나, `Tippy.js`로 툴팁을 붙이는 경우)와 원활하게 통합할 수 있도록 유연성을 제공합니다.
+- **구조**: `const Avatar = React.forwardRef((props, ref) => <AvatarPrimitive.Root ref={ref} {...props} />)`

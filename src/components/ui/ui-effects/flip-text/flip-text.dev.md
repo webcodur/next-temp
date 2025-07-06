@@ -1,66 +1,74 @@
-# FlipText 컴포넌트 기술 문서
+# FlipText 기술 명세서
 
-## 개요
+이 문서는 `Framer Motion` 라이브러리를 활용하여 구현된 `FlipText` 컴포넌트의 내부 아키텍처와 애니메이션 실행 원리를 설명합니다.
 
-`FlipText` 컴포넌트는 Framer Motion을 활용하여 텍스트의 각 문자를 개별적으로 3D 회전 애니메이션으로 표현한다. 문자열을 개별 문자로 분할하고, 순차적 지연을 통해 자연스러운 타이핑 효과를 구현하며, 동적 컴포넌트 생성을 통해 유연한 HTML 요소 렌더링을 지원한다.
+## 1. 아키텍처: 부모-자식 구조와 Stagger 애니메이션
 
-## 핵심 의존성
+`FlipText`는 보이지 않는 부모 컨테이너(`Wrapper`)와 각 문자를 담당하는 여러 개의 자식 컴포넌트(`Character`)로 구성됩니다. 부모는 `staggerChildren` 속성을 통해 자식들의 애니메이션을 순차적으로 실행시키는 오케스트레이터 역할을 합니다.
 
-- `framer-motion`: 3D 회전 애니메이션과 순차적 지연 효과를 제공하는 애니메이션 라이브러리
-- `react`: 문자열 처리와 동적 컴포넌트 생성을 위한 기반 라이브러리
-- `clsx` 및 `tailwind-merge` (`cn` 유틸리티): 동적 클래스 조합 관리
+```mermaid
+graph TD
+    subgraph "FlipText 컴포넌트"
+        Wrapper["<b>Wrapper (부모)</b><br/>- motion.div<br/>- variants (container)<br/>- transition: { staggerChildren: 0.08 }"]
+        subgraph "Characters (자식들)"
+            C1["<b>Character ('H')</b><br/>- motion.span<br/>- variants (item)"]
+            C2["<b>Character ('E')</b><br/>- motion.span<br/>- variants (item)"]
+            C3["<b>Character ('L')</b><br/>- motion.span<br/>- variants (item)"]
+            C4[...]
+        end
+    end
+    Wrapper --> C1 & C2 & C3 & C4
 
-## 구현 플로우
+    style Wrapper fill:#e3f2fd,stroke:#333
+```
 
-### 1. 문자열 분할 및 처리
+## 2. Variants: 애니메이션 상태 정의
 
-**문자 배열 생성**:
-- `React.Children.toArray(children).join('').split('')`을 통해 React 노드를 문자열로 변환 후 개별 문자로 분할한다.
-- 이 과정을 통해 중첩된 React 요소도 올바르게 텍스트로 추출할 수 있다.
+`Framer Motion`의 `variants`는 애니메이션의 시작(`hidden`)과 끝(`visible`) 상태를 미리 정의해 둔 객체입니다.
 
-**공백 문자 처리**:
-- 일반 공백(` `)을 non-breaking space(`\u00A0`)로 변환하여 레이아웃 붕괴를 방지한다.
-- 이를 통해 문자 간 간격이 일정하게 유지된다.
+- **`container` (부모) Variants**: 자식 요소들의 애니메이션을 트리거하는 역할만 합니다.
+- **`item` (자식) Variants**: 각 문자의 실제 시각적 변화(회전, 투명도)를 정의합니다.
 
-### 2. 동적 컴포넌트 생성
+```mermaid
+graph TD
+    subgraph "Variants 정의"
+        subgraph "item Variants"
+            Hidden["<b>hidden</b><br/>- opacity: 0<br/>- rotateY: -90"]
+            Visible["<b>visible</b><br/>- opacity: 1<br/>- rotateY: 0"]
+        end
+    end
 
-**Motion 컴포넌트 래핑**:
-- `motion(Component)`를 사용하여 `as` prop으로 전달된 HTML 요소를 Motion 컴포넌트로 변환한다.
-- 기본값은 `span`이며, `h1`, `p`, `div` 등 모든 HTML 요소로 변경 가능하다.
+    Hidden -- "애니메이션 실행" --> Visible
+```
 
-**Props 전달**:
-- `MotionProps`를 확장하여 Framer Motion의 모든 속성을 그대로 전달받을 수 있다.
-- 이를 통해 추가적인 애니메이션 속성이나 이벤트 핸들러를 자유롭게 사용할 수 있다.
+부모 컨테이너가 `visible` 상태가 되면, 모든 자식들도 자동으로 `visible` 상태로 전환되며 애니메이션이 실행됩니다.
 
-### 3. 애니메이션 시스템
+## 3. `staggerChildren` 동작 원리
 
-**기본 Variants**:
-- `hidden`: `rotateX: -90, opacity: 0` (X축 기준 -90도 회전, 투명)
-- `visible`: `rotateX: 0, opacity: 1` (정상 위치, 불투명)
-- 3D 회전 효과로 문자가 아래에서 위로 뒤집히며 등장하는 효과를 구현한다.
+`staggerChildren`은 부모의 `transition` prop에 설정되며, 자식 애니메이션 간의 시간 간격을 제어합니다.
 
-**순차적 지연**:
-- `delay: i * delayMultiple`을 통해 각 문자마다 다른 지연 시간을 적용한다.
-- 기본값 `0.08`초씩 증가하여 자연스러운 순차 등장 효과를 만든다.
+```mermaid
+flowchart TD
+    A["Wrapper의 transition:<br/>{ staggerChildren: 0.08 }"] --> B{자식 애니메이션 시작};
+    B --> C1["1번째 자식 (H):<br/>delay = 0 * 0.08 = 0s"];
+    B --> C2["2번째 자식 (E):<br/>delay = 1 * 0.08 = 0.08s"];
+    B --> C3["3번째 자식 (L):<br/>delay = 2 * 0.08 = 0.16s"];
+    B --> C4["..."];
+```
 
-**AnimatePresence 활용**:
-- `mode="wait"`를 사용하여 텍스트 변경 시 이전 애니메이션이 완전히 끝난 후 새 애니메이션을 시작한다.
-- 이를 통해 텍스트 변경 시에도 깔끔한 전환 효과를 제공한다.
+이 메커니즘 덕분에 개발자가 각 문자의 `delay` 값을 수동으로 계산할 필요 없이, `staggerChildren` 값 하나로 전체 애니메이션의 리듬을 쉽게 조절할 수 있습니다.
 
-### 4. 스타일링 시스템
+## 4. `as` Prop을 이용한 동적 태그 생성
 
-**3D 변형 기준점**:
-- `origin-center`를 사용하여 회전 중심을 문자의 중앙으로 설정한다.
-- 이를 통해 자연스러운 회전 효과를 구현한다.
+`as` prop은 렌더링될 HTML 태그를 동적으로 결정합니다. 이 값은 `Framer Motion`의 `motion()` 팩토리 함수에 전달되어, 해당 태그에 애니메이션 기능이 추가된 새로운 컴포넌트를 생성합니다.
 
-**시각적 향상**:
-- `drop-shadow-sm`을 적용하여 문자에 미세한 그림자 효과를 추가한다.
-- `inline-block` 디스플레이로 문자별 독립적인 변형을 가능하게 한다.
+```mermaid
+graph TD
+    A[as="h1" Prop] --> B["motion('h1') 호출"];
+    B --> C[애니메이션 기능이 추가된<br/>h1 컴포넌트 생성];
+    C --> D["<h1 class='...'>...</h1> 렌더링"];
 
-## 주요 특징
+    style B fill:#e8f5e9
+```
 
-- **성능 최적화**: 각 문자를 개별 컴포넌트로 분리하여 불필요한 리렌더링을 방지한다.
-- **유연한 커스터마이징**: `variants` prop을 통해 완전히 다른 애니메이션 효과로 교체 가능하다.
-- **접근성 고려**: 텍스트 내용은 그대로 유지되어 스크린 리더에서 정상적으로 읽힌다.
-- **반응형 지원**: 컨테이너의 `justify-center`로 다양한 화면 크기에서 중앙 정렬을 유지한다.
-- **타입 안전성**: TypeScript를 통해 모든 props와 variants의 타입 안전성을 보장한다. 
+이 방식을 통해 시맨틱 마크업을 유지하면서도 유연하게 애니메이션 효과를 적용할 수 있습니다.

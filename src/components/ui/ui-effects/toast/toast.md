@@ -1,315 +1,94 @@
-# Toast 컴포넌트
+# Toast 기능 명세서
 
-Sonner 라이브러리 기반의 토스트 알림 시스템입니다.
+`Toast`는 사용자에게 작업 결과(예: 성공, 실패)나 간단한 정보를 화면 모서리에 잠시 나타나는 팝업 형태로 알려주는 알림 시스템입니다.
 
-## 구성 요소
+## 1. 사용 구조
 
-### ToastProvider
-앱 전역에서 토스트 알림을 사용할 수 있게 하는 컨텍스트 프로바이더
+`Toast` 시스템을 사용하기 위해서는, 먼저 애플리케이션의 최상위 레벨을 `ToastProvider`로 감싸주어야 합니다. 그 후, 어떤 컴포넌트에서든 `toast()` 함수를 호출하여 즉시 알림을 표시할 수 있습니다.
 
-### toast 함수
-다양한 타입의 토스트 알림을 표시하는 함수
+```mermaid
+graph TD
+    subgraph "1. 설정 (최상단에 한 번)"
+        A[ToastProvider]
+    end
 
-## 주요 특징
+    subgraph "2. 사용 (필요한 곳 어디서든)"
+        B["toast() 함수 호출<br/>(e.g., toast.success('성공!'))"]
+    end
 
-- **Sonner 기반**: 성능과 접근성에 최적화된 라이브러리
-- **다양한 타입**: 성공, 에러, 경고, 정보 알림 지원
-- **자동 위치 조정**: 화면 하단 중앙에 표시
-- **컬러 시스템**: richColors 옵션으로 직관적인 색상 구분
-- **자동 사라짐**: 3초 후 자동 제거
-- **스택 관리**: 여러 토스트 자동 배치 및 관리
+    subgraph "3. 결과"
+        C[화면 모서리에 Toast 알림 표시]
+    end
 
-## 기본 설정
-
-### 1. 프로바이더 설정
-
-앱의 최상위에 ToastProvider를 배치하세요:
-
-```tsx
-import { ToastProvider } from '@/components/ui/ui-effects/toast/Toast';
-
-function App() {
-  return (
-    <ToastProvider>
-      {/* 앱 컨텐츠 */}
-    </ToastProvider>
-  );
-}
+    A -- "전역 컨텍스트 제공" --> B --> C
 ```
 
-### 2. 토스트 사용
+## 2. Toast 종류
 
-```tsx
-import { toast } from '@/components/ui/ui-effects/toast/Toast';
+`toast` 함수는 목적에 따라 다양한 종류(type)를 제공하며, 각 종류는 고유한 아이콘과 색상을 가져 사용자가 상황을 직관적으로 인지할 수 있도록 돕습니다.
 
-function MyComponent() {
-  const handleSuccess = () => {
-    toast.success('성공적으로 저장되었습니다!');
-  };
+```mermaid
+graph TD
+    subgraph "Toast Types"
+        T_Success["<b>success</b><br/>(성공)"]
+        T_Error["<b>error</b><br/>(오류)"]
+        T_Warning["<b>warning</b><br/>(경고)"]
+        T_Info["<b>info</b><br/>(정보)"]
+        T_Loading["<b>loading</b><br/>(로딩 중)"]
+    end
 
-  const handleError = () => {
-    toast.error('오류가 발생했습니다.');
-  };
+    subgraph "Visual Feedback"
+        V_Success["- 초록색<br/>- 체크 아이콘 ✅"]
+        V_Error["- 빨간색<br/>- X 아이콘 ❌"]
+        V_Warning["- 노란색<br/>- 경고 아이콘 ⚠️"]
+        V_Info["- 파란색<br/>- 정보 아이콘 ⓘ"]
+        V_Loading["- 회색<br/>- 스피너 아이콘  spinners"]
+    end
 
-  return (
-    <div>
-      <button onClick={handleSuccess}>성공 토스트</button>
-      <button onClick={handleError}>에러 토스트</button>
-    </div>
-  );
-}
+    T_Success --> V_Success
+    T_Error --> V_Error
+    T_Warning --> V_Warning
+    T_Info --> V_Info
+    T_Loading --> V_Loading
 ```
 
-## Toast 타입별 사용법
+## 3. Promise 기반 자동 상태 변경
 
-### 기본 토스트
+`toast.promise` 함수를 사용하면, 비동기 작업(예: API 요청)의 상태에 따라 토스트 메시지가 자동으로 변경되어 사용자에게 실시간 진행 상황을 알려줄 수 있습니다.
 
-```tsx
-toast('기본 메시지입니다.');
+```mermaid
+sequenceDiagram
+    participant C as Component
+    participant T as Toast
+    participant P as Promise
+
+    C->>T: toast.promise(myPromise, {<br/> loading: '처리 중...',<br/> success: '성공!',<br/> error: '실패!'<br/>})
+
+    T->>P: Promise 실행
+    activate T
+    T-->>C: '처리 중...' Toast 표시
+
+    alt Promise 성공 시
+        P-->>T: 성공(Success)
+        T-->>C: '성공!' Toast로 자동 변경
+    else Promise 실패 시
+        P-->>T: 실패(Error)
+        T-->>C: '실패!' Toast로 자동 변경
+    end
+    deactivate T
 ```
 
-### 성공 토스트
+## 4. 추가 기능
 
-```tsx
-toast.success('작업이 성공적으로 완료되었습니다!');
-```
+| 기능               | 설명                                         | 사용 예시                                          |
+| :----------------- | :------------------------------------------- | :------------------------------------------------- |
+| **액션 버튼**      | 토스트 내부에 클릭 가능한 버튼을 추가합니다. | '삭제되었습니다' 토스트에 '실행 취소' 버튼 추가    |
+| **지속 시간 설정** | 토스트가 화면에 표시되는 시간을 조절합니다.  | `duration: 5000` (5초) 또는 `Infinity` (수동 닫기) |
+| **상세 설명**      | 제목 아래에 추가적인 설명 텍스트를 붙입니다. | '업로드 완료' 제목 아래에 파일 이름 표시           |
 
-### 에러 토스트
+## 5. 주요 사용 시나리오
 
-```tsx
-toast.error('오류가 발생했습니다. 다시 시도해주세요.');
-```
-
-### 경고 토스트
-
-```tsx
-toast.warning('주의가 필요한 상황입니다.');
-```
-
-### 정보 토스트
-
-```tsx
-toast.info('새로운 업데이트가 있습니다.');
-```
-
-### 로딩 토스트
-
-```tsx
-const loadingToast = toast.loading('처리 중입니다...');
-
-// 작업 완료 후
-toast.success('완료되었습니다!', { id: loadingToast });
-```
-
-## 고급 사용법
-
-### 커스텀 지속 시간
-
-```tsx
-toast.success('이 메시지는 5초간 표시됩니다.', {
-  duration: 5000
-});
-```
-
-### 무한 지속 (수동 닫기)
-
-```tsx
-toast.error('수동으로 닫아야 하는 중요한 오류', {
-  duration: Infinity
-});
-```
-
-### 액션 버튼 포함
-
-```tsx
-toast('파일이 삭제되었습니다.', {
-  action: {
-    label: '되돌리기',
-    onClick: () => {
-      // 되돌리기 로직
-      toast.success('파일이 복원되었습니다.');
-    }
-  }
-});
-```
-
-### 커스텀 설명
-
-```tsx
-toast.success('업로드 완료', {
-  description: '파일이 성공적으로 업로드되었습니다.'
-});
-```
-
-### 커스텀 스타일
-
-```tsx
-toast('커스텀 스타일 토스트', {
-  style: {
-    background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
-    color: 'white'
-  }
-});
-```
-
-## 토스트 제어
-
-### 모든 토스트 닫기
-
-```tsx
-import { toast } from '@/components/ui/ui-effects/toast/Toast';
-
-toast.dismiss(); // 모든 토스트 닫기
-```
-
-### 특정 토스트 닫기
-
-```tsx
-const toastId = toast('닫을 수 있는 토스트');
-toast.dismiss(toastId);
-```
-
-### 프로미스 기반 토스트
-
-```tsx
-const myPromise = fetch('/api/data');
-
-toast.promise(myPromise, {
-  loading: '데이터를 불러오는 중...',
-  success: (data) => '데이터를 성공적으로 불러왔습니다!',
-  error: '데이터를 불러오는데 실패했습니다.'
-});
-```
-
-## 실제 사용 예시
-
-### 폼 제출 처리
-
-```tsx
-function ContactForm() {
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const loadingToast = toast.loading('메시지를 전송하는 중...');
-    
-    try {
-      await submitForm(formData);
-      toast.success('메시지가 성공적으로 전송되었습니다!', {
-        id: loadingToast
-      });
-    } catch (error) {
-      toast.error('전송에 실패했습니다. 다시 시도해주세요.', {
-        id: loadingToast
-      });
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* 폼 필드들 */}
-      <button type="submit">전송</button>
-    </form>
-  );
-}
-```
-
-### 파일 업로드
-
-```tsx
-function FileUpload() {
-  const handleUpload = async (files) => {
-    for (const file of files) {
-      const uploadPromise = uploadFile(file);
-      
-      toast.promise(uploadPromise, {
-        loading: `${file.name} 업로드 중...`,
-        success: `${file.name} 업로드 완료!`,
-        error: `${file.name} 업로드 실패`
-      });
-    }
-  };
-
-  return (
-    <input 
-      type="file" 
-      multiple 
-      onChange={(e) => handleUpload(e.target.files)} 
-    />
-  );
-}
-```
-
-### 데이터 저장
-
-```tsx
-function SaveButton({ data }) {
-  const handleSave = async () => {
-    try {
-      await saveData(data);
-      toast.success('변경사항이 저장되었습니다.', {
-        action: {
-          label: '확인',
-          onClick: () => window.location.reload()
-        }
-      });
-    } catch (error) {
-      toast.error('저장 중 오류가 발생했습니다.', {
-        description: error.message,
-        duration: 5000
-      });
-    }
-  };
-
-  return (
-    <button onClick={handleSave}>
-      저장
-    </button>
-  );
-}
-```
-
-## 설정 옵션
-
-현재 기본 설정:
-- **위치**: `bottom-center` (화면 하단 중앙)
-- **컬러**: `richColors` 활성화
-- **지속시간**: `3000ms` (3초)
-
-### 커스텀 설정
-
-ToastProvider에서 설정을 변경하려면:
-
-```tsx
-<Toaster 
-  position="top-right"
-  expand={false}
-  richColors={true}
-  toastOptions={{
-    duration: 4000,
-    style: {
-      background: 'var(--background)',
-      color: 'var(--foreground)',
-      border: '1px solid var(--border)'
-    }
-  }}
-/>
-```
-
-## 접근성 기능
-
-Sonner는 기본적으로 다음 접근성 기능을 제공합니다:
-
-- **ARIA 라이브 영역**: 스크린 리더 자동 읽기
-- **키보드 지원**: ESC 키로 토스트 닫기
-- **포커스 관리**: 토스트 내 버튼 포커스 처리
-- **고대비 모드**: 시스템 설정 자동 적용
-
-## 테마 지원
-
-현재 시스템의 다크/라이트 모드와 자동으로 연동됩니다:
-
-```tsx
-// 다크 모드에서 자동으로 어두운 배경 적용
-// 라이트 모드에서 자동으로 밝은 배경 적용
-toast.success('테마에 맞게 자동 스타일링됩니다.');
-``` 
+- **폼 제출**: 사용자가 회원가입, 댓글 작성 등 폼을 제출했을 때, 그 결과를 '성공' 또는 '실패' 토스트로 알려줍니다.
+- **데이터 저장**: 사용자가 '저장' 버튼을 눌러 변경사항을 저장하는 동안 '로딩 중' 토스트를, 완료 후 '성공' 토스트를 표시합니다.
+- **삭제 확인**: 사용자가 항목을 삭제했을 때, '삭제되었습니다' 토스트와 함께 '실행 취소' 액션 버튼을 제공하여 실수를 만회할 기회를 줍니다.
+- **알림**: 사용자에게 '새로운 메시지가 도착했습니다' 와 같은 중요하지 않지만 유용한 정보를 `info` 토스트로 알려줍니다.

@@ -1,51 +1,90 @@
-# Card 컴포넌트 기술 문서
+# Card 기술 명세서
 
-## 개요
+이 문서는 여러 개의 하위 컴포넌트를 조합하여 만드는 `Card` 컴포넌트의 내부 아키텍처와 동적 스타일링 메커니즘을 설명합니다.
 
-`Card` 컴포넌트는 모듈화된 설계를 통해 유연하고 재사용 가능한 카드 UI를 제공한다. 기본 컴포넌트와 확장 컴포넌트로 구분하여 필요에 따라 선택적으로 사용할 수 있으며, 조건부 스타일링을 통해 다양한 시각적 변형을 지원한다.
+## 1. 아키텍처: 컴포넌트 컴포지션과 스타일 주입
 
-## 핵심 의존성
+`Card`와 그 하위 컴포넌트들은 각각 의미에 맞는 HTML 태그(`div`, `h3`, `p` 등)를 기반으로, `React.forwardRef`와 `cn` 유틸리티를 통해 스타일과 유연성을 더하는 방식으로 구현됩니다.
 
-- `react`: 컴포넌트 구현의 기반 라이브러리
-- `clsx` 및 `tailwind-merge` (`cn` 유틸리티): 조건부 클래스 조합과 뉴모피즘 스타일 적용
+```mermaid
+graph TD
+    subgraph "기본 HTML 태그"
+        A[div]
+        B[h3]
+        C[p]
+    end
 
-## 구현 플로우
+    subgraph "React.forwardRef (ref 전달 기능 추가)"
+        D[forwardRef(div)]
+        E[forwardRef(h3)]
+        F[forwardRef(p)]
+    end
 
-### 1. 기본 컴포넌트 구조
+    subgraph "cn() (스타일 클래스 주입)"
+        G["cn('neu-flat rounded-lg...', props.className)"]
+        H["cn('font-semibold...', props.className)"]
+        I["cn('text-sm text-muted-foreground', props.className)"]
+    end
 
-**Card (메인 컨테이너)**:
-- `React.forwardRef`를 사용하여 ref 전달을 지원한다.
-- `variant` prop에 따라 다른 뉴모피즘 스타일을 적용한다:
-  - `default`: `neu-flat` (기본 평면 스타일)
-  - `outline-solid`: `neu-flat border-2` (테두리 강조)
-  - `elevated`: `neu-raised` (높은 그림자)
-- `hoverEffect` prop이 true일 때 `neu-raised` 클래스를 추가하여 호버 효과를 제공한다.
+    subgraph "최종 컴포넌트"
+        J[Card]
+        K[CardTitle]
+        L[CardDescription]
+    end
 
-**CardHeader, CardContent, CardFooter**:
-- 각각 독립적인 영역을 담당하며, 일관된 패딩과 간격을 제공한다.
-- `CardHeader`는 `space-y-1.5`로 제목과 설명 간의 수직 간격을 관리한다.
-- `CardContent`와 `CardFooter`는 `pt-0`을 사용하여 상단 패딩을 제거해 영역 간 연결성을 유지한다.
+    A --> D --> G --> J
+    B --> E --> H --> K
+    C --> F --> I --> L
+```
 
-**CardTitle, CardDescription**:
-- 의미론적 HTML 요소(`h3`, `p`)를 사용하여 접근성을 향상시킨다.
-- 타이포그래피 스타일을 일관되게 적용한다.
+이러한 구조는 각 컴포넌트가 명확한 단일 책임(시맨틱 마크업, 스타일링, `ref` 전달)을 갖게 하여 코드의 가독성과 유지보수성을 높입니다.
 
-### 2. 확장 컴포넌트 구조
+## 2. 조건부 스타일링 로직 (`Card` 컴포넌트)
 
-**CardActions, CardAction**:
-- `absolute` 포지셔닝을 사용하여 카드 우상단에 액션 버튼을 배치한다.
-- `CardAction`은 원형 버튼 스타일로 `neu-raised`와 `backdrop-blur-xs`를 적용한다.
-- 버튼 크기는 `h-8 w-8`로 고정하여 일관된 크기를 유지한다.
+`Card` 컴포넌트는 `variant`와 `hoverEffect` prop의 값에 따라 `cn` 함수 내부에서 조건부로 클래스를 추가하여 최종 스타일을 결정합니다.
 
-**CardBadge**:
-- `variant` prop을 통해 6가지 색상 변형을 제공한다.
-- 각 variant는 배경색과 텍스트 색상을 조합하여 명확한 시각적 구분을 제공한다.
-- `success`, `warning`, `danger` variant는 투명도(`/10`)를 사용하여 부드러운 색상 표현을 구현한다.
+```mermaid
+flowchart TD
+    A[variant, hoverEffect Props] --> B{cn() 함수 호출};
+    B --> C["기본 클래스 적용<br/>'neu-flat', 'rounded-lg'..."];
+    B --> D{variant === 'elevated' ?};
+    D -- Yes --> E["'neu-raised' 클래스 추가"];
+    B --> F{variant === 'outline-solid' ?};
+    F -- Yes --> G["'border-2' 클래스 추가"];
+    B --> H{hoverEffect === true ?};
+    H -- Yes --> I["'neu-hover' 클래스 추가"];
 
-## 주요 특징
+    subgraph "최종 결과"
+        J[조합된 클래스가 적용된 div 렌더링]
+    end
 
-- **모듈화된 구조**: 각 컴포넌트가 독립적으로 작동하여 필요한 부분만 선택적으로 사용 가능하다.
-- **조건부 스타일링**: `cn` 유틸리티와 조건부 표현식을 통해 동적 스타일 적용이 효율적으로 관리된다.
-- **뉴모피즘 통합**: 프로젝트 디자인 시스템의 뉴모피즘 클래스를 적극 활용하여 일관된 시각적 경험을 제공한다.
-- **접근성 고려**: 의미론적 HTML 요소와 `forwardRef`를 통해 스크린 리더와 키보드 네비게이션을 지원한다.
-- **확장성**: 새로운 카드 요소나 variant를 쉽게 추가할 수 있는 구조로 설계되었다. 
+    C & E & G & I --> J
+```
+
+## 3. `CardActions`의 절대 위치 지정
+
+`CardActions` 컴포넌트는 부모인 `Card` 컴포넌트에 `relative` 클래스가 적용되어 있다는 전제 하에, `absolute` 포지셔닝을 사용하여 우상단에 배치됩니다.
+
+```mermaid
+graph TD
+    subgraph "Card (position: relative)"
+        A["CardActions<br/>(position: absolute, top-4, right-4)"]
+    end
+
+    style A fill:#e3f2fd, stroke:#333
+    note right of A
+        <b>Card</b> 컴포넌트에
+        <b>relative</b> 클래스를
+        반드시 추가해야 합니다.
+    end note
+```
+
+이 방식은 `CardActions`의 위치를 카드 내용의 길이에 상관없이 항상 일관된 위치에 고정시켜 줍니다.
+
+## 4. `forwardRef`의 역할
+
+모든 `Card` 관련 컴포넌트는 `React.forwardRef`를 사용하여 구현되었습니다. 이는 `Card` 컴포넌트 자체 또는 그 하위 요소들에 직접 `ref`를 연결할 수 있게 하여, 다음과 같은 상황에서 높은 유연성을 제공합니다.
+
+- 특정 카드 영역으로 스크롤을 이동시킬 때
+- 카드에 애니메이션 효과(`Framer Motion`)를 적용할 때
+- 카드에 툴팁(`Tippy.js`)을 붙일 때
