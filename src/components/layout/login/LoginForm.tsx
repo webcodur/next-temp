@@ -135,7 +135,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 							`}>
 								{formData.rememberMe && (
 									<svg
-										className="w-3 h-3 text-brand"
+										className="w-3 h-3 text-primary"
 										fill="currentColor"
 										viewBox="0 0 20 20">
 										<path
@@ -154,7 +154,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 
 					<button
 						type="button"
-						className="text-sm transition-all duration-200 font-multilang text-brand hover:text-brand/80 hover:underline">
+						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-primary/80 hover:underline">
 						비밀번호 찾기
 					</button>
 				</div>
@@ -164,7 +164,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 					type="submit" 
 					className="w-full h-11 font-multilang" 
 					disabled={isLoading}
-					variant="brand"
+					variant="primary"
 				>
 					{isLoading ? '로그인 중...' : '로그인'}
 				</Button>
@@ -176,7 +176,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 					</span>
 					<button
 						type="button"
-						className="text-sm transition-all duration-200 font-multilang text-brand hover:text-brand/80 hover:underline">
+						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-primary/80 hover:underline">
 						회원가입
 					</button>
 				</div>

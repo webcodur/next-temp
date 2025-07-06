@@ -87,7 +87,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
-						${isFocused ? 'ring-2 ring-brand' : ''}
+						${isFocused ? 'ring-2 ring-primary' : ''}
 						${error ? 'ring-2 ring-destructive' : ''}
 						${!isValid ? 'ring-2 ring-red-500' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}

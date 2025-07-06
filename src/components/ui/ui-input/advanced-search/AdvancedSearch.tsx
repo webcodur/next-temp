@@ -40,7 +40,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 						{/* 리셋 버튼 */}
 						<button
 							onClick={onReset}
-							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-muted-foreground transition-colors bg-background neu-raised rounded-xl hover:text-brand">
+							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-muted-foreground transition-colors bg-background neu-raised rounded-xl hover:text-primary">
 							<RotateCcw className="w-4 h-4" />
 							{resetLabel}
 						</button>
@@ -48,7 +48,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 						{/* 검색 버튼 */}
 						<button
 							onClick={onSearch}
-							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-brand-foreground transition-colors bg-brand neu-raised rounded-xl hover:bg-brand/90">
+							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-primary-foreground transition-colors bg-primary neu-raised rounded-xl hover:bg-primary/90">
 							<Search className="w-4 h-4" />
 							{searchLabel}
 						</button>

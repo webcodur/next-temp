@@ -100,7 +100,7 @@ export function DateRangePicker({
 					scrollableYearDropdown={scrollableYearDropdown}
 					showMonthYearPicker={showMonthYearPicker}
 					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border-brand neu-inset focus:outline-hidden focus:ring-0"
+					className="box-border px-2 py-1 w-36 rounded border-primary neu-inset focus:outline-hidden focus:ring-0"
 				/>
 			</div>
 			<span className="text-sm shrink-0">~</span>
@@ -119,7 +119,7 @@ export function DateRangePicker({
 					scrollableYearDropdown={scrollableYearDropdown}
 					showMonthYearPicker={showMonthYearPicker}
 					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border-brand neu-inset focus:outline-hidden focus:ring-0"
+					className="box-border px-2 py-1 w-36 rounded border-primary neu-inset focus:outline-hidden focus:ring-0"
 				/>
 			</div>
 		</div>
@@ -187,7 +187,7 @@ export function SingleDatePicker({
 				scrollableYearDropdown={scrollableYearDropdown}
 				showMonthYearPicker={showMonthYearPicker}
 				renderCustomHeader={renderCustomYearMonthHeader}
-				className={`box-border px-2 py-1 rounded border-brand neu-inset focus:outline-hidden focus:ring-0 ${className}`}
+				className={`box-border px-2 py-1 rounded border-primary neu-inset focus:outline-hidden focus:ring-0 ${className}`}
 			/>
 		</div>
 	);
@@ -234,7 +234,7 @@ export function TimeOnlyPicker({
 				minTime={minTime}
 				maxTime={maxTime}
 				locale={ko}
-				className={`box-border px-2 py-1 rounded border-brand neu-inset focus:outline-hidden focus:ring-0 ${className}`}
+				className={`box-border px-2 py-1 rounded border-primary neu-inset focus:outline-hidden focus:ring-0 ${className}`}
 			/>
 		</div>
 	);

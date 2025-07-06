@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as THREE from 'three';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -9,7 +9,7 @@ type GeometryType = 'box' | 'sphere' | 'cylinder' | 'cone' | 'plane' | 'torus';
 export default function GeometriesPage() {
 	const t = useTranslations();
 	
-	const geometryData = {
+	const geometryData = useMemo(() => ({
 		box: {
 			name: t('3D_정육면체'),
 			description: t('3D_정육면체설명'),
@@ -46,7 +46,7 @@ export default function GeometriesPage() {
 			create: () => new THREE.TorusGeometry(1, 0.3, 16, 100),
 			color: 0xfd79a8,
 		},
-	};
+	}), [t]);
 
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
@@ -105,7 +105,7 @@ export default function GeometriesPage() {
 	}, []);
 
 	// #region 도형 변경 함수
-	const changeGeometry = (type: GeometryType) => {
+	const changeGeometry = useCallback((type: GeometryType) => {
 		if (!sceneRef.current) return;
 
 		// 기존 메쉬 제거
@@ -124,13 +124,13 @@ export default function GeometriesPage() {
 		meshRef.current = mesh;
 		sceneRef.current.add(mesh);
 		setSelectedGeometry(type);
-	};
+	}, [geometryData]);
 	// #endregion
 
 	// 초기 도형 생성
 	useEffect(() => {
 		changeGeometry('box');
-	}, []);
+	}, [changeGeometry]);
 
 	const currentData = geometryData[selectedGeometry];
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ListHighlightMarker from '@/components/ui/ui-data/list-highlight-marker/ListHighlightMarker';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -11,16 +11,16 @@ export default function ListHighlightMarkerPage() {
 	const [mixedSelectedIds, setMixedSelectedIds] = useState<string[]>([]);
 
 	// 기본 리스트 항목들
-	const basicItems = [
+	const basicItems = useMemo(() => [
 		{ id: '1', label: `${t('리스트하이라이트_아이템')} 1` },
 		{ id: '2', label: `${t('리스트하이라이트_아이템')} 2` },
 		{ id: '3', label: `${t('리스트하이라이트_아이템')} 3` },
 		{ id: '4', label: `${t('리스트하이라이트_아이템')} 4` },
 		{ id: '5', label: `${t('리스트하이라이트_아이템')} 5` },
-	];
+	], [t]);
 
 	// 비활성화 항목이 포함된 리스트
-	const mixedItems = [
+	const mixedItems = useMemo(() => [
 		{ id: '1', label: `${t('리스트하이라이트_아이템')} 1` },
 		{ id: '2', label: `${t('리스트하이라이트_아이템')} 2` },
 		{ id: '3', label: `${t('리스트하이라이트_아이템')} 3 ${t('리스트하이라이트_비활성화')}`, disabled: true },
@@ -29,7 +29,7 @@ export default function ListHighlightMarkerPage() {
 		{ id: '6', label: `${t('리스트하이라이트_아이템')} 6` },
 		{ id: '7', label: `${t('리스트하이라이트_아이템')} 7` },
 		{ id: '8', label: `${t('리스트하이라이트_아이템')} 8` },
-	];
+	], [t]);
 
 	// 선택 처리 함수
 	const handleSelect = (id: string, selectedList: string[], setSelectedList: (ids: string[]) => void) => {

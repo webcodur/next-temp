@@ -60,7 +60,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
-						${isFocused ? 'ring-2 ring-brand' : ''}
+						${isFocused ? 'ring-2 ring-primary' : ''}
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 						w-full bg-transparent flex items-center justify-between
 					`}

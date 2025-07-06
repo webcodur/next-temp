@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
 	const currentPageClasses = `
 		flex items-center justify-center min-w-[40px] h-10 px-3 text-sm font-medium rounded-md
-		bg-brand text-brand-foreground neu-inset
+		bg-primary text-primary-foreground neu-inset
 	`;
 
 	// 페이지 번호 범위 계산
@@ -87,7 +87,7 @@ const Pagination: React.FC<PaginationProps> = ({
 					{/* 로딩 중일 때 스피너 표시 */}
 					{isLoading && currentPage === 1 ? (
 						<div className="absolute z-10 transform -translate-x-1/2 -translate-y-1/2 start-1/2 top-1/2">
-							<div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+							<div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
 						</div>
 					) : (
 						isRTL ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />

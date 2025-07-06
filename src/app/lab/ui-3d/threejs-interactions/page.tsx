@@ -1,19 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { useState } from 'react';
 import { useTranslations } from '@/hooks/useI18n';
 
 type InteractionType = 'orbit' | 'drag' | 'click' | 'hover' | 'keyboard';
 
 export default function InteractionsPage() {
 	const t = useTranslations();
-	const mountRef = useRef<HTMLDivElement>(null);
-	const sceneRef = useRef<THREE.Scene | null>(null);
-	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-	const meshRef = useRef<THREE.Mesh | null>(null);
-	const controlsRef = useRef<OrbitControls | null>(null);
+
 
 	const [selectedInteraction, setSelectedInteraction] = useState<InteractionType>('orbit');
 
@@ -31,10 +25,11 @@ export default function InteractionsPage() {
 				{/* 3D 뷰어 */}
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold">{t('3D_상호작용갤러리')}</h2>
-					<div 
-						ref={mountRef} 
-						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
-					/>
+					<div className="border border-gray-200 rounded-lg overflow-hidden mb-4 h-64">
+						<div className="flex items-center justify-center h-full text-gray-500">
+							3D 뷰어 플레이스홀더
+						</div>
+					</div>
 					
 					{/* 안내 메시지 */}
 					<div className="neu-inset p-4 rounded-lg">

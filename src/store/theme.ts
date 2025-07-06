@@ -18,11 +18,11 @@ export const toggleThemeAtom = atom(null, (get, set) => {
 		
 		// 테마 변경 시 브랜드 스케일 재계산
 		// 브랜드 색상을 다시 읽어서 새로운 테마에 맞게 스케일 업데이트
-		const brandColor = getComputedStyle(document.documentElement)
-			.getPropertyValue('--brand').trim();
-		if (brandColor) {
+		const primaryColor = getComputedStyle(document.documentElement)
+			.getPropertyValue('--primary').trim();
+		if (primaryColor) {
 			// 브랜드 업데이트 함수가 있다면 호출
-			const event = new CustomEvent('themeChanged', { detail: { theme: newTheme, brandColor } });
+			const event = new CustomEvent('themeChanged', { detail: { theme: newTheme, primaryColor } });
 			window.dispatchEvent(event);
 		}
 	}

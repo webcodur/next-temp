@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { setBrandColorAtom, brandColorAtom } from '@/store/brand';
+import { setPrimaryColorAtom, primaryColorAtom } from '@/store/primary';
 import { ChangeEvent } from 'react';
 import clsx from 'clsx';
 
@@ -42,13 +42,13 @@ function hexToHslString(hex: string): string {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
-interface BrandColorPickerProps {
+interface PrimaryColorPickerProps {
   className?: string;
 }
 
-export function BrandColorPicker({ className }: BrandColorPickerProps) {
-  const [color] = useAtom(brandColorAtom);
-  const [, setBrandColor] = useAtom(setBrandColorAtom);
+export function PrimaryColorPicker({ className }: PrimaryColorPickerProps) {
+  const [color] = useAtom(primaryColorAtom);
+  const [, setPrimaryColor] = useAtom(setPrimaryColorAtom);
 
   // 현재 HSL을 HEX로 변환 (간단 버전) for input value
   const hslToHex = (hsl: string): string => {
@@ -71,14 +71,14 @@ export function BrandColorPicker({ className }: BrandColorPickerProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const hex = e.target.value;
     const hslString = hexToHslString(hex);
-    setBrandColor(hslString);
+    setPrimaryColor(hslString);
   };
 
   return (
     <div className={clsx('relative', className)}>
       <input
         type="color"
-        aria-label="brand color picker"
+        aria-label="primary color picker"
         value={hslToHex(color)}
         onChange={handleChange}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

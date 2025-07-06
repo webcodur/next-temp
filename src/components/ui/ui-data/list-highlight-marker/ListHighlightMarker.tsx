@@ -36,12 +36,12 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 	const getBorderClass = () => {
 		if (isRTL) {
 			return isActive
-				? 'bg-brand/5 border-r-4 border-r-brand -translate-x-1'
-				: 'hover:border-r-4 hover:border-r-brand hover:-translate-x-1 hover:bg-brand/5';
+				? 'bg-primary/5 border-r-4 border-r-primary -translate-x-1'
+				: 'hover:border-r-4 hover:border-r-primary hover:-translate-x-1 hover:bg-primary/5';
 		} else {
 			return isActive
-				? 'bg-brand/5 border-l-4 border-l-brand translate-x-1'
-				: 'hover:border-l-4 hover:border-l-brand hover:translate-x-1 hover:bg-brand/5';
+				? 'bg-primary/5 border-l-4 border-l-primary translate-x-1'
+				: 'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-primary/5';
 		}
 	};
 
@@ -94,7 +94,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 				{/* Check 아이콘 - active 상태에서만 보임 */}
 				<Check
 					className={cn(
-						'absolute inset-0 w-4 h-4 text-brand transition-all duration-200',
+						'absolute inset-0 w-4 h-4 text-primary transition-all duration-200',
 						'transform',
 						isActive
 							? 'opacity-100 scale-100 rotate-0'

@@ -107,10 +107,10 @@ export function SideHeader() {
 							className={`flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300 ${isRTL ? 'flex-row-reverse' : ''}`}>
 							{/* 로고 아이콘 */}
 							<div className="flex justify-center items-center shrink-0">
-								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-brand group-hover:scale-105" />
+								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-primary group-hover:scale-105" />
 							</div>
 							{/* 타이틀 텍스트 */}
-							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-brand/90">
+							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-primary/90">
 								{t('사이드바_헤더_건물타이틀')}
 							</div>
 						</Link>
@@ -123,7 +123,7 @@ export function SideHeader() {
 					<button
 						onClick={handleSearchOpen}
 						className={`flex gap-3 items-center p-3 w-full rounded-lg border border-border neu-flat neu-hover group ${isRTL ? 'flex-row-reverse' : ''}`}>
-						<Search className={`w-4 h-4 text-muted-foreground group-hover:text-brand transition-colors duration-200 ${isRTL ? 'scale-x-[-1]' : ''}`} />
+						<Search className={`w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors duration-200 ${isRTL ? 'scale-x-[-1]' : ''}`} />
 						<span className="text-sm text-muted-foreground group-hover:text-foreground font-multilang">
 							{isAdmin ? t('사이드바_헤더_통합검색') : t('사이드바_헤더_메뉴검색')}
 						</span>

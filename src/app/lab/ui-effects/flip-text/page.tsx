@@ -232,7 +232,7 @@ export default function FlipTextPage() {
 							className="text-2xl font-bold text-primary"
 							duration={0.7}
 							delayMultiple={0.08}>
-							{t('플립텍스트_BRAND')}
+							{t('플립텍스트_PRIMARY')}
 						</FlipText>
 					</div>
 

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLocale } from '@/hooks/useI18n';
+import Image from 'next/image';
 
 interface CarouselProps {
 	items: Array<{
@@ -81,12 +82,12 @@ const Carousel: React.FC<CarouselProps> = ({
 					<>
 						<button
 							onClick={goToPrevious}
-							className={`absolute ${isRTL ? 'end-2' : 'start-2'} top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
+							className={`absolute ${isRTL ? 'end-2' : 'start-2'} top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
 							{isRTL ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
 						</button>
 						<button
 							onClick={goToNext}
-							className={`absolute ${isRTL ? 'start-2' : 'end-2'} top-1/2 p-2 text-brand-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
+							className={`absolute ${isRTL ? 'start-2' : 'end-2'} top-1/2 p-2 text-primary-foreground bg-background/50 rounded-full transition-all duration-200 transform -translate-y-1/2 neu-raised hover:bg-background/70`}>
 							{isRTL ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
 						</button>
 					</>
@@ -101,7 +102,7 @@ const Carousel: React.FC<CarouselProps> = ({
 								onClick={() => goToSlide(index)}
 								className={`w-3 h-3 rounded-full transition-all duration-200 ${
 									index === currentIndex
-										? 'bg-brand neu-inset'
+										? 'bg-primary neu-inset'
 										: 'bg-background/50 neu-flat hover:bg-background/70'
 								}`}
 							/>
@@ -119,14 +120,16 @@ const Carousel: React.FC<CarouselProps> = ({
 							onClick={() => goToSlide(index)}
 							className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden transition-all duration-200 ${
 								index === currentIndex
-									? 'ring-2 ring-brand neu-inset'
+									? 'ring-2 ring-primary neu-inset'
 									: 'neu-flat hover:neu-raised'
 							}`}
 						>
 							{item.thumbnail ? (
-								<img
+								<Image
 									src={item.thumbnail}
 									alt={item.title}
+									width={80}
+									height={80}
 									className="w-full h-full object-cover"
 								/>
 							) : (

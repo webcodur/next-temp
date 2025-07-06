@@ -70,8 +70,8 @@ const Tabs = React.forwardRef<
 								'relative px-6 mx-1 rounded-lg font-medium transition-all duration-200',
 								sizeClasses[size],
 								activeId === tab.id 
-									? 'text-brand neu-inset' 
-									: 'text-muted-foreground hover:text-brand neu-raised'
+									? 'text-primary neu-inset' 
+									: 'text-muted-foreground hover:text-primary neu-raised'
 							)}
 						>
 							{tab.icon && (

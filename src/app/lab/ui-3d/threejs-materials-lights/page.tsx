@@ -185,7 +185,7 @@ export default function MaterialsLightsPage() {
 			geometry.dispose();
 			material.dispose();
 		};
-	}, []);
+	}, [lightData.ambient.color, lightData.directional.color, lightData.point.color, lightData.spot.color, materialData.standard]);
 
 	// #region 재질 변경
 	const changeMaterial = (type: MaterialType) => {

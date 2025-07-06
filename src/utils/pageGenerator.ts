@@ -27,11 +27,10 @@ export function getAllBotMenuPaths(): BotMenuPath[] {
 				paths.push({
 					topKey,
 					midKey,
-					topLabel: topItem['kor-name'],
-					midLabel: midItem['kor-name'],
-					botLabel: botItem['kor-name'],
+					topLabel: topItem.key,
+					midLabel: midItem.key,
+					botLabel: botItem.key,
 					href: botItem.href,
-					description: botItem.description || '',
 				});
 			});
 		});

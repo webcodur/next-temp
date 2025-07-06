@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useLocale } from '@/hooks/useI18n';
 import { type Locale } from '@/lib/i18n';
+import Image from 'next/image';
 
 interface LanguageSwitcherProps {
 	variant?: 'header' | 'sidebar' | 'inline';
@@ -70,9 +71,11 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 				`}
 			>
 				<div className="relative w-6 h-6">
-					<img
+					<Image
 						src={currentMeta.flag}
 						alt={currentMeta.name}
+						width={24}
+						height={24}
 						className="w-full h-full rounded-full object-cover"
 					/>
 				</div>
@@ -100,9 +103,11 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 									className="w-full p-2 hover:bg-muted/50 transition-colors flex items-center justify-center"
 								>
 									<div className="relative w-8 h-8">
-										<img
+										<Image
 											src={meta.flag}
 											alt={meta.name}
+											width={32}
+											height={32}
 											className="w-full h-full rounded-full object-cover"
 										/>
 									</div>

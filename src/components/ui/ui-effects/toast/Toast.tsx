@@ -13,8 +13,8 @@ const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       toastOptions={{
         duration: 3000,
         style: {
-          background: 'hsl(var(--brand))',
-          color: 'hsl(var(--brand-foreground))',
+          		background: 'hsl(var(--primary))',
+          color: 'hsl(var(--primary-foreground))',
         },
       }}
     />

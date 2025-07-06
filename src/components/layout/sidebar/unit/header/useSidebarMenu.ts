@@ -76,7 +76,7 @@ export function useSidebarMenu() {
 				}
 			}
 		}
-	}, [pathname, isMounted]);
+	}, [pathname, isMounted, singleOpenMode]);
 
 	// 모드 변경 시 상태 전환 처리
 	useEffect(() => {

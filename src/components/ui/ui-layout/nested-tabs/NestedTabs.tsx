@@ -88,8 +88,8 @@ const NestedTabs = React.forwardRef<
 								'relative px-6 mx-1 rounded-lg font-medium transition-all duration-200',
 								sizeClasses[size],
 								activeTopId === tab.id
-									? 'text-brand neu-inset'
-									: 'text-muted-foreground hover:text-brand neu-raised'
+									? 'text-primary neu-inset'
+									: 'text-muted-foreground hover:text-primary neu-raised'
 							)}
 						>
 							{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
@@ -111,8 +111,8 @@ const NestedTabs = React.forwardRef<
 									'relative px-4 mx-1 rounded-md font-medium transition-all duration-200',
 									sizeClasses.sm, // 서브탭은 작은 사이즈로 고정
 									activeSubId === subTab.id
-										? 'text-brand neu-inset'
-										: 'text-muted-foreground hover:text-brand neu-raised'
+										? 'text-primary neu-inset'
+										: 'text-muted-foreground hover:text-primary neu-raised'
 								)}
 							>
 								{subTab.icon && <span className="inline-block me-2">{subTab.icon}</span>}

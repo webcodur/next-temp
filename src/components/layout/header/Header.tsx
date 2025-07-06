@@ -9,8 +9,8 @@ import { ProfileButton } from '@/components/layout/header/ProfileButton';
 import dynamic from 'next/dynamic';
 import clsx from 'clsx';
 
-const BrandColorPicker = dynamic(
-	() => import('@/components/layout/header/BrandColorPicker').then(mod => ({ default: mod.BrandColorPicker })),
+const PrimaryColorPicker = dynamic(
+	() => import('@/components/layout/header/PrimaryColorPicker').then(mod => ({ default: mod.PrimaryColorPicker })),
 	{
 		ssr: false,
 		loading: () => <div className="w-9 h-9" />
@@ -41,7 +41,7 @@ export function Header() {
 				{/* 언어 선택 */}
 				<LanguageSwitcher variant="header" className={flagButton} />
 				{/* 브랜드 컬러 픽커 */}
-				<BrandColorPicker className={squareButton} />
+				<PrimaryColorPicker className={squareButton} />
 				{/* 테마 토글 */}
 				<ThemeToggle variant="icon" showLabel={false} className={squareButton} />
 				{/* 프로필 버튼 */}

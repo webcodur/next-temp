@@ -266,7 +266,7 @@ export default function TablePage() {
 								key={i}
 								className="flex justify-center items-center h-12 text-xs font-bold rounded"
 								style={{ 
-									backgroundColor: `hsl(var(--brand-${i}))`,
+									backgroundColor: `hsl(var(--primary-${i}))`,
 									color: i < 5 ? 'white' : 'black'
 								}}
 							>
@@ -295,7 +295,7 @@ export default function TablePage() {
 								borderColor: 'hsl(var(--border))'
 							}}
 							onMouseEnter={(e) => {
-								e.currentTarget.style.backgroundColor = 'hsl(var(--brand-2) / 0.6)';
+								e.currentTarget.style.backgroundColor = 'hsl(var(--primary-2) / 0.6)';
 							}}
 							onMouseLeave={(e) => {
 								e.currentTarget.style.backgroundColor = '';
@@ -327,7 +327,7 @@ export default function TablePage() {
 								data={users}
 								columns={columns}
 								pageSize={3}
-								brandHeader={true}
+								primaryHeader={true}
 							/>
 						</div>
 					</div>
@@ -340,7 +340,7 @@ export default function TablePage() {
 								data={users}
 								columns={columns}
 								pageSize={3}
-								brandAccent={true}
+								primaryAccent={true}
 							/>
 						</div>
 
@@ -350,7 +350,7 @@ export default function TablePage() {
 								data={users}
 								columns={columns}
 								pageSize={3}
-								brandHover={true}
+								primaryHover={true}
 							/>
 						</div>
 					</div>
@@ -363,8 +363,8 @@ export default function TablePage() {
 								data={users}
 								columns={columns}
 								pageSize={3}
-								brandHeader={true}
-								brandHover={true}
+								primaryHeader={true}
+								primaryHover={true}
 							/>
 						</div>
 
@@ -374,9 +374,9 @@ export default function TablePage() {
 								data={users}
 								columns={columns}
 								pageSize={3}
-								brandAccent={true}
-								brandHeader={true}
-								brandHover={true}
+								primaryAccent={true}
+								primaryHeader={true}
+								primaryHover={true}
 							/>
 						</div>
 					</div>
@@ -389,7 +389,7 @@ export default function TablePage() {
 								data={null}
 								columns={columns}
 								pageSize={3}
-								brandAccent={true}
+								primaryAccent={true}
 								loadingRows={3}
 							/>
 						</div>
@@ -400,7 +400,7 @@ export default function TablePage() {
 								data={[]}
 								columns={columns}
 								pageSize={3}
-								brandHeader={true}
+								primaryHeader={true}
 								emptyMessage="브랜드 테이블에 데이터가 없습니다."
 							/>
 						</div>

@@ -43,7 +43,7 @@ export function ThemeToggle({
 
 	const iconClasses = variant === 'button' 
 		? 'neu-icon-active' 
-		: 'text-brand';
+		: 'text-primary';
 
 	return (
 		<button

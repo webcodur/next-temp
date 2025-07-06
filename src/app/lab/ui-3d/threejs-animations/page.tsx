@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -9,7 +9,7 @@ type AnimationType = 'rotation' | 'position' | 'scale' | 'color' | 'combined';
 export default function AnimationsPage() {
 	const t = useTranslations();
 	
-	const animationData = {
+	const animationData = useMemo(() => ({
 		rotation: {
 			name: t('3D_회전'),
 			description: t('3D_회전설명'),
@@ -69,7 +69,7 @@ export default function AnimationsPage() {
 				material.color.setHSL(hue, 0.8, 0.6);
 			},
 		},
-	};
+	}), [t]);
 
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
@@ -164,7 +164,7 @@ export default function AnimationsPage() {
 			geometry.dispose();
 			material.dispose();
 		};
-	}, [selectedAnimation, isPlaying, speed]);
+	}, [selectedAnimation, isPlaying, speed, animationData]);
 
 	// #region 컨트롤 함수들
 	const togglePlayPause = () => {
@@ -201,7 +201,7 @@ export default function AnimationsPage() {
 					<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션갤러리')}</h2>
 					<div 
 						ref={mountRef} 
-						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
+						className="overflow-hidden mb-4 rounded-lg border border-gray-200"
 					/>
 					
 					{/* 재생 컨트롤 */}
@@ -221,11 +221,11 @@ export default function AnimationsPage() {
 					</div>
 					
 					{/* 현재 선택된 애니메이션 정보 */}
-					<div className="neu-inset p-4 rounded-lg">
-						<h3 className="font-semibold text-lg text-blue-600">
+					<div className="p-4 rounded-lg neu-inset">
+						<h3 className="text-lg font-semibold text-blue-600">
 							{animationData[selectedAnimation].name}
 						</h3>
-						<p className="text-sm text-gray-600 mt-1">
+						<p className="mt-1 text-sm text-gray-600">
 							{animationData[selectedAnimation].description}
 						</p>
 					</div>
@@ -247,12 +247,12 @@ export default function AnimationsPage() {
 										onClick={() => setSelectedAnimation(type)}
 										className={`w-full p-3 rounded-lg text-left transition-all ${
 											isSelected 
-												? 'neu-inset bg-blue-50' 
+												? 'bg-blue-50 neu-inset' 
 												: 'neu-raised hover:neu-inset'
 										}`}
 									>
-										<h3 className="font-semibold text-sm">{data.name}</h3>
-										<p className="text-xs text-gray-600 mt-1">
+										<h3 className="text-sm font-semibold">{data.name}</h3>
+										<p className="mt-1 text-xs text-gray-600">
 											{data.description}
 										</p>
 									</button>
@@ -266,7 +266,7 @@ export default function AnimationsPage() {
 						<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션제어')}</h2>
 						<div className="space-y-4">
 							<div>
-								<label className="block text-sm font-medium mb-2">
+								<label className="block mb-2 text-sm font-medium">
 									속도: {speed}x
 								</label>
 								<input

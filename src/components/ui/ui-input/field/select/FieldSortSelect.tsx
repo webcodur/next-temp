@@ -86,13 +86,13 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 						)}
 					</span>
 
-					<ChevronDown
-						className={`
-							${FIELD_STYLES.rightIcon}
-							neu-icon-inactive hover:neu-icon-active
-							transition-transform
-							${isOpen ? 'rotate-180' : ''}
-						`}
+					                                <ChevronDown
+                                        className={`
+                                                ${FIELD_STYLES.endIcon}
+                                                neu-icon-inactive hover:neu-icon-active
+                                                transition-transform
+                                                ${isOpen ? 'rotate-180' : ''}
+                                        `}
 					/>
 				</button>
 

@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 
 // 그라데이션 배경 (더 옅게) 과 음각용 그림자
 const BACKGROUND = 'linear-gradient(135deg, hsl(var(--card) / 0.85), hsl(var(--muted) / 0.7))';
-const INSET_LIGHT_SIDE = 'hsl(var(--brand) / 0.1)';
-const INSET_SHADE_SIDE = 'hsl(var(--brand) / 0.35)';
+const INSET_LIGHT_SIDE = 'hsl(var(--primary) / 0.1)';
+const INSET_SHADE_SIDE = 'hsl(var(--primary) / 0.35)';
 
 type InsetContainerProps = {
   children: React.ReactNode;

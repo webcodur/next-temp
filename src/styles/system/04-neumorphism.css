@@ -9,7 +9,7 @@
 📋 파일 구조
 ┌─ 기본 클래스 (줄 31-436)      │ neu-flat, neu-raised, neu-elevated 등
 ├─ RTL 대응 (줄 437-785)       │ [dir='rtl'] 버전들 - 아랍어 지원
-├─ 브랜드 버전 (줄 786-908)     │ neu-*-brand 클래스들
+├─ 프라이머리 버전 (줄 786-908)     │ neu-*-primary 클래스들
 └─ 정리/주석 (줄 909-943)      │ 레거시 제거, 마무리
 
 🎯 90% 상황은 이 3개면 충분:
@@ -18,11 +18,11 @@
 3. neu-elevated - 카드, 고정 패널 (세 번째로 많이 사용)
 
 🔥 브랜드 칼라 버전:
-- neu-flat-brand     - 브랜드 강조 컨테이너
-- neu-raised-brand   - 브랜드 강조 버튼
+- neu-flat-primary     - 브랜드 강조 컨테이너
+- neu-raised-primary   - 브랜드 강조 버튼
 
 ⚡ 자주 묻는 질문:
-Q: 브랜드 칼라 안 보임 → A: brand-2/[0.6] 사용 (라이트/다크 자동 대응)
+Q: 브랜드 칼라 안 보임 → A: primary-2/[0.6] 사용 (라이트/다크 자동 대응)
 Q: 호버가 느림 → A: transition 클래스 제거 확인
 Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + neu-hover 등)
 
@@ -190,7 +190,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
 		/* 우측 강화된 그림자 */ calc(var(--nm-offset) * 1.5) 0
 			calc(var(--nm-blur) * 1.5) rgba(var(--nm-dark-rgba)),
-		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--brand) / 0.1);
+		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--primary) / 0.1);
 }
 
 .neu-raised:active {
@@ -255,7 +255,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
 		/* 우측 강화된 그림자 */ calc(var(--nm-offset) * 1.5) 0
 			calc(var(--nm-blur) * 1.5) rgba(var(--nm-dark-rgba)),
-		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--brand) / 0.08);
+		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--primary) / 0.08);
 }
 
 .neu-elevated:focus,
@@ -278,14 +278,14 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba)),
 		/* 우측 유지된 그림자 */ calc(var(--nm-offset) * 1.3) 0
 			calc(var(--nm-blur) * 1.3) rgba(var(--nm-dark-rgba)),
-		/* 브랜드 컬러 포커스 링 */ 0 0 0 2px hsl(var(--brand) / 0.15);
+		/* 브랜드 컬러 포커스 링 */ 0 0 0 2px hsl(var(--primary) / 0.15);
 }
 
 /* 4-3. neu-inset - 음각 (활성/선택 상태) */
 .neu-inset {
 	/* 부드러운 border + 음각 shadow */
 	border: 1px solid hsl(var(--border) / 0.4);
-	color: hsl(var(--brand));
+	color: hsl(var(--primary));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		/* 내부 우하단 그림자 */
@@ -347,7 +347,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 /* 4-4. neu-inset-shadow - shadow만 있는 inset (border 없음) */
 .neu-inset-shadow {
 	border: none; /* border 제거 */
-	color: hsl(var(--brand));
+	color: hsl(var(--primary));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		/* 내부 우하단 그림자 */
@@ -404,10 +404,10 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 
 /* 4-5. neu-icon - 아이콘 (테슬라 스타일) */
 .neu-icon-active {
-	color: hsl(var(--brand));
+	color: hsl(var(--primary));
 	filter: drop-shadow(
-		0 1px 3px hsla(var(--brand), 0.2)
-	); /* brand 컬러 섀도우 */
+		0 1px 3px hsla(var(--primary), 0.2)
+	); /* primary 컬러 섀도우 */
 	transition:
 		color 0.15s ease-out,
 		filter 0.15s ease-out,
@@ -593,7 +593,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
 		/* 우측 → 좌측 강화된 그림자 */ calc(var(--nm-offset) * -1.5) 0
 			calc(var(--nm-blur) * 1.5) rgba(var(--nm-dark-rgba)),
-		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--brand) / 0.1);
+		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--primary) / 0.1);
 }
 
 [dir='rtl'] .neu-raised:active {
@@ -648,7 +648,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
 		/* 우측 → 좌측 강화된 그림자 */ calc(var(--nm-offset) * -1.5) 0
 			calc(var(--nm-blur) * 1.5) rgba(var(--nm-dark-rgba)),
-		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--brand) / 0.08);
+		/* 전체 확산 그림자 */ 0 4px 12px hsl(var(--primary) / 0.08);
 }
 
 [dir='rtl'] .neu-elevated:focus,
@@ -668,7 +668,7 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba)),
 		/* 우측 → 좌측 유지된 그림자 */ calc(var(--nm-offset) * -1.3) 0
 			calc(var(--nm-blur) * 1.3) rgba(var(--nm-dark-rgba)),
-		/* 브랜드 컬러 포커스 링 */ 0 0 0 2px hsl(var(--brand) / 0.15);
+		/* 브랜드 컬러 포커스 링 */ 0 0 0 2px hsl(var(--primary) / 0.15);
 }
 
 /* RTL 뉴모피즘 - neu-inset */
@@ -812,15 +812,15 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 
 /* 4-7. 브랜드 칼라 버전 뉴모피즘 클래스들 */
 
-/* neu-flat-brand - 브랜드 칼라 강조 평면 */
-.neu-flat-brand {
+/* neu-flat-primary - 브랜드 칼라 강조 평면 */
+.neu-flat-primary {
 	/* 브랜드 칼라 border + 기본 그림자 */
-	border: 1px solid hsl(var(--brand-4) / 0.4);
+	border: 1px solid hsl(var(--primary-4) / 0.4);
 	box-shadow: 
 		/* 우하단 메인 그림자 */
 		0 0 3px rgba(var(--nm-dark-rgba)),
 		/* 좌상단 하이라이트 */ -1px -1px 2px rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--brand-3) / 0.2);
+		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-3) / 0.2);
 	transition:
 		transform 0.15s ease-out,
 		box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
@@ -828,34 +828,34 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 	will-change: transform, box-shadow;
 }
 
-.neu-flat-brand:hover {
+.neu-flat-primary:hover {
 	/* 호버 시 브랜드 칼라 강화 */
-	border-color: hsl(var(--brand-5) / 0.6);
+	border-color: hsl(var(--primary-5) / 0.6);
 	box-shadow: 
 		/* 우하단 강화된 그림자 */
 		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
 		/* 좌상단 강화된 하이라이트 */ -1.5px -1.5px 3px rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px hsl(var(--brand-4) / 0.3),
-		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--brand-4) / 0.2);
+		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-4) / 0.3),
+		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--primary-4) / 0.2);
 }
 
-.neu-flat-brand:focus {
+.neu-flat-primary:focus {
 	outline: none;
 	/* 포커스 시 브랜드 칼라 최고 강도 */
-	border-color: hsl(var(--brand-6) / 0.8);
+	border-color: hsl(var(--primary-6) / 0.8);
 	box-shadow:
 		/* 내부 우하단 그림자 */
 		inset var(--nm-offset) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
 		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -1)
 			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 포커스 링 */ inset 0 0 0 2px hsl(var(--brand-5) / 0.4),
-		/* 브랜드 칼라 외부 포커스 글로우 */ 0 0 8px hsl(var(--brand-5) / 0.3);
+		/* 브랜드 칼라 포커스 링 */ inset 0 0 0 2px hsl(var(--primary-5) / 0.4),
+		/* 브랜드 칼라 외부 포커스 글로우 */ 0 0 8px hsl(var(--primary-5) / 0.3);
 }
 
-/* neu-raised-brand - 브랜드 칼라 강조 양각 */
-.neu-raised-brand {
+/* neu-raised-primary - 브랜드 칼라 강조 양각 */
+.neu-raised-primary {
 	/* 브랜드 칼라 border + 양각 shadow */
-	border: 1px solid hsl(var(--brand-4) / 0.3);
+	border: 1px solid hsl(var(--primary-4) / 0.3);
 	cursor: pointer;
 	transition:
 		transform 0.1s ease-out,
@@ -867,12 +867,12 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 		var(--nm-offset) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
 		/* 좌상단 하이라이트 */ calc(var(--nm-offset) * -1)
 			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 전체 확산 그림자 */ 0 2px 8px hsl(var(--brand-4) / 0.15);
+		/* 브랜드 칼라 전체 확산 그림자 */ 0 2px 8px hsl(var(--primary-4) / 0.15);
 }
 
-.neu-raised-brand:hover {
+.neu-raised-primary:hover {
 	/* 호버 시 브랜드 칼라 강화 */
-	border-color: hsl(var(--brand-5) / 0.5);
+	border-color: hsl(var(--primary-5) / 0.5);
 	transform: translateY(-1px);
 	box-shadow:
 		/* 우하단 강화된 그림자 */
@@ -880,10 +880,10 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 1.1) rgba(var(--nm-dark-rgba)),
 		/* 좌상단 강화된 하이라이트 */ calc(var(--nm-offset) * -1.2)
 			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.2) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 강화된 확산 그림자 */ 0 4px 12px hsl(var(--brand-4) / 0.25);
+		/* 브랜드 칼라 강화된 확산 그림자 */ 0 4px 12px hsl(var(--primary-4) / 0.25);
 }
 
-.neu-raised-brand:active {
+.neu-raised-primary:active {
 	transform: translateY(1px);
 	transition: all 0.05s ease-in;
 	box-shadow:
@@ -892,44 +892,44 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 			calc(var(--nm-blur) * 0.8) rgba(var(--nm-dark-rgba)),
 		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -0.8)
 			calc(var(--nm-offset) * -0.8) calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--brand-5) / 0.2);
+		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-5) / 0.2);
 }
 
 /* RTL 브랜드 칼라 버전 */
-[dir='rtl'] .neu-flat-brand {
+[dir='rtl'] .neu-flat-primary {
 	box-shadow: 
 		/* 우하단 메인 그림자 (RTL에서는 좌하단) */
 		0 0 3px rgba(var(--nm-dark-rgba)),
 		/* 좌상단 하이라이트 (RTL에서는 우상단) */ 1px -1px 2px rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--brand-3) / 0.2);
+		/* 브랜드 칼라 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-3) / 0.2);
 }
 
-[dir='rtl'] .neu-flat-brand:hover {
+[dir='rtl'] .neu-flat-primary:hover {
 	box-shadow: 
 		/* 우하단 강화된 그림자 (RTL에서는 좌하단) */
 		0 0 4px rgba(var(--nm-dark-rgba), 1.2),
 		/* 좌상단 강화된 하이라이트 (RTL에서는 우상단) */ 1.5px -1.5px 3px rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px hsl(var(--brand-4) / 0.3),
-		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--brand-4) / 0.2);
+		/* 브랜드 칼라 강화된 내부 글로우 */ inset 0 0 0 1px hsl(var(--primary-4) / 0.3),
+		/* 브랜드 칼라 외부 글로우 */ 0 0 6px hsl(var(--primary-4) / 0.2);
 }
 
-[dir='rtl'] .neu-raised-brand {
+[dir='rtl'] .neu-raised-primary {
 	box-shadow:
 		/* 우하단 메인 그림자 (RTL에서는 좌하단) */
 		calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
 		/* 좌상단 하이라이트 (RTL에서는 우상단) */ var(--nm-offset)
 			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 전체 확산 그림자 */ 0 2px 8px hsl(var(--brand-4) / 0.15);
+		/* 브랜드 칼라 전체 확산 그림자 */ 0 2px 8px hsl(var(--primary-4) / 0.15);
 }
 
-[dir='rtl'] .neu-raised-brand:hover {
+[dir='rtl'] .neu-raised-primary:hover {
 	box-shadow:
 		/* 우하단 강화된 그림자 (RTL에서는 좌하단) */
 		calc(var(--nm-offset) * -1.2) calc(var(--nm-offset) * 1.2)
 			calc(var(--nm-blur) * 1.1) rgba(var(--nm-dark-rgba)),
 		/* 좌상단 강화된 하이라이트 (RTL에서는 우상단) */ calc(var(--nm-offset) * 1.2)
 			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.2) rgba(var(--nm-light-rgba)),
-		/* 브랜드 칼라 강화된 확산 그림자 */ 0 4px 12px hsl(var(--brand-4) / 0.25);
+		/* 브랜드 칼라 강화된 확산 그림자 */ 0 4px 12px hsl(var(--primary-4) / 0.25);
 }
 
 /*
@@ -940,6 +940,6 @@ Q: 새 효과 필요 → A: 기존 클래스 조합 먼저 시도 (neu-flat + ne
 */
 
 /* 4-8. 테이블 행 호버 효과 - 실제로는 Tailwind 클래스 사용하므로 제거됨 */
-/* SmartTable에서는 hover:bg-brand-2/[0.6]와 hover:bg-muted/[0.5] 사용 */
+/* SmartTable에서는 hover:bg-primary-2/[0.6]와 hover:bg-muted/[0.5] 사용 */
 
 /* #endregion 뉴모피즘 시스템 */

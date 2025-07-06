@@ -77,21 +77,21 @@ export function SideResizeControl() {
 			{/* 세로선 배경 */}
 			<div
 				className={`absolute -end-0.5 top-0 h-full w-0.5 transition-all duration-200 ${
-					isActive ? 'bg-brand opacity-60' : 'bg-border/20 opacity-40'
+					isActive ? 'bg-primary opacity-60' : 'bg-border/20 opacity-40'
 				} blur-[0.5px] shadow-sm`}
 			/>
 			
 			{/* end 측 음영 효과 */}
 			<div
 				className={`absolute -end-1 top-0 h-full w-2 transition-all duration-200 ${
-					isActive ? 'bg-gradient-to-r from-brand/10 to-brand/20' : 'bg-gradient-to-r from-border/5 to-border/10'
+					isActive ? 'bg-gradient-to-r from-primary/10 to-primary/20' : 'bg-gradient-to-r from-border/5 to-border/10'
 				} blur-sm pointer-events-none`}
 			/>
 			
 			{/* 드래그 핸들 아이콘 */}
 			<GripVertical
 				className={`h-6 w-auto transition-colors duration-200 relative z-10 ${
-					isActive ? 'text-brand' : 'text-border/70'
+					isActive ? 'text-primary' : 'text-border/70'
 				}`}
 			/>
 		</div>

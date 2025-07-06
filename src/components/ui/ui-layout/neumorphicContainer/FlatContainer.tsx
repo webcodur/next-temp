@@ -22,7 +22,7 @@ export const FlatContainer: React.FC<FlatContainerProps> = ({
       style={{
         background: BACKGROUND,
         // 평면은 그림자 없이 미묘한 border로 구분
-        borderColor: 'hsl(var(--brand) / 0.3)',
+        			borderColor: 'hsl(var(--primary) / 0.3)',
       }}
     >
       {children}

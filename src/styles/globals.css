@@ -60,15 +60,15 @@
 	}
 }
 
-/* --- brand scrollbar --- */
+/* --- primary scrollbar --- */
 ::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-	background: hsl(var(--brand) / 0.6);
+	background: hsl(var(--primary) / 0.6);
 	border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: hsl(var(--brand));
+	background: hsl(var(--primary));
 }

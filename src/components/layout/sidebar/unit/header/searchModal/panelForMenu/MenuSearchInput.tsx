@@ -24,7 +24,7 @@ const MenuSearchInput: React.FC<MenuSearchInputProps> = ({
 				placeholder={t('검색_메뉴_플레이스홀더')}
 				value={searchQuery}
 				onChange={(e) => onSearchChange(e.target.value)}
-				className="py-3 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand ps-12 pe-12"
+				className="py-3 w-full text-base rounded-lg border border-border neu-flat focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ps-12 pe-12"
 				dir={isRTL ? 'rtl' : 'ltr'}
 			/>
 			{searchQuery && (

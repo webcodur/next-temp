@@ -19,7 +19,7 @@ export const FIELD_STYLES = {
 	// 드롭다운 옵션
 	dropdownOption:
 		'font-multilang cursor-pointer px-3 py-2 text-sm font-medium transition-all neu-hover text-foreground hover:bg-muted',
-	dropdownOptionSelected: 'neu-inset bg-brand text-brand-foreground font-bold',
+	dropdownOptionSelected: 'neu-inset bg-primary text-primary-foreground font-bold',
 	dropdownOptionHighlighted: 'neu-raised bg-muted text-muted-foreground',
 	dropdownOptionDisabled: 'cursor-not-allowed text-muted-foreground opacity-60',
 

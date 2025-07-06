@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScroll';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -13,7 +13,7 @@ export default function Page() {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setIsLoading(true);
     setTimeout(() => {
       setItems(prevItems => {
@@ -27,11 +27,11 @@ export default function Page() {
       });
       setIsLoading(false);
     }, 1000);
-  };
+  }, [t]);
 
   useEffect(() => {
     loadMore();
-  }, []);
+  }, [loadMore]);
 
   return (
     <div className="max-w-md mx-auto py-8">

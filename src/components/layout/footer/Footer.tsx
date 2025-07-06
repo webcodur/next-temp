@@ -32,7 +32,7 @@ export default function Footer() {
 								href="https://meerkat.day/"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-foreground transition-colors hover:text-brand">
+								className="text-foreground transition-colors hover:text-primary">
 							{t('푸터_링크_공식홈페이지')}
 							</a>
 						</div>
@@ -48,7 +48,7 @@ export default function Footer() {
 								href="https://blog.naver.com/7meerkat"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-foreground transition-colors hover:text-brand">
+								className="text-foreground transition-colors hover:text-primary">
 							{t('푸터_링크_블로그')}
 							</a>
 						</div>

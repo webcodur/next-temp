@@ -5,7 +5,7 @@ import { usePaginationState } from './usePaginationState';
 import { usePaginationData } from './usePaginationData';
 import { usePaginationNavigation } from './usePaginationNavigation';
 import { PaginationInfo } from './PaginationInfo';
-import { PaginationControls } from './PaginationControls';
+import PaginationControls from './PaginationControls';
 import { PageSizeSelector } from './PageSizeSelector';
 
 const PaginatedTable = <T extends Record<string, unknown>>({

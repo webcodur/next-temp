@@ -39,16 +39,16 @@ export const Accordion: React.FC<AccordionProps> = ({
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
-				className={`flex items-center justify-between p-4 ${isOpen ? 'bg-brand/10' : 'bg-background'} cursor-pointer neu-raised rounded-2xl transition-colors ${
+				className={`flex items-center justify-between p-4 ${isOpen ? 'bg-primary/10' : 'bg-background'} cursor-pointer neu-raised rounded-2xl transition-colors ${
 					disabled 
 						? 'cursor-not-allowed opacity-60' 
-						: 'hover:bg-brand/10'
+						: 'hover:bg-primary/10'
 				} ${headerClassName}`}>
 				<h2 className="text-sm font-medium text-foreground">{title}</h2>
 				<div className="flex items-center gap-3">
 					{/* 상태 텍스트 */}
 					{statusText && (
-						<span className="text-xs font-medium text-brand">
+						<span className="text-xs font-medium text-primary">
 							{statusText}
 						</span>
 					)}

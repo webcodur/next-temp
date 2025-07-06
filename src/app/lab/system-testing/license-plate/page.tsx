@@ -39,11 +39,10 @@ export default function LicensePlatePage() {
 									{variant.desc}
 								</p>
 								<div className="flex justify-center">
-									<LicensePlate 
-										plateNumber="123가4567" 
-										width="280px" 
-										variant={variant.key}
-									/>
+																				<LicensePlate 
+												plateNumber="123가4567" 
+												width="280px"
+											/>
 								</div>
 							</div>
 						))}
@@ -58,7 +57,7 @@ export default function LicensePlatePage() {
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{plateNumbers.map((number, index) => (
 							<div key={index} className="flex justify-center">
-								<LicensePlate plateNumber={number} width="280px" variant="volume" />
+								<LicensePlate plateNumber={number} width="280px"  />
 							</div>
 						))}
 					</div>
@@ -74,11 +73,11 @@ export default function LicensePlatePage() {
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_픽셀고정')}</p>
-							<LicensePlate plateNumber="123가4567" width="250px" variant="volume" />
+							<LicensePlate plateNumber="123가4567" width="250px"  />
 						</div>
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_rem단위')}</p>
-							<LicensePlate plateNumber="456나7890" width="15rem" variant="volume" />
+							<LicensePlate plateNumber="456나7890" width="15rem"  />
 						</div>
 					</div>
 				</div>
@@ -94,7 +93,7 @@ export default function LicensePlatePage() {
 								{width}
 							</h3>
 							<div className="flex justify-center">
-								<LicensePlate plateNumber="123가4567" width={width} variant="volume" />
+								<LicensePlate plateNumber="123가4567" width={width}  />
 							</div>
 						</div>
 					))}
@@ -113,17 +112,17 @@ export default function LicensePlatePage() {
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_뷰포트기준')}</p>
-							<LicensePlate plateNumber="123가4567" width="30vw" variant="volume" />
+							<LicensePlate plateNumber="123가4567" width="30vw"  />
 						</div>
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_부모기준')}</p>
 							<div style={{ width: '300px', margin: '0 auto' }}>
-								<LicensePlate plateNumber="456나7890" width="80%" variant="volume" />
+								<LicensePlate plateNumber="456나7890" width="80%"  />
 							</div>
 						</div>
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_큰크기')}</p>
-							<LicensePlate plateNumber="789다1234" width="400px" variant="volume" />
+							<LicensePlate plateNumber="789다1234" width="400px"  />
 						</div>
 					</div>
 				</div>
@@ -138,15 +137,15 @@ export default function LicensePlatePage() {
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_짧은번호')}</p>
-							<LicensePlate plateNumber="12가3456" width="200px" variant="volume" />
+							<LicensePlate plateNumber="12가3456" width="200px"  />
 						</div>
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_긴번호')}</p>
-							<LicensePlate plateNumber="1234나5678" width="200px" variant="volume" />
+							<LicensePlate plateNumber="1234나5678" width="200px"  />
 						</div>
 						<div className="text-center">
 							<p className="mb-2 text-sm text-gray-600 font-multilang">{t('번호판테스트_특수문자')}</p>
-							<LicensePlate plateNumber="미인식차량" width="200px" variant="volume" />
+							<LicensePlate plateNumber="미인식차량" width="200px"  />
 						</div>
 					</div>
 				</div>

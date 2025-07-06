@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { LanguageSwitcher } from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
+import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { useTranslations, useLocale } from '@/hooks/useI18n';
 
 export default function FontTestPage() {

@@ -24,9 +24,19 @@ module.exports = {
 					3: 'hsl(var(--surface-3))',
 				},
 
-				// 강조 색상 - 가시성 개선
+				// 강조 색상 - 가시성 개선 (브랜드 포인트 색상)
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
+					0: 'hsl(var(--primary-0))',
+					1: 'hsl(var(--primary-1))',
+					2: 'hsl(var(--primary-2))',
+					3: 'hsl(var(--primary-3))',
+					4: 'hsl(var(--primary-4))',
+					5: 'hsl(var(--primary-5))',
+					6: 'hsl(var(--primary-6))',
+					7: 'hsl(var(--primary-7))',
+					8: 'hsl(var(--primary-8))',
+					9: 'hsl(var(--primary-9))',
 					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
@@ -64,21 +74,7 @@ module.exports = {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))',
 				},
-				// 브랜드 포인트 색상
-				brand: {
-					DEFAULT: 'hsl(var(--brand))',
-					0: 'hsl(var(--brand-0))',
-					1: 'hsl(var(--brand-1))',
-					2: 'hsl(var(--brand-2))',
-					3: 'hsl(var(--brand-3))',
-					4: 'hsl(var(--brand-4))',
-					5: 'hsl(var(--brand-5))',
-					6: 'hsl(var(--brand-6))',
-					7: 'hsl(var(--brand-7))',
-					8: 'hsl(var(--brand-8))',
-					9: 'hsl(var(--brand-9))',
-					foreground: 'hsl(var(--brand-foreground))',
-				},
+
 			},
 			fontFamily: {
 				// 다국어 자동 선택 폰트 (서브셋 최적화)

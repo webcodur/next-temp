@@ -64,7 +64,7 @@ export function Sidebar() {
 				insetInlineStart: '0px',
 				...sidebarTransformStyle,
 			}}
-			className={`fixed top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-e-3xl will-change-transform z-40 border-e-2 ${showResizeIndicator ? 'border-brand' : 'border-transparent'}`}>
+			className={`fixed top-0 h-screen overflow-y-auto scrollbar-hide sidebar-container bg-surface-2 rounded-e-3xl will-change-transform z-40 border-e-2 ${showResizeIndicator ? 'border-primary' : 'border-transparent'}`}>
 			{!isCollapsed && <SideResizeControl />}
 			<div className="flex flex-col h-full">
 				{/* 사이드바 헤더 영역 */}

@@ -80,7 +80,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-20 ps-12' : 'pl-12 pr-20'}
-						${isFocused ? 'ring-2 ring-brand' : ''}
+						${isFocused ? 'ring-2 ring-primary' : ''}
 						${error ? 'ring-2 ring-destructive' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
 						w-full bg-transparent

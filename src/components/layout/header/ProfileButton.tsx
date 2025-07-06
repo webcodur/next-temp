@@ -69,7 +69,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		return (
 			<button
 				onClick={() => router.push('/login')}
-				className={clsx('text-brand', className)}>
+				className={clsx('text-primary', className)}>
 				<User className="w-5 h-5" />
 			</button>
 		);
@@ -77,7 +77,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 
 	// 사용자 역할에 따른 설정
 	const isAdmin = user.role === 'admin';
-	const roleColor = isAdmin ? 'text-orange-500' : 'text-brand';
+	const roleColor = isAdmin ? 'text-orange-500' : 'text-primary';
 	const roleText = isAdmin ? '관리자' : '일반사용자';
 
 	return (
@@ -100,8 +100,8 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					{/* 사용자 정보 */}
 					<div className="p-3 border-b border-border/50">
 						<div className="flex items-center gap-3">
-							<div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
-								<User className="w-5 h-5 text-brand" />
+							<div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+								<User className="w-5 h-5 text-primary" />
 							</div>
 							<div className="flex-1 min-w-0">
 								<p className="text-sm font-medium text-foreground truncate font-multilang">
@@ -129,14 +129,14 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 					<div className="p-1">
 						<button
 							onClick={handleProfile}
-							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-primary/10 transition-colors">
 							<User className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground font-multilang">프로필</span>
 						</button>
 
 						<button
 							onClick={handleSettings}
-							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-brand/10 transition-colors">
+							className="flex items-center gap-3 w-full p-2 text-start rounded-md hover:bg-primary/10 transition-colors">
 							<Settings className="w-4 h-4 text-muted-foreground" />
 							<span className="text-sm text-foreground font-multilang">설정</span>
 						</button>

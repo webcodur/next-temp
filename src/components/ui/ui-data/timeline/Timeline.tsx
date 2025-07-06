@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocale } from '@/hooks/useI18n';
 
-interface TimelineItem {
+export interface TimelineItem {
 	id: string;
 	title: string;
 	content: string;
@@ -32,7 +32,7 @@ const Timeline: React.FC<TimelineProps> = ({
 			case 'upcoming':
 				return 'bg-gray-300';
 			default:
-				return 'bg-brand';
+				return 'bg-primary';
 		}
 	};
 

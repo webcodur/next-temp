@@ -7,7 +7,7 @@ import { useTranslations } from '@/hooks/useI18n';
 
 // 목업 데이터 타입 (인덱스 시그니처 추가)
 interface User extends Record<string, unknown> {
-	id: number;
+	key: number;
 	name: string;
 	email: string;
 	status: 'active' | 'pending' | 'inactive';
@@ -32,7 +32,7 @@ const PaginationDemo = () => {
 		const statuses: User['status'][] = ['active', 'pending', 'inactive'];
 
 		return Array.from({ length: count }, (_, index) => ({
-			id: index + 1,
+			key: index + 1,
 			name: `사용자 ${index + 1}`,
 			email: `user${index + 1}@example.com`,
 			status: statuses[index % 3],
@@ -48,35 +48,31 @@ const PaginationDemo = () => {
 	// 컬럼 정의
 	const columns: SmartTableColumn<User>[] = [
 		{
-			id: 'id',
+			key: 'id' as keyof User,
 			header: t('테이블_ID'),
-			accessorKey: 'id',
 			width: '80px',
 			align: 'center',
 		},
 		{
-			id: 'name',
+			key: 'name',
 			header: t('테이블_이름'),
-			accessorKey: 'name',
 			width: '120px',
-			align: 'left',
+			align: 'start',
 		},
 		{
-			id: 'email',
+			key: 'email',
 			header: t('테이블_이메일'),
-			accessorKey: 'email',
 			width: '200px',
-			align: 'left',
+			align: 'start',
 		},
 		{
-			id: 'department',
+			key: 'department',
 			header: t('페이지네이션_부서'),
-			accessorKey: 'department',
 			width: '100px',
 			align: 'center',
 		},
 		{
-			id: 'status',
+			key: 'status',
 			header: t('테이블_상태'),
 			width: '100px',
 			align: 'center',
@@ -98,9 +94,8 @@ const PaginationDemo = () => {
 			),
 		},
 		{
-			id: 'joinDate',
+			key: 'joinDate',
 			header: t('페이지네이션_입사일'),
-			accessorKey: 'joinDate',
 			width: '100px',
 			align: 'center',
 		},

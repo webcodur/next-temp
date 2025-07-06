@@ -27,10 +27,10 @@ interface SmartTableProps<T> {
 	pageSize?: number;
 	emptyMessage?: string;
 	loadingRows?: number;
-	// 브랜드 칼라 옵션들
-	brandAccent?: boolean; // 테두리 및 강조 요소에 브랜드 칼라 적용
-	brandHeader?: boolean; // 헤더에 브랜드 칼라 적용
-	brandHover?: boolean; // 호버 효과에 브랜드 칼라 적용
+	// 프라이머리 칼라 옵션들
+	primaryAccent?: boolean; // 테두리 및 강조 요소에 프라이머리 칼라 적용
+	primaryHeader?: boolean; // 헤더에 프라이머리 칼라 적용
+	primaryHover?: boolean; // 호버 효과에 프라이머리 칼라 적용
 }
 
 const SmartTable = <T extends Record<string, any>>({
@@ -44,9 +44,9 @@ const SmartTable = <T extends Record<string, any>>({
 	pageSize = 10,
 	emptyMessage = '데이터가 없습니다.',
 	loadingRows = 5,
-	brandAccent = false,
-	brandHeader = false,
-	brandHover = false,
+	primaryAccent = false,
+	primaryHeader = false,
+	primaryHover = false,
 }: SmartTableProps<T>) => {
 	const { isRTL } = useLocale();
 
@@ -90,13 +90,13 @@ const SmartTable = <T extends Record<string, any>>({
 	};
 
 	return (
-		<div className={`overflow-hidden ${brandAccent ? 'neu-flat-brand' : 'neu-flat'} rounded-lg ${className}`}>
+		<div className={`overflow-hidden ${primaryAccent ? 'neu-flat-primary' : 'neu-flat'} rounded-lg ${className}`}>
 			<div className="overflow-x-auto">
 				<table className="w-full bg-background">
 					{/* 테이블 헤더 */}
 					<thead className={`
-						${brandHeader 
-							? 'border-b bg-brand-1/20 border-brand-4/30' 
+						${primaryHeader 
+							? 'border-b bg-primary-1/20 border-primary-4/30' 
 							: 'bg-muted/50'
 						} ${headerClassName}
 					`}>
@@ -106,8 +106,8 @@ const SmartTable = <T extends Record<string, any>>({
 									key={column.key ? String(column.key) : `col-${colIndex}`}
 									className={`
 										px-6 py-3 text-xs font-medium ${
-											brandHeader 
-												? 'text-brand-8' 
+											primaryHeader 
+												? 'text-primary-8' 
 												: 'text-muted-foreground'
 										} uppercase tracking-wider
 										${getAlignmentClass(column.align)}
@@ -139,8 +139,8 @@ const SmartTable = <T extends Record<string, any>>({
 								<tr
 									key={index}
 									className={`
-										${brandHover 
-											? 'hover:bg-brand-2/[0.6]' 
+										${primaryHover 
+											? 'hover:bg-primary-2/[0.6]' 
 											: 'hover:bg-muted/[0.5]'
 										}
 										${getRowClassName(item, index)}
