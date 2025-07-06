@@ -170,6 +170,7 @@
 	"폰트테스트_샘플텍스트선택": "Sample Text Selection",
 	"폰트테스트_커스텀텍스트입력": "Custom Text Input",
 	"폰트테스트_플레이스홀더": "Enter your text here...",
+	"에디터_플레이스홀더_내용입력": "Enter your content...",
 	"폰트테스트_폰트미리보기": "Font System Comparison",
 	"폰트테스트_실제적용결과": "Actual Application Result",
 	"폰트테스트_설명노트": "The text above uses font-multilang class to automatically apply optimized fonts for each character.",

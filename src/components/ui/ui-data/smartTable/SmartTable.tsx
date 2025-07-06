@@ -27,6 +27,10 @@ interface SmartTableProps<T> {
 	pageSize?: number;
 	emptyMessage?: string;
 	loadingRows?: number;
+	// 브랜드 칼라 옵션들
+	brandAccent?: boolean; // 테두리 및 강조 요소에 브랜드 칼라 적용
+	brandHeader?: boolean; // 헤더에 브랜드 칼라 적용
+	brandHover?: boolean; // 호버 효과에 브랜드 칼라 적용
 }
 
 const SmartTable = <T extends Record<string, any>>({
@@ -40,6 +44,9 @@ const SmartTable = <T extends Record<string, any>>({
 	pageSize = 10,
 	emptyMessage = '데이터가 없습니다.',
 	loadingRows = 5,
+	brandAccent = false,
+	brandHeader = false,
+	brandHover = false,
 }: SmartTableProps<T>) => {
 	const { isRTL } = useLocale();
 
@@ -56,7 +63,7 @@ const SmartTable = <T extends Record<string, any>>({
 						key={`loading-${index}-${String(column.key)}`}
 						className={`px-6 py-4 ${cellClassName}`}
 					>
-						<div className="h-4 bg-muted rounded neu-flat"></div>
+						<div className="h-4 rounded bg-muted neu-flat"></div>
 					</td>
 				))}
 			</tr>
@@ -83,17 +90,26 @@ const SmartTable = <T extends Record<string, any>>({
 	};
 
 	return (
-		<div className={`overflow-hidden neu-flat rounded-lg ${className}`}>
+		<div className={`overflow-hidden ${brandAccent ? 'neu-flat-brand' : 'neu-flat'} rounded-lg ${className}`}>
 			<div className="overflow-x-auto">
 				<table className="w-full bg-background">
 					{/* 테이블 헤더 */}
-					<thead className={`bg-muted/50 ${headerClassName}`}>
+					<thead className={`
+						${brandHeader 
+							? 'border-b bg-brand-1/20 border-brand-4/30' 
+							: 'bg-muted/50'
+						} ${headerClassName}
+					`}>
 						<tr>
-							{							columns.map((column, colIndex) => (
+							{columns.map((column, colIndex) => (
 								<th
 									key={column.key ? String(column.key) : `col-${colIndex}`}
 									className={`
-										px-6 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider
+										px-6 py-3 text-xs font-medium ${
+											brandHeader 
+												? 'text-brand-8' 
+												: 'text-muted-foreground'
+										} uppercase tracking-wider
 										${getAlignmentClass(column.align)}
 										${column.headerClassName || ''}
 									`}
@@ -106,7 +122,7 @@ const SmartTable = <T extends Record<string, any>>({
 					</thead>
 
 					{/* 테이블 바디 */}
-					<tbody className="bg-background divide-y divide-border">
+					<tbody className="divide-y bg-background divide-border">
 						{isLoading ? (
 							createLoadingRows()
 						) : actualData.length === 0 ? (
@@ -123,7 +139,10 @@ const SmartTable = <T extends Record<string, any>>({
 								<tr
 									key={index}
 									className={`
-										hover:bg-muted/30 transition-colors
+										${brandHover 
+											? 'hover:bg-brand-2/[0.6]' 
+											: 'hover:bg-muted/[0.5]'
+										}
 										${getRowClassName(item, index)}
 									`}
 								>

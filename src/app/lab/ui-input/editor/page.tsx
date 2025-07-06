@@ -6,7 +6,7 @@ import { useTranslations } from '@/hooks/useI18n'
 
 // 클라이언트에서만 로드되도록 동적 임포트
 const Editor = dynamic(
-  () => import('@/components/ui/ui-input/editor/Editor').then(mod => mod.Editor),
+  () => import('@/components/ui/ui-input/editor/Editor'),
   { ssr: false }
 )
 
@@ -15,7 +15,7 @@ export default function EditorPage() {
   const [content, setContent] = useState<string>('')
 
   return (
-    <div className="max-w-5xl p-8 mx-auto space-y-6">
+    <div className="p-8 mx-auto space-y-6 max-w-5xl">
       <h1 className="mb-6 text-2xl font-bold font-multilang">{t('에디터_제목')}</h1>
       
       <Editor
@@ -26,7 +26,7 @@ export default function EditorPage() {
 
       <div className="p-4 mt-8 rounded-lg neu-flat">
         <h2 className="mb-2 text-lg font-semibold font-multilang">{t('에디터_현재콘텐츠')}</h2>
-        <pre className="p-4 overflow-x-auto text-sm bg-gray-100 rounded">
+        <pre className="overflow-x-auto p-4 text-sm bg-gray-100 rounded">
           {content}
         </pre>
       </div>

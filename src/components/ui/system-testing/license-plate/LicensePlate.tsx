@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { useLocale } from '@/hooks/useI18n';
 
 interface LicensePlateProps {
@@ -6,6 +7,7 @@ interface LicensePlateProps {
 	region?: string;
 	country?: 'KR' | 'US' | 'UAE';
 	className?: string;
+	width?: string;
 }
 
 const LicensePlate: React.FC<LicensePlateProps> = ({
@@ -13,6 +15,7 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 	region = '서울',
 	country = 'KR',
 	className = '',
+	width,
 }) => {
 	const { isRTL } = useLocale();
 
@@ -46,7 +49,8 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 		return Math.max(baseWidth, textLength * charWidth + imageWidth + 40);
 	};
 
-	const plateWidth = getPlateWidth();
+	// width prop이 있으면 우선 사용, 없으면 자동 계산
+	const plateWidth = width ? parseInt(width.replace('px', '')) : getPlateWidth();
 
 	// RTL에 따른 패널 스타일
 	const getStartPanelStyle = (): React.CSSProperties => ({
@@ -91,7 +95,7 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 
 	return (
 		<div
-			className={`relative overflow-hidden transition-all duration-200 hover:shadow-lg ${className}`}
+			className={`overflow-hidden relative transition-all duration-200 hover:shadow-lg ${className}`}
 			style={{
 				width: `${plateWidth}px`,
 				height: '60px',
@@ -109,9 +113,11 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 		>
 			{/* 시작 패널 (이미지 영역) */}
 			<div style={getStartPanelStyle()}>
-				<img
+				<Image
 					src="/images/license-plate.png"
 					alt="License Plate"
+					width={imageWidth}
+					height={60}
 					style={getImageStyle()}
 				/>
 			</div>

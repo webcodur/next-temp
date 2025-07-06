@@ -10,7 +10,6 @@ import { useLocale } from '@/hooks/useI18n';
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
 import { SideToggleControl } from './sidebar/unit/control/SideToggleControl';
-import Footer from './footer/Footer';
 
 // hooks
 import { useSidebarKeyboard } from './sidebar/unit/control/useSidebarKeyboard';
@@ -48,21 +47,20 @@ export function MainLayout({ children }: MainLayoutProps) {
 	};
 
 	return (
-		<div className="flex overflow-scroll h-screen bg-surface-2" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
+		<div className="flex h-screen bg-surface-2" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<SideToggleControl />
 			<Sidebar />
 			<main
 				style={mainStyle}
-				className="flex flex-col flex-1 bg-surface-1">
+				className="flex overflow-hidden flex-col flex-1 bg-surface-1">
 				<Header />
-				<div ref={scrollContainerRef} className="flex-1">
+				<div ref={scrollContainerRef} className="overflow-auto flex-1">
 					<div className="max-w-[1440px] mx-auto px-6 w-full py-6">
 						{children}
 					</div>
 				</div>
-				<Footer />
+				{/* <Footer /> */}
 			</main>
 		</div>
 	);
 }
- 

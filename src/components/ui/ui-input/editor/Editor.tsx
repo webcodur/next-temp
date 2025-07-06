@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale, useTranslations } from '@/hooks/useI18n';
 
 interface EditorProps {
 	value?: string;
@@ -18,7 +18,7 @@ interface EditorProps {
 const Editor: React.FC<EditorProps> = ({
 	value = '',
 	onChange,
-	placeholder = '내용을 입력하세요...',
+	placeholder,
 	height = 400,
 	disabled = false,
 	toolbar,
@@ -28,16 +28,20 @@ const Editor: React.FC<EditorProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const editorRef = useRef<any>(null);
 	const { isRTL, currentLocale } = useLocale();
+	const t = useTranslations();
+	
+	// 다국어 처리된 placeholder 사용
+	const resolvedPlaceholder = placeholder || t('에디터_플레이스홀더_내용입력');
 
 	const defaultToolbar = isRTL
 		? 'undo redo | blocks | ' +
-		  'bold italic forecolor backcolor | alignright aligncenter ' +
-		  'alignleft alignjustify | bullist numlist outdent indent | ' +
-		  'removeformat | help'
+    'bold italic forecolor backcolor | alignright aligncenter ' +
+    'alignleft alignjustify | bullist numlist outdent indent | ' +
+    'removeformat | help'
 		: 'undo redo | blocks | ' +
-		  'bold italic forecolor backcolor | alignleft aligncenter ' +
-		  'alignright alignjustify | bullist numlist outdent indent | ' +
-		  'removeformat | help';
+    'bold italic forecolor backcolor | alignleft aligncenter ' +
+    'alignright alignjustify | bullist numlist outdent indent | ' +
+    'removeformat | help';
 
 	const defaultPlugins = [
 		'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
@@ -51,7 +55,7 @@ const Editor: React.FC<EditorProps> = ({
 		menubar: false,
 		plugins: plugins || defaultPlugins,
 		toolbar: toolbar || defaultToolbar,
-		placeholder,
+		placeholder: resolvedPlaceholder,
 		directionality: (isRTL ? 'rtl' : 'ltr') as 'rtl' | 'ltr',
 		language: currentLocale === 'ar' ? 'ar' : currentLocale === 'en' ? 'en' : 'ko_KR',
 		content_style: `
@@ -84,9 +88,9 @@ const Editor: React.FC<EditorProps> = ({
 	}, [value]);
 
 	return (
-		<div className={`neu-flat rounded-lg overflow-hidden ${className}`}>
+		<div className={`overflow-hidden rounded-lg neu-flat ${className}`}>
 			<TinyMCEEditor
-				apiKey="your-tinymce-api-key" // 실제 API 키로 교체 필요
+				apiKey={process.env.NEXT_PUBLIC_API_KEY_EDITOR || "no-api-key"}
 				onInit={(evt, editor) => editorRef.current = editor}
 				init={getEditorConfig()}
 				disabled={disabled}

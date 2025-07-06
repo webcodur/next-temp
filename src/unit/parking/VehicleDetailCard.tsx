@@ -27,11 +27,11 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 	};
 
 	return (
-		<div className="p-4 bg-background rounded-2xl neu-flat">
+		<div className="p-4 rounded-2xl bg-background neu-flat">
 			<div className="flex flex-col gap-4 lg:flex-row">
 				{/* 차량 이미지 영역 */}
 				<div className="shrink-0">
-					<div className="overflow-hidden relative w-full h-96 bg-muted rounded-xl lg:w-80 neu-inset">
+					<div className="overflow-hidden relative w-full h-96 rounded-xl bg-muted lg:w-80 neu-inset">
 						{!imageError ? (
 							<Image
 								src="/temp-car-img.png"
@@ -82,7 +82,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 											/>
 										</div>
 										{copiedPlate === vehicle.car_number && (
-											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+											<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs rounded-lg shadow-lg transform -translate-x-1/2 text-success-foreground bg-success neu-raised animate-fadeIn">
 												<Check size={12} className="inline me-1" />
 												복사됨
 											</div>
@@ -103,7 +103,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 													/>
 												</div>
 												{copiedPlate === vehicle.modify_car_number && (
-													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs text-success-foreground bg-success rounded-lg shadow-lg transform -translate-x-1/2 neu-raised animate-fadeIn">
+													<div className="absolute -top-8 left-1/2 px-3 py-1 text-xs rounded-lg shadow-lg transform -translate-x-1/2 text-success-foreground bg-success neu-raised animate-fadeIn">
 														<Check size={12} className="inline me-1" />
 														복사됨
 													</div>
@@ -136,7 +136,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 
 							{/* 시간 정보 */}
 							<div className="grid grid-cols-1 gap-2 mt-3 md:grid-cols-2">
-								<div className="p-3 text-center bg-muted rounded-lg border border-border">
+								<div className="p-3 text-center rounded-lg border bg-muted border-border">
 									<div className="mb-1 text-xs text-muted-foreground">
 										{vehicle.status === 1 ? '입차시간' : '출차시간'}
 									</div>
@@ -146,7 +146,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 								</div>
 
 								{vehicle.device_name && (
-									<div className="p-3 text-center bg-muted rounded-lg border border-border">
+									<div className="p-3 text-center rounded-lg border bg-muted border-border">
 										<div className="mb-1 text-xs text-muted-foreground">
 											통행입구
 										</div>
@@ -160,7 +160,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle }) => {
 							{/* 특별 표시 */}
 							{vehicle.is_black === 'Y' && (
 								<div className="flex gap-2 justify-center items-center mt-3">
-									<div className="w-2 h-2 bg-destructive rounded-full"></div>
+									<div className="w-2 h-2 rounded-full bg-destructive"></div>
 									<span className="text-sm font-medium text-destructive">
 										블랙리스트 차량
 									</span>

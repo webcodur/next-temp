@@ -170,13 +170,7 @@ export default function TablePage() {
 		alert(`사용자 ${id} ${t('테이블_삭제')}`);
 	};
 
-	// 행 클릭 핸들러 (상세 페이지 이동 시뮬레이션)
-	const handleRowClick = (user: User) => {
-		const statusText = user.status === 'active' ? t('테이블_활성') : user.status === 'inactive' ? t('테이블_비활성') : t('테이블_대기');
-		alert(
-			`${user.name}의 상세 정보 페이지로 이동\n이메일: ${user.email}\n상태: ${statusText}`
-		);
-	};
+
 
 	// 로딩 시뮬레이션 (data를 null로 설정)
 	const simulateLoading = () => {
@@ -228,8 +222,6 @@ export default function TablePage() {
 					data={users}
 					columns={columns}
 					pageSize={5}
-					clickableRows={true}
-					onRowClick={handleRowClick}
 				/>
 			</div>
 
@@ -249,6 +241,170 @@ export default function TablePage() {
 				<div>
 					<h2 className="mb-4 text-xl font-semibold">{t('테이블_기본페이지크기')}</h2>
 					<SmartTable data={users} columns={columns} />
+				</div>
+			</div>
+
+			<div className="mt-16">
+				<h2 className="mb-6 text-2xl font-bold text-center">브랜드 칼라 테스트</h2>
+				<p className="mb-8 text-center text-muted-foreground">
+					오른쪽 상단 칼라 피커로 브랜드 칼라를 변경하면 아래 테이블들의 색상이 실시간으로 반영됩니다.
+				</p>
+				
+				{/* 브랜드 변수 테스트 */}
+				<div className="p-4 mb-8 rounded-lg neu-flat">
+					<div className="flex justify-between items-center mb-4">
+						<h3 className="font-semibold">브랜드 변수 테스트</h3>
+						<div className="text-sm text-muted-foreground">
+							현재: <span className="font-medium text-blue-600 dark:text-blue-400">
+								{typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? '다크모드' : '라이트모드'}
+							</span>
+						</div>
+					</div>
+					<div className="grid grid-cols-10 gap-2 mb-4">
+						{Array.from({ length: 10 }, (_, i) => (
+							<div
+								key={i}
+								className="flex justify-center items-center h-12 text-xs font-bold rounded"
+								style={{ 
+									backgroundColor: `hsl(var(--brand-${i}))`,
+									color: i < 5 ? 'white' : 'black'
+								}}
+							>
+								{i}
+							</div>
+						))}
+					</div>
+					<div className="grid grid-cols-2 gap-4 mb-4">
+						<div 
+							className="p-4 rounded border cursor-pointer"
+							style={{ 
+								borderColor: 'hsl(var(--border))'
+							}}
+							onMouseEnter={(e) => {
+								e.currentTarget.style.backgroundColor = 'hsl(var(--muted) / 0.5)';
+							}}
+							onMouseLeave={(e) => {
+								e.currentTarget.style.backgroundColor = '';
+							}}
+						>
+							기본 호버 테스트 (마우스 올려보세요)
+						</div>
+						<div 
+							className="p-4 rounded border cursor-pointer"
+							style={{ 
+								borderColor: 'hsl(var(--border))'
+							}}
+							onMouseEnter={(e) => {
+								e.currentTarget.style.backgroundColor = 'hsl(var(--brand-2) / 0.6)';
+							}}
+							onMouseLeave={(e) => {
+								e.currentTarget.style.backgroundColor = '';
+							}}
+						>
+							브랜드 호버 테스트 (마우스 올려보세요)
+						</div>
+					</div>
+					<div className="text-xs text-muted-foreground">
+						💡 브랜드 변수는 테마별로 자동 조정됩니다. 다크모드에서는 낮은 번호가 어두운 색상입니다.
+					</div>
+				</div>
+				
+				<div className="grid grid-cols-1 gap-8">
+					{/* 기본 테이블 vs 브랜드 헤더 */}
+					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">기본 테이블</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+							/>
+						</div>
+
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">브랜드 헤더</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+								brandHeader={true}
+							/>
+						</div>
+					</div>
+
+					{/* 브랜드 액센트 vs 브랜드 호버 */}
+					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">브랜드 액센트 (테두리 강조)</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+								brandAccent={true}
+							/>
+						</div>
+
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">브랜드 호버 (행 위에 마우스 올려보세요)</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+								brandHover={true}
+							/>
+						</div>
+					</div>
+
+					{/* 조합 테스트 */}
+					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">헤더 + 호버</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+								brandHeader={true}
+								brandHover={true}
+							/>
+						</div>
+
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">모든 브랜드 옵션</h3>
+							<SmartTable
+								data={users}
+								columns={columns}
+								pageSize={3}
+								brandAccent={true}
+								brandHeader={true}
+								brandHover={true}
+							/>
+						</div>
+					</div>
+
+					{/* 로딩 상태 브랜드 테이블 */}
+					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">로딩 상태 (브랜드 액센트)</h3>
+							<SmartTable
+								data={null}
+								columns={columns}
+								pageSize={3}
+								brandAccent={true}
+								loadingRows={3}
+							/>
+						</div>
+
+						<div>
+							<h3 className="mb-4 text-lg font-semibold">빈 데이터 (브랜드 헤더)</h3>
+							<SmartTable
+								data={[]}
+								columns={columns}
+								pageSize={3}
+								brandHeader={true}
+								emptyMessage="브랜드 테이블에 데이터가 없습니다."
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

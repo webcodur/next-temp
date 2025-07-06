@@ -6,8 +6,16 @@ import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
-import { BrandColorPicker } from '@/components/layout/header/BrandColorPicker';
+import dynamic from 'next/dynamic';
 import clsx from 'clsx';
+
+const BrandColorPicker = dynamic(
+	() => import('@/components/layout/header/BrandColorPicker').then(mod => ({ default: mod.BrandColorPicker })),
+	{
+		ssr: false,
+		loading: () => <div className="w-9 h-9" />
+	}
+);
 
 export function Header() {
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);

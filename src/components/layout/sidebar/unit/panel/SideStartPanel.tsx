@@ -1,6 +1,5 @@
 import { menuData } from '@/data/menuData';
 import { styles } from '@/data/sidebarConfig';
-import { useLocale } from '@/hooks/useI18n';
 
 /**
  * 사이드바 시작 패널 Props 타입
@@ -21,7 +20,6 @@ interface SideStartPanelProps {
 export function SideStartPanel({ topMenu, onTopClick }: SideStartPanelProps) {
 	// 전체 Top 메뉴 키 목록 추출
 	const topKeys = Object.keys(menuData);
-	const { isRTL } = useLocale();
 
 	return (
 		<div
@@ -45,7 +43,7 @@ export function SideStartPanel({ topMenu, onTopClick }: SideStartPanelProps) {
 							<topItem.icon
 								className={`w-6 h-6 transition-all duration-200 ${
 									isActive ? 'neu-icon-active' : 'neu-icon-inactive'
-								} ${isRTL ? 'scale-x-[-1]' : ''}`}
+								} `}
 							/>
 						</button>
 					);
