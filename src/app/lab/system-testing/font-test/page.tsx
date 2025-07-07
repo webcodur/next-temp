@@ -1,19 +1,31 @@
+/*
+  파일명: src/app/lab/system-testing/font-test/page.tsx
+  기능: 다국어 폰트 시스템을 테스트하고 시각적으로 비교하는 페이지
+  책임: `font-multilang` 클래스의 자동 폰트 적용을 시연하고, 개별 폰트 및 Pretendard 굵기(weight)를 비교하며, RTL 레이아웃을 확인한다.
+*/
+
 'use client';
 
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/ui-input/button/Button';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { useTranslations, useLocale } from '@/hooks/useI18n';
 
 export default function FontTestPage() {
+	// #region 훅
 	const t = useTranslations();
 	const { isRTL } = useLocale();
+	// #endregion
+
+	// #region 상태
 	const [selectedText, setSelectedText] = useState<
 		'korean' | 'english' | 'arabic' | 'mixed'
 	>('korean');
 	const [customText, setCustomText] = useState('');
+	// #endregion
 
-	// 샘플 텍스트들
+	// #region 상수
 	const sampleTexts = {
 		korean: t('폰트테스트_샘플_한국어'),
 		english: t('폰트테스트_샘플_영어'),
@@ -22,7 +34,9 @@ export default function FontTestPage() {
 	};
 
 	const currentText = customText || sampleTexts[selectedText];
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-6 space-y-8">
 			{/* 언어 전환기 */}
@@ -169,4 +183,5 @@ export default function FontTestPage() {
 			{/* #endregion */}
 		</div>
 	);
+	// #endregion
 } 

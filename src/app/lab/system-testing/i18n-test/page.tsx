@@ -1,12 +1,21 @@
+/*
+  파일명: src/app/lab/system-testing/i18n-test/page.tsx
+  기능: 다국어(i18n) 시스템의 언어팩과 번역 기능을 테스트하는 페이지
+  책임: `useTranslations` 훅을 통해 다양한 카테고리의 번역 키를 렌더링하고, `LanguageSwitcher`를 통해 언어 변경이 올바르게 적용되는지 확인한다.
+*/
+
 'use client';
 
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { useLocale, useTranslations } from '@/hooks/useI18n';
 
 export default function I18nTestPage() {
+  // #region 훅
   const { currentLocale, supportedLocales } = useLocale();
   const t = useTranslations();
+  // #endregion
 
+  // #region 렌더링
   return (
     <div className="container p-6 mx-auto space-y-8">
       {/* #region 헤더 */}
@@ -156,4 +165,5 @@ export default function I18nTestPage() {
       {/* #endregion */}
     </div>
   );
+  // #endregion
 } 

@@ -1,14 +1,31 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-animations/page.tsx
+  기능: Three.js를 사용한 기본적인 3D 애니메이션(회전, 이동, 크기/색상 변경)을 시연하는 페이지
+  책임: 사용자가 선택한 애니메이션 유형에 따라 3D 객체를 렌더링하고, 재생/정지 및 속도 조절 기능을 제공한다.
+*/
+
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 type AnimationType = 'rotation' | 'position' | 'scale' | 'color' | 'combined';
+// #endregion
 
 export default function AnimationsPage() {
+	// #region 훅
 	const t = useTranslations();
-	
+	const mountRef = useRef<HTMLDivElement>(null);
+	const sceneRef = useRef<THREE.Scene | null>(null);
+	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+	const meshRef = useRef<THREE.Mesh | null>(null);
+	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
+	// #endregion
+
+	// #region 상수: 애니메이션 데이터
 	const animationData = useMemo(() => ({
 		rotation: {
 			name: t('3D_회전'),
@@ -49,44 +66,35 @@ export default function AnimationsPage() {
 			name: t('3D_복합애니메이션'),
 			description: t('3D_복합애니메이션설명'),
 			animate: (mesh: THREE.Mesh, time: number) => {
-				// 회전
 				mesh.rotation.x = time * 0.3;
 				mesh.rotation.y = time * 0.5;
-				
-				// 위치 (원형 궤도)
 				const radius = 1.5;
 				mesh.position.x = Math.cos(time) * radius;
 				mesh.position.z = Math.sin(time) * radius;
 				mesh.position.y = Math.sin(time * 2) * 0.5;
-				
-				// 크기
 				const scale = 0.8 + Math.sin(time * 3) * 0.2;
 				mesh.scale.setScalar(scale);
-				
-				// 색상
 				const material = mesh.material as THREE.MeshLambertMaterial;
 				const hue = (time * 0.3) % 1;
 				material.color.setHSL(hue, 0.8, 0.6);
 			},
 		},
 	}), [t]);
+	// #endregion
 
-	const mountRef = useRef<HTMLDivElement>(null);
-	const sceneRef = useRef<THREE.Scene | null>(null);
-	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-	const meshRef = useRef<THREE.Mesh | null>(null);
-	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
-	
+	// #region 상태
 	const [selectedAnimation, setSelectedAnimation] = useState<AnimationType>('rotation');
 	const [isPlaying, setIsPlaying] = useState(true);
 	const [speed, setSpeed] = useState(1);
+	// #endregion
 
+	// #region useEffect: 씬 초기화 및 애니메이션 루프
 	useEffect(() => {
 		if (!mountRef.current) return;
 
-		const mount = mountRef.current; // ref 값을 변수로 복사
+		const mount = mountRef.current;
 
-		// #region 기본 설정
+		// #region 씬 및 렌더러 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0xf8f9fa);
 		sceneRef.current = scene;
@@ -102,7 +110,7 @@ export default function AnimationsPage() {
 		mount.appendChild(renderer.domElement);
 		// #endregion
 
-		// #region 조명 설정
+		// #region 조명 및 객체 설정
 		const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
 		scene.add(ambientLight);
 
@@ -110,9 +118,7 @@ export default function AnimationsPage() {
 		directionalLight.position.set(5, 5, 5);
 		directionalLight.castShadow = true;
 		scene.add(directionalLight);
-		// #endregion
 
-		// #region 메인 객체 생성
 		const geometry = new THREE.BoxGeometry(1, 1, 1);
 		const material = new THREE.MeshLambertMaterial({ color: 0x00ff88 });
 		const mesh = new THREE.Mesh(geometry, material);
@@ -120,12 +126,10 @@ export default function AnimationsPage() {
 		meshRef.current = mesh;
 		scene.add(mesh);
 
-		// 참조용 격자 추가
 		const gridHelper = new THREE.GridHelper(10, 10, 0xcccccc, 0xeeeeee);
 		gridHelper.position.y = -2;
 		scene.add(gridHelper);
 
-		// 바닥 평면
 		const planeGeometry = new THREE.PlaneGeometry(10, 10);
 		const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
 		const plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -141,13 +145,9 @@ export default function AnimationsPage() {
 			
 			if (meshRef.current && isPlaying) {
 				const elapsedTime = clockRef.current.getElapsedTime() * speed;
-				
-				// 객체 초기화 (위치, 회전, 크기, 색상)
 				meshRef.current.position.set(0, 0, 0);
 				meshRef.current.rotation.set(0, 0, 0);
 				meshRef.current.scale.set(1, 1, 1);
-				
-				// 선택된 애니메이션 적용
 				animationData[selectedAnimation].animate(meshRef.current, elapsedTime);
 			}
 			
@@ -165,8 +165,9 @@ export default function AnimationsPage() {
 			material.dispose();
 		};
 	}, [selectedAnimation, isPlaying, speed, animationData]);
+	// #endregion
 
-	// #region 컨트롤 함수들
+	// #region 핸들러
 	const togglePlayPause = () => {
 		setIsPlaying(!isPlaying);
 		if (!isPlaying) {
@@ -186,6 +187,7 @@ export default function AnimationsPage() {
 	};
 	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-8 space-y-8">
 			<div className="p-6 rounded-xl neu-flat">
@@ -196,7 +198,6 @@ export default function AnimationsPage() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-				{/* 3D 뷰어 */}
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션갤러리')}</h2>
 					<div 
@@ -204,7 +205,6 @@ export default function AnimationsPage() {
 						className="overflow-hidden mb-4 rounded-lg border border-gray-200"
 					/>
 					
-					{/* 재생 컨트롤 */}
 					<div className="flex gap-2 mb-4">
 						<button
 							onClick={togglePlayPause}
@@ -220,7 +220,6 @@ export default function AnimationsPage() {
 						</button>
 					</div>
 					
-					{/* 현재 선택된 애니메이션 정보 */}
 					<div className="p-4 rounded-lg neu-inset">
 						<h3 className="text-lg font-semibold text-blue-600">
 							{animationData[selectedAnimation].name}
@@ -231,9 +230,7 @@ export default function AnimationsPage() {
 					</div>
 				</div>
 
-				{/* 컨트롤 패널 */}
 				<div className="space-y-6">
-					{/* 애니메이션 선택 */}
 					<div className="p-6 rounded-xl neu-flat">
 						<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션선택')}</h2>
 						<div className="space-y-2">
@@ -251,69 +248,33 @@ export default function AnimationsPage() {
 												: 'neu-raised hover:neu-inset'
 										}`}
 									>
-										<h3 className="text-sm font-semibold">{data.name}</h3>
-										<p className="mt-1 text-xs text-gray-600">
-											{data.description}
-										</p>
+										<h4 className="font-semibold">{data.name}</h4>
+										<p className="text-sm text-gray-500">{data.description}</p>
 									</button>
 								);
 							})}
 						</div>
 					</div>
-					
-					{/* 애니메이션 제어 */}
-					<div className="p-6 rounded-xl neu-flat">
-						<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션제어')}</h2>
-						<div className="space-y-4">
-							<div>
-								<label className="block mb-2 text-sm font-medium">
-									속도: {speed}x
-								</label>
-								<input
-									type="range"
-									min="0.1"
-									max="3"
-									step="0.1"
-									value={speed}
-									onChange={(e) => setSpeed(parseFloat(e.target.value))}
-									className="w-full"
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			{/* 이론 설명 */}
-			<div className="p-6 rounded-xl neu-flat">
-				<h2 className="mb-4 text-xl font-semibold">{t('3D_애니메이션이해')}</h2>
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-					<div className="p-4 bg-blue-50 rounded-lg">
-						<h3 className="mb-2 font-semibold text-blue-800">🔄 {t('3D_회전')}</h3>
-						<p className="text-sm text-blue-600">
-							{t('3D_회전설명')}
-						</p>
-					</div>
-					<div className="p-4 bg-green-50 rounded-lg">
-						<h3 className="mb-2 font-semibold text-green-800">📍 {t('3D_이동')}</h3>
-						<p className="text-sm text-green-600">
-							{t('3D_이동설명')}
-						</p>
-					</div>
-					<div className="p-4 bg-purple-50 rounded-lg">
-						<h3 className="mb-2 font-semibold text-purple-800">📏 {t('3D_크기변화')}</h3>
-						<p className="text-sm text-purple-600">
-							{t('3D_크기변화설명')}
-						</p>
-					</div>
-					<div className="p-4 bg-orange-50 rounded-lg">
-						<h3 className="mb-2 font-semibold text-orange-800">🎨 {t('3D_색상변화')}</h3>
-						<p className="text-sm text-orange-600">
-							{t('3D_색상변화설명')}
-						</p>
+					<div className="p-6 rounded-xl neu-flat">
+						<h2 className="mb-4 text-xl font-semibold">{t('3D_속도조절')}</h2>
+						<div className="flex items-center gap-4">
+							<span>{t('3D_느리게')}</span>
+							<input
+								type="range"
+								min="0.1"
+								max="3"
+								step="0.1"
+								value={speed}
+								onChange={(e) => setSpeed(parseFloat(e.target.value))}
+								className="w-full"
+							/>
+							<span>{t('3D_빠르게')} ({speed.toFixed(1)}x)</span>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
+	// #endregion
 } 

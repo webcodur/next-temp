@@ -1,18 +1,27 @@
+/*
+  파일명: src/app/lab/ui-3d/barrier-3d/page.tsx
+  기능: 3D 차단기(Barrier) 컴포넌트의 다양한 뷰와 상호작용을 테스트하는 페이지
+  책임: 대각선, 운전자, 보안 등 여러 시점의 3D 차단기를 렌더링하고, 상태(열림/닫힘) 및 운행 모드 변경을 제어한다.
+*/
+
 'use client';
 
 import * as React from 'react';
+
+import { useTranslations } from '@/hooks/useI18n';
 import {
 	BarrierDiagonalView,
 	BarrierDriverView,
 	BarrierSecurityView,
-	OperationMode,
-	ViewAngle,
 } from '@/unit/barrier/barrier';
-import { useTranslations } from '@/hooks/useI18n';
+import type { OperationMode, ViewAngle } from '@/unit/barrier/barrier';
 
 export default function Barrier3DPage() {
+	// #region 훅
 	const t = useTranslations();
-	
+	// #endregion
+
+	// #region 상태
 	const [barrierStates, setBarrierStates] = React.useState<
 		Record<ViewAngle, boolean>
 	>({
@@ -28,7 +37,9 @@ export default function Barrier3DPage() {
 		driver: 'always-open',
 		security: 'bypass',
 	});
+	// #endregion
 
+	// #region 핸들러
 	const toggleBarrier = (viewAngle: ViewAngle) => {
 		setBarrierStates((prev) => ({
 			...prev,
@@ -50,7 +61,9 @@ export default function Barrier3DPage() {
 			return newModes;
 		});
 	};
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="container py-10">
 			<h1 className="mb-8 text-3xl font-bold">
@@ -131,4 +144,5 @@ export default function Barrier3DPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 }

@@ -1,16 +1,26 @@
+/*
+  파일명: src/app/lab/system-testing/theme-test/page.tsx
+  기능: 라이트/다크 테마 및 뉴모피즘 시스템을 시각적으로 테스트하는 페이지
+  책임: 색상 팔레트, 뉴모피즘 요소, 버튼 스타일, 아이콘 상태 등 테마에 따른 모든 UI 요소의 렌더링을 검증한다.
+*/
+
 'use client';
 
 import { useAtom } from 'jotai';
 import { Moon, Sun, Palette, Eye, EyeOff, Settings } from 'lucide-react';
-import { themeAtom } from '@/store/theme';
-import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
+
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { useTranslations } from '@/hooks/useI18n';
+import { themeAtom } from '@/store/theme';
 
 export default function ThemeTestPage() {
+	// #region 훅
 	const [theme] = useAtom(themeAtom);
 	const t = useTranslations();
+	// #endregion
 
+	// #region 상수
 	const colors = [
 		{ name: 'Primary', class: 'bg-primary text-primary-foreground' },
 		{ name: 'Secondary', class: 'bg-secondary text-secondary-foreground' },
@@ -27,7 +37,9 @@ export default function ThemeTestPage() {
 		{ name: 'Inset (활성 상태)', class: 'neu-inset' },
 		{ name: 'Hover Effect', class: 'neu-flat neu-hover' },
 	];
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-6 mx-auto space-y-8 max-w-6xl">
 			{/* 제목 & 테마 정보 */}
@@ -158,4 +170,5 @@ export default function ThemeTestPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

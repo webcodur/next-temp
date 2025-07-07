@@ -1,17 +1,54 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-interactions/page.tsx
+  기능: Three.js에서의 사용자 상호작용(궤도 제어, 드래그, 클릭 등)을 시연하기 위한 플레이스홀더 페이지
+  책임: 각 상호작용 유형에 대한 설명과 선택 UI를 제공하며, 실제 3D 구현을 위한 구조를 정의한다.
+*/
+
 'use client';
 
 import { useState } from 'react';
+
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 type InteractionType = 'orbit' | 'drag' | 'click' | 'hover' | 'keyboard';
+// #endregion
 
 export default function InteractionsPage() {
+	// #region 훅
 	const t = useTranslations();
+	// #endregion
 
-
+	// #region 상태
 	const [selectedInteraction, setSelectedInteraction] = useState<InteractionType>('orbit');
+	// #endregion
+	
+	// #region 상수
+	const interactionDetails = {
+		orbit: {
+			label: t('3D_궤도제어'),
+			description: t('3D_궤도제어설명'),
+		},
+		drag: {
+			label: t('3D_드래그'),
+			description: t('3D_드래그설명'),
+		},
+		click: {
+			label: t('3D_클릭'),
+			description: t('3D_클릭설명'),
+		},
+		hover: {
+			label: t('3D_호버'),
+			description: t('3D_호버설명'),
+		},
+		keyboard: {
+			label: t('3D_키보드'),
+			description: t('3D_키보드설명'),
+		}
+	};
+	// #endregion
 
-	// 페이지의 주요 헤딩과 설명만 언어팩 적용
+	// #region 렌더링
 	return (
 		<div className="p-8 space-y-8">
 			<div className="p-6 rounded-xl neu-flat">
@@ -22,7 +59,6 @@ export default function InteractionsPage() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-				{/* 3D 뷰어 */}
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold">{t('3D_상호작용갤러리')}</h2>
 					<div className="border border-gray-200 rounded-lg overflow-hidden mb-4 h-64">
@@ -31,7 +67,6 @@ export default function InteractionsPage() {
 						</div>
 					</div>
 					
-					{/* 안내 메시지 */}
 					<div className="neu-inset p-4 rounded-lg">
 						<div className="space-y-1 text-sm text-gray-600">
 							<p>• {t('3D_마우스드래그')}</p>
@@ -41,26 +76,12 @@ export default function InteractionsPage() {
 					</div>
 				</div>
 
-				{/* 상호작용 선택 패널 */}
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold">{t('3D_상호작용선택')}</h2>
 					<div className="space-y-2">
-						{(['orbit', 'drag', 'click', 'hover', 'keyboard'] as InteractionType[]).map((type) => {
+						{(Object.keys(interactionDetails) as InteractionType[]).map((type) => {
 							const isSelected = selectedInteraction === type;
-							const labels = {
-								orbit: t('3D_궤도제어'),
-								drag: t('3D_드래그'),
-								click: t('3D_클릭'),
-								hover: t('3D_호버'),
-								keyboard: t('3D_키보드')
-							};
-							const descriptions = {
-								orbit: t('3D_궤도제어설명'),
-								drag: t('3D_드래그설명'),
-								click: t('3D_클릭설명'),
-								hover: t('3D_호버설명'),
-								keyboard: t('3D_키보드설명')
-							};
+							const detail = interactionDetails[type];
 							
 							return (
 								<button
@@ -72,9 +93,9 @@ export default function InteractionsPage() {
 											: 'neu-raised hover:neu-inset'
 									}`}
 								>
-									<h3 className="font-semibold text-sm">{labels[type]}</h3>
+									<h3 className="font-semibold text-sm">{detail.label}</h3>
 									<p className="text-xs text-gray-600 mt-1">
-										{descriptions[type]}
+										{detail.description}
 									</p>
 								</button>
 							);
@@ -83,7 +104,6 @@ export default function InteractionsPage() {
 				</div>
 			</div>
 
-			{/* 이론 설명 */}
 			<div className="p-6 rounded-xl neu-flat">
 				<h2 className="mb-4 text-xl font-semibold">{t('3D_상호작용이해')}</h2>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -115,4 +135,5 @@ export default function InteractionsPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

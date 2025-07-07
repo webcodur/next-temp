@@ -1,12 +1,21 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-advanced/page.tsx
+  기능: Three.js의 고급 기능(텍스처, 파티클, 그림자 등)을 시연하는 페이지
+  책임: 사용자가 선택한 기능에 따라 Three.js 씬(Scene)을 동적으로 구성하고 렌더링하며, 각 기능에 대한 설명을 제공한다.
+*/
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 type AdvancedFeature = 'texture' | 'particles' | 'postprocessing' | 'shadows' | 'fog' | 'loader';
+// #endregion
 
-// 간단한 파티클 시스템
+// #region 파티클 시스템 클래스
 class ParticleSystem {
 	particles: THREE.BufferGeometry;
 	material: THREE.PointsMaterial;
@@ -64,8 +73,10 @@ class ParticleSystem {
 		this.material.dispose();
 	}
 }
+// #endregion
 
 export default function AdvancedPage() {
+	// #region 훅
 	const t = useTranslations();
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
@@ -73,10 +84,14 @@ export default function AdvancedPage() {
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const meshRef = useRef<THREE.Mesh | null>(null);
 	const particleSystemRef = useRef<ParticleSystem | null>(null);
-	
+	// #endregion
+
+	// #region 상태
 	const [selectedFeature, setSelectedFeature] = useState<AdvancedFeature>('texture');
 	const [isLoading, setIsLoading] = useState(false);
+	// #endregion
 
+	// #region 상수
 	const advancedFeatures = {
 		texture: {
 			name: t('3D_텍스처매핑'),
@@ -109,7 +124,9 @@ export default function AdvancedPage() {
 			instruction: t('3D_모델로딩가이드'),
 		},
 	};
+	// #endregion
 
+	// #region useEffect: 씬 초기화 및 정리
 	useEffect(() => {
 		if (!mountRef.current) return;
 
@@ -161,8 +178,9 @@ export default function AdvancedPage() {
 			renderer.dispose();
 		};
 	}, []);
+	// #endregion
 
-	// #region 기능별 장면 설정
+	// #region useEffect: 기능별 장면 설정
 	useEffect(() => {
 		if (!sceneRef.current || !cameraRef.current || !rendererRef.current) return;
 
@@ -248,221 +266,127 @@ export default function AdvancedPage() {
 					break;
 				}
 				
-				default: {
-					const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-					const material = new THREE.MeshLambertMaterial({ color: 0x4285f4 });
-					const mesh = new THREE.Mesh(geometry, material);
-					mesh.castShadow = true;
-					meshRef.current = mesh;
-					scene.add(mesh);
-				}
+				case 'postprocessing':
+					// 이 기능은 예제이므로 비워둡니다.
+					break;
+				
+				case 'loader':
+					setIsLoading(true);
+					setTimeout(() => {
+						const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
+						const material = new THREE.MeshStandardMaterial({
+							color: 0x61dafb,
+							metalness: 0.8,
+							roughness: 0.2,
+						});
+						const mesh = new THREE.Mesh(geometry, material);
+						mesh.castShadow = true;
+						meshRef.current = mesh;
+						scene.add(mesh);
+						setIsLoading(false);
+					}, 1500); // 로딩 시뮬레이션
+					break;
 			}
 		};
 
 		setupFeature();
 
-		// #region 애니메이션 루프
+		// 애니메이션 루프
+		let animationId: number;
 		const animate = () => {
-			requestAnimationFrame(animate);
+			animationId = requestAnimationFrame(animate);
 			
-			// 기본 회전 애니메이션
-			if (meshRef.current && selectedFeature !== 'fog') {
-				meshRef.current.rotation.x += 0.01;
-				meshRef.current.rotation.y += 0.01;
-				
-				if (selectedFeature === 'shadows') {
-					meshRef.current.position.y = 1 + Math.sin(Date.now() * 0.003) * 0.5;
-				}
+			if (meshRef.current) {
+				meshRef.current.rotation.x += 0.005;
+				meshRef.current.rotation.y += 0.005;
 			}
 			
-			// 파티클 애니메이션
-			if (particleSystemRef.current && selectedFeature === 'particles') {
+			if (particleSystemRef.current) {
 				particleSystemRef.current.update();
 			}
-			
-			// 카메라 자동 회전 (안개 모드)
-			if (selectedFeature === 'fog') {
-				const time = Date.now() * 0.001;
-				camera.position.x = Math.cos(time) * 8;
-				camera.position.z = Math.sin(time) * 8;
-				camera.lookAt(0, 0, 0);
-			}
-			
+
 			renderer.render(scene, camera);
 		};
+
 		animate();
-		// #endregion
 
 		return () => {
-			// 안개 제거
-			scene.fog = null;
-			
-			// 추가된 객체들 정리
-			const objectsToRemove = [...scene.children];
-			objectsToRemove.forEach(obj => {
-				if (obj !== scene.children[0] && obj !== scene.children[1] && obj !== scene.children[2]) {
-					scene.remove(obj);
-					if (obj instanceof THREE.Mesh) {
-						obj.geometry.dispose();
-						if (obj.material instanceof THREE.Material) {
-							obj.material.dispose();
-						}
+			cancelAnimationFrame(animationId);
+			// 씬에서 객체 제거
+			scene.children.forEach(child => {
+				if (child instanceof THREE.Mesh) {
+					child.geometry.dispose();
+					if(Array.isArray(child.material)) {
+						child.material.forEach(m => m.dispose());
+					} else {
+						(child.material as THREE.Material).dispose();
 					}
+					scene.remove(child);
 				}
 			});
+			scene.fog = null;
 		};
 	}, [selectedFeature]);
 	// #endregion
 
-	// #region 기능 변경
+	// #region 핸들러
 	const changeFeature = (feature: AdvancedFeature) => {
-		setIsLoading(true);
 		setSelectedFeature(feature);
-		
-		// 로딩 시뮬레이션
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 500);
 	};
 	// #endregion
-
-	const currentFeature = advancedFeatures[selectedFeature];
-
+	
+	// #region 렌더링
 	return (
-		<div className="p-8 space-y-8">
-			<div className="p-6 rounded-xl neu-flat">
-				<h1 className="mb-4 text-3xl font-bold font-multilang">{t('3D_고급기능제목')}</h1>
-				<p className="mb-6 text-gray-600 font-multilang">
-					{t('3D_고급기능설명')}
-				</p>
-			</div>
+		<div className="p-6">
+			<h1 className="text-3xl font-bold mb-4">{t('3D_고급기능')}</h1>
+			
+			<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+				{/* 사이드바 */}
+				<div className="md:col-span-1 p-4 rounded-lg neu-flat">
+					<h2 className="text-xl font-semibold mb-4">{t('3D_기능선택')}</h2>
+					<div className="flex flex-col space-y-2">
+						{Object.keys(advancedFeatures).map((key) => (
+							<button
+								key={key}
+								onClick={() => changeFeature(key as AdvancedFeature)}
+								className={`
+									p-3 text-left rounded-md transition-all
+									${selectedFeature === key ? 'neu-inset text-primary' : 'neu-raised'}
+								`}
+							>
+								{advancedFeatures[key as AdvancedFeature].name}
+							</button>
+						))}
+					</div>
+				</div>
 
-			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-				{/* 3D 뷰어 */}
-				<div className="p-6 rounded-xl neu-flat">
-					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_고급실습')}</h2>
-					
-					{isLoading && (
-						<div className="flex items-center justify-center h-[600px] border border-gray-200 rounded-lg">
-							<div className="text-center">
-								<div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 border-blue-500 animate-spin"></div>
-								<p className="text-gray-600 font-multilang">{t('3D_고급로딩')}</p>
-							</div>
-						</div>
-					)}
-					
-					<div 
-						ref={mountRef} 
-						className={`border border-gray-200 rounded-lg overflow-hidden mb-4 ${isLoading ? 'hidden' : ''}`}
-					/>
-					
-					{/* 현재 기능 설명 */}
-					<div className="p-4 rounded-lg neu-inset">
-						<h3 className="mb-2 text-lg font-semibold text-purple-600 font-multilang">
-							{currentFeature.name}
+				{/* 메인 뷰 */}
+				<div className="md:col-span-3">
+					<div className="p-4 mb-4 rounded-lg neu-flat">
+						<h3 className="text-lg font-bold">
+							{advancedFeatures[selectedFeature].name}
 						</h3>
-						<p className="mb-2 text-sm text-gray-600 font-multilang">
-							{currentFeature.description}
-						</p>
-						<p className="text-sm font-semibold text-green-600 font-multilang">
-							💡 {currentFeature.instruction}
-						</p>
-					</div>
-				</div>
-
-				{/* 기능 선택 패널 */}
-				<div className="p-6 rounded-xl neu-flat">
-					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_고급기능')}</h2>
-					<div className="space-y-3">
-						{(Object.keys(advancedFeatures) as AdvancedFeature[]).map((feature) => {
-							const data = advancedFeatures[feature];
-							const isActive = selectedFeature === feature;
-							
-							return (
-								<button
-									key={feature}
-									onClick={() => changeFeature(feature)}
-									disabled={isLoading}
-									className={`w-full p-4 rounded-lg text-start transition-all ${
-										isActive 
-											? 'bg-purple-50 neu-inset' 
-											: 'neu-raised hover:neu-inset'
-									} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-								>
-									<h3 className="mb-1 text-sm font-semibold font-multilang">{data.name}</h3>
-									<p className="text-xs text-gray-600 font-multilang">
-										{data.description}
-									</p>
-								</button>
-							);
-						})}
-					</div>
-
-					{/* 학습 진행도 */}
-					<div className="p-4 mt-6 rounded-lg neu-inset">
-						<h4 className="mb-2 font-semibold text-gray-800 font-multilang">{t('3D_학습진행도')}</h4>
-						<div className="w-full h-2 bg-gray-200 rounded-full">
-							<div 
-								className="h-2 bg-linear-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
-								style={{ width: '100%' }}
-							></div>
-						</div>
-						<p className="mt-2 text-xs text-gray-600 font-multilang">
-							{t('3D_학습완료')}
-						</p>
-					</div>
-				</div>
-			</div>
-
-			{/* 이론 설명 */}
-			<div className="p-6 rounded-xl neu-flat">
-				<h2 className="mb-4 text-xl font-semibold font-multilang">{t('3D_심화이론')}</h2>
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-					<div>
-						<h3 className="mb-2 text-lg font-semibold text-purple-600 font-multilang">{t('3D_텍스처시스템')}</h3>
-						<p className="text-sm text-gray-600 font-multilang">
-							{t('3D_텍스처시스템설명')}
+						<p className="text-sm text-muted-foreground mt-1">
+							{advancedFeatures[selectedFeature].description}
 						</p>
 					</div>
 
-					<div>
-						<h3 className="mb-2 text-lg font-semibold text-yellow-600 font-multilang">{t('3D_파티클효과')}</h3>
-						<p className="text-sm text-gray-600 font-multilang">
-							{t('3D_파티클효과설명')}
-						</p>
+					<div className="relative w-[800px] h-[600px] rounded-lg overflow-hidden neu-inset">
+						{isLoading && (
+							<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+								<p className="text-white text-xl">{t('공통_로딩중')}</p>
+							</div>
+						)}
+						<div ref={mountRef} className="w-full h-full" />
 					</div>
-
-					<div>
-						<h3 className="mb-2 text-lg font-semibold text-gray-600 font-multilang">{t('3D_그림자안개')}</h3>
-						<p className="text-sm text-gray-600 font-multilang">
-							{t('3D_그림자안개설명')}
-						</p>
-					</div>
-				</div>
-
-				{/* 다음 단계 안내 */}
-				<div className="mt-6 space-y-4">
-					<div className="p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-purple-400">
-						<h4 className="font-semibold text-purple-800 font-multilang">{t('3D_다음학습')}</h4>
-						<div className="mt-2 space-y-1 text-sm text-purple-700">
-							<p className="font-multilang">• {t('3D_WebXR')}</p>
-							<p className="font-multilang">• {t('3D_물리엔진')}</p>
-							<p className="font-multilang">• {t('3D_성능최적화')}</p>
-							<p className="font-multilang">• {t('3D_쉐이더프로그래밍')}</p>
-						</div>
-					</div>
-
-					<div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
-						<h4 className="font-semibold text-green-800 font-multilang">{t('3D_실전프로젝트')}</h4>
-						<div className="mt-2 space-y-1 text-sm text-green-700">
-							<p className="font-multilang">• {t('3D_제품전시관')}</p>
-							<p className="font-multilang">• {t('3D_데이터시각화')}</p>
-							<p className="font-multilang">• {t('3D_미니게임')}</p>
-							<p className="font-multilang">• {t('3D_건축비주얼')}</p>
-						</div>
+					
+					<div className="mt-4 p-4 rounded-lg bg-blue-100 text-blue-800">
+						<h4 className="font-semibold">{t('3D_사용법')}</h4>
+						<p className="text-sm">{advancedFeatures[selectedFeature].instruction}</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
+	// #endregion
 } 

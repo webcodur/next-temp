@@ -1,19 +1,31 @@
+/*
+  파일명: src/app/lab/system-testing/license-plate/page.tsx
+  기능: LicensePlate 컴포넌트의 다양한 옵션과 스타일을 테스트하는 페이지
+  책임: 번호판의 variant(flat, volume), 크기(고정, 반응형), 다양한 번호 형식을 렌더링하고 시각적으로 확인한다.
+*/
+
 'use client';
 
 import React from 'react';
+
 import LicensePlate from '@/components/ui/system-testing/license-plate/LicensePlate';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function LicensePlatePage() {
+	// #region 훅
 	const t = useTranslations();
-	
+	// #endregion
+
+	// #region 상수
 	const plateNumbers = ['123가4567', '45나8901', '678다2345', '90라6789'];
 	const widths = ['8rem', '12rem', '16rem', '20rem']; // 실제 CSS 값
 	const variants = [
 		{ key: 'flat' as const, name: t('번호판테스트_평면'), desc: t('번호판테스트_평면설명') },
 		{ key: 'volume' as const, name: t('번호판테스트_볼륨감'), desc: t('번호판테스트_볼륨감설명') },
 	];
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-6 space-y-8">
 			<div className="text-center">
@@ -152,4 +164,5 @@ export default function LicensePlatePage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

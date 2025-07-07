@@ -1,14 +1,30 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-geometries/page.tsx
+  기능: Three.js에서 제공하는 다양한 기본 도형(Geometries)을 시각적으로 보여주는 페이지
+  책임: 사용자가 선택한 도형을 3D 씬에 렌더링하고, 각 도형의 특징과 생성 방법을 설명한다.
+*/
+
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 type GeometryType = 'box' | 'sphere' | 'cylinder' | 'cone' | 'plane' | 'torus';
+// #endregion
 
 export default function GeometriesPage() {
+	// #region 훅
 	const t = useTranslations();
-	
+	const mountRef = useRef<HTMLDivElement>(null);
+	const sceneRef = useRef<THREE.Scene | null>(null);
+	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+	const meshRef = useRef<THREE.Mesh | null>(null);
+	// #endregion
+
+	// #region 상수: 도형 데이터
 	const geometryData = useMemo(() => ({
 		box: {
 			name: t('3D_정육면체'),
@@ -47,19 +63,19 @@ export default function GeometriesPage() {
 			color: 0xfd79a8,
 		},
 	}), [t]);
+	// #endregion
 
-	const mountRef = useRef<HTMLDivElement>(null);
-	const sceneRef = useRef<THREE.Scene | null>(null);
-	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-	const meshRef = useRef<THREE.Mesh | null>(null);
+	// #region 상태
 	const [selectedGeometry, setSelectedGeometry] = useState<GeometryType>('box');
+	// #endregion
 
+	// #region useEffect: 씬 초기화
 	useEffect(() => {
 		if (!mountRef.current) return;
 
-		const mount = mountRef.current; // ref 값을 변수로 복사
+		const mount = mountRef.current;
 
-		// #region 기본 설정
+		// #region 씬 및 렌더러 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0xf0f0f0);
 		sceneRef.current = scene;
@@ -103,19 +119,18 @@ export default function GeometriesPage() {
 			renderer.dispose();
 		};
 	}, []);
+	// #endregion
 
-	// #region 도형 변경 함수
+	// #region 핸들러
 	const changeGeometry = useCallback((type: GeometryType) => {
 		if (!sceneRef.current) return;
 
-		// 기존 메쉬 제거
 		if (meshRef.current) {
 			sceneRef.current.remove(meshRef.current);
 			meshRef.current.geometry.dispose();
 			(meshRef.current.material as THREE.Material).dispose();
 		}
 
-		// 새 도형 생성
 		const data = geometryData[type];
 		const geometry = data.create();
 		const material = new THREE.MeshLambertMaterial({ color: data.color });
@@ -127,11 +142,13 @@ export default function GeometriesPage() {
 	}, [geometryData]);
 	// #endregion
 
-	// 초기 도형 생성
+	// #region useEffect: 초기 도형 생성
 	useEffect(() => {
 		changeGeometry('box');
 	}, [changeGeometry]);
+	// #endregion
 
+	// #region 렌더링
 	const currentData = geometryData[selectedGeometry];
 
 	return (
@@ -144,7 +161,6 @@ export default function GeometriesPage() {
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-				{/* 3D 뷰어 */}
 				<div className="neu-flat p-6 rounded-xl">
 					<h2 className="text-xl font-semibold mb-4">{t('3D_실습갤러리')}</h2>
 					<div 
@@ -152,7 +168,6 @@ export default function GeometriesPage() {
 						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
 					/>
 					
-					{/* 현재 선택된 도형 정보 */}
 					<div className="neu-inset p-4 rounded-lg">
 						<h3 className="font-semibold text-lg" style={{ color: `#${currentData.color.toString(16)}` }}>
 							{currentData.name}
@@ -163,7 +178,6 @@ export default function GeometriesPage() {
 					</div>
 				</div>
 
-				{/* 도형 선택 패널 */}
 				<div className="neu-flat p-6 rounded-xl">
 					<h2 className="text-xl font-semibold mb-4">{t('3D_도형선택')}</h2>
 					<div className="grid grid-cols-2 gap-3">
@@ -196,7 +210,6 @@ export default function GeometriesPage() {
 				</div>
 			</div>
 
-			{/* 이론 설명 */}
 			<div className="neu-flat p-6 rounded-xl">
 				<h2 className="text-xl font-semibold mb-4">{t('3D_도형이해')}</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -222,4 +235,5 @@ export default function GeometriesPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

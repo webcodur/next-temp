@@ -1,11 +1,18 @@
+/*
+  파일명: src/app/lab/ui-data/pagination/page.tsx
+  기능: `DataTable` 컴포넌트와 통합된 페이지네이션 기능을 테스트하는 페이지
+  책임: 목업 데이터를 생성하고, 테이블에 표시하며, 페이지 변경, 페이지 크기 조절, 데이터 새로고침 등 페이지네이션 관련 상호작용을 검증한다.
+*/
+
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import DataTable from '@/components/ui/ui-data/data-table/DataTable';
 import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 import { useTranslations } from '@/hooks/useI18n';
 
-// 목업 데이터 타입 (인덱스 시그니처 추가)
+// #region 타입 정의
 interface User extends Record<string, unknown> {
 	key: number;
 	name: string;
@@ -14,9 +21,12 @@ interface User extends Record<string, unknown> {
 	department: string;
 	joinDate: string;
 }
+// #endregion
 
 const PaginationDemo = () => {
+	// #region 훅
 	const t = useTranslations();
+	// #endregion
 
 	// #region 상태 관리
 	const [currentPage, setCurrentPage] = useState(1);
@@ -25,7 +35,7 @@ const PaginationDemo = () => {
 	const [userData, setUserData] = useState<User[] | null>(null);
 	// #endregion
 
-	// #region 목업 데이터 생성
+	// #region 상수 및 목업 데이터
 	const generateMockUsers = (count: number): User[] => {
 		const departments = ['개발', '디자인', '마케팅', '영업', '운영'];
 		const statuses: User['status'][] = ['active', 'pending', 'inactive'];
@@ -44,7 +54,6 @@ const PaginationDemo = () => {
 		}));
 	};
 
-	// 컬럼 정의
 	const columns: SmartTableColumn<User>[] = [
 		{
 			key: 'id' as keyof User,
@@ -101,12 +110,11 @@ const PaginationDemo = () => {
 	];
 	// #endregion
 
-	// #region 데이터 로딩 시뮬레이션
+	// #region 데이터 로딩
 	const loadData = useCallback(async () => {
 		setIsFetching(true);
 		setUserData(null);
 
-		// 2초 로딩 시뮬레이션
 		setTimeout(() => {
 			setUserData(generateMockUsers(237));
 			setIsFetching(false);
@@ -128,13 +136,12 @@ const PaginationDemo = () => {
 		setCurrentPage(1);
 	};
 
-
-
 	const handleReloadData = () => {
 		loadData();
 	};
 	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="container px-4 py-8 mx-auto">
 			<h1 className="mb-6 text-3xl font-bold">
@@ -170,7 +177,6 @@ const PaginationDemo = () => {
 						</button>
 					</div>
 
-					{/* 통합 테이블 + 페이지네이션 */}
 					<DataTable
 						data={userData}
 						columns={columns}
@@ -185,7 +191,6 @@ const PaginationDemo = () => {
 				</div>
 			</div>
 
-			{/* 자동 관리 모드 예시 */}
 			<div className="mb-8">
 				<h2 className="mb-4 text-xl font-semibold">
 					{t('페이지네이션_자동관리')}
@@ -199,10 +204,9 @@ const PaginationDemo = () => {
 					/>
 				</div>
 			</div>
-
-
 		</div>
 	);
+	// #endregion
 };
 
 export default PaginationDemo;

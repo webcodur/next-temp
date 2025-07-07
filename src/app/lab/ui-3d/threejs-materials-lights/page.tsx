@@ -1,15 +1,32 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-materials-lights/page.tsx
+  기능: Three.js의 다양한 재질(Materials)과 조명(Lights) 효과를 시연하는 페이지
+  책임: 사용자가 선택한 재질과 조명 조합에 따라 3D 객체를 렌더링하고, 각 요소의 시각적 차이를 비교할 수 있도록 한다.
+*/
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 type MaterialType = 'basic' | 'lambert' | 'phong' | 'standard' | 'physical';
 type LightType = 'ambient' | 'directional' | 'point' | 'spot';
+// #endregion
 
 export default function MaterialsLightsPage() {
+	// #region 훅
 	const t = useTranslations();
-	
+	const mountRef = useRef<HTMLDivElement>(null);
+	const sceneRef = useRef<THREE.Scene | null>(null);
+	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+	const meshRef = useRef<THREE.Mesh | null>(null);
+	const lightsRef = useRef<THREE.Light[]>([]);
+	// #endregion
+
+	// #region 상수: 재질 및 조명 데이터
 	const materialData = {
 		basic: {
 			name: t('3D_기본재질'),
@@ -73,25 +90,23 @@ export default function MaterialsLightsPage() {
 			color: 0xffffff,
 		},
 	};
+	// #endregion
 
-	const mountRef = useRef<HTMLDivElement>(null);
-	const sceneRef = useRef<THREE.Scene | null>(null);
-	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-	const meshRef = useRef<THREE.Mesh | null>(null);
-	const lightsRef = useRef<THREE.Light[]>([]);
-
+	// #region 상태
 	const [selectedMaterial, setSelectedMaterial] =
 		useState<MaterialType>('standard');
 	const [enabledLights, setEnabledLights] = useState<Set<LightType>>(
 		new Set(['ambient', 'directional'])
 	);
+	// #endregion
 
+	// #region useEffect: 씬 초기화
 	useEffect(() => {
 		if (!mountRef.current) return;
 
-		const mount = mountRef.current; // ref 값을 변수로 복사
+		const mount = mountRef.current;
 
-		// #region 기본 설정
+		// #region 씬 및 렌더러 설정
 		const scene = new THREE.Scene();
 		scene.background = new THREE.Color(0x202020);
 		sceneRef.current = scene;
@@ -115,7 +130,6 @@ export default function MaterialsLightsPage() {
 		meshRef.current = mesh;
 		scene.add(mesh);
 
-		// 바닥 평면 추가
 		const planeGeometry = new THREE.PlaneGeometry(10, 10);
 		const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
 		const plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -186,8 +200,9 @@ export default function MaterialsLightsPage() {
 			material.dispose();
 		};
 	}, [lightData.ambient.color, lightData.directional.color, lightData.point.color, lightData.spot.color, materialData.standard]);
+	// #endregion
 
-	// #region 재질 변경
+	// #region 핸들러
 	const changeMaterial = (type: MaterialType) => {
 		if (!meshRef.current) return;
 
@@ -198,9 +213,7 @@ export default function MaterialsLightsPage() {
 		meshRef.current.material = newMaterial;
 		setSelectedMaterial(type);
 	};
-	// #endregion
 
-	// #region 조명 토글
 	const toggleLight = (type: LightType) => {
 		if (!sceneRef.current) return;
 
@@ -211,12 +224,10 @@ export default function MaterialsLightsPage() {
 			newEnabledLights.add(type);
 		}
 
-		// 모든 조명 끄기
 		lightsRef.current.forEach((light) => {
 			light.intensity = 0;
 		});
 
-		// 선택된 조명만 켜기
 		const lightTypes: LightType[] = ['ambient', 'directional', 'point', 'spot'];
 		lightTypes.forEach((lightType, index) => {
 			if (newEnabledLights.has(lightType)) {
@@ -228,6 +239,7 @@ export default function MaterialsLightsPage() {
 	};
 	// #endregion
 
+	// #region 렌더링
 	const currentMaterial = materialData[selectedMaterial];
 
 	return (
@@ -240,117 +252,82 @@ export default function MaterialsLightsPage() {
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-				{/* 3D 뷰어 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">{t('3D_재질갤러리')}</h2>
-					<div 
-						ref={mountRef} 
-						className="border border-gray-200 rounded-lg overflow-hidden mb-4"
-					/>
-					
-					{/* 현재 선택된 재질 정보 */}
-					<div className="neu-inset p-4 rounded-lg">
-						<h3 className="font-semibold text-lg text-green-600">
-							{currentMaterial.name}
-						</h3>
-						<p className="text-sm text-gray-600 mt-1">
-							{currentMaterial.description}
-						</p>
+				<div className="lg:col-span-2">
+					<div className="neu-flat p-6 rounded-xl">
+						<h2 className="text-xl font-semibold mb-4">{t('3D_재질갤러리')}</h2>
+						<div 
+							ref={mountRef} 
+							className="border border-gray-200 rounded-lg overflow-hidden mb-4"
+						/>
+						
+						<div className="neu-inset p-4 rounded-lg">
+							<h3 className="font-semibold text-lg text-blue-600">
+								{currentMaterial.name}
+							</h3>
+							<p className="text-sm text-gray-600 mt-1">
+								{currentMaterial.description}
+							</p>
+						</div>
 					</div>
 				</div>
 
-				{/* 재질 선택 패널 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">{t('3D_재질선택')}</h2>
-					<div className="space-y-3">
-						{(Object.keys(materialData) as MaterialType[]).map((type) => {
-							const data = materialData[type];
-							const isSelected = selectedMaterial === type;
-							
-							return (
+				<div className="space-y-6">
+					<div className="neu-flat p-6 rounded-xl">
+						<h3 className="text-lg font-semibold mb-4">{t('3D_재질선택')}</h3>
+						<div className="space-y-2">
+							{(Object.keys(materialData) as MaterialType[]).map((type) => (
 								<button
 									key={type}
 									onClick={() => changeMaterial(type)}
-									className={`w-full p-3 rounded-lg text-left transition-all ${
-										isSelected 
-											? 'neu-inset bg-green-50' 
+									className={`w-full p-2 text-left rounded-md transition-all ${
+										selectedMaterial === type
+											? 'neu-inset bg-blue-50'
 											: 'neu-raised hover:neu-inset'
 									}`}
 								>
-									<h3 className="font-semibold text-sm">{data.name}</h3>
-									<p className="text-xs text-gray-600 mt-1">
-										{data.description}
-									</p>
+									{materialData[type].name}
 								</button>
-							);
-						})}
+							))}
+						</div>
 					</div>
-				</div>
 
-				{/* 조명 제어 패널 */}
-				<div className="neu-flat p-6 rounded-xl">
-					<h2 className="text-xl font-semibold mb-4">{t('3D_조명패널')}</h2>
-					<div className="space-y-3">
-						{(Object.keys(lightData) as LightType[]).map((type) => {
-							const data = lightData[type];
-							const isEnabled = enabledLights.has(type);
-							
-							return (
-								<button
-									key={type}
-									onClick={() => toggleLight(type)}
-									className={`w-full p-3 rounded-lg text-left transition-all ${
-										isEnabled 
-											? 'neu-inset bg-yellow-50' 
-											: 'neu-raised hover:neu-inset'
-									}`}
-								>
-									<h3 className="font-semibold text-sm">{data.name}</h3>
-									<p className="text-xs text-gray-600 mt-1">
-										{data.description}
-									</p>
-								</button>
-							);
-						})}
+					<div className="neu-flat p-6 rounded-xl">
+						<h3 className="text-lg font-semibold mb-4">{t('3D_조명선택')}</h3>
+						<div className="space-y-2">
+							{(Object.keys(lightData) as LightType[]).map((type) => (
+								<label key={type} className="flex items-center gap-2 cursor-pointer">
+									<input
+										type="checkbox"
+										checked={enabledLights.has(type)}
+										onChange={() => toggleLight(type)}
+										className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+									/>
+									<span>{lightData[type].name}</span>
+								</label>
+							))}
+						</div>
 					</div>
 				</div>
 			</div>
 
-			{/* 이론 설명 */}
 			<div className="neu-flat p-6 rounded-xl">
-				<h2 className="text-xl font-semibold mb-4">{t('3D_조명이해')}</h2>
+				<h2 className="text-xl font-semibold mb-4">{t('3D_핵심이론')}</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div>
-						<h3 className="text-lg font-semibold mb-3 text-purple-600">🎨 재질 특성</h3>
-						<div className="space-y-2 text-sm">
-							<div className="p-3 bg-purple-50 rounded">
-								<strong>{t('3D_기본재질')}</strong>: {t('3D_기본재질설명')}
-							</div>
-							<div className="p-3 bg-purple-50 rounded">
-								<strong>{t('3D_램버트재질')}</strong>: {t('3D_램버트재질설명')}
-							</div>
-							<div className="p-3 bg-purple-50 rounded">
-								<strong>{t('3D_물리재질')}</strong>: {t('3D_물리재질설명')}
-							</div>
-						</div>
+					<div className="p-4 bg-blue-50 rounded-lg">
+						<h3 className="font-semibold text-blue-800 mb-2">🎨 {t('3D_재질이란')}</h3>
+						<p className="text-sm text-blue-600">
+							{t('3D_재질이란설명')}
+						</p>
 					</div>
-
-					<div>
-						<h3 className="text-lg font-semibold mb-3 text-orange-600">💡 조명 종류</h3>
-						<div className="space-y-2 text-sm">
-							<div className="p-3 bg-orange-50 rounded">
-								<strong>{t('3D_환경광')}</strong>: 전체적으로 균일한 빛
-							</div>
-							<div className="p-3 bg-orange-50 rounded">
-								<strong>{t('3D_방향광')}</strong>: 태양처럼 한 방향에서 오는 빛
-							</div>
-							<div className="p-3 bg-orange-50 rounded">
-								<strong>{t('3D_점광원')}</strong>: 전구처럼 한 점에서 퍼지는 빛
-							</div>
-						</div>
+					<div className="p-4 bg-green-50 rounded-lg">
+						<h3 className="font-semibold text-green-800 mb-2">💡 {t('3D_조명이란')}</h3>
+						<p className="text-sm text-green-600">
+							{t('3D_조명이란설명')}
+						</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
+	// #endregion
 }

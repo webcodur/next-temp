@@ -1,13 +1,26 @@
+/*
+  파일명: src/app/lab/system-testing/rtl-demo/page.tsx
+  기능: RTL(Right-to-Left) 언어 지원을 테스트하는 데모 페이지
+  책임: `dir` 속성 및 `text-align`을 포함한 RTL 스타일링, 다국어 텍스트 렌더링, 언어 전환 기능을 시각적으로 검증한다.
+*/
+
 'use client';
 
 import React, { useState } from 'react';
+
 import { useTranslations, useLocale } from '@/hooks/useI18n';
 
 export default function RTLDemoPage() {
+	// #region 훅
 	const t = useTranslations();
 	const { currentLocale, changeLocale } = useLocale();
-	const [testText, setTestText] = useState(t('RTL데모_기본테스트텍스트'));
+	// #endregion
 
+	// #region 상태
+	const [testText, setTestText] = useState(t('RTL데모_기본테스트텍스트'));
+	// #endregion
+
+	// #region 상수
 	const demoTexts = [
 		{
 			label: t('RTL데모_한국어텍스트'),
@@ -74,7 +87,9 @@ export default function RTLDemoPage() {
 			),
 		},
 	];
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-6 space-y-8">
 			<div className="text-center">
@@ -253,4 +268,5 @@ export default function RTLDemoPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

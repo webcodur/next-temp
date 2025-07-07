@@ -1,16 +1,28 @@
+/*
+  파일명: src/app/lab/ui-data/list-highlight-marker/page.tsx
+  기능: `ListHighlightMarker` 컴포넌트의 선택 및 하이라이트 기능을 테스트하는 페이지
+  책임: 기본 리스트와 비활성화 항목이 포함된 리스트를 렌더링하고, 마우스 클릭 및 키보드(방향키, Enter)를 통한 항목 선택 및 탐색 기능을 검증한다.
+*/
+
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import ListHighlightMarker from '@/components/ui/ui-data/list-highlight-marker/ListHighlightMarker';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function ListHighlightMarkerPage() {
+	// #region 훅
 	const t = useTranslations();
+	// #endregion
+
+	// #region 상태
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 	const [mixedSelectedIds, setMixedSelectedIds] = useState<string[]>([]);
+	// #endregion
 
-	// 기본 리스트 항목들
+	// #region 상수
 	const basicItems = useMemo(() => [
 		{ id: '1', label: `${t('리스트하이라이트_아이템')} 1` },
 		{ id: '2', label: `${t('리스트하이라이트_아이템')} 2` },
@@ -19,7 +31,6 @@ export default function ListHighlightMarkerPage() {
 		{ id: '5', label: `${t('리스트하이라이트_아이템')} 5` },
 	], [t]);
 
-	// 비활성화 항목이 포함된 리스트
 	const mixedItems = useMemo(() => [
 		{ id: '1', label: `${t('리스트하이라이트_아이템')} 1` },
 		{ id: '2', label: `${t('리스트하이라이트_아이템')} 2` },
@@ -30,8 +41,9 @@ export default function ListHighlightMarkerPage() {
 		{ id: '7', label: `${t('리스트하이라이트_아이템')} 7` },
 		{ id: '8', label: `${t('리스트하이라이트_아이템')} 8` },
 	], [t]);
+	// #endregion
 
-	// 선택 처리 함수
+	// #region 핸들러
 	const handleSelect = (id: string, selectedList: string[], setSelectedList: (ids: string[]) => void) => {
 		const newSelectedIds = selectedList.includes(id)
 			? selectedList.filter(selectedId => selectedId !== id)
@@ -39,8 +51,9 @@ export default function ListHighlightMarkerPage() {
 		setSelectedList(newSelectedIds);
 		console.log('Selected items:', newSelectedIds);
 	};
+	// #endregion
 
-	// 키보드 네비게이션 처리
+	// #region useEffect: 키보드 네비게이션
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === 'ArrowUp') {
@@ -61,7 +74,9 @@ export default function ListHighlightMarkerPage() {
 		window.addEventListener('keydown', handleKeyDown);
 		return () => window.removeEventListener('keydown', handleKeyDown);
 	}, [highlightedIndex, selectedIds, basicItems]);
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="container mx-auto p-6 space-y-8">
 			<div>
@@ -69,7 +84,6 @@ export default function ListHighlightMarkerPage() {
 				<p className="text-gray-600 mb-8">{t('리스트하이라이트_설명')}</p>
 			</div>
 
-			{/* 기본 리스트 */}
 			<div className="space-y-4">
 				<h2 className="text-xl font-semibold">{t('리스트하이라이트_기본리스트')}</h2>
 				<p className="text-gray-600">
@@ -92,7 +106,6 @@ export default function ListHighlightMarkerPage() {
 				</div>
 			</div>
 
-			{/* 비활성화 항목 포함 */}
 			<div className="space-y-4">
 				<h2 className="text-xl font-semibold">{t('리스트하이라이트_비활성화항목')}</h2>
 				<p className="text-gray-600">{t('리스트하이라이트_일부비활성화')}</p>
@@ -114,4 +127,5 @@ export default function ListHighlightMarkerPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 }

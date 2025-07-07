@@ -1,19 +1,29 @@
+/*
+  파일명: src/app/lab/ui-3d/threejs-basics/page.tsx
+  기능: Three.js의 가장 기본적인 3요소(Scene, Camera, Renderer)를 사용하여 3D 렌더링의 핵심 원리를 시연하는 페이지
+  책임: 정육면체(Cube)를 생성하고, 애니메이션 루프를 통해 회전시키며, 각 구성 요소의 역할을 설명한다.
+*/
+
 'use client';
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function BasicsPage() {
+	// #region 훅
 	const t = useTranslations();
 	const mountRef = useRef<HTMLDivElement>(null);
 	const sceneRef = useRef<THREE.Scene | null>(null);
 	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+	// #endregion
 
+	// #region useEffect: 씬 초기화 및 애니메이션
 	useEffect(() => {
 		if (!mountRef.current) return;
 
-		const mount = mountRef.current; // ref 값을 변수로 복사
+		const mount = mountRef.current;
 
 		// #region Scene 생성
 		const scene = new THREE.Scene();
@@ -68,7 +78,9 @@ export default function BasicsPage() {
 		};
 		// #endregion
 	}, []);
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-8 space-y-8">
 			<div className="p-6 rounded-xl neu-flat">
@@ -152,4 +164,5 @@ export default function BasicsPage() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 
