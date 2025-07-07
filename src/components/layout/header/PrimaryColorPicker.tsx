@@ -44,9 +44,10 @@ function hexToHslString(hex: string): string {
 
 interface PrimaryColorPickerProps {
   className?: string;
+  iconColorClass?: string;
 }
 
-export function PrimaryColorPicker({ className }: PrimaryColorPickerProps) {
+export function PrimaryColorPicker({ className, iconColorClass = 'text-primary' }: PrimaryColorPickerProps) {
   const [color] = useAtom(primaryColorAtom);
   const [, setPrimaryColor] = useAtom(setPrimaryColorAtom);
 
@@ -91,7 +92,7 @@ export function PrimaryColorPicker({ className }: PrimaryColorPickerProps) {
           fill="none" 
           stroke="currentColor" 
           strokeWidth="2"
-          className="text-muted-foreground"
+          className={iconColorClass}
         >
           <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
           <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />

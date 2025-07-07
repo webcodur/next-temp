@@ -7,6 +7,8 @@ import FieldEmail from '@/components/ui/ui-input/field/text/FieldEmail';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import { FieldSortSelect } from '@/components/ui/ui-input/field/select/FieldSortSelect';
 import FieldDatePicker from '@/components/ui/ui-input/field/datepicker/FieldDatePicker';
+import FieldTimePicker from '@/components/ui/ui-input/field/time/FieldTimePicker';
+import TimeRangePicker from '@/components/ui/ui-input/field/time/unit/TimeRangePicker';
 import { Option, SortDirection } from '@/components/ui/ui-input/field/core/types';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -22,11 +24,19 @@ export default function FieldPage() {
 	const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
 	// #region DatePicker 상태들
-	const [singleDate, setSingleDate] = useState<string>('');
-	const [startDate, setStartDate] = useState<string>('');
-	const [endDate, setEndDate] = useState<string>('');
-	const [dateTimeValue, setDateTimeValue] = useState<string>('');
-	const [monthValue, setMonthValue] = useState<string>('');
+	const [singleDate, setSingleDate] = useState<Date | null>(null);
+	const [startDate, setStartDate] = useState<Date | null>(null);
+	const [endDate, setEndDate] = useState<Date | null>(null);
+	const [dateTimeValue, setDateTimeValue] = useState<Date | null>(null);
+	const [monthValue, setMonthValue] = useState<Date | null>(null);
+	const [rangeStartDate, setRangeStartDate] = useState<Date | null>(null);
+	const [rangeEndDate, setRangeEndDate] = useState<Date | null>(null);
+	// #endregion
+
+	// #region TimePicker 상태들
+	const [timeValue, setTimeValue] = useState<string>('');
+	const [workStartTime, setWorkStartTime] = useState<string>('');
+	const [workEndTime, setWorkEndTime] = useState<string>('');
 	// #endregion
 
 	const tagOptions: Option[] = [
@@ -147,7 +157,7 @@ export default function FieldPage() {
 							<FieldDatePicker
 								id="event-date"
 								label={t('필드테스트_이벤트날짜')}
-								type="date"
+								datePickerType="single"
 								placeholder={t('필드테스트_날짜선택')}
 								value={singleDate}
 								onChange={setSingleDate}
@@ -157,7 +167,7 @@ export default function FieldPage() {
 							<FieldDatePicker
 								id="start-date"
 								label={t('필드테스트_시작날짜')}
-								type="date"
+								datePickerType="single"
 								value={startDate}
 								onChange={setStartDate}
 							/>
@@ -166,7 +176,7 @@ export default function FieldPage() {
 							<FieldDatePicker
 								id="end-date"
 								label={t('필드테스트_종료날짜')}
-								type="date"
+								datePickerType="single"
 								value={endDate}
 								onChange={setEndDate}
 							/>
@@ -175,7 +185,7 @@ export default function FieldPage() {
 							<FieldDatePicker
 								id="datetime"
 								label={t('필드테스트_예약일시')}
-								type="datetime-local"
+								datePickerType="datetime"
 								placeholder={t('필드테스트_날짜시간선택')}
 								value={dateTimeValue}
 								onChange={setDateTimeValue}
@@ -185,10 +195,48 @@ export default function FieldPage() {
 							<FieldDatePicker
 								id="month"
 								label={t('필드테스트_보고서월')}
-								type="month"
+								datePickerType="month"
 								placeholder={t('필드테스트_월선택')}
 								value={monthValue}
 								onChange={setMonthValue}
+							/>
+
+							{/* 날짜 범위 선택 */}
+							<FieldDatePicker
+								id="date-range"
+								label={t('필드테스트_날짜범위')}
+								datePickerType="range"
+								startDate={rangeStartDate}
+								endDate={rangeEndDate}
+								onStartDateChange={setRangeStartDate}
+								onEndDateChange={setRangeEndDate}
+							/>
+						</div>
+					</section>
+					{/* #endregion */}
+
+					{/* #region TimePicker 필드들 */}
+					<section>
+						<h2 className="mb-4 text-lg font-semibold">{t('필드테스트_시간선택필드')}</h2>
+						<div className="space-y-4">
+							{/* 기본 시간 선택 */}
+							<FieldTimePicker
+								id="appointment-time"
+								label={t('필드테스트_예약시간')}
+								placeholder={t('필드테스트_시간선택')}
+								value={timeValue}
+								onChange={setTimeValue}
+							/>
+
+							{/* 근무 시간 범위 */}
+							<TimeRangePicker
+								label={t('필드테스트_근무시간')}
+								startId="work-start"
+								endId="work-end"
+								startValue={workStartTime}
+								endValue={workEndTime}
+								onStartChange={setWorkStartTime}
+								onEndChange={setWorkEndTime}
 							/>
 						</div>
 					</section>

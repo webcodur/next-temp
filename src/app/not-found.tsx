@@ -16,7 +16,7 @@ export default function NotFound() {
 		<div className="flex justify-center items-center p-4 min-h-screen">
 			<div className="w-full max-w-md text-center">
 				{/* #region 메인 컨테이너 */}
-				<div className="neu-raised p-8 space-y-8 rounded-2xl">
+				<div className="p-8 space-y-8 rounded-2xl neu-raised">
 					{/* 404 숫자 */}
 					<div className="space-y-4">
 						<h1 className="text-9xl font-bold font-multilang text-primary">

@@ -74,4 +74,22 @@ body {
 	direction: ltr;
 	text-align: left;
 }
+
+/* 브라우저 자동완성 스타일 재정의 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 30px hsl(var(--background)) inset !important;
+	-webkit-text-fill-color: hsl(var(--foreground)) !important;
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+/* Firefox 자동완성 */
+input:-moz-autofill {
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
 /* #endregion */

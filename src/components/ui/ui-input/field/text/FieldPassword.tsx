@@ -56,7 +56,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 				</div>
 			)}
 			<div className="relative">
-				<Key className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
+				<Key className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
 				<input
 					ref={inputRef}
 					id={id}

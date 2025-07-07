@@ -67,15 +67,15 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 							<div
 								className={`w-6 h-6 flex items-center justify-center rounded-full me-3 border transition-all duration-200 focus-within:neu-inset ${
 									isSelected
-										? 'neu-inset bg-background border-border shadow-inner'
+										? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
 										: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'
 								}`}>
 								{isSelected && (
-									<div className="w-3 h-3 bg-foreground rounded-full"></div>
+									<div className="w-3 h-3 bg-primary rounded-full shadow-sm"></div>
 								)}
 							</div>
 							<span
-								className={`text-sm font-medium ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+								className={`text-sm font-medium ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
 								{option.label}
 							</span>
 						</div>

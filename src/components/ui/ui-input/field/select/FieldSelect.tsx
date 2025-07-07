@@ -75,7 +75,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 					}}
 				>
 					<span className={`${FIELD_STYLES.startIcon}`}>
-						{startIcon || <List className="neu-icon-inactive w-4 h-4" />}
+						{startIcon || <List className="neu-icon-active w-4 h-4" />}
 					</span>
 					<span className={`${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}>
 						{selectedOption ? selectedOption.label : placeholder}
@@ -83,7 +83,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 					<ChevronDown 
 						className={`
 							${FIELD_STYLES.endIcon}
-							w-4 h-4 transition-transform
+							w-4 h-4
 							${isOpen ? 'rotate-180' : ''}
 						`}
 					/>
@@ -96,6 +96,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						selectedValue={value}
 						onSelect={handleSelect}
 						maxHeight={200}
+						triggerRef={selectRef as React.RefObject<HTMLElement>}
 					/>
 				)}
 			</div>

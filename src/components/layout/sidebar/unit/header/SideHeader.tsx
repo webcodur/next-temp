@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAtom } from 'jotai';
-import { Building2, Minus, Search } from 'lucide-react';
+import { Minus, Search } from 'lucide-react';
+import Image from 'next/image';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
@@ -104,10 +105,16 @@ export function SideHeader() {
 						<Link
 							href="/"
 							onClick={handleLogoClick}
-							className={`flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-raised group transition-all duration-300 ${isRTL ? 'flex-row-reverse' : ''}`}>
+							className={`flex gap-3 justify-center items-center p-2 rounded-xl select-none neu-elevated group transition-all duration-300 ${isRTL ? 'flex-row-reverse' : ''}`}>
 							{/* 로고 아이콘 */}
 							<div className="flex justify-center items-center shrink-0">
-								<Building2 className="w-6 h-6 transition-all duration-300 text-foreground/80 group-hover:text-primary group-hover:scale-105" />
+								<Image
+									src="/icons/testLogo/lg.png"
+									alt="logo"
+									width={24}
+									height={24}
+									className="w-6 h-6 transition-all duration-300 group-hover:scale-105"
+								/>
 							</div>
 							{/* 타이틀 텍스트 */}
 							<div className="text-lg font-semibold text-foreground/90 truncate max-w-[160px] transition-colors duration-300 group-hover:text-primary/90">

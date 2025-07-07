@@ -86,22 +86,25 @@ export function SideEndPanel({
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
 	const [expandCollapseTooltipOpen, setExpandCollapseTooltipOpen] = useState(false);
+	// 전체 펼침 / 접힘 버튼 비활성화 상태
+	const [isExpandCollapseProcessing, setIsExpandCollapseProcessing] = useState(false);
 	const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
 
-	// areAllExpanded 상태가 변경될 때 툴팁을 강제로 닫고 다시 열기
+	// areAllExpanded 상태가 변경될 때 툴팁 텍스트를 갱신하기 위해 잠시 닫았다가 다시 연다
 	useEffect(() => {
 		if (expandCollapseTooltipOpen) {
 			setExpandCollapseTooltipOpen(false);
-			// 짧은 지연 후 다시 열기
-			setTimeout(() => {
-				setExpandCollapseTooltipOpen(true);
-			}, 100);
+			// 짧은 지연 후 다시 열어 최신 라벨을 보여준다
+			setTimeout(() => setExpandCollapseTooltipOpen(true), 100);
 		}
-	}, [areAllExpanded, expandCollapseTooltipOpen]);
+	// ※ 의도적으로 expandCollapseTooltipOpen 을 의존성에 넣지 않는다.
+	//   넣을 경우 마우스 hover 만으로도 effect 가 반복 실행되어 툴팁이 보이지 않게 된다.
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [areAllExpanded]);
 
 	// 툴팁 표시 제어
 	const handleTooltipMouseEnter = () => {
@@ -195,6 +198,23 @@ export function SideEndPanel({
 		return midItem.botItems.some((botItem) => pathname === botItem.href);
 	};
 
+	// 전체 펼침 / 접힘 버튼 클릭 핸들러
+	const handleExpandCollapseClick = (e: React.MouseEvent) => {
+		if (isExpandCollapseProcessing) return; // 이미 처리 중이면 무시
+		setIsExpandCollapseProcessing(true);
+
+		e.preventDefault();
+		e.stopPropagation();
+		if (areAllExpanded) {
+			void onCollapseAll?.();
+		} else {
+			void onExpandAll?.();
+		}
+
+		// 애니메이션(300ms) 동안 재클릭 방지, 여유를 두어 500ms 후 활성화
+		setTimeout(() => setIsExpandCollapseProcessing(false), 500);
+	};
+
 	return (
 		<TooltipProvider delayDuration={0}>
 			<div
@@ -252,24 +272,18 @@ export function SideEndPanel({
 
 					{/* 우측: 전체 열기/닫기 버튼 - 상태에 따라 토글 */}
 					<div className="flex items-center">
-						<Tooltip open={expandCollapseTooltipOpen}>
+						<Tooltip open={!isExpandCollapseProcessing && expandCollapseTooltipOpen}>
 							<TooltipTrigger asChild>
 								<Button
 									type="button"
 									variant="ghost"
 									size="icon"
-									onMouseEnter={() => setExpandCollapseTooltipOpen(true)}
-									onMouseLeave={() => setExpandCollapseTooltipOpen(false)}
-									onClick={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-										if (areAllExpanded) {
-											void onCollapseAll?.();
-										} else {
-											void onExpandAll?.();
-										}
-									}}
-									className="w-6 h-6 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105">
+									disabled={isExpandCollapseProcessing}
+									onMouseEnter={() => !isExpandCollapseProcessing && setExpandCollapseTooltipOpen(true)}
+									onMouseLeave={() => !isExpandCollapseProcessing && setExpandCollapseTooltipOpen(false)}
+									onClick={handleExpandCollapseClick}
+									className={`w-6 h-6 rounded-md transition-all duration-150 cursor-pointer hover:bg-muted/40 hover:scale-105 ${isExpandCollapseProcessing ? 'opacity-40 pointer-events-none' : ''}`}
+								>
 									<ChevronsUpDown className="w-4 h-4 cursor-pointer neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>

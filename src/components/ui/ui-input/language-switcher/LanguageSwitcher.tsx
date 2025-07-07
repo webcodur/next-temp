@@ -5,24 +5,33 @@ import { ChevronDown } from 'lucide-react';
 import { useLocale } from '@/hooks/useI18n';
 import { type Locale } from '@/lib/i18n';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 
 interface LanguageSwitcherProps {
 	variant?: 'header' | 'sidebar' | 'inline';
 	className?: string;
+	hideChevron?: boolean;
 }
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 	variant = 'inline',
 	className = '',
+	hideChevron = false,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const menuRef = useRef<HTMLDivElement>(null);
 	const { currentLocale, changeLocale, availableLocales, allLocaleMetadata } = useLocale();
 
 	// 외부 클릭 감지
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+			if (
+				containerRef.current &&
+				!containerRef.current.contains(event.target as Node) &&
+				menuRef.current &&
+				!menuRef.current.contains(event.target as Node)
+			) {
 				setIsOpen(false);
 			}
 		};
@@ -79,23 +88,26 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 						className="w-full h-full rounded-full object-cover"
 					/>
 				</div>
-				<ChevronDown
-					className={`w-3 h-3 ml-1 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-				/>
+				{!hideChevron && (
+					<ChevronDown
+						className={`w-3 h-3 ml-1 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+					/>
+				)}
 			</button>
 
 			{/* 드롭다운 메뉴 */}
-			{isOpen && (
+			{isOpen && typeof window !== 'undefined' && createPortal(
 				<div
-					className={`
-						absolute top-full left-1/2 transform -translate-x-1/2 z-20 mt-2 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg neu-flat focus:outline-hidden
-						${styles.dropdown}
-					`}
+					ref={menuRef}
+					className={
+						`fixed z-[9999] mt-2 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg neu-flat bg-background focus:outline-hidden
+						${styles.dropdown}`
+					}
+					style={{ top: (containerRef.current?.getBoundingClientRect().bottom ?? 0) + 4, left: (containerRef.current?.getBoundingClientRect().left ?? 0) + (containerRef.current?.offsetWidth ?? 0)/2 }}
 				>
 					<div className="py-1 rounded-lg bg-background">
 						{availableLocales.filter(locale => locale !== currentLocale).map((locale) => {
 							const meta = allLocaleMetadata[locale];
-
 							return (
 								<button
 									key={locale}
@@ -103,19 +115,14 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 									className="w-full p-2 hover:bg-muted/50 transition-colors flex items-center justify-center"
 								>
 									<div className="relative w-8 h-8">
-										<Image
-											src={meta.flag}
-											alt={meta.name}
-											width={32}
-											height={32}
-											className="w-full h-full rounded-full object-cover"
-										/>
+										<Image src={meta.flag} alt={meta.name} width={32} height={32} className="w-full h-full rounded-full object-cover" />
 									</div>
 								</button>
 							);
 						})}
 					</div>
-				</div>
+				</div>,
+				document.body
 			)}
 		</div>
 	);

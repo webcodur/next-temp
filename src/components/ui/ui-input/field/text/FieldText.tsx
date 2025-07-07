@@ -49,7 +49,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 				</label>
 			)}
 			<div className="relative">
-				<StartIcon className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
+				<StartIcon className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
 				<input
 					ref={inputRef}
 					id={id}

@@ -7,7 +7,8 @@ import { useSidebarSearch } from './useSidebarSearch';
 import { useMenuSearch } from './useMenuSearch';
 import { useTranslations, useLocale } from '@/hooks/useI18n';
 import { userAtom } from '@/store/auth';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
+import ModalContainer from '@/components/ui/ui-layout/modal/unit/ModalContainer';
+// import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PanelForSite from './panelForSite/PanelForSite';
 import PanelForMenu from './panelForMenu/PanelForMenu';
 import { SearchModalProps, SiteResult, MenuResult } from './types';
@@ -45,10 +46,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 	};
 
 	return (
-		<Modal
+		<ModalContainer
 			isOpen={isOpen}
 			onClose={onClose}
-			size="xl">
+			>
 			<div className="space-y-6">
 				{/* 탭 버튼 - 운영진에게만 보임 */}
 				{isAdmin && (
@@ -91,7 +92,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 					<PanelForMenu onItemSelect={handleMenuSelectAndClose} />
 				)}
 			</div>
-		</Modal>
+		</ModalContainer>
 	);
 };
 

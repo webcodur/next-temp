@@ -95,12 +95,12 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 					<div
 						className={`${currentSize.track} relative rounded-full transition-all duration-200 border focus-within:neu-inset ${
 							checked
-								? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
+								? 'neu-inset bg-primary-1 border-primary-3 shadow-inner'
 								: 'neu-flat bg-muted border-border shadow-xs hover:shadow-md'
 						}`}>
 						<div
-							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-background border border-border rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
-								checked ? 'border-primary/20' : 'border-border'
+							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-background border rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
+								checked ? 'border-primary-6 bg-primary-6 text-white shadow-primary/20' : 'border-border'
 							}`}
 						/>
 					</div>

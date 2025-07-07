@@ -79,7 +79,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 
   // #region 렌더링
 	return (
-		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-elevated">
+		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-elevated bg-card">
 			{/* 헤더 */}
 			<div className="mb-8 text-center">
 				<h1 className="mb-2 text-2xl font-bold font-multilang text-foreground">로그인</h1>

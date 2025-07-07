@@ -6,6 +6,7 @@ import { useAtom } from 'jotai';
 import { LoginForm } from '@/components/layout/login/LoginForm';
 import { loginAtom, isAuthenticatedAtom } from '@/store/auth';
 import { useTranslations } from '@/hooks/useI18n';
+import ModalContainer from '@/components/ui/ui-layout/modal/unit/ModalContainer';
 
 interface LoginFormData {
 	username: string;
@@ -15,6 +16,7 @@ interface LoginFormData {
 
 export default function LoginPage() {
 	const [isLoading, setIsLoading] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(true);
 	const [, login] = useAtom(loginAtom);
 	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
 	const router = useRouter();
@@ -59,6 +61,11 @@ export default function LoginPage() {
 		}
 	};
 
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		router.push('/');
+	};
+
 	// 이미 로그인된 경우 로딩 표시
 	if (isAuthenticated) {
 		return (
@@ -70,8 +77,8 @@ export default function LoginPage() {
 	}
 
 	return (
-		<div className="p-4 w-full max-w-md">
+		<ModalContainer isOpen={isModalOpen} onClose={handleCloseModal}>
 			<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-		</div>
+		</ModalContainer>
 	);
 }

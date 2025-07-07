@@ -53,7 +53,7 @@ const Tabs = React.forwardRef<
 		<div 
 			ref={ref}
 			className={cn(
-				'relative overflow-hidden rounded-2xl neu-flat transition-all duration-200', 
+				'relative overflow-hidden rounded-2xl transition-all duration-200', 
 				variant === 'filled' && 'bg-muted',
 				className
 			)}

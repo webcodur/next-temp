@@ -71,13 +71,13 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 					<div
 						className={`w-6 h-6 flex items-center justify-center rounded-md transition-all duration-200 border focus-within:neu-inset ${
 							isChecked || indeterminate
-								? 'neu-inset bg-background border-border shadow-inner'
+								? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
 								: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'
 						}`}>
 						{indeterminate ? (
-							<Minus className="w-4 h-4 text-foreground" />
+							<Minus className="w-4 h-4 text-primary" />
 						) : isChecked ? (
-							<Check className="w-4 h-4 text-foreground" />
+							<Check className="w-4 h-4 text-primary" />
 						) : null}
 					</div>
 				</div>

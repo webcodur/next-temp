@@ -63,7 +63,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 				</div>
 			)}
 			<div className="relative">
-				<Mail className={`${FIELD_STYLES.startIcon} neu-icon-inactive`} />
+				<Mail className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
 				<input
 					ref={inputRef}
 					id={id}

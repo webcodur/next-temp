@@ -6,6 +6,8 @@ import { parseCarAllowType } from '@/data/mockParkingData';
 import { LicensePlate } from '@/components/ui/system-testing/license-plate';
 import { useTranslations } from '@/hooks/useI18n';
 
+type TableSize = 'sm' | 'md' | 'lg';
+
 interface VehicleListTableProps {
 	vehicles: VehicleEntry[];
 	filters: SearchFilters;
@@ -16,6 +18,7 @@ interface VehicleListTableProps {
 	isLoading: boolean;
 	onFiltersChange: (filters: SearchFilters) => void;
 	onSearch: () => void;
+	size?: TableSize;
 }
 
 const VehicleListTable: React.FC<VehicleListTableProps> = ({
@@ -28,8 +31,40 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	isLoading,
 	onFiltersChange,
 	onSearch,
+	size = 'sm',
 }) => {
 	const t = useTranslations();
+	
+	// 사이즈 기반 클래스 매핑
+	const sizeClasses = {
+		sm: {
+			headerText: 'text-xs',
+			rowText: 'text-xs',
+			rowPadding: 'py-2',
+			plateWidth: '120px',
+		},
+		md: {
+			headerText: 'text-sm',
+			rowText: 'text-sm',
+			rowPadding: 'py-2.5',
+			plateWidth: '140px',
+		},
+		lg: {
+			headerText: 'text-base',
+			rowText: 'text-base',
+			rowPadding: 'py-3',
+			plateWidth: '160px',
+		},
+	} as const;
+
+	const currentSize = sizeClasses[size];
+	
+	// 컬럼 너비 (% 기준) 및 최소 너비(px)
+	const columnPercents = ['8', '20', '25', '12', '35'];
+	const columnMinWidths = ['64', '120', '140', '96', '160'];
+	const gridTemplateColumns = columnPercents
+		.map((pct, idx) => `minmax(${columnMinWidths[idx]}px, ${pct}%)`)
+		.join(' ');
 	
 	// 필터링된 차량 목록
 	const filteredVehicles = vehicles.filter((vehicle) => {
@@ -94,12 +129,14 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 				<div className="flex overflow-hidden flex-col h-full">
 					{/* 테이블 헤더 - 고정 */}
 					<div className="border-b bg-muted border-border shrink-0">
-						<div className="flex text-xs font-medium text-muted-foreground">
-							<div className="px-2 py-1 w-16 text-start">{t('주차_테이블_헤더_순번')}</div>
-							<div className="px-2 py-1 w-32 text-start">{t('주차_테이블_헤더_차량구분')}</div>
-							<div className="px-2 py-1 w-40 text-start">{t('주차_테이블_헤더_차량번호')}</div>
-							<div className="px-2 py-1 w-20 text-start">{t('주차_테이블_헤더_입출차')}</div>
-							<div className="flex-1 px-2 py-1 text-start">{t('주차_테이블_헤더_이용시간')}</div>
+						<div
+							className={`grid ${currentSize.headerText} font-medium text-muted-foreground`}
+							style={{ gridTemplateColumns }}>
+							<div className="px-2 py-1 text-start">{t('주차_테이블_헤더_순번')}</div>
+							<div className="px-2 py-1 text-start">{t('주차_테이블_헤더_차량구분')}</div>
+							<div className="px-2 py-1 text-start">{t('주차_테이블_헤더_차량번호')}</div>
+							<div className="px-2 py-1 text-start">{t('주차_테이블_헤더_입출차')}</div>
+							<div className="px-2 py-1 text-start">{t('주차_테이블_헤더_이용시간')}</div>
 						</div>
 					</div>
 
@@ -115,20 +152,21 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 									<div
 										key={`${vehicle.id}_${vehicle.status}_${index}`}
 										onClick={() => handleRowClick(vehicle)}
-										className={`flex items-center border-b border-border hover:bg-muted cursor-pointer transition-colors text-xs py-2 ${
+										className={`grid items-center border-b border-border hover:bg-muted cursor-pointer transition-colors ${currentSize.rowText} ${currentSize.rowPadding} ${
 											selectedVehicle?.id === vehicle.id &&
 											selectedVehicle?.status === vehicle.status
 												? 'bg-primary/10'
 												: vehicle.is_black === 'Y'
 													? 'bg-destructive/10'
 													: ''
-										}`}>
-										<div className="px-2 py-1 w-16 text-foreground">
+										}`}
+										style={{ gridTemplateColumns }}>
+										<div className="px-2 py-1 text-foreground">
 											{(filteredVehicles.length - index)
 												.toString()
 												.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 										</div>
-										<div className="px-2 py-1 w-32">
+										<div className="px-2 py-1 text-foreground">
 											<div>
 												<div className="font-medium text-foreground">
 													{parseCarAllowType(vehicle.type)}
@@ -145,24 +183,24 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												)}
 											</div>
 										</div>
-										<div className="px-2 py-1 w-40">
+										<div className="px-2 py-1 text-foreground">
 											<div className="flex flex-col gap-1">
 												<LicensePlate
 													plateNumber={vehicle.car_number}
-													width="120px"
+													width={currentSize.plateWidth}
 												/>
 												{vehicle.modify_car_number && (
 													<>
 														<span className="text-xs text-warning">→</span>
 														<LicensePlate
 															plateNumber={vehicle.modify_car_number}
-															width="120px"
+															width={currentSize.plateWidth}
 														/>
 													</>
 												)}
 											</div>
 										</div>
-										<div className="px-2 py-1 w-20">
+										<div className="px-2 py-1 text-foreground">
 											<div>
 												<span
 													className={`inline-flex px-1 py-0.5 rounded text-xs font-medium ${
@@ -179,7 +217,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 												)}
 											</div>
 										</div>
-										<div className="flex-1 px-2 py-1 text-foreground">
+										<div className="px-2 py-1 text-foreground">
 											{vehicle.use_time}
 										</div>
 									</div>

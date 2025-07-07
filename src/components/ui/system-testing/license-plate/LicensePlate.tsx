@@ -49,8 +49,9 @@ const LicensePlate: React.FC<LicensePlateProps> = ({
 		return Math.max(baseWidth, textLength * charWidth + imageWidth + 40);
 	};
 
-	// width prop이 있으면 우선 사용, 없으면 자동 계산
-	const plateWidth = width ? parseInt(width.replace('px', '')) : getPlateWidth();
+	// width prop이 있으면 최소값으로 사용하되, 계산된 최소 너비보다 작으면 자동 보정
+	const requestedWidth = width ? parseInt(width.replace(/[^0-9]/g, '')) : undefined;
+	const plateWidth = Math.max(requestedWidth ?? 0, getPlateWidth());
 
 	// RTL에 따른 패널 스타일
 	const getStartPanelStyle = (): React.CSSProperties => ({

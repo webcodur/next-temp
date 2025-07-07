@@ -159,6 +159,7 @@ export default function Home() {
 							isLoading={isLoading}
 							onFiltersChange={handleFiltersChange}
 							onSearch={handleSearch}
+							size="lg"
 						/>
 					</div>
 

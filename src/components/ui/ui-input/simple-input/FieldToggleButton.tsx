@@ -34,21 +34,21 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 
 	const variantStyles = {
 		default: pressed
-			? 'neu-inset bg-muted text-muted-foreground shadow-inner'
+			? 'neu-inset bg-primary/10 text-primary border-primary/20 shadow-inner'
 			: 'neu-raised bg-background text-foreground shadow-md hover:shadow-lg',
 		'outline-solid': pressed
-			? 'neu-inset bg-muted text-muted-foreground border border-border shadow-inner'
+			? 'neu-inset bg-primary/10 text-primary border-primary/30 shadow-inner'
 			: 'neu-flat bg-background text-foreground border border-border shadow-xs hover:shadow-md',
 		ghost: pressed
-			? 'bg-muted text-muted-foreground'
+			? 'bg-primary/10 text-primary'
 			: 'bg-transparent text-foreground hover:bg-muted',
 	};
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className="flex items-center justify-between h-6">
+			<div className="flex justify-between items-center h-6">
 				{label && (
-					<label className="text-sm font-medium text-foreground leading-6">
+					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
 					</label>
 				)}
