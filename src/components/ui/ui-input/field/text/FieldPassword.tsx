@@ -60,6 +60,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 				<input
 					ref={inputRef}
 					id={id}
+					name={id}
 					type={showPassword ? 'text' : 'password'}
 					placeholder={placeholder}
 					value={value}
@@ -73,6 +74,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 						onBlur?.();
 					}}
 					disabled={disabled}
+					autoComplete="new-password"
 					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`
 						${FIELD_STYLES.container} 

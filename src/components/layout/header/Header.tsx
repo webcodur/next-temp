@@ -5,6 +5,7 @@ import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
 import { SettingsButton } from '@/components/layout/header/SettingsButton';
+import { GuideButton } from '@/components/layout/header/GuideButton';
 import clsx from 'clsx';
 
 export function Header() {
@@ -27,6 +28,8 @@ export function Header() {
 
 			{/* Right Section */}
 			<div className="flex gap-3 items-center">
+				{/* 가이드 버튼 */}
+				<GuideButton className={squareButton} />
 				{/* 설정 버튼 */}
 				<SettingsButton className={squareButton} />
 				{/* 프로필 버튼 */}

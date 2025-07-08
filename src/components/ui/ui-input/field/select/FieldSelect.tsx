@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { List, ChevronDown } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/useI18n';
+import { useSelectLogic } from '../shared/useSelectLogic';
 
 interface FieldSelectProps {
 	id: string;
@@ -33,26 +34,32 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	onFocus,
 	onBlur,
 }) => {
-	const [isOpen, setIsOpen] = useState(false);
 	const [isFocused, setIsFocused] = useState(false);
-	const selectRef = useRef<HTMLDivElement>(null);
 	const { isRTL } = useLocale();
 
-	const selectedOption = options.find(option => option.value === value);
+	// use shared select logic (handles outside click & keyboard nav)
+	const {
+		isOpen,
+		setIsOpen,
+		highlightedIndex,
+		containerRef,
+		selectedOption,
+		handleOptionSelect,
+	} = useSelectLogic(options, value, onChange);
 
 	const handleSelect = (optionValue: string) => {
-		onChange?.(optionValue);
-		setIsOpen(false);
+		const opt = options.find((o) => o.value === optionValue);
+		if (opt) handleOptionSelect(opt);
 	};
 
 	return (
-		<div className={`relative ${className}`}>
+		<div ref={containerRef} className={`relative ${className}`}>
 			{label && (
 				<label htmlFor={id} className={FIELD_STYLES.label}>
 					{label}
 				</label>
 			)}
-			<div className="relative" ref={selectRef}>
+			<div className="relative">
 				<div
 					className={`
 						${FIELD_STYLES.container}
@@ -75,7 +82,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 					}}
 				>
 					<span className={`${FIELD_STYLES.startIcon}`}>
-						{startIcon || <List className="neu-icon-active w-4 h-4" />}
+						{startIcon || <List className="w-4 h-4 neu-icon-active" />}
 					</span>
 					<span className={`${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}>
 						{selectedOption ? selectedOption.label : placeholder}
@@ -95,8 +102,9 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						options={options}
 						selectedValue={value}
 						onSelect={handleSelect}
+						highlightedIndex={highlightedIndex}
 						maxHeight={200}
-						triggerRef={selectRef as React.RefObject<HTMLElement>}
+						triggerRef={containerRef as React.RefObject<HTMLElement>}
 					/>
 				)}
 			</div>

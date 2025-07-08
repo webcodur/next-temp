@@ -67,6 +67,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 				<input
 					ref={inputRef}
 					id={id}
+					name={id}
 					type="email"
 					placeholder={placeholder}
 					value={value}
@@ -80,6 +81,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 						onBlur?.();
 					}}
 					disabled={disabled}
+					autoComplete="off"
 					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`
 						${FIELD_STYLES.container} 

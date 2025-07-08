@@ -34,6 +34,8 @@ interface SmartTableProps<T> {
 	pageSize?: number;
 	emptyMessage?: string;
 	loadingRows?: number;
+	/** 행 클릭 시 호출되는 콜백 */
+	onRowClick?: (item: T, index: number) => void;
 }
 
 const SmartTable = <T extends Record<string, any>>({
@@ -46,6 +48,7 @@ const SmartTable = <T extends Record<string, any>>({
 	pageSize = 10,
 	emptyMessage = '데이터가 없습니다.',
 	loadingRows = 5,
+	onRowClick,
 }: SmartTableProps<T>) => {
 	const { isRTL } = useLocale();
 	const [sortState, setSortState] = useState<SortState>({ key: '', direction: null });
@@ -69,7 +72,8 @@ const SmartTable = <T extends Record<string, any>>({
 
 	// 로딩 상태 처리
 	const isInitialLoading = data === null;
-	const rawData = data || [];
+	// data가 변할 때만 새로운 배열을 생성하도록 메모이제이션하여 ESLint 경고 해결
+	const rawData = useMemo(() => data ?? [], [data]);
 
 	// 정렬된 데이터
 	const sortedData = useMemo(() => {
@@ -153,9 +157,10 @@ const SmartTable = <T extends Record<string, any>>({
 	};
 
 	return (
-		<div className={`overflow-hidden rounded-lg neu-flat-primary ${className}`}>
+		<div className={`rounded-lg neu-flat-primary ${className}`}>
 			<div className="overflow-x-auto">
-				<table className="w-full bg-background">
+				<table className="w-full min-w-max bg-background rounded-lg overflow-hidden">
+          
 					{/* 테이블 헤더 */}
 					<thead className={`border-b bg-primary-1/20 border-primary-4/30 ${headerClassName}`}>
 						<tr>
@@ -170,7 +175,7 @@ const SmartTable = <T extends Record<string, any>>({
 									<th
 										key={columnKey}
 										className={`
-											px-6 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
+											relative px-2 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
 											text-center
 											${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 											${canSort ? 'cursor-pointer hover:bg-primary-2/30 select-none' : ''}
@@ -179,23 +184,30 @@ const SmartTable = <T extends Record<string, any>>({
 										style={{ width: column.width }}
 										onClick={() => handleSort(columnKey, canSort, actualKey)}
 									>
-										<div className="flex gap-1 justify-center items-center">
-											<span>{column.header}</span>
+										<div className="inline-block relative">
+											{/* 헤더 타이틀 */}
+											<span className="block text-base truncate font-multilang">
+												{column.header}
+											</span>
+
+											{/* 정렬 아이콘 */}
 											{canSort && (
-												<div className="flex flex-col">
-													<ChevronUp 
-														size={12} 
-														className={`
-															transition-colors
-															${sortDirection === 'asc' ? 'text-primary-8' : 'text-primary-4'}
-														`}
+												<div
+													className={`absolute top-1/2 -translate-y-1/2 flex flex-col ${
+														isRTL ? 'right-full mr-1' : 'left-full ml-1'
+													}`}
+												>
+													<ChevronUp
+														size={12}
+														className={
+															`transition-colors ${sortDirection === 'asc' ? 'text-primary-8' : 'text-primary-4'}`
+														}
 													/>
-													<ChevronDown 
-														size={12} 
-														className={`
-															transition-colors -mt-1
-															${sortDirection === 'desc' ? 'text-primary-8' : 'text-primary-4'}
-														`}
+													<ChevronDown
+														size={12}
+														className={
+															`transition-colors -mt-1 ${sortDirection === 'desc' ? 'text-primary-8' : 'text-primary-4'}`
+														}
 													/>
 												</div>
 											)}
@@ -223,9 +235,11 @@ const SmartTable = <T extends Record<string, any>>({
 							actualData.map((item, index) => (
 								<tr
 									key={index}
+									onClick={() => onRowClick?.(item, index)}
 									className={`
 										${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
 										hover:bg-primary-2/[0.6]
+										${onRowClick ? 'cursor-pointer' : ''}
 										${getRowClassName(item, index)}
 									`}
 								>

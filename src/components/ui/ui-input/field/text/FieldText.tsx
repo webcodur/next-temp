@@ -53,6 +53,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 				<input
 					ref={inputRef}
 					id={id}
+					name={id}
 					type="text"
 					placeholder={placeholder}
 					value={value}
@@ -66,6 +67,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 						onBlur?.();
 					}}
 					disabled={disabled}
+					autoComplete="off"
 					maxLength={maxLength}
 					dir={isRTL ? 'rtl' : 'ltr'}
 					className={`

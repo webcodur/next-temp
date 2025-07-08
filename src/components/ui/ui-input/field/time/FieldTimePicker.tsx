@@ -100,9 +100,11 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 				<input
 					type="text"
 					id={id}
+					name={id}
 					value={inputValue}
 					placeholder={placeholder}
 					disabled={disabled}
+					autoComplete="off"
 					dir={isRTL ? 'rtl' : 'ltr'}
 					onFocus={() => !disabled && setIsOpen(true)}
 					onChange={(e) => {

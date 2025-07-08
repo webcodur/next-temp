@@ -65,7 +65,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 			className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-sm bg-background/40"
 			onClick={handleBackdropClick}
 		>
-			<div className={cn('relative bg-background neu-raised rounded-lg shadow-lg', className)}>
+			<div className={cn('relative rounded-lg shadow-lg bg-background neu-elevated', className)}>
 				{children}
 			</div>
 		</div>

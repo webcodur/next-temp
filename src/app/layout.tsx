@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { MainLayout } from '@/components/layout/main-layout';
 import { Provider } from 'jotai';
+import { LoginModal } from '@/components/layout/login/LoginModal';
 
 export const metadata: Metadata = {
 	title: 'HUB-NEW',
@@ -18,6 +19,7 @@ export default function RootLayout({
 			<body>
 				<Provider>
 					<MainLayout>{children}</MainLayout>
+					<LoginModal />
 				</Provider>
 			</body>
 		</html>

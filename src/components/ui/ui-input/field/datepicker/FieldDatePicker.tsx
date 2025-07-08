@@ -134,6 +134,8 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		locale: ko,
 		maxDate: maxDate ?? undefined,
 		disabled,
+		autoComplete: 'off',
+		name: id,
 		renderCustomHeader: renderCustomYearMonthHeader,
 		onFocus: () => setIsFocused(true),
 		onBlur: () => setIsFocused(false),
@@ -163,6 +165,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 					<div className="relative">
 						{getIcon()}
 						<DatePicker
+							id={id}
 							selected={startDate ?? undefined}
 							onChange={handleStartDateChange}
 							selectsStart
@@ -178,6 +181,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 					<div className="relative">
 						<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />
 						<DatePicker
+							id={`${id}-end`}
 							selected={endDate ?? undefined}
 							onChange={handleEndDateChange}
 							selectsEnd
@@ -206,6 +210,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				<div className="relative">
 					{getIcon()}
 					<DatePicker
+						id={id}
 						selected={value ?? undefined}
 						onChange={handleSingleDateChange}
 						minDate={minDate ?? undefined}

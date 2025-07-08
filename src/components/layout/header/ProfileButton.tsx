@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { User, Settings, LogOut, ChevronDown, Shield, UserCheck } from 'lucide-react';
 import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
+import { openLoginModalAtom } from '@/store/loginModal';
 import clsx from 'clsx';
 
 interface ProfileButtonProps {
@@ -19,6 +20,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 	const [user] = useAtom(userAtom);
 	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
 	const [, logout] = useAtom(logoutAtom);
+	const [, openLoginModal] = useAtom(openLoginModalAtom);
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (
@@ -41,7 +43,8 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 
 			if (result.success) {
 				console.log('로그아웃 성공');
-				router.push('/login');
+				openLoginModal();
+				router.push('/');
 			} else {
 				console.error('로그아웃 실패:', result.error);
 				alert(result.error || '로그아웃에 실패했습니다.');
@@ -68,7 +71,7 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 	if (!isAuthenticated || !user) {
 		return (
 			<button
-				onClick={() => router.push('/login')}
+				onClick={() => openLoginModal()}
 				className={clsx('text-primary', className)}>
 				<User className="w-5 h-5" />
 			</button>

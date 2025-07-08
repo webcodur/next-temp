@@ -41,9 +41,8 @@ const DataTable = <T extends Record<string, unknown>>({
 	});
 
 	// 페이지네이션 표시 여부 결정
-	const shouldShowPagination =
-		showPagination &&
-		(paginationData.totalPages > 1 || externalOnPageSizeChange);
+	// showPagination이 false로 명시된 경우를 제외하고 항상 페이지네이션을 표시한다.
+	const shouldShowPagination = showPagination;
 
 	return (
 		<div>
@@ -54,7 +53,6 @@ const DataTable = <T extends Record<string, unknown>>({
 				className={className}
 				rowClassName={rowClassName}
 				pageSize={paginationState.pageSize}
-				isFetching={isFetching}
 			/>
 
 			{/* 페이지네이션 UI */}

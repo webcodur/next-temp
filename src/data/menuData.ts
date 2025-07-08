@@ -381,6 +381,10 @@ export const menuData: MenuData = {
 						key: '타임라인',
 						href: '/lab/ui-data/timeline',
 					},
+					{
+						key: '테이블',
+						href: '/lab/ui-data/table',
+					},
 				],
 			},
 			UI효과: {

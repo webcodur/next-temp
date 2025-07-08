@@ -34,24 +34,30 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
 	const { isRTL } = useLocale();
 
+	// 데이터 존재 여부
+	const noData = !totalItems || totalItems === 0 || totalPages === 0;
+
 	// 현재 페이지가 속한 그룹의 시작 페이지와 끝 페이지 계산
 	const currentGroup = Math.ceil(currentPage / groupSize);
 	const startPage = (currentGroup - 1) * groupSize + 1;
-	const endPage = Math.min(startPage + groupSize - 1, totalPages);
+	const endPage = Math.min(startPage + groupSize - 1, Math.max(totalPages, 1));
 
-	// 페이지 번호 배열 생성
+	// 페이지 번호 배열 생성 (데이터가 없으면 기본으로 [1]을 표시)
 	const pageNumbers: number[] = [];
 	for (let i = startPage; i <= endPage; i++) {
 		pageNumbers.push(i);
 	}
+	if (noData && pageNumbers.length === 0) pageNumbers.push(1);
 
 	// 첫 페이지로 이동
 	const goToFirstPage = () => {
+		if (noData) return;
 		if (currentPage !== 1) onPageChange(1);
 	};
 
 	// 이전 그룹으로 이동
 	const goToPreviousGroup = () => {
+		if (noData) return;
 		if (startPage > 1) {
 			const previousGroupLastPage = startPage - 1;
 			onPageChange(previousGroupLastPage);
@@ -60,6 +66,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
 	// 다음 그룹으로 이동
 	const goToNextGroup = () => {
+		if (noData) return;
 		if (endPage < totalPages) {
 			const nextGroupFirstPage = endPage + 1;
 			onPageChange(nextGroupFirstPage);
@@ -68,6 +75,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
 	// 마지막 페이지로 이동
 	const goToLastPage = () => {
+		if (noData) return;
 		if (currentPage !== totalPages) onPageChange(totalPages);
 	};
 
@@ -101,16 +109,22 @@ const Pagination: React.FC<PaginationProps> = ({
 		bg-muted text-primary neu-inset
 	`;
 
-	if (totalPages <= 1 && !onPageSizeChange) return null;
+	// 데이터가 없더라도 UI skeleton을 유지하기 위해 렌더링은 계속한다.
 
 	return (
 		<div className={`flex justify-between items-center ${className}`}>
 			{/* 왼쪽: 총 항목 수 표시 */}
 			<div className="flex-1">
-				{typeof totalItems === 'number' && totalItems > 0 && (
-					<div className="text-sm text-muted-foreground font-multilang">
-						총 {totalItems}개의 {itemName} 중 {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}개 표시
-					</div>
+				{typeof totalItems === 'number' && (
+					totalItems > 0 ? (
+						<div className="text-sm text-muted-foreground font-multilang">
+							총 {totalItems}개의 {itemName} 중
+							{' '}
+							{(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}개 표시
+						</div>
+					) : (
+						<div className="text-sm text-muted-foreground font-multilang">표시할 데이터가 없습니다.</div>
+					)
 				)}
 			</div>
 
@@ -139,11 +153,12 @@ const Pagination: React.FC<PaginationProps> = ({
 					{pageNumbers.map((pageNumber) => (
 						<button
 							key={pageNumber}
-							onClick={() => onPageChange(pageNumber)}
+							disabled={noData}
+							onClick={() => !noData && onPageChange(pageNumber)}
 							className={
-								pageNumber === currentPage
+								pageNumber === currentPage && !noData
 									? currentPageClasses
-									: pageButtonClasses
+									: pageButtonClasses + (noData ? ' opacity-50 cursor-not-allowed' : '')
 							}
 							aria-current={pageNumber === currentPage ? 'page' : undefined}>
 							{pageNumber}
@@ -172,21 +187,20 @@ const Pagination: React.FC<PaginationProps> = ({
 
 			{/* 우측: 페이지 크기 선택기 */}
 			<div className="flex flex-1 justify-end">
-				{onPageSizeChange && (
-					<div className="flex gap-2 items-center text-sm font-multilang">
-						<span>페이지당 항목:</span>
-						<select
-							value={pageSize}
-							onChange={handlePageSizeChange}
-							className="px-2 py-1 rounded-md border cursor-pointer border-border bg-background text-foreground focus:border-primary focus:ring-1 focus:ring-primary">
-							{pageSizeOptions.map((size) => (
-								<option key={size} value={size}>
-									{size}
-								</option>
-							))}
-						</select>
-					</div>
-				)}
+				<div className="flex gap-2 items-center text-sm font-multilang">
+					<span>페이지당 항목:</span>
+					<select
+						value={pageSize}
+						disabled={noData || !onPageSizeChange}
+						onChange={handlePageSizeChange}
+						className="px-2 py-1 rounded-md border cursor-pointer border-border bg-background text-foreground focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+						{pageSizeOptions.map((size) => (
+							<option key={size} value={size}>
+								{size}
+							</option>
+						))}
+					</select>
+				</div>
 			</div>
 		</div>
 	);

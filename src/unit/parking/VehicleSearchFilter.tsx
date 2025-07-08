@@ -24,8 +24,8 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 		onFiltersChange({ ...filters, [key]: value });
 	};
 
-	// 차량유형 옵션 생성
-	const carTypeOptions = [
+	// 차량유형 옵션 생성 (중복 값 제거)
+	const carTypeOptionsRaw = [
 		{ value: '0', label: t('주차_필터_미인식') },
 		...carAllowTypes.map((type) => ({
 			value: type.sub_type.toString(),
@@ -35,6 +35,11 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 		{ value: '100', label: t('주차_필터_미인식차량') },
 		{ value: '101', label: t('주차_필터_개인이동수단') },
 	];
+
+	// value 기준으로 중복 옵션 제거
+	const carTypeOptions = carTypeOptionsRaw.filter(
+		(option, index, self) => self.findIndex((o) => o.value === option.value) === index
+	);
 
 	// 입출차 옵션
 	const inOutOptions = [
