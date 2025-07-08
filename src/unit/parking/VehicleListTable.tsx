@@ -3,7 +3,6 @@ import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScro
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import { LicensePlate } from '@/components/ui/system-testing/license-plate';
 import { useTranslations } from '@/hooks/useI18n';
 
 type TableSize = 'sm' | 'md' | 'lg';
@@ -19,6 +18,8 @@ interface VehicleListTableProps {
 	onFiltersChange: (filters: SearchFilters) => void;
 	onSearch: () => void;
 	size?: TableSize;
+	/** 타이틀 표시 여부. 기본값 true */
+	showTitle?: boolean;
 }
 
 const VehicleListTable: React.FC<VehicleListTableProps> = ({
@@ -32,6 +33,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	onFiltersChange,
 	onSearch,
 	size = 'sm',
+	showTitle = true,
 }) => {
 	const t = useTranslations();
 	
@@ -102,12 +104,14 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	};
 
 	return (
-		<div className="p-2 rounded-xl bg-background neu-flat">
+		<div className="flex flex-col p-6 h-full rounded-xl bg-background neu-elevated">
 			{/* 헤더 */}
-			<div className="flex justify-between items-center mb-2">
-				<h2 className="text-sm font-semibold text-foreground">
-					{t('주차_테이블_제목_금일입출차현황')}
-				</h2>
+			<div className="flex flex-col items-center mb-2">
+				{showTitle && (
+					<h2 className="text-sm font-semibold text-center text-foreground">
+						{t('주차_테이블_제목_금일입출차현황')}
+					</h2>
+				)}
 				<div className="text-xs text-muted-foreground">
 					{t('주차_테이블_총건수').replace('{count}', filteredVehicles.length.toString())}
 				</div>
@@ -185,18 +189,16 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 										</div>
 										<div className="px-2 py-1 text-foreground">
 											<div className="flex flex-col gap-1">
-												<LicensePlate
-													plateNumber={vehicle.car_number}
-													width={currentSize.plateWidth}
-												/>
+												<div className="text-sm font-bold font-multilang">
+													{vehicle.car_number}
+												</div>
 												{vehicle.modify_car_number && (
-													<>
+													<div className="flex gap-1 items-center">
 														<span className="text-xs text-warning">→</span>
-														<LicensePlate
-															plateNumber={vehicle.modify_car_number}
-															width={currentSize.plateWidth}
-														/>
-													</>
+														<div className="text-sm font-bold font-multilang text-warning">
+															{vehicle.modify_car_number}
+														</div>
+													</div>
 												)}
 											</div>
 										</div>

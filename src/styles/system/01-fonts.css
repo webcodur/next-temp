@@ -281,4 +281,8 @@
 .font-cairo {
 	font-family: 'Cairo', 'MultiLang', system-ui, sans-serif !important;
 }
+
+.font-headline {
+	font-family: 'HY헤드라인M', 'Pretendard', system-ui, sans-serif !important;
+}
 /* #endregion */

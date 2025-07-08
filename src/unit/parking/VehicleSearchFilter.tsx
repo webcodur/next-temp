@@ -2,6 +2,10 @@ import React from 'react';
 import { SearchFilters } from '@/types/parking';
 import { carAllowTypes } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
+import FieldText from '@/components/ui/ui-input/field/text/FieldText';
+import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import { Search } from 'lucide-react';
 
 interface VehicleSearchFilterProps {
 	filters: SearchFilters;
@@ -20,73 +24,86 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 		onFiltersChange({ ...filters, [key]: value });
 	};
 
-	const handleKeyPress = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			onSearch();
-		}
-	};
+	// 차량유형 옵션 생성
+	const carTypeOptions = [
+		{ value: '0', label: t('주차_필터_미인식') },
+		...carAllowTypes.map((type) => ({
+			value: type.sub_type.toString(),
+			label: type.name,
+		})),
+		{ value: '99', label: t('주차_필터_오인식') },
+		{ value: '100', label: t('주차_필터_미인식차량') },
+		{ value: '101', label: t('주차_필터_개인이동수단') },
+	];
+
+	// 입출차 옵션
+	const inOutOptions = [
+		{ value: '1', label: t('주차_필터_입차') },
+		{ value: '2', label: t('주차_필터_출차') },
+	];
+
+	// 통행입구 옵션
+	const entranceOptions = [
+		{ value: '입구A', label: t('주차_필터_입구A') },
+		{ value: '입구B', label: t('주차_필터_입구B') },
+		{ value: '출구A', label: t('주차_필터_출구A') },
+		{ value: '출구B', label: t('주차_필터_출구B') },
+	];
 
 	return (
-		<div className="bg-background border border-border rounded-lg p-1.5 mb-1.5">
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-1.5">
-				{/* 차량유형 선택 */}
-				<select
-					value={filters.car_type || ''}
-					onChange={(e) => handleFilterChange('car_type', e.target.value)}
-					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
-					<option value="">{t('주차_필터_차량유형선택')}</option>
-					<option value="0">{t('주차_필터_미인식')}</option>
-					{carAllowTypes.map((type) => (
-						<option key={type.sub_type} value={type.sub_type.toString()}>
-							{type.name}
-						</option>
-					))}
-					<option value="99">{t('주차_필터_오인식')}</option>
-					<option value="100">{t('주차_필터_미인식차량')}</option>
-					<option value="101">{t('주차_필터_개인이동수단')}</option>
-				</select>
+		<div className="bg-background border border-border rounded-lg p-3 mb-3 neu-flat">
+				<div className="flex flex-col md:flex-row gap-3">
+					{/* 2x2 그리드 영역 */}
+					<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+						{/* 차량유형 선택 */}
+						<FieldSelect
+							id="car-type-filter"
+							placeholder={t('주차_필터_차량유형선택')}
+							options={carTypeOptions}
+							value={filters.car_type || ''}
+							onChange={(value) => handleFilterChange('car_type', value)}
+						/>
 
-				{/* 입출차 선택 */}
-				<select
-					value={filters.in_out_status || ''}
-					onChange={(e) => handleFilterChange('in_out_status', e.target.value)}
-					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
-					<option value="">{t('주차_필터_입출차선택')}</option>
-					<option value="1">{t('주차_필터_입차')}</option>
-					<option value="2">{t('주차_필터_출차')}</option>
-				</select>
+						{/* 입출차 선택 */}
+						<FieldSelect
+							id="in-out-filter"
+							placeholder={t('주차_필터_입출차선택')}
+							options={inOutOptions}
+							value={filters.in_out_status || ''}
+							onChange={(value) => handleFilterChange('in_out_status', value)}
+						/>
 
-				{/* 통행입구 선택 */}
-				<select
-					value={filters.entrance_status || ''}
-					onChange={(e) =>
-						handleFilterChange('entrance_status', e.target.value)
-					}
-					className="rounded px-2 py-1 bg-muted border border-border focus:outline-hidden focus:border-primary text-xs">
-					<option value="">{t('주차_필터_통행입구선택')}</option>
-					<option value="입구A">{t('주차_필터_입구A')}</option>
-					<option value="입구B">{t('주차_필터_입구B')}</option>
-					<option value="출구A">{t('주차_필터_출구A')}</option>
-					<option value="출구B">{t('주차_필터_출구B')}</option>
-				</select>
+						{/* 통행입구 선택 */}
+						<FieldSelect
+							id="entrance-filter"
+							placeholder={t('주차_필터_통행입구선택')}
+							options={entranceOptions}
+							value={filters.entrance_status || ''}
+							onChange={(value) => handleFilterChange('entrance_status', value)}
+						/>
 
-				{/* 차량번호 검색 */}
-				<input
-					type="text"
-					placeholder={t('주차_필터_차량번호플레이스홀더')}
-					value={filters.keyword || ''}
-					onChange={(e) => handleFilterChange('keyword', e.target.value)}
-					onKeyPress={handleKeyPress}
-					className="rounded px-2 py-1 bg-background border border-border focus:outline-hidden focus:border-primary placeholder-muted-foreground text-xs"
-				/>
+						{/* 차량번호 검색 */}
+						<FieldText
+							id="keyword-filter"
+							placeholder={t('주차_필터_차량번호플레이스홀더')}
+							value={filters.keyword || ''}
+							onChange={(value) => handleFilterChange('keyword', value)}
+							showSearchIcon={true}
+						/>
+					</div>
 
-				{/* 검색 버튼 */}
-				<button
-					onClick={onSearch}
-					className="rounded px-3 py-1 bg-warning text-warning-foreground font-medium hover:bg-warning/80 transition-colors text-xs">
-					{t('공통_검색')}
-				</button>
-			</div>
+					{/* 검색 버튼 영역 */}
+					<div className="flex items-stretch justify-center shrink-0">
+						<Button
+							onClick={onSearch}
+							variant="default"
+							size="icon"
+							className="h-full w-10 bg-primary text-primary-foreground hover:bg-primary/90 neu-raised"
+						>
+							<Search className="w-4 h-4" />
+						</Button>
+					</div>
+				</div>
 		</div>
 	);
 };

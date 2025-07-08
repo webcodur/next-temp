@@ -1,8 +1,16 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useMemo } from 'react';
 import { useLocale } from '@/hooks/useI18n';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+
+type SortDirection = 'asc' | 'desc' | null;
+
+interface SortState {
+	key: string;
+	direction: SortDirection;
+}
 
 export interface SmartTableColumn<T> {
 	key?: keyof T | string;
@@ -23,14 +31,9 @@ interface SmartTableProps<T> {
 	headerClassName?: string;
 	rowClassName?: string | ((item: T, index: number) => string);
 	cellClassName?: string;
-	isFetching?: boolean;
 	pageSize?: number;
 	emptyMessage?: string;
 	loadingRows?: number;
-	// 프라이머리 칼라 옵션들
-	primaryAccent?: boolean; // 테두리 및 강조 요소에 프라이머리 칼라 적용
-	primaryHeader?: boolean; // 헤더에 프라이머리 칼라 적용
-	primaryHover?: boolean; // 호버 효과에 프라이머리 칼라 적용
 }
 
 const SmartTable = <T extends Record<string, any>>({
@@ -40,28 +43,88 @@ const SmartTable = <T extends Record<string, any>>({
 	headerClassName = '',
 	rowClassName = '',
 	cellClassName = '',
-	isFetching = false,
 	pageSize = 10,
 	emptyMessage = '데이터가 없습니다.',
 	loadingRows = 5,
-	primaryAccent = false,
-	primaryHeader = false,
-	primaryHover = false,
 }: SmartTableProps<T>) => {
 	const { isRTL } = useLocale();
+	const [sortState, setSortState] = useState<SortState>({ key: '', direction: null });
+
+	// 정렬 클릭 핸들러
+	const handleSort = (columnKey: string, sortable: boolean = true, actualKey?: string) => {
+		if (!sortable || !actualKey) return;
+		
+		setSortState(prev => {
+			if (prev.key !== actualKey) {
+				return { key: actualKey, direction: 'asc' };
+			}
+			
+			const newDirection: SortDirection = 
+				prev.direction === 'asc' ? 'desc' : 
+				prev.direction === 'desc' ? null : 'asc';
+				
+			return { key: actualKey, direction: newDirection };
+		});
+	};
 
 	// 로딩 상태 처리
-	const isLoading = isFetching || data === null;
-	const actualData = isLoading ? [] : data;
+	const isInitialLoading = data === null;
+	const rawData = data || [];
+
+	// 정렬된 데이터
+	const sortedData = useMemo(() => {
+		if (!rawData.length || !sortState.direction || !sortState.key) {
+			return rawData;
+		}
+
+		// 정렬 키가 실제 데이터에 존재하는지 확인
+		const hasKey = rawData.some(item => sortState.key in item);
+		if (!hasKey) {
+			console.warn(`정렬 키 '${sortState.key}'가 데이터에 존재하지 않습니다.`);
+			return rawData;
+		}
+
+		return [...rawData].sort((a, b) => {
+			const aValue = a[sortState.key];
+			const bValue = b[sortState.key];
+
+			if (aValue === bValue) return 0;
+			
+			// null, undefined 처리
+			if (aValue == null) return 1;
+			if (bValue == null) return -1;
+
+			// 숫자 비교
+			if (typeof aValue === 'number' && typeof bValue === 'number') {
+				return sortState.direction === 'asc' ? aValue - bValue : bValue - aValue;
+			}
+
+			// 문자열 비교
+			const aStr = String(aValue).toLowerCase();
+			const bStr = String(bValue).toLowerCase();
+			
+			if (sortState.direction === 'asc') {
+				return aStr.localeCompare(bStr);
+			} else {
+				return bStr.localeCompare(aStr);
+			}
+		});
+	}, [rawData, sortState]);
+
+	const actualData = sortedData;
 
 	// 빈 로딩 행 생성
 	const createLoadingRows = () => {
 		return Array.from({ length: Math.min(loadingRows, pageSize) }, (_, index) => (
 			<tr key={`loading-${index}`} className="animate-pulse">
-				{columns.map((column) => (
+				{columns.map((column, colIndex) => (
 					<td
 						key={`loading-${index}-${String(column.key)}`}
-						className={`px-6 py-4 ${cellClassName}`}
+						className={`
+							px-6 py-4 
+							${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+							${cellClassName}
+						`}
 					>
 						<div className="h-4 rounded bg-muted neu-flat"></div>
 					</td>
@@ -90,40 +153,62 @@ const SmartTable = <T extends Record<string, any>>({
 	};
 
 	return (
-		<div className={`overflow-hidden ${primaryAccent ? 'neu-flat-primary' : 'neu-flat'} rounded-lg ${className}`}>
+		<div className={`overflow-hidden rounded-lg neu-flat-primary ${className}`}>
 			<div className="overflow-x-auto">
 				<table className="w-full bg-background">
 					{/* 테이블 헤더 */}
-					<thead className={`
-						${primaryHeader 
-							? 'border-b bg-primary-1/20 border-primary-4/30' 
-							: 'bg-muted/50'
-						} ${headerClassName}
-					`}>
+					<thead className={`border-b bg-primary-1/20 border-primary-4/30 ${headerClassName}`}>
 						<tr>
-							{columns.map((column, colIndex) => (
-								<th
-									key={column.key ? String(column.key) : `col-${colIndex}`}
-									className={`
-										px-6 py-3 text-xs font-medium ${
-											primaryHeader 
-												? 'text-primary-8' 
-												: 'text-muted-foreground'
-										} uppercase tracking-wider
-										${getAlignmentClass(column.align)}
-										${column.headerClassName || ''}
-									`}
-									style={{ width: column.width }}
-								>
-									{column.header}
-								</th>
-							))}
+							{columns.map((column, colIndex) => {
+								const columnKey = column.key ? String(column.key) : `col-${colIndex}`;
+								const actualKey = column.key ? String(column.key) : undefined;
+								const canSort = column.sortable !== false && !!actualKey;
+								const isSorted = sortState.key === actualKey;
+								const sortDirection = isSorted ? sortState.direction : null;
+								
+								return (
+									<th
+										key={columnKey}
+										className={`
+											px-6 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
+											text-center
+											${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+											${canSort ? 'cursor-pointer hover:bg-primary-2/30 select-none' : ''}
+											${column.headerClassName || ''}
+										`}
+										style={{ width: column.width }}
+										onClick={() => handleSort(columnKey, canSort, actualKey)}
+									>
+										<div className="flex gap-1 justify-center items-center">
+											<span>{column.header}</span>
+											{canSort && (
+												<div className="flex flex-col">
+													<ChevronUp 
+														size={12} 
+														className={`
+															transition-colors
+															${sortDirection === 'asc' ? 'text-primary-8' : 'text-primary-4'}
+														`}
+													/>
+													<ChevronDown 
+														size={12} 
+														className={`
+															transition-colors -mt-1
+															${sortDirection === 'desc' ? 'text-primary-8' : 'text-primary-4'}
+														`}
+													/>
+												</div>
+											)}
+										</div>
+									</th>
+								);
+							})}
 						</tr>
 					</thead>
 
 					{/* 테이블 바디 */}
 					<tbody className="divide-y bg-background divide-border">
-						{isLoading ? (
+						{isInitialLoading ? (
 							createLoadingRows()
 						) : actualData.length === 0 ? (
 							<tr>
@@ -139,10 +224,8 @@ const SmartTable = <T extends Record<string, any>>({
 								<tr
 									key={index}
 									className={`
-										${primaryHover 
-											? 'hover:bg-primary-2/[0.6]' 
-											: 'hover:bg-muted/[0.5]'
-										}
+										${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
+										hover:bg-primary-2/[0.6]
 										${getRowClassName(item, index)}
 									`}
 								>
@@ -152,6 +235,7 @@ const SmartTable = <T extends Record<string, any>>({
 											className={`
 												px-6 py-4 whitespace-nowrap text-sm text-foreground
 												${getAlignmentClass(column.align)}
+												${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 												${column.cellClassName || cellClassName}
 											`}
 										>

@@ -144,23 +144,36 @@ export default function Home() {
 					size="md"
 					forceRemount={true}>
 					{/* 입출차 관리 탭 */}
-					<div className="space-y-4">
-						{/* 차량 상세정보 */}
-						<VehicleDetailCard vehicle={selectedVehicle} />
+					<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+						{/* Vehicle Detail – start (LTR: left) */}
+						<div className="w-full h-full lg:max-w-sm xl:max-w-md shrink-0">
+							{/* 타이틀 */}
+							<h2 className="mb-2 text-lg font-semibold text-foreground">
+								{t('주차_카드_차량정보')}
+							</h2>
+							<VehicleDetailCard vehicle={selectedVehicle} showTitle={false} />
+						</div>
 
-						{/* 차량 목록 테이블 */}
-						<VehicleListTable
-							vehicles={vehicles}
-							filters={filters}
-							selectedVehicle={selectedVehicle}
-							onVehicleSelect={handleVehicleSelect}
-							onLoadMore={handleLoadMore}
-							hasMore={hasMore}
-							isLoading={isLoading}
-							onFiltersChange={handleFiltersChange}
-							onSearch={handleSearch}
-							size="lg"
-						/>
+						{/* Vehicle List – end (LTR: right) */}
+						<div className="flex-1 w-full h-full">
+							{/* 타이틀 */}
+							<h2 className="mb-2 text-lg font-semibold text-foreground">
+								{t('주차_테이블_제목_금일입출차현황')}
+							</h2>
+							<VehicleListTable
+								vehicles={vehicles}
+								filters={filters}
+								selectedVehicle={selectedVehicle}
+								onVehicleSelect={handleVehicleSelect}
+								onLoadMore={handleLoadMore}
+								hasMore={hasMore}
+								isLoading={isLoading}
+								onFiltersChange={handleFiltersChange}
+								onSearch={handleSearch}
+								size="lg"
+								showTitle={false}
+							/>
+						</div>
 					</div>
 
 					{/* 차단기 제어 탭 */}

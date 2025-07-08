@@ -224,7 +224,7 @@ export function SideEndPanel({
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
 					{/* 좌측: 단일/다중 모드 토글 버튼 */}
 					<div className="flex items-center">
-						<Tooltip open={tooltipOpen}>
+						<Tooltip open={tooltipOpen} onOpenChange={(open) => setTooltipOpen(open)}>
 							<TooltipTrigger asChild>
 								<Button
 									type="button"
@@ -272,7 +272,14 @@ export function SideEndPanel({
 
 					{/* 우측: 전체 열기/닫기 버튼 - 상태에 따라 토글 */}
 					<div className="flex items-center">
-						<Tooltip open={!isExpandCollapseProcessing && expandCollapseTooltipOpen}>
+						<Tooltip
+							open={!isExpandCollapseProcessing && expandCollapseTooltipOpen}
+							onOpenChange={(open) => {
+								// 처리 중이 아닐 때만 상태 업데이트하여 불필요한 렌더링 방지
+								if (!isExpandCollapseProcessing) {
+									setExpandCollapseTooltipOpen(open);
+								}
+							}}>
 							<TooltipTrigger asChild>
 								<Button
 									type="button"
@@ -287,7 +294,7 @@ export function SideEndPanel({
 									<ChevronsUpDown className="w-4 h-4 cursor-pointer neu-icon-inactive" />
 								</Button>
 							</TooltipTrigger>
-							<TooltipContent side="right">
+							<TooltipContent side="bottom">
 								<div className="text-center">
 									<div className="font-medium">
 										{areAllExpanded ? t('사이드바_전체접기') : t('사이드바_전체펼치기')}
@@ -371,7 +378,7 @@ export function SideEndPanel({
 
 														{/* 수평선 종료점 (봇메뉴 앞) - 위치 조정하여 잘리지 않도록 */}
 														<div
-															className="absolute z-0 w-1 h-1 rounded-full bg-muted-foreground/30 start-[19px]"
+															className="absolute z-0 w-1 h-1 rounded-full start-[19px] bg-primary-5/50 translate-y-[-0.5px] translate-x-[1.5px]"
 															style={{ 
 																top: '17.5px'
 															}}></div>

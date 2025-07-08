@@ -60,7 +60,7 @@ const Tabs = React.forwardRef<
 			{...props}
 		>
 			{/* 탭 헤더 */}
-			<div className="overflow-hidden relative p-2 rounded-xl neu-flat">
+			<div className="overflow-hidden relative p-4 rounded-xl neu-elevated">
 				<div className={cn("flex relative z-10", alignClasses[align])}>
 					{tabs.map((tab) => (
 						<button

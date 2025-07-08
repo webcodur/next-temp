@@ -121,9 +121,6 @@ const VehicleSmartTable: React.FC<VehicleSmartTableProps> = ({
             return base + ' ' + state;
           }}
           headerClassName={`${sz.font}`}
-          primaryAccent={false}
-          primaryHeader={false}
-          primaryHover={false}
         />
       </InfiniteScroll>
     </div>

@@ -45,8 +45,8 @@ const InfiniteScroll: FC<InfiniteScrollProps> = ({
 					ref={sentinelRef}
 					className="flex justify-center py-3 border-t border-border">
 					{isLoading ? (
-						<div className="flex items-center gap-2 text-muted-foreground">
-							<div className="w-4 h-4 border-2 border-border border-t-primary rounded-full animate-spin"></div>
+						<div className="flex gap-2 items-center text-muted-foreground">
+							<div className="w-4 h-4 rounded-full border-2 animate-spin border-border border-t-primary"></div>
 							<span className="text-xs">데이터 로딩 중...</span>
 						</div>
 					) : (

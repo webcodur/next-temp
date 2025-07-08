@@ -354,22 +354,16 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			UI체크: {
-				key: 'UI체크',
-				botItems: [
-					{
-						key: '비밀번호이메일',
-						href: '/lab/ui-check/password-email-field',
-					},
-				],
-			},
-
 			UI데이터: {
 				key: 'UI데이터',
 				botItems: [
 					{
-						key: '테이블',
-						href: '/lab/ui-data/table',
+						key: 'SmartTable',
+						href: '/lab/ui-data/smrtTable',
+					},
+					{
+						key: '무한SmartTable',
+						href: '/lab/ui-data/infinite-table',
 					},
 					{
 						key: '페이지네이션',
