@@ -352,6 +352,10 @@ export const menuData: MenuData = {
 						key: '날짜선택',
 						href: '/lab/ui-input/datepicker',
 					},
+					{
+						key: '고급검색',
+						href: '/lab/ui-input/advanced-search',
+					},
 				],
 			},
 			UI데이터: {
