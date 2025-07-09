@@ -32,7 +32,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 		<Accordion title={title} defaultOpen={defaultOpen} statusText={statusText}>
 			<div className="space-y-6">
 				{/* 검색 필드들 */}
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">{children}</div>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
 
 				{/* 버튼 영역 */}
 				{showButtons && (
@@ -40,7 +40,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 						{/* 리셋 버튼 */}
 						<button
 							onClick={onReset}
-							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-muted-foreground transition-colors bg-background neu-raised rounded-xl hover:text-primary">
+							className="flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors text-muted-foreground bg-background neu-raised hover:text-primary">
 							<RotateCcw className="w-4 h-4" />
 							{resetLabel}
 						</button>
@@ -48,7 +48,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 						{/* 검색 버튼 */}
 						<button
 							onClick={onSearch}
-							className="flex items-center h-10 gap-2 px-4 text-sm font-medium text-primary-foreground transition-colors bg-primary neu-raised rounded-xl hover:bg-primary/90">
+							className="flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors text-primary-foreground bg-primary neu-raised hover:bg-primary/90">
 							<Search className="w-4 h-4" />
 							{searchLabel}
 						</button>

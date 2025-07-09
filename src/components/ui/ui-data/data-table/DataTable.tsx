@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { SmartTable } from '@/components/ui/ui-data/smartTable/SmartTable';
 import { DataTableProps } from './data-table.types';

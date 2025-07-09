@@ -1,9 +1,7 @@
 import {
 	Car,
-	Building2,
+  Network,
 	Megaphone,
-	Settings,
-	User,
 	FlaskConical,
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
@@ -37,23 +35,23 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '입출차관리',
-						href: '/parking/users/entry-exit',
+						href: '/member/entryexit',
 					},
 					{
 						key: '차량등록',
-						href: '/parking/users/vehicle-registration',
+						href: '/member/member',
 					},
 					{
 						key: '방문자관리',
-						href: '/parking/users/visitors',
+						href: '/member/visitor',
 					},
 					{
 						key: '세대관리',
-						href: '/parking/users/households',
+						href: '/member/resident-household',
 					},
 					{
 						key: '블랙리스트',
-						href: '/parking/users/blacklist',
+						href: '/member/blacklist',
 					},
 				],
 			},
@@ -99,7 +97,7 @@ export const menuData: MenuData = {
 		},
 	},
 	커뮤니티: {
-		icon: Building2,
+		icon: Network,
 		key: '커뮤니티',
 		midItems: {
 			시설서비스: {
@@ -195,107 +193,7 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	계정: {
-		icon: User,
-		key: '계정',
-		midItems: {
-			계정관리: {
-				key: '계정관리',
-				botItems: [
-					{
-						key: '사용자관리',
-						href: '/account/management/users',
-					},
-					{
-						key: '권한관리',
-						href: '/account/management/roles',
-					},
-					{
-						key: '그룹관리',
-						href: '/account/management/groups',
-					},
-				],
-			},
-			보안설정: {
-				key: '보안설정',
-				botItems: [
-					{
-						key: '비밀번호정책',
-						href: '/account/security/password-policy',
-					},
-					{
-						key: '로그인이력',
-						href: '/account/security/login-history',
-					},
-					{
-						key: '세션관리',
-						href: '/account/security/session',
-					},
-				],
-			},
-		},
-	},
-	설정: {
-		icon: Settings,
-		key: '설정',
-		midItems: {
-			시스템설정: {
-				key: '시스템설정',
-				botItems: [
-					{
-						key: '일반설정',
-						href: '/settings/system/general',
-					},
-					{
-						key: '데이터베이스',
-						href: '/settings/system/database',
-					},
-					{
-						key: '백업복원',
-						href: '/settings/system/backup',
-					},
-					{
-						key: '로그관리',
-						href: '/settings/system/logs',
-					},
-				],
-			},
-			환경설정: {
-				key: '환경설정',
-				botItems: [
-					{
-						key: '테마설정',
-						href: '/settings/preferences/theme',
-					},
-					{
-						key: '언어설정',
-						href: '/settings/preferences/language',
-					},
-					{
-						key: '알림설정',
-						href: '/settings/preferences/notifications',
-					},
-				],
-			},
-			연동설정: {
-				key: '연동설정',
-				botItems: [
-					{
-						key: 'API설정',
-						href: '/settings/integration/api',
-					},
-					{
-						key: '웹훅설정',
-						href: '/settings/integration/webhooks',
-					},
-					{
-						key: '외부서비스',
-						href: '/settings/integration/external-services',
-					},
-				],
-			},
-		},
-	},
+
 	연구소: {
 		icon: FlaskConical,
 		key: '연구소',
@@ -483,6 +381,10 @@ export const menuData: MenuData = {
 					{
 						key: '테마테스트',
 						href: '/lab/system-testing/theme-test',
+					},
+					{
+						key: '자유테스트',
+						href: '/lab/system-testing/playground',
 					},
 				],
 			},

@@ -39,7 +39,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
           value={startValue}
           onChange={onStartChange}
           disabled={disabled}
-          className="flex-1"
+          className="w-36"
         />
         <span className="text-sm shrink-0">~</span>
         <FieldTimePicker
@@ -48,7 +48,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
           value={endValue}
           onChange={onEndChange}
           disabled={disabled}
-          className="flex-1"
+          className="w-36"
         />
       </div>
     </div>

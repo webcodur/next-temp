@@ -53,14 +53,14 @@ const Tabs = React.forwardRef<
 		<div 
 			ref={ref}
 			className={cn(
-				'relative overflow-hidden rounded-2xl transition-all duration-200', 
+				'relative rounded-2xl transition-all duration-200', 
 				variant === 'filled' && 'bg-muted',
 				className
 			)}
 			{...props}
 		>
 			{/* 탭 헤더 */}
-			<div className="overflow-hidden relative p-4 rounded-xl neu-elevated">
+			<div className="relative p-4 rounded-xl neu-elevated">
 				<div className={cn("flex relative z-10", alignClasses[align])}>
 					{tabs.map((tab) => (
 						<button
@@ -86,7 +86,7 @@ const Tabs = React.forwardRef<
 			</div>
 
 			{/* 탭 컨텐츠 */}
-			<div className="overflow-hidden relative p-6 mt-6 rounded-xl neu-flat">
+			<div className="relative p-6 mt-6 rounded-xl neu-elevated">
 				<div className="relative z-10">
 					{forceRemount ? (
 						// 조건부 렌더링: 활성 탭만 렌더링 (Three.js 컴포넌트 완전 언마운트)

@@ -1,10 +1,19 @@
+/* 
+  파일명: /components/ui/ui-data/smartTable/SmartTable.tsx
+  기능: 제네릭 데이터 테이블 컴포넌트
+  책임: 정렬, 로딩 상태, RTL 지원이 포함된 데이터 테이블을 제공한다.
+*/ // ------------------------------
+
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useState, useMemo } from 'react';
-import { useLocale } from '@/hooks/useI18n';
+
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
+import { useLocale } from '@/hooks/useI18n';
+
+// #region 타입 및 인터페이스
 type SortDirection = 'asc' | 'desc' | null;
 
 interface SortState {
@@ -37,6 +46,7 @@ interface SmartTableProps<T> {
 	/** 행 클릭 시 호출되는 콜백 */
 	onRowClick?: (item: T, index: number) => void;
 }
+// #endregion
 
 const SmartTable = <T extends Record<string, any>>({
 	data,
@@ -50,33 +60,16 @@ const SmartTable = <T extends Record<string, any>>({
 	loadingRows = 5,
 	onRowClick,
 }: SmartTableProps<T>) => {
+	// #region 상태
 	const { isRTL } = useLocale();
 	const [sortState, setSortState] = useState<SortState>({ key: '', direction: null });
+	// #endregion
 
-	// 정렬 클릭 핸들러
-	const handleSort = (columnKey: string, sortable: boolean = true, actualKey?: string) => {
-		if (!sortable || !actualKey) return;
-		
-		setSortState(prev => {
-			if (prev.key !== actualKey) {
-				return { key: actualKey, direction: 'asc' };
-			}
-			
-			const newDirection: SortDirection = 
-				prev.direction === 'asc' ? 'desc' : 
-				prev.direction === 'desc' ? null : 'asc';
-				
-			return { key: actualKey, direction: newDirection };
-		});
-	};
-
-	// 로딩 상태 처리
-	const isInitialLoading = data === null;
-	// data가 변할 때만 새로운 배열을 생성하도록 메모이제이션하여 ESLint 경고 해결
-	const rawData = useMemo(() => data ?? [], [data]);
-
+	// #region 유틸리티 함수
 	// 정렬된 데이터
 	const sortedData = useMemo(() => {
+		const rawData = data ?? [];
+		
 		if (!rawData.length || !sortState.direction || !sortState.key) {
 			return rawData;
 		}
@@ -113,9 +106,7 @@ const SmartTable = <T extends Record<string, any>>({
 				return bStr.localeCompare(aStr);
 			}
 		});
-	}, [rawData, sortState]);
-
-	const actualData = sortedData;
+	}, [data, sortState]);
 
 	// 빈 로딩 행 생성
 	const createLoadingRows = () => {
@@ -155,11 +146,37 @@ const SmartTable = <T extends Record<string, any>>({
 		}
 		return rowClassName;
 	};
+	// #endregion
 
+	// #region 핸들러
+	// 정렬 클릭 핸들러
+	const handleSort = (columnKey: string, sortable: boolean = true, actualKey?: string) => {
+		if (!sortable || !actualKey) return;
+		
+		setSortState(prev => {
+			if (prev.key !== actualKey) {
+				return { key: actualKey, direction: 'asc' };
+			}
+			
+			const newDirection: SortDirection = 
+				prev.direction === 'asc' ? 'desc' : 
+				prev.direction === 'desc' ? null : 'asc';
+				
+			return { key: actualKey, direction: newDirection };
+		});
+	};
+	// #endregion
+
+	// #region 상수
+	// 로딩 상태 처리
+	const isInitialLoading = data === null;
+	const actualData = sortedData;
+	// #endregion
+
+	// #region 렌더링
 	return (
-		<div className={`rounded-lg neu-flat-primary ${className}`}>
-			<div className="overflow-x-auto">
-				<table className="w-full min-w-max bg-background rounded-lg overflow-hidden">
+		<div className={`rounded-lg neu-flat-primary overflow-x-auto ${className}`}>
+                <table className="w-full min-w-max bg-background rounded-lg overflow-hidden">
           
 					{/* 테이블 헤더 */}
 					<thead className={`border-b bg-primary-1/20 border-primary-4/30 ${headerClassName}`}>
@@ -268,9 +285,9 @@ const SmartTable = <T extends Record<string, any>>({
 						)}
 					</tbody>
 				</table>
-			</div>
-		</div>
+        </div>
 	);
+	// #endregion
 };
 
 export { SmartTable };

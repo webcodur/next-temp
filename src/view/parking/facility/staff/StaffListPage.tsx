@@ -151,7 +151,7 @@ export default function StaffListPage() {
 
   // #region 렌더링
   return (
-    <main className="flex flex-col gap-6 mx-auto max-w-6xl">
+    <main className="flex flex-col gap-6">
       {/* 추가 버튼 */}
       <div className="flex justify-end items-center">
         <Button

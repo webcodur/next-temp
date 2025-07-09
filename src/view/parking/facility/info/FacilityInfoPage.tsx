@@ -13,7 +13,7 @@ function InfoCard({ label, value, icon: Icon }: { label: string; value: string; 
         <Icon className="w-4 h-4 neu-icon-active" />
         <span className="text-sm text-foreground">{label}</span>
       </div>
-      <span className="text-base font-semibold text-primary">{value}</span>
+      <span className="text-base font-semibold">{value}</span>
     </div>
   );
 }
@@ -68,7 +68,7 @@ export default function FacilityInfoPage() {
       {/* ----------------------------- 헤더 영역 ----------------------------- */}
       <header className="flex flex-col gap-3">
         {/* 시설 유형 라벨 */}
-        <span className="inline-block px-3 py-1 text-sm rounded-full text-primary w-fit neu-flat">
+        <span className="inline-block px-3 py-1 text-sm rounded-full text-primary w-fit neu-elevated">
           {facility.type}
         </span>
 

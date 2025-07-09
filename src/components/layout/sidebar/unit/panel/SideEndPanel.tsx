@@ -32,7 +32,7 @@ interface SideEndPanelProps {
 	topKey: string; // 현재 선택된 Top 메뉴 키
 	topData: TopItem; // 현재 선택된 Top 메뉴 데이터
 	midMenu?: string; // 현재 선택된 Mid 메뉴 키 (선택 사항)
-	midExpanded: Set<string>; // 펼쳐진 Mid 메뉴들의 키 집합
+	midExpanded: Set<string>; // 펼쳐진 Mid 메뉴들의 키 집합  
 	singleOpenMode: boolean; // 단일 열기 모드 여부
 	onMidClick: (midKey: string) => void; // Mid 메뉴 클릭 핸들러
 	onSingleOpenToggle: () => void; // 단일/다중 모드 토글 핸들러
@@ -218,7 +218,7 @@ export function SideEndPanel({
 	return (
 		<TooltipProvider delayDuration={0}>
 			<div
-				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 border-s border-border/30 pe-4 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}`}
+				className={`flex overflow-hidden flex-col h-full bg-gradient-to-b from-background/30 to-background/10 pe-4 ms-1.5 ${!isResizing ? 'transition-all duration-200 ease-in-out' : ''}` }
 				style={{ width: `${endPanelWidth}px` }}>
 				{/* 타이틀 및 제어 버튼 영역 */}
 				<div className="flex justify-between items-center px-3 py-3 border-b border-border/40">
