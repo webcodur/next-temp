@@ -12,6 +12,7 @@ import React, { ReactNode, useState, useMemo } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useLocale } from '@/hooks/useI18n';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // #region 타입 및 인터페이스
 type SortDirection = 'asc' | 'desc' | null;
@@ -41,7 +42,6 @@ interface SmartTableProps<T> {
 	rowClassName?: string | ((item: T, index: number) => string);
 	cellClassName?: string;
 	pageSize?: number;
-	emptyMessage?: string;
 	loadingRows?: number;
 	/** 행 클릭 시 호출되는 콜백 */
 	onRowClick?: (item: T, index: number) => void;
@@ -56,13 +56,13 @@ const SmartTable = <T extends Record<string, any>>({
 	rowClassName = '',
 	cellClassName = '',
 	pageSize = 10,
-	emptyMessage = '데이터가 없습니다.',
 	loadingRows = 5,
 	onRowClick,
 }: SmartTableProps<T>) => {
 	// #region 상태
 	const { isRTL } = useLocale();
 	const [sortState, setSortState] = useState<SortState>({ key: '', direction: null });
+	const [modalContent, setModalContent] = useState<string | null>(null);
 	// #endregion
 
 	// #region 유틸리티 함수
@@ -121,7 +121,30 @@ const SmartTable = <T extends Record<string, any>>({
 							${cellClassName}
 						`}
 					>
-						<div className="h-4 rounded bg-muted neu-flat"></div>
+						<div className="h-5 rounded bg-muted neu-flat"></div>
+					</td>
+				))}
+			</tr>
+		));
+	};
+
+	// 빈 행 생성
+	const createEmptyRows = () => {
+		return Array.from({ length: pageSize }, (_, index) => (
+			<tr
+				key={`empty-${index}`}
+				className={`${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}`}
+			>
+				{columns.map((column, colIndex) => (
+					<td
+						key={`empty-${index}-${String(column.key ?? colIndex)}`}
+						className={`
+							px-6 py-4 
+							${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+							${cellClassName}
+						`}
+					>
+						<div className="h-5" />
 					</td>
 				))}
 			</tr>
@@ -175,9 +198,12 @@ const SmartTable = <T extends Record<string, any>>({
 
 	// #region 렌더링
 	return (
-		<div className={`rounded-lg neu-flat-primary overflow-x-auto ${className}`}>
-                <table className="w-full min-w-max bg-background rounded-lg overflow-hidden">
-          
+		<>
+			<div className={`overflow-x-auto rounded-lg neu-flat-primary ${className}`}>
+				<table
+					className="w-full overflow-hidden rounded-lg bg-background"
+					style={{ tableLayout: 'fixed' }}
+				>
 					{/* 테이블 헤더 */}
 					<thead className={`border-b bg-primary-1/20 border-primary-4/30 ${headerClassName}`}>
 						<tr>
@@ -240,14 +266,7 @@ const SmartTable = <T extends Record<string, any>>({
 						{isInitialLoading ? (
 							createLoadingRows()
 						) : actualData.length === 0 ? (
-							<tr>
-								<td
-									colSpan={columns.length}
-									className="px-6 py-12 text-center text-muted-foreground font-multilang"
-								>
-									{emptyMessage}
-								</td>
-							</tr>
+							createEmptyRows()
 						) : (
 							actualData.map((item, index) => (
 								<tr
@@ -264,20 +283,43 @@ const SmartTable = <T extends Record<string, any>>({
 										<td
 											key={`${index}-${column.key ? String(column.key) : colIndex}`}
 											className={`
-												px-6 py-4 whitespace-nowrap text-sm text-foreground
+												px-6 py-4 text-sm text-foreground
 												${getAlignmentClass(column.align)}
 												${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 												${column.cellClassName || cellClassName}
 											`}
 										>
-											{column.cell
-												? column.cell(item, index)
-												: column.render && column.key && column.key in item
-													? column.render(item[column.key as keyof T], item, index)
-													: column.key && column.key in item
-														? String(item[column.key as keyof T] || '')
-														: ''
-											}
+											{(() => {
+												const rawValue =
+													column.key && item[column.key as keyof T]
+														? String(item[column.key as keyof T])
+														: null;
+
+												const content = (() => {
+													if (column.cell) return column.cell(item, index);
+													if (column.render && column.key && column.key in item)
+														return column.render(item[column.key as keyof T], item, index);
+													if (rawValue !== null) return rawValue;
+													return '';
+												})();
+
+												return (
+													<div
+														className="truncate"
+														title={rawValue ?? ''}
+														onClick={(e) => {
+															if (
+																rawValue &&
+																e.currentTarget.scrollWidth > e.currentTarget.clientWidth
+															) {
+																setModalContent(rawValue);
+															}
+														}}
+													>
+														{content}
+													</div>
+												);
+											})()}
 										</td>
 									))}
 								</tr>
@@ -285,7 +327,17 @@ const SmartTable = <T extends Record<string, any>>({
 						)}
 					</tbody>
 				</table>
-        </div>
+			</div>
+
+			<Modal
+				isOpen={modalContent !== null}
+				onClose={() => setModalContent(null)}
+				title="전체 내용"
+				size="md"
+			>
+				<p className="font-multilang whitespace-pre-wrap break-words">{modalContent}</p>
+			</Modal>
+		</>
 	);
 	// #endregion
 };

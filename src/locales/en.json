@@ -137,7 +137,8 @@
 	"메뉴_모니터링": "Monitoring",
 
 	"메뉴_근무자관리": "Staff Management",
-	"메뉴_정책설정": "Policy Settings",
+	"메뉴_차단기설정": "Barrier Settings",
+	"메뉴_출입정책": "Access Policy",
 	"메뉴_할인권관리": "Discount Management",
 	"메뉴_정산기관리": "Settlement Machine Management",
 	"메뉴_결제관리": "Payment Management",

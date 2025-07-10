@@ -47,9 +47,35 @@ const InfiniteSmartTable = <T extends Record<string, any>>({
 	threshold,
 	...tableProps
 }: InfiniteSmartTableProps<T>) => {
-	// 추가 로딩 상태 (초기 로딩은 SmartTable에서 처리)
-	const isLoadingMore = isFetching && data !== null;
+	// 데이터 상태 구분
+	const isInitialLoading = data === null;
+	const isEmpty = data !== null && data.length === 0;
+	const hasData = data !== null && data.length > 0;
+	const isLoadingMore = isFetching && hasData;
 	
+	// 초기 로딩 상태 - 스켈레톤 표시
+	if (isInitialLoading) {
+		return (
+			<SmartTable
+				data={null} // SmartTable이 스켈레톤을 표시하도록
+				columns={columns}
+				{...tableProps}
+			/>
+		);
+	}
+	
+	// 빈 데이터 상태 - 빈 메시지 표시
+	if (isEmpty) {
+		return (
+			<SmartTable
+				data={[]} // 빈 배열 전달하여 emptyMessage 표시
+				columns={columns}
+				{...tableProps}
+			/>
+		);
+	}
+	
+	// 데이터가 있는 상태 - 무한 스크롤 적용
 	return (
 		<InfiniteScroll
 			loadMore={loadMore}

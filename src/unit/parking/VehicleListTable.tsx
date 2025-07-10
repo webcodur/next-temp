@@ -230,13 +230,9 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					<div className="overflow-y-auto flex-1">
-						<InfiniteScroll
-							loadMore={onLoadMore}
-							hasMore={hasMore}
-							isLoading={isLoading}
-							threshold={0.8}>
+						{filteredVehicles.length === 0 ? (
 							<SmartTable
-								data={filteredVehicles}
+								data={[]}
 								columns={columns}
 								rowClassName={(item) => `${currentSize.rowText} ${currentSize.rowPadding} ${
 									selectedVehicle?.id === item.id && selectedVehicle?.status === item.status
@@ -247,7 +243,26 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 								}`}
 								onRowClick={(item) => handleRowClick(item)}
 							/>
-						</InfiniteScroll>
+						) : (
+							<InfiniteScroll
+								loadMore={onLoadMore}
+								hasMore={hasMore}
+								isLoading={isLoading}
+								threshold={0.8}>
+								<SmartTable
+									data={filteredVehicles}
+									columns={columns}
+									rowClassName={(item) => `${currentSize.rowText} ${currentSize.rowPadding} ${
+										selectedVehicle?.id === item.id && selectedVehicle?.status === item.status
+											? 'bg-primary/10'
+											: item.is_black === 'Y'
+												? 'bg-destructive/10'
+												: ''
+									}`}
+									onRowClick={(item) => handleRowClick(item)}
+								/>
+							</InfiniteScroll>
+						)}
 					</div>
 				</div>
 			</div>

@@ -106,10 +106,11 @@ const VehicleSmartTable: React.FC<VehicleSmartTableProps> = ({
 
   return (
     <div className="rounded-xl neu-flat bg-background">
-      <InfiniteScroll loadMore={onLoadMore} hasMore={hasMore} isLoading={isLoading} threshold={0.8}>
+      {vehicles.length === 0 ? (
         <SmartTable
-          data={vehicles}
+          data={[]}
           columns={columns}
+          emptyMessage="차량 데이터가 없습니다."
           rowClassName={(item) => {
             const base = `${sz.font} ${sz.padding} hover:bg-muted cursor-pointer`;
             const state =
@@ -122,7 +123,25 @@ const VehicleSmartTable: React.FC<VehicleSmartTableProps> = ({
           }}
           headerClassName={`${sz.font}`}
         />
-      </InfiniteScroll>
+      ) : (
+        <InfiniteScroll loadMore={onLoadMore} hasMore={hasMore} isLoading={isLoading} threshold={0.8}>
+          <SmartTable
+            data={vehicles}
+            columns={columns}
+            rowClassName={(item) => {
+              const base = `${sz.font} ${sz.padding} hover:bg-muted cursor-pointer`;
+              const state =
+                item.id === selectedVehicle?.id && item.status === selectedVehicle?.status
+                  ? 'bg-primary/10'
+                  : item.is_black === 'Y'
+                    ? 'bg-destructive/10'
+                    : '';
+              return base + ' ' + state;
+            }}
+            headerClassName={`${sz.font}`}
+          />
+        </InfiniteScroll>
+      )}
     </div>
   );
 };

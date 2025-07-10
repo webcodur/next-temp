@@ -25,8 +25,12 @@ export const menuData: MenuData = {
 						href: '/parking/facility/staff',
 					},
 					{
-						key: '정책설정',
-						href: '/parking/facility/policy',
+						key: '차단기설정',
+						href: '/parking/facility/barrier',
+					},
+					{
+						key: '출입정책',
+						href: '/parking/facility/entry',
 					},
 				],
 			},

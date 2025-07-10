@@ -1,7 +1,6 @@
 'use client';
 
-// Tab2-EntryPolicy.tsx : 출입 정책 + 블랙리스트 정책 탭
-
+import { usePageDescription } from '@/hooks/usePageDescription';
 import React, { useState } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -32,7 +31,10 @@ const TITLE_STYLE =
 const ACTION_ICON_CONTAINER_STYLE = 'flex absolute top-2 right-2 gap-1';
 
 // -------------------- 컴포넌트 --------------------
-export default function Tab2EntryPolicy() {
+
+// EntryPolicyPage: 출입 정책 페이지
+export default function EntryPolicyPage() {
+  usePageDescription('출입 정책을 설정합니다.');
   // Entry 정책 상태
   const [entryPolicy, setEntryPolicy] = useState<'all' | 'office'>('office');
   const [returnHourEnabled, setReturnHourEnabled] = useState<boolean>(false);
