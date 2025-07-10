@@ -74,7 +74,6 @@ module.exports = {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))',
 				},
-
 			},
 			fontFamily: {
 				// 다국어 자동 선택 폰트 (서브셋 최적화)

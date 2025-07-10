@@ -1,9 +1,10 @@
 // #region 사이드바 기본 설정값들
 export const defaults = {
-	topMenu: '주차',
-	midMenu: '시설관리',
-	sidebarWidth: 300, // botMenu 텍스트 여유 공간 확보를 위해 증가 (286 → 300)
-	startColumnWidth: 80, // 96 → 80으로 줄임
+	topMenu: 'parking',
+	midMenu: 'facility',
+	startColumnWidth: 80, // 시작 패널 너비
+	collapsedWidth: 0, // 접혔을 때 끝 패널 너비
+	expandedWidth: 220, // 펼쳐졌을 때 끝 패널 너비
 };
 
 export const styles = {

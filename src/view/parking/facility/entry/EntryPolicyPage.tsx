@@ -80,7 +80,7 @@ export default function EntryPolicyPage() {
             value={warningCount}
             onChange={(e) => setWarningCount(Number(e.target.value))}
           />
-          <span className="text-sm font-multilang shrink-0">회 이상 경고 시 등록</span>
+          <span className="text-sm font-multilang shrink-0">회 이상 경고 시</span>
         </div>
       </div>
 

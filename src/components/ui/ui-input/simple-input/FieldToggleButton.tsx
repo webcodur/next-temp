@@ -45,15 +45,12 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 	};
 
 	return (
-		<div className={`relative ${className}`}>
-			<div className="flex justify-between items-center h-6">
-				{label && (
-					<label className="text-sm font-medium leading-6 text-foreground">
-						{label}
-					</label>
-				)}
-			</div>
-
+		<div className={`flex w-full items-center justify-between ${className}`}>
+			{label && (
+				<label className="text-sm font-medium leading-6 text-foreground">
+					{label}
+				</label>
+			)}
 			<button
 				type="button"
 				onClick={handleClick}

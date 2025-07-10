@@ -1,9 +1,4 @@
-import {
-	Car,
-  Network,
-	Megaphone,
-	FlaskConical,
-} from 'lucide-react';
+import { Car, Network, Megaphone, FlaskConical } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조

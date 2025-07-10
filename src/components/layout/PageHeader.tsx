@@ -61,10 +61,10 @@ export default function PageHeader() {
   if (!title && !description) return null;
 
   return (
-    <div className="flex flex-col gap-1 items-center">
-      {title && <h1 className="text-3xl font-bold">{title}</h1>}
+    <div className="flex flex-col gap-1">
+      {title && <h1 className="text-2xl font-bold">{title}</h1>}
       {description?.trim() && (
-        <p className="max-w-prose text-base text-muted-foreground">
+        <p className="max-w-prose text-sm text-muted-foreground">
           {description}
         </p>
       )}

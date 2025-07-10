@@ -1,17 +1,19 @@
+'use client';
+
 import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 import { defaults } from '@/data/sidebarConfig';
 
-export const END_PANEL_MIN_WIDTH = 180;
-export const END_PANEL_MAX_WIDTH = 500;
-
-export const endPanelWidthAtom = atom(
-	defaults.sidebarWidth - defaults.startColumnWidth
-);
+// 사이드바의 접힘/펼침 상태 (메인 토글)
+export const sidebarCollapsedAtom = atom<boolean>(false);
+// 사이드바 끝 패널 너비
+export const endPanelWidthAtom = atom(defaults.expandedWidth);
+// 리사이징 상태
 export const isResizingAtom = atom(false);
 export const isSideResizeControlHoveredAtom = atom(false);
 
-export const sidebarCollapsedAtom = atom<boolean>(false);
+// 현재 활성화된 Top 메뉴를 관리하는 atom
+export const activeTopMenuAtom = atom('주차');
+
 export const headerCollapsedAtom = atom<boolean>(false);
 
 // 헤더 토글 표시 상태 (애니메이션 제어용)
@@ -22,12 +24,7 @@ export const currentMidMenuAtom = atom<string>('');
 export const currentBotMenuAtom = atom<string>('');
 
 // Hydration-safe: 초기화 시 localStorage 읽지 않음
-export const singleOpenModeAtom = atomWithStorage<boolean>(
-	'singleOpenMode',
-	false,
-	undefined,
-	{ getOnInit: false }
-);
+export const singleOpenModeAtom = atom<boolean>(false);
 
 // 메뉴 검색 관련 atom들 - 언어팩 시스템 사용
 export const menuSearchQueryAtom = atom<string>('');
@@ -45,18 +42,16 @@ export const menuSearchResultsAtom = atom<
 export const menuSearchActiveAtom = atom<boolean>(false);
 
 // 최근 접속 메뉴 관련 atom들 - Hydration-safe, 언어팩 시스템 사용
-export const recentMenusAtom = atomWithStorage<
+export const recentMenusAtom = atom<
 	Array<{
 		type: 'bot';
 		topKey: string;
 		midKey: string;
-		item: {
-			key: string;
-			href: string;
-		};
-		accessedAt: number;
+		botKey: string;
+		label: string;
+		href: string;
 	}>
->('recentMenus', [], undefined, { getOnInit: false });
+>([]);
 
 // 현장 검색 관련 atom들
 export const siteSearchQueryAtom = atom<string>('');
@@ -72,12 +67,9 @@ export const siteSearchResultsAtom = atom<
 export const siteSearchActiveAtom = atom<boolean>(false);
 
 // 최근 접속 현장 관련 atom들 - Hydration-safe
-export const recentSitesAtom = atomWithStorage<
+export const recentSitesAtom = atom<
 	Array<{
 		id: string;
 		name: string;
-		address: string;
-		description?: string;
-		accessedAt: number;
 	}>
->('recentSites', [], undefined, { getOnInit: false });
+>([]);

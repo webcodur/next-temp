@@ -68,17 +68,14 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 	const currentSize = sizeStyles[size];
 
 	return (
-		<div className={`relative ${className}`}>
-			<div className="flex justify-between items-center h-6">
-				{label && (
-					<label className="text-sm font-medium leading-6 text-foreground">
-						{label}
-					</label>
-				)}
-			</div>
-
+		<div className={`flex w-full items-center justify-between ${className}`}>
+			{label && (
+				<label className="text-sm font-medium leading-6 text-foreground">
+					{label}
+				</label>
+			)}
 			<div
-				className={`flex items-center h-8 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+				className={`flex items-center ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
 				onClick={handleChange}
 				onKeyDown={handleKeyDown}
 				tabIndex={disabled ? -1 : 0}
