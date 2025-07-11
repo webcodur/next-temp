@@ -29,10 +29,9 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 	};
 
 	return (
-		<div className="flex flex-col p-6 h-full rounded-2xl bg-background neu-elevated">
-			{/* 타이틀 (외부 제어 가능) */}
+		<div className="flex flex-col p-6 h-full rounded-2xl bg-background">
 			{showTitle && (
-				<h2 className="mb-4 text-lg font-semibold text-center text-foreground">
+				<h2 className="mb-4 w-full text-lg font-semibold text-center text-foreground">
 					{t('주차_카드_차량정보')}
 				</h2>
 			)}

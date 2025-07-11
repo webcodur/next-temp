@@ -35,7 +35,6 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	onFiltersChange,
 	onSearch,
 	size = 'sm',
-	showTitle = true,
 }) => {
 	const t = useTranslations();
 	
@@ -202,18 +201,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	};
 
 	return (
-		<div className="flex flex-col p-6 h-full rounded-xl bg-background neu-elevated">
-			{/* 헤더 */}
-			<div className="flex flex-col items-center mb-2">
-				{showTitle && (
-					<h2 className="text-sm font-semibold text-center text-foreground">
-						{t('주차_테이블_제목_금일입출차현황')}
-					</h2>
-				)}
-				<div className="text-xs text-muted-foreground">
-					{t('주차_테이블_총건수').replace('{count}', filteredVehicles.length.toString())}
-				</div>
-			</div>
+		<div className="flex flex-col p-6 h-full rounded-xl bg-background">
 
 			{/* 검색 필터 */}
 			<div className="mb-3">
@@ -226,7 +214,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 
 			{/* 테이블 영역 */}
 			<div
-				className="rounded-lg border bg-background border-border neu-inset"
+				className="rounded-lg border bg-background"
 				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}>
 				<div className="flex overflow-hidden flex-col h-full">
 					<div className="overflow-y-auto flex-1">

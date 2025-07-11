@@ -1,7 +1,22 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Car, Shield } from 'lucide-react';
+import { Car, Shield, GripVertical } from 'lucide-react';
+import {
+	DndContext,
+	closestCenter,
+	PointerSensor,
+	useSensor,
+	useSensors,
+	DragEndEvent,
+} from '@dnd-kit/core';
+import {
+	arrayMove,
+	SortableContext,
+	horizontalListSortingStrategy,
+	useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
@@ -18,6 +33,94 @@ import {
 } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
 
+// #region Draggable Components
+const SortableVehicleDetail = ({
+	vehicle,
+	showTitle,
+}: {
+	vehicle: VehicleEntry | null;
+	showTitle: boolean;
+}) => {
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id: 'details' });
+	const t = useTranslations();
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		opacity: isDragging ? 0.5 : 1,
+		zIndex: isDragging ? 10 : 'auto',
+	};
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			className="flex flex-col w-full h-full lg:max-w-sm xl:max-w-md shrink-0"
+		>
+			<div
+				{...listeners}
+				className="flex gap-2 items-center justify-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
+			>
+				<GripVertical size={18} className="text-muted-foreground" />
+				<h2 className="text-lg font-semibold text-foreground">
+					{t('주차_카드_차량정보')}
+				</h2>
+			</div>
+			<VehicleDetailCard vehicle={vehicle} showTitle={showTitle} />
+		</div>
+	);
+};
+
+const SortableVehicleList = (
+	props: React.ComponentProps<typeof VehicleListTable>,
+) => {
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id: 'list' });
+	const t = useTranslations();
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		opacity: isDragging ? 0.5 : 1,
+		zIndex: isDragging ? 10 : 'auto',
+	};
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			className="flex flex-col flex-1 w-full h-full neu-flat"
+		>
+			<div
+				{...listeners}
+				className="flex gap-2 items-center justify-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
+			>
+				<GripVertical size={18} className="text-muted-foreground" />
+				<h2 className="text-lg font-semibold text-foreground">
+					{t('주차_테이블_제목_금일입출차현황')}
+				</h2>
+			</div>
+			<div className="flex-1 overflow-y-auto">
+				<VehicleListTable {...props} />
+			</div>
+		</div>
+	);
+};
+// #endregion
+
 export default function Home() {
 	const t = useTranslations();
 
@@ -30,9 +133,32 @@ export default function Home() {
 	const [filters, setFilters] = useState<SearchFilters>({});
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
+	const [panelOrder, setPanelOrder] = useState<string[]>(['details', 'list']);
+	const [isClient, setIsClient] = useState(false);
 	// #endregion
 
-	// #region 초기 데이터 로드
+	// #region DND-Kit 설정
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 8,
+			},
+		}),
+	);
+
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+		if (over && active.id !== over.id) {
+			setPanelOrder((items) => {
+				const oldIndex = items.indexOf(active.id as string);
+				const newIndex = items.indexOf(over.id as string);
+				return arrayMove(items, oldIndex, newIndex);
+			});
+		}
+	};
+	// #endregion
+
+	// #region 초기 데이터 로드 및 클라이언트 확인
 	useEffect(() => {
 		const initialData = generateMockVehicleEntries(50);
 		setVehicles(initialData);
@@ -40,6 +166,10 @@ export default function Home() {
 		if (initialData.length > 0) {
 			setSelectedVehicle(initialData[0]);
 		}
+	}, []);
+
+	useEffect(() => {
+		setIsClient(true);
 	}, []);
 	// #endregion
 
@@ -125,9 +255,10 @@ export default function Home() {
 
 	// #region 렌더링
 	return (
+		// 페이지 전체 컨테이너
 		<div className="p-4 min-h-screen bg-background">
 			<div className="mx-auto max-w-7xl">
-				{/* 헤더 */}
+				{/* 페이지 헤더 */}
 				<div className="mb-6">
 					<h1 className="mb-1 text-2xl font-bold text-foreground">
 						{t('주차_시스템제목')}
@@ -135,47 +266,94 @@ export default function Home() {
 					<p className="text-sm text-muted-foreground">{t('주차_시스템설명')}</p>
 				</div>
 
-				{/* 탭 메뉴 */}
+				{/* 탭 기반 메인 UI */}
 				<Tabs
 					tabs={tabs}
 					variant="default"
 					align="start"
 					size="md"
 					forceRemount={true}>
-					{/* 입출차 관리 탭 */}
-					<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-						{/* Vehicle Detail – start (LTR: left) */}
-						<div className="w-full h-full lg:max-w-sm xl:max-w-md shrink-0">
-							{/* 타이틀 */}
-							<h2 className="mb-2 text-lg font-semibold text-foreground">
-								{t('주차_카드_차량정보')}
-							</h2>
-							<VehicleDetailCard vehicle={selectedVehicle} showTitle={false} />
+					{/* 1. 입출차 관리 탭 */}
+					{isClient ? (
+						// 클라이언트에서만 렌더링: 드래그 앤 드롭 기능 활성화
+						<DndContext
+							sensors={sensors}
+							collisionDetection={closestCenter}
+							onDragEnd={handleDragEnd}
+						>
+							<SortableContext
+								items={panelOrder}
+								strategy={horizontalListSortingStrategy}
+							>
+								<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+									{panelOrder.map((id) =>
+										id === 'details' ? (
+											<SortableVehicleDetail
+												key="details"
+												vehicle={selectedVehicle}
+												showTitle={false}
+											/>
+										) : (
+											<SortableVehicleList
+												key="list"
+												vehicles={vehicles}
+												filters={filters}
+												selectedVehicle={selectedVehicle}
+												onVehicleSelect={handleVehicleSelect}
+												onLoadMore={handleLoadMore}
+												hasMore={hasMore}
+												isLoading={isLoading}
+												onFiltersChange={handleFiltersChange}
+												onSearch={handleSearch}
+												size="lg"
+												showTitle={false}
+											/>
+										),
+									)}
+								</div>
+							</SortableContext>
+						</DndContext>
+					) : (
+						// 서버 사이드 렌더링 및 하이드레이션 이전의 정적 UI
+						<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+							{/* 차량 정보 패널 (정적) */}
+							<div className="flex flex-col w-full h-full lg:max-w-sm xl:max-w-md shrink-0">
+								<div className="flex gap-2 items-center justify-center p-2 rounded-t-lg neu-flat-focus">
+									<GripVertical size={18} className="text-muted-foreground" />
+									<h2 className="text-lg font-semibold text-foreground">
+										{t('주차_카드_차량정보')}
+									</h2>
+								</div>
+								<VehicleDetailCard vehicle={selectedVehicle} showTitle={false} />
+							</div>
+							{/* 차량 목록 테이블 (정적) */}
+							<div className="flex flex-col flex-1 w-full h-full neu-flat">
+								<div className="flex gap-2 items-center justify-center p-2 rounded-t-lg neu-flat-focus">
+									<GripVertical size={18} className="text-muted-foreground" />
+									<h2 className="text-lg font-semibold text-foreground">
+										{t('주차_테이블_제목_금일입출차현황')}
+									</h2>
+								</div>
+								<div className="flex-1 overflow-y-auto">
+									<VehicleListTable
+										vehicles={vehicles}
+										filters={filters}
+										selectedVehicle={selectedVehicle}
+										onVehicleSelect={handleVehicleSelect}
+										onLoadMore={handleLoadMore}
+										hasMore={hasMore}
+										isLoading={isLoading}
+										onFiltersChange={handleFiltersChange}
+										onSearch={handleSearch}
+										size="lg"
+										showTitle={false}
+									/>
+								</div>
+							</div>
 						</div>
+					)}
 
-						{/* Vehicle List – end (LTR: right) */}
-						<div className="flex-1 w-full h-full">
-							{/* 타이틀 */}
-							<h2 className="mb-2 text-lg font-semibold text-foreground">
-								{t('주차_테이블_제목_금일입출차현황')}
-							</h2>
-							<VehicleListTable
-								vehicles={vehicles}
-								filters={filters}
-								selectedVehicle={selectedVehicle}
-								onVehicleSelect={handleVehicleSelect}
-								onLoadMore={handleLoadMore}
-								hasMore={hasMore}
-								isLoading={isLoading}
-								onFiltersChange={handleFiltersChange}
-								onSearch={handleSearch}
-								size="lg"
-								showTitle={false}
-							/>
-						</div>
-					</div>
-
-					{/* 차단기 제어 탭 */}
+					{/* 2. 차단기 제어 탭 */}
 					<div className="space-y-4">
 						<BarrierGrid
 							barriers={barriers}

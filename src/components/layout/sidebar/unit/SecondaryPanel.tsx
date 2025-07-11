@@ -3,8 +3,7 @@
 import { useAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
-import { sidebarCollapsedAtom, activeTopMenuAtom } from '@/store/sidebar';
+import { activeTopMenuAtom } from '@/store/sidebar';
 import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
 import { useSecondaryMenu } from './useSecondaryMenu';
@@ -21,7 +20,6 @@ import { useTranslations } from '@/hooks/useI18n';
 export function SecondaryPanel() {
 	const t = useTranslations();
 	const pathname = usePathname();
-	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [activeTopMenu] = useAtom(activeTopMenuAtom);
 
 	const {
@@ -35,7 +33,6 @@ export function SecondaryPanel() {
 
 	const topData = menuData[activeTopMenu];
 	if (!topData) return null;
-	if (isCollapsed) return null;
 
 	const allMidKeys = Object.keys(topData.midItems);
 	const areAllExpanded = allMidKeys.length > 0 && allMidKeys.every((key) => midExpanded.has(key));
@@ -52,17 +49,10 @@ export function SecondaryPanel() {
 		<TooltipProvider delayDuration={100}>
 			<div
 				style={{ width: `${defaults.expandedWidth}px` }}
-				className="h-full flex flex-col overflow-y-auto scrollbar-hide">
-				{/* Location Title */}
-				<div className="h-16 px-4 flex flex-row items-center justify-start gap-3 border-b border-border/50">
-					<Image src="/icons/testLogo/lg.png" alt="System Logo" width={30} height={30} />
-					<div>
-						<h1 className="text-lg font-bold text-foreground truncate">LG U+</h1>
-						<p className="text-xs text-muted-foreground">시니어 레지던스</p>
-					</div>
-				</div>
+				className="flex overflow-y-auto flex-col h-full scrollbar-hide border-e border-border/20 bg-surface-2 sidebar-container">
+				{/* Location Title - REMOVED */}
 				{/* Menu Controls */}
-				<div className="flex justify-between items-center h-14 px-4 border-b border-border/50">
+				<div className="flex justify-between items-center px-4 h-14 border-b border-border/50">
 					{/* Mode Toggle */}
 					<Tooltip>
 						<TooltipTrigger asChild>
@@ -101,7 +91,7 @@ export function SecondaryPanel() {
 							key={midKey}
 							open={midExpanded.has(midKey)}
 							onOpenChange={() => handleMidClick(midKey)}>
-							<CollapsibleTrigger className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-surface-3 neu-raised">
+							<CollapsibleTrigger className="flex justify-between items-center p-2 w-full rounded-lg hover:bg-surface-3 neu-raised">
 								<span className="font-semibold text-foreground">{t(midItem.key)}</span>
 								<ChevronRight
 									className={`w-5 h-5 transition-transform duration-200 ${
@@ -109,7 +99,7 @@ export function SecondaryPanel() {
 									}`}
 								/>
 							</CollapsibleTrigger>
-							<CollapsibleContent className="py-1 px-2 mt-1 rounded-lg bg-surface-1">
+							<CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
 								<ul className="flex flex-col gap-1">
 									{midItem.botItems.map((botItem) => {
 										const isActive = pathname === botItem.href;

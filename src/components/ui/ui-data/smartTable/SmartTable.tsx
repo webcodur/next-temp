@@ -13,6 +13,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useLocale } from '@/hooks/useI18n';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { cn } from '@/lib/utils';
 
 // #region 타입 및 인터페이스
 type SortDirection = 'asc' | 'desc' | null;
@@ -142,6 +143,8 @@ const SmartTable = <T extends Record<string, any>>({
 							px-6 py-4 
 							${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 							${cellClassName}
+							${index === pageSize - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
+							${index === pageSize - 1 && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
 						`}
 					>
 						<div className="h-5" />
@@ -199,13 +202,20 @@ const SmartTable = <T extends Record<string, any>>({
 	// #region 렌더링
 	return (
 		<>
-			<div className={`overflow-x-auto rounded-lg neu-flat-primary ${className}`}>
+			<div
+				className={cn(
+					'overflow-auto max-h-[600px] rounded-lg neu-flat-primary',
+					className,
+				)}
+			>
 				<table
 					className="w-full overflow-hidden rounded-lg bg-background"
 					style={{ tableLayout: 'fixed' }}
 				>
 					{/* 테이블 헤더 */}
-					<thead className={`border-b bg-primary-1/20 border-primary-4/30 ${headerClassName}`}>
+					<thead
+						className={`sticky top-0 z-10 border-b bg-surface-2 border-primary-4/30 ${headerClassName}`}
+					>
 						<tr>
 							{columns.map((column, colIndex) => {
 								const columnKey = column.key ? String(column.key) : `col-${colIndex}`;
@@ -223,6 +233,8 @@ const SmartTable = <T extends Record<string, any>>({
 											${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 											${canSort ? 'cursor-pointer hover:bg-primary-2/30 select-none' : ''}
 											${column.headerClassName || ''}
+											${colIndex === 0 ? 'rounded-tl-lg' : ''}
+											${colIndex === columns.length - 1 ? 'rounded-tr-lg' : ''}
 										`}
 										style={{ width: column.width }}
 										onClick={() => handleSort(columnKey, canSort, actualKey)}
@@ -287,6 +299,8 @@ const SmartTable = <T extends Record<string, any>>({
 												${getAlignmentClass(column.align)}
 												${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 												${column.cellClassName || cellClassName}
+												${index === actualData.length - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
+												${index === actualData.length - 1 && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
 											`}
 										>
 											{(() => {

@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useRef, useEffect } from 'react';
 import { Clock, X } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
@@ -28,55 +27,14 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 	showClearButton = true,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+	const [openAbove, setOpenAbove] = useState(false);
 	const [selectedHour, setSelectedHour] = useState<number | null>(null);
 	const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
 	const [inputValue, setInputValue] = useState<string>(value);
 	const { isRTL } = useLocale();
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const calculatePosition = useCallback(() => {
-		if (containerRef.current) {
-			const rect = containerRef.current.getBoundingClientRect();
-			const dropdownHeight = 300; // 근사치
-			const viewportHeight = window.innerHeight;
-			const spaceBelow = viewportHeight - rect.bottom;
-			const shouldOpenAbove = spaceBelow < dropdownHeight;
-			
-			setPosition({
-				top: shouldOpenAbove ? rect.top - dropdownHeight - 8 : rect.bottom + 8,
-				left: rect.left,
-				width: rect.width,
-			});
-		}
-	}, []);
-	
-	useEffect(() => {
-		if (isOpen) {
-			let ticking = false;
-			const handleEvent = () => {
-				if (!ticking) {
-					window.requestAnimationFrame(() => {
-						calculatePosition();
-						ticking = false;
-					});
-					ticking = true;
-				}
-			};
-			
-			calculatePosition();
-			window.addEventListener('scroll', handleEvent, true);
-			window.addEventListener('resize', handleEvent);
-			
-			return () => {
-				window.removeEventListener('scroll', handleEvent, true);
-				window.removeEventListener('resize', handleEvent);
-			};
-		}
-	}, [isOpen, calculatePosition]);
-
-
-	// 현재 값을 파싱
+	// 현재 값을 파싱하여 시/분 상태 설정
 	useEffect(() => {
 		setInputValue(value);
 		if (value) {
@@ -89,7 +47,17 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 		}
 	}, [value]);
 
-	// 외부 클릭 시 닫기
+	// 드롭다운 위치 계산
+	useEffect(() => {
+		if (isOpen && containerRef.current) {
+			const rect = containerRef.current.getBoundingClientRect();
+			const dropdownHeight = 300; // 근사치
+			const spaceBelow = window.innerHeight - rect.bottom;
+			setOpenAbove(spaceBelow < dropdownHeight);
+		}
+	}, [isOpen]);
+
+	// 외부 클릭 감지
 	useEffect(() => {
 		if (!isOpen) return;
 		const handleClick = (e: MouseEvent) => {
@@ -113,87 +81,9 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 
 	// 시간 옵션 생성
 	const hours = Array.from({ length: 24 }, (_, i) => i);
-	const minutes = Array.from({ length: 60 }, (_, i) => i);
+	const minutes = Array.from({ length: 12 }, (_, i) => i * 5);
 
 	const hasValue = Boolean(value);
-
-	const dropdownContent = (
-		<div 
-			className={`fixed z-[9999] ${document.documentElement.classList.contains('dark') ? 'dark' : ''}`}
-			style={{
-				top: `${position.top}px`,
-				left: `${position.left}px`,
-				width: `${position.width}px`,
-				colorScheme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-			}}
-		>
-			<div 
-				className={`
-					${FIELD_STYLES.dropdown}
-					rounded-lg max-h-64 overflow-hidden
-				`}
-			>
-				<div className="p-4">
-					<div className="mb-3 text-sm font-medium text-foreground">시간 선택</div>
-					
-					{/* 시간/분 선택 스크롤 리스트 */}
-					<div className="flex gap-4">
-						{/* 시 리스트 */}
-						<div className="w-16">
-							<div className="mb-2 text-xs text-center text-muted-foreground">시</div>
-							<div className="overflow-y-auto p-1 space-y-1 max-h-56">
-								{hours.map((hour) => (
-									<button
-										key={hour}
-										type="button"
-										onClick={() => {
-											const minute = selectedMinute ?? 0;
-											handleTimeSelect(hour, minute);
-										}}
-										className={`
-											w-full px-2 py-1 text-xs rounded text-center
-											${selectedHour === hour 
-												? 'neu-inset !bg-primary !text-primary-foreground' 
-												: 'neu-raised hover:bg-muted'
-											}
-										`}
-									>
-										{hour.toString().padStart(2, '0')}
-									</button>
-								))}
-							</div>
-						</div>
-
-						{/* 분 리스트 */}
-						<div className="w-16">
-							<div className="mb-2 text-xs text-center text-muted-foreground">분</div>
-							<div className="overflow-y-auto p-1 space-y-1 max-h-56">
-								{minutes.map((minute) => (
-									<button
-										key={minute}
-										type="button"
-										onClick={() => {
-											const hour = selectedHour ?? 0;
-											handleTimeSelect(hour, minute);
-										}}
-										className={`
-											w-full px-2 py-1 text-xs rounded text-center
-											${selectedMinute === minute 
-												? 'neu-inset !bg-primary !text-primary-foreground' 
-												: 'neu-raised hover:bg-muted'
-											}
-										`}
-									>
-										{minute.toString().padStart(2, '0')}
-									</button>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
 
 	return (
 		<div ref={containerRef} className={`relative space-y-1 ${className}`}>
@@ -266,7 +156,60 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 				)}
 
 				{/* 시간 선택 드롭다운 */}
-				{isOpen && !disabled && createPortal(dropdownContent, document.body)}
+				{isOpen && !disabled && (
+					<div 
+						className={`
+							absolute start-0 end-0 z-50
+							${openAbove ? 'bottom-full mb-1' : 'top-full mt-1'}
+							${FIELD_STYLES.dropdown}
+							rounded-lg max-h-64 overflow-hidden
+						`}
+					>
+						<div className="p-4">
+							<div className="mb-3 text-sm font-medium text-foreground">시간 선택</div>
+							<div className="flex gap-4">
+								{/* 시 리스트 */}
+								<div className="w-16">
+									<div className="mb-2 text-xs text-center text-muted-foreground">시</div>
+									<div className="overflow-y-auto p-1 space-y-1 max-h-56">
+										{hours.map((hour) => (
+											<button
+												key={hour}
+												type="button"
+												onClick={() => handleTimeSelect(hour, selectedMinute ?? 0)}
+												className={`w-full px-2 py-1 text-xs rounded text-center
+													${selectedHour === hour 
+														? 'neu-inset !bg-primary !text-primary-foreground' 
+														: 'neu-raised hover:bg-muted'}`}
+											>
+												{hour.toString().padStart(2, '0')}
+											</button>
+										))}
+									</div>
+								</div>
+								{/* 분 리스트 */}
+								<div className="w-16">
+									<div className="mb-2 text-xs text-center text-muted-foreground">분</div>
+									<div className="overflow-y-auto p-1 space-y-1 max-h-56">
+										{minutes.map((minute) => (
+											<button
+												key={minute}
+												type="button"
+												onClick={() => handleTimeSelect(selectedHour ?? 0, minute)}
+												className={`w-full px-2 py-1 text-xs rounded text-center
+													${selectedMinute === minute 
+														? 'neu-inset !bg-primary !text-primary-foreground' 
+														: 'neu-raised hover:bg-muted'}`}
+											>
+												{minute.toString().padStart(2, '0')}
+											</button>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);

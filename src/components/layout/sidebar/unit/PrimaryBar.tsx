@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { PanelLeft } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
 import { sidebarCollapsedAtom, activeTopMenuAtom } from '@/store/sidebar';
@@ -23,14 +23,15 @@ export function PrimaryBar() {
 	return (
 		<div
 			style={{ minWidth: `${defaults.startColumnWidth}px` }}
-			className="h-full border-e border-border/20 shrink-0 flex flex-col items-center">
-			{/* 여닫기 버튼 */}
-			<div className="h-16 flex items-center justify-center">
+			className="flex flex-col items-center h-full border-e border-border/20 shrink-0">
+			
+      {/* 여닫기 버튼 */}
+			<div className="flex justify-center items-center h-16">
 				<button
 					type="button"
 					onClick={handleToggle}
-					className="w-12 h-12 rounded-xl flex items-center justify-center neu-raised hover:neu-inset transition-all duration-200">
-					<PanelLeft className="w-6 h-6 text-foreground" />
+					className="flex justify-center items-center w-12 h-12 rounded-xl transition-all duration-200 neu-raised hover:neu-inset">
+					<Menu className="w-6 h-6 text-foreground" />
 				</button>
 			</div>
 

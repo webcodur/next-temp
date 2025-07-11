@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import { FieldProps } from './types';
 import FieldText from '../text/FieldText';
 import FieldPassword from '../text/FieldPassword';
@@ -10,13 +10,8 @@ import { FieldSortSelect } from '../select/FieldSortSelect';
 import FieldDatePicker from '../datepicker/FieldDatePicker';
 
 export const Field: React.FC<FieldProps> = (props) => {
-	// 고유한 id 생성 (label 기반 또는 랜덤)
-	const generateId = () => {
-		const base = props.label?.replace(/\s+/g, '-').toLowerCase() || 'field';
-		return `${base}-${Math.random().toString(36).substr(2, 9)}`;
-	};
-
-	const id = generateId();
+	const generatedId = useId();
+	const id = `field-${generatedId}`;
 
 	switch (props.type) {
 		case 'text':
