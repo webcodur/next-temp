@@ -37,6 +37,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import { Sidebar } from './sidebar/Sidebar';
 import { Header } from './header/Header';
 import { SecondaryPanel } from './sidebar/unit/SecondaryPanel';
+import { InfoPanel } from './InfoPanel';
 // hooks
 import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
 // data
@@ -73,9 +74,10 @@ export function MainLayout({ children }: MainLayoutProps) {
 							<div className="mb-6">
 								<PageHeader />
 							</div>
-							{children}
-						</div>
+                {children}
+						</div>  
 					</main>
+					<InfoPanel />
 				</div>
 			</div>
 		</div>

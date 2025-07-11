@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { currentBotMenuAtom } from '@/store/sidebar';
-import { pageDescriptionAtom } from '@/store/page';
+import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
 import { menuData } from '@/data/menuData';
 // i18n
 import { useTranslations } from '@/hooks/useI18n';
@@ -30,6 +30,7 @@ const hrefToKeyMap: Record<string, string> = (() => {
 
 // 페이지 상단 중앙 헤더 (타이틀 + 설명)
 export default function PageHeader() {
+  const pageTitleFromAtom = useAtomValue(pageTitleAtom);
   const currentBotMenu = useAtomValue(currentBotMenuAtom);
   const description = useAtomValue(pageDescriptionAtom);
   const pathname = usePathname();
@@ -39,13 +40,16 @@ export default function PageHeader() {
 
   // 타이틀 계산: 1) Atom 2) 메뉴 매핑 3) URL 세그먼트
   const title = useMemo(() => {
+    // 1) Atom 값 우선 사용
+    if (pageTitleFromAtom) return pageTitleFromAtom;
+
     let key = '';
 
-    // 1) Atom 값
+    // 2) Atom 값
     if (currentBotMenu) key = currentBotMenu;
-    // 2) 메뉴 매핑
+    // 3) 메뉴 매핑
     else if (hrefToKeyMap[pathname]) key = hrefToKeyMap[pathname];
-    // 3) URL 세그먼트
+    // 4) URL 세그먼트
     else {
       const last = pathname.split('/').filter(Boolean).pop();
       key = last ? last.replace(/-/g, ' ') : '';
@@ -55,7 +59,7 @@ export default function PageHeader() {
 
     // 언어팩 키는 "메뉴_{key}" 형식
     return t(`메뉴_${key}`);
-  }, [currentBotMenu, pathname, t]);
+  }, [pageTitleFromAtom, currentBotMenu, pathname, t]);
 
   // 타이틀과 설명이 모두 없으면 렌더 스킵
   if (!title && !description) return null;

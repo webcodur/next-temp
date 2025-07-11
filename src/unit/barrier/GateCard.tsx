@@ -33,13 +33,6 @@ interface GateCardProps {
   editingName: string;
   setEditingName: React.Dispatch<React.SetStateAction<string>>;
 }
-
-interface CategoryToggleProps {
-  label: string;
-  active: boolean;
-  disabled: boolean;
-  onToggle: () => void;
-}
 // #endregion
 
 // #region 상수
@@ -64,41 +57,6 @@ const VIEW_LABEL: Record<ViewType, string> = {
   driver: '운전자',
   security: '보안카메라',
 };
-// #endregion
-
-// #region 하위 컴포넌트
-function CategoryToggle({ label, active, disabled, onToggle }: CategoryToggleProps) {
-  return (
-    <div
-      className={`
-        flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer
-        ${active 
-          ? 'bg-primary/10 border-primary/30 text-primary' 
-          : 'bg-surface-2/30 border-border/30 text-muted-foreground'
-        }
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}
-      `}
-      onClick={disabled ? undefined : onToggle}
-    >
-      <span className="font-medium font-multilang">{label}</span>
-      <div className="relative">
-        <div
-          className={`
-            w-10 h-5 rounded-full transition-all
-            ${active ? 'bg-primary' : 'bg-surface-3'}
-          `}
-        >
-          <div
-            className={`
-              absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform
-              ${active ? 'translate-x-5' : 'translate-x-0.5'}
-            `}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 // #endregion
 
 export default function GateCard({
@@ -142,6 +100,14 @@ export default function GateCard({
     setView(view);
     setIsModalOpen(false);
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      onEditCancel();
+    } else if (e.key === 'Enter') {
+      onEditSave();
+    }
+  };
   // #endregion
 
   // #region 렌더링
@@ -166,19 +132,22 @@ export default function GateCard({
         <div className={TITLEBAR_CONTENT_STYLE}>
           {isEditing ? (
             <input
-              className="px-3 py-1 w-40 text-lg font-bold text-center rounded-md outline-none font-multilang neu-flat focus:neu-inset bg-background"
+              className="w-40 px-3 py-1 text-lg font-bold text-center bg-background rounded-md outline-none font-multilang neu-flat focus:neu-inset"
               value={editingName}
               onChange={(e) => setEditingName(e.target.value)}
+              onKeyDown={handleKeyDown}
               spellCheck={false}
               onClick={(e) => e.stopPropagation()} // 드래그 방지
             />
           ) : (
-            <span className="text-lg font-bold font-multilang">{gateDisplayName}</span>
+            <span className="inline-block w-40 px-3 py-1 text-lg font-bold text-center truncate font-multilang">
+              {gateDisplayName}
+            </span>
           )}
         </div>
 
         {/* 액션 버튼들 (우측) */}
-        <div className="flex gap-1">
+        <div className="flex justify-end gap-1" style={{ minWidth: '3.25rem' }}>
           {isEditing ? (
             <>
               <Button 
@@ -188,7 +157,7 @@ export default function GateCard({
                   e.stopPropagation();
                   onEditSave();
                 }}
-                className="h-6 w-6">
+                className="w-6 h-6">
                 <Check size={14} />
               </Button>
               <Button 
@@ -198,7 +167,7 @@ export default function GateCard({
                   e.stopPropagation();
                   onEditCancel();
                 }}
-                className="h-6 w-6">
+                className="w-6 h-6">
                 <X size={14} />
               </Button>
             </>
@@ -210,7 +179,7 @@ export default function GateCard({
                 e.stopPropagation();
                 onEditStart();
               }}
-              className="h-6 w-6">
+              className="w-6 h-6">
               <Pencil size={14} />
             </Button>
           )}
@@ -220,17 +189,27 @@ export default function GateCard({
       {/* 카드 내용 영역 */}
       <div className="flex flex-col gap-4 p-6">
         {/* 카테고리 토글들 */}
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {defaultCategories.map((cat) => {
             const active = categories?.[cat] || false;
+            const buttonClass = active
+              ? 'neu-inset text-primary'
+              : 'neu-raised text-muted-foreground';
+
             return (
-              <CategoryToggle
+              <button
                 key={cat}
-                label={cat}
-                active={active}
                 disabled={!isEditing}
-                onToggle={() => toggleCategory(id, cat)}
-              />
+                onClick={() => toggleCategory(id, cat)}
+                className={`
+                  p-3 rounded-lg text-sm font-medium transition-all duration-150 font-multilang
+                  ${buttonClass}
+                  disabled:opacity-50 disabled:cursor-not-allowed disabled:neu-flat
+                  ${!isEditing ? '' : 'hover:scale-[1.03]'}
+                `}
+              >
+                {cat}
+              </button>
             );
           })}
         </div>
