@@ -11,7 +11,6 @@ import {
 	currentBotMenuAtom,
 } from '@/store/sidebar';
 import { menuData } from '@/data/menuData';
-import { siteData } from '@/data/siteData';
 import clsx from 'clsx';
 
 // #region BreadcrumbItem 컴포넌트
@@ -72,7 +71,7 @@ export function Breadcrumb() {
 
 	// #region 브레드크럼 아이템 생성
 	const getBreadcrumbItems = () => {
-		const items = [{ label: siteData.name, href: '/' }];
+		const items = [];
 
 		if (currentTopMenu && menuData[currentTopMenu]) {
 			items.push({

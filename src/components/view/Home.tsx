@@ -66,7 +66,7 @@ const SortableVehicleDetail = ({
 		>
 			<div
 				{...listeners}
-				className="flex gap-2 items-center justify-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
+				className="flex gap-2 justify-center items-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
 			>
 				<GripVertical size={18} className="text-muted-foreground" />
 				<h2 className="text-lg font-semibold text-foreground">
@@ -106,14 +106,14 @@ const SortableVehicleList = (
 		>
 			<div
 				{...listeners}
-				className="flex gap-2 items-center justify-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
+				className="flex gap-2 justify-center items-center p-2 rounded-t-lg cursor-grab neu-flat-focus"
 			>
 				<GripVertical size={18} className="text-muted-foreground" />
 				<h2 className="text-lg font-semibold text-foreground">
 					{t('주차_테이블_제목_금일입출차현황')}
 				</h2>
 			</div>
-			<div className="flex-1 overflow-y-auto">
+			<div className="overflow-y-auto flex-1">
 				<VehicleListTable {...props} />
 			</div>
 		</div>
@@ -256,10 +256,10 @@ export default function Home() {
 	// #region 렌더링
 	return (
 		// 페이지 전체 컨테이너
-		<div className="p-4 min-h-screen bg-background">
-			<div className="mx-auto max-w-7xl">
+		<div className="p-4 min-h-screen rounded-lg bg-background border-1">
+			<div className="mx-auto my-2 max-w-7xl">
 				{/* 페이지 헤더 */}
-				<div className="mb-6">
+				<div className="mb-6 text-center">
 					<h1 className="mb-1 text-2xl font-bold text-foreground">
 						{t('주차_시스템제목')}
 					</h1>
@@ -316,9 +316,10 @@ export default function Home() {
 					) : (
 						// 서버 사이드 렌더링 및 하이드레이션 이전의 정적 UI
 						<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-							{/* 차량 정보 패널 (정적) */}
+
+							{/* 차량 상세정보 패널 */}
 							<div className="flex flex-col w-full h-full lg:max-w-sm xl:max-w-md shrink-0">
-								<div className="flex gap-2 items-center justify-center p-2 rounded-t-lg neu-flat-focus">
+								<div className="flex gap-2 justify-center items-center p-2 rounded-t-lg">
 									<GripVertical size={18} className="text-muted-foreground" />
 									<h2 className="text-lg font-semibold text-foreground">
 										{t('주차_카드_차량정보')}
@@ -326,15 +327,16 @@ export default function Home() {
 								</div>
 								<VehicleDetailCard vehicle={selectedVehicle} showTitle={false} />
 							</div>
-							{/* 차량 목록 테이블 (정적) */}
-							<div className="flex flex-col flex-1 w-full h-full neu-flat">
-								<div className="flex gap-2 items-center justify-center p-2 rounded-t-lg neu-flat-focus">
+
+							{/* 차량 목록 테이블 */}
+							<div className="flex flex-col flex-1 w-full h-full">
+								<div className="flex gap-2 justify-center items-center p-2 rounded-t-lg">
 									<GripVertical size={18} className="text-muted-foreground" />
 									<h2 className="text-lg font-semibold text-foreground">
 										{t('주차_테이블_제목_금일입출차현황')}
 									</h2>
 								</div>
-								<div className="flex-1 overflow-y-auto">
+								<div className="overflow-y-auto flex-1">
 									<VehicleListTable
 										vehicles={vehicles}
 										filters={filters}

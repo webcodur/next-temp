@@ -36,10 +36,12 @@ export function useSecondaryMenu() {
 		[singleOpenMode]
 	);
 
-	const handleSingleOpenToggle = () => setSingleOpenMode((prev) => !prev);
-	const handleExpandAll = (allKeys: string[]) =>
-		setMidExpanded(new Set(allKeys));
-	const handleCollapseAll = () => setMidExpanded(new Set());
+	const handleSingleOpenToggle = useCallback(() => setSingleOpenMode((prev) => !prev), [setSingleOpenMode]);
+	const handleExpandAll = useCallback(
+		(allKeys: string[]) => setMidExpanded(new Set(allKeys)),
+		[]
+	);
+	const handleCollapseAll = useCallback(() => setMidExpanded(new Set()), []);
 
 	return {
 		midExpanded,

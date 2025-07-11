@@ -5,7 +5,6 @@ import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/Advance
 import DataTable from '@/components/ui/ui-data/data-table/DataTable';
 import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 import { usePageDescription } from '@/hooks/usePageDescription';
-import { useLocale } from '@/hooks/useI18n';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import TimeRangePicker from '@/components/ui/ui-input/field/time/unit/TimeRangePicker';
 
@@ -100,7 +99,6 @@ const SEARCH_CATEGORY_OPTIONS = [
 
 export default function MemberEntryExitPage() {
   usePageDescription('이용자 입출차 현황을 실시간으로 관리합니다.');
-  const { isRTL } = useLocale();
 
   // ------------------------- 상태 관리 -------------------------
   const [filteredData, setFilteredData] = useState<EntryExit[]>(MOCK_DATA);
@@ -165,16 +163,12 @@ export default function MemberEntryExitPage() {
 
   // --------------------------- 렌더 ---------------------------
   return (
-    <main
-      className="flex flex-col gap-6 px-4 mx-auto w-full max-w-7xl md:px-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-      suppressHydrationWarning
-    >
+    <div className="flex flex-col gap-6">
       {/* 고급 검색 패널 */}
       <AdvancedSearch title="검색조건 설정" onSearch={handleSearch} onReset={handleReset}>
         {/* 기간 설정 */}
-        <div className="flex items-center gap-2">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">기간설정</span>
+        <div className="flex gap-2 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">기간설정</span>
           <Field
             type="datepicker"
             datePickerType="range"
@@ -187,8 +181,8 @@ export default function MemberEntryExitPage() {
         </div>
 
         {/* 시간설정 */}
-        <div className="flex items-center gap-2">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">시간설정</span>
+        <div className="flex gap-2 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">시간설정</span>
           <Field
             type="select"
             placeholder="전체"
@@ -210,8 +204,8 @@ export default function MemberEntryExitPage() {
         </div>
 
         {/* 구분 (차량유형) */}
-        <div className="flex items-center gap-2">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">구분</span>
+        <div className="flex gap-2 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">구분</span>
           <Field
             type="select"
             placeholder="차량유형 선택"
@@ -223,8 +217,8 @@ export default function MemberEntryExitPage() {
         </div>
 
         {/* 주차시간 */}
-        <div className="flex items-center gap-2">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">주차시간</span>
+        <div className="flex gap-2 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">주차시간</span>
           <Field
             type="text"
             placeholder="0"
@@ -244,9 +238,9 @@ export default function MemberEntryExitPage() {
         </div>
 
         {/* 출차 여부 */}
-        <div className="flex items-center gap-4">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">출차여부</span>
-          <label className="flex items-center gap-1 text-sm">
+        <div className="flex gap-4 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">출차여부</span>
+          <label className="flex gap-1 items-center text-sm">
             <input
               type="radio"
               name="exitStatus"
@@ -256,7 +250,7 @@ export default function MemberEntryExitPage() {
             />
             전체
           </label>
-          <label className="flex items-center gap-1 text-sm">
+          <label className="flex gap-1 items-center text-sm">
             <input
               type="radio"
               name="exitStatus"
@@ -269,8 +263,8 @@ export default function MemberEntryExitPage() {
         </div>
 
         {/* 검색설정 */}
-        <div className="flex items-center gap-2">
-          <span className="w-20 shrink-0 neu-flat py-2 text-center text-sm">검색설정</span>
+        <div className="flex gap-2 items-center">
+          <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">검색설정</span>
           <Field
             type="select"
             placeholder="차량번호"
@@ -294,6 +288,6 @@ export default function MemberEntryExitPage() {
         <h2 className="mb-4 text-xl font-semibold">입출차 조회</h2>
         <DataTable<EntryExit> data={filteredData} columns={columns} />
       </section>
-    </main>
+    </div>
   );
 } 

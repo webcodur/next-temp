@@ -3,6 +3,7 @@
 import { useAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { activeTopMenuAtom } from '@/store/sidebar';
 import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
@@ -32,6 +33,14 @@ export function SecondaryPanel() {
 	} = useSecondaryMenu();
 
 	const topData = menuData[activeTopMenu];
+
+	useEffect(() => {
+		if (topData) {
+			const allMidKeys = Object.keys(topData.midItems);
+			handleExpandAll(allMidKeys);
+		}
+	}, [activeTopMenu, topData, handleExpandAll]);
+
 	if (!topData) return null;
 
 	const allMidKeys = Object.keys(topData.midItems);
@@ -49,10 +58,10 @@ export function SecondaryPanel() {
 		<TooltipProvider delayDuration={100}>
 			<div
 				style={{ width: `${defaults.expandedWidth}px` }}
-				className="flex overflow-y-auto flex-col h-full scrollbar-hide border-e border-border/20 bg-surface-2 sidebar-container">
+				className="flex flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
 				{/* Location Title - REMOVED */}
 				{/* Menu Controls */}
-				<div className="flex justify-between items-center px-4 h-14 border-b border-border/50">
+				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-border/50">
 					{/* Mode Toggle */}
 					<Tooltip>
 						<TooltipTrigger asChild>
@@ -85,7 +94,7 @@ export function SecondaryPanel() {
 				</div>
 
 				{/* Menu List */}
-				<nav className="flex flex-col gap-2 p-2">
+				<nav className="flex overflow-y-auto flex-col flex-grow gap-2 p-2 scrollbar-hide">
 					{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 						<Collapsible
 							key={midKey}

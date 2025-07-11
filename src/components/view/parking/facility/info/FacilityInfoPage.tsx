@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { usePageDescription } from '@/hooks/usePageDescription';
-import { useLocale } from '@/hooks/useI18n';
 import type { LucideIcon } from 'lucide-react';
 import { Car, Users, Smartphone, Shield, Calendar, CreditCard, Phone, LockKeyhole, User } from 'lucide-react';
 
@@ -21,7 +20,6 @@ function InfoCard({ label, value, icon: Icon }: { label: string; value: string; 
 export default function FacilityInfoPage() {
   // 페이지 설명 설정
   usePageDescription('시설 기본 정보를 표시합니다.');
-  const { isRTL } = useLocale();
 
   /* -------------------------------------------------------------------------- */
   /*                                 MOCK DATA                                  */
@@ -60,11 +58,7 @@ export default function FacilityInfoPage() {
   ];
 
   return (
-    <main
-      className="flex flex-col gap-12 px-4 mx-auto w-full max-w-5xl md:px-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-      suppressHydrationWarning
-    >
+    <div className="flex flex-col gap-12 mx-auto w-full max-w-5xl">
       {/* ----------------------------- 헤더 영역 ----------------------------- */}
       <header className="flex flex-col gap-3">
         {/* 시설 유형 라벨 */}
@@ -73,9 +67,7 @@ export default function FacilityInfoPage() {
         </span>
 
         {/* 시설명, 과금 상태 */}
-        <h1
-          className={`flex gap-2 items-end text-3xl font-semibold leading-snug ${
-            isRTL ? 'flex-row-reverse' : ''}`}>
+        <h1 className="flex gap-2 items-end text-3xl font-semibold leading-snug">
           <span className="font-multilang">{facility.name}</span>
           <span className="text-base text-primary">{facility.contract.paid}</span>
         </h1>
@@ -95,6 +87,6 @@ export default function FacilityInfoPage() {
           />
         ))}
       </section>
-    </main>
+    </div>
   );
 } 
