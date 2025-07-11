@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/announcement/notices/event/EventNoticesPage'; 
+export { default } from '@/components/view/announcement/notices/event/EventNoticesPage'; 

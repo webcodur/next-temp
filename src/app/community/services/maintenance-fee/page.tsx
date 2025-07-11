@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/community/services/maintenance-fee/MaintenanceFeePage'; 
+export { default } from '@/components/view/community/services/maintenance-fee/MaintenanceFeePage'; 

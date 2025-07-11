@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/parking/facility/entry/EntryPolicyPage'; 
+export { default } from '@/components/view/parking/facility/entry/EntryPolicyPage'; 

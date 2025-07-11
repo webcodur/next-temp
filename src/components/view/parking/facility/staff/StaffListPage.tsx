@@ -7,7 +7,7 @@ import { usePageDescription } from '@/hooks/usePageDescription';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import DataTable from '@/components/ui/ui-data/data-table/DataTable';
 import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
-import AddStaffModal, { StaffInput } from '@/view/parking/facility/staff/AddStaffModal';
+import AddStaffModal, { StaffInput } from '@/components/view/parking/facility/staff/AddStaffModal';
 
 // #region 타입 정의
 interface Staff {

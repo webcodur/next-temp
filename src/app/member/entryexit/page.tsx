@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import MemberEntryExitPage from '@/view/member/entry-exit/MemberEntryExitPage';
+import MemberEntryExitPage from '@/components/view/member/entry-exit/MemberEntryExitPage';
 
 export default function MemberEntryExitRoute() {
   return <MemberEntryExitPage />;

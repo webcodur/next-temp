@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/parking/stores/status/StoreStatusPage'; 
+export { default } from '@/components/view/parking/stores/status/StoreStatusPage'; 

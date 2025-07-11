@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/parking/payment/settlement/PaymentSettlementPage'; 
+export { default } from '@/components/view/parking/payment/settlement/PaymentSettlementPage'; 

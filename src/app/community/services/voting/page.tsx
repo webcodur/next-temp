@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/community/services/voting/VotingPage'; 
+export { default } from '@/components/view/community/services/voting/VotingPage'; 

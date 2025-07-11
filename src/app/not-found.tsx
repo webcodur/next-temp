@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/NotFound';
+export { default } from '@/components/view/NotFound';

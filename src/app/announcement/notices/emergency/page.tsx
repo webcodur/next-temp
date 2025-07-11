@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/announcement/notices/emergency/EmergencyNoticesPage'; 
+export { default } from '@/components/view/announcement/notices/emergency/EmergencyNoticesPage'; 

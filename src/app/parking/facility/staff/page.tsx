@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/parking/facility/staff/StaffListPage'; 
+export { default } from '@/components/view/parking/facility/staff/StaffListPage'; 

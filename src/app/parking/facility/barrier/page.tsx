@@ -1,3 +1,3 @@
 'use client';
 
-export { default } from '@/view/parking/facility/barrier/BarrierPolicyPage';
+export { default } from '@/components/view/parking/facility/barrier/BarrierPolicyPage';

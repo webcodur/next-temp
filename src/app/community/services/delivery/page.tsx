@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/community/services/delivery/DeliveryManagementPage'; 
+export { default } from '@/components/view/community/services/delivery/DeliveryManagementPage'; 

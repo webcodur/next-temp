@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/Home';
+export { default } from '@/components/view/Home';

@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/announcement/push/template/PushTemplatePage'; 
+export { default } from '@/components/view/announcement/push/template/PushTemplatePage'; 

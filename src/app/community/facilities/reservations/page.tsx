@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/community/facilities/reservations/FacilityReservationsPage'; 
+export { default } from '@/components/view/community/facilities/reservations/FacilityReservationsPage'; 

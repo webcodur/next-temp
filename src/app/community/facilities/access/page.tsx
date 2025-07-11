@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/view/community/facilities/access/FacilityAccessPage'; 
+export { default } from '@/components/view/community/facilities/access/FacilityAccessPage'; 
