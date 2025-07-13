@@ -110,7 +110,6 @@ const VehicleSmartTable: React.FC<VehicleSmartTableProps> = ({
         <SmartTable
           data={[]}
           columns={columns}
-          emptyMessage="차량 데이터가 없습니다."
           rowClassName={(item) => {
             const base = `${sz.font} ${sz.padding} hover:bg-muted cursor-pointer`;
             const state =

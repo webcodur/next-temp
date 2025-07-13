@@ -19,8 +19,8 @@ const getTypeLabel = (type: CellType): string => {
   switch (type) {
     case 'seat':
       return '좌석';
-    case 'table':
-      return '테이블';
+    case 'object':
+      return '객체';
     default:
       return '';
   }
@@ -30,7 +30,7 @@ const getTypeColor = (type: CellType): string => {
   switch (type) {
     case 'seat':
       return 'text-green-600';
-    case 'table':
+    case 'object':
       return 'text-yellow-600';
     default:
       return 'text-gray-500';

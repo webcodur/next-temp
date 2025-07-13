@@ -29,6 +29,8 @@ const ProfileIcon = () => (
 
 const TabsPage: React.FC = () => {
 	const t = useTranslations();
+	// 탭 상태 관리
+	const [activeTab, setActiveTab] = useState('tab1');
 	// 토글 상태 관리
 	const [notifications, setNotifications] = useState(true);
 	const [darkMode, setDarkMode] = useState(false);
@@ -48,143 +50,148 @@ const TabsPage: React.FC = () => {
 
 				<Tabs 
 					tabs={tabList} 
-					variant="filled"
+					activeId={activeTab}
+					onTabChange={setActiveTab}
 					align="center"
 					size="md"
 					className="p-6"
-				>
-					{/* 대시보드 탭 */}
-					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-							{t('탭_대시보드개요')}
-						</h2>
-						<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_총방문자')}</h3>
-								<p className="text-2xl font-bold text-gray-600">12,345</p>
-							</div>
-							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_월간매출')}</h3>
-								<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
-							</div>
-							<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-								<h3 className="font-medium text-gray-700 font-multilang">{t('탭_신규가입')}</h3>
-								<p className="text-2xl font-bold text-gray-600">834</p>
+				/>
+
+				<div className="mt-6 p-6 rounded-xl neu-flat min-h-[300px]">
+					{activeTab === 'tab1' && (
+						<div className="space-y-6">
+							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+								{t('탭_대시보드개요')}
+							</h2>
+							<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_총방문자')}</h3>
+									<p className="text-2xl font-bold text-gray-600">12,345</p>
+								</div>
+								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_월간매출')}</h3>
+									<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
+								</div>
+								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_활성사용자')}</h3>
+									<p className="text-2xl font-bold text-gray-600">3,456</p>
+								</div>
 							</div>
 						</div>
-					</div>
+					)}
 
-					{/* 설정 탭 */}
-					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-							{t('탭_시스템설정')}
-						</h2>
-						<div className="space-y-5">
-							{/* 알림 토글 */}
-							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
-								<div>
-									<span className="font-medium text-gray-700 font-multilang">{t('탭_알림활성화')}</span>
-									<p className="mt-1 text-sm text-gray-500 font-multilang">
-										{notifications
-											? t('탭_알림활성화됨')
-											: t('탭_알림비활성화됨')}
-									</p>
-								</div>
-								<button
-									onClick={() => setNotifications(!notifications)}
-									className="focus:outline-hidden">
-									<div className={cn("relative w-14 h-7 rounded-full transition-all duration-200 neu-inset")}>
-										<div
-											className={cn(
-												"w-6 h-6 rounded-full absolute top-0.5 neu-raised transition-all duration-300",
-												notifications ? 'right-0.5 bg-green-50' : 'left-0.5'
-											)}
-										/>
-									</div>
-								</button>
-							</div>
-
-							{/* 다크모드 토글 */}
-							<div className="flex justify-between items-center p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
-								<div>
-									<span className="font-medium text-gray-700 font-multilang">{t('탭_다크모드')}</span>
-									<p className="mt-1 text-sm text-gray-500 font-multilang">
-										{darkMode
-											? t('탭_다크모드활성화됨')
-											: t('탭_라이트모드활성화됨')}
-									</p>
-								</div>
-								<button
-									onClick={() => setDarkMode(!darkMode)}
-									className="focus:outline-hidden">
-									<div className={cn("relative w-14 h-7 rounded-full transition-all duration-200 neu-inset")}>
-										<div
-											className={cn(
-												"w-6 h-6 rounded-full absolute top-0.5 neu-raised transition-all duration-300",
-												darkMode ? 'right-0.5 bg-blue-50' : 'left-0.5'
-											)}
-										/>
-									</div>
-								</button>
-							</div>
-
-							{/* 추가 설정 항목 */}
-							<div className="p-5 rounded-lg transition-all duration-200 neu-flat hover:neu-raised">
-								<h3 className="mb-3 font-medium text-gray-700 font-multilang">
-									{t('탭_현재설정상태')}
-								</h3>
-								<div className="space-y-2 text-sm text-gray-600">
-									<div className="flex justify-between">
-										<span className="font-multilang">{t('탭_알림')}</span>
-										<span
-											className={
-												notifications ? 'font-medium text-green-600' : 'font-medium text-red-500'
-											}>
-											{notifications ? t('탭_ON') : t('탭_OFF')}
+					{activeTab === 'tab2' && (
+						<div className="space-y-6">
+							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+								{t('탭_설정')}
+							</h2>
+							<div className="space-y-4">
+								<div className="p-4 rounded-lg neu-inset">
+									<div className="flex justify-between items-center">
+										<span className="font-medium text-gray-700 font-multilang">
+											{t('탭_알림설정')}
 										</span>
+										<button
+											onClick={() => setNotifications(!notifications)}
+											className={cn(
+												'relative w-12 h-6 rounded-full transition-all duration-200',
+												notifications ? 'neu-inset' : 'neu-raised',
+												notifications ? 'bg-primary' : 'bg-gray-300',
+											)}
+										>
+											<div
+												className={cn(
+													'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
+													notifications ? 'translate-x-6' : 'translate-x-0.5',
+												)}
+											/>
+										</button>
 									</div>
-									<div className="flex justify-between">
-										<span className="font-multilang">{t('탭_다크모드')}:</span>
-										<span
-											className={darkMode ? 'font-medium text-blue-600' : 'font-medium text-red-500'}>
-											{darkMode ? t('탭_ON') : t('탭_OFF')}
+								</div>
+								<div className="p-4 rounded-lg neu-inset">
+									<div className="flex justify-between items-center">
+										<span className="font-medium text-gray-700 font-multilang">
+											{t('탭_다크모드')}
 										</span>
+										<button
+											onClick={() => setDarkMode(!darkMode)}
+											className={cn(
+												'relative w-12 h-6 rounded-full transition-all duration-200',
+												darkMode ? 'neu-inset' : 'neu-raised',
+												darkMode ? 'bg-primary' : 'bg-gray-300',
+											)}
+										>
+											<div
+												className={cn(
+													'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
+													darkMode ? 'translate-x-6' : 'translate-x-0.5',
+												)}
+											/>
+										</button>
+									</div>
+								</div>
+								<div className="p-4 rounded-lg neu-inset">
+									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+										{t('탭_계정정보')}
+									</h3>
+									<div className="space-y-2 text-sm text-gray-600">
+										<p>Email: user@example.com</p>
+										<p>Plan: Premium</p>
+										<p>Status: Active</p>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					)}
 
-					{/* 프로필 탭 */}
-					<div className="space-y-6">
-						<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-							{t('탭_사용자프로필')}
-						</h2>
-						<div className="flex flex-col items-center space-y-6 md:flex-row md:items-start md:space-y-0 md:space-x-6">
-							<div className="flex justify-center items-center w-24 h-24 rounded-full transition-all duration-200 neu-raised hover:scale-105">
-								<span className="text-3xl font-bold text-gray-600">김</span>
-							</div>
-							<div className="flex-1 space-y-4 w-full">
-								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500 font-multilang">{t('탭_이름')}</label>
-									<p className="text-lg font-medium text-gray-700 font-multilang">{t('탭_김개발자')}</p>
+					{activeTab === 'tab3' && (
+						<div className="space-y-6">
+							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+								{t('탭_프로필')}
+							</h2>
+							<div className="space-y-4">
+								<div className="p-4 rounded-lg neu-inset">
+									<div className="flex items-center space-x-4">
+										<div className="flex justify-center items-center w-16 h-16 rounded-full neu-inset">
+											<ProfileIcon />
+										</div>
+										<div>
+											<h3 className="font-medium text-gray-700 font-multilang">
+												{t('탭_사용자이름')}
+											</h3>
+											<p className="text-gray-600">Premium User</p>
+										</div>
+									</div>
 								</div>
-								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500 font-multilang">{t('탭_이메일')}</label>
-									<p className="text-lg font-medium text-gray-700 font-multilang">
-										{t('탭_이메일주소')}
-									</p>
+								<div className="p-4 rounded-lg neu-inset">
+									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+										{t('탭_개인정보')}
+									</h3>
+									<div className="space-y-2 text-sm text-gray-600">
+										<p>가입일: 2023년 3월 15일</p>
+										<p>마지막 접속: 2024년 1월 20일</p>
+										<p>총 접속 시간: 245시간</p>
+									</div>
 								</div>
-								<div className="p-4 rounded-lg transition-all duration-200 neu-inset">
-									<label className="text-sm text-gray-500 font-multilang">{t('탭_가입일')}</label>
-									<p className="text-lg font-medium text-gray-700 font-multilang">
-										{t('탭_가입일날짜')}
-									</p>
+								<div className="p-4 rounded-lg neu-inset">
+									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+										{t('탭_사용통계')}
+									</h3>
+									<div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+										<div>
+											<p>작성한 게시물: 23개</p>
+											<p>좋아요: 145개</p>
+										</div>
+										<div>
+											<p>댓글: 89개</p>
+											<p>공유: 12개</p>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</Tabs>
+					)}
+				</div>
 			</div>
 		</div>
 	);

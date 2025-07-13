@@ -1,7 +1,6 @@
 import React from 'react';
 import { Settings, Car, Construction } from 'lucide-react';
 import { GlobalFunctionMode } from '../types';
-import { OperationMode, ParkingBarrier } from '@/types/parking';
 
 interface FunctionModeToggleProps {
   currentMode: GlobalFunctionMode;
