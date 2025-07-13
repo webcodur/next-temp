@@ -45,8 +45,8 @@ const getOperationModeIcon = (mode: OperationMode, className?: string) => {
 };
 
 const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
-	width = 150,
-	height = 180,
+	width = 280,
+	height = 320,
 	isOpen = false,
 	onToggle,
 	showControls = true,
@@ -243,7 +243,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	}, [isDropdownOpen]);
 
 	return (
-		<div className={`flex flex-col items-center gap-6 ${className}`}>
+		<div className={`flex flex-col gap-2 items-center ${className}`}>
 			<div
 				ref={mountRef}
 				onClick={
@@ -253,7 +253,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 					onToggle && !isButtonDisabled && setIsHovering(true)
 				}
 				onMouseLeave={() => setIsHovering(false)}
-				className={`flex items-center justify-center p-4 overflow-hidden rounded-3xl neu-flat ${
+				className={`flex items-center justify-center p-2 overflow-hidden rounded-3xl neu-flat ${
 					onToggle && !isButtonDisabled
 						? 'cursor-pointer hover:neu-raised'
 						: isButtonDisabled
@@ -262,10 +262,10 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 				}`}
 				style={
 					{
-						width: `${width + 32}px`,
-						height: `${height + 32}px`,
-						minWidth: `${width + 32}px`,
-						minHeight: `${height + 32}px`,
+						width: `${width + 16}px`,
+						height: `${height + 16}px`,
+						minWidth: `${width + 16}px`,
+						minHeight: `${height + 16}px`,
 						// 확대/축소에 대응하는 CSS 설정
 						imageRendering:
 							'crisp-edges' as React.CSSProperties['imageRendering'],
@@ -276,11 +276,11 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 				}
 			/>
 			{showControls && (
-				<div className="flex flex-col items-center gap-2">
+				<div className="flex flex-col gap-1 items-center">
 					{/* 컨트롤 영역 - 2x2 그리드 */}
-					<div className="grid w-full grid-cols-2 gap-2 px-1">
+					<div className="grid grid-cols-2 gap-1 px-1 w-full">
 						{/* 좌측 컬럼: 운행 모드 */}
-						<div className="flex flex-col items-center gap-1">
+						<div className="flex flex-col items-center gap-0.5">
 							<h4 className="text-xs font-medium text-muted-foreground">
 								운행모드
 							</h4>
@@ -290,7 +290,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 										e.stopPropagation();
 										setIsDropdownOpen(!isDropdownOpen);
 									}}
-									className="flex items-center gap-1 px-2 py-1 text-xs font-medium neu-raised rounded-lg min-w-[80px] min-h-[30px]">
+									className="flex items-center gap-1 px-2 py-1 text-xs font-medium neu-raised rounded-lg min-w-[80px] min-h-[28px]">
 									{getOperationModeIcon(operationMode, 'w-4 h-4')}
 									<span className="text-xs">
 										{OPERATION_MODE_NAMES[operationMode]}
@@ -311,7 +311,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 
 								{/* 드롭다운 메뉴 */}
 								{isDropdownOpen && (
-									<div className={`absolute top-full mt-1 py-1 neu-flat rounded-lg bg-white shadow-lg border z-10 min-w-[120px] ${
+									<div className={`absolute top-full mt-0.5 py-0.5 neu-flat rounded-lg bg-white shadow-lg border z-10 min-w-[120px] ${
 										isRTL ? 'right-0' : 'left-0'
 									}`}>
 										{(
@@ -328,7 +328,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 													handleOperationModeChange(mode);
 													setIsDropdownOpen(false);
 												}}
-												className={`w-full flex items-center gap-2 px-2 py-1 text-xs hover:bg-muted/50 transition-colors ${
+												className={`w-full flex items-center gap-1 px-2 py-0.5 text-xs hover:bg-muted/50 transition-colors ${
 													operationMode === mode
 														? 'bg-primary/10 text-primary'
 														: 'text-foreground/80'
@@ -343,7 +343,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 						</div>
 
 						{/* 우측 컬럼: 차단기 개폐 */}
-						<div className="flex flex-col items-center gap-1">
+						<div className="flex flex-col items-center gap-0.5">
 							<h4 className="text-xs font-medium text-muted-foreground">
 								차단기 개폐
 							</h4>
@@ -353,7 +353,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 								onMouseEnter={() => setIsHovering(true)}
 								onMouseLeave={() => setIsHovering(false)}
 								style={{ width: '80px' }}
-								className={`flex items-center justify-center gap-1 px-2 py-1 rounded-lg font-medium neu-raised min-h-[30px] ${
+								className={`flex items-center justify-center gap-1 px-2 py-1 rounded-lg font-medium neu-raised min-h-[28px] ${
 									!onToggle || isButtonDisabled
 										? 'opacity-50 cursor-not-allowed'
 										: ''

@@ -50,12 +50,22 @@ const DataTable = <T extends Record<string, unknown>>({
 		<div>
 			{/* 테이블 렌더링 */}
 			<SmartTable
-				data={paginationData.isLoading ? null : paginationData.paginatedData}
+				data={paginationData.isInitialLoading ? null : paginationData.paginatedData}
 				columns={columns}
 				className={className}
 				rowClassName={rowClassName}
 				pageSize={paginationState.pageSize}
 			/>
+
+			{/* 추가 로딩 인디케이터 */}
+			{paginationData.isAdditionalLoading && (
+				<div className="flex justify-center py-3 border-t border-border">
+					<div className="flex gap-2 items-center text-muted-foreground">
+						<div className="w-4 h-4 rounded-full border-2 animate-spin border-border border-t-primary"></div>
+						<span className="text-sm">데이터 로딩 중...</span>
+					</div>
+				</div>
+			)}
 
 			{/* 페이지네이션 UI */}
 			{shouldShowPagination && (

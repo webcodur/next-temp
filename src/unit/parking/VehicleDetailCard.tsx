@@ -29,7 +29,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 	};
 
 	return (
-		<div className="flex flex-col p-6 h-full rounded-2xl bg-background">
+		<div className="flex flex-col p-6 h-full rounded-2xl">
 			{showTitle && (
 				<h2 className="mb-4 w-full text-lg font-semibold text-center text-foreground">
 					{t('주차_카드_차량정보')}

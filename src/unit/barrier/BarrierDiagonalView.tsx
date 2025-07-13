@@ -15,8 +15,8 @@ interface BarrierDiagonalViewProps {
 }
 
 const BarrierDiagonalView: React.FC<BarrierDiagonalViewProps> = ({
-	width = 220,
-	height = 264,
+	width = 280,
+	height = 320,
 	isOpen = false,
 	onToggle,
 	showControls = true,
@@ -26,10 +26,10 @@ const BarrierDiagonalView: React.FC<BarrierDiagonalViewProps> = ({
 	showTitle = true,
 }) => {
 	return (
-		<div className="flex flex-col items-center gap-2">
+		<div className="flex flex-col items-center gap-1">
 			{showTitle && (
-				<div className="text-center">
-					<h3 className="text-base font-semibold text-foreground">대각선 시점</h3>
+				<div className="text-center mb-1">
+					<h3 className="text-sm font-semibold text-foreground">대각선 시점</h3>
 					<p className="text-xs text-muted-foreground">입체감이 가장 좋은 기본 시점</p>
 				</div>
 			)}

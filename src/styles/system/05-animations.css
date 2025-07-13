@@ -101,11 +101,47 @@
 	}
 }
 
+/* 마이크로 인터렉션 애니메이션 */
+@keyframes clickFeedback {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(0.95);
+		opacity: 0.8;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes iconPulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
 .animate-slide-down {
 	animation: slideDown 250ms ease-out;
 }
 
 .animate-slide-up {
 	animation: slideUp 200ms ease-in;
+}
+
+.animate-click-feedback {
+	animation: clickFeedback 200ms ease-out;
+}
+
+.animate-icon-pulse {
+	animation: iconPulse 150ms ease-out;
 }
 /* #endregion */

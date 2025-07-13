@@ -1,0 +1,51 @@
+/* 토스트 전용 CSS */
+:root {
+	--sonner-success-bg: hsl(var(--success) / 0.9);
+	--sonner-success-border: hsl(var(--success) / 0.8);
+	--sonner-success-text: hsl(var(--success-foreground));
+
+	--sonner-error-bg: hsl(var(--destructive) / 0.9);
+	--sonner-error-border: hsl(var(--destructive) / 0.8);
+	--sonner-error-text: hsl(var(--destructive-foreground));
+
+	--sonner-warning-bg: hsl(var(--warning) / 0.9);
+	--sonner-warning-border: hsl(var(--warning) / 0.8);
+	--sonner-warning-text: hsl(var(--warning-foreground));
+
+	--sonner-info-bg: hsl(var(--primary) / 0.9);
+	--sonner-info-border: hsl(var(--primary) / 0.8);
+	--sonner-info-text: hsl(var(--primary-foreground));
+}
+
+.toast-container [data-sonner-toast][data-type='success'] {
+	background: var(--sonner-success-bg) !important;
+	border-color: var(--sonner-success-border) !important;
+	color: var(--sonner-success-text) !important;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.toast-container [data-sonner-toast][data-type='error'] {
+	background: var(--sonner-error-bg) !important;
+	border-color: var(--sonner-error-border) !important;
+	color: var(--sonner-error-text) !important;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.toast-container [data-sonner-toast][data-type='warning'] {
+	background: var(--sonner-warning-bg) !important;
+	border-color: var(--sonner-warning-border) !important;
+	color: var(--sonner-warning-text) !important;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.toast-container [data-sonner-toast][data-type='info'] {
+	background: var(--sonner-info-bg) !important;
+	border-color: var(--sonner-info-border) !important;
+	color: var(--sonner-info-text) !important;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.toast-container [data-sonner-toast] [data-icon] {
+	color: inherit !important;
+	filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)) !important;
+}

@@ -44,6 +44,8 @@ interface SmartTableProps<T> {
 	cellClassName?: string;
 	pageSize?: number;
 	loadingRows?: number;
+	/** 추가 데이터 로딩 중 상태 */
+	isLoadingMore?: boolean;
 	/** 행 클릭 시 호출되는 콜백 */
 	onRowClick?: (item: T, index: number) => void;
 }
@@ -58,6 +60,7 @@ const SmartTable = <T extends Record<string, any>>({
 	cellClassName = '',
 	pageSize = 10,
 	loadingRows = 5,
+	isLoadingMore = false,
 	onRowClick,
 }: SmartTableProps<T>) => {
 	// #region 상태
@@ -127,6 +130,25 @@ const SmartTable = <T extends Record<string, any>>({
 				))}
 			</tr>
 		));
+	};
+
+	// 추가 로딩 행 생성
+	const createLoadingMoreRow = () => {
+		if (!isLoadingMore) return null;
+		
+		return (
+			<tr key="loading-more" className="bg-surface-1 border-t border-primary-4/30">
+				<td 
+					colSpan={columns.length}
+					className="px-6 py-4 text-center text-muted-foreground"
+				>
+					<div className="flex gap-2 items-center justify-center">
+						<div className="w-4 h-4 rounded-full border-2 animate-spin border-border border-t-primary"></div>
+						<span className="text-sm">데이터 로딩 중...</span>
+					</div>
+				</td>
+			</tr>
+		);
 	};
 
 	// 빈 행 생성
@@ -204,7 +226,7 @@ const SmartTable = <T extends Record<string, any>>({
 		<>
 			<div
 				className={cn(
-					'overflow-auto max-h-[600px] rounded-lg neu-flat-primary',
+					'rounded-lg neu-flat-primary',
 					className,
 				)}
 			>
@@ -280,64 +302,67 @@ const SmartTable = <T extends Record<string, any>>({
 						) : actualData.length === 0 ? (
 							createEmptyRows()
 						) : (
-							actualData.map((item, index) => (
-								<tr
-									key={index}
-									onClick={() => onRowClick?.(item, index)}
-									className={`
-										${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
-										hover:bg-primary-2/[0.6]
-										${onRowClick ? 'cursor-pointer' : ''}
-										${getRowClassName(item, index)}
-									`}
-								>
-									{columns.map((column, colIndex) => (
-										<td
-											key={`${index}-${column.key ? String(column.key) : colIndex}`}
-											className={`
-												px-6 py-4 text-sm text-foreground
-												${getAlignmentClass(column.align)}
-												${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
-												${column.cellClassName || cellClassName}
-												${index === actualData.length - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
-												${index === actualData.length - 1 && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
-											`}
-										>
-											{(() => {
-												const rawValue =
-													column.key && item[column.key as keyof T]
-														? String(item[column.key as keyof T])
-														: null;
+							<>
+								{actualData.map((item, index) => (
+									<tr
+										key={index}
+										onClick={() => onRowClick?.(item, index)}
+										className={`
+											${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
+											hover:bg-primary-2/[0.6]
+											${onRowClick ? 'cursor-pointer' : ''}
+											${getRowClassName(item, index)}
+										`}
+									>
+										{columns.map((column, colIndex) => (
+											<td
+												key={`${index}-${column.key ? String(column.key) : colIndex}`}
+												className={`
+													px-6 py-4 text-sm text-foreground
+													${getAlignmentClass(column.align)}
+													${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+													${column.cellClassName || cellClassName}
+													${index === actualData.length - 1 && !isLoadingMore && colIndex === 0 ? 'rounded-bl-lg' : ''}
+													${index === actualData.length - 1 && !isLoadingMore && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
+												`}
+											>
+												{(() => {
+													const rawValue =
+														column.key && item[column.key as keyof T]
+															? String(item[column.key as keyof T])
+															: null;
 
-												const content = (() => {
-													if (column.cell) return column.cell(item, index);
-													if (column.render && column.key && column.key in item)
-														return column.render(item[column.key as keyof T], item, index);
-													if (rawValue !== null) return rawValue;
-													return '';
-												})();
+													const content = (() => {
+														if (column.cell) return column.cell(item, index);
+														if (column.render && column.key && column.key in item)
+															return column.render(item[column.key as keyof T], item, index);
+														if (rawValue !== null) return rawValue;
+														return '';
+													})();
 
-												return (
-													<div
-														className="truncate"
-														title={rawValue ?? ''}
-														onClick={(e) => {
-															if (
-																rawValue &&
-																e.currentTarget.scrollWidth > e.currentTarget.clientWidth
-															) {
-																setModalContent(rawValue);
-															}
-														}}
-													>
-														{content}
-													</div>
-												);
-											})()}
-										</td>
-									))}
-								</tr>
-							))
+													return (
+														<div
+															className="truncate"
+															title={rawValue ?? ''}
+															onClick={(e) => {
+																if (
+																	rawValue &&
+																	e.currentTarget.scrollWidth > e.currentTarget.clientWidth
+																) {
+																	setModalContent(rawValue);
+																}
+															}}
+														>
+															{content}
+														</div>
+													);
+												})()}
+											</td>
+										))}
+									</tr>
+								))}
+								{createLoadingMoreRow()}
+							</>
 						)}
 					</tbody>
 				</table>

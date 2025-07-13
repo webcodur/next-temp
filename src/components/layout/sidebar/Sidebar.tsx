@@ -16,7 +16,7 @@ export function Sidebar() {
 			style={{
 				width: `${defaults.startColumnWidth}px`,
 			}}
-			className="flex h-screen sidebar-container bg-surface-2">
+			className="flex h-screen bg-surface-2">
 			<PrimaryBar />
 		</aside>
 	);

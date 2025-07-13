@@ -15,8 +15,8 @@ interface BarrierSecurityViewProps {
 }
 
 const BarrierSecurityView: React.FC<BarrierSecurityViewProps> = ({
-	width = 220,
-	height = 264,
+	width = 280,
+	height = 320,
 	isOpen = false,
 	onToggle,
 	showControls = true,
@@ -26,10 +26,10 @@ const BarrierSecurityView: React.FC<BarrierSecurityViewProps> = ({
 	showTitle = true,
 }) => {
 	return (
-		<div className="flex flex-col items-center gap-2">
+		<div className="flex flex-col gap-1 items-center">
 			{showTitle && (
-				<div className="text-center">
-					<h3 className="text-base font-semibold text-foreground">
+				<div className="mb-1 text-center">
+					<h3 className="text-sm font-semibold text-foreground">
 						보안카메라 시점
 					</h3>
 					<p className="text-xs text-muted-foreground">모니터링 최적화 각도</p>

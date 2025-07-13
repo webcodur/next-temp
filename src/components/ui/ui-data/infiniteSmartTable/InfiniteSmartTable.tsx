@@ -86,6 +86,7 @@ const InfiniteSmartTable = <T extends Record<string, any>>({
 			<SmartTable
 				data={data}
 				columns={columns}
+				isLoadingMore={isLoadingMore}
 				{...tableProps}
 			/>
 		</InfiniteScroll>

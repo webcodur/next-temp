@@ -41,6 +41,7 @@ import { SecondaryPanel } from './sidebar/unit/SecondaryPanel';
 import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
 // data
 import { sidebarCollapsedAtom } from '@/store/sidebar';
+import { defaults } from '@/data/sidebarConfig';
 
 interface MainLayoutProps {
 	children: ReactNode;
@@ -67,10 +68,19 @@ export function MainLayout({ children }: MainLayoutProps) {
 			<div className="flex overflow-hidden flex-col flex-1 h-screen">
 				<Header />
 				<div className="flex overflow-hidden flex-1">
-					{!isCollapsed && <SecondaryPanel />}
-					<main className="overflow-y-auto flex-1 py-10">
-						<div className="p-10 mx-auto max-w-7xl bg-surface-1 rounded-10">
-							<div className="mb-6">
+					<div 
+						className={`flex-shrink-0 transition-all duration-300 ease-in-out ${isCollapsed ? 'overflow-hidden' : ''}`}
+						style={{ width: isCollapsed ? '0px' : `${defaults.expandedWidth}px` }}>
+						<div className={`transition-transform duration-300 ease-in-out ${
+							isCollapsed ? 'transform -translate-x-full' : 'transform translate-x-0'
+						}`}
+						style={{ width: `${defaults.expandedWidth}px` }}>
+							<SecondaryPanel />
+						</div>
+					</div>
+					<main className="overflow-y-auto flex-1 p-6">
+						<div className="p-8 mx-auto max-w-7xl bg-surface-1 rounded-lg neu-flat">
+							<div className="mb-3">
 								<PageHeader />
 							</div>
                 {children}

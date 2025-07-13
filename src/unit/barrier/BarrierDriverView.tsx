@@ -15,8 +15,8 @@ interface BarrierDriverViewProps {
 }
 
 const BarrierDriverView: React.FC<BarrierDriverViewProps> = ({
-	width = 220,
-	height = 264,
+	width = 280,
+	height = 320,
 	isOpen = false,
 	onToggle,
 	showControls = true,
@@ -26,10 +26,10 @@ const BarrierDriverView: React.FC<BarrierDriverViewProps> = ({
 	showTitle = true,
 }) => {
 	return (
-		<div className="flex flex-col items-center gap-2">
+		<div className="flex flex-col items-center gap-1">
 			{showTitle && (
-				<div className="text-center">
-					<h3 className="text-base font-semibold text-foreground">운전자 시점</h3>
+				<div className="text-center mb-1">
+					<h3 className="text-sm font-semibold text-foreground">운전자 시점</h3>
 					<p className="text-xs text-muted-foreground">실제 운전자가 보는 관점</p>
 				</div>
 			)}

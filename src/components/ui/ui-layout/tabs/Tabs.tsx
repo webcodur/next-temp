@@ -43,15 +43,15 @@ const Tabs = React.forwardRef<
 		};
 
 		const sizeClasses = {
-			sm: 'text-xs py-2',
-			md: 'text-sm py-3',
-			lg: 'text-base py-4',
+			sm: 'text-xs py-1',
+			md: 'text-sm py-2',
+			lg: 'text-base py-2',
 		};
 
 		return (
 			<div
 				ref={ref}
-				className={cn('relative p-4 rounded-xl neu-elevated', className)}
+				className={cn('relative p-2 rounded-xl neu-elevated', className)}
 				{...props}
 			>
 				<div className={cn('flex relative z-10', alignClasses[align])}>
@@ -60,7 +60,7 @@ const Tabs = React.forwardRef<
 							key={tab.id}
 							onClick={() => onTabChange(tab.id)}
 							className={cn(
-								'relative px-6 mx-1 rounded-lg font-medium transition-all duration-200',
+								'relative px-3 mx-1 rounded-lg font-medium transition-all duration-200 flex items-center justify-center',
 								sizeClasses[size],
 								activeId === tab.id
 									? 'text-primary neu-inset'

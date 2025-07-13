@@ -15,7 +15,8 @@ interface UsePaginationDataReturn<T> {
 	paginatedData: T[];
 	totalItems: number;
 	totalPages: number;
-	isLoading: boolean;
+	isInitialLoading: boolean;
+	isAdditionalLoading: boolean;
 	actualData: T[];
 }
 
@@ -25,11 +26,15 @@ export const usePaginationData = <T>({
 	pageSize,
 	isFetching = false,
 }: UsePaginationDataProps<T>): UsePaginationDataReturn<T> => {
-	// 로딩 상태 결정
-	const isLoading = isFetching || data === undefined || data === null;
+	// 로딩 상태 구분
+	const isInitialLoading = data === undefined || data === null;
+	const isAdditionalLoading = isFetching && !isInitialLoading;
 
-	// 실제 데이터 (로딩 중이면 빈 배열)
-	const actualData = useMemo(() => (isLoading ? [] : data), [isLoading, data]);
+	// 실제 데이터 (초기 로딩 중이면 빈 배열)
+	const actualData = useMemo(
+		() => (isInitialLoading ? [] : data),
+		[isInitialLoading, data]
+	);
 
 	// 페이지네이션 계산
 	const totalItems = actualData.length;
@@ -44,7 +49,8 @@ export const usePaginationData = <T>({
 		paginatedData,
 		totalItems,
 		totalPages,
-		isLoading,
+		isInitialLoading,
+		isAdditionalLoading,
 		actualData,
 	};
 };

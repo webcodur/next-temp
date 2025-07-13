@@ -59,7 +59,6 @@ export function SecondaryPanel() {
 			<div
 				style={{ width: `${defaults.expandedWidth}px` }}
 				className="flex flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
-				{/* Location Title - REMOVED */}
 				{/* Menu Controls */}
 				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-border/50">
 					{/* Mode Toggle */}
@@ -94,7 +93,7 @@ export function SecondaryPanel() {
 				</div>
 
 				{/* Menu List */}
-				<nav className="flex overflow-y-auto flex-col flex-grow gap-2 p-2 scrollbar-hide">
+				<nav className="flex-1 p-2 overflow-y-auto">
 					{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 						<Collapsible
 							key={midKey}

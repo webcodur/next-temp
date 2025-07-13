@@ -68,9 +68,7 @@ export default function PageHeader() {
     <div className="flex flex-col gap-1 items-center text-center">
       {title && <h1 className="text-2xl font-bold">{title}</h1>}
       {description?.trim() && (
-        <p className="max-w-prose text-sm text-muted-foreground">
-          {description}
-        </p>
+        <p> {description} </p>
       )}
     </div>
   );

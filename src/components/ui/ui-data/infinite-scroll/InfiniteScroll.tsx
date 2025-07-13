@@ -43,16 +43,9 @@ const InfiniteScroll: FC<InfiniteScrollProps> = ({
 			{hasMore && (
 				<div
 					ref={sentinelRef}
-					className="flex justify-center py-3 border-t border-border">
-					{isLoading ? (
-						<div className="flex gap-2 items-center text-muted-foreground">
-							<div className="w-4 h-4 rounded-full border-2 animate-spin border-border border-t-primary"></div>
-							<span className="text-xs">데이터 로딩 중...</span>
-						</div>
-					) : (
-						<div className="text-xs text-muted-foreground/70">스크롤하여 더 보기</div>
-					)}
-				</div>
+					className="h-1 w-full opacity-0 pointer-events-none"
+					aria-hidden="true"
+				/>
 			)}
 			{!hasMore && (
 				<div className="flex justify-center py-3 border-t border-border">

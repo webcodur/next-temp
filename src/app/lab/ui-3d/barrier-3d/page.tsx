@@ -70,7 +70,7 @@ export default function Barrier3DPage() {
 				{t('3D_배리어제목')}
 			</h1>
 
-			<div className="p-4 mb-8 border border-blue-200 rounded-lg bg-blue-50">
+			<div className="p-4 mb-8 bg-blue-50 rounded-lg border border-blue-200">
 				<h3 className="mb-2 text-lg font-semibold text-blue-800">
 					{t('3D_배리어특징')}
 				</h3>
@@ -87,12 +87,12 @@ export default function Barrier3DPage() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
-					<div className="flex justify-center mb-4">
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+				<div className="p-3 from-gray-50 to-gray-100 rounded-lg border border-gray-200 bg-linear-to-br">
+					<div className="flex justify-center">
 						<BarrierDiagonalView
-							width={220}
-							height={264}
+							width={300}
+							height={340}
 							isOpen={barrierStates.diagonal}
 							onToggle={() => toggleBarrier('diagonal')}
 							showControls={true}
@@ -106,11 +106,11 @@ export default function Barrier3DPage() {
 					</div>
 				</div>
 
-				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
-					<div className="flex justify-center mb-4">
+				<div className="p-3 from-gray-50 to-gray-100 rounded-lg border border-gray-200 bg-linear-to-br">
+					<div className="flex justify-center">
 						<BarrierDriverView
-							width={220}
-							height={264}
+							width={300}
+							height={340}
 							isOpen={barrierStates.driver}
 							onToggle={() => toggleBarrier('driver')}
 							showControls={true}
@@ -124,11 +124,11 @@ export default function Barrier3DPage() {
 					</div>
 				</div>
 
-				<div className="p-6 border border-gray-200 rounded-lg bg-linear-to-br from-gray-50 to-gray-100">
-					<div className="flex justify-center mb-4">
+				<div className="p-3 from-gray-50 to-gray-100 rounded-lg border border-gray-200 bg-linear-to-br">
+					<div className="flex justify-center">
 						<BarrierSecurityView
-							width={220}
-							height={264}
+							width={300}
+							height={340}
 							isOpen={barrierStates.security}
 							onToggle={() => toggleBarrier('security')}
 							showControls={true}

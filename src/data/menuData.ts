@@ -228,6 +228,10 @@ export const menuData: MenuData = {
 						key: '아코디언',
 						href: '/lab/ui-layout/accordion',
 					},
+					{
+						key: '시설예약',
+						href: '/lab/ui-layout/facility-reservation',
+					},
 				],
 			},
 			UI입력: {
