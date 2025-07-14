@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpDown, Settings } from 'lucide-react';
+import { ArrowUpDown, Settings, CheckCircle, Zap, RotateCcw } from 'lucide-react';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
 
 interface BarrierControlPanelProps {
@@ -9,11 +9,26 @@ interface BarrierControlPanelProps {
   layout?: 'horizontal' | 'vertical';
 }
 
+// #region 운영 모드별 아이콘 컴포넌트
+const getOperationModeIcon = (mode: OperationMode) => {
+  switch (mode) {
+    case 'always-open':
+      return <CheckCircle className="w-3 h-3" />;
+    case 'bypass':
+      return <Zap className="w-3 h-3" />;
+    case 'auto-operation':
+      return <RotateCcw className="w-3 h-3" />;
+    default:
+      return <CheckCircle className="w-3 h-3" />;
+  }
+};
+// #endregion
+
 // #region 운영 모드 옵션
 const operationModeOptions = [
-  { value: 'always-open', label: '항시 열림', icon: '✅' },
-  { value: 'bypass', label: '바이패스', icon: '⚡' },
-  { value: 'auto-operation', label: '자동 운행', icon: '🔄' },
+  { value: 'always-open', label: '항시 열림' },
+  { value: 'bypass', label: '바이패스' },
+  { value: 'auto-operation', label: '자동 운행' },
 ] as const;
 // #endregion
 
@@ -33,6 +48,7 @@ const BarrierControlPanel: React.FC<BarrierControlPanelProps> = ({
       {/* 운영 모드 */}
       <div className={`flex items-center gap-1 ${layout === 'vertical' ? 'justify-center' : ''}`}>
         <Settings className="w-4 h-4 text-muted-foreground" />
+        {getOperationModeIcon(barrier.operationMode)}
         <select
           value={barrier.operationMode}
           onChange={(e) => onOperationModeChange(e.target.value as OperationMode)}
@@ -40,7 +56,7 @@ const BarrierControlPanel: React.FC<BarrierControlPanelProps> = ({
         >
           {operationModeOptions.map((option) => (
             <option key={option.value} value={option.value}>
-              {option.icon} {option.label}
+              {option.label}
             </option>
           ))}
         </select>

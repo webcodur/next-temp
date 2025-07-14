@@ -16,6 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
+import { Construction } from 'lucide-react';
 import { BarrierManagementViewProps } from './types';
 import { useFunctionMode } from './hooks/useBarrierViewMode';
 import { useBarrierOperations } from './hooks/useBarrierOperations';
@@ -153,16 +154,20 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
         
         <DragOverlay>
           {activeId ? (
-            <div className="p-4 rounded-lg neu-flat bg-surface-2 h-[400px] flex flex-col opacity-80">
-              <div className="flex justify-between items-center p-2 mb-4 rounded-lg bg-muted/50 cursor-grabbing">
-                {/* 왼쪽: 드래그 상태 표시 */}
-                <div className="flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-muted min-w-[60px]">
-                  <span className="font-medium">드래그 중</span>
-                </div>
+            <div className="p-4 rounded-lg neu-flat bg-surface-2 h-[500px] flex flex-col opacity-80 relative">
+              {/* 넘버링 띠 (absolute) */}
+              <div className="absolute top-1 left-1 z-10 flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-primary/90 text-primary-foreground min-w-[30px]">
+                <span className="font-medium">드래그 중</span>
+              </div>
+
+              {/* 차단기명 헤더 */}
+              <div className="flex items-center justify-between mb-3 px-1 py-0.5">
+                {/* 왼쪽: 빈 공간 (대칭성 유지) */}
+                <div className="min-w-[60px]"></div>
 
                 {/* 중앙: 차단기명 */}
-                <div className="flex flex-1 justify-center items-center">
-                  <h3 className="font-semibold text-center text-foreground font-multilang">
+                <div className="flex-1 flex justify-center items-center">
+                  <h3 className="font-semibold text-foreground font-multilang text-lg px-2 py-0.5 text-center">
                     {sortedBarriers.find(b => b.id === activeId)?.name || '차단기'}
                   </h3>
                 </div>
@@ -178,7 +183,9 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
       {/* 빈 상태 처리 */}
       {barriers.length === 0 && (
         <div className="flex flex-col justify-center items-center py-12 text-center">
-          <div className="mb-4 text-4xl">🚧</div>
+          <div className="mb-4">
+            <Construction className="w-16 h-16 mx-auto" />
+          </div>
           <h3 className="mb-2 text-lg font-semibold text-foreground">
             등록된 차단기가 없습니다
           </h3>

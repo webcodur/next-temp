@@ -1,24 +1,33 @@
+/* 
+  파일명: /components/layout/header/Breadcrumb.tsx
+  기능: 헤더의 브레드크럼 네비게이션 컴포넌트
+  책임: 현재 페이지 경로를 표시하고 반응형 드롭다운 메뉴 제공
+*/ // ------------------------------
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { useAtom } from 'jotai';
-import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import clsx from 'clsx';
+
+import { menuData } from '@/data/menuData';
 import {
 	currentTopMenuAtom,
 	currentMidMenuAtom,
 	currentBotMenuAtom,
 } from '@/store/sidebar';
-import { menuData } from '@/data/menuData';
-import clsx from 'clsx';
 
-// #region BreadcrumbItem 컴포넌트
+// #region 타입
 interface BreadcrumbItemProps {
 	label: string;
 	isCurrent?: boolean;
 }
+// #endregion
 
+// #region 서브 컴포넌트
 const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
 	<span
 		className={`truncate ${
@@ -30,10 +39,14 @@ const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
 		{label}
 	</span>
 );
+
+const Separator = () => (
+	<ChevronRight className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
+);
 // #endregion
 
 export function Breadcrumb() {
-	// #region 상태 및 훅 초기화
+	// #region 상태
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [currentMidMenu, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [currentBotMenu, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
@@ -43,33 +56,7 @@ export function Breadcrumb() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	// #endregion
 
-	// #region 페이지 경로 변경 시 breadcrumb 업데이트
-	useEffect(() => {
-		const pathSegments = pathname.split('/').filter(Boolean);
-
-		if (pathSegments.length === 0) {
-			setCurrentTopMenu('');
-			setCurrentMidMenu('');
-			setCurrentBotMenu('');
-			return;
-		}
-
-		for (const [topKey, topItem] of Object.entries(menuData)) {
-			for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
-				for (const botItem of midItem.botItems) {
-					if (botItem.href === pathname) {
-						setCurrentTopMenu(topKey);
-						setCurrentMidMenu(midKey);
-						setCurrentBotMenu(botItem.key);
-						return;
-					}
-				}
-			}
-		}
-	}, [pathname, setCurrentTopMenu, setCurrentMidMenu, setCurrentBotMenu]);
-	// #endregion
-
-	// #region 브레드크럼 아이템 생성
+	// #region 유틸리티
 	const getBreadcrumbItems = () => {
 		const items = [];
 
@@ -109,32 +96,6 @@ export function Breadcrumb() {
 
 		return items;
 	};
-
-	const breadcrumbItems = getBreadcrumbItems();
-	// #endregion
-
-	// #region 너비 감지를 위한 레이아웃 이펙트
-	useEffect(() => {
-		const checkScreenSize = () => {
-			setIsCollapsed(window.innerWidth < 1500);
-		};
-		checkScreenSize(); // 초기 렌더링 시 체크
-		window.addEventListener('resize', checkScreenSize);
-		return () => window.removeEventListener('resize', checkScreenSize);
-	}, []);
-	// #endregion
-
-	if (breadcrumbItems.length <= 1) {
-		return (
-			<h2 className="text-lg font-semibold truncate text-foreground">
-				{breadcrumbItems.length > 0 ? breadcrumbItems[0].label : '홈'}
-			</h2>
-		);
-	}
-
-	const Separator = () => (
-		<ChevronRight className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
-	);
 
 	const renderFullBreadcrumb = () => (
 		<div className="flex gap-2 items-center min-w-0">
@@ -188,10 +149,58 @@ export function Breadcrumb() {
 			</DropdownMenu.Portal>
 		</DropdownMenu.Root>
 	);
+	// #endregion
+
+	// #region 효과
+	useEffect(() => {
+		const pathSegments = pathname.split('/').filter(Boolean);
+
+		if (pathSegments.length === 0) {
+			setCurrentTopMenu('');
+			setCurrentMidMenu('');
+			setCurrentBotMenu('');
+			return;
+		}
+
+		for (const [topKey, topItem] of Object.entries(menuData)) {
+			for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
+				for (const botItem of midItem.botItems) {
+					if (botItem.href === pathname) {
+						setCurrentTopMenu(topKey);
+						setCurrentMidMenu(midKey);
+						setCurrentBotMenu(botItem.key);
+						return;
+					}
+				}
+			}
+		}
+	}, [pathname, setCurrentTopMenu, setCurrentMidMenu, setCurrentBotMenu]);
+
+	useEffect(() => {
+		const checkScreenSize = () => {
+			setIsCollapsed(window.innerWidth < 1500);
+		};
+		checkScreenSize();
+		window.addEventListener('resize', checkScreenSize);
+		return () => window.removeEventListener('resize', checkScreenSize);
+	}, []);
+	// #endregion
+
+	// #region 렌더링
+	const breadcrumbItems = getBreadcrumbItems();
+
+	if (breadcrumbItems.length <= 1) {
+		return (
+			<h2 className="text-lg font-semibold truncate text-foreground">
+				{breadcrumbItems.length > 0 ? breadcrumbItems[0].label : '홈'}
+			</h2>
+		);
+	}
 
 	return (
 		<nav aria-label="Breadcrumb" className="w-full">
 			{isCollapsed ? renderCollapsedBreadcrumb() : renderFullBreadcrumb()}
 		</nav>
 	);
+	// #endregion
 }

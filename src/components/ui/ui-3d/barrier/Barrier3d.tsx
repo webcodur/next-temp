@@ -15,6 +15,7 @@ import {
 	createLights,
 	createGround,
 	createBarrier,
+	isWebGLSupported,
 } from './scene';
 import { createToggleHandler } from './animation';
 import { TripleChevronUp, TripleChevronDown } from './icons';
@@ -97,60 +98,128 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	useEffect(() => {
 		if (isInitializedRef.current) return;
 
-		const scene = new THREE.Scene();
-		scene.background = new THREE.Color(COLORS.BACKGROUND);
-		sceneRef.current = scene;
-
-		// viewAngle에 따른 카메라 위치 설정
-		const cameraConfig = CAMERA_POSITIONS[viewAngle];
-		const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-		camera.position.set(...cameraConfig.position);
-		camera.lookAt(...cameraConfig.lookAt);
-		cameraRef.current = camera;
-
-		const renderer = createRenderer(width, height);
-		rendererRef.current = renderer;
-
-		if (mountRef.current) {
-			while (mountRef.current.firstChild) {
-				mountRef.current.removeChild(mountRef.current.firstChild);
+		// WebGL 지원 여부 확인
+		if (!isWebGLSupported()) {
+			console.warn('WebGL is not supported. Rendering fallback UI.');
+			if (mountRef.current) {
+				mountRef.current.innerHTML = `
+					<div style="
+						width: ${width}px; 
+						height: ${height}px; 
+						display: flex; 
+						align-items: center; 
+						justify-content: center; 
+						background-color: var(--surface-2); 
+						border-radius: 8px; 
+						color: var(--muted-foreground);
+						font-size: 14px;
+					">
+						WebGL 미지원 브라우저
+					</div>
+				`;
 			}
-			mountRef.current.appendChild(renderer.domElement);
+			return;
 		}
 
-		createLights(scene);
-		createGround(scene);
-		createBarrier(scene, isOpen, ledMaterialRef, armMaterialRef, barrierArmRef);
+		try {
+			const scene = new THREE.Scene();
+			scene.background = new THREE.Color(COLORS.BACKGROUND);
+			sceneRef.current = scene;
 
-		const animate = () => {
-			animationIdRef.current = requestAnimationFrame(animate);
-			if (rendererRef.current && cameraRef.current && sceneRef.current) {
-				rendererRef.current.render(sceneRef.current, cameraRef.current);
+			// viewAngle에 따른 카메라 위치 설정
+			const cameraConfig = CAMERA_POSITIONS[viewAngle];
+			const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+			camera.position.set(...cameraConfig.position);
+			camera.lookAt(...cameraConfig.lookAt);
+			cameraRef.current = camera;
+
+			const renderer = createRenderer(width, height);
+			rendererRef.current = renderer;
+
+			// WebGL 컨텍스트 손실 이벤트 처리
+			renderer.domElement.addEventListener('webglcontextlost', (e) => {
+				e.preventDefault();
+				console.warn('WebGL context lost. Barrier3D will try to recover.');
+				if (animationIdRef.current) {
+					cancelAnimationFrame(animationIdRef.current);
+				}
+			});
+
+			renderer.domElement.addEventListener('webglcontextrestored', () => {
+				console.log('WebGL context restored. Reinitializing Barrier3D.');
+				// 컨텍스트 복구 시 재초기화
+				isInitializedRef.current = false;
+			});
+
+			if (mountRef.current) {
+				while (mountRef.current.firstChild) {
+					mountRef.current.removeChild(mountRef.current.firstChild);
+				}
+				mountRef.current.appendChild(renderer.domElement);
 			}
-		};
-		animate();
 
-		// 리사이즈 이벤트 리스너 추가
-		window.addEventListener('resize', handleResize);
-		// 초기 리사이즈 호출
-		setTimeout(handleResize, 100);
+			createLights(scene);
+			createGround(scene);
+			createBarrier(scene, isOpen, ledMaterialRef, armMaterialRef, barrierArmRef);
 
-		isInitializedRef.current = true;
+			const animate = () => {
+				animationIdRef.current = requestAnimationFrame(animate);
+				if (rendererRef.current && cameraRef.current && sceneRef.current) {
+					try {
+						rendererRef.current.render(sceneRef.current, cameraRef.current);
+					} catch (error) {
+						console.error('Barrier3D render error:', error);
+						// 렌더링 에러 시 애니메이션 중단
+						if (animationIdRef.current) {
+							cancelAnimationFrame(animationIdRef.current);
+						}
+					}
+				}
+			};
+			animate();
 
-		// cleanup에서 사용할 현재 mount 참조를 미리 저장
-		const currentMount = mountRef.current;
+			// 리사이즈 이벤트 리스너 추가
+			window.addEventListener('resize', handleResize);
+			// 초기 리사이즈 호출
+			setTimeout(handleResize, 100);
 
-		return () => {
-			if (animationIdRef.current) {
-				cancelAnimationFrame(animationIdRef.current);
+			isInitializedRef.current = true;
+
+			// cleanup에서 사용할 현재 mount 참조를 미리 저장
+			const currentMount = mountRef.current;
+
+			return () => {
+				if (animationIdRef.current) {
+					cancelAnimationFrame(animationIdRef.current);
+				}
+				window.removeEventListener('resize', handleResize);
+				if (currentMount?.contains(renderer.domElement)) {
+					currentMount.removeChild(renderer.domElement);
+				}
+				renderer.dispose();
+				isInitializedRef.current = false;
+			};
+		} catch (error) {
+			console.error('Barrier3D initialization error:', error);
+			// 초기화 실패 시 fallback 렌더링
+			if (mountRef.current) {
+				mountRef.current.innerHTML = `
+					<div style="
+						width: ${width}px; 
+						height: ${height}px; 
+						display: flex; 
+						align-items: center; 
+						justify-content: center; 
+						background-color: var(--surface-2); 
+						border-radius: 8px; 
+						color: var(--muted-foreground);
+						font-size: 14px;
+					">
+						3D 차단기 로드 실패
+					</div>
+				`;
 			}
-			window.removeEventListener('resize', handleResize);
-			if (currentMount?.contains(renderer.domElement)) {
-				currentMount.removeChild(renderer.domElement);
-			}
-			renderer.dispose();
-			isInitializedRef.current = false;
-		};
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []); // 의도적으로 빈 의존성 배열 - 초기화는 한 번만 실행
 

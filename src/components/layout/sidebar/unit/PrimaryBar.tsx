@@ -1,17 +1,27 @@
+/* 
+  파일명: /components/layout/sidebar/unit/PrimaryBar.tsx
+  기능: 사이드바의 메인 아이콘 바 컴포넌트
+  책임: 토글 버튼과 메뉴 아이콘들을 제공하는 세로 네비게이션 바
+*/ // ------------------------------
 'use client';
+
+import { useState } from 'react';
 
 import { useAtom } from 'jotai';
 import { Menu } from 'lucide-react';
+
 import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
 import { sidebarCollapsedAtom, activeTopMenuAtom } from '@/store/sidebar';
-import { useState } from 'react';
 
 export function PrimaryBar() {
+	// #region 상태
 	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [activeTopMenu, setActiveTopMenu] = useAtom(activeTopMenuAtom);
 	const [clickedMenu, setClickedMenu] = useState<string>('');
+	// #endregion
 
+	// #region 핸들러
 	const handleToggle = () => setIsCollapsed(!isCollapsed);
 	
 	const handleMenuClick = (topKey: string) => {
@@ -31,7 +41,9 @@ export function PrimaryBar() {
 			setActiveTopMenu(topKey);
 		}
 	};
+	// #endregion
 
+	// #region 렌더링
 	const topKeys = Object.keys(menuData);
 
 	return (
@@ -79,4 +91,5 @@ export function PrimaryBar() {
 			</div>
 		</div>
 	);
+	// #endregion
 } 

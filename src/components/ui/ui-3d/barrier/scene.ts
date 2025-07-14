@@ -1,16 +1,26 @@
 import * as THREE from 'three';
 import { COLORS, POSITIONS, SIZES, SETTINGS } from './constants';
 
+// WebGL 지원 여부 확인 유틸리티
+export const isWebGLSupported = () => {
+	try {
+		const canvas = document.createElement('canvas');
+		const context = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+		return context !== null;
+	} catch {
+		return false;
+	}
+};
+
 export const createRenderer = (width: number, height: number) => {
 	const renderer = new THREE.WebGLRenderer({
 		antialias: true,
 		alpha: true,
 		powerPreference: 'high-performance',
-		precision: 'highp',
-		logarithmicDepthBuffer: true,
+		// precision과 logarithmicDepthBuffer 제거 (호환성 문제 해결)
 	});
 	renderer.setSize(width, height);
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 3에서 2로 낮춤
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	renderer.outputColorSpace = THREE.SRGBColorSpace;

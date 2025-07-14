@@ -57,19 +57,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
     }));
   };
 
-  // 전체 선택/해제
-  const handleSelectAll = () => {
-    if (!isEditMode) return;
-    
-    const allEnabled = vehicleTypeCategories.every((cat) => localPolicies[cat]);
-    const newPolicies: Record<string, boolean> = {};
-    
-    vehicleTypeCategories.forEach((cat) => {
-      newPolicies[cat] = !allEnabled;
-    });
-    
-    setLocalPolicies(newPolicies);
-  };
+
 
   const enabledCount = Object.values(isEditMode ? localPolicies : policies).filter(Boolean).length;
   const totalCount = vehicleTypeCategories.length;
@@ -120,17 +108,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
         )}
       </div>
 
-      {/* 편집 모드일 때 전체 선택 버튼 */}
-      {isEditMode && (
-        <div className="flex justify-end">
-          <button
-            onClick={handleSelectAll}
-            className="px-2 py-1 text-xs rounded-md neu-raised hover:neu-inset"
-          >
-            {enabledCount === totalCount ? '전체 해제' : '전체 선택'}
-          </button>
-        </div>
-      )}
+
 
       {/* 정책 목록 */}
       <div className="grid grid-cols-2 gap-2">

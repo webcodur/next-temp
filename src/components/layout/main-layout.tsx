@@ -1,5 +1,34 @@
-// #region MainLayout 구조
-/*
+/* 
+  파일명: /components/layout/main-layout.tsx
+  기능: 메인 레이아웃의 루트 컴포넌트
+  책임: 사이드바, 헤더, 콘텐츠 영역을 포함한 3단 구조의 레이아웃 제공
+*/ // ------------------------------
+'use client';
+
+import { ReactNode, useEffect } from 'react';
+
+import { useAtom, useAtomValue } from 'jotai';
+
+import { useLocale } from '@/hooks/useI18n';
+import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
+import { initPrimaryColorAtom } from '@/store/primary';
+import { sidebarCollapsedAtom } from '@/store/sidebar';
+import { initThemeAtom } from '@/store/theme';
+
+import { defaults } from '@/data/sidebarConfig';
+
+import PageHeader from './PageHeader';
+import { Header } from './header/Header';
+import { Sidebar } from './sidebar/Sidebar';
+import { SecondaryPanel } from './sidebar/unit/SecondaryPanel';
+
+// #region 타입
+interface MainLayoutProps {
+	children: ReactNode;
+}
+// #endregion
+
+/* 
  * [레이아웃 구조]
  * 이 컴포넌트는 '사이드바 + 헤더 + 콘텐츠'의 3단 구조를 가진다.
  * 전체 화면을 차지하는 최상위 div는 좌우로 Sidebar와 메인 콘텐츠 영역을 나눈다.
@@ -24,44 +53,25 @@
  * 이 방식은 Header와 Sidebar를 화면에 고정한 채 콘텐츠 영역만 독립적으로 스크롤할 수 있게 하여
  * 안정적인 사용자 경험을 제공한다.
  */
-// #endregion
-'use client';
-
-import { ReactNode, useEffect } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
-import { initThemeAtom } from '@/store/theme';
-import { initPrimaryColorAtom } from '@/store/primary';
-import { useLocale } from '@/hooks/useI18n';
-// components
-import PageHeader from '@/components/layout/PageHeader';
-import { Sidebar } from './sidebar/Sidebar';
-import { Header } from './header/Header';
-import { SecondaryPanel } from './sidebar/unit/SecondaryPanel';
-// hooks
-import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
-// data
-import { sidebarCollapsedAtom } from '@/store/sidebar';
-import { defaults } from '@/data/sidebarConfig';
-
-interface MainLayoutProps {
-	children: ReactNode;
-}
 
 export function MainLayout({ children }: MainLayoutProps) {
+	// #region 상태 및 훅
 	const [, initTheme] = useAtom(initThemeAtom);
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
 	const isCollapsed = useAtomValue(sidebarCollapsedAtom);
+	// #endregion
 
-	// 테마 초기화
+	// #region 초기화 및 부가 효과
 	useEffect(() => {
 		initTheme();
 		initPrimaryColor();
 	}, [initTheme, initPrimaryColor]);
 
-	// 키보드 단축키 활성화
 	useThemeKeyboard();
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<Sidebar />
@@ -79,7 +89,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 						</div>
 					</div>
 					<main className="overflow-y-auto flex-1 p-6">
-						<div className="p-8 mx-auto max-w-7xl bg-surface-1 rounded-lg neu-flat">
+						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-surface-1 neu-flat">
 							<div className="mb-3">
 								<PageHeader />
 							</div>
@@ -90,4 +100,5 @@ export function MainLayout({ children }: MainLayoutProps) {
 			</div>
 		</div>
 	);
+	// #endregion
 }

@@ -1,27 +1,41 @@
+/* 
+  파일명: /components/layout/header/ProfileButton.tsx
+  기능: 헤더의 프로필 버튼 컴포넌트
+  책임: 사용자 프로필 드롭다운 메뉴와 로그인/로그아웃 처리
+*/ // ------------------------------
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { User, Settings, LogOut, ChevronDown, Shield, UserCheck } from 'lucide-react';
-import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
-import { openLoginModalAtom } from '@/store/loginModal';
 import clsx from 'clsx';
 
+import { userAtom, logoutAtom, isAuthenticatedAtom } from '@/store/auth';
+import { openLoginModalAtom } from '@/store/loginModal';
+
+// #region 타입
 interface ProfileButtonProps {
 	className?: string;
 }
+// #endregion
 
 export function ProfileButton({ className = '' }: ProfileButtonProps) {
+	// #region 상태
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const router = useRouter();
+	// #endregion
 
+	// #region 훅
+	const router = useRouter();
 	const [user] = useAtom(userAtom);
 	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
 	const [, logout] = useAtom(logoutAtom);
 	const [, openLoginModal] = useAtom(openLoginModalAtom);
+	// #endregion
 
+	// #region 핸들러
 	const handleClickOutside = (event: MouseEvent) => {
 		if (
 			dropdownRef.current &&
@@ -30,11 +44,6 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 			setIsOpen(false);
 		}
 	};
-
-	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
 
 	const handleLogout = async () => {
 		try {
@@ -66,7 +75,16 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		setIsOpen(false);
 		router.push('/account/security/password-policy');
 	};
+	// #endregion
 
+	// #region 효과
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+	// #endregion
+
+	// #region 렌더링
 	// 로그인하지 않은 경우 로그인 버튼 표시
 	if (!isAuthenticated || !user) {
 		return (
@@ -157,4 +175,5 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 			)}
 		</div>
 	);
+	// #endregion
 }

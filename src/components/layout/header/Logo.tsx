@@ -1,8 +1,14 @@
+/* 
+  파일명: /components/layout/header/Logo.tsx
+  기능: 헤더의 로고 컴포넌트
+  책임: 시스템 로고와 브랜드명을 표시하는 링크 컴포넌트
+*/ // ------------------------------
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
+// #region 렌더링
 export const Logo = () => {
 	return (
 		<Link href="/" className="flex gap-3 items-center cursor-pointer">
@@ -13,4 +19,5 @@ export const Logo = () => {
 			</div>
 		</Link>
 	);
-}; 
+};
+// #endregion 

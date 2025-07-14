@@ -1,24 +1,35 @@
+/* 
+  파일명: /components/layout/sidebar/unit/SecondaryPanel.tsx
+  기능: 사이드바의 세컨더리 패널 컴포넌트
+  책임: 확장된 메뉴 트리와 네비게이션 링크를 제공하는 패널
+*/ // ------------------------------
 'use client';
+
+import { useEffect } from 'react';
 
 import { useAtom } from 'jotai';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { ChevronRight, ChevronsUpDown, Focus, Layers } from 'lucide-react';
+
+import { useTranslations } from '@/hooks/useI18n';
 import { activeTopMenuAtom } from '@/store/sidebar';
-import { menuData } from '@/data/menuData';
-import { defaults } from '@/data/sidebarConfig';
-import { useSecondaryMenu } from './useSecondaryMenu';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/ui-effects/tooltip/Tooltip';
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from '@/components/ui/ui-layout/collapsible/Collapsible';
-import { Button } from '@/components/ui/ui-input/button/Button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/ui-effects/tooltip/Tooltip';
-import { ChevronRight, ChevronsUpDown, Focus, Layers } from 'lucide-react';
-import { useTranslations } from '@/hooks/useI18n';
+
+import { menuData } from '@/data/menuData';
+import { defaults } from '@/data/sidebarConfig';
+
+import { useSecondaryMenu } from './useSecondaryMenu';
 
 export function SecondaryPanel() {
+	// #region 훅
 	const t = useTranslations();
 	const pathname = usePathname();
 	const [activeTopMenu] = useAtom(activeTopMenuAtom);
@@ -31,28 +42,39 @@ export function SecondaryPanel() {
 		handleExpandAll,
 		handleCollapseAll,
 	} = useSecondaryMenu();
+	// #endregion
 
+	// #region 상수
 	const topData = menuData[activeTopMenu];
+	// #endregion
 
+	// #region 효과
 	useEffect(() => {
 		if (topData) {
 			const allMidKeys = Object.keys(topData.midItems);
 			handleExpandAll(allMidKeys);
 		}
 	}, [activeTopMenu, topData, handleExpandAll]);
+	// #endregion
 
-	if (!topData) return null;
-
-	const allMidKeys = Object.keys(topData.midItems);
-	const areAllExpanded = allMidKeys.length > 0 && allMidKeys.every((key) => midExpanded.has(key));
-
+	// #region 유틸리티
 	const handleExpandCollapseClick = () => {
+		const allMidKeys = Object.keys(topData.midItems);
+		const areAllExpanded = allMidKeys.length > 0 && allMidKeys.every((key) => midExpanded.has(key));
+		
 		if (areAllExpanded) {
 			handleCollapseAll();
 		} else {
 			handleExpandAll(allMidKeys);
 		}
 	};
+	// #endregion
+
+	// #region 렌더링
+	if (!topData) return null;
+
+	const allMidKeys = Object.keys(topData.midItems);
+	const areAllExpanded = allMidKeys.length > 0 && allMidKeys.every((key) => midExpanded.has(key));
 
 	return (
 		<TooltipProvider delayDuration={100}>
@@ -133,4 +155,5 @@ export function SecondaryPanel() {
 			</div>
 		</TooltipProvider>
 	);
+	// #endregion
 } 

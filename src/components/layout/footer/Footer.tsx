@@ -1,9 +1,18 @@
+/* 
+  파일명: /components/layout/footer/Footer.tsx
+  기능: 레이아웃의 푸터 컴포넌트
+  책임: 회사 정보, 연락처, 링크 등 푸터 정보 제공
+*/ // ------------------------------
 'use client';
 
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function Footer() {
+	// #region 훅
 	const t = useTranslations();
+	// #endregion
+
+	// #region 렌더링
 	return (
 		<footer className="bg-surface-3 border-t border-border text-muted-foreground py-20 mt-[150px]">
 			<div className="container max-w-2xl px-6 mx-auto">
@@ -90,4 +99,5 @@ export default function Footer() {
 			</div>
 		</footer>
 	);
+	// #endregion
 }

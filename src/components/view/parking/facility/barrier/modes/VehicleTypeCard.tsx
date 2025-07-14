@@ -1,11 +1,21 @@
+/* 
+  파일명: /components/view/parking/facility/barrier/modes/VehicleTypeCard.tsx
+  기능: 차단기별 출입 유형 차량 설정 카드 컴포넌트
+  책임: 드래그 앤 드롭, 이름 편집, 정책 설정을 통합 관리한다.
+*/ // ------------------------------
+
 import React, { useState } from 'react';
-import { Edit2 } from 'lucide-react';
+
+import { Edit2, Check, X } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+
 import { ParkingBarrier, OperationMode } from '@/types/parking';
+
 import BarrierControlPanel from '../shared/BarrierControlPanel';
 import VehicleTypeSettings from './VehicleTypeSettings';
 
+// #region 타입 정의
 interface VehicleTypeCardProps {
   barrier: ParkingBarrier;
   orderIndex: number;
@@ -14,8 +24,9 @@ interface VehicleTypeCardProps {
   onOperationModeChange: (mode: OperationMode) => void;
   onPolicyUpdate: (policies: Record<string, boolean>) => void;
 }
+// #endregion
 
-// #region 기본 정책 데이터 (임시)
+// #region 상수 정의
 const defaultPolicies: Record<string, boolean> = {
   '입주': true,
   '방문': true,
@@ -28,7 +39,7 @@ const defaultPolicies: Record<string, boolean> = {
 };
 // #endregion
 
-// #region 출입 유형 차량 설정 카드 컴포넌트
+// #region 메인 컴포넌트
 const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   barrier,
   orderIndex,
@@ -37,11 +48,13 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
   onOperationModeChange,
   onPolicyUpdate,
 }) => {
+  // #region 상태
   const [isEditingName, setIsEditingName] = useState(false);
   const [editingName, setEditingName] = useState(barrier.name);
   const [policies, setPolicies] = useState<Record<string, boolean>>(defaultPolicies);
+  // #endregion
 
-  // 드래그 앤 드롭 설정
+  // #region 훅
   const {
     attributes,
     listeners,
@@ -55,8 +68,9 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  // #endregion
 
-  // 이름 편집 핸들러
+  // #region 핸들러
   const handleSaveName = () => {
     if (editingName.trim()) {
       console.log('차단기 이름 변경:', barrier.id, editingName);
@@ -69,33 +83,37 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
     setIsEditingName(false);
   };
 
-  // 정책 업데이트 핸들러
   const handlePolicyUpdate = (newPolicies: Record<string, boolean>) => {
     setPolicies(newPolicies);
     onPolicyUpdate(newPolicies);
   };
+  // #endregion
 
+  // #region 렌더링
   return (
     <div 
       ref={setNodeRef}
       style={style}
-      className={`p-4 rounded-lg neu-flat bg-surface-2 h-[400px] flex flex-col ${
+      className={`p-4 rounded-lg neu-flat bg-surface-2 h-[500px] flex flex-col relative ${
         isDragging ? 'opacity-50' : ''
       }`}
     >
-      {/* 카드 헤더 */}
-      <div className="flex items-center justify-between mb-2 px-1 py-0.5 rounded-lg bg-muted/30">
-        {/* 왼쪽: 넘버링 */}
-        <div className="flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-muted min-w-[60px]">
-          <span className="font-semibold">
-            {orderIndex + 1}/{totalCount}
-          </span>
-        </div>
+      {/* 넘버링 띠 (absolute) */}
+      <div className="absolute top-1 left-1 z-10 flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-primary/90 text-primary-foreground min-w-[30px]">
+        <span className="font-semibold">
+          {orderIndex + 1}/{totalCount}
+        </span>
+      </div>
 
-        {/* 중앙: 차단기명 (드래그 가능) */}
+      {/* 카드 헤더 */}
+      <div className="flex items-center justify-between mb-3 px-1 py-0.5">
+        {/* 왼쪽: 빈 공간 (대칭성 유지) */}
+        <div className="min-w-[60px]"></div>
+
+        {/* 중앙: 차단기명 */}
         <div className="flex-1 flex justify-center items-center">
           {isEditingName ? (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 justify-center w-full">
               <input
                 type="text"
                 value={editingName}
@@ -104,27 +122,29 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') handleCancelEdit();
                 }}
-                className="px-2 py-0.5 text-base rounded border border-border bg-background text-center font-medium"
+                className="px-3 py-1 text-lg font-semibold rounded border border-border bg-background text-center font-multilang min-w-0 max-w-[180px]"
                 autoFocus
               />
-              <button
-                onClick={handleSaveName}
-                className="p-1 neu-raised hover:neu-inset rounded text-primary"
-              >
-                ✓
-              </button>
-              <button
-                onClick={handleCancelEdit}
-                className="p-1 neu-raised hover:neu-inset rounded text-muted-foreground"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleSaveName}
+                  className="p-1.5 neu-raised hover:neu-inset rounded text-primary"
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  className="p-1.5 neu-raised hover:neu-inset rounded text-muted-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ) : (
             <h3 
               {...attributes}
               {...listeners}
-              className="font-semibold text-foreground font-multilang text-center text-lg cursor-grab active:cursor-grabbing hover:bg-muted/20 px-2 py-0.5 rounded transition-colors"
+              className="font-semibold text-foreground font-multilang text-lg cursor-grab active:cursor-grabbing hover:bg-muted/20 px-2 py-0.5 rounded transition-colors text-center"
             >
               {barrier.name}
             </h3>
@@ -163,6 +183,7 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
       </div>
     </div>
   );
+  // #endregion
 };
 
 export default VehicleTypeCard;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit2 } from 'lucide-react';
+import { Edit2, Check, X } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
@@ -57,23 +57,26 @@ const BarrierOperationCard: React.FC<BarrierOperationCardProps> = ({
     <div 
       ref={setNodeRef}
       style={style}
-      className={`p-4 rounded-lg neu-flat bg-surface-2 h-[400px] flex flex-col ${
+      className={`p-4 rounded-lg neu-flat bg-surface-2 h-[500px] flex flex-col relative ${
         isDragging ? 'opacity-50' : ''
       }`}
     >
-      {/* 카드 헤더 */}
-      <div className="flex items-center justify-between mb-2 px-1 py-0.5 rounded-lg bg-muted/30">
-        {/* 왼쪽: 넘버링 */}
-        <div className="flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-muted min-w-[60px]">
-          <span className="font-semibold">
-            {orderIndex + 1}/{totalCount}
-          </span>
-        </div>
+      {/* 넘버링 띠 (absolute) */}
+      <div className="absolute top-1 left-1 z-10 flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-primary/90 text-primary-foreground min-w-[30px]">
+        <span className="font-semibold">
+          {orderIndex + 1}/{totalCount}
+        </span>
+      </div>
 
-        {/* 중앙: 차단기명 (드래그 가능) */}
+      {/* 카드 헤더 */}
+      <div className="flex items-center justify-between mb-3 px-1 py-0.5">
+        {/* 왼쪽: 빈 공간 (대칭성 유지) */}
+        <div className="min-w-[60px]"></div>
+
+        {/* 중앙: 차단기명 */}
         <div className="flex-1 flex justify-center items-center">
           {isEditingName ? (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 justify-center w-full">
               <input
                 type="text"
                 value={editingName}
@@ -82,27 +85,29 @@ const BarrierOperationCard: React.FC<BarrierOperationCardProps> = ({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') handleCancelEdit();
                 }}
-                className="px-2 py-0.5 text-base rounded border border-border bg-background text-center font-medium"
+                className="px-3 py-1 text-lg font-semibold rounded border border-border bg-background text-center font-multilang min-w-0 max-w-[180px]"
                 autoFocus
               />
-              <button
-                onClick={handleSaveName}
-                className="p-1 neu-raised hover:neu-inset rounded text-primary"
-              >
-                ✓
-              </button>
-              <button
-                onClick={handleCancelEdit}
-                className="p-1 neu-raised hover:neu-inset rounded text-muted-foreground"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleSaveName}
+                  className="p-1.5 neu-raised hover:neu-inset rounded text-primary"
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  className="p-1.5 neu-raised hover:neu-inset rounded text-muted-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ) : (
             <h3 
               {...attributes}
               {...listeners}
-              className="font-semibold text-foreground font-multilang text-center text-lg cursor-grab active:cursor-grabbing hover:bg-muted/20 px-2 py-0.5 rounded transition-colors"
+              className="font-semibold text-foreground font-multilang text-lg cursor-grab active:cursor-grabbing hover:bg-muted/20 px-2 py-0.5 rounded transition-colors text-center"
             >
               {barrier.name}
             </h3>
