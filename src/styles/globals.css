@@ -72,3 +72,11 @@
 ::-webkit-scrollbar-thumb:hover {
 	background: hsl(var(--primary));
 }
+
+/* --- scrollbar gutter stable --- */
+.scrollbar-gutter-stable {
+	/* 스크롤바 공간을 미리 확보하여 레이아웃 시프트 방지 */
+	scrollbar-gutter: stable;
+	/* 구형 브라우저 호환성을 위한 fallback */
+	overflow-y: scroll;
+}

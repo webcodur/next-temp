@@ -115,7 +115,7 @@ export function SecondaryPanel() {
 				</div>
 
 				{/* Menu List */}
-				<nav className="flex-1 p-2 overflow-y-auto">
+				<nav className="overflow-y-auto flex-1 p-2">
 					{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 						<Collapsible
 							key={midKey}
@@ -137,7 +137,7 @@ export function SecondaryPanel() {
 											<li key={botItem.key}>
 												<Link
 													href={botItem.href}
-													className={`block p-2 rounded-md text-sm transition-colors ${
+													className={`block p-2 rounded-md text-sm ${
 														isActive
 															? 'text-primary-foreground bg-primary'
 															: 'text-foreground hover:bg-surface-3'

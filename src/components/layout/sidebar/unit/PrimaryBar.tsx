@@ -41,6 +41,14 @@ export function PrimaryBar() {
 			setActiveTopMenu(topKey);
 		}
 	};
+
+	const handlePrimaryBarClick = () => {
+		setIsCollapsed(!isCollapsed);
+	};
+
+	const stopPropagation = (e: React.MouseEvent) => {
+		e.stopPropagation();
+	};
 	// #endregion
 
 	// #region 렌더링
@@ -49,14 +57,18 @@ export function PrimaryBar() {
 	return (
 		<div
 			style={{ minWidth: `${defaults.startColumnWidth}px` }}
-			className="flex flex-col items-center h-full border-e border-border/20 shrink-0 sidebar-container">
+			className="flex flex-col items-center h-full cursor-pointer border-e border-border/20 shrink-0 sidebar-container"
+			onClick={handlePrimaryBarClick}>
 			
       {/* 여닫기 버튼 */}
 			<div className="flex justify-center items-center h-16">
 				<button
 					type="button"
-					onClick={handleToggle}
-					className="flex justify-center items-center w-12 h-12 rounded-xl transition-all duration-200 neu-raised hover:neu-inset cursor-pointer">
+					onClick={(e) => {
+						stopPropagation(e);
+						handleToggle();
+					}}
+					className="flex justify-center items-center w-12 h-12 rounded-xl transition-all duration-200 cursor-pointer neu-raised hover:neu-inset">
 					<Menu className="w-6 h-6 text-foreground" />
 				</button>
 			</div>
@@ -72,12 +84,14 @@ export function PrimaryBar() {
 						<button
 							key={topKey}
 							type="button"
-							onClick={() => handleMenuClick(topKey)}
+							onClick={(e) => {
+								stopPropagation(e);
+								handleMenuClick(topKey);
+							}}
 							className={`w-full h-12 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group cursor-pointer ${
 								isActive ? 'neu-inset' : 'neu-raised'
 							} ${
-								isClicked ? 'animate-click-feedback' : ''
-							}`}>
+								isClicked ? 'animate-click-feedback' : ''}`}>
 							<topItem.icon
 								className={`w-6 h-6 transition-all duration-200 ${
 									isActive ? 'neu-icon-active' : 'neu-icon-inactive'

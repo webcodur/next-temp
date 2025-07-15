@@ -1,9 +1,14 @@
+/* 
+  파일명: /components/view/parking/facility/barrierManager/BarrierManager.tsx
+  기능: 주차장 차단기 관리 인터페이스
+  책임: 차단기 목록 표시, 드래그앤드롭 정렬, 상태 관리를 담당한다.
+*/ // ------------------------------
+
 import React, { useState, useEffect } from 'react';
+
 import { 
   DndContext, 
   DragEndEvent, 
-  DragOverlay, 
-  DragStartEvent,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
@@ -14,17 +19,17 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy
+  rectSortingStrategy
 } from '@dnd-kit/sortable';
 import { Construction } from 'lucide-react';
+
+import { OperationMode } from '@/types/parking';
+
 import { BarrierManagerProps } from './types';
 import { useBarrierOperations } from './useBarrierOperations';
 import { getResponsiveGridClass } from './viewModeConfig';
-import { OperationMode } from '@/types/parking';
-import { ParkingBarrier } from '@/types/parking';
 import VehicleTypeCard from './VehicleTypeCard/VehicleTypeCard';
 
-// #region 메인 차단기 관리 뷰 컴포넌트
 const BarrierManager: React.FC<BarrierManagerProps> = ({
   barriers: initialBarriers,
   onBarrierOpen,
@@ -33,7 +38,13 @@ const BarrierManager: React.FC<BarrierManagerProps> = ({
   onPolicyUpdate,
 }) => {
 
-  // 훅 초기화
+  // #region 상태
+  const [barrierOrder, setBarrierOrder] = useState<string[]>(() => 
+    initialBarriers.map(barrier => barrier.id)
+  );
+  // #endregion
+
+  // #region 훅
   const {
     barriers,
     handleBarrierToggle,
@@ -47,18 +58,10 @@ const BarrierManager: React.FC<BarrierManagerProps> = ({
     onPolicyUpdate
   );
 
-  // 드래그 앤 드롭 상태
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeItem, setActiveItem] = useState<ParkingBarrier | null>(null);
-  const [barrierOrder, setBarrierOrder] = useState<string[]>(() => 
-    barriers.map(barrier => barrier.id)
-  );
-
-  // 드래그 센서 설정
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px 이상 이동해야 드래그 시작
+        distance: 8,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -66,100 +69,76 @@ const BarrierManager: React.FC<BarrierManagerProps> = ({
     })
   );
 
-  // barriers 변경 시 barrierOrder 업데이트
   useEffect(() => {
     const newBarrierIds = barriers.map(barrier => barrier.id);
     setBarrierOrder(prev => {
-      // 기존 순서를 유지하면서 새로운 차단기 추가
       const existingIds = prev.filter(id => newBarrierIds.includes(id));
       const newIds = newBarrierIds.filter(id => !prev.includes(id));
       return [...existingIds, ...newIds];
     });
   }, [barriers]);
+  // #endregion
 
-  // 반응형 그리드 클래스
-  const gridClass = getResponsiveGridClass();
-
-  // 개별 정책 업데이트 핸들러
+  // #region 핸들러
   const handleIndividualPolicyUpdate = (barrierId: string, policies: Record<string, boolean>) => {
-    console.log('정책 업데이트:', barrierId, policies);
     handlePolicyUpdate(barrierId, policies);
   };
 
-  // 드래그 핸들러
-  const handleDragStart = (event: DragStartEvent) => {
-    const id = event.active.id as string;
-    const barrier = sortedBarriers.find(b => b.id === id);
-    setActiveId(id);
-    setActiveItem(barrier || null);
+  const handleDragStart = () => {
+    // 필요 시 드래그 시작 로직 추가
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    if (active.id !== over?.id) {
-      setBarrierOrder((items) => {
+    if (active.id !== over?.id && over) {
+      setBarrierOrder(items => {
         const oldIndex = items.indexOf(active.id as string);
-        const newIndex = items.indexOf(over?.id as string);
+        const newIndex = items.indexOf(over.id as string);
         return arrayMove(items, oldIndex, newIndex);
       });
     }
-    
-    setActiveId(null);
-    setActiveItem(null);
   };
+  // #endregion
 
-  // 정렬된 차단기 목록
-  const sortedBarriers = barrierOrder.map(id => barriers.find(b => b.id === id)!).filter(Boolean);
+  // #region 계산된 값
+  const gridClass = getResponsiveGridClass();
+  const sortedBarriers = barrierOrder
+    .map(id => barriers.find(b => b.id === id))
+    .filter(Boolean) as typeof barriers;
+  // #endregion
 
+  // #region 렌더링
   return (
     <div className="space-y-6">
-      {/* 차단기 카드 그리드 */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={barrierOrder} strategy={verticalListSortingStrategy}>
+        <SortableContext items={barrierOrder} strategy={rectSortingStrategy}>
           <section className={gridClass}>
-            {sortedBarriers.map((barrier, index) => {
-              const commonProps = {
-                barrier,
-                orderIndex: index,
-                totalCount: sortedBarriers.length,
-                onToggle: () => handleBarrierToggle(barrier.id),
-                onOperationModeChange: (mode: OperationMode) => handleOperationModeChange(barrier.id, mode),
-              };
-
-              return (
-                <VehicleTypeCard 
-                  key={barrier.id} 
-                  {...commonProps} 
-                  onPolicyUpdate={(policies: Record<string, boolean>) => 
-                    handleIndividualPolicyUpdate(barrier.id, policies)
-                  }
-                />
-              );
-            })}
+            {sortedBarriers.map((barrier) => (
+              <VehicleTypeCard 
+                key={barrier.id}
+                barrier={barrier}
+                onToggle={() => handleBarrierToggle(barrier.id)}
+                onOperationModeChange={(mode: OperationMode) => 
+                  handleOperationModeChange(barrier.id, mode)
+                }
+                onPolicyUpdate={(policies: Record<string, boolean>) => 
+                  handleIndividualPolicyUpdate(barrier.id, policies)
+                }
+              />
+            ))}
           </section>
         </SortableContext>
-        
-        <DragOverlay>
-          {activeId && activeItem ? (
-            <div className="flex justify-center items-center w-80 h-32 font-bold text-white rounded-lg shadow-lg bg-primary/80">
-              {activeItem.name}
-            </div>
-          ) : null}
-        </DragOverlay>
       </DndContext>
 
-      {/* 빈 상태 처리 */}
       {barriers.length === 0 && (
         <div className="flex flex-col justify-center items-center py-12 text-center">
-          <div className="mb-4">
-            <Construction className="mx-auto w-16 h-16" />
-          </div>
+          <Construction className="mx-auto mb-4 w-16 h-16" />
           <h3 className="mb-2 text-lg font-semibold text-foreground">
             등록된 차단기가 없습니다
           </h3>
@@ -170,7 +149,7 @@ const BarrierManager: React.FC<BarrierManagerProps> = ({
       )}
     </div>
   );
+  // #endregion
 };
 
-export default BarrierManager;
-// #endregion 
+export default BarrierManager; 

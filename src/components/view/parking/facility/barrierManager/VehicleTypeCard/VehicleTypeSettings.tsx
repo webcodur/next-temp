@@ -4,7 +4,6 @@ interface VehicleTypeSettingsProps {
   policies: Record<string, boolean>;
   onPolicyUpdate: (policies: Record<string, boolean>) => void;
   isEditMode?: boolean;
-  isReadOnly?: boolean;
 }
 
 // #region 차량 유형 카테고리
@@ -25,7 +24,6 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
   policies,
   onPolicyUpdate,
   isEditMode = false,
-  isReadOnly = false,
 }) => {
 
   // 정책 토글
@@ -42,14 +40,6 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
 
   return (
     <div className="space-y-3">
-      {/* 헤더 */}
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 justify-center items-center w-full">
-          <h4 className="font-medium text-center text-foreground font-multilang">
-            출입 유형 차량 설정
-          </h4>
-        </div>
-      </div>
 
       {/* 정책 목록 */}
       <div className="grid grid-cols-2 gap-2">
@@ -62,7 +52,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
               className={`flex items-center gap-2 p-2 rounded-md transition-all ${
                 isEditMode
                   ? 'cursor-pointer hover:neu-inset'
-                  : 'cursor-default'
+                  : 'cursor-default opacity-60'
               } ${
                 isEnabled
                   ? 'neu-inset text-primary bg-primary/10'
@@ -84,14 +74,6 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
         })}
       </div>
 
-
-
-      {/* 읽기 전용 모드 안내 */}
-      {isReadOnly && (
-        <div className="text-xs text-center text-muted-foreground font-multilang">
-          읽기 전용 모드 - 편집 권한이 없습니다
-        </div>
-      )}
     </div>
   );
 };
