@@ -72,10 +72,12 @@ export const SIZES = {
 } as const;
 
 export const SETTINGS = {
-	SHADOW_MAP_SIZE: 8192, // 4096에서 8192로 증가하여 더 선명한 그림자
+	SHADOW_MAP_SIZE: 4096, // 8192에서 4096으로 줄임 (GPU 호환성 향상)
 	AMBIENT_LIGHT_INTENSITY: 0.8,
 	DIRECTIONAL_LIGHT_INTENSITY: 0.6,
 	DEFAULT_ANIMATION_DURATION: 300,
+	MAX_PIXEL_RATIO: 1.5, // 픽셀 비율 제한 추가
+	FALLBACK_SHADOW_MAP_SIZE: 2048, // 낮은 성능 GPU를 위한 fallback
 } as const;
 
 export const VIEW_ANGLE_NAMES: Record<ViewAngle, string> = {

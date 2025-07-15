@@ -18,13 +18,11 @@ import {
 } from '@dnd-kit/sortable';
 import { Construction } from 'lucide-react';
 import { BarrierManagementViewProps } from './types';
-import { useFunctionMode } from './hooks/useBarrierViewMode';
 import { useBarrierOperations } from './hooks/useBarrierOperations';
 import { getResponsiveGridClass } from './utils/viewModeConfig';
-import FunctionModeToggle from './shared/ViewModeToggle';
 import VehicleTypeCard from './modes/VehicleTypeCard';
-import BarrierOperationCard from './modes/BarrierOperationCard';
 import { OperationMode } from '@/types/parking';
+import { ParkingBarrier } from '@/types/parking';
 
 // #region 메인 차단기 관리 뷰 컴포넌트
 const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
@@ -35,13 +33,7 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
   onPolicyUpdate,
 }) => {
 
-
   // 훅 초기화
-  const {
-    functionModeState,
-    setGlobalFunctionMode,
-  } = useFunctionMode();
-
   const {
     barriers,
     handleBarrierToggle,
@@ -57,13 +49,18 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
 
   // 드래그 앤 드롭 상태
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeItem, setActiveItem] = useState<ParkingBarrier | null>(null);
   const [barrierOrder, setBarrierOrder] = useState<string[]>(() => 
     barriers.map(barrier => barrier.id)
   );
 
   // 드래그 센서 설정
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px 이상 이동해야 드래그 시작
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -91,7 +88,10 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
 
   // 드래그 핸들러
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+    const id = event.active.id as string;
+    const barrier = sortedBarriers.find(b => b.id === id);
+    setActiveId(id);
+    setActiveItem(barrier || null);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -106,6 +106,7 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
     }
     
     setActiveId(null);
+    setActiveItem(null);
   };
 
   // 정렬된 차단기 목록
@@ -113,11 +114,17 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* 기능 모드 토글 */}
-      <FunctionModeToggle
-        currentMode={functionModeState.globalMode}
-        onModeChange={setGlobalFunctionMode}
-      />
+      {/* 헤더 */}
+      <section className="flex justify-between items-center p-4 rounded-lg neu-flat">
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground font-multilang">
+            차단기 관리
+          </h2>
+          <div className="flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-muted">
+            <span className="font-medium">출입유형 관리</span>
+          </div>
+        </div>
+      </section>
 
       {/* 차단기 카드 그리드 */}
       <DndContext
@@ -137,7 +144,7 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
                 onOperationModeChange: (mode: OperationMode) => handleOperationModeChange(barrier.id, mode),
               };
 
-              return functionModeState.globalMode === 'vehicle-type' ? (
+              return (
                 <VehicleTypeCard 
                   key={barrier.id} 
                   {...commonProps} 
@@ -145,36 +152,15 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
                     handleIndividualPolicyUpdate(barrier.id, policies)
                   }
                 />
-              ) : (
-                <BarrierOperationCard key={barrier.id} {...commonProps} />
               );
             })}
           </section>
         </SortableContext>
         
         <DragOverlay>
-          {activeId ? (
-            <div className="p-4 rounded-lg neu-flat bg-surface-2 h-[500px] flex flex-col opacity-80 relative">
-              {/* 넘버링 띠 (absolute) */}
-              <div className="absolute top-1 left-1 z-10 flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-primary/90 text-primary-foreground min-w-[30px]">
-                <span className="font-medium">드래그 중</span>
-              </div>
-
-              {/* 차단기명 헤더 */}
-              <div className="flex items-center justify-between mb-3 px-1 py-0.5">
-                {/* 왼쪽: 빈 공간 (대칭성 유지) */}
-                <div className="min-w-[60px]"></div>
-
-                {/* 중앙: 차단기명 */}
-                <div className="flex-1 flex justify-center items-center">
-                  <h3 className="font-semibold text-foreground font-multilang text-lg px-2 py-0.5 text-center">
-                    {sortedBarriers.find(b => b.id === activeId)?.name || '차단기'}
-                  </h3>
-                </div>
-
-                {/* 오른쪽: 빈 공간 (대칭성 유지) */}
-                <div className="min-w-[60px]"></div>
-              </div>
+          {activeId && activeItem ? (
+            <div className="w-80 h-32 bg-primary/80 rounded-lg shadow-lg flex items-center justify-center text-white font-bold">
+              {activeItem.name}
             </div>
           ) : null}
         </DragOverlay>
@@ -184,7 +170,7 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
       {barriers.length === 0 && (
         <div className="flex flex-col justify-center items-center py-12 text-center">
           <div className="mb-4">
-            <Construction className="w-16 h-16 mx-auto" />
+            <Construction className="mx-auto w-16 h-16" />
           </div>
           <h3 className="mb-2 text-lg font-semibold text-foreground">
             등록된 차단기가 없습니다

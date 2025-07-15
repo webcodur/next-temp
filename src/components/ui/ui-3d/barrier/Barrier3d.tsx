@@ -90,7 +90,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 			// 렌더러 크기 업데이트
 			rendererRef.current.setSize(actualWidth, actualHeight);
 			// 픽셀 비율 재설정 (확대/축소 시에도 선명함 유지)
-			rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+			rendererRef.current.setPixelRatio(Math.min(window.devicePixelRatio, SETTINGS.MAX_PIXEL_RATIO));
 		}
 	}, []);
 
@@ -133,7 +133,32 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 			camera.lookAt(...cameraConfig.lookAt);
 			cameraRef.current = camera;
 
-			const renderer = createRenderer(width, height);
+			let renderer;
+			try {
+				renderer = createRenderer(width, height);
+			} catch (rendererError) {
+				console.error('렌더러 생성 실패:', rendererError);
+				if (mountRef.current) {
+					mountRef.current.innerHTML = `
+						<div style="
+							width: ${width}px; 
+							height: ${height}px; 
+							display: flex; 
+							align-items: center; 
+							justify-content: center; 
+							background-color: var(--surface-2); 
+							border-radius: 8px; 
+							color: var(--muted-foreground);
+							font-size: 14px;
+							text-align: center;
+							padding: 16px;
+						">
+							GPU 호환성 문제<br/>브라우저를 재시작해 주세요
+						</div>
+					`;
+				}
+				return;
+			}
 			rendererRef.current = renderer;
 
 			// WebGL 컨텍스트 손실 이벤트 처리
@@ -214,8 +239,10 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 						border-radius: 8px; 
 						color: var(--muted-foreground);
 						font-size: 14px;
+						text-align: center;
+						padding: 16px;
 					">
-						3D 차단기 로드 실패
+						3D 차단기 로드 실패<br/>페이지를 새로고침해 주세요
 					</div>
 				`;
 			}

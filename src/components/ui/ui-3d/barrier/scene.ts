@@ -13,47 +13,71 @@ export const isWebGLSupported = () => {
 };
 
 export const createRenderer = (width: number, height: number) => {
-	const renderer = new THREE.WebGLRenderer({
-		antialias: true,
-		alpha: true,
-		powerPreference: 'high-performance',
-		// precision과 logarithmicDepthBuffer 제거 (호환성 문제 해결)
-	});
-	renderer.setSize(width, height);
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 3에서 2로 낮춤
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-	renderer.outputColorSpace = THREE.SRGBColorSpace;
-	renderer.toneMapping = THREE.ACESFilmicToneMapping;
-	renderer.toneMappingExposure = 1.2;
-	return renderer;
+	try {
+		const renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			alpha: true,
+			powerPreference: 'default', // 'high-performance'에서 'default'로 변경
+			preserveDrawingBuffer: false, // 메모리 절약
+			failIfMajorPerformanceCaveat: false, // 성능 문제가 있어도 실행
+		});
+		
+		renderer.setSize(width, height);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, SETTINGS.MAX_PIXEL_RATIO)); // 일관된 픽셀 비율
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap에서 기본 PCFShadowMap으로 변경
+		renderer.outputColorSpace = THREE.SRGBColorSpace;
+		renderer.toneMapping = THREE.LinearToneMapping; // ACESFilmicToneMapping에서 기본으로 변경
+		renderer.toneMappingExposure = 1.0; // 1.2에서 1.0으로 변경
+		
+		return renderer;
+	} catch (error) {
+		console.error('WebGL 렌더러 생성 실패:', error);
+		throw new Error('WebGL 렌더러를 초기화할 수 없습니다.');
+	}
 };
 
 export const createLights = (scene: THREE.Scene) => {
-	// 부드러운 환경광
-	const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-	scene.add(ambientLight);
+	try {
+		// 부드러운 환경광
+		const ambientLight = new THREE.AmbientLight(0xffffff, SETTINGS.AMBIENT_LIGHT_INTENSITY);
+		scene.add(ambientLight);
 
-	// 메인 방향광 (부드럽게)
-	const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-	directionalLight.position.set(...POSITIONS.LIGHT);
-	directionalLight.castShadow = true;
-	directionalLight.shadow.mapSize.setScalar(SETTINGS.SHADOW_MAP_SIZE);
-	directionalLight.shadow.camera.near = 0.1;
-	directionalLight.shadow.camera.far = 50;
-	directionalLight.shadow.bias = -0.0001;
-	directionalLight.shadow.radius = 8; // 부드러운 그림자
-	scene.add(directionalLight);
+		// 메인 방향광 (보수적인 설정)
+		const directionalLight = new THREE.DirectionalLight(0xffffff, SETTINGS.DIRECTIONAL_LIGHT_INTENSITY);
+		directionalLight.position.set(...POSITIONS.LIGHT);
+		directionalLight.castShadow = true;
+		
+		// 안전한 그림자 맵 크기 사용 (모든 GPU에서 호환)
+		directionalLight.shadow.mapSize.setScalar(SETTINGS.FALLBACK_SHADOW_MAP_SIZE);
+		directionalLight.shadow.camera.near = 0.1;
+		directionalLight.shadow.camera.far = 50;
+		directionalLight.shadow.bias = -0.0001;
+		directionalLight.shadow.radius = 4; // 8에서 4로 줄임 (호환성)
+		
+		// 그림자 카메라 범위 최적화
+		directionalLight.shadow.camera.left = -8;
+		directionalLight.shadow.camera.right = 8;
+		directionalLight.shadow.camera.top = 8;
+		directionalLight.shadow.camera.bottom = -8;
+		
+		scene.add(directionalLight);
 
-	// 보조 조명 (반대편에서)
-	const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-	fillLight.position.set(-5, 8, -5);
-	scene.add(fillLight);
+		// 보조 조명 (반대편에서)
+		const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+		fillLight.position.set(-5, 8, -5);
+		scene.add(fillLight);
 
-	// 상단 조명 (부드러운 전체 조명)
-	const topLight = new THREE.DirectionalLight(0xffffff, 0.2);
-	topLight.position.set(0, 15, 0);
-	scene.add(topLight);
+		// 상단 조명 (부드러운 전체 조명)
+		const topLight = new THREE.DirectionalLight(0xffffff, 0.2);
+		topLight.position.set(0, 15, 0);
+		scene.add(topLight);
+	} catch (error) {
+		console.error('조명 생성 실패:', error);
+		// 기본 환경광만 추가 (fallback)
+		const fallbackLight = new THREE.AmbientLight(0xffffff, 1.0);
+		scene.add(fallbackLight);
+	}
 };
 
 export const createGround = (scene: THREE.Scene) => {

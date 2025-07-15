@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Edit2, Save, X } from 'lucide-react';
+import React from 'react';
 
 interface VehicleTypeSettingsProps {
   policies: Record<string, boolean>;
   onPolicyUpdate: (policies: Record<string, boolean>) => void;
+  isEditMode?: boolean;
   isReadOnly?: boolean;
 }
 
@@ -24,42 +24,22 @@ const vehicleTypeCategories = [
 const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
   policies,
   onPolicyUpdate,
+  isEditMode = false,
   isReadOnly = false,
 }) => {
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [localPolicies, setLocalPolicies] = useState<Record<string, boolean>>(policies);
-
-  // 편집 모드 시작
-  const handleStartEdit = () => {
-    setLocalPolicies(policies);
-    setIsEditMode(true);
-  };
-
-  // 편집 취소
-  const handleCancelEdit = () => {
-    setLocalPolicies(policies);
-    setIsEditMode(false);
-  };
-
-  // 편집 저장
-  const handleSaveEdit = () => {
-    onPolicyUpdate(localPolicies);
-    setIsEditMode(false);
-  };
 
   // 정책 토글
   const handleTogglePolicy = (category: string) => {
     if (!isEditMode) return;
     
-    setLocalPolicies((prev) => ({
-      ...prev,
-      [category]: !prev[category],
-    }));
+    const newPolicies = {
+      ...policies,
+      [category]: !policies[category],
+    };
+    onPolicyUpdate(newPolicies);
   };
 
-
-
-  const enabledCount = Object.values(isEditMode ? localPolicies : policies).filter(Boolean).length;
+  const enabledCount = Object.values(policies).filter(Boolean).length;
   const totalCount = vehicleTypeCategories.length;
   const coveragePercentage = Math.round((enabledCount / totalCount) * 100);
 
@@ -75,45 +55,12 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
             {enabledCount}/{totalCount}개 ({coveragePercentage}%)
           </div>
         </div>
-
-        {!isReadOnly && (
-          <div className="flex items-center gap-1">
-            {isEditMode ? (
-              <>
-                <button
-                  onClick={handleSaveEdit}
-                  className="p-1 neu-raised hover:neu-inset rounded text-success"
-                  title="저장"
-                >
-                  <Save className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={handleCancelEdit}
-                  className="p-1 neu-raised hover:neu-inset rounded text-muted-foreground"
-                  title="취소"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={handleStartEdit}
-                className="p-1 neu-raised hover:neu-inset rounded text-primary"
-                title="편집"
-              >
-                <Edit2 className="w-3 h-3" />
-              </button>
-            )}
-          </div>
-        )}
       </div>
-
-
 
       {/* 정책 목록 */}
       <div className="grid grid-cols-2 gap-2">
         {vehicleTypeCategories.map((category) => {
-          const isEnabled = (isEditMode ? localPolicies : policies)[category] || false;
+          const isEnabled = policies[category] || false;
           
           return (
             <label
@@ -143,6 +90,8 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
           );
         })}
       </div>
+
+
 
       {/* 읽기 전용 모드 안내 */}
       {isReadOnly && (

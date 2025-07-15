@@ -1,10 +1,3 @@
-export type FunctionMode = 'vehicle-type' | 'barrier-operation';
-export type GlobalFunctionMode = 'vehicle-type' | 'barrier-operation';
-
-export interface FunctionModeState {
-	globalMode: GlobalFunctionMode;
-}
-
 export interface BarrierManagementViewProps {
 	barriers: import('@/types/parking').ParkingBarrier[];
 	onBarrierOpen: (barrierId: string) => void;
