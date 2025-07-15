@@ -1,7 +1,16 @@
-import React from 'react';
-import ParkingBarrier3D from '@/components/ui/ui-3d/barrier/Barrier3d';
-import { OperationMode } from '@/components/ui/ui-3d/barrier/constants';
+/* 
+  파일명: /unit/barrier/BarrierDiagonalView.tsx
+  기능: 차단기의 대각선 시점 3D 뷰 컴포넌트
+  책임: 대각선 시점에서 차단기를 3D로 표시하고 제어 기능을 제공한다.
+*/
 
+import React from 'react';
+
+import ParkingBarrier3D from '@/components/ui/ui-3d/barrier/Barrier3d';
+
+import type { OperationMode } from '@/components/ui/ui-3d/barrier/constants';
+
+// #region 타입
 interface BarrierDiagonalViewProps {
 	width?: number;
 	height?: number;
@@ -13,7 +22,9 @@ interface BarrierDiagonalViewProps {
 	onOperationModeChange?: (mode: OperationMode) => void;
 	showTitle?: boolean;
 }
+// #endregion
 
+// #region 렌더링
 const BarrierDiagonalView: React.FC<BarrierDiagonalViewProps> = ({
 	width = 280,
 	height = 320,
@@ -48,5 +59,6 @@ const BarrierDiagonalView: React.FC<BarrierDiagonalViewProps> = ({
 		</div>
 	);
 };
+// #endregion
 
 export default BarrierDiagonalView;

@@ -1,23 +1,39 @@
+/* 
+  파일명: /unit/parking/VehicleDetailCard.tsx
+  기능: 차량 상세 정보를 표시하는 카드 컴포넌트
+  책임: 선택된 차량의 번호판, 이미지, 세부 정보를 시각적으로 표시한다.
+*/
+
 import React, { useState } from 'react';
 import Image from 'next/image';
+
 import { Car, Check } from 'lucide-react';
-import { VehicleEntry } from '@/types/parking';
-import { parseCarAllowType } from '@/data/mockParkingData';
+
 import { LicensePlate } from '@/components/ui/system-testing/license-plate';
+import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
 
+import type { VehicleEntry } from '@/types/parking';
+
+// #region 타입
 interface VehicleDetailCardProps {
 	vehicle: VehicleEntry | null;
 	/** 타이틀 표시 여부. 기본값은 true */
 	showTitle?: boolean;
 }
+// #endregion
 
 const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitle = true }) => {
+	// #region 상수
 	const t = useTranslations();
+	// #endregion
+
+	// #region 상태
 	const [imageError, setImageError] = useState(false);
 	const [copiedPlate, setCopiedPlate] = useState<string | null>(null);
+	// #endregion
 
-	// 번호판 복사 핸들러
+	// #region 핸들러
 	const handlePlateClick = async (plateNumber: string) => {
 		try {
 			await navigator.clipboard.writeText(plateNumber);
@@ -27,7 +43,9 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 			console.error('번호판 복사 실패:', error);
 		}
 	};
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="flex flex-col p-6 h-full rounded-2xl">
 			{showTitle && (
@@ -58,9 +76,6 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 						)}
 					</div>
 				</div>
-
-				{/* 차량번호 */}
-
 
 				{/* 차량 정보 영역 */}
 				<div className="flex-1">
@@ -153,6 +168,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 			</div>
 		</div>
 	);
+	// #endregion
 };
 
 export default VehicleDetailCard;

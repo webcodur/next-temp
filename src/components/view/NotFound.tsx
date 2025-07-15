@@ -1,21 +1,35 @@
+/* 
+  파일명: /components/view/NotFound.tsx
+  기능: 404 에러 페이지 컴포넌트
+  책임: 존재하지 않는 페이지에 대한 사용자 친화적 에러 화면과 네비게이션 제공
+*/
+
 'use client';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
 import { useRouter } from 'next/navigation';
+
 import { Home, ArrowLeft, RefreshCw } from 'lucide-react';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function NotFound() {
+	// #region 상수
 	const router = useRouter();
 	const t = useTranslations();
+	// #endregion
+
+	// #region 핸들러
 	const handleGoHome = () => router.push('/');
 	const handleGoBack = () => router.back();
 	const handleRefresh = () => window.location.reload();
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="flex justify-center items-center p-4 min-h-screen">
 			<div className="w-full max-w-md text-center">
-				{/* #region 메인 컨테이너 */}
+				{/* 메인 컨테이너 */}
 				<div className="p-8 space-y-8 rounded-2xl neu-raised">
 					{/* 404 숫자 */}
 					<div className="space-y-4">
@@ -65,8 +79,8 @@ export default function NotFound() {
 						<p className="text-sm font-multilang text-foreground/50">Error Code: 404</p>
 					</div>
 				</div>
-				{/* #endregion */}
 			</div>
 		</div>
 	);
+	// #endregion
 } 

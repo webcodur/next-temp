@@ -1,9 +1,17 @@
+/* 
+  파일명: /components/ui/ui-input/button/Button.tsx
+  기능: 뉴모피즘 스타일의 재사용 가능한 버튼 컴포넌트
+  책임: 다양한 variant와 size를 제공하는 UI 시스템의 기본 버튼 컴포넌트
+*/
+
 import * as React from 'react';
+
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+// #region 타입 및 스타일
 const buttonVariants = cva(
 	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
 	{
@@ -40,7 +48,9 @@ export interface ButtonProps
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
 }
+// #endregion
 
+// #region 컴포넌트
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	({ className, variant, size, asChild = false, ...props }, ref) => {
 		const Comp = asChild ? Slot : 'button';
@@ -54,5 +64,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	}
 );
 Button.displayName = 'Button';
+// #endregion
 
 export { Button, buttonVariants };

@@ -1,13 +1,24 @@
+/* 
+  파일명: /components/view/Home.tsx
+  기능: 주차 관리 시스템의 메인 홈페이지 컴포넌트
+  책임: 차량 입출차 관리와 차단기 제어 기능을 탭으로 제공한다.
+*/
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import { useSetAtom } from 'jotai';
 import { Car, Shield } from 'lucide-react';
+
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
+import BarrierManagementView from '@/components/view/parking/facility/barrier/BarrierManagementView';
+import { useTranslations } from '@/hooks/useI18n';
+import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
-import BarrierManagementView from '@/components/view/parking/facility/barrier/BarrierManagementView';
-import {
+
+import type {
 	VehicleEntry,
 	SearchFilters,
 	ParkingBarrier,
@@ -17,27 +28,32 @@ import {
 	generateMockVehicleEntries,
 	mockBarriers,
 } from '@/data/mockParkingData';
-import { useTranslations } from '@/hooks/useI18n';
-import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
+
+// #region 타입
+// 추가 타입이 필요한 경우 여기에 정의
+// #endregion
 
 export default function Home() {
+	// #region 상수
 	const t = useTranslations();
 	const setPageTitle = useSetAtom(pageTitleAtom);
 	const setPageDescription = useSetAtom(pageDescriptionAtom);
 
-	// #region 페이지 헤더 설정
-	useEffect(() => {
-		setPageTitle(t('주차_시스템제목'));
-		setPageDescription(t('주차_시스템설명'));
-
-		return () => {
-			setPageTitle(null);
-			setPageDescription('');
-		};
-	}, [setPageTitle, setPageDescription, t]);
+	const tabs = [
+		{
+			id: 'vehicles',
+			label: t('주차_입출차관리'),
+			icon: <Car size={16} />,
+		},
+		{
+			id: 'barriers',
+			label: t('주차_차단기제어'),
+			icon: <Shield size={16} />,
+		},
+	];
 	// #endregion
 
-	// #region 상태 관리
+	// #region 상태
 	const [vehicles, setVehicles] = useState<VehicleEntry[]>([]);
 	const [barriers, setBarriers] = useState<ParkingBarrier[]>(mockBarriers);
 	const [selectedVehicle, setSelectedVehicle] = useState<VehicleEntry | null>(
@@ -49,7 +65,19 @@ export default function Home() {
 	const [activeTab, setActiveTab] = useState('vehicles');
 	// #endregion
 
-	// #region 초기 데이터 로드
+	// #region 훅
+	// 페이지 헤더 설정
+	useEffect(() => {
+		setPageTitle(t('주차_시스템제목'));
+		setPageDescription(t('주차_시스템설명'));
+
+		return () => {
+			setPageTitle(null);
+			setPageDescription('');
+		};
+	}, [setPageTitle, setPageDescription, t]);
+
+	// 초기 데이터 로드
 	useEffect(() => {
 		const initialData = generateMockVehicleEntries(50);
 		setVehicles(initialData);
@@ -60,7 +88,7 @@ export default function Home() {
 	}, []);
 	// #endregion
 
-	// #region 무한스크롤 핸들러
+	// #region 핸들러
 	const handleLoadMore = () => {
 		if (isLoading || vehicles.length >= 500) {
 			setHasMore(false);
@@ -79,9 +107,7 @@ export default function Home() {
 			}
 		}, 1000);
 	};
-	// #endregion
 
-	// #region 이벤트 핸들러
 	const handleFiltersChange = (newFilters: SearchFilters) => {
 		setFilters(newFilters);
 	};
@@ -120,21 +146,6 @@ export default function Home() {
 			),
 		);
 	};
-	// #endregion
-
-	// #region 탭 데이터
-	const tabs = [
-		{
-			id: 'vehicles',
-			label: t('주차_입출차관리'),
-			icon: <Car size={16} />,
-		},
-		{
-			id: 'barriers',
-			label: t('주차_차단기제어'),
-			icon: <Shield size={16} />,
-		},
-	];
 	// #endregion
 
 	// #region 렌더링
@@ -198,5 +209,5 @@ export default function Home() {
 			)}
 		</div>
 	);
-}
-// #endregion 
+	// #endregion
+} 

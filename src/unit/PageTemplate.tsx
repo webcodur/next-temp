@@ -1,9 +1,18 @@
+/* 
+  파일명: /unit/PageTemplate.tsx
+  기능: 개발 중인 페이지를 위한 템플릿 컴포넌트
+  책임: 메뉴 정보를 표시하고 준비 중인 페이지 UI를 제공한다.
+*/
+
 import type { BotMenuPath } from '@/utils/pageGenerator';
 
+// #region 타입
 interface PageTemplateProps {
 	menuInfo: BotMenuPath;
 }
+// #endregion
 
+// #region 렌더링
 export function PageTemplate({ menuInfo }: PageTemplateProps) {
 	return (
 		<div className="container p-6 mx-auto space-y-6">
@@ -56,3 +65,4 @@ export function PageTemplate({ menuInfo }: PageTemplateProps) {
 		</div>
 	);
 }
+// #endregion

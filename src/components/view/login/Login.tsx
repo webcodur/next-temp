@@ -1,34 +1,52 @@
+/* 
+  파일명: /components/view/login/Login.tsx
+  기능: 로그인 페이지의 메인 뷰 컴포넌트
+  책임: 로그인 폼을 모달로 표시하고 인증 처리 및 리다이렉트를 관리한다.
+*/
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAtom } from 'jotai';
-import { LoginForm } from '@/components/layout/login/LoginForm';
-import { loginAtom, isAuthenticatedAtom } from '@/store/auth';
-import { useTranslations } from '@/hooks/useI18n';
-import ModalContainer from '@/components/ui/ui-layout/modal/unit/ModalContainer';
 
+import { useAtom } from 'jotai';
+
+import { LoginForm } from '@/components/layout/login/LoginForm';
+import ModalContainer from '@/components/ui/ui-layout/modal/unit/ModalContainer';
+import { useTranslations } from '@/hooks/useI18n';
+import { loginAtom, isAuthenticatedAtom } from '@/store/auth';
+
+// #region 타입
 interface LoginFormData {
 	username: string;
 	password: string;
 	rememberMe: boolean;
 }
+// #endregion
 
 export default function LoginPage() {
-	const [isLoading, setIsLoading] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(true);
-	const [, login] = useAtom(loginAtom);
-	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
+	// #region 상수
 	const router = useRouter();
 	const t = useTranslations();
+	const [, login] = useAtom(loginAtom);
+	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
+	// #endregion
 
+	// #region 상태
+	const [isLoading, setIsLoading] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(true);
+	// #endregion
+
+	// #region 훅
 	// 이미 로그인된 사용자는 홈으로 리다이렉트
 	useEffect(() => {
 		if (isAuthenticated) {
 			router.push('/');
 		}
 	}, [isAuthenticated, router]);
+	// #endregion
 
+	// #region 핸들러
 	const handleLogin = async (data: LoginFormData) => {
 		setIsLoading(true);
 
@@ -65,7 +83,9 @@ export default function LoginPage() {
 		setIsModalOpen(false);
 		router.push('/');
 	};
+	// #endregion
 
+	// #region 렌더링
 	// 이미 로그인된 경우 로딩 표시
 	if (isAuthenticated) {
 		return (
@@ -81,4 +101,5 @@ export default function LoginPage() {
 			<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
 		</ModalContainer>
 	);
+	// #endregion
 } 

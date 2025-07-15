@@ -1,11 +1,16 @@
+/* 
+  파일명: /components/layout/login/LoginForm.tsx
+  기능: 로그인 페이지에서 사용되는 폼 컴포넌트
+  책임: 사용자 인증 및 입력값 검증을 처리한다.
+*/
+
 'use client';
-// #region 임포트
+
 import { useState } from 'react';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldPassword from '@/components/ui/ui-input/field/text/FieldPassword';
-import { Button } from '@/components/ui/ui-input/button/Button';
-
-// #endregion
 
 // #region 타입
 interface LoginFormData {
@@ -13,6 +18,7 @@ interface LoginFormData {
 	password: string;
 	rememberMe: boolean;
 }
+
 interface LoginFormProps {
 	onSubmit: (data: LoginFormData) => void;
 	isLoading?: boolean;
@@ -20,16 +26,16 @@ interface LoginFormProps {
 // #endregion
 
 export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
-  // #region 상태
+	// #region 상태
 	const [formData, setFormData] = useState<LoginFormData>({
 		username: '',
 		password: '',
 		rememberMe: false,
 	});
 	const [errors, setErrors] = useState<Partial<LoginFormData>>({});
-  // #endregion
+	// #endregion
 
-	// #region 검증 로직
+	// #region 핸들러
 	const validateForm = () => {
 		const newErrors: Partial<LoginFormData> = {};
 
@@ -48,9 +54,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
-	// #endregion
 
-	// #region 이벤트 핸들러
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (validateForm()) {
@@ -77,7 +81,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	};
 	// #endregion
 
-  // #region 렌더링
+	// #region 렌더링
 	return (
 		<div className="p-8 mx-auto w-full max-w-md rounded-2xl neu-elevated bg-card">
 			{/* 헤더 */}
@@ -183,5 +187,5 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 			</form>
 		</div>
 	);
+	// #endregion
 }
-// #endregion
