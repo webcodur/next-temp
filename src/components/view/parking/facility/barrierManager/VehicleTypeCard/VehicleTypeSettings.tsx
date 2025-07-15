@@ -39,21 +39,15 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
     onPolicyUpdate(newPolicies);
   };
 
-  const enabledCount = Object.values(policies).filter(Boolean).length;
-  const totalCount = vehicleTypeCategories.length;
-  const coveragePercentage = Math.round((enabledCount / totalCount) * 100);
 
   return (
     <div className="space-y-3">
       {/* 헤더 */}
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <h4 className="text-sm font-medium text-foreground font-multilang">
+        <div className="flex gap-2 justify-center items-center w-full">
+          <h4 className="font-medium text-center text-foreground font-multilang">
             출입 유형 차량 설정
           </h4>
-          <div className="text-xs text-muted-foreground font-multilang">
-            {enabledCount}/{totalCount}개 ({coveragePercentage}%)
-          </div>
         </div>
       </div>
 
@@ -74,7 +68,6 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
                   ? 'neu-inset text-primary bg-primary/10'
                   : 'neu-flat'
               }`}
-              onClick={isEditMode ? () => handleTogglePolicy(category) : undefined}
             >
               <input
                 type="checkbox"
@@ -83,7 +76,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
                 disabled={!isEditMode}
                 className="w-3 h-3 rounded border border-border"
               />
-              <span className="text-xs font-medium font-multilang">
+              <span className="font-medium font-multilang">
                 {category}
               </span>
             </label>
@@ -95,7 +88,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
 
       {/* 읽기 전용 모드 안내 */}
       {isReadOnly && (
-        <div className="text-xs text-muted-foreground text-center font-multilang">
+        <div className="text-xs text-center text-muted-foreground font-multilang">
           읽기 전용 모드 - 편집 권한이 없습니다
         </div>
       )}

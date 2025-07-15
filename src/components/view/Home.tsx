@@ -12,7 +12,7 @@ import { useSetAtom } from 'jotai';
 import { Car, Shield } from 'lucide-react';
 
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import BarrierManagementView from '@/components/view/parking/facility/barrier/BarrierManagementView';
+import BarrierManager from '@/components/view/parking/facility/barrierManager/BarrierManager';
 import { useTranslations } from '@/hooks/useI18n';
 import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
@@ -199,7 +199,7 @@ export default function Home() {
 
 			{activeTab === 'barriers' && (
 				<div className="space-y-4">
-					<BarrierManagementView
+					<BarrierManager
 						barriers={barriers}
 						onBarrierOpen={handleBarrierOpen}
 						onBarrierClose={handleBarrierClose}

@@ -17,15 +17,15 @@ import {
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
 import { Construction } from 'lucide-react';
-import { BarrierManagementViewProps } from './types';
-import { useBarrierOperations } from './hooks/useBarrierOperations';
-import { getResponsiveGridClass } from './utils/viewModeConfig';
-import VehicleTypeCard from './modes/VehicleTypeCard';
+import { BarrierManagerProps } from './types';
+import { useBarrierOperations } from './useBarrierOperations';
+import { getResponsiveGridClass } from './viewModeConfig';
 import { OperationMode } from '@/types/parking';
 import { ParkingBarrier } from '@/types/parking';
+import VehicleTypeCard from './VehicleTypeCard/VehicleTypeCard';
 
 // #region 메인 차단기 관리 뷰 컴포넌트
-const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
+const BarrierManager: React.FC<BarrierManagerProps> = ({
   barriers: initialBarriers,
   onBarrierOpen,
   onBarrierClose,
@@ -114,18 +114,6 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* 헤더 */}
-      <section className="flex justify-between items-center p-4 rounded-lg neu-flat">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-semibold text-foreground font-multilang">
-            차단기 관리
-          </h2>
-          <div className="flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-muted">
-            <span className="font-medium">출입유형 관리</span>
-          </div>
-        </div>
-      </section>
-
       {/* 차단기 카드 그리드 */}
       <DndContext
         sensors={sensors}
@@ -159,7 +147,7 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
         
         <DragOverlay>
           {activeId && activeItem ? (
-            <div className="w-80 h-32 bg-primary/80 rounded-lg shadow-lg flex items-center justify-center text-white font-bold">
+            <div className="flex justify-center items-center w-80 h-32 font-bold text-white rounded-lg shadow-lg bg-primary/80">
               {activeItem.name}
             </div>
           ) : null}
@@ -184,5 +172,5 @@ const BarrierManagementView: React.FC<BarrierManagementViewProps> = ({
   );
 };
 
-export default BarrierManagementView;
+export default BarrierManager;
 // #endregion 

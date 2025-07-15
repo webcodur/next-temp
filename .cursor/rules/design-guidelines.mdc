@@ -1,7 +1,6 @@
 ---
-alwaysApply: true
+alwaysApply: false
 ---
-
 # 🎨 통합 디자인 시스템 가이드
 
 ## 1. 📁 참고 파일
@@ -55,6 +54,7 @@ alwaysApply: true
 
 - `.neu-flat`: 평면 - 기본 컨테이너, 패널
 - `.neu-raised`: 양각 - 기본 버튼, 클릭 가능한 요소
+- `.neu-elevated`: 양각 - 항상 양각 상태이며 기타 사항은 raised와 동일
 - `.neu-inset`: 음각 - 활성/선택된 상태
 
 ### 4.2. 아이콘 상태
@@ -125,30 +125,16 @@ Radix UI, Framer Motion 등 외부 라이브러리 컴포넌트에 직접 뉴모
 
 ## 7. 📦 활용 가능한 라이브러리
 
-### 7.1. 🎭 애니메이션 & 인터랙션
-
 - **framer-motion**: 고급 애니메이션, 제스처
 - **@dnd-kit/core**: 드래그 앤 드롭
-
-### 7.2. 🧩 UI 컴포넌트
-
 - **@radix-ui/react-\***: 접근성 기반 UI 프리미티브
 - **lucide-react**: 아이콘 시스템
 - **sonner**: 토스트 알림
-
-### 7.3. 📊 데이터 시각화
-
 - **@tanstack/react-table**: 데이터 그리드
 - **recharts**: 차트
-
-### 7.4. 📝 에디터 & 폼
-
 - **@tinymce/tinymce-react**: 리치 텍스트 에디터
 - **react-hook-form**: 폼 상태 관리
 - **zod**: 스키마 검증
-
-### 7.5. 🔧 상태 & 유틸리티
-
 - **jotai**: 원자적 상태 관리
 - **clsx**, **tailwind-merge**: CSS 클래스 유틸리티
 

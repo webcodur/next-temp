@@ -1,5 +1,5 @@
 /* 
-  파일명: /components/view/parking/facility/barrier/modes/VehicleTypeCard.tsx
+  파일명: /components/view/parking/facility/BarrierManagementView/VehicleTypeCard/VehicleTypeCard.tsx
   기능: 차단기별 출입 유형 차량 설정 카드 컴포넌트
   책임: 드래그 앤 드롭, 이름 편집, 정책 설정, 차단기 제어를 통합 관리한다.
 */ // ------------------------------
@@ -134,19 +134,18 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
       }`}
     >
       {/* 카드 헤더 - 윈도우 앱 스타일 */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/80 to-primary/60 text-primary-foreground">
+      <div className="flex gap-3 items-center px-4 py-3 bg-gradient-to-r from-primary/80 to-primary/60 text-primary-foreground">
         {/* DND 손잡이 */}
         <div 
           {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
           className={`flex items-center justify-center p-1 rounded transition-colors ${
-            isDragOverlay ? '' : 'cursor-grab active:cursor-grabbing hover:bg-white/20'
-          }`}
+            isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-white/20'}`}
         >
           <GripVertical className="w-5 h-5 text-white/80" />
         </div>
 
         {/* 차단기명 */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 justify-center items-center">
           {isEditMode && !isDragOverlay ? (
             <input
               type="text"
@@ -156,20 +155,20 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
                 if (e.key === 'Enter') handleSaveEdit();
                 if (e.key === 'Escape') handleCancelEdit();
               }}
-              className="w-full max-w-xs px-3 py-1 text-lg font-semibold text-center rounded border border-white/30 bg-white/90 text-foreground font-multilang"
+              className="px-3 py-1 w-full max-w-xs text-lg font-semibold text-center rounded border border-white/30 bg-white/90 text-foreground font-multilang"
               autoFocus
               spellCheck={false}
               onClick={(e) => e.stopPropagation()}
             />
           ) : (
-            <h3 className="font-bold text-white font-multilang text-lg px-2 py-1 rounded transition-colors cursor-not-allowed">
+            <h3 className="px-2 py-1 text-lg font-bold text-white rounded transition-colors cursor-not-allowed font-multilang">
               {barrier.name}
             </h3>
           )}
         </div>
 
         {/* 순서 넘버링 */}
-        <div className="flex items-center justify-center w-8 h-8 rounded bg-white/20 backdrop-blur-sm text-sm font-bold">
+        <div className="flex justify-center items-center w-8 h-8 text-sm font-bold rounded backdrop-blur-sm bg-white/20">
           {orderIndex + 1}
         </div>
       </div>
@@ -187,13 +186,13 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
         </div>
 
                 {/* 운영모드 + 액션 버튼 영역 */}
-        <div className="border-t border-border/50 pt-3 mb-3">
-          <div className="flex items-center justify-between gap-3 p-2 rounded-lg bg-muted/30">
+        <div className="pt-3 mb-3 border-t border-border/50">
+          <div className="flex gap-3 justify-between items-center p-2 rounded-lg bg-muted/30">
             {/* 왼쪽: 운영모드 */}
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex flex-1 gap-2 items-center">
               {isEditMode && !isDragOverlay ? (
                 <>
-                  <Settings className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <Settings className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
                   {getOperationModeIcon(editingOperationMode)}
                   <select
                     value={editingOperationMode}
@@ -209,7 +208,7 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
                 </>
               ) : (
                 <>
-                  <Settings className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <Settings className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
                   {getOperationModeIcon(barrier.operationMode)}
                   <span className="text-sm text-muted-foreground">
                     {operationModeOptions.find(opt => opt.value === barrier.operationMode)?.label}
@@ -224,7 +223,7 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
                 {!isEditMode ? (
                   <button
                     onClick={() => setIsEditMode(true)}
-                    className="p-2 neu-raised hover:neu-inset rounded-full opacity-70 hover:opacity-100 transition-opacity"
+                    className="p-2 rounded-full opacity-70 transition-opacity neu-raised hover:neu-inset hover:opacity-100"
                     title="수정 모드"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -233,14 +232,14 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
                   <div className="flex gap-2">
                     <button
                       onClick={handleCancelEdit}
-                      className="p-2 neu-raised hover:neu-inset rounded-full opacity-70 hover:opacity-100 transition-opacity"
+                      className="p-2 rounded-full opacity-70 transition-opacity neu-raised hover:neu-inset hover:opacity-100"
                       title="취소"
                     >
                       <X className="w-4 h-4" />
                     </button>
                     <button
                       onClick={handleSaveEdit}
-                      className="p-2 neu-inset text-primary rounded-full"
+                      className="p-2 rounded-full neu-inset text-primary"
                       title="저장"
                     >
                       <Check className="w-4 h-4" />
@@ -255,9 +254,9 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
 
       {/* Footer: 차단기 상태 및 여닫기 버튼 */}
       {!isDragOverlay && (
-        <div className="bg-muted/50 border-t border-border/50 p-3 flex items-center justify-between">
+        <div className="flex justify-between items-center p-3 border-t bg-muted/50 border-border/50">
           {/* 차단기 상태 */}
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2 items-center">
             <div className={`w-3 h-3 rounded-full ${
               barrier.isOpen ? 'bg-success' : 'bg-destructive'
             }`} />
