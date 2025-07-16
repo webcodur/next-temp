@@ -121,9 +121,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 					{/* Desktop SecondaryPanel */}
 					{!isMobile && (
 						<div 
-							className={`flex-shrink-0 transition-all duration-300 ease-in-out ${isCollapsed ? 'overflow-hidden' : ''}`}
+							className={`flex-shrink-0 h-full transition-all duration-300 ease-in-out ${isCollapsed ? 'overflow-hidden' : ''}`}
 							style={{ width: isCollapsed ? '0px' : `${defaults.expandedWidth}px` }}>
-							<div className={`transition-transform duration-300 ease-in-out ${
+							<div className={`h-full transition-transform duration-300 ease-in-out ${
 								isCollapsed ? 'transform -translate-x-full' : 'transform translate-x-0'
 							}`}
 							style={{ width: `${defaults.expandedWidth}px` }}>

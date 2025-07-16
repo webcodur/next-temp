@@ -115,7 +115,7 @@ export function SecondaryPanel() {
 				</div>
 
 				{/* Menu List */}
-				<nav className="overflow-y-auto flex-1 p-2">
+				<nav className="overflow-y-auto flex-1 p-2 min-h-0">
 					{Object.entries(topData.midItems).map(([midKey, midItem]) => (
 						<Collapsible
 							key={midKey}

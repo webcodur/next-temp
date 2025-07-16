@@ -1,59 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
+import React from 'react';
 import { Calendar, X, Clock } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
 import { FieldDatePickerComponentProps } from '../core/types';
-
-// #region 커스텀 헤더 구성 함수
-interface CustomHeaderProps {
-	date: Date;
-	changeYear: (year: number) => void;
-	changeMonth: (month: number) => void;
-}
-
-const renderCustomYearMonthHeader = ({
-	date,
-	changeYear,
-	changeMonth,
-}: CustomHeaderProps) => {
-	const years = Array.from(
-		{ length: 30 },
-		(_, i) => new Date().getFullYear() - 15 + i
-	);
-	const months = Array.from({ length: 12 }, (_, i) => i);
-
-	return (
-		<div className="flex justify-center items-center px-2 py-2 space-x-2">
-			<select
-				className="px-2 py-1 text-sm rounded border neu-inset bg-background"
-				value={date.getFullYear()}
-				onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}>
-				{years.map((year) => (
-					<option key={year} value={year}>
-						{year}년
-					</option>
-				))}
-			</select>
-
-			<select
-				className="px-2 py-1 text-sm rounded border neu-inset bg-background"
-				value={date.getMonth()}
-				onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}>
-				{months.map((month) => (
-					<option key={month} value={month}>
-						{month + 1}월
-					</option>
-				))}
-			</select>
-		</div>
-	);
-};
-// #endregion
+import { 
+	SingleDatePicker, 
+	TimeOnlyPicker 
+} from '../../datepicker/Datepicker';
 
 const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> = ({
 	id,
@@ -74,7 +29,6 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 	className = '',
 	disabled = false,
 }) => {
-	const [isFocused, setIsFocused] = useState(false);
 	const { isRTL } = useLocale();
 
 	// 아이콘 선택
@@ -99,21 +53,6 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		}
 	};
 
-	// 단일 날짜 처리
-	const handleSingleDateChange = (date: Date | null) => {
-		onChange?.(date);
-	};
-
-	// 범위 시작 날짜 처리
-	const handleStartDateChange = (date: Date | null) => {
-		onStartDateChange?.(date);
-	};
-
-	// 범위 끝 날짜 처리
-	const handleEndDateChange = (date: Date | null) => {
-		onEndDateChange?.(date);
-	};
-
 	// 클리어 버튼 처리
 	const handleClear = () => {
 		if (datePickerType === 'range') {
@@ -129,26 +68,16 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		(startDate || endDate) : 
 		value;
 
-	// 공통 DatePicker 속성
-	const commonProps = {
-		locale: ko,
-		maxDate: maxDate ?? undefined,
-		disabled,
-		autoComplete: 'off',
-		name: id,
-		renderCustomHeader: renderCustomYearMonthHeader,
-		onFocus: () => setIsFocused(true),
-		onBlur: () => setIsFocused(false),
-		withPortal: false,
-		className: `
+	// 공통 스타일 클래스
+	const getDatePickerClassName = () => {
+		return `
 			${FIELD_STYLES.container}
 			${FIELD_STYLES.height}
 			${FIELD_STYLES.text}
 			${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
-			${isFocused ? 'ring-2 ring-primary' : ''}
 			${disabled ? FIELD_STYLES.disabled : ''}
 			w-full bg-transparent border-0 focus:outline-none focus:ring-0
-		`,
+		`;
 	};
 
 	return (
@@ -159,45 +88,41 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				</label>
 			)}
 
-			{/* 범위 선택기 */}
+			{/* 범위 선택기 - 두 개의 SingleDatePicker 사용 */}
 			{datePickerType === 'range' && (
-				<div className="flex items-center space-x-2">
-					<div className="relative">
-						{getIcon()}
-						<DatePicker
-							id={id}
-							selected={startDate ?? undefined}
-							onChange={handleStartDateChange}
-							selectsStart
-							startDate={startDate ?? undefined}
-							endDate={endDate ?? undefined}
-							minDate={minDate ?? undefined}
-							dateFormat={dateFormat}
-							placeholderText="시작 날짜"
-							{...commonProps}
-						/>
-					</div>
-					<span className="text-sm shrink-0">~</span>
-					<div className="relative">
-						<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />
-						<DatePicker
-							id={`${id}-end`}
-							selected={endDate ?? undefined}
-							onChange={handleEndDateChange}
-							selectsEnd
-							startDate={startDate ?? undefined}
-							endDate={endDate ?? undefined}
-							minDate={startDate ?? undefined}
-							dateFormat={dateFormat}
-							placeholderText="마지막 날짜"
-							{...commonProps}
-						/>
+				<div className="space-y-2">
+					<div className="flex items-center space-x-2">
+						<div className="relative flex-1">
+							{getIcon()}
+							<SingleDatePicker
+								selected={startDate ?? null}
+								onChange={onStartDateChange || (() => {})}
+								placeholderText="시작 날짜"
+								maxDate={endDate ?? null}
+								minDate={minDate ?? null}
+								dateFormat={dateFormat}
+								className={getDatePickerClassName()}
+							/>
+						</div>
+						<span>~</span>
+						<div className="relative flex-1">
+							<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />
+							<SingleDatePicker
+								selected={endDate ?? null}
+								onChange={onEndDateChange || (() => {})}
+								placeholderText="마지막 날짜"
+								minDate={startDate ?? null}
+								maxDate={maxDate ?? null}
+								dateFormat={dateFormat}
+								className={getDatePickerClassName()}
+							/>
+						</div>
 					</div>
 					{hasValue && (
 						<button
 							type="button"
 							onClick={handleClear}
-							className={FIELD_STYLES.clearButton}
+							className={`${FIELD_STYLES.clearButton} ml-auto`}
 						>
 							<X className="w-3 h-3" />
 						</button>
@@ -205,23 +130,48 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				</div>
 			)}
 
-			{/* 단일 선택기 */}
-			{datePickerType !== 'range' && (
+			{/* 시간 전용 선택기 */}
+			{datePickerType === 'time' && (
 				<div className="relative">
 					{getIcon()}
-					<DatePicker
-						id={id}
-						selected={value ?? undefined}
-						onChange={handleSingleDateChange}
-						minDate={minDate ?? undefined}
+					<TimeOnlyPicker
+						selected={value ?? null}
+						onChange={onChange || (() => {})}
+						timeFormat={timeFormat}
+						timeIntervals={timeIntervals}
+						placeholderText={placeholder}
+						className={getDatePickerClassName()}
+						minTime={minDate ?? undefined}
+						maxTime={maxDate ?? undefined}
+					/>
+					{hasValue && (
+						<button
+							type="button"
+							onClick={handleClear}
+							className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton}`}
+						>
+							<X className="w-3 h-3" />
+						</button>
+					)}
+				</div>
+			)}
+
+			{/* 단일 선택기 (single, datetime, month) */}
+			{datePickerType !== 'range' && datePickerType !== 'time' && (
+				<div className="relative">
+					{getIcon()}
+					<SingleDatePicker
+						selected={value ?? null}
+						onChange={onChange || (() => {})}
 						dateFormat={getDateFormat()}
 						placeholderText={placeholder}
+						minDate={minDate ?? null}
+						maxDate={maxDate ?? null}
 						showTimeSelect={datePickerType === 'datetime' || datePickerType === 'dateTime'}
-						showTimeSelectOnly={datePickerType === 'time'}
 						timeFormat={timeFormat}
 						timeIntervals={timeIntervals}
 						showMonthYearPicker={datePickerType === 'month'}
-						{...commonProps}
+						className={getDatePickerClassName()}
 					/>
 					{hasValue && (
 						<button

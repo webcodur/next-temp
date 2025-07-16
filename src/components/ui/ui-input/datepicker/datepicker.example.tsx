@@ -3,7 +3,6 @@
 import * as React from 'react';
 import {
 	SingleDatePicker,
-	DateRangePicker,
 	TimeOnlyPicker,
 } from './Datepicker';
 import { useTranslations } from '@/hooks/useI18n';
@@ -48,12 +47,21 @@ export default function DatepickerExample() {
 					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_날짜범위선택')}</h2>
 					<div>
 						<p className="mb-2 font-medium font-multilang">{t('날짜선택_시작일종료일선택')}</p>
-						<DateRangePicker
-							startDate={startDate}
-							endDate={endDate}
-							onStartDateChange={setStartDate}
-							onEndDateChange={setEndDate}
-						/>
+						<div className="flex items-center space-x-2">
+							<SingleDatePicker
+								selected={startDate}
+								onChange={setStartDate}
+								placeholderText="시작 날짜"
+								maxDate={endDate}
+							/>
+							<span>~</span>
+							<SingleDatePicker
+								selected={endDate}
+								onChange={setEndDate}
+								placeholderText="마지막 날짜"
+								minDate={startDate}
+							/>
+						</div>
 						<p className="mt-2 text-sm text-gray-600 font-multilang">
 							{t('날짜선택_선택된기간')}: {startDate ? startDate.toLocaleDateString() : t('날짜선택_없음')}{' '}
 							~ {endDate ? endDate.toLocaleDateString() : t('날짜선택_없음')}
@@ -90,6 +98,7 @@ export default function DatepickerExample() {
 							<TimeOnlyPicker
 								selected={timeOnlyValue}
 								onChange={setTimeOnlyValue}
+								timeIntervals={30}
 							/>
 							<p className="mt-2 text-sm text-gray-600 font-multilang">
 								{t('날짜선택_선택된시간')}:{' '}

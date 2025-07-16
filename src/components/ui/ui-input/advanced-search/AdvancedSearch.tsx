@@ -1,8 +1,17 @@
+/* 
+  파일명: /components/ui/ui-input/advanced-search/AdvancedSearch.tsx
+  기능: 아코디언 형태의 고급 검색 인터페이스 컴포넌트
+  책임: 필드 제어와 반응형 레이아웃을 통한 동적 검색 조건 관리
+*/ // ------------------------------
+
 import React, { useState, ReactElement, cloneElement } from 'react';
+
 import { RotateCcw, Search, Settings, CheckSquare2, Square } from 'lucide-react';
+
 import { Accordion } from '@/components/ui/ui-layout/accordion/Accordion';
 import { useLocale } from '@/hooks/useI18n';
 
+// #region 타입 및 인터페이스
 interface FieldConfig {
 	key: string;
 	label: string;
@@ -21,7 +30,9 @@ interface AdvancedSearchProps {
 	showButtons?: boolean;
 	statusText?: string;
 	fieldControlsLabel?: string;
+	searchFieldsLabel?: string;
 }
+// #endregion
 
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	title = 'Advanced Search',
@@ -34,14 +45,19 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	showButtons = true,
 	statusText,
 	fieldControlsLabel = '검색 조건 설정',
+	searchFieldsLabel = '검색 조건',
 }) => {
+	// #region 훅
 	const { isRTL } = useLocale();
+	// #endregion
 	
-	// 필드 상태 관리
+	// #region 상태
 	const [fieldStates, setFieldStates] = useState<FieldConfig[]>(() => {
 		return fields.map(field => ({ ...field, visible: true }));
 	});
+	// #endregion
 
+	// #region 핸들러
 	// 필드 표시/숨김 토글
 	const toggleFieldVisibility = (key: string) => {
 		setFieldStates(prev =>
@@ -64,7 +80,9 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 			prev.map(field => ({ ...field, visible: false }))
 		);
 	};
+	// #endregion
 
+	// #region 렌더링
 	// 표시할 필드들 필터링
 	const visibleFields = fieldStates.filter(field => field.visible);
 
@@ -126,12 +144,21 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 				</div>
 
 				{/* 검색 필드들 */}
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-					{visibleFields.map(field => (
-						<div key={field.key}>
-							{cloneElement(field.element, { key: field.key })}
-						</div>
-					))}
+				<div className="space-y-4">
+					{/* 검색 필드 타이틀 */}
+					<div className="flex gap-2 items-center">
+						<Search className="w-4 h-4 text-primary" />
+						<h3 className="text-sm font-semibold text-foreground">{searchFieldsLabel}</h3>
+					</div>
+					
+					{/* 검색 필드 그리드 */}
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+						{visibleFields.map(field => (
+							<div key={field.key}>
+								{cloneElement(field.element, { key: field.key })}
+							</div>
+						))}
+					</div>
 				</div>
 
 				{/* 버튼 영역 */}
@@ -157,4 +184,5 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 			</div>
 		</Accordion>
 	);
+	// #endregion
 };

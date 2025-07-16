@@ -80,7 +80,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 						{selectedOption && (
 							<span
 								onClick={handleSortToggle}
-								className="ms-2 text-xs cursor-pointer font-multilang text-muted-foreground">
+								className="text-xs cursor-pointer ms-2 font-multilang text-muted-foreground">
 								{sortDirection === 'asc' ? '오름차순' : '내림차순'}
 							</span>
 						)}

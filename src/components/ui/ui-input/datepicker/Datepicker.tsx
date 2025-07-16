@@ -1,21 +1,49 @@
 'use client';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+// Portal 컴포넌트 - 직접 구현
+const PortalContainer = ({ children }: { children?: React.ReactNode }) => {
+	if (typeof document === 'undefined' || !children) return null;
+	
+	let portalRoot = document.getElementById('datepicker-portal');
+	if (!portalRoot) {
+		portalRoot = document.createElement('div');
+		portalRoot.id = 'datepicker-portal';
+		portalRoot.style.position = 'absolute';
+		portalRoot.style.top = '0';
+		portalRoot.style.left = '0';
+		portalRoot.style.zIndex = '9999';
+		document.body.appendChild(portalRoot);
+	}
+
+	return createPortal(children, portalRoot);
+};
 
 // #region 커스텀 헤더 구성 함수
 interface CustomHeaderProps {
 	date: Date;
 	changeYear: (year: number) => void;
 	changeMonth: (month: number) => void;
+	decreaseMonth: () => void;
+	increaseMonth: () => void;
+	prevMonthButtonDisabled: boolean;
+	nextMonthButtonDisabled: boolean;
 }
 
 const renderCustomYearMonthHeader = ({
 	date,
 	changeYear,
 	changeMonth,
+	decreaseMonth,
+	increaseMonth,
+	prevMonthButtonDisabled,
+	nextMonthButtonDisabled,
 }: CustomHeaderProps) => {
 	const years = Array.from(
 		{ length: 30 },
@@ -24,9 +52,17 @@ const renderCustomYearMonthHeader = ({
 	const months = Array.from({ length: 12 }, (_, i) => i);
 
 	return (
-		<div className="flex justify-center items-center px-2 py-2 space-x-2">
+		<div className="flex justify-center items-center">
+			<button
+				type="button"
+				onClick={decreaseMonth}
+				disabled={prevMonthButtonDisabled}
+				aria-label="이전 월"
+			>
+				<ChevronLeft />
+			</button>
+
 			<select
-				className="px-2 py-1 text-sm rounded border neu-inset"
 				value={date.getFullYear()}
 				onChange={({ target: { value } }) => changeYear(parseInt(value, 10))}>
 				{years.map((year) => (
@@ -37,7 +73,6 @@ const renderCustomYearMonthHeader = ({
 			</select>
 
 			<select
-				className="px-2 py-1 text-sm rounded border neu-inset"
 				value={date.getMonth()}
 				onChange={({ target: { value } }) => changeMonth(parseInt(value, 10))}>
 				{months.map((month) => (
@@ -46,85 +81,18 @@ const renderCustomYearMonthHeader = ({
 					</option>
 				))}
 			</select>
+
+			<button
+				type="button"
+				onClick={increaseMonth}
+				disabled={nextMonthButtonDisabled}
+				aria-label="다음 월"
+			>
+				<ChevronRight />
+			</button>
 		</div>
 	);
 };
-// #endregion
-
-// #region DateRangePicker 컴포넌트
-export type DateRangePickerProps = {
-	startDate: Date | null;
-	endDate: Date | null;
-	onStartDateChange: (date: Date | null) => void;
-	onEndDateChange: (date: Date | null) => void;
-	className?: string;
-	yearDropdownItemNumber?: number;
-	scrollableYearDropdown?: boolean;
-	showMonthYearPicker?: boolean;
-};
-
-export function DateRangePicker({
-	startDate,
-	endDate,
-	onStartDateChange,
-	onEndDateChange,
-	className = '',
-	yearDropdownItemNumber = 15,
-	scrollableYearDropdown = true,
-	showMonthYearPicker = false,
-}: DateRangePickerProps) {
-	// Date Picker 콜백 핸들러
-	const handleStartDateChange = (date: Date | null) => {
-		onStartDateChange(date);
-	};
-
-	const handleEndDateChange = (date: Date | null) => {
-		onEndDateChange(date);
-	};
-
-	return (
-		<div
-			className={`flex items-center space-x-2 ${className}`}
-			style={{ width: 'fit-content' }}>
-			<div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
-				<DatePicker
-					selected={startDate ?? undefined}
-					onChange={handleStartDateChange}
-					selectsStart
-					startDate={startDate ?? undefined}
-					endDate={endDate ?? undefined}
-					dateFormat="yyyy-MM-dd"
-					placeholderText="시작 날짜"
-					locale={ko}
-					yearDropdownItemNumber={yearDropdownItemNumber}
-					scrollableYearDropdown={scrollableYearDropdown}
-					showMonthYearPicker={showMonthYearPicker}
-					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border-primary neu-inset focus:outline-hidden focus:ring-0"
-				/>
-			</div>
-			<span className="text-sm shrink-0">~</span>
-			<div style={{ width: '144px', minWidth: '144px', maxWidth: '144px' }}>
-				<DatePicker
-					selected={endDate ?? undefined}
-					onChange={handleEndDateChange}
-					selectsEnd
-					startDate={startDate ?? undefined}
-					endDate={endDate ?? undefined}
-					minDate={startDate ?? undefined}
-					dateFormat="yyyy-MM-dd"
-					placeholderText="마지막 날짜"
-					locale={ko}
-					yearDropdownItemNumber={yearDropdownItemNumber}
-					scrollableYearDropdown={scrollableYearDropdown}
-					showMonthYearPicker={showMonthYearPicker}
-					renderCustomHeader={renderCustomYearMonthHeader}
-					className="box-border px-2 py-1 w-36 rounded border-primary neu-inset focus:outline-hidden focus:ring-0"
-				/>
-			</div>
-		</div>
-	);
-}
 // #endregion
 
 // #region 단일 DatePicker 컴포넌트
@@ -159,37 +127,34 @@ export function SingleDatePicker({
 	scrollableYearDropdown = true,
 	showMonthYearPicker = false,
 }: SingleDatePickerProps) {
-	// Date Picker 콜백 핸들러
 	const handleDateChange = (date: Date | null) => {
 		onChange(date);
 	};
 
-	// 입력 포맷 결정: 기본 날짜 포맷인 "yyyy-MM-dd"만 사용하는 경우에만 시간 포함
 	const inputDateFormat =
 		showTimeSelect && dateFormat === 'yyyy-MM-dd'
 			? `${dateFormat} ${timeFormat}`
 			: dateFormat;
 
 	return (
-		<div style={{ width: 'fit-content', minWidth: 'fit-content' }}>
-			<DatePicker
-				selected={selected ?? undefined}
-				onChange={handleDateChange}
-				dateFormat={inputDateFormat}
-				placeholderText={placeholderText}
-				minDate={minDate ?? undefined}
-				maxDate={maxDate ?? undefined}
-				locale={ko}
-				showTimeSelect={showTimeSelect}
-				timeFormat={timeFormat}
-				timeIntervals={timeIntervals}
-				yearDropdownItemNumber={yearDropdownItemNumber}
-				scrollableYearDropdown={scrollableYearDropdown}
-				showMonthYearPicker={showMonthYearPicker}
-				renderCustomHeader={renderCustomYearMonthHeader}
-				className={`box-border px-2 py-1 rounded border-primary neu-inset focus:outline-hidden focus:ring-0 ${className}`}
-			/>
-		</div>
+		<DatePicker
+			selected={selected ?? undefined}
+			onChange={handleDateChange}
+			dateFormat={inputDateFormat}
+			placeholderText={placeholderText}
+			minDate={minDate ?? undefined}
+			maxDate={maxDate ?? undefined}
+			locale={ko}
+			showTimeSelect={showTimeSelect}
+			timeFormat={timeFormat}
+			timeIntervals={timeIntervals}
+			yearDropdownItemNumber={yearDropdownItemNumber}
+			scrollableYearDropdown={scrollableYearDropdown}
+			showMonthYearPicker={showMonthYearPicker}
+			renderCustomHeader={showMonthYearPicker || showTimeSelect ? undefined : renderCustomYearMonthHeader}
+			className={className}
+			popperContainer={PortalContainer}
+		/>
 	);
 }
 // #endregion
@@ -210,7 +175,7 @@ export function TimeOnlyPicker({
 	selected,
 	onChange,
 	timeFormat = 'HH:mm',
-	timeIntervals = 1,
+	timeIntervals = 15,
 	placeholderText = '시간 선택',
 	className = '',
 	minTime,
@@ -221,22 +186,20 @@ export function TimeOnlyPicker({
 	};
 
 	return (
-		<div style={{ width: 'fit-content', minWidth: 'fit-content' }}>
-			<DatePicker
-				selected={selected ?? undefined}
-				onChange={handleTimeChange}
-				showTimeSelect
-				showTimeSelectOnly
-				timeIntervals={timeIntervals}
-				timeFormat={timeFormat}
-				dateFormat={timeFormat}
-				placeholderText={placeholderText}
-				minTime={minTime}
-				maxTime={maxTime}
-				locale={ko}
-				className={`box-border px-2 py-1 rounded border-primary neu-inset focus:outline-hidden focus:ring-0 ${className}`}
-			/>
-		</div>
+		<DatePicker
+			selected={selected ?? undefined}
+			onChange={handleTimeChange}
+			showTimeSelect
+			showTimeSelectOnly
+			timeIntervals={timeIntervals}
+			timeFormat={timeFormat}
+			placeholderText={placeholderText}
+			minTime={minTime}
+			maxTime={maxTime}
+			locale={ko}
+			className={className}
+			popperContainer={PortalContainer}
+		/>
 	);
 }
 // #endregion
