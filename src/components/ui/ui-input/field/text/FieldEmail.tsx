@@ -49,7 +49,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 	const isValid = value ? isValidEmail(value) : true;
 
 	return (
-		<div className={`relative ${className}`}>
+		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (
 				<div className="flex justify-between items-center mb-1">
 					<label htmlFor={id} className={FIELD_STYLES.label}>

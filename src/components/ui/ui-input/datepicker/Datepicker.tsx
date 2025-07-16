@@ -210,7 +210,7 @@ export function TimeOnlyPicker({
 	selected,
 	onChange,
 	timeFormat = 'HH:mm',
-	timeIntervals = 30,
+	timeIntervals = 1,
 	placeholderText = '시간 선택',
 	className = '',
 	minTime,

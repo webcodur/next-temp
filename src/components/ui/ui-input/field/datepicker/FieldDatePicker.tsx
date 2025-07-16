@@ -139,7 +139,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		renderCustomHeader: renderCustomYearMonthHeader,
 		onFocus: () => setIsFocused(true),
 		onBlur: () => setIsFocused(false),
-		withPortal: true,
+		withPortal: false,
 		className: `
 			${FIELD_STYLES.container}
 			${FIELD_STYLES.height}
@@ -152,7 +152,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 	};
 
 	return (
-		<div className={`relative ${className}`}>
+		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (
 				<label htmlFor={id} className={FIELD_STYLES.label}>
 					{label}

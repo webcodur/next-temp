@@ -1,11 +1,18 @@
-import React, { ReactNode } from 'react';
-import { RotateCcw, Search } from 'lucide-react';
+import React, { useState, ReactElement, cloneElement } from 'react';
+import { RotateCcw, Search, Settings, CheckSquare2, Square } from 'lucide-react';
 import { Accordion } from '@/components/ui/ui-layout/accordion/Accordion';
 import { useLocale } from '@/hooks/useI18n';
 
+interface FieldConfig {
+	key: string;
+	label: string;
+	element: ReactElement;
+	visible: boolean;
+}
+
 interface AdvancedSearchProps {
 	title?: string;
-	children: ReactNode;
+	fields: FieldConfig[];
 	onSearch?: () => void;
 	onReset?: () => void;
 	searchLabel?: string;
@@ -13,11 +20,12 @@ interface AdvancedSearchProps {
 	defaultOpen?: boolean;
 	showButtons?: boolean;
 	statusText?: string;
+	fieldControlsLabel?: string;
 }
 
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	title = 'Advanced Search',
-	children,
+	fields,
 	onSearch,
 	onReset,
 	searchLabel = '검색',
@@ -25,14 +33,106 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	defaultOpen = true,
 	showButtons = true,
 	statusText,
+	fieldControlsLabel = '검색 조건 설정',
 }) => {
 	const { isRTL } = useLocale();
+	
+	// 필드 상태 관리
+	const [fieldStates, setFieldStates] = useState<FieldConfig[]>(() => {
+		return fields.map(field => ({ ...field, visible: true }));
+	});
+
+	// 필드 표시/숨김 토글
+	const toggleFieldVisibility = (key: string) => {
+		setFieldStates(prev =>
+			prev.map(field =>
+				field.key === key ? { ...field, visible: !field.visible } : field
+			)
+		);
+	};
+
+	// 전체 선택
+	const selectAllFields = () => {
+		setFieldStates(prev =>
+			prev.map(field => ({ ...field, visible: true }))
+		);
+	};
+
+	// 전체 해제
+	const deselectAllFields = () => {
+		setFieldStates(prev =>
+			prev.map(field => ({ ...field, visible: false }))
+		);
+	};
+
+	// 표시할 필드들 필터링
+	const visibleFields = fieldStates.filter(field => field.visible);
 
 	return (
 		<Accordion title={title} defaultOpen={defaultOpen} statusText={statusText}>
 			<div className="space-y-6">
+				{/* 필드 제어 패널 */}
+				<div className="mb-4">
+					{/* 헤더 영역 */}
+					<div className="flex justify-between items-center mb-3">
+						<div className="flex gap-2 items-center">
+							<Settings className="w-4 h-4 text-primary" />
+							<h3 className="text-sm font-semibold text-foreground">{fieldControlsLabel}</h3>
+						</div>
+						
+						{/* 전체 제어 버튼들 */}
+						<div className="flex gap-2 items-center">
+							<button
+								onClick={selectAllFields}
+								className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all duration-200 neu-raised cursor-pointer"
+								title="전체 선택"
+							>
+								<CheckSquare2 className="w-3 h-3" />
+								전체선택
+							</button>
+							<button
+								onClick={deselectAllFields}
+								className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all duration-200 neu-raised cursor-pointer"
+								title="전체 해제"
+							>
+								<Square className="w-3 h-3" />
+								전체해제
+							</button>
+						</div>
+					</div>
+					
+					{/* 체크박스 영역 */}
+					<div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4 mb-3">
+						{fieldStates.map(field => (
+							<label 
+								key={field.key} 
+								className="group flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-200 hover:bg-muted/30 cursor-pointer border border-transparent hover:border-border/30"
+							>
+								<input
+									type="checkbox"
+									checked={field.visible}
+									onChange={() => toggleFieldVisibility(field.key)}
+									className="w-3.5 h-3.5 rounded border border-border text-primary focus:ring-1 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+								/>
+								<span className="text-xs font-medium transition-colors select-none text-foreground group-hover:text-primary">
+									{field.label}
+								</span>
+							</label>
+						))}
+					</div>
+
+					{/* 구분선 */}
+					<hr className="border-border/30" />
+				</div>
+
 				{/* 검색 필드들 */}
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+					{visibleFields.map(field => (
+						<div key={field.key}>
+							{cloneElement(field.element, { key: field.key })}
+						</div>
+					))}
+				</div>
 
 				{/* 버튼 영역 */}
 				{showButtons && (

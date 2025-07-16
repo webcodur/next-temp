@@ -42,7 +42,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 	const StartIcon = showSearchIcon ? Search : Type;
 
 	return (
-		<div className={`relative ${className}`}>
+		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (
 				<label htmlFor={id} className={FIELD_STYLES.label}>
 					{label}

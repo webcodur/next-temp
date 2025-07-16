@@ -47,7 +47,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	};
 
 	return (
-		<div ref={containerRef} className={`relative space-y-1 ${className}`}>
+		<div ref={containerRef} className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && <label className={FIELD_STYLES.label}>{label}</label>}
 
 			<div className="relative">

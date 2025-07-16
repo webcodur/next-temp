@@ -42,7 +42,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 	const { isRTL } = useLocale();
 
 	return (
-		<div className={`relative ${className}`}>
+		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (
 				<div className="flex justify-between items-center mb-1">
 					<label htmlFor={id} className={FIELD_STYLES.label}>

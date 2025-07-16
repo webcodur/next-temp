@@ -53,7 +53,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	};
 
 	return (
-		<div ref={containerRef} className={`relative ${className}`}>
+		<div ref={containerRef} className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (
 				<label htmlFor={id} className={FIELD_STYLES.label}>
 					{label}

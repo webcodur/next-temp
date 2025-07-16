@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Option } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
+import { Portal } from '../shared/Portal';
 
 interface SelectDropdownProps {
 	isOpen: boolean;
@@ -23,7 +24,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 	maxHeight,
 	triggerRef,
 }) => {
-	const [openAbove, setOpenAbove] = useState(false);
+	const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
 
 	useEffect(() => {
 		if (triggerRef?.current && isOpen) {
@@ -34,7 +35,14 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 			const minHeight = Math.min(7, totalCount) * 40;
 			const finalMaxHeight = Math.max(maxHeight, minHeight);
 			
-			setOpenAbove(spaceBelow < finalMaxHeight + 16);
+			const shouldOpenAbove = spaceBelow < finalMaxHeight + 16;
+
+			// 위치 계산
+			setPosition({
+				top: shouldOpenAbove ? rect.top - finalMaxHeight - 8 : rect.bottom + 4,
+				left: rect.left,
+				width: rect.width
+			});
 		}
 	}, [isOpen, options.length, maxHeight, triggerRef]);
 
@@ -51,43 +59,50 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 	const finalMaxHeight = Math.max(maxHeight, minHeight);
 
 	return (
-		<div
-			className={`absolute start-0 end-0 z-50 ${openAbove ? 'bottom-full mb-1' : 'top-full mt-1'}`}
-		>
+		<Portal>
 			<div
-				className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg`}
-				style={{ maxHeight: `${finalMaxHeight}px` }}>
-				<ul
-					className={FIELD_STYLES.dropdownScroll}
+				className="fixed z-[9999]"
+				style={{
+					top: `${position.top}px`,
+					left: `${position.left}px`,
+					width: `${position.width}px`,
+				}}
+			>
+				<div
+					className={`${FIELD_STYLES.dropdown} overflow-hidden rounded-lg shadow-xl`}
 					style={{ maxHeight: `${finalMaxHeight}px` }}>
-					{options.map((option, index) => {
-						const isSelected = selectedValue === option.value;
-						const isHighlighted = highlightedIndex === index;
-						const numberLabel = `${index + 1}/${totalCount}`;
+					<ul
+						className={FIELD_STYLES.dropdownScroll}
+						style={{ maxHeight: `${finalMaxHeight}px` }}>
+						{options.map((option, index) => {
+							const isSelected = selectedValue === option.value;
+							const isHighlighted = highlightedIndex === index;
+							const numberLabel = `${index + 1}/${totalCount}`;
 
-						return (
-							<li
-								key={option.value}
-								onClick={() => handleOptionClick(option)}
-								className={`
-									${FIELD_STYLES.dropdownOption}
-									${option.disabled ? FIELD_STYLES.dropdownOptionDisabled : ''}
-									${isSelected ? `${FIELD_STYLES.dropdownOptionSelected} !bg-primary !text-primary-foreground` : ''}
-									${isHighlighted && !isSelected ? FIELD_STYLES.dropdownOptionHighlighted : ''}
-								`.replace(/\s+/g, ' ').trim()}>
-								<div className="flex justify-between items-center">
-									<div className="flex gap-2 items-center">
-										<span className={`font-multilang text-xs font-mono ${isSelected ? 'text-primary-foreground' : isHighlighted ? 'text-foreground' : 'text-muted-foreground'}`}>
-											{numberLabel}
-										</span>
-										<span className={`font-multilang ${isSelected ? '!text-primary-foreground':''}`}>{option.label}</span>
+							return (
+								<li
+									key={option.value}
+									onClick={() => handleOptionClick(option)}
+									className={`
+										${FIELD_STYLES.dropdownOption}
+										${option.disabled ? FIELD_STYLES.dropdownOptionDisabled : ''}
+										${isSelected ? `${FIELD_STYLES.dropdownOptionSelected} !bg-primary !text-primary-foreground` : ''}
+										${isHighlighted && !isSelected ? FIELD_STYLES.dropdownOptionHighlighted : ''}
+									`.replace(/\s+/g, ' ').trim()}>
+									<div className="flex justify-between items-center">
+										<div className="flex gap-2 items-center">
+											<span className={`font-multilang text-xs font-mono ${isSelected ? 'text-primary-foreground' : isHighlighted ? 'text-foreground' : 'text-muted-foreground'}`}>
+												{numberLabel}
+											</span>
+											<span className={`font-multilang ${isSelected ? '!text-primary-foreground':''}`}>{option.label}</span>
+										</div>
 									</div>
-								</div>
-							</li>
-						);
-					})}
-				</ul>
+								</li>
+							);
+						})}
+					</ul>
+				</div>
 			</div>
-		</div>
+		</Portal>
 	);
 };

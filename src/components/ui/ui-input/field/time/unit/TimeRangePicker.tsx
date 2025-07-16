@@ -1,5 +1,6 @@
 import React from 'react';
 import FieldTimePicker from '@/components/ui/ui-input/field/time/FieldTimePicker';
+import { FIELD_STYLES } from '@/components/ui/ui-input/field/core/config';
 
 interface TimeRangePickerProps {
   label?: string;
@@ -30,7 +31,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
   disabled = false,
 }) => {
   return (
-    <div className={`space-y-1 ${className}`}>
+    <div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
       {label && <span className="font-multilang text-sm font-medium text-foreground">{label}</span>}
       <div className="flex items-center gap-2">
         <FieldTimePicker
@@ -39,7 +40,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
           value={startValue}
           onChange={onStartChange}
           disabled={disabled}
-          className="w-36"
+          className="w-36 !p-0 !border-0 !bg-transparent !shadow-none !neu-none"
         />
         <span className="text-sm shrink-0">~</span>
         <FieldTimePicker
@@ -48,7 +49,7 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
           value={endValue}
           onChange={onEndChange}
           disabled={disabled}
-          className="w-36"
+          className="w-36 !p-0 !border-0 !bg-transparent !shadow-none !neu-none"
         />
       </div>
     </div>
