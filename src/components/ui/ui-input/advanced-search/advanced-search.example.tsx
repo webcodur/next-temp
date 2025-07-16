@@ -68,7 +68,7 @@ const PhoneField = () => (
 	</div>
 );
 
-export const AdvancedSearchExample: React.FC = () => {
+export default function AdvancedSearchExample() {
 	// 검색 필드 설정
 	const searchFields = [
 		{
@@ -133,4 +133,4 @@ export const AdvancedSearchExample: React.FC = () => {
 			/>
 		</div>
 	);
-}; 
+} 
