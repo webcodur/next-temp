@@ -18,16 +18,40 @@ alwaysApply: false
 - 공통 HTTP 클라이언트는 `app/services/` 레벨에 배치
 
 ### 2. 파일명 명명 규칙
-- **기본**: `{도메인}_{엔드포인트}_{HTTP메소드}.ts`
-- **파라미터**: `{도메인}_{엔드포인트}_{id}_{HTTP메소드}.ts`
-- **검색/필터**: `{도메인}_{엔드포인트}_search@params_{HTTP메소드}.ts`
-- **복합 엔드포인트**: 하이픈(-), 언더스코어(_) 활용
 
-**예시**:
-- `users_GET.ts` (사용자 목록)
-- `users_{id}_PUT.ts` (사용자 수정)
-- `products_search@params_GET.ts` (상품 검색)
-- `order_payment-history_GET.ts` (복합 엔드포인트)
+#### 핵심 규칙
+- **도메인**: 항상 단수형 (user, product, order)
+- **파라미터**: `@파라미터명` (해당 리소스에 바로 붙임)
+- **검색/쿼리**: `$` (쿼리 파라미터가 있는 GET 요청)
+- **중첩 리소스**: 언더스코어(_)로 연결
+- **구분자**: 언더스코어(_)만 사용
+
+#### 패턴
+```
+{도메인}[@파라미터][_{서브리소스}[@파라미터]][_$]_{HTTP메소드}.ts
+```
+
+#### 기본 CRUD
+- `user_GET.ts` (사용자 목록)
+- `user@id_GET.ts` (사용자 상세)
+- `user_POST.ts` (사용자 생성)
+- `user@id_PUT.ts` (사용자 수정)
+- `user@id_DELETE.ts` (사용자 삭제)
+
+#### 검색/필터
+- `user$_GET.ts` (사용자 검색 - 모든 쿼리 파라미터)
+- `product$_GET.ts` (상품 검색/필터)
+- `user@id_order$_GET.ts` (특정 사용자의 주문 검색)
+
+#### 중첩 리소스
+- `user@id_order_GET.ts` (특정 사용자의 주문 목록)
+- `user@id_order@orderId_GET.ts` (특정 사용자의 특정 주문)
+- `user@id_profile_PUT.ts` (특정 사용자의 프로필 수정)
+
+#### 특수 엔드포인트
+- `auth_login_POST.ts` (로그인)
+- `payment_history$_GET.ts` (결제 이력 검색)
+- `admin_user_stats_GET.ts` (관리자 사용자 통계)
 
 ## 코드 구조 템플릿
 
@@ -74,16 +98,22 @@ export async function {함수명}({파라미터들}) {
 ### HTTP 메소드별 패턴
 - **GET (목록)**: `get{Entity}List`
 - **GET (상세)**: `get{Entity}Detail`  
-- **POST**: `create{Entity}` 또는 `register{Entity}`
+- **GET (검색)**: `search{Entity}`
+- **POST**: `create{Entity}`
 - **PUT**: `update{Entity}`
 - **DELETE**: `delete{Entity}`
-- **검색**: `search{Entity}`
 
-### 예시
-- `getUserList()`, `getProductDetail()`
-- `createUser()`, `registerProduct()`
-- `updateOrder()`, `deleteItem()`
-- `searchProducts()`
+### 파일명과 함수명 매핑
+| 파일명 | 함수명 | 설명 |
+|---|---|---|
+| `user_GET.ts` | `getUserList()` | 사용자 목록 |
+| `user@id_GET.ts` | `getUserDetail()` | 사용자 상세 |
+| `user$_GET.ts` | `searchUser()` | 사용자 검색 |
+| `user_POST.ts` | `createUser()` | 사용자 생성 |
+| `user@id_PUT.ts` | `updateUser()` | 사용자 수정 |
+| `user@id_DELETE.ts` | `deleteUser()` | 사용자 삭제 |
+| `user@id_order_GET.ts` | `getUserOrderList()` | 특정 사용자 주문 목록 |
+| `user@id_order@orderId_GET.ts` | `getUserOrderDetail()` | 특정 사용자 주문 상세 |
 
 ## 반환값 표준화
 
@@ -124,16 +154,28 @@ export async function {함수명}({파라미터들}) {
 ## 중요 참고 사항
 
 1. **공통 HTTP 클라이언트**: `app/services/fetchClient.ts` 모듈 임포트
-  - `fetchDefault`: 일반 JSON API 요청
-  - `fetchForm`: FormData/파일 업로드 요청
+   - `fetchDefault`: 일반 JSON API 요청
+   - `fetchForm`: FormData/파일 업로드 요청
+
 2. **서버 액션**: Next.js 환경에서는 'use server' 지시어 필수
-3. **에러 처리**: 일관된 에러 메시지 형식과 로깅
-4. **타입 정의**: 주석으로 응답 타입 가이드 제공
-5. **쿼리 파라미터**: URLSearchParams로 동적 URL 구성
-6. **파일 분량**: 200줄 이하 권장, 단일 책임 원칙
-7. **코드 스타일**: 
-  - 스페이스 일관성 유지 (`success: true`, `errorMsg: string`)
-  - 반환값 키 일관성 (`data` vs `result` 주의)
+
+3. **파일명 규칙 엄수**:
+   - 도메인은 **반드시 단수형** (users ❌, user ✅)
+   - 파라미터는 **@** 접두사로 구분 (`user@id`)
+   - 쿼리 파라미터는 **$** 표기 (`user$_GET.ts`)
+   - 중첩 리소스는 **언더스코어(_)** 연결
+
+4. **에러 처리**: 일관된 에러 메시지 형식과 로깅
+
+5. **타입 정의**: 주석으로 응답 타입 가이드 제공
+
+6. **쿼리 파라미터**: URLSearchParams로 동적 URL 구성
+
+7. **파일 분량**: 200줄 이하 권장, 단일 책임 원칙
+
+8. **코드 스타일**: 
+   - 스페이스 일관성 유지 (`success: true`, `errorMsg: string`)
+   - 반환값 키 일관성 (`data` vs `result` 주의)
 
 ## 적용 원칙
 

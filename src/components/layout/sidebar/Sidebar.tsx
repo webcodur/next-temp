@@ -10,7 +10,7 @@ import { PrimaryBar } from './unit/PrimaryBar';
 
 import { defaults } from '@/data/sidebarConfig';
 
-export function Sidebar() {
+export default function Sidebar() {
 	// #region 훅
 	useSidebarKeyboard();
 	// #endregion

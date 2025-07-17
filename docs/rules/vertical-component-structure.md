@@ -4,11 +4,9 @@
 
 컴포넌트를 기능별로 중첩시켜 계층을 만든다
 
-```
 Manager
 └── Card
-    └── Settings
-```
+  └── Settings
 
 ## 기본 원칙
 
@@ -19,13 +17,11 @@ Manager
 
 ## 예시
 
-```
 orderManager/
 ├── OrderManager.tsx
 ├── useOrderOperations.ts
 └── OrderCard/
-    ├── OrderCard.tsx
-    └── OrderDetails/
-        ├── OrderDetails.tsx
-        └── PaymentForm.tsx
-``` 
+  ├── OrderCard.tsx
+  └── OrderDetails/
+    ├── OrderDetails.tsx
+    └── PaymentForm.tsx

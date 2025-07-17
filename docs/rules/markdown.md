@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: false
----
 # 마크다운 및 ASCII ART 작성 가이드라인
 
 ## 📝 마크다운 린트 준수

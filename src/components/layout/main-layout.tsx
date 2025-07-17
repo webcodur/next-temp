@@ -4,23 +4,25 @@
   책임: 사이드바, 헤더, 콘텐츠 영역을 포함한 3단 구조의 레이아웃 제공
 */ // ------------------------------
 'use client';
-
+// react
 import { ReactNode, useEffect, useState } from 'react';
-
 import { useAtom } from 'jotai';
-
+// hooks
 import { useLocale } from '@/hooks/useI18n';
 import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
+import { useAuth } from '@/hooks/useAuth';
+// store
 import { initPrimaryColorAtom } from '@/store/primary';
+import { initTheme } from '@/store/theme';
 import { sidebarCollapsedAtom } from '@/store/sidebar';
-import { initThemeAtom } from '@/store/theme';
-
+// data
 import { defaults } from '@/data/sidebarConfig';
-
-import PageHeader from './PageHeader';
-import { Header } from './header/Header';
-import { Sidebar } from './sidebar/Sidebar';
-import { SecondaryPanel } from './sidebar/unit/SecondaryPanel';
+// components
+import Login from '@/components/view/login/Login';
+import PageHeader from '@/components/layout/PageHeader';
+import Header from '@/components/layout/header/Header';
+import Sidebar from '@/components/layout/sidebar/Sidebar';
+import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel';
 import { ToastProvider } from '@/components/ui/ui-effects/toast/Toast';
 
 // #region 타입
@@ -62,7 +64,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	// #region 상태 및 훅
-	const [, initTheme] = useAtom(initThemeAtom);
+	const { isLoggedIn, isLoading } = useAuth();
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
 	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
@@ -89,7 +91,6 @@ export function MainLayout({ children }: MainLayoutProps) {
 	useEffect(() => {
 		if (showSecondaryPanelOverlay) {
 			setIsAnimating(true);
-			// 다음 프레임에 애니메이션 시작
 			requestAnimationFrame(() => {
 				setShouldShow(true);
 			});
@@ -103,14 +104,26 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 	// #region 초기화 및 부가 효과
 	useEffect(() => {
-		initTheme();
+		// 테마 및 프라이머리 컬러 초기화
 		initPrimaryColor();
-	}, [initTheme, initPrimaryColor]);
-
+    initTheme();
+	}, [initPrimaryColor]);
 	useThemeKeyboard();
 	// #endregion
 
 	// #region 렌더링
+	// 로딩 중
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-screen bg-surface-3">
+				<div className="text-center">
+					<div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 animate-spin border-primary"></div>
+					<p className="text-text-secondary">로딩 중...</p>
+				</div>
+			</div>
+		);
+	}
+	if (!isLoggedIn) return <Login />;
 	return (
 		<ToastProvider>
 			<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>

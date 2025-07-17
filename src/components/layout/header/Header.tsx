@@ -15,7 +15,7 @@ import { SettingsButton } from '@/components/layout/header/SettingsButton';
 import { Logo } from './Logo';
 import { SearchButton } from './SearchButton';
 
-export function Header() {
+export default function Header() {
 	// #region 상수
 	const buttonBase = 'h-9 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';
 	const squareButton = clsx(buttonBase, 'w-9');

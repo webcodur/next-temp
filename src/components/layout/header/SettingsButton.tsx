@@ -82,7 +82,7 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">화면 모드</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentThemeName}</span>
-            <ThemeToggle variant="icon" showLabel={false} className="flex justify-center items-center w-12 h-12 neu-flat" />
+            <ThemeToggle className="flex justify-center items-center w-12 h-12 neu-flat" />
           </div>
         </div>
       </Modal>

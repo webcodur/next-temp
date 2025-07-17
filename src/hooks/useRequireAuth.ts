@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { isAuthenticatedAtom } from '@/store/auth';
-import { openLoginModalAtom } from '@/store/loginModal';
+import { useRouter } from 'next/navigation';
+import { useAuth } from './useAuth';
 
-// 특정 페이지에서 호출 시 인증이 안되어 있으면 로그인 모달을 연다.
+// 특정 페이지에서 호출 시 인증이 안되어 있으면 로그인 페이지로 리다이렉트
 export function useRequireAuth() {
-  const [isAuthenticated] = useAtom(isAuthenticatedAtom);
-  const [, openLoginModal] = useAtom(openLoginModalAtom);
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      openLoginModal();
+    if (!isLoggedIn) {
+      router.push('/login');
     }
-  }, [isAuthenticated, openLoginModal]);
+  }, [isLoggedIn, router]);
 
-  return isAuthenticated;
+  return isLoggedIn;
 } 

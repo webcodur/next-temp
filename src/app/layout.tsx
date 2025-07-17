@@ -8,7 +8,7 @@ import type { Metadata } from 'next';
 import { Provider } from 'jotai';
 
 import { MainLayout } from '@/components/layout/main-layout';
-import { LoginModal } from '@/components/layout/login/LoginModal';
+import { AppProviders } from '@/providers/AppProviders';
 
 import './globals.css';
 
@@ -30,10 +30,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="ko" className="font-multilang" suppressHydrationWarning>
 			<body>
-				<Provider>
-					<MainLayout>{children}</MainLayout>
-					<LoginModal />
-				</Provider>
+				<AppProviders>
+					<Provider>
+						<MainLayout>{children}</MainLayout>
+					</Provider>
+				</AppProviders>
 			</body>
 		</html>
 	);

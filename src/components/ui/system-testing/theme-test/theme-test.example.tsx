@@ -52,7 +52,7 @@ export default function ThemeTestExample() {
 						<div className="text-sm text-muted-foreground">
 							{t('테마테스트_현재테마')} <span className="font-semibold text-primary">{theme}</span>
 						</div>
-						<ThemeToggle variant="button" />
+						<ThemeToggle showLabel={true} />
 					</div>
 				</div>
 				<p className="text-muted-foreground font-multilang">

@@ -6,100 +6,79 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-import { useAtom } from 'jotai';
-
+import { useState } from 'react';
 import { LoginForm } from '@/components/layout/login/LoginForm';
-import ModalContainer from '@/components/ui/ui-layout/modal/unit/ModalContainer';
-import { useTranslations } from '@/hooks/useI18n';
-import { loginAtom, isAuthenticatedAtom } from '@/store/auth';
+import { useAuth } from '@/hooks/useAuth';
+import { useLocale } from '@/hooks/useI18n';
+// import { initThemeAtom } from '@/store/theme';
 
 // #region 타입
 interface LoginFormData {
 	username: string;
 	password: string;
-	rememberMe: boolean;
+	rememberUsername: boolean;
+}
+
+interface LoginPageProps {
+	onLoginSuccess?: () => void;
 }
 // #endregion
 
-export default function LoginPage() {
+export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 	// #region 상수
-	const router = useRouter();
-	const t = useTranslations();
-	const [, login] = useAtom(loginAtom);
-	const [isAuthenticated] = useAtom(isAuthenticatedAtom);
+	const { login } = useAuth();
+	const { isRTL } = useLocale();
 	// #endregion
 
 	// #region 상태
 	const [isLoading, setIsLoading] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(true);
+	const [errorMessage, setErrorMessage] = useState('');
 	// #endregion
 
-	// #region 훅
-	// 이미 로그인된 사용자는 홈으로 리다이렉트
-	useEffect(() => {
-		if (isAuthenticated) {
-			router.push('/');
-		}
-	}, [isAuthenticated, router]);
-	// #endregion
 
 	// #region 핸들러
 	const handleLogin = async (data: LoginFormData) => {
 		setIsLoading(true);
+		setErrorMessage('');
 
 		try {
-			// rememberMe 옵션 로깅 (개발용)
-			console.log('로그인 데이터:', {
+			console.log('로그인 시도 (실제 API 연동):', {
 				username: data.username,
 				password: '***',
-				rememberMe: data.rememberMe,
+				rememberUsername: data.rememberUsername,
 			});
 
-			const result = await login({
-				username: data.username,
-				password: data.password,
-			});
+			const result = await login(data.username, data.password);
 
 			if (result.success) {
-				console.log('로그인 성공:', result.user);
-				// 로그인 성공 시 홈으로 리다이렉트
-				router.push('/');
+				console.log('로그인 성공');
+				onLoginSuccess?.();
 			} else {
 				console.error('로그인 실패:', result.error);
-				alert(result.error || t('로그인_메시지_실패'));
+				setErrorMessage(result.error || '로그인에 실패했습니다.');
 			}
 		} catch (error) {
 			console.error('로그인 처리 중 오류:', error);
-			alert(t('로그인_메시지_오류발생'));
+			setErrorMessage('로그인 중 오류가 발생했습니다. API 서버 연결을 확인해주세요.');
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
-		router.push('/');
-	};
 	// #endregion
 
 	// #region 렌더링
-	// 이미 로그인된 경우 로딩 표시
-	if (isAuthenticated) {
-		return (
-			<div className="p-4 text-center">
-				<div className="mx-auto mb-4 w-8 h-8 rounded-full border-2 animate-spin border-primary border-t-transparent"></div>
-				<p className="text-muted-foreground">{t('로그인_메시지_이동중')}</p>
-			</div>
-		);
-	}
-
 	return (
-		<ModalContainer isOpen={isModalOpen} onClose={handleCloseModal}>
-			<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-		</ModalContainer>
+		<div className="flex fixed inset-0 z-50 justify-center items-center bg-background font-multilang" dir={isRTL ? 'rtl' : 'ltr'}>
+			<div className="space-y-4">
+				{errorMessage && (
+					<div className="p-3 text-sm rounded-lg border bg-destructive/10 text-destructive border-destructive/20">
+						{errorMessage}
+					</div>
+				)}
+				<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+			</div>
+		</div>
 	);
 	// #endregion
 } 

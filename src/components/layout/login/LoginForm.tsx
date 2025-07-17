@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
@@ -16,7 +16,7 @@ import FieldPassword from '@/components/ui/ui-input/field/text/FieldPassword';
 interface LoginFormData {
 	username: string;
 	password: string;
-	rememberMe: boolean;
+	rememberUsername: boolean;
 }
 
 interface LoginFormProps {
@@ -30,9 +30,23 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	const [formData, setFormData] = useState<LoginFormData>({
 		username: '',
 		password: '',
-		rememberMe: false,
+		rememberUsername: false,
 	});
 	const [errors, setErrors] = useState<Partial<LoginFormData>>({});
+	// #endregion
+
+	// #region 로컬스토리지 초기화
+	useEffect(() => {
+		// 저장된 아이디 불러오기
+		const savedUsername = localStorage.getItem('remembered-username');
+		if (savedUsername) {
+			setFormData(prev => ({
+				...prev,
+				username: savedUsername,
+				rememberUsername: true,
+			}));
+		}
+	}, []);
 	// #endregion
 
 	// #region 핸들러
@@ -58,6 +72,12 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (validateForm()) {
+			// 아이디 기억하기 처리
+			if (formData.rememberUsername) {
+				localStorage.setItem('remembered-username', formData.username);
+			} else {
+				localStorage.removeItem('remembered-username');
+			}
 			onSubmit(formData);
 		}
 	};
@@ -76,8 +96,8 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 		}
 	};
 
-	const toggleRememberMe = () => {
-		setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
+	const toggleRememberUsername = () => {
+		setFormData((prev) => ({ ...prev, rememberUsername: !prev.rememberUsername }));
 	};
 	// #endregion
 
@@ -120,24 +140,24 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 					)}
 				</div>
 
-				{/* 추가 옵션 */}
-				<div className="flex justify-between items-center">
+				{/* 아이디 기억하기 옵션 */}
+				<div className="flex items-center">
 					<label
 						className="flex items-center space-x-2 cursor-pointer group"
-						onClick={toggleRememberMe}>
+						onClick={toggleRememberUsername}>
 						<div className="relative">
 							<input
 								type="checkbox"
 								className="sr-only"
-								checked={formData.rememberMe}
-								onChange={toggleRememberMe}
+								checked={formData.rememberUsername}
+								onChange={toggleRememberUsername}
 							/>
 							<div
 								className={`
 								flex justify-center items-center w-4 h-4 rounded transition-all duration-200
-								${formData.rememberMe ? 'neu-flat bg-card' : 'neu-raised bg-card'}
+								${formData.rememberUsername ? 'neu-flat bg-card' : 'neu-raised bg-card'}
 							`}>
-								{formData.rememberMe && (
+								{formData.rememberUsername && (
 									<svg
 										className="w-3 h-3 text-primary"
 										fill="currentColor"
@@ -152,15 +172,9 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 							</div>
 						</div>
 						<span className="text-sm font-multilang text-muted-foreground">
-							로그인 상태 유지
+							아이디 기억하기
 						</span>
 					</label>
-
-					<button
-						type="button"
-						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-primary/80 hover:underline">
-						비밀번호 찾기
-					</button>
 				</div>
 
 				{/* 로그인 버튼 */}
@@ -172,18 +186,6 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 				>
 					{isLoading ? '로그인 중...' : '로그인'}
 				</Button>
-
-				{/* 회원가입 링크 */}
-				<div className="text-center">
-					<span className="text-sm font-multilang text-muted-foreground">
-						계정이 없으신가요?{' '}
-					</span>
-					<button
-						type="button"
-						className="text-sm transition-all duration-200 font-multilang text-primary hover:text-primary/80 hover:underline">
-						회원가입
-					</button>
-				</div>
 			</form>
 		</div>
 	);

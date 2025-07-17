@@ -28,7 +28,7 @@ import { defaults } from '@/data/sidebarConfig';
 
 import { useSecondaryMenu } from './useSecondaryMenu';
 
-export function SecondaryPanel() {
+export default function SecondaryPanel() {
 	// #region 훅
 	const t = useTranslations();
 	const pathname = usePathname();
