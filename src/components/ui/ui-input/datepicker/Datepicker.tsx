@@ -261,3 +261,40 @@ export function PickMonth({
 	);
 }
 // #endregion
+
+// #region 시간 전용 선택기 컴포넌트2
+import TimeRangeSelector, { TimeInput, TimeRangeInput, TimeInfo } from './TimeRangeSelector';
+
+export type PickTimeRange2Props = {
+	initialStartHour?: number;
+	initialStartMinute?: number;
+	initialEndHour?: number;
+	initialEndMinute?: number;
+	onChange?: (startHour: number, startMinute: number, endHour: number, endMinute: number) => void;
+	className?: string;
+};
+
+export function PickTimeRange2({
+	initialStartHour = 9,
+	initialStartMinute = 30,
+	initialEndHour = 21,
+	initialEndMinute = 0,
+	onChange,
+	className = ''
+}: PickTimeRange2Props) {
+	return (
+		<TimeRangeSelector
+			initialStartHour={initialStartHour}
+			initialStartMinute={initialStartMinute}
+			initialEndHour={initialEndHour}
+			initialEndMinute={initialEndMinute}
+			onChange={onChange}
+			className={className}
+		/>
+	);
+}
+
+// 개별 모듈도 export (필요시 사용 가능)
+export { TimeInput as PickTimeSingle2, TimeRangeInput as PickTimeRange2Input, TimeInfo as PickTimeInfo2 };
+
+// #endregion

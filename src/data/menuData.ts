@@ -232,6 +232,10 @@ export const menuData: MenuData = {
 						key: '시설예약',
 						href: '/lab/ui-layout/facility-reservation',
 					},
+					{
+						key: 'GridForm',
+						href: '/lab/ui-layout/grid-form',
+					},
 				],
 			},
 			UI입력: {
