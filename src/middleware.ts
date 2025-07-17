@@ -6,7 +6,22 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 정적 파일들은 통과
-  if (pathname.startsWith('/_next/') || pathname === '/favicon.ico') {
+  if (
+    pathname.startsWith('/_next/') || 
+    pathname === '/favicon.ico' ||
+    pathname.startsWith('/fonts/') ||
+    pathname.startsWith('/images/') ||
+    pathname.startsWith('/icons/') ||
+    pathname.startsWith('/tinymce/') ||
+    pathname.endsWith('.svg') ||
+    pathname.endsWith('.png') ||
+    pathname.endsWith('.jpg') ||
+    pathname.endsWith('.jpeg') ||
+    pathname.endsWith('.woff2') ||
+    pathname.endsWith('.woff') ||
+    pathname.endsWith('.ttf') ||
+    pathname.endsWith('.css')
+  ) {
     return NextResponse.next();
   }
 
@@ -30,10 +45,16 @@ export const config = {
   matcher: [
     /*
      * 다음 경로들을 제외한 모든 요청에 대해 실행:
+     * - api routes
      * - _next/static (static files)
-     * - _next/image (image optimization files)
+     * - _next/image (image optimization files)  
      * - favicon.ico (favicon file)
+     * - fonts directory
+     * - images directory
+     * - icons directory
+     * - tinymce directory
+     * - common static file extensions
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|fonts|images|icons|tinymce).*)',
   ],
 }; 

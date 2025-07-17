@@ -49,23 +49,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       // 기본 에러 UI
       return (
         <div className="min-h-[400px] flex items-center justify-center p-6">
-          <div className="text-center max-w-md">
-            <div className="mb-4 flex justify-center">
+          <div className="max-w-md text-center">
+            <div className="flex justify-center mb-4">
               <AlertCircle className="w-16 h-16 text-red-500" />
             </div>
             
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">
               문제가 발생했습니다
             </h2>
             
-            <p className="text-gray-600 mb-6">
+            <p className="mb-6 text-gray-600">
               예상치 못한 오류가 발생했습니다. 페이지를 새로고침하거나 잠시 후 다시 시도해주세요.
             </p>
             
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mb-6 p-4 bg-gray-100 rounded text-left text-sm">
-                <summary className="cursor-pointer font-medium">에러 상세 정보</summary>
-                <pre className="mt-2 whitespace-pre-wrap text-red-600">
+              <details className="p-4 mb-6 text-sm text-left bg-gray-100 rounded">
+                <summary className="font-medium cursor-pointer">에러 상세 정보</summary>
+                <pre className="mt-2 text-red-600 whitespace-pre-wrap">
                   {this.state.error.message}
                   {'\n\n'}
                   {this.state.error.stack}
@@ -76,15 +76,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center px-4 py-2 text-white rounded-md transition-colors bg-primary hover:bg-primary/90"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="mr-2 w-4 h-4" />
                 다시 시도
               </button>
               
               <button
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+                className="inline-flex items-center px-4 py-2 text-gray-800 bg-gray-200 rounded-md transition-colors hover:bg-gray-300"
               >
                 페이지 새로고침
               </button>

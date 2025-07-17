@@ -19,7 +19,7 @@ export default function TooltipExample() {
         <h1 className="mb-8 text-3xl font-bold">{t('툴팁_제목')}</h1>
         <div className="flex flex-col space-y-4">
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button>{t('툴팁_기본툴팁')}</Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -28,7 +28,7 @@ export default function TooltipExample() {
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button>{t('툴팁_위치바뀜')}</Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -37,7 +37,7 @@ export default function TooltipExample() {
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button>{t('툴팁_지연툴팁')}</Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -46,7 +46,7 @@ export default function TooltipExample() {
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button>{t('툴팁_긴내용버튼')}</Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -55,7 +55,7 @@ export default function TooltipExample() {
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button>{t('툴팁_코드복사')}</Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -64,7 +64,7 @@ export default function TooltipExample() {
           </Tooltip>
           
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button disabled>{t('툴팁_비활성버튼')}</Button>
             </TooltipTrigger>
             <TooltipContent>

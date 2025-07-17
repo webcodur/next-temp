@@ -64,7 +64,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	// #region 상태 및 훅
-	const { isLoggedIn, isLoading } = useAuth();
+	const { isLoggedIn } = useAuth();
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
 	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
@@ -113,16 +113,6 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 	// #region 렌더링
 	// 로딩 중
-	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center h-screen bg-surface-3">
-				<div className="text-center">
-					<div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 animate-spin border-primary"></div>
-					<p className="text-text-secondary">로딩 중...</p>
-				</div>
-			</div>
-		);
-	}
 	if (!isLoggedIn) return <Login />;
 	return (
 		<ToastProvider>

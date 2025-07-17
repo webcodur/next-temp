@@ -1,26 +1,34 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useAtom } from 'jotai';
+import { useEffect, useTransition } from 'react';
 import { signInWithCredentials } from '../services/auth/auth_signin_POST';
 import { logout as logoutAction } from '../services/auth/auth_logout_GET';
+import { isAuthenticatedAtom, userAtom } from '../store/auth';
 
 /**
- * 클라이언트 기반 인증 훅 - SSR 호환
+ * 전역 상태 기반 인증 훅
  */
 export function useAuth() {
   const [isPending, startTransition] = useTransition();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
+  const [user, setUser] = useAtom(userAtom);
 
-  // 클라이언트에서만 토큰 확인
+  // 초기 토큰 확인 - 쿠키만 체크
   useEffect(() => {
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('access-token='))
       ?.split('=')[1];
-    setIsLoggedIn(!!token);
-    setIsLoading(false);
-  }, []);
+    
+    // 쿠키 토큰 유무와 로그인 상태 동기화
+    if (token && !isLoggedIn) {
+      setIsLoggedIn(true);
+    } else if (!token && isLoggedIn) {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  }, [isLoggedIn, setIsLoggedIn, setUser]);
 
   /**
    * 로그인
@@ -36,9 +44,17 @@ export function useAuth() {
       return { success: false, error: '토큰을 받지 못했습니다' };
     }
 
-    // 쿠키에 토큰 저장 (24시간)
+    // 쿠키에만 토큰 저장 (24시간)
     document.cookie = `access-token=${result.data.accessToken}; path=/; max-age=86400`;
+    
+    // 로그인 상태만 업데이트
     setIsLoggedIn(true);
+    
+    // 사용자 정보가 있다면 설정
+    if (result.data.user) {
+      setUser(result.data.user);
+    }
+
     return { success: true };
   };
 
@@ -49,18 +65,21 @@ export function useAuth() {
     startTransition(async () => {
       await logoutAction();
       
-      // 쿠키 제거 및 상태 업데이트
+      // 쿠키 제거
       document.cookie = 'access-token=; path=/; max-age=0';
+      
+      // 상태 초기화
       setIsLoggedIn(false);
-      // router.push 제거 - 조건부 렌더링으로 자동 처리됨
+      setUser(null);
     });
   };
 
   return {
     isLoggedIn,
-    isLoading,
+    isLoading: false,
     login,
     logout,
     isPending,
+    user,
   };
 } 
