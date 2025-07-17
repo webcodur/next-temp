@@ -2,153 +2,131 @@
 
 import * as React from 'react';
 import {
-	SingleDatePicker,
-	TimeOnlyPicker,
+	PickDate,
+	PickDateRange,
+	PickTime,
+	PickMonth,
 } from './Datepicker';
-import { useTranslations } from '@/hooks/useI18n';
 
 export default function DatepickerExample() {
-	const t = useTranslations();
-	
-	const [startDate, setStartDate] = React.useState<Date | null>(null);
-	const [endDate, setEndDate] = React.useState<Date | null>(null);
-
+	// PickDate 관련 상태
 	const [singleDate, setSingleDate] = React.useState<Date | null>(null);
-	const [dateTimeValue, setDateTimeValue] = React.useState<Date | null>(null);
-	const [monthYearDate, setMonthYearDate] = React.useState<Date | null>(null);
-	const [timeOnlyValue, setTimeOnlyValue] = React.useState<Date | null>(null);
-	const [workTimeValue, setWorkTimeValue] = React.useState<Date | null>(null);
+	const [dateWithTime, setDateWithTime] = React.useState<Date | null>(null);
+
+	// PickDateRange 관련 상태
+	const [dateRange, setDateRange] = React.useState<[Date | null, Date | null]>([null, null]);
+	const [startDate, endDate] = dateRange;
+
+	// PickTime 관련 상태
+	const [timeOnly, setTimeOnly] = React.useState<Date | null>(null);
+
+	// PickMonth 관련 상태
+	const [monthOnly, setMonthOnly] = React.useState<Date | null>(null);
 
 	return (
 		<div className="container py-10">
-			<h1 className="mb-8 text-3xl font-bold font-multilang">{t('날짜선택_제목')}</h1>
+			<h1 className="mb-8 text-3xl font-bold">데이트피커 컴포넌트 예제</h1>
 
-			<div className="space-y-10">
-				{/* 기본 DatePicker */}
-				<section>
-					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_기본DatePicker')}</h2>
-					<div className="flex flex-col space-y-4">
+			<div className="space-y-12">
+				{/* PickDate 섹션 */}
+				<section className="p-6 border rounded-lg">
+					<h2 className="mb-6 text-2xl font-semibold text-blue-600">PickDate - 단일 날짜 선택</h2>
+					
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						{/* 기본 날짜 선택 */}
 						<div>
-							<p className="mb-2 font-medium font-multilang">{t('날짜선택_단일날짜선택')}</p>
-							<SingleDatePicker
+							<h3 className="mb-2 font-medium">기본 날짜 선택</h3>
+							<PickDate
 								selected={singleDate}
 								onChange={setSingleDate}
+								placeholderText="날짜를 선택하세요"
 							/>
-							<p className="mt-2 text-sm text-gray-600 font-multilang">
-								{t('날짜선택_선택된날짜')}:{' '}
-								{singleDate ? singleDate.toLocaleDateString() : t('날짜선택_없음')}
+							<p className="mt-1 text-sm text-gray-600">
+								선택된 날짜: {singleDate ? singleDate.toLocaleDateString() : '없음'}
+							</p>
+						</div>
+
+						{/* 날짜 + 시간 */}
+						<div>
+							<h3 className="mb-2 font-medium">날짜 + 시간 선택</h3>
+							<PickDate
+								selected={dateWithTime}
+								onChange={setDateWithTime}
+								dateFormat="yyyy-MM-dd HH:mm"
+								placeholderText="날짜와 시간을 선택하세요"
+								showTimeSelect={true}
+							/>
+							<p className="mt-1 text-sm text-gray-600">
+								선택된 날짜시간: {dateWithTime ? dateWithTime.toLocaleString() : '없음'}
 							</p>
 						</div>
 					</div>
 				</section>
 
-				{/* 날짜 범위 선택 */}
-				<section>
-					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_날짜범위선택')}</h2>
+				{/* PickDateRange 섹션 */}
+				<section className="p-6 border rounded-lg">
+					<h2 className="mb-6 text-2xl font-semibold text-green-600">PickDateRange - 날짜 범위 선택</h2>
+					
 					<div>
-						<p className="mb-2 font-medium font-multilang">{t('날짜선택_시작일종료일선택')}</p>
-						<div className="flex items-center space-x-2">
-							<SingleDatePicker
-								selected={startDate}
-								onChange={setStartDate}
-								placeholderText="시작 날짜"
-								maxDate={endDate}
-							/>
-							<span>~</span>
-							<SingleDatePicker
-								selected={endDate}
-								onChange={setEndDate}
-								placeholderText="마지막 날짜"
-								minDate={startDate}
-							/>
-						</div>
-						<p className="mt-2 text-sm text-gray-600 font-multilang">
-							{t('날짜선택_선택된기간')}: {startDate ? startDate.toLocaleDateString() : t('날짜선택_없음')}{' '}
-							~ {endDate ? endDate.toLocaleDateString() : t('날짜선택_없음')}
-						</p>
-					</div>
-				</section>
-
-				{/* 날짜 및 시간 선택 */}
-				<section>
-					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_날짜시간선택')}</h2>
-					<div>
-						<p className="mb-2 font-medium font-multilang">{t('날짜선택_날짜시간함께선택')}</p>
-						<SingleDatePicker
-							selected={dateTimeValue}
-							onChange={setDateTimeValue}
-							showTimeSelect={true}
-							dateFormat="yyyy-MM-dd HH:mm"
-							timeFormat="HH:mm"
-							timeIntervals={15}
+						<h3 className="mb-2 font-medium">날짜 범위 선택</h3>
+						<PickDateRange
+							startDate={startDate}
+							endDate={endDate}
+							onChange={setDateRange}
+							placeholderText="날짜 범위를 선택하세요"
 						/>
-						<p className="mt-2 text-sm text-gray-600 font-multilang">
-							{t('날짜선택_선택된날짜시간')}:{' '}
-							{dateTimeValue ? dateTimeValue.toLocaleString() : t('날짜선택_없음')}
+						<p className="mt-1 text-sm text-gray-600">
+							선택된 범위: {startDate ? startDate.toLocaleDateString() : '없음'} ~ {endDate ? endDate.toLocaleDateString() : '없음'}
 						</p>
 					</div>
 				</section>
 
-				{/* 시간 전용 선택기 */}
-				<section>
-					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_시간전용선택기')}</h2>
-					<div className="flex flex-col space-y-6">
-						<div>
-							<p className="mb-2 font-medium font-multilang">{t('날짜선택_기본시간선택')}</p>
-							<TimeOnlyPicker
-								selected={timeOnlyValue}
-								onChange={setTimeOnlyValue}
-								timeIntervals={30}
-							/>
-							<p className="mt-2 text-sm text-gray-600 font-multilang">
-								{t('날짜선택_선택된시간')}:{' '}
-								{timeOnlyValue ? timeOnlyValue.toLocaleTimeString('ko-KR', { 
-									hour: '2-digit', 
-									minute: '2-digit',
-									hour12: false 
-								}) : t('날짜선택_없음')}
-							</p>
-						</div>
-
-						<div>
-							<p className="mb-2 font-medium font-multilang">{t('날짜선택_근무시간선택')}</p>
-							<TimeOnlyPicker
-								selected={workTimeValue}
-								onChange={setWorkTimeValue}
-								timeIntervals={15}
-								placeholderText={t('날짜선택_근무시간선택플레이스홀더')}
-								minTime={new Date(new Date().setHours(9, 0, 0, 0))}
-								maxTime={new Date(new Date().setHours(18, 0, 0, 0))}
-							/>
-							<p className="mt-2 text-sm text-gray-600 font-multilang">
-								{t('날짜선택_선택된근무시간')}:{' '}
-								{workTimeValue ? workTimeValue.toLocaleTimeString('ko-KR', { 
-									hour: '2-digit', 
-									minute: '2-digit',
-									hour12: false 
-								}) : t('날짜선택_없음')}
-							</p>
-						</div>
+				{/* PickTime 섹션 */}
+				<section className="p-6 border rounded-lg">
+					<h2 className="mb-6 text-2xl font-semibold text-purple-600">PickTime - 시간 선택</h2>
+					
+					<div>
+						<h3 className="mb-2 font-medium">시간 선택</h3>
+						<PickTime
+							selected={timeOnly}
+							onChange={setTimeOnly}
+							placeholderText="시간을 선택하세요"
+						/>
+						<p className="mt-1 text-sm text-gray-600">
+							선택된 시간: {timeOnly ? timeOnly.toLocaleTimeString('ko-KR', { 
+								hour: '2-digit', 
+								minute: '2-digit',
+								hour12: false 
+							}) : '없음'}
+						</p>
 					</div>
 				</section>
 
-				{/* 월별 선택 */}
-				<section>
-					<h2 className="mb-4 text-2xl font-semibold font-multilang">{t('날짜선택_월별선택')}</h2>
-					<div className="flex flex-col space-y-6">
-						<div>
-							<p className="mb-2 font-medium font-multilang">{t('날짜선택_월단위선택')}</p>
-							<SingleDatePicker
-								selected={monthYearDate}
-								onChange={setMonthYearDate}
-								showMonthYearPicker={true}
-								dateFormat="yyyy년 MM월"
-							/>
-							<p className="mt-2 text-sm text-gray-600 font-multilang">
-								{t('날짜선택_선택된월')}:{' '}
-								{monthYearDate ? monthYearDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' }) : t('날짜선택_없음')}
-							</p>
-						</div>
+				{/* PickMonth 섹션 */}
+				<section className="p-6 border rounded-lg">
+					<h2 className="mb-6 text-2xl font-semibold text-orange-600">PickMonth - 년월 선택</h2>
+					
+					<div>
+						<h3 className="mb-2 font-medium">년월 선택</h3>
+						<PickMonth
+							selected={monthOnly}
+							onChange={setMonthOnly}
+							placeholderText="년월을 선택하세요"
+						/>
+						<p className="mt-1 text-sm text-gray-600">
+							선택된 년월: {monthOnly ? monthOnly.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' }) : '없음'}
+						</p>
+					</div>
+				</section>
+
+				{/* 사용법 안내 */}
+				<section className="p-6 bg-gray-50 rounded-lg">
+					<h2 className="mb-4 text-xl font-semibold">사용법</h2>
+					<div className="space-y-2 text-sm">
+						<div><code className="bg-gray-200 px-2 py-1 rounded">{'<PickDate />'}</code> - 단일 날짜 선택, 날짜+시간 선택 가능</div>
+						<div><code className="bg-gray-200 px-2 py-1 rounded">{'<PickDateRange />'}</code> - 시작일과 종료일 범위 선택</div>
+						<div><code className="bg-gray-200 px-2 py-1 rounded">{'<PickTime />'}</code> - 시간만 선택 (날짜 없이)</div>
+						<div><code className="bg-gray-200 px-2 py-1 rounded">{'<PickMonth />'}</code> - 년월만 선택 (일자 없이)</div>
 					</div>
 				</section>
 			</div>

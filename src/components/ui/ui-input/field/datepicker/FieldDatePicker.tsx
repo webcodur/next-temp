@@ -5,10 +5,10 @@ import { Calendar, X, Clock } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
 import { FieldDatePickerComponentProps } from '../core/types';
-import { 
-	SingleDatePicker, 
-	TimeOnlyPicker 
-} from '../../datepicker/Datepicker';
+import {
+	PickDate,
+	PickTime
+} from '@/components/ui/ui-input/datepicker/Datepicker';
 
 const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> = ({
 	id,
@@ -24,8 +24,6 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 	minDate,
 	maxDate,
 	dateFormat = 'yyyy-MM-dd',
-	timeFormat = 'HH:mm',
-	timeIntervals = 30,
 	className = '',
 	disabled = false,
 }) => {
@@ -36,21 +34,6 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		return datePickerType === 'time' ? 
 			<Clock className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} /> :
 			<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />;
-	};
-
-	// 날짜 포맷 결정
-	const getDateFormat = () => {
-		switch (datePickerType) {
-			case 'datetime':
-			case 'dateTime':
-				return `${dateFormat} ${timeFormat}`;
-			case 'time':
-				return timeFormat;
-			case 'month':
-				return 'yyyy-MM';
-			default:
-				return dateFormat;
-		}
 	};
 
 	// 클리어 버튼 처리
@@ -88,33 +71,36 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				</label>
 			)}
 
-			{/* 범위 선택기 - 두 개의 SingleDatePicker 사용 */}
+			{/* 범위 선택기 - 두 개의 PickDate 사용 */}
 			{datePickerType === 'range' && (
-				<div className="space-y-2">
-					<div className="flex items-center space-x-2">
-						<div className="relative flex-1">
-							{getIcon()}
-							<SingleDatePicker
+				<div className="datepicker-container">
+					<div className="datepicker-range">
+						<div className="start-date">
+							<label>시작 날짜</label>
+							<PickDate
 								selected={startDate ?? null}
-								onChange={onStartDateChange || (() => {})}
-								placeholderText="시작 날짜"
+								onChange={(date) => {
+									onStartDateChange?.(date);
+									if (onChange) {
+										(onChange as unknown as (value: (Date | null)[]) => void)([date, endDate ?? null]);
+									}
+								}}
+								placeholderText="시작 날짜 선택"
 								maxDate={endDate ?? null}
-								minDate={minDate ?? null}
-								dateFormat={dateFormat}
-								className={getDatePickerClassName()}
 							/>
 						</div>
-						<span>~</span>
-						<div className="relative flex-1">
-							<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />
-							<SingleDatePicker
+						<div className="end-date">
+							<label>종료 날짜</label>
+							<PickDate
 								selected={endDate ?? null}
-								onChange={onEndDateChange || (() => {})}
-								placeholderText="마지막 날짜"
+								onChange={(date) => {
+									onEndDateChange?.(date);
+									if (onChange) {
+										(onChange as unknown as (value: (Date | null)[]) => void)([startDate ?? null, date]);
+									}
+								}}
+								placeholderText="종료 날짜 선택"
 								minDate={startDate ?? null}
-								maxDate={maxDate ?? null}
-								dateFormat={dateFormat}
-								className={getDatePickerClassName()}
 							/>
 						</div>
 					</div>
@@ -134,15 +120,11 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 			{datePickerType === 'time' && (
 				<div className="relative">
 					{getIcon()}
-					<TimeOnlyPicker
-						selected={value ?? null}
-						onChange={onChange || (() => {})}
-						timeFormat={timeFormat}
-						timeIntervals={timeIntervals}
+					<PickTime
+						selected={value as Date | null}
+						onChange={(time) => onChange?.(time)}
 						placeholderText={placeholder}
 						className={getDatePickerClassName()}
-						minTime={minDate ?? undefined}
-						maxTime={maxDate ?? undefined}
 					/>
 					{hasValue && (
 						<button
@@ -160,17 +142,14 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 			{datePickerType !== 'range' && datePickerType !== 'time' && (
 				<div className="relative">
 					{getIcon()}
-					<SingleDatePicker
-						selected={value ?? null}
-						onChange={onChange || (() => {})}
-						dateFormat={getDateFormat()}
+					<PickDate
+						selected={value as Date | null}
+						onChange={(date) => onChange?.(date)}
+						dateFormat={datePickerType === 'datetime' ? 'yyyy-MM-dd HH:mm' : dateFormat}
 						placeholderText={placeholder}
+						showTimeSelect={datePickerType === 'datetime'}
 						minDate={minDate ?? null}
 						maxDate={maxDate ?? null}
-						showTimeSelect={datePickerType === 'datetime' || datePickerType === 'dateTime'}
-						timeFormat={timeFormat}
-						timeIntervals={timeIntervals}
-						showMonthYearPicker={datePickerType === 'month'}
 						className={getDatePickerClassName()}
 					/>
 					{hasValue && (
