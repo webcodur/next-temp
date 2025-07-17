@@ -4,8 +4,8 @@ import { usePageDescription } from '@/hooks/usePageDescription';
 import React, { useState } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { FieldRadioGroup } from '@/components/ui/ui-input/simple-input/FieldRadioGroup';
-import { FieldToggleSwitch } from '@/components/ui/ui-input/simple-input/FieldToggleSwitch';
+import { SimpleRadioGroup } from '@/components/ui/ui-input/simple-input/SimpleRadioGroup';
+import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 
 // -------------------- 상수 및 타입 --------------------
 export type CorpCategoryKey = '업무' | '상가' | '커뮤니티' | '유치원';
@@ -51,10 +51,10 @@ export default function EntryPolicyPage() {
       {/* 상단 3행 컨트롤 */}
       <div className="flex flex-col gap-6 max-w-5xl">
         {/* ① 출입 허용 */}
-        <FieldRadioGroup
+        <SimpleRadioGroup
           label="출입 허용"
           value={entryPolicy}
-          onChange={(v) => setEntryPolicy(v as 'all' | 'office')}
+          onChange={(v: string) => setEntryPolicy(v as 'all' | 'office')}
           layout="horizontal"
           options={[
             { label: '전체', value: 'all' },
@@ -63,7 +63,7 @@ export default function EntryPolicyPage() {
         />
 
         {/* ② 회차시간 사용 */}
-        <FieldToggleSwitch
+        <SimpleToggleSwitch
           label="회차시간 사용"
           checked={returnHourEnabled}
           onChange={setReturnHourEnabled}
@@ -113,10 +113,10 @@ export default function EntryPolicyPage() {
                 </div>
 
                 {/* 회차시간 토글 */}
-                <FieldToggleSwitch
+                <SimpleToggleSwitch
                   label="회차시간"
                   checked={policy.workHour}
-                  onChange={(val) =>
+                  onChange={(val: boolean) =>
                     setCorpPolicies((prev) => ({
                       ...prev,
                       [cat]: { ...prev[cat], workHour: val },
@@ -127,10 +127,10 @@ export default function EntryPolicyPage() {
                 />
 
                 {/* 블랙리스트 사용여부 토글 */}
-                <FieldToggleSwitch
+                <SimpleToggleSwitch
                   label="블랙리스트"
                   checked={policy.blacklist}
-                  onChange={(val) =>
+                  onChange={(val: boolean) =>
                     setCorpPolicies((prev) => ({
                       ...prev,
                       [cat]: { ...prev[cat], blacklist: val },

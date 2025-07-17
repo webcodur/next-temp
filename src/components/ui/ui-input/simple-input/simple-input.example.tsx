@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { FieldCheckbox } from './FieldCheckbox';
-import { FieldToggleButton } from './FieldToggleButton';
-import { FieldToggleSwitch } from './FieldToggleSwitch';
-import { FieldRadioGroup } from './FieldRadioGroup';
+import { SimpleCheckbox } from './SimpleCheckbox';
+import { SimpleCheckboxGroup } from './SimpleCheckboxGroup';
+import { SimpleToggleButton } from './SimpleToggleButton';
+import { SimpleToggleSwitch } from './SimpleToggleSwitch';
+import { SimpleRadioGroup } from './SimpleRadioGroup';
+import { SimpleDropdown } from './SimpleDropdown';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function SimpleInputExample() {
@@ -21,6 +23,8 @@ export default function SimpleInputExample() {
 	const [switchValue, setSwitchValue] = useState(false);
 	const [toggleButtonValue, setToggleButtonValue] = useState(false);
 	const [radioValue, setRadioValue] = useState('design');
+	const [checkboxGroupValue, setCheckboxGroupValue] = useState(['notifications']);
+	const [dropdownValue, setDropdownValue] = useState('');
 
 	const checkboxOptions = [
 		{ key: 'notifications', label: t('간단입력_알림받기') },
@@ -39,6 +43,14 @@ export default function SimpleInputExample() {
 		{ value: 'finance', label: t('간단입력_재무') },
 	];
 
+	const dropdownOptions = [
+		{ value: 'option1', label: t('간단입력_옵션1') },
+		{ value: 'option2', label: t('간단입력_옵션2') },
+		{ value: 'option3', label: t('간단입력_옵션3') },
+		{ value: 'option4', label: t('간단입력_옵션4') },
+		{ value: 'option5', label: t('간단입력_옵션5') },
+	];
+
 	const handleCheckboxChange = (key: string, checked: boolean) => {
 		setCheckboxStates((prev) => ({
 			...prev,
@@ -54,19 +66,43 @@ export default function SimpleInputExample() {
 				{/* 체크박스 */}
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('간단입력_체크박스')}</h2>
-					<div className="space-y-4">
-						{checkboxOptions.map((option) => (
-							<FieldCheckbox
-								key={option.key}
-								label={option.label}
-								checked={
-									checkboxStates[option.key as keyof typeof checkboxStates]
-								}
-								onChange={(checked) =>
-									handleCheckboxChange(option.key, checked)
-								}
-							/>
-						))}
+					<div className="space-y-6">
+						<div className="space-y-4">
+							{checkboxOptions.map((option) => (
+								<SimpleCheckbox
+									key={option.key}
+									label={option.label}
+									checked={
+										checkboxStates[option.key as keyof typeof checkboxStates]
+									}
+									onChange={(checked: boolean) =>
+										handleCheckboxChange(option.key, checked)
+									}
+								/>
+							))}
+						</div>
+
+						<SimpleCheckboxGroup
+							label={t('간단입력_세로체크박스그룹')}
+							options={checkboxOptions.map(option => ({
+								value: option.key,
+								label: option.label
+							}))}
+							value={checkboxGroupValue}
+							onChange={setCheckboxGroupValue}
+							layout="vertical"
+						/>
+
+						<SimpleCheckboxGroup
+							label={t('간단입력_가로체크박스그룹')}
+							options={checkboxOptions.slice(0, 3).map(option => ({
+								value: option.key,
+								label: option.label
+							}))}
+							value={checkboxGroupValue}
+							onChange={setCheckboxGroupValue}
+							layout="horizontal"
+						/>
 					</div>
 				</div>
 
@@ -74,7 +110,7 @@ export default function SimpleInputExample() {
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('간단입력_라디오그룹')}</h2>
 					<div className="space-y-6">
-						<FieldRadioGroup
+						<SimpleRadioGroup
 							label={t('간단입력_수직라디오그룹')}
 							options={radioOptions.slice(0, 4)}
 							value={radioValue}
@@ -82,7 +118,7 @@ export default function SimpleInputExample() {
 							layout="vertical"
 						/>
 
-						<FieldRadioGroup
+						<SimpleRadioGroup
 							label={t('간단입력_수평라디오그룹')}
 							options={radioOptions.slice(0, 3)}
 							value={radioValue}
@@ -96,27 +132,27 @@ export default function SimpleInputExample() {
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('간단입력_토글스위치')}</h2>
 					<div className="space-y-6">
-						<FieldToggleSwitch
+						<SimpleToggleSwitch
 							label={t('간단입력_기본토글스위치')}
 							checked={switchValue}
 							onChange={setSwitchValue}
 						/>
 
-						<FieldToggleSwitch
+						<SimpleToggleSwitch
 							label={t('간단입력_Small토글스위치')}
 							checked={switchValue}
 							onChange={setSwitchValue}
 							size="sm"
 						/>
 
-						<FieldToggleSwitch
+						<SimpleToggleSwitch
 							label={t('간단입력_Medium토글스위치')}
 							checked={switchValue}
 							onChange={setSwitchValue}
 							size="md"
 						/>
 
-						<FieldToggleSwitch
+						<SimpleToggleSwitch
 							label={t('간단입력_Large토글스위치')}
 							checked={switchValue}
 							onChange={setSwitchValue}
@@ -129,7 +165,7 @@ export default function SimpleInputExample() {
 				<div className="p-6 rounded-xl neu-flat">
 					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('간단입력_토글버튼')}</h2>
 					<div className="space-y-6">
-						<FieldToggleButton
+						<SimpleToggleButton
 							label={t('간단입력_기본토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
@@ -137,7 +173,7 @@ export default function SimpleInputExample() {
 							size="md"
 						/>
 
-						<FieldToggleButton
+						<SimpleToggleButton
 							label={t('간단입력_아웃라인토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
@@ -145,7 +181,7 @@ export default function SimpleInputExample() {
 							size="md"
 						/>
 
-						<FieldToggleButton
+						<SimpleToggleButton
 							label={t('간단입력_고스트토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
@@ -153,7 +189,7 @@ export default function SimpleInputExample() {
 							size="md"
 						/>
 
-						<FieldToggleButton
+						<SimpleToggleButton
 							label={t('간단입력_Small토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
@@ -161,12 +197,34 @@ export default function SimpleInputExample() {
 							size="sm"
 						/>
 
-						<FieldToggleButton
+						<SimpleToggleButton
 							label={t('간단입력_Large토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
 							variant="default"
 							size="lg"
+						/>
+					</div>
+				</div>
+
+				{/* 드롭다운 */}
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold font-multilang">{t('간단입력_드롭다운')}</h2>
+					<div className="space-y-6">
+						<SimpleDropdown
+							label={t('간단입력_기본드롭다운')}
+							options={dropdownOptions}
+							value={dropdownValue}
+							onChange={setDropdownValue}
+							placeholder={t('간단입력_선택하세요')}
+						/>
+
+						<SimpleDropdown
+							label={t('간단입력_비활성화드롭다운')}
+							options={dropdownOptions.slice(0, 3)}
+							value={dropdownValue}
+							onChange={setDropdownValue}
+							disabled={true}
 						/>
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Dialog, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldPassword from '@/components/ui/ui-input/field/text/FieldPassword';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
@@ -65,11 +65,12 @@ const AddStaffModal: React.FC<AddStaffModalProps> = ({ isOpen, onClose, onAdd })
   };
 
   return (
-    <Dialog
+    <Modal
       isOpen={isOpen}
       onClose={onClose}
       title="근무자 추가"
       size="lg"
+      closeOnBackdropClick={false}
     >
       <div className="grid gap-4">
         <FieldText
@@ -119,15 +120,15 @@ const AddStaffModal: React.FC<AddStaffModalProps> = ({ isOpen, onClose, onAdd })
         />
       </div>
 
-      <DialogFooter className="mt-6">
+      <div className="flex justify-end space-x-3 mt-6">
         <Button variant="ghost" onClick={onClose}>
           목록
         </Button>
         <Button variant="accent" onClick={handleSubmit} disabled={!isValid}>
           등록
         </Button>
-      </DialogFooter>
-    </Dialog>
+      </div>
+    </Modal>
   );
 };
 

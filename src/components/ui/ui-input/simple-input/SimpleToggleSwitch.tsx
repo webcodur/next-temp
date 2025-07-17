@@ -3,7 +3,7 @@
 import React from 'react';
 import { useLocale } from '@/hooks/useI18n';
 
-interface FieldToggleSwitchProps {
+interface SimpleToggleSwitchProps {
 	label?: string;
 	checked?: boolean;
 	onChange?: (checked: boolean) => void;
@@ -12,7 +12,7 @@ interface FieldToggleSwitchProps {
 	className?: string;
 }
 
-export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
+export const SimpleToggleSwitch: React.FC<SimpleToggleSwitchProps> = ({
 	label,
 	checked = false,
 	onChange,
@@ -105,4 +105,4 @@ export const FieldToggleSwitch: React.FC<FieldToggleSwitchProps> = ({
 			</div>
 		</div>
 	);
-};
+}; 

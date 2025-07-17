@@ -8,7 +8,7 @@ interface Option {
 	disabled?: boolean;
 }
 
-interface FieldRadioGroupProps {
+interface SimpleRadioGroupProps {
 	label?: string;
 	value?: string;
 	onChange?: (value: string) => void;
@@ -18,7 +18,7 @@ interface FieldRadioGroupProps {
 	layout?: 'horizontal' | 'vertical';
 }
 
-export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
+export const SimpleRadioGroup: React.FC<SimpleRadioGroupProps> = ({
 	label,
 	value,
 	onChange,
@@ -41,16 +41,15 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className="flex items-center justify-between h-6">
+			<div className="flex justify-between items-center h-6">
 				{label && (
-					<label className="text-sm font-medium text-foreground leading-6">
+					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
 					</label>
 				)}
 			</div>
 
-			<div
-				className={`flex min-h-8 ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4'}`}>
+			<div className={`flex min-h-8 ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4 justify-between'}`}>
 				{options.map((option) => {
 					const isSelected = option.value === value;
 					const isDisabled = disabled || option.disabled;
@@ -58,7 +57,13 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 					return (
 						<div
 							key={option.value}
-							className={`flex items-center h-8 ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+							className={`flex items-center h-8 p-2 rounded-lg border border-transparent transition-all duration-200 ${
+								layout === 'horizontal' ? 'flex-1' : ''
+							} ${
+								isDisabled 
+									? 'opacity-60 cursor-not-allowed' 
+									: 'cursor-pointer hover:bg-muted/70 hover:border-muted hover:shadow-md hover:scale-[1.01]'
+							}`}
 							onClick={() => !isDisabled && handleChange(option.value)}
 							onKeyDown={handleKeyDown(option.value)}
 							tabIndex={isDisabled ? -1 : 0}
@@ -67,11 +72,11 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 							<div
 								className={`w-6 h-6 flex items-center justify-center rounded-full me-3 border transition-all duration-200 focus-within:neu-inset ${
 									isSelected
-										? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
-										: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'
+										? 'shadow-inner neu-inset bg-primary/10 border-primary/30'
+										: 'shadow-md neu-raised bg-background border-border hover:shadow-lg'
 								}`}>
 								{isSelected && (
-									<div className="w-3 h-3 bg-primary rounded-full shadow-sm"></div>
+									<div className="w-3 h-3 rounded-full shadow-sm bg-primary"></div>
 								)}
 							</div>
 							<span
@@ -84,4 +89,4 @@ export const FieldRadioGroup: React.FC<FieldRadioGroupProps> = ({
 			</div>
 		</div>
 	);
-};
+}; 

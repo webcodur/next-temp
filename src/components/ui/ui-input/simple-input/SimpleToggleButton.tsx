@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-interface FieldToggleButtonProps {
+interface SimpleToggleButtonProps {
 	label?: string;
 	pressed?: boolean;
 	onChange?: (pressed: boolean) => void;
@@ -12,7 +12,7 @@ interface FieldToggleButtonProps {
 	className?: string;
 }
 
-export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
+export const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
 	label,
 	pressed = false,
 	onChange,
@@ -66,4 +66,4 @@ export const FieldToggleButton: React.FC<FieldToggleButtonProps> = ({
 			</button>
 		</div>
 	);
-};
+}; 

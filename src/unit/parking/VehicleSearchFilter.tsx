@@ -56,10 +56,10 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 	];
 
 	return (
-		<div className="bg-background border border-border rounded-lg p-3 mb-3 neu-flat">
-				<div className="flex flex-col md:flex-row gap-3">
+		<div className="p-3 mb-3 rounded-lg border bg-background border-border neu-flat">
+				<div className="flex flex-col gap-3 md:flex-row">
 					{/* 2x2 그리드 영역 */}
-					<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
+					<div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
 						{/* 차량유형 선택 */}
 						<FieldSelect
 							id="car-type-filter"
@@ -98,12 +98,12 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 					</div>
 
 					{/* 검색 버튼 영역 */}
-					<div className="flex items-stretch justify-center shrink-0">
+					<div className="flex justify-center items-stretch shrink-0">
 						<Button
 							onClick={onSearch}
 							variant="default"
 							size="icon"
-							className="h-full w-10 bg-primary text-primary-foreground hover:bg-primary/90 neu-raised"
+							className="w-10 h-full bg-primary text-primary-foreground hover:bg-primary/90 neu-raised"
 						>
 							<Search className="w-4 h-4" />
 						</Button>

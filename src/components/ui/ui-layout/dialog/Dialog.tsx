@@ -105,7 +105,7 @@ export const Dialog: React.FC<DialogProps> = ({
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.2 }}
-					className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/50"
+					className="flex fixed inset-0 justify-center items-center p-4 z-9999 bg-black/50"
 					onClick={handleOverlayClick}>
 					<motion.div
 						initial={{ scale: 0.9, opacity: 0 }}
@@ -120,7 +120,7 @@ export const Dialog: React.FC<DialogProps> = ({
 						`}>
 						{/* Header */}
 						{(title || showCloseButton) && (
-							<div className="flex items-center justify-between p-6 border-b border-border">
+							<div className="flex justify-between items-center p-6 border-b border-border">
 								<div className="flex items-center space-x-3">
 									{IconComponent && (
 										<IconComponent
@@ -136,7 +136,7 @@ export const Dialog: React.FC<DialogProps> = ({
 								{showCloseButton && (
 									<button
 										onClick={onClose}
-										className="p-2 text-muted-foreground hover:text-foreground neu-raised rounded-lg transition-colors">
+										className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-foreground neu-raised">
 										<X className="w-5 h-5" />
 									</button>
 								)}
@@ -180,7 +180,7 @@ export const DialogDescription: React.FC<{
 	children: React.ReactNode;
 	className?: string;
 }> = ({ children, className = '' }) => (
-	<p className={`text-sm text-muted-foreground mt-2 ${className}`}>
+	<p className={`mt-2 text-sm text-muted-foreground ${className}`}>
 		{children}
 	</p>
 );

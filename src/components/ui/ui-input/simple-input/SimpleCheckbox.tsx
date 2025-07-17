@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Check, Minus } from 'lucide-react';
 
-interface FieldCheckboxProps {
+interface SimpleCheckboxProps {
 	label?: string;
 	checked?: boolean;
 	onChange?: (checked: boolean) => void;
@@ -12,7 +12,7 @@ interface FieldCheckboxProps {
 	className?: string;
 }
 
-export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
+export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
 	label,
 	checked = false,
 	onChange,
@@ -84,4 +84,4 @@ export const FieldCheckbox: React.FC<FieldCheckboxProps> = ({
 			</div>
 		</div>
 	);
-};
+}; 

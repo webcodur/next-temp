@@ -12,7 +12,8 @@ import React, { ReactNode, useState, useMemo } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useLocale } from '@/hooks/useI18n';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { Dialog, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { cn } from '@/lib/utils';
 
 // #region 타입 및 인터페이스
@@ -368,14 +369,21 @@ const SmartTable = <T extends Record<string, any>>({
 				</table>
 			</div>
 
-			<Modal
+			<Dialog
 				isOpen={modalContent !== null}
 				onClose={() => setModalContent(null)}
 				title="전체 내용"
 				size="md"
+				variant="info"
 			>
 				<p className="font-multilang whitespace-pre-wrap break-words">{modalContent}</p>
-			</Modal>
+				
+				<DialogFooter>
+					<Button onClick={() => setModalContent(null)} className="font-multilang">
+						확인
+					</Button>
+				</DialogFooter>
+			</Dialog>
 		</>
 	);
 	// #endregion
