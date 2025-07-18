@@ -29,6 +29,7 @@
 | [FacilityEditor](./ui-layout/facility-editor/facility-editor.md)    | 관리자용 시설 레이아웃 편집 도구입니다.                   |
 | [SeatReservation](./ui-layout/seat-reservation/seat-reservation.md) | 사용자 좌석 예약 인터페이스입니다.                        |
 | [GridForm](./ui-layout/grid-form/grid-form.md)                      | CSS Grid와 Flexbox를 계층적으로 조합한 폼 레이아웃 컴포넌트입니다. |
+| [SectionPanel](./ui-layout/section-panel/section-panel.md)           | 헤더와 콘텐츠 영역으로 구성된 섹션 패널 컨테이너입니다. |
 
 <!-- Theme Toggle 컴포넌트: UI 폴더에서 제거되었으며 개별 페이지/헤더에서 관리합니다. -->
 

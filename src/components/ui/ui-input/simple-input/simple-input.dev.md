@@ -1,6 +1,6 @@
 # 단순 입력(Simple Input) 기술 명세서
 
-이 문서는 `FieldCheckbox`, `FieldCheckboxGroup`, `FieldRadioGroup`, `FieldToggleButton`, `FieldToggleSwitch`, `FieldDropdown` 컴포넌트의 내부 아키텍처와 외부 라이브러리와의 연동 방식을 설명합니다.
+이 문서는 `FieldCheckbox`, `FieldCheckboxGroup`, `FieldRadioGroup`, `FieldToggleButton`, `FieldToggleSwitch`, `FieldDropdown`, `FieldTextInput` 컴포넌트의 내부 아키텍처와 외부 라이브러리와의 연동 방식을 설명합니다.
 
 ## 1. 공통 Field 아키텍처
 
@@ -20,6 +20,7 @@ graph TD
         D[FieldToggleButton]
         E[FieldToggleSwitch]
         F[FieldDropdown]
+        G[FieldTextInput]
     end
 
     A -- "확장(Extends)" --> F_Core
@@ -28,6 +29,7 @@ graph TD
     D -- "확장(Extends)" --> F_Core
     E -- "확장(Extends)" --> F_Core
     F -- "확장(Extends)" --> F_Core
+    G -- "확장(Extends)" --> F_Core
 
     subgraph "고유 로직"
         Logic_A["- Checkbox UI<br/>- checked/onChange"]
@@ -36,6 +38,7 @@ graph TD
         Logic_D["- Button UI<br/>- pressed/onChange"]
         Logic_E["- Switch UI<br/>- checked/onChange"]
         Logic_F["- Dropdown UI<br/>- 리스트 아이콘<br/>- value/onChange"]
+        Logic_G["- TextInput UI<br/>- 텍스트 아이콘<br/>- 포커스 상태 관리<br/>- value/onChange"]
     end
 
     A --> Logic_A
@@ -44,6 +47,7 @@ graph TD
     D --> Logic_D
     E --> Logic_E
     F --> Logic_F
+    G --> Logic_G
 
     style F_Core fill:#e3f2fd,stroke:#333
 ```
@@ -108,3 +112,4 @@ graph TD
 - **포커스 관리**: 키보드 탐색 시 포커스를 받으면 `focus-visible`과 함께 외곽선 스타일이 적용되어 접근성을 준수합니다.
 - **비활성화 상태**: `disabled` prop이 `true`일 경우, `opacity-60`와 `cursor-not-allowed` 클래스를 적용하여 사용자 입력을 막고 시각적으로 비활성화되었음을 표시합니다.
 - **드롭다운 특화**: `FieldDropdown`은 리스트 아이콘과 화살표 아이콘을 포함하여 명확한 UX를 제공하며, 외부 클릭 감지로 자동 닫힘 기능을 구현합니다.
+- **텍스트 입력 특화**: `FieldTextInput`은 텍스트 아이콘을 포함하며, 포커스 상태에 따른 시각적 피드백을 제공하고 다양한 입력 타입을 지원합니다.

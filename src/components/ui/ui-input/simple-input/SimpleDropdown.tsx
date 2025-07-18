@@ -30,7 +30,6 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-
 	const selectedOption = options.find(option => option.value === value);
 
 	// 외부 클릭 시 드롭다운 닫기
@@ -40,12 +39,12 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				setIsOpen(false);
 			}
 		};
-
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
+
 
 	const handleToggle = () => {
 		if (disabled) return;
@@ -60,7 +59,6 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (disabled) return;
-
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
 			setIsOpen(!isOpen);
@@ -91,7 +89,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 
 	return (
 		<div className={`relative ${className}`} ref={dropdownRef}>
-			<div className="flex justify-between items-center h-6">
+			<div className="flex justify-between items-center">
 				{label && (
 					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
@@ -99,33 +97,32 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				)}
 			</div>
 
-			<div
-				className={`relative flex items-center h-8 px-3 border rounded-xl transition-all duration-200 focus-within:neu-inset ${
-					isOpen
-						? 'neu-inset border-primary/30 shadow-inner'
-						: 'neu-raised border-border shadow-md hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-				onClick={handleToggle}
-				onKeyDown={handleKeyDown}
-				tabIndex={disabled ? -1 : 0}
-				role="combobox"
-				aria-expanded={isOpen}
-				aria-haspopup="listbox">
+			<div className="relative">
+				<input
+					type="text"
+					className={`w-full h-8 pl-10 pr-10 text-sm font-medium border rounded-lg bg-background ${
+						isOpen
+							? 'shadow-inner neu-inset border-primary/30'
+							: 'shadow-md neu-flat border-border hover:shadow-lg'
+					} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'} 
+					${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}
+					value={selectedOption ? selectedOption.label : ''}
+					placeholder={!selectedOption ? placeholder : ''}
+					readOnly
+					onClick={handleToggle}
+					onKeyDown={handleKeyDown}
+					tabIndex={disabled ? -1 : 0}
+					role="combobox"
+					aria-expanded={isOpen}
+					aria-haspopup="listbox"
+					aria-controls={isOpen ? 'dropdown-listbox' : undefined}
+				/>
 				
 				{/* 왼쪽 리스트 아이콘 */}
-				<List className="w-4 h-4 text-muted-foreground mr-3 flex-shrink-0" />
-
-				{/* 중앙 컨텐츠 */}
-				<div className="flex-1 text-sm font-medium">
-					{selectedOption ? (
-						<span className="text-foreground">{selectedOption.label}</span>
-					) : (
-						<span className="text-muted-foreground">{placeholder}</span>
-					)}
-				</div>
+				<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 
 				{/* 우측 화살표 아이콘 */}
-				<div className="ml-3 flex-shrink-0">
+				<div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
 					{isOpen ? (
 						<ChevronUp className="w-4 h-4 text-muted-foreground" />
 					) : (
@@ -136,21 +133,29 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 
 			{/* 드롭다운 메뉴 */}
 			{isOpen && (
-				<div className="absolute top-full left-0 right-0 mt-1 z-50 neu-flat border border-border rounded-xl shadow-lg bg-background">
-					<ul role="listbox" className="py-1 max-h-60 overflow-auto">
+				<div 
+					className="absolute right-0 left-0 top-full z-50 mt-1 rounded-lg border shadow-lg border-border bg-background"
+				>
+					<ul id="dropdown-listbox" role="listbox" className="overflow-auto py-1 max-h-60">
 						{options.map((option) => (
 							<li
 								key={option.value}
-								className={`px-3 py-2 text-sm cursor-pointer transition-colors duration-200 ${
+								className={`px-3 py-2 text-sm cursor-pointer ${
 									option.disabled
 										? 'opacity-50 cursor-not-allowed'
-										: 'hover:bg-muted hover:neu-flat'
+										: 'hover:bg-muted'
 								} ${
 									option.value === value
 										? 'bg-primary/10 text-primary font-medium'
 										: 'text-foreground'
 								}`}
-								onClick={() => !option.disabled && handleSelect(option.value)}
+								style={{ transition: 'none' }}
+								onClick={(e) => {
+									e.stopPropagation();
+									if (!option.disabled) {
+										handleSelect(option.value);
+									}
+								}}
 								role="option"
 								aria-selected={option.value === value}
 								aria-disabled={option.disabled}>

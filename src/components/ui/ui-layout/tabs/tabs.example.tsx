@@ -52,8 +52,6 @@ const TabsExample: React.FC = () => {
 					tabs={tabList} 
 					activeId={activeTab}
 					onTabChange={setActiveTab}
-					align="center"
-					size="md"
 					className="p-6"
 				/>
 

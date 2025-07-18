@@ -19,7 +19,7 @@ import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
 // components
 import Login from '@/components/view/login/Login';
-import PageHeader from '@/components/layout/PageHeader';
+import PageWrapper from '@/components/layout/PageWrapper';
 import Header from '@/components/layout/header/Header';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel';
@@ -164,10 +164,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 					<main className="overflow-y-auto flex-1 p-6 scrollbar-gutter-stable">
 						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-surface-1 neu-flat">
-							<div className="mb-3">
-								<PageHeader />
-							</div>
-                {children}
+							<PageWrapper>
+								{children}
+							</PageWrapper>
 						</div>  
 					</main>
 				</div>

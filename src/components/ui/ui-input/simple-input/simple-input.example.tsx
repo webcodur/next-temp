@@ -7,6 +7,7 @@ import { SimpleToggleButton } from './SimpleToggleButton';
 import { SimpleToggleSwitch } from './SimpleToggleSwitch';
 import { SimpleRadioGroup } from './SimpleRadioGroup';
 import { SimpleDropdown } from './SimpleDropdown';
+import { SimpleTextInput } from './SimpleTextInput';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function SimpleInputExample() {
@@ -25,6 +26,8 @@ export default function SimpleInputExample() {
 	const [radioValue, setRadioValue] = useState('design');
 	const [checkboxGroupValue, setCheckboxGroupValue] = useState(['notifications']);
 	const [dropdownValue, setDropdownValue] = useState('');
+	const [textValue, setTextValue] = useState('');
+	const [emailValue, setEmailValue] = useState('');
 
 	const checkboxOptions = [
 		{ key: 'notifications', label: t('간단입력_알림받기') },
@@ -224,6 +227,34 @@ export default function SimpleInputExample() {
 							options={dropdownOptions.slice(0, 3)}
 							value={dropdownValue}
 							onChange={setDropdownValue}
+							disabled={true}
+						/>
+					</div>
+				</div>
+
+				{/* 텍스트 입력 */}
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold font-multilang">텍스트 입력</h2>
+					<div className="space-y-6">
+						<SimpleTextInput
+							label="기본 텍스트 입력"
+							value={textValue}
+							onChange={setTextValue}
+							placeholder="텍스트를 입력하세요"
+						/>
+
+						<SimpleTextInput
+							label="이메일 입력"
+							type="email"
+							value={emailValue}
+							onChange={setEmailValue}
+							placeholder="이메일을 입력하세요"
+						/>
+
+						<SimpleTextInput
+							label="비활성화된 입력"
+							value="수정할 수 없음"
+							onChange={setTextValue}
 							disabled={true}
 						/>
 					</div>

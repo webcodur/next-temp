@@ -5,7 +5,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScroll';
 import {
 	SmartTable,
 	SmartTableColumn,
@@ -34,6 +33,8 @@ interface InfiniteSmartTableProps<T> {
 	loadingRows?: number;
 	/* IntersectionObserver threshold */
 	threshold?: number;
+	/* 행 클릭 시 호출되는 콜백 */
+	onRowClick?: (item: T, index: number) => void;
 }
 // #endregion
 
@@ -44,52 +45,20 @@ const InfiniteSmartTable = <T extends Record<string, any>>({
 	loadMore,
 	hasMore,
 	isFetching = false,
-	threshold,
+	threshold = 0.1,
 	...tableProps
 }: InfiniteSmartTableProps<T>) => {
-	// 데이터 상태 구분
-	const isInitialLoading = data === null;
-	const isEmpty = data !== null && data.length === 0;
-	const hasData = data !== null && data.length > 0;
-	const isLoadingMore = isFetching && hasData;
-	
-	// 초기 로딩 상태 - 스켈레톤 표시
-	if (isInitialLoading) {
-		return (
-			<SmartTable
-				data={null} // SmartTable이 스켈레톤을 표시하도록
-				columns={columns}
-				{...tableProps}
-			/>
-		);
-	}
-	
-	// 빈 데이터 상태 - 빈 메시지 표시
-	if (isEmpty) {
-		return (
-			<SmartTable
-				data={[]} // 빈 배열 전달하여 emptyMessage 표시
-				columns={columns}
-				{...tableProps}
-			/>
-		);
-	}
-	
-	// 데이터가 있는 상태 - 무한 스크롤 적용
+	// SmartTable의 내장 무한 스크롤 기능을 사용
 	return (
-		<InfiniteScroll
+		<SmartTable
+			data={data}
+			columns={columns}
+			isLoadingMore={isFetching}
 			loadMore={loadMore}
 			hasMore={hasMore}
-			isLoading={isLoadingMore}
 			threshold={threshold}
-		>
-			<SmartTable
-				data={data}
-				columns={columns}
-				isLoadingMore={isLoadingMore}
-				{...tableProps}
-			/>
-		</InfiniteScroll>
+			{...tableProps}
+		/>
 	);
 };
 // #endregion

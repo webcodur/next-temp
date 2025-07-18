@@ -28,7 +28,6 @@
 - rgba() 투명도로 자연스러운 그림자 블렌딩
 
 ⚡ 성능 최적화
-- transition: 0.15s ease-out (즉각적 반응)
 - CSS 변수 기반 테마 전환
 - 최소한의 그림자 레이어로 렌더링 최적화
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -53,7 +52,6 @@
 .field-dropdown-scroll::-webkit-scrollbar-thumb {
 	background: hsl(var(--border)); /* 테마 변수 사용 */
 	border-radius: 3px;
-	transition: background-color 0.15s ease-out; /* 테슬라 스타일 전환 */
 }
 
 .field-dropdown-scroll::-webkit-scrollbar-thumb:hover {

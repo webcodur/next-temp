@@ -155,44 +155,30 @@ export default function Home() {
 				tabs={tabs}
 				activeId={activeTab}
 				onTabChange={setActiveTab}
-				align="start"
-				size="md"
 			/>
 
 			{activeTab === 'vehicles' && (
-				<div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+				<div className="flex flex-col gap-4 min-h-0 lg:flex-row lg:items-start">
 					{/* 차량 상세정보 패널 */}
-					<div className="flex flex-col w-full h-full lg:max-w-sm xl:max-w-md shrink-0 neu-flat bg-surface-2">
-						<div className="flex gap-2 justify-center items-center p-2 rounded-t-lg">
-							<h2 className="text-lg font-semibold text-foreground">
-								{t('주차_카드_차량정보')}
-							</h2>
-						</div>
-						<VehicleDetailCard vehicle={selectedVehicle} showTitle={false} />
+					<div className="w-full lg:max-w-sm xl:max-w-md shrink-0">
+						<VehicleDetailCard vehicle={selectedVehicle} showTitle={true} />
 					</div>
 
 					{/* 차량 목록 테이블 */}
-					<div className="flex flex-col flex-1 w-full h-full neu-flat bg-surface-2">
-						<div className="flex gap-2 justify-center items-center p-2 rounded-t-lg">
-							<h2 className="text-lg font-semibold text-foreground">
-								{t('주차_테이블_제목_금일입출차현황')}
-							</h2>
-						</div>
-						<div className="overflow-y-auto flex-1">
-							<VehicleListTable
-								vehicles={vehicles}
-								filters={filters}
-								selectedVehicle={selectedVehicle}
-								onVehicleSelect={handleVehicleSelect}
-								onLoadMore={handleLoadMore}
-								hasMore={hasMore}
-								isLoading={isLoading}
-								onFiltersChange={handleFiltersChange}
-								onSearch={handleSearch}
-								size="lg"
-								showTitle={false}
-							/>
-						</div>
+					<div className="overflow-hidden flex-1 w-full min-w-0">
+						<VehicleListTable
+							vehicles={vehicles}
+							filters={filters}
+							selectedVehicle={selectedVehicle}
+							onVehicleSelect={handleVehicleSelect}
+							onLoadMore={handleLoadMore}
+							hasMore={hasMore}
+							isLoading={isLoading}
+							onFiltersChange={handleFiltersChange}
+							onSearch={handleSearch}
+							size="lg"
+							showTitle={true}
+						/>
 					</div>
 				</div>
 			)}

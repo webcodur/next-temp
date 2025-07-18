@@ -7,7 +7,7 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useState, useMemo } from 'react';
+import React, { ReactNode, useState, useMemo, useRef, useCallback } from 'react';
 
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
@@ -49,6 +49,12 @@ interface SmartTableProps<T> {
 	isLoadingMore?: boolean;
 	/** 행 클릭 시 호출되는 콜백 */
 	onRowClick?: (item: T, index: number) => void;
+	/** 무한 스크롤 - 추가 데이터 로드 함수 */
+	loadMore?: () => void;
+	/** 무한 스크롤 - 더 로드할 데이터가 있는지 여부 */
+	hasMore?: boolean;
+	/** 무한 스크롤 - IntersectionObserver threshold */
+	threshold?: number;
 }
 // #endregion
 
@@ -63,11 +69,34 @@ const SmartTable = <T extends Record<string, any>>({
 	loadingRows = 5,
 	isLoadingMore = false,
 	onRowClick,
+	loadMore,
+	hasMore = false,
+	threshold = 0.1,
 }: SmartTableProps<T>) => {
 	// #region 상태
 	const { isRTL } = useLocale();
 	const [sortState, setSortState] = useState<SortState>({ key: '', direction: null });
 	const [modalContent, setModalContent] = useState<string | null>(null);
+	
+	// 무한 스크롤을 위한 IntersectionObserver 설정
+	const observer = useRef<IntersectionObserver | null>(null);
+	const sentinelRef = useCallback(
+		(node: HTMLDivElement | null) => {
+			if (isLoadingMore || !loadMore) return;
+			observer.current?.disconnect();
+			if (!node) return;
+			observer.current = new IntersectionObserver(
+				([entry]) => {
+					if (entry.isIntersecting && hasMore) {
+						loadMore();
+					}
+				},
+				{ threshold }
+			);
+			observer.current.observe(node);
+		},
+		[isLoadingMore, hasMore, loadMore, threshold]
+	);
 	// #endregion
 
 	// #region 유틸리티 함수
@@ -138,12 +167,12 @@ const SmartTable = <T extends Record<string, any>>({
 		if (!isLoadingMore) return null;
 		
 		return (
-			<tr key="loading-more" className="bg-surface-1 border-t border-primary-4/30">
+			<tr key="loading-more" className="border-t bg-surface-1 border-primary-4/30">
 				<td 
 					colSpan={columns.length}
 					className="px-6 py-4 text-center text-muted-foreground"
 				>
-					<div className="flex gap-2 items-center justify-center">
+					<div className="flex gap-2 justify-center items-center">
 						<div className="w-4 h-4 rounded-full border-2 animate-spin border-border border-t-primary"></div>
 						<span className="text-sm">데이터 로딩 중...</span>
 					</div>
@@ -166,8 +195,6 @@ const SmartTable = <T extends Record<string, any>>({
 							px-6 py-4 
 							${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 							${cellClassName}
-							${index === pageSize - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
-							${index === pageSize - 1 && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
 						`}
 					>
 						<div className="h-5" />
@@ -231,13 +258,14 @@ const SmartTable = <T extends Record<string, any>>({
 					className,
 				)}
 			>
-				<table
-					className="w-full overflow-hidden rounded-lg bg-background"
-					style={{ tableLayout: 'fixed' }}
-				>
-					{/* 테이블 헤더 */}
+				{/* 헤더 테이블 - 고정 */}
+				<div className="scrollbar-gutter-stable">
+					<table
+						className="overflow-hidden w-full rounded-t-lg bg-background"
+						style={{ tableLayout: 'fixed' }}
+					>
 					<thead
-						className={`sticky top-0 z-10 border-b bg-surface-2 border-primary-4/30 ${headerClassName}`}
+						className={`border-b bg-surface-2 border-primary-4/30 ${headerClassName}`}
 					>
 						<tr>
 							{columns.map((column, colIndex) => {
@@ -295,78 +323,134 @@ const SmartTable = <T extends Record<string, any>>({
 							})}
 						</tr>
 					</thead>
+				</table>
+				</div>
 
-					{/* 테이블 바디 */}
-					<tbody className="divide-y bg-background divide-border">
-						{isInitialLoading ? (
-							createLoadingRows()
-						) : actualData.length === 0 ? (
-							createEmptyRows()
-						) : (
-							<>
-								{actualData.map((item, index) => (
-									<tr
-										key={index}
-										onClick={() => onRowClick?.(item, index)}
-										className={`
-											${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
-											hover:bg-primary-2/[0.6]
-											${onRowClick ? 'cursor-pointer' : ''}
-											${getRowClassName(item, index)}
-										`}
+				{/* 바디 테이블 - 스크롤 가능 */}
+				<div className="overflow-auto scrollbar-gutter-stable">
+					<table
+						className="overflow-hidden w-full rounded-b-lg bg-background"
+						style={{ tableLayout: 'fixed', borderSpacing: 0, borderCollapse: 'separate' }}
+					>
+						{/* 투명한 헤더로 컬럼 너비 유지 */}
+						<thead className="opacity-0 pointer-events-none" style={{ height: 0, overflow: 'hidden' }}>
+							<tr style={{ height: 0 }}>
+								{columns.map((column, colIndex) => (
+									<th
+										key={`invisible-${colIndex}`}
+										className="relative px-2 py-0"
+										style={{ 
+											width: column.width,
+											height: 0,
+											overflow: 'hidden'
+										}}
 									>
-										{columns.map((column, colIndex) => (
-											<td
-												key={`${index}-${column.key ? String(column.key) : colIndex}`}
-												className={`
-													px-6 py-4 text-sm text-foreground
-													${getAlignmentClass(column.align)}
-													${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
-													${column.cellClassName || cellClassName}
-													${index === actualData.length - 1 && !isLoadingMore && colIndex === 0 ? 'rounded-bl-lg' : ''}
-													${index === actualData.length - 1 && !isLoadingMore && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
-												`}
-											>
-												{(() => {
-													const rawValue =
-														column.key && item[column.key as keyof T]
-															? String(item[column.key as keyof T])
-															: null;
-
-													const content = (() => {
-														if (column.cell) return column.cell(item, index);
-														if (column.render && column.key && column.key in item)
-															return column.render(item[column.key as keyof T], item, index);
-														if (rawValue !== null) return rawValue;
-														return '';
-													})();
-
-													return (
-														<div
-															className="truncate"
-															title={rawValue ?? ''}
-															onClick={(e) => {
-																if (
-																	rawValue &&
-																	e.currentTarget.scrollWidth > e.currentTarget.clientWidth
-																) {
-																	setModalContent(rawValue);
-																}
-															}}
-														>
-															{content}
-														</div>
-													);
-												})()}
-											</td>
-										))}
-									</tr>
+										<span className="block text-base font-multilang" style={{ position: 'absolute', top: '-9999px' }}>
+											{column.header}
+										</span>
+									</th>
 								))}
+							</tr>
+						</thead>
+
+						{/* 테이블 바디 */}
+						<tbody className="divide-y bg-background divide-border">
+							{isInitialLoading ? (
+								createLoadingRows()
+							) : actualData.length === 0 ? (
+								createEmptyRows()
+							) : (
+								<>
+									{actualData.map((item, index) => (
+										<tr
+											key={index}
+											onClick={() => onRowClick?.(item, index)}
+											className={`
+												${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
+												hover:bg-primary-2/[0.6]
+												${onRowClick ? 'cursor-pointer' : ''}
+												${getRowClassName(item, index)}
+											`}
+										>
+											{columns.map((column, colIndex) => (
+												<td
+													key={`${index}-${column.key ? String(column.key) : colIndex}`}
+													className={`
+														px-6 py-4 text-sm text-foreground
+														${getAlignmentClass(column.align)}
+														${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+														${column.cellClassName || cellClassName}
+														${index === actualData.length - 1 && !isLoadingMore && colIndex === 0 ? 'rounded-bl-lg' : ''}
+														${index === actualData.length - 1 && !isLoadingMore && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
+													`}
+												>
+													{(() => {
+														const rawValue =
+															column.key && item[column.key as keyof T]
+																? String(item[column.key as keyof T])
+																: null;
+
+														const content = (() => {
+															if (column.cell) return column.cell(item, index);
+															if (column.render && column.key && column.key in item)
+																return column.render(item[column.key as keyof T], item, index);
+															if (rawValue !== null) return rawValue;
+															return '';
+														})();
+
+														return (
+															<div
+																className="truncate"
+																title={rawValue ?? ''}
+																onClick={(e) => {
+																	if (
+																		rawValue &&
+																		e.currentTarget.scrollWidth > e.currentTarget.clientWidth
+																	) {
+																		setModalContent(rawValue);
+																	}
+																}}
+															>
+																{content}
+															</div>
+														);
+													})()}
+												</td>
+											))}
+										</tr>
+																	))}
 								{createLoadingMoreRow()}
+								
+								{/* 무한 스크롤 sentinel 및 상태 */}
+								{loadMore && hasMore && (
+									<tr>
+										<td 
+											colSpan={columns.length}
+											className="p-0"
+										>
+											<div
+												ref={sentinelRef}
+												className="w-full h-1 opacity-0 pointer-events-none"
+												aria-hidden="true"
+											/>
+										</td>
+									</tr>
+								)}
+								{loadMore && !hasMore && !isInitialLoading && actualData.length > 0 && (
+									<tr>
+										<td 
+											colSpan={columns.length}
+											className="px-6 py-3 text-xs text-center border-t text-muted-foreground/70 border-primary-4/30"
+										>
+											모든 데이터를 불러왔습니다
+										</td>
+									</tr>
+								)}
 							</>
 						)}
 					</tbody>
-				</table>
+					</table>
+				</div>
 			</div>
 
 			<Dialog
@@ -376,7 +460,7 @@ const SmartTable = <T extends Record<string, any>>({
 				size="md"
 				variant="info"
 			>
-				<p className="font-multilang whitespace-pre-wrap break-words">{modalContent}</p>
+				<p className="whitespace-pre-wrap break-words font-multilang">{modalContent}</p>
 				
 				<DialogFooter>
 					<Button onClick={() => setModalContent(null)} className="font-multilang">

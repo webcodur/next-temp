@@ -1,10 +1,10 @@
 import React from 'react';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { InfiniteSmartTable } from '@/components/ui/ui-data/infiniteSmartTable/InfiniteSmartTable';
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
-import { SmartTable } from '@/components/ui/ui-data/smartTable/SmartTable';
 import type { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 
 // #region Types & Constants
@@ -25,25 +25,27 @@ interface VehicleListTableProps {
 }
 
 const SIZE_CLASSES = {
-	sm: { headerText: 'text-xs', rowText: 'text-xs', rowPadding: 'py-2' },
-	md: { headerText: 'text-sm', rowText: 'text-sm', rowPadding: 'py-2.5' },
-	lg: { headerText: 'text-base', rowText: 'text-base', rowPadding: 'py-3' },
+	sm: { headerText: 'text-xs', rowText: 'text-xs', rowPadding: 'py-1 px-2' },
+	md: { headerText: 'text-sm', rowText: 'text-sm', rowPadding: 'py-2 px-3' },
+	lg: { headerText: 'text-base', rowText: 'text-base', rowPadding: 'py-2 px-4' },
 } as const;
 // #endregion
 
 // #region Utilities
 const formatDateTime = (dateStr: string) => {
 	const dateObj = new Date(dateStr);
-	if (isNaN(dateObj.getTime())) return dateStr;
 	
-	const yy = String(dateObj.getFullYear()).slice(2);
-	const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-	const dd = String(dateObj.getDate()).padStart(2, '0');
-	const HH = String(dateObj.getHours()).padStart(2, '0');
-	const ii = String(dateObj.getMinutes()).padStart(2, '0');
-	const ss = String(dateObj.getSeconds()).padStart(2, '0');
+	// 유효하지 않은 날짜는 현재 시간으로 대체
+	const validDate = isNaN(dateObj.getTime()) ? new Date() : dateObj;
 	
-	return { date: `${yy}-${mm}-${dd}`, time: `${HH}-${ii}-${ss}` };
+	const yy = String(validDate.getFullYear()).slice(2);
+	const mm = String(validDate.getMonth() + 1).padStart(2, '0');
+	const dd = String(validDate.getDate()).padStart(2, '0');
+	const HH = String(validDate.getHours()).padStart(2, '0');
+	const ii = String(validDate.getMinutes()).padStart(2, '0');
+	const ss = String(validDate.getSeconds()).padStart(2, '0');
+	
+	return { date: `${yy}-${mm}-${dd}`, time: `${HH}:${ii}:${ss}` };
 };
 
 const filterVehicles = (vehicles: VehicleEntry[], filters: SearchFilters): VehicleEntry[] => {
@@ -58,104 +60,109 @@ const filterVehicles = (vehicles: VehicleEntry[], filters: SearchFilters): Vehic
 // #endregion
 
 // #region Table Columns
-const createColumns = (t: ReturnType<typeof useTranslations>, filteredVehicles: VehicleEntry[]): SmartTableColumn<VehicleEntry>[] => [
-	{
-		header: t('주차_테이블_헤더_순번'),
-		width: '64px',
-		align: 'start',
-		sortable: false,
-		cell: (_item, index) => (
-			<span>
-				{(filteredVehicles.length - index)
-					.toString()
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-			</span>
-		),
-	},
-	{
-		key: 'type',
-		header: t('주차_테이블_헤더_차량구분'),
-		width: '120px',
-		align: 'start',
-		cell: (vehicle) => (
-			<div>
-				<div className="font-medium text-foreground">
-					{parseCarAllowType(vehicle.type)}
-					{vehicle.modify_car_type && (
-						<span className="ms-1 text-warning">
-							→{parseCarAllowType(vehicle.modify_car_type)}
-						</span>
+const createColumns = (
+	t: ReturnType<typeof useTranslations>, 
+	filteredVehicles: VehicleEntry[]
+): SmartTableColumn<VehicleEntry>[] => {
+	return [
+		{
+			header: t('주차_테이블_헤더_순번'),
+			width: '4rem', // 최소 너비만 지정
+			align: 'center',
+			sortable: false,
+			cell: (_item, index) => (
+				<div className="font-mono text-base text-center">
+					{(filteredVehicles.length - index)
+						.toString()
+						.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+				</div>
+			),
+		},
+		{
+			key: 'type',
+			header: t('주차_테이블_헤더_차량구분'),
+			width: '8rem',
+			align: 'start',
+			cell: (vehicle) => (
+				<div className="space-y-1">
+					<div className="text-base font-medium leading-tight text-foreground">
+						{parseCarAllowType(vehicle.type)}
+						{vehicle.modify_car_type && (
+							<span className="ml-1 text-sm text-warning">
+								→{parseCarAllowType(vehicle.modify_car_type)}
+							</span>
+						)}
+					</div>
+					{(vehicle.address_1depth || vehicle.address_2depth) && (
+						<div className="text-sm leading-tight text-muted-foreground">
+							{vehicle.address_1depth} {vehicle.address_2depth}
+						</div>
 					)}
 				</div>
-				{(vehicle.address_1depth || vehicle.address_2depth) && (
-					<div className="text-xs text-muted-foreground">
-						{vehicle.address_1depth} {vehicle.address_2depth}
-					</div>
-				)}
-			</div>
-		),
-	},
-	{
-		key: 'car_number',
-		header: t('주차_테이블_헤더_차량번호'),
-		width: '140px',
-		align: 'start',
-		cell: (vehicle) => (
-			<div className="flex flex-col gap-1">
-				<div className="text-sm font-bold font-multilang">
-					{vehicle.car_number}
-				</div>
-				{vehicle.modify_car_number && (
-					<div className="flex gap-1 items-center">
-						<span className="text-xs text-warning">→</span>
-						<div className="text-sm font-bold font-multilang text-warning">
-							{vehicle.modify_car_number}
-						</div>
-					</div>
-				)}
-			</div>
-		),
-	},
-	{
-		key: 'status',
-		header: t('주차_테이블_헤더_입출차'),
-		width: '96px',
-		align: 'start',
-		cell: (vehicle) => (
-			<div>
-				<span
-					className={`inline-flex px-1 py-0.5 rounded text-xs font-medium ${
-						vehicle.status === 1
-							? 'bg-primary/10 text-primary'
-							: 'bg-success/10 text-success'
-					}`}
-				>
-					{vehicle.status === 1 ? t('주차_상태_입차') : t('주차_상태_출차')}
-				</span>
-				{vehicle.device_name && (
-					<div className="text-xs text-muted-foreground">{vehicle.device_name}</div>
-				)}
-			</div>
-		),
-	},
-	{
-		key: 'use_time',
-		header: t('주차_테이블_헤더_이용시간'),
-		width: '160px',
-		align: 'start',
-		cell: (vehicle) => {
-			const formatted = formatDateTime(vehicle.use_time);
-			return typeof formatted === 'string' ? (
-				<span>{formatted}</span>
-			) : (
-				<div className="flex flex-col">
-					<span>{formatted.date}</span>
-					<span>{formatted.time}</span>
-				</div>
-			);
+			),
 		},
-	},
-];
+		{
+			key: 'car_number',
+			header: t('주차_테이블_헤더_차량번호'),
+			width: '7rem',
+			align: 'start',
+			cell: (vehicle) => (
+				<div className="space-y-1">
+					<div className="text-base font-bold leading-tight font-multilang">
+						{vehicle.car_number}
+					</div>
+					{vehicle.modify_car_number && (
+						<div className="flex gap-1 items-center">
+							<span className="text-sm text-warning">→</span>
+							<div className="text-base font-bold leading-tight font-multilang text-warning">
+								{vehicle.modify_car_number}
+							</div>
+						</div>
+					)}
+				</div>
+			),
+		},
+		{
+			key: 'status',
+			header: t('주차_테이블_헤더_입출차'),
+			width: '5rem',
+			align: 'center',
+			cell: (vehicle) => (
+				<div className="space-y-1">
+					<span
+						className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
+							vehicle.status === 1
+								? 'bg-primary/10 text-primary'
+								: 'bg-success/10 text-success'
+						}`}
+					>
+						{vehicle.status === 1 ? t('주차_상태_입차') : t('주차_상태_출차')}
+					</span>
+					{vehicle.device_name && (
+						<div className="text-sm leading-tight text-muted-foreground">
+							{vehicle.device_name}
+						</div>
+					)}
+				</div>
+			),
+		},
+		{
+			key: 'use_time',
+			header: t('주차_테이블_헤더_이용시간'),
+			width: '7rem',
+			align: 'center',
+			cell: (vehicle) => {
+				const formatted = formatDateTime(vehicle.use_time);
+				return (
+					<div className="font-mono text-base whitespace-normal">
+						<div className="block mb-1">{formatted.date}</div>
+						<div className="block text-sm">{formatted.time}</div>
+					</div>
+				);
+			},
+		},
+	];
+};
 // #endregion
 
 // #region Main Component
@@ -191,26 +198,28 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 			columns,
 			rowClassName: getRowClassName,
 			onRowClick: onVehicleSelect,
+			loadMore: onLoadMore,
+			hasMore: hasMore,
+			isFetching: isLoading,
+			threshold: 0.8,
 		};
 
-		return filteredVehicles.length === 0 ? (
-			<SmartTable data={[]} {...tableProps} />
-		) : (
+		return (
 			<InfiniteSmartTable
 				data={filteredVehicles}
-				loadMore={onLoadMore}
-				hasMore={hasMore}
-				isFetching={isLoading}
-				threshold={0.8}
 				{...tableProps}
 			/>
 		);
 	};
 
-	return (
-		<div className="flex flex-col p-6 h-full rounded-xl">
+    return (
+		<SectionPanel 
+			title={t('주차_테이블_제목_금일입출차현황')}
+			className="w-full h-full"
+			contentClassName="flex flex-col min-h-0 overflow-hidden"
+		>
 			{/* 검색 필터 */}
-			<div className="mb-3">
+			<div className="">
 				<VehicleSearchFilter
 					filters={filters}
 					onFiltersChange={onFiltersChange}
@@ -218,18 +227,18 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 				/>
 			</div>
 
-			{/* 테이블 영역 */}
-			<div
-				className="rounded-lg border bg-background"
-				style={{ height: '500px', maxHeight: '500px', minHeight: '500px' }}
-			>
-				<div className="flex overflow-hidden flex-col h-full">
-					<div className="overflow-y-auto flex-1">
+			{/* 테이블 영역 - 최대 높이 제한 및 스크롤 처리 */}
+			<div className="flex-shrink-0 p-4 pt-0">
+				<div 
+					className="overflow-hidden rounded-lg border bg-background"
+					style={{ height: '60vh', maxHeight: '600px', minHeight: '400px' }}
+				>
+					<div className="overflow-y-auto h-full">
 						{renderTable()}
 					</div>
 				</div>
 			</div>
-		</div>
+		</SectionPanel>
 	);
 };
 // #endregion

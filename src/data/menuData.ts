@@ -236,6 +236,10 @@ export const menuData: MenuData = {
 						key: 'GridForm',
 						href: '/lab/ui-layout/grid-form',
 					},
+					{
+						key: '섹션패널',
+						href: '/lab/ui-layout/section-panel',
+					},
 				],
 			},
 			UI입력: {

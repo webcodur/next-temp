@@ -14,8 +14,6 @@ export interface TabsProps {
 	tabs: Tab[];
 	activeId: string;
 	onTabChange: (id: string) => void;
-	align?: 'start' | 'center' | 'end';
-	size?: 'sm' | 'md' | 'lg';
 }
 // #endregion
 
@@ -29,39 +27,24 @@ const Tabs = React.forwardRef<
 			tabs,
 			activeId,
 			onTabChange,
-			align = 'start',
-			size = 'md',
 			className,
 			...props
 		},
 		ref,
 	) => {
-		const alignClasses = {
-			start: 'justify-start',
-			center: 'justify-center',
-			end: 'justify-end',
-		};
-
-		const sizeClasses = {
-			sm: 'text-xs py-1',
-			md: 'text-sm py-2',
-			lg: 'text-base py-2',
-		};
-
 		return (
 			<div
 				ref={ref}
-				className={cn('relative p-2 rounded-xl neu-elevated', className)}
+				className={cn('relative rounded-xl neu-elevated', className)}
 				{...props}
 			>
-				<div className={cn('flex relative z-10', alignClasses[align])}>
+				<div className="flex relative z-10 gap-3 justify-center px-3 py-3">
 					{tabs.map(tab => (
 						<button
 							key={tab.id}
 							onClick={() => onTabChange(tab.id)}
 							className={cn(
-								'relative px-3 mx-1 rounded-lg font-medium transition-all duration-200 flex items-center justify-center',
-								sizeClasses[size],
+								'relative flex-1 px-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center text-base py-2 border-b-2 ',
 								activeId === tab.id
 									? 'text-primary neu-inset'
 									: 'text-muted-foreground hover:text-primary neu-raised',

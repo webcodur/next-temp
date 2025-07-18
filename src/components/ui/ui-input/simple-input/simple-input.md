@@ -1,6 +1,6 @@
 # 단순 입력(Simple Input) 컴포넌트 모음
 
-이 문서는 사용자의 입력을 받는 기본적인 UI 컴포넌트 여섯 가지(`Checkbox`, `CheckboxGroup`, `RadioGroup`, `ToggleButton`, `ToggleSwitch`, `Dropdown`)의 기능과 사용법을 설명합니다.
+이 문서는 사용자의 입력을 받는 기본적인 UI 컴포넌트 일곱 가지(`Checkbox`, `CheckboxGroup`, `RadioGroup`, `ToggleButton`, `ToggleSwitch`, `Dropdown`, `TextInput`)의 기능과 사용법을 설명합니다.
 
 ## 1. 컴포넌트 종류 및 핵심 기능
 
@@ -15,6 +15,7 @@ graph TD
         D[FieldToggleButton<br/>(토글 버튼)]
         E[FieldToggleSwitch<br/>(토글 스위치)]
         F[FieldDropdown<br/>(드롭다운)]
+        G[FieldTextInput<br/>(텍스트 입력)]
     end
 
     subgraph "핵심 기능"
@@ -24,6 +25,7 @@ graph TD
         Func_D["- 두 가지 상태 전환<br/>- 아이콘/텍스트 기반"]
         Func_E["- On/Off 상태 전환<br/>- 시각적인 스위치 형태"]
         Func_F["- 여러 옵션 중 선택<br/>- 리스트 아이콘 포함<br/>- 드롭다운 메뉴"]
+        Func_G["- 텍스트 입력<br/>- 다양한 입력 타입 지원<br/>- 포커스 상태 관리"]
     end
 
     A --> Func_A
@@ -32,6 +34,7 @@ graph TD
     D --> Func_D
     E --> Func_E
     F --> Func_F
+    G --> Func_G
 ```
 
 ---
@@ -108,9 +111,25 @@ graph TD
 | `onChange`    | 값 변경 시 호출되는 함수            | `(value) => {}`                   |
 | `placeholder` | 선택되지 않은 상태의 표시 텍스트    | "선택하세요"                      |
 
-## 8. 사용 시나리오
+---
+
+## 8. FieldTextInput
+
+사용자가 텍스트를 직접 입력할 수 있는 입력 필드입니다. 다양한 입력 타입을 지원하며 포커스 상태에 따른 시각적 피드백을 제공합니다.
+
+| Prop          | 설명                                | 예시                              |
+| :------------ | :---------------------------------- | :-------------------------------- |
+| `value`       | 현재 입력된 값                      | `'사용자 입력'`                   |
+| `onChange`    | 값 변경 시 호출되는 함수            | `(value) => {}`                   |
+| `placeholder` | 입력 전 표시될 안내 텍스트          | "텍스트를 입력하세요"             |
+| `type`        | 입력 타입 (`'text' \| 'email' \| 'password' \| 'number'`) | `'text'`                    |
+| `disabled`    | 비활성화 여부                      | `false`                          |
+
+---
+
+## 9. 사용 시나리오
 
 - **설정 페이지**: `ToggleSwitch`로 각종 알림 설정을, `RadioGroup`으로 테마 설정을, `Dropdown`으로 언어 선택을 제어합니다.
-- **가입 양식**: `Checkbox`로 개별 약관 동의를, `CheckboxGroup`으로 관심 분야를, `Dropdown`으로 직업을 선택받습니다.
+- **가입 양식**: `Checkbox`로 개별 약관 동의를, `CheckboxGroup`으로 관심 분야를, `Dropdown`으로 직업을, `TextInput`으로 이름과 이메일을 입력받습니다.
 - **에디터 툴바**: `ToggleButton`을 사용하여 텍스트 스타일(볼드, 이탤릭)을 켜고 끕니다.
-- **필터링**: `CheckboxGroup`으로 카테고리를, `RadioGroup`으로 정렬 옵션을, `Dropdown`으로 지역을 선택합니다.
+- **필터링**: `CheckboxGroup`으로 카테고리를, `RadioGroup`으로 정렬 옵션을, `Dropdown`으로 지역을, `TextInput`으로 검색어를 입력받습니다.

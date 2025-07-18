@@ -9,6 +9,7 @@ import Image from 'next/image';
 
 import { Car, Check } from 'lucide-react';
 
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { LicensePlate } from '@/components/ui/system-testing/license-plate';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
@@ -47,13 +48,12 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 
 	// #region 렌더링
 	return (
-		<div className="flex flex-col p-6 h-full rounded-2xl">
-			{showTitle && (
-				<h2 className="mb-4 w-full text-lg font-semibold text-center text-foreground">
-					{t('주차_카드_차량정보')}
-				</h2>
-			)}
-			<div className="flex flex-col gap-4">
+		<SectionPanel 
+			title={showTitle ? t('주차_카드_차량정보') : undefined}
+			className="h-full"
+			contentClassName="overflow-auto"
+		>
+			<div className="flex flex-col gap-4 p-6">
 				{/* 차량 이미지 영역 */}
 				<div className="shrink-0">
 					<div className="relative mx-auto w-full h-72 rounded-xl lg:h-64 bg-muted neu-inset">
@@ -166,7 +166,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 					)}
 				</div>
 			</div>
-		</div>
+		</SectionPanel>
 	);
 	// #endregion
 };

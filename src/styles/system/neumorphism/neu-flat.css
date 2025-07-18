@@ -35,7 +35,6 @@
 .neu-flat {
 	/* 뚜렷한 border + 입체적 그림자 효과 */
 	border: 1.5px solid hsl(var(--border) / 0.6);
-	border-radius: 0.5rem; /* 8px radius 내장 */
 	box-shadow: 
 		/* 우하단 메인 그림자 */
 		0 0 3px rgba(var(--nm-dark-rgba)),

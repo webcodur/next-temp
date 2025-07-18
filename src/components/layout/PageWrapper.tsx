@@ -1,9 +1,9 @@
 /* 
-  파일명: /components/layout/PageHeader.tsx
+  파일명: /components/layout/PageWrapper.tsx
   기능: 페이지 상단 헤더 컴포넌트
   책임: 페이지 제목과 설명을 동적으로 표시하는 헤더
 */ // ------------------------------
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 import { useAtomValue } from 'jotai';
 import { usePathname } from 'next/navigation';
@@ -13,6 +13,7 @@ import { currentBotMenuAtom } from '@/store/sidebar';
 import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
 
 import { menuData } from '@/data/menuData';
+import Footer from '@/components/layout/footer/Footer';
 
 // #region 상수
 const hrefToKeyMap: Record<string, string> = (() => {
@@ -28,8 +29,14 @@ const hrefToKeyMap: Record<string, string> = (() => {
 })();
 // #endregion
 
+// #region 타입
+interface PageWrapperProps {
+  children: ReactNode;
+}
+// #endregion
+
 // #region 메인 컴포넌트
-export default function PageHeader() {
+export default function PageWrapper({ children }: PageWrapperProps) {
   // #region 상태
   const pageTitleFromAtom = useAtomValue(pageTitleAtom);
   const currentBotMenu = useAtomValue(currentBotMenuAtom);
@@ -66,16 +73,29 @@ export default function PageHeader() {
   // #endregion
 
   // #region 렌더링
-  // 타이틀과 설명이 모두 없으면 렌더 스킵
-  if (!title && !description) return null;
-
   return (
-    <div className="flex flex-col gap-1 items-center text-center">
-      {title && <h1 className="text-2xl font-bold">{title}</h1>}
-      {description?.trim() && (
-        <p> {description} </p>
+    <>
+      {/* 페이지 헤더 */}
+      {(title || description) && (
+        <div className="flex flex-col gap-1 items-center mb-8 text-center">
+          {title && <h1 className="text-2xl font-bold">{title}</h1>}
+          {description?.trim() && (
+            <p> {description} </p>
+          )}
+        </div>
       )}
-    </div>
+
+      {/* 페이지 콘텐츠 */}
+      <div className="flex-1 pb-16">
+        {children}
+      </div>
+
+      {/* 구분선 */}
+      <div className="h-px bg-gradient-to-r from-transparent to-transparent border-t border-border/30 via-border/20"></div>
+
+      {/* 푸터 */}
+      <Footer />
+    </>
   );
   // #endregion
 }

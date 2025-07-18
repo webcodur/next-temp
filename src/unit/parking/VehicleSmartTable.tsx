@@ -3,7 +3,6 @@
 import React from 'react';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { SmartTable, SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
-import InfiniteScroll from '@/components/ui/ui-data/infinite-scroll/InfiniteScroll';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import LicensePlate from '@/components/ui/system-testing/license-plate/LicensePlate';
 import { useTranslations } from '@/hooks/useI18n';
@@ -123,23 +122,25 @@ const VehicleSmartTable: React.FC<VehicleSmartTableProps> = ({
           headerClassName={`${sz.font}`}
         />
       ) : (
-        <InfiniteScroll loadMore={onLoadMore} hasMore={hasMore} isLoading={isLoading} threshold={0.8}>
-          <SmartTable
-            data={vehicles}
-            columns={columns}
-            rowClassName={(item) => {
-              const base = `${sz.font} ${sz.padding} hover:bg-muted cursor-pointer`;
-              const state =
-                item.id === selectedVehicle?.id && item.status === selectedVehicle?.status
-                  ? 'bg-primary/10'
-                  : item.is_black === 'Y'
-                    ? 'bg-destructive/10'
-                    : '';
-              return base + ' ' + state;
-            }}
-            headerClassName={`${sz.font}`}
-          />
-        </InfiniteScroll>
+        <SmartTable
+          data={vehicles}
+          columns={columns}
+          rowClassName={(item) => {
+            const base = `${sz.font} ${sz.padding} hover:bg-muted cursor-pointer`;
+            const state =
+              item.id === selectedVehicle?.id && item.status === selectedVehicle?.status
+                ? 'bg-primary/10'
+                : item.is_black === 'Y'
+                  ? 'bg-destructive/10'
+                  : '';
+            return base + ' ' + state;
+          }}
+          headerClassName={`${sz.font}`}
+          loadMore={onLoadMore}
+          hasMore={hasMore}
+          isLoadingMore={isLoading}
+          threshold={0.8}
+        />
       )}
     </div>
   );

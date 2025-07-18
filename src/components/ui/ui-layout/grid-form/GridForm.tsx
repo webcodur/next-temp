@@ -6,8 +6,6 @@ import { cn } from '@/lib/utils';
 // #region 타입 정의
 export interface GridFormProps {
 	labelWidth?: string;
-	gap?: string;
-	maxWidth?: string;
 	className?: string;
 	children: React.ReactNode;
 }
@@ -38,9 +36,7 @@ const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
-	labelWidth = '150px',
-	gap = '20px',
-	maxWidth = '800px',
+	labelWidth = '200px',
 	className,
 	children,
 	...props
@@ -53,16 +49,12 @@ const GridForm = React.forwardRef<
 				className
 			)}
 			style={{
-				maxWidth,
-			}}
+				'--label-width': labelWidth,
+			} as React.CSSProperties}
 			{...props}
 		>
 			<div
-				className="grid items-start"
-				style={{
-					gridTemplateColumns: `${labelWidth} 1fr`,
-					gap,
-				}}
+				className="overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80"
 			>
 				{children}
 			</div>
@@ -76,6 +68,7 @@ GridForm.displayName = 'GridForm';
 // #region GridForm.Row 컴포넌트
 const GridFormRow: React.FC<GridFormRowProps> = ({
 	align = 'center',
+	className,
 	children,
 }) => {
 	const alignClasses = {
@@ -85,33 +78,49 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 	};
 
 	return (
-		<>
+		<div
+			className={cn(
+				'grid',
+				'border-b border-border/20 last:border-b-0',
+				'transition-colors duration-200',
+				// 얼룩말 효과 - 홀수 행
+				'odd:bg-background/50',
+				// 얼룩말 효과 - 짝수 행
+				'even:bg-muted/30',
+				'hover:bg-muted/50',
+				alignClasses[align],
+				className
+			)}
+			style={{
+				gridTemplateColumns: 'var(--label-width) 1fr',
+			}}
+		>
 			{React.Children.map(children, (child) => {
 				if (React.isValidElement(child)) {
 					// 라벨인 경우
 					if (child.type === GridFormLabel) {
-						return React.cloneElement(child, {
+						return React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
 							className: cn(
 								'justify-self-start',
 								alignClasses[align],
-								(child.props as { className?: string }).className
+								(child.props as GridFormLabelProps)?.className
 							),
-						} as Partial<GridFormLabelProps>);
+						});
 					}
 					// 컨텐츠인 경우
 					if (child.type === GridFormContent) {
-						return React.cloneElement(child, {
+						return React.cloneElement(child as React.ReactElement<GridFormContentProps>, {
 							className: cn(
 								'justify-self-stretch',
 								alignClasses[align],
-								(child.props as { className?: string }).className
+								(child.props as GridFormContentProps)?.className
 							),
-						} as Partial<GridFormContentProps>);
+						});
 					}
 				}
 				return child;
 			})}
-		</>
+		</div>
 	);
 };
 
@@ -133,7 +142,9 @@ const GridFormLabel = React.forwardRef<
 			ref={ref}
 			className={cn(
 				'text-sm font-medium text-foreground',
-				'flex items-center py-2 font-multilang',
+				'flex items-center px-4 py-3 font-multilang',
+				'border-r border-border/40',
+				'transition-colors duration-200',
 				className
 			)}
 			{...props}
@@ -171,7 +182,8 @@ const GridFormContent = React.forwardRef<
 		<div
 			ref={ref}
 			className={cn(
-				'flex',
+				'flex px-4 py-3',
+				'transition-colors duration-200',
 				directionClasses[direction],
 				className
 			)}
