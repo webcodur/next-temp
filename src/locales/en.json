@@ -31,7 +31,7 @@
 	"메뉴_시설관리": "Facility Management",
 	"메뉴_이용자관리": "User Management",
 	"메뉴_주차장정보": "Parking Information",
-	"메뉴_직원관리": "Staff Management",
+	  "메뉴_직원관리": "Admin Management",
 	"메뉴_정책관리": "Policy Management",
 	"메뉴_입출차관리": "Entry/Exit Management",
 	"메뉴_차량등록": "Vehicle Registration",
@@ -137,7 +137,7 @@
 	"메뉴_환경설정": "Environment Settings",
 	"메뉴_모니터링": "Monitoring",
 
-	"메뉴_근무자관리": "Staff Management",
+	  "메뉴_근무자관리": "Admin Management",
 	"메뉴_차단기설정": "Barrier Settings",
 	"메뉴_출입정책": "Access Policy",
 	"메뉴_할인권관리": "Discount Management",

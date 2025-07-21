@@ -21,9 +21,9 @@ const GridFormExample = () => {
 	};
 
 	const SampleFormData = () => (
-		<div className="mt-6 p-4 bg-muted rounded-lg">
-			<h4 className="font-semibold mb-2 font-multilang">현재 폼 데이터:</h4>
-			<pre className="text-xs overflow-auto">
+		<div className="p-4 mt-6 rounded-lg bg-muted">
+			<h4 className="mb-2 font-semibold font-multilang">현재 폼 데이터:</h4>
+			<pre className="overflow-auto text-xs">
 				{JSON.stringify(formData, null, 2)}
 			</pre>
 		</div>
@@ -31,12 +31,12 @@ const GridFormExample = () => {
 
 	return (
 		<div className="p-8">
-			<h1 className="text-2xl font-bold mb-6 font-multilang">GridForm 컴포넌트 예제</h1>
+			<h1 className="mb-6 text-2xl font-bold font-multilang">GridForm 컴포넌트 예제</h1>
 			
 			{/* 기본 예제 */}
 			<div className="mb-12">
-				<h2 className="text-xl font-semibold mb-4 font-multilang">1. 기본 투표 생성 폼</h2>
-				<div className="bg-white p-6 rounded-lg border">
+				<h2 className="mb-4 text-xl font-semibold font-multilang">1. 기본 투표 생성 폼</h2>
+				<div className="p-6 bg-white rounded-lg border">
 					<GridForm>
 						<GridForm.Row>
 							<GridForm.Label required htmlFor="vote-title">
@@ -49,7 +49,7 @@ const GridFormExample = () => {
 									value={formData.title}
 									onChange={(e) => handleChange('title', e.target.value)}
 									placeholder="투표 제목을 입력하세요"
-									className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+									className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
 							</GridForm.Content>
 						</GridForm.Row>
@@ -58,7 +58,7 @@ const GridFormExample = () => {
 							<GridForm.Label>투표 유형</GridForm.Label>
 							<GridForm.Content direction="column" gap="8px">
 								<div className="flex gap-4">
-									<label className="flex items-center gap-2">
+									<label className="flex gap-2 items-center">
 										<input
 											type="radio"
 											name="type"
@@ -69,7 +69,7 @@ const GridFormExample = () => {
 										/>
 										<span className="font-multilang">단일 선택</span>
 									</label>
-									<label className="flex items-center gap-2">
+									<label className="flex gap-2 items-center">
 										<input
 											type="radio"
 											name="type"
@@ -98,7 +98,7 @@ const GridFormExample = () => {
 									onChange={(e) => handleChange('description', e.target.value)}
 									placeholder="투표에 대한 상세 설명을 입력하세요"
 									rows={4}
-									className="w-full p-2 border border-border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+									className="p-2 w-full rounded-md border resize-none border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
 							</GridForm.Content>
 						</GridForm.Row>
@@ -108,12 +108,12 @@ const GridFormExample = () => {
 
 			{/* 커스텀 레이아웃 예제 */}
 			<div className="mb-12">
-				<h2 className="text-xl font-semibold mb-4 font-multilang">2. 커스텀 레이아웃 (좁은 라벨)</h2>
-				<div className="bg-white p-6 rounded-lg border">
-					<GridForm labelWidth="100px" gap="16px" maxWidth="600px">
+				<h2 className="mb-4 text-xl font-semibold font-multilang">2. 커스텀 레이아웃 (좁은 라벨)</h2>
+				<div className="p-6 bg-white rounded-lg border">
+					<GridForm labelWidth="100px" gap="16px">
 						<GridForm.Row>
 							<GridForm.Label htmlFor="start-date">
-								<Calendar className="w-4 h-4 mr-1 inline" />
+								<Calendar className="inline mr-1 w-4 h-4" />
 								시작일
 							</GridForm.Label>
 							<GridForm.Content>
@@ -122,14 +122,14 @@ const GridFormExample = () => {
 									type="date"
 									value={formData.startDate}
 									onChange={(e) => handleChange('startDate', e.target.value)}
-									className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+									className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
 							</GridForm.Content>
 						</GridForm.Row>
 
 						<GridForm.Row>
 							<GridForm.Label htmlFor="end-date">
-								<Calendar className="w-4 h-4 mr-1 inline" />
+								<Calendar className="inline mr-1 w-4 h-4" />
 								종료일
 							</GridForm.Label>
 							<GridForm.Content>
@@ -138,14 +138,14 @@ const GridFormExample = () => {
 									type="date"
 									value={formData.endDate}
 									onChange={(e) => handleChange('endDate', e.target.value)}
-									className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+									className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
 							</GridForm.Content>
 						</GridForm.Row>
 
 						<GridForm.Row>
 							<GridForm.Label htmlFor="category">
-								<FileText className="w-4 h-4 mr-1 inline" />
+								<FileText className="inline mr-1 w-4 h-4" />
 								카테고리
 							</GridForm.Label>
 							<GridForm.Content>
@@ -153,7 +153,7 @@ const GridFormExample = () => {
 									id="category"
 									value={formData.category}
 									onChange={(e) => handleChange('category', e.target.value)}
-									className="w-full p-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+									className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								>
 									<option value="general">일반</option>
 									<option value="important">중요</option>
@@ -167,17 +167,17 @@ const GridFormExample = () => {
 
 			{/* 복잡한 컨텐츠 예제 */}
 			<div className="mb-12">
-				<h2 className="text-xl font-semibold mb-4 font-multilang">3. 복잡한 컨텐츠 배치</h2>
-				<div className="bg-white p-6 rounded-lg border">
+				<h2 className="mb-4 text-xl font-semibold font-multilang">3. 복잡한 컨텐츠 배치</h2>
+				<div className="p-6 bg-white rounded-lg border">
 					<GridForm labelWidth="120px">
 						<GridForm.Row align="start">
 							<GridForm.Label>
-								<Settings className="w-4 h-4 mr-1 inline" />
+								<Settings className="inline mr-1 w-4 h-4" />
 								고급 옵션
 							</GridForm.Label>
 							<GridForm.Content direction="column" gap="16px">
 								<div className="space-y-3">
-									<label className="flex items-center gap-2">
+									<label className="flex gap-2 items-center">
 										<input
 											type="checkbox"
 											checked={formData.allowAnonymous}
@@ -186,7 +186,7 @@ const GridFormExample = () => {
 										/>
 										<span className="font-multilang">익명 투표 허용</span>
 									</label>
-									<label className="flex items-center gap-2">
+									<label className="flex gap-2 items-center">
 										<input
 											type="checkbox"
 											checked={formData.requireAuth}
@@ -198,7 +198,7 @@ const GridFormExample = () => {
 								</div>
 								
 								<div className="p-3 bg-blue-50 rounded-md border">
-									<div className="flex items-start gap-2">
+									<div className="flex gap-2 items-start">
 										<Users className="w-4 h-4 text-blue-600 mt-0.5" />
 										<div>
 											<p className="text-sm font-medium text-blue-900 font-multilang">
@@ -218,13 +218,13 @@ const GridFormExample = () => {
 							<GridForm.Content direction="row" gap="8px">
 								<button
 									type="submit"
-									className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-multilang"
+									className="px-6 py-2 rounded-md transition-colors bg-primary text-primary-foreground hover:bg-primary/90 font-multilang"
 								>
 									투표 생성
 								</button>
 								<button
 									type="button"
-									className="px-6 py-2 border border-border rounded-md hover:bg-muted transition-colors font-multilang"
+									className="px-6 py-2 rounded-md border transition-colors border-border hover:bg-muted font-multilang"
 								>
 									미리보기
 								</button>

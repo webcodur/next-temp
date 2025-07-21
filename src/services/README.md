@@ -9,6 +9,7 @@ src/services/
 ├── fetchClient.ts              # 공통 HTTP 클라이언트
 ├── auth/                       # 인증 관련 API
 ├── admin/                      # 관리자 관리 API
+
 ├── systemConfig/               # 시스템 설정 API
 ├── ipBlock/                    # IP 차단 관리 API
 ├── cache/                      # 캐시 관리 API
@@ -31,13 +32,16 @@ import { deleteAdmin } from '@/services/admin/admin@id_DELETE';
 // 관리자 생성
 const createResult = await createAdmin({
   account: 'admin01',
-  role_id: 1,
-  password: 'password123'
+  roleId: 'admin',
+  password: 'password123',
+  name: '김관리자',
+  phone: '010-1234-5678'
 });
 
 // 관리자 검색
 const searchResult = await searchAdmin({
   name: '김철수',
+  roleId: '관리자',
   page: 1,
   limit: 10
 });
@@ -48,8 +52,9 @@ const detailResult = await getAdminDetail({ id: 1 });
 // 관리자 수정
 const updateResult = await updateAdmin({
   id: 1,
-  name: '김철수',
-  email: 'kim@example.com'
+  name: '김철수수정',
+  phone: '010-9999-8888',
+  roleId: '관리자'
 });
 
 // 관리자 삭제

@@ -1,10 +1,9 @@
 'use server';
-
 import { fetchDefault } from '../fetchClient';
 
 /**
- * 관리자 상세 조회
- * @param id 관리자 ID
+ * 관리자 계정 정보를 조회한다
+ * @param id 계정 ID
  * @returns 관리자 상세 정보
  */
 export async function getAdminDetail({
@@ -12,15 +11,21 @@ export async function getAdminDetail({
 }: {
   id: number;
 }) {
-  const response = await fetchDefault(`/admins/${id}`, {
+  const url = `/admins/${id}`;
+  console.log('getAdminDetail 요청 URL:', url, 'ID:', id, 'ID 타입:', typeof id);
+  
+  const response = await fetchDefault(url, {
     method: 'GET',
   });
 
+  console.log('getAdminDetail 응답 상태:', response.status, response.statusText);
+  
   const result = await response.json();
+  console.log('getAdminDetail 응답 데이터:', result);
   
   if (!response.ok) {
-    const errorMsg = result.message || `관리자 상세 조회 실패(코드): ${response.status}`
-    console.log(errorMsg)
+    const errorMsg = result.message || `관리자 계정 상세 조회 실패(코드): ${response.status}`
+    console.log('getAdminDetail 오류:', errorMsg)
     return {
       success: false,
       errorMsg: errorMsg,

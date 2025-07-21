@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
-import DataTable from '@/components/ui/ui-data/data-table/DataTable';
-import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
+import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { usePageDescription } from '@/hooks/usePageDescription';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import TimeRangePicker from '@/components/ui/ui-input/field/time/unit/TimeRangePicker';
@@ -57,7 +56,7 @@ const MOCK_DATA: EntryExit[] = [
 ];
 
 // --------------------------- 테이블 컬럼 ---------------------------
-const columns: SmartTableColumn<EntryExit>[] = [
+	const columns: BaseTableColumn<EntryExit>[] = [
   { key: 'id', header: '순번', width: '80px', align: 'center', sortable: true },
   { key: 'vehicleType', header: '차량구분', sortable: true },
   { key: 'plateNumber', header: '차량번호', sortable: true },
@@ -286,7 +285,7 @@ export default function MemberEntryExitPage() {
       {/* 데이터 테이블 */}
       <section>
         <h2 className="mb-4 text-xl font-semibold">입출차 조회</h2>
-        <DataTable<EntryExit> data={filteredData} columns={columns} />
+        				<PaginatedTable data={filteredData} columns={columns} />
       </section>
     </div>
   );

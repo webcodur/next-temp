@@ -50,12 +50,9 @@
 
 | 컴포넌트                                                                          | 설명                                                                                       |
 | :-------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
-| [Data Table](./ui-data/data-table/data-table.md)                                  | 정렬, 필터링, 페이지네이션 기능이 포함된 강력한 데이터 테이블입니다.                       |
+| [Table Components](../app/lab/ui-data/table/page.tsx)                             | 기본 테이블, 무한 스크롤, 페이지네이션 등 다양한 테이블 컴포넌트 통합 _(Lab 페이지: `lab/ui-data/table`)_ |
 | [Infinite Scroll](./ui-data/infinite-scroll/infinite-scroll.md)                   | 사용자가 스크롤을 내리면 새로운 데이터를 계속 불러오는 목록입니다.                         |
 | [List Highlight Marker](./ui-data/list-highlight-marker/list-highlight-marker.md) | 목록에서 현재 선택되거나 호버된 항목을 시각적으로 강조합니다.                              |
-| [Pagination](./ui-data/pagination/pagination.md)                                  | 많은 양의 데이터를 여러 페이지로 나누어 보여주는 네비게이션입니다.                         |
-| [Smart Table](./ui-data/smartTable/smart-table.md)                                | Data Table을 확장한 스마트 기능 테이블 _(Lab 페이지: `lab/ui-data/table`)_                 |
-| [Infinite Smart Table](./ui-data/infiniteSmartTable/infinite-smart-table.md)      | 무한 스크롤과 스마트 테이블을 결합한 컴포넌트 _(Lab 페이지: `lab/ui-data/infinite-table`)_ |
 | [Timeline](./ui-data/timeline/timeline.md)                                        | 시간 순서에 따라 이벤트나 기록을 시각적으로 보여줍니다.                                    |
 
 ### 효과 및 장식 (`ui-effects`)
@@ -72,6 +69,7 @@
 | [Morphing Text](./ui-effects/morphing-text/morphing-text.md) | 하나의 텍스트가 다른 텍스트로 부드럽게 변형되는 애니메이션입니다.       |
 | [Toast](./ui-effects/toast/toast.md)                         | 작업 결과나 간단한 정보를 잠시 보여주는 팝업 알림입니다.                |
 | [Tooltip](./ui-effects/tooltip/tooltip.md)                   | 특정 요소에 대한 추가 정보를 제공하는 작은 말풍선입니다.                |
+| [Loading](./ui-effects/loading/loading.md)                   | 다양한 로딩 애니메이션 효과를 제공하는 컴포넌트들입니다.                |
 
 ### 3D 및 시스템 (`ui-3d` & `system-testing`)
 

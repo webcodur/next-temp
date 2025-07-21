@@ -1,10 +1,9 @@
 'use server';
-
 import { fetchDefault } from '../fetchClient';
 
 /**
- * 관리자 삭제
- * @param id 관리자 ID
+ * 시스템 관리자가 계정 ID로 관리자 계정을 삭제한다
+ * @param id 계정 ID
  * @returns 삭제 결과
  */
 export async function deleteAdmin({
@@ -20,14 +19,14 @@ export async function deleteAdmin({
   if (response.status === 204) {
     return {
       success: true,
-      data: { message: '관리자가 성공적으로 삭제되었습니다.' },
+      data: { message: '관리자 계정이 성공적으로 삭제되었습니다.' },
     }
   }
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `관리자 삭제 실패(코드): ${response.status}`
+    const errorMsg = result.message || `관리자 계정 삭제 실패(코드): ${response.status}`
     console.log(errorMsg)
     return {
       success: false,

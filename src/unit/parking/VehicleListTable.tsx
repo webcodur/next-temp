@@ -1,11 +1,10 @@
 import React from 'react';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import { InfiniteSmartTable } from '@/components/ui/ui-data/infiniteSmartTable/InfiniteSmartTable';
+import { InfiniteTable, BaseTableColumn } from '@/components/ui/ui-data/infiniteTable/InfiniteTable';
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
-import type { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
 
 // #region Types & Constants
 type TableSize = 'sm' | 'md' | 'lg';
@@ -63,7 +62,7 @@ const filterVehicles = (vehicles: VehicleEntry[], filters: SearchFilters): Vehic
 const createColumns = (
 	t: ReturnType<typeof useTranslations>, 
 	filteredVehicles: VehicleEntry[]
-): SmartTableColumn<VehicleEntry>[] => {
+): BaseTableColumn<VehicleEntry>[] => {
 	return [
 		{
 			header: t('주차_테이블_헤더_순번'),
@@ -200,12 +199,12 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 			onRowClick: onVehicleSelect,
 			loadMore: onLoadMore,
 			hasMore: hasMore,
-			isFetching: isLoading,
+			isLoadingMore: isLoading,
 			threshold: 0.8,
 		};
 
 		return (
-			<InfiniteSmartTable
+			<InfiniteTable
 				data={filteredVehicles}
 				{...tableProps}
 			/>

@@ -17,7 +17,7 @@ export const menuData: MenuData = {
 					},
 					{
 						key: '근무자관리',
-						href: '/parking/facility/staff',
+            href: '/parking/facility/admin',
 					},
 					{
 						key: '차단기설정',
@@ -271,16 +271,8 @@ export const menuData: MenuData = {
 				key: 'UI데이터',
 				botItems: [
 					{
-						key: 'SmartTable',
-						href: '/lab/ui-data/smrtTable',
-					},
-					{
-						key: '무한SmartTable',
-						href: '/lab/ui-data/infinite-table',
-					},
-					{
-						key: '페이지네이션',
-						href: '/lab/ui-data/pagination',
+						key: '테이블',
+						href: '/lab/ui-data/table',
 					},
 					{
 						key: '무한스크롤',
@@ -293,10 +285,6 @@ export const menuData: MenuData = {
 					{
 						key: '타임라인',
 						href: '/lab/ui-data/timeline',
-					},
-					{
-						key: '테이블',
-						href: '/lab/ui-data/table',
 					},
 				],
 			},
@@ -334,6 +322,10 @@ export const menuData: MenuData = {
 					{
 						key: '토스트',
 						href: '/lab/ui-effects/toast',
+					},
+					{
+						key: '로딩',
+						href: '/lab/ui-effects/loading',
 					},
 				],
 			},

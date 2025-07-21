@@ -18,25 +18,9 @@ export default function Footer() {
 			<div className="container px-6 py-16 mx-auto">
 				{/* 메인 콘텐츠 영역 */}
 				<div className="grid grid-cols-1 gap-8 mb-12 lg:grid-cols-3">
-					{/* 브랜드 섹션 */}
-					<div className="lg:col-span-1">
-						<div className="flex items-center mb-4">
-							<div className="flex justify-center items-center mr-3 w-10 h-10 rounded-lg bg-primary">
-								<span className="text-lg font-bold text-primary-foreground">M</span>
-							</div>
-							<div>
-								<h3 className="text-xl font-bold text-foreground">Meerkat Hub</h3>
-								<p className="text-sm text-muted-foreground">AX DX SPACE TECHNOLOGY</p>
-							</div>
-						</div>
-						<p className="text-sm leading-relaxed text-muted-foreground">
-							{t('푸터_회사정보')}
-						</p>
-					</div>
-
 					{/* 연락처 섹션 */}
 					<div className="lg:col-span-1">
-						<h4 className="mb-4 font-semibold text-foreground">Contact</h4>
+						<h4 className="mb-4 font-semibold text-center text-foreground">Contact</h4>
 						<div className="space-y-3">
 							<div className="flex items-center">
 								<div className="flex justify-center items-center mr-3 w-8 h-8 rounded-full bg-primary/10">
@@ -57,9 +41,27 @@ export default function Footer() {
 						</div>
 					</div>
 
+					{/* 브랜드 섹션 */}
+					<div className="lg:col-span-1">
+						<div className="flex flex-col items-center mb-4">
+							<div className="flex items-center mb-2">
+								<div className="flex justify-center items-center mr-3 w-10 h-10 rounded-lg bg-primary">
+									<span className="text-lg font-bold text-primary-foreground">M</span>
+								</div>
+								<div>
+									<h3 className="text-xl font-bold text-foreground">Meerkat Hub</h3>
+									<p className="text-sm text-muted-foreground">AX DX SPACE TECHNOLOGY</p>
+								</div>
+							</div>
+						</div>
+						<p className="text-sm leading-relaxed text-muted-foreground">
+							{t('푸터_회사정보')}
+						</p>
+					</div>
+
 					{/* 링크 섹션 */}
 					<div className="lg:col-span-1">
-						<h4 className="mb-4 font-semibold text-foreground">Links</h4>
+						<h4 className="mb-4 font-semibold text-center text-foreground">Links</h4>
 						<div className="space-y-3">
 							<a
 								href="https://meerkat.day/"

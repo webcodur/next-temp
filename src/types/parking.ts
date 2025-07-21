@@ -1,5 +1,5 @@
 // 차량 입출차 데이터 타입
-export interface VehicleEntry {
+export interface VehicleEntry extends Record<string, unknown> {
 	id: number;
 	status: 1 | 2; // 1: 입차, 2: 출차
 	car_number: string;

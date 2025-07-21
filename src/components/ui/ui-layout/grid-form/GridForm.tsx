@@ -1,11 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { createContext } from 'react';
 import { cn } from '@/lib/utils';
+
+// #region Context 정의
+interface GridFormContextValue {
+	labelWidth: string;
+	gap: string;
+}
+
+const GridFormContext = createContext<GridFormContextValue | null>(null);
+
+
+// #endregion
 
 // #region 타입 정의
 export interface GridFormProps {
 	labelWidth?: string;  // 옵션 프롭 (필수 아님)
+	gap?: string;
 	className?: string;
 	children: React.ReactNode;
 }
@@ -36,29 +48,30 @@ const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
-	labelWidth = '200px',  // 기본값 설정
+	labelWidth = '300px',  // 기본값 설정
+	gap = '20px',
 	className,
 	children,
 	...props
 }, ref) => {
 	return (
-		<div
-			ref={ref}
-			className={cn(
-				'mx-auto w-full',
-				className
-			)}
-			style={{
-				'--label-width': labelWidth,  // CSS 변수로 적용
-			} as React.CSSProperties}
-			{...props}
-		>
+		<GridFormContext.Provider value={{ labelWidth, gap }}>
 			<div
-				className="overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80"
+				ref={ref}
+				className={cn(
+					'w-full overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80',
+					'grid auto-rows-min items-stretch', // 전체를 Grid Container로 만들고 items를 stretch
+					className
+				)}
+				style={{
+					gridTemplateColumns: `${labelWidth} 1fr`,
+					gap: 0, // gap을 0으로 설정하여 테두리가 겹치도록 함
+				} as React.CSSProperties}
+				{...props}
 			>
 				{children}
 			</div>
-		</div>
+		</GridFormContext.Provider>
 	);
 });
 
@@ -68,58 +81,55 @@ GridForm.displayName = 'GridForm';
 // #region GridForm.Row 컴포넌트
 const GridFormRow: React.FC<GridFormRowProps> = ({
 	align = 'center',
-	className,
 	children,
 }) => {
 	const alignClasses = {
-		start: 'items-start',
-		center: 'items-center',
-		end: 'items-end',
+		start: 'self-start',
+		center: 'self-center',
+		end: 'self-end',
 	};
 
+	// Label과 Content를 찾아서 직접 렌더링
+	let labelElement = null;
+	let contentElement = null;
+
+	React.Children.forEach(children, (child) => {
+		if (React.isValidElement(child)) {
+			if (child.type === GridFormLabel) {
+				labelElement = React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
+					className: cn(
+						// 박스 스타일링 - 가운데 정렬 (세로, 가로)
+						'flex items-center justify-center px-4 py-3',
+						'bg-muted/30 border-r border-b border-border/40',
+						'font-medium text-sm text-foreground',
+						// 높이 맞춤
+						'min-h-full',
+						// 마지막에서 두 번째 요소의 하단 테두리 제거 (라벨)
+						'[&:nth-last-child(2)]:border-b-0',
+						alignClasses[align],
+						(child.props as GridFormLabelProps)?.className
+					),
+				});
+			}
+			if (child.type === GridFormContent) {
+				contentElement = React.cloneElement(child as React.ReactElement<GridFormContentProps>, {
+					className: cn(
+						'bg-background border-b border-border/40',
+						// 마지막 요소의 하단 테두리 제거 (컨텐츠)
+						'last:border-b-0',
+						alignClasses[align],
+						(child.props as GridFormContentProps)?.className
+					),
+				});
+			}
+		}
+	});
+
 	return (
-		<div
-			className={cn(
-				'grid',
-				'border-b border-border/20 last:border-b-0',
-				// 얼룩말 효과 - 홀수 행
-				'odd:bg-background/50',
-				// 얼룩말 효과 - 짝수 행
-				'even:bg-muted/30',
-				'hover:bg-muted/50',
-				alignClasses[align],
-				className
-			)}
-			style={{
-				gridTemplateColumns: 'var(--label-width) 1fr',
-			}}
-		>
-			{React.Children.map(children, (child) => {
-				if (React.isValidElement(child)) {
-					// 라벨인 경우
-					if (child.type === GridFormLabel) {
-						return React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
-							className: cn(
-								'justify-self-start',
-								alignClasses[align],
-								(child.props as GridFormLabelProps)?.className
-							),
-						});
-					}
-					// 컨텐츠인 경우
-					if (child.type === GridFormContent) {
-						return React.cloneElement(child as React.ReactElement<GridFormContentProps>, {
-							className: cn(
-								'justify-self-stretch',
-								alignClasses[align],
-								(child.props as GridFormContentProps)?.className
-							),
-						});
-					}
-				}
-				return child;
-			})}
-		</div>
+		<>
+			{labelElement}
+			{contentElement}
+		</>
 	);
 };
 
@@ -180,8 +190,10 @@ const GridFormContent = React.forwardRef<
 		<div
 			ref={ref}
 			className={cn(
-				'flex px-4 py-3',
+				'flex px-4 py-3 min-h-full',
 				directionClasses[direction],
+				// direction이 column일 때는 justify-center, row일 때는 items-center
+				direction === 'column' ? 'justify-center' : 'items-center',
 				className
 			)}
 			style={{

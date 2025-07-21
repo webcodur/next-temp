@@ -1,10 +1,35 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useCallback } from 'react';
 import { signInWithCredentials } from '../services/auth/auth_signin_POST';
 import { logout as logoutAction } from '../services/auth/auth_logout_GET';
-import { isAuthenticatedAtom, userAtom } from '../store/auth';
+import { refreshTokenWithString } from '../services/auth/auth_refresh_POST';
+import { isAuthenticatedAtom, userAtom, parkingLotsAtom } from '../store/auth';
+
+/**
+ * 쿠키에서 토큰 가져오기
+ */
+const getTokenFromCookie = (tokenName: string): string | null => {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(`${tokenName}=`))
+    ?.split('=')[1] || null;
+};
+
+/**
+ * 쿠키에 토큰 설정
+ */
+const setTokenToCookie = (tokenName: string, token: string, maxAge: number = 86400) => {
+  document.cookie = `${tokenName}=${token}; path=/; max-age=${maxAge}`;
+};
+
+/**
+ * 쿠키에서 토큰 제거
+ */
+const removeTokenFromCookie = (tokenName: string) => {
+  document.cookie = `${tokenName}=; path=/; max-age=0`;
+};
 
 /**
  * 전역 상태 기반 인증 훅
@@ -13,22 +38,67 @@ export function useAuth() {
   const [isPending, startTransition] = useTransition();
   const [isLoggedIn, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
   const [user, setUser] = useAtom(userAtom);
+  const [parkingLots, setParkingLots] = useAtom(parkingLotsAtom);
 
-  // 초기 토큰 확인 - 쿠키만 체크
+  /**
+   * 토큰 자동 갱신
+   */
+  const refreshToken = useCallback(async (): Promise<boolean> => {
+    const refreshTokenString = getTokenFromCookie('refresh-token');
+    
+    if (!refreshTokenString) {
+      return false;
+    }
+
+    try {
+      const result = await refreshTokenWithString(refreshTokenString);
+      
+      if (result.success && result.data) {
+        // 새로운 토큰들 저장
+        setTokenToCookie('access-token', result.data.accessToken);
+        setTokenToCookie('refresh-token', result.data.refreshToken);
+        
+        // 주차장 정보 업데이트 (있는 경우)
+        if (result.data.parkinglots) {
+          setParkingLots(result.data.parkinglots);
+        }
+        
+        return true;
+      }
+      
+      return false;
+    } catch {
+      return false;
+    }
+  }, [setParkingLots]);
+
+  // 초기 토큰 확인 및 자동 갱신 설정
   useEffect(() => {
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('access-token='))
-      ?.split('=')[1];
+    const accessToken = getTokenFromCookie('access-token');
+    const refreshTokenString = getTokenFromCookie('refresh-token');
     
     // 쿠키 토큰 유무와 로그인 상태 동기화
-    if (token && !isLoggedIn) {
+    if (accessToken && !isLoggedIn) {
       setIsLoggedIn(true);
-    } else if (!token && isLoggedIn) {
-      setIsLoggedIn(false);
-      setUser(null);
+    } else if (!accessToken && isLoggedIn) {
+      // accessToken이 없으면 refresh 시도
+      if (refreshTokenString) {
+        refreshToken().then((success) => {
+          if (!success) {
+            // refresh 실패 시 로그아웃
+            setIsLoggedIn(false);
+            setUser(null);
+            setParkingLots([]);
+          }
+        });
+      } else {
+        // refresh token도 없으면 로그아웃
+        setIsLoggedIn(false);
+        setUser(null);
+        setParkingLots([]);
+      }
     }
-  }, [isLoggedIn, setIsLoggedIn, setUser]);
+  }, [isLoggedIn, setIsLoggedIn, setUser, setParkingLots, refreshToken]);
 
   /**
    * 로그인
@@ -44,15 +114,24 @@ export function useAuth() {
       return { success: false, error: '토큰을 받지 못했습니다' };
     }
 
-    // 쿠키에만 토큰 저장 (24시간)
-    document.cookie = `access-token=${result.data.accessToken}; path=/; max-age=86400`;
+    // 토큰들을 쿠키에 저장
+    setTokenToCookie('access-token', result.data.accessToken);
     
-    // 로그인 상태만 업데이트
+    if (result.data.refreshToken) {
+      setTokenToCookie('refresh-token', result.data.refreshToken);
+    }
+    
+    // 로그인 상태 업데이트
     setIsLoggedIn(true);
     
     // 사용자 정보가 있다면 설정
     if (result.data.user) {
       setUser(result.data.user);
+    }
+    
+    // 주차장 정보가 있다면 설정
+    if (result.data.parkinglots) {
+      setParkingLots(result.data.parkinglots);
     }
 
     return { success: true };
@@ -66,11 +145,13 @@ export function useAuth() {
       await logoutAction();
       
       // 쿠키 제거
-      document.cookie = 'access-token=; path=/; max-age=0';
+      removeTokenFromCookie('access-token');
+      removeTokenFromCookie('refresh-token');
       
       // 상태 초기화
       setIsLoggedIn(false);
       setUser(null);
+      setParkingLots([]);
     });
   };
 
@@ -79,7 +160,9 @@ export function useAuth() {
     isLoading: false,
     login,
     logout,
+    refreshToken,
     isPending,
     user,
+    parkingLots,
   };
 } 

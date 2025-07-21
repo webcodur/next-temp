@@ -18,6 +18,8 @@
 | `PUT /admins/{id}` | `admin@id_PUT.ts` | `updateAdmin()` | 관리자 수정 |
 | `DELETE /admins/{id}` | `admin@id_DELETE.ts` | `deleteAdmin()` | 관리자 삭제 |
 
+
+
 ### System Config 관련
 | 엔드포인트 | 파일명 | 함수명 | 설명 |
 |---|---|---|---|

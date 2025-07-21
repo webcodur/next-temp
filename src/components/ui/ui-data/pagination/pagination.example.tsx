@@ -7,8 +7,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import DataTable from '../data-table/DataTable';
-import { SmartTableColumn } from '@/components/ui/ui-data/smartTable/SmartTable';
+import { PaginatedTable, BaseTableColumn } from '../paginatedTable/PaginatedTable';
 import { useTranslations } from '@/hooks/useI18n';
 
 // #region 타입 정의
@@ -53,35 +52,35 @@ export default function PaginationExample() {
 		}));
 	};
 
-	const columns: SmartTableColumn<User>[] = [
+	const columns: BaseTableColumn<User>[] = [
 		{
 			key: 'id' as keyof User,
 			header: t('테이블_ID'),
-			width: '80px',
+			width: '10%',
 			align: 'center',
 		},
 		{
 			key: 'name',
 			header: t('테이블_이름'),
-			width: '120px',
+			width: '18%',
 			align: 'start',
 		},
 		{
 			key: 'email',
 			header: t('테이블_이메일'),
-			width: '200px',
+			width: '30%',
 			align: 'start',
 		},
 		{
 			key: 'department',
 			header: t('페이지네이션_부서'),
-			width: '100px',
+			width: '15%',
 			align: 'center',
 		},
 		{
 			key: 'status',
 			header: t('테이블_상태'),
-			width: '100px',
+			width: '15%',
 			align: 'center',
 			cell: (user: User) => (
 				<span
@@ -103,7 +102,7 @@ export default function PaginationExample() {
 		{
 			key: 'joinDate',
 			header: t('페이지네이션_입사일'),
-			width: '100px',
+			width: '12%',
 			align: 'center',
 		},
 	];
@@ -176,7 +175,7 @@ export default function PaginationExample() {
 						</button>
 					</div>
 
-					<DataTable
+					<PaginatedTable
 						data={userData}
 						columns={columns}
 						isFetching={isFetching}
@@ -195,12 +194,12 @@ export default function PaginationExample() {
 					{t('페이지네이션_자동관리')}
 				</h2>
 				<div className="p-6 bg-white rounded-lg shadow-md">
-					<DataTable
-						data={userData}
-						columns={columns}
-						pageSize={15}
-						itemName={t('페이지네이션_사용자')}
-					/>
+									<PaginatedTable
+					data={userData}
+					columns={columns}
+					pageSize={15}
+					itemName={t('페이지네이션_사용자')}
+				/>
 				</div>
 			</div>
 		</div>
