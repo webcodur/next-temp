@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 // #region 타입 정의
 export interface GridFormProps {
-	labelWidth?: string;
+	labelWidth?: string;  // 옵션 프롭 (필수 아님)
 	className?: string;
 	children: React.ReactNode;
 }
@@ -36,7 +36,7 @@ const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
-	labelWidth = '200px',
+	labelWidth = '200px',  // 기본값 설정
 	className,
 	children,
 	...props
@@ -49,7 +49,7 @@ const GridForm = React.forwardRef<
 				className
 			)}
 			style={{
-				'--label-width': labelWidth,
+				'--label-width': labelWidth,  // CSS 변수로 적용
 			} as React.CSSProperties}
 			{...props}
 		>
@@ -82,7 +82,6 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 			className={cn(
 				'grid',
 				'border-b border-border/20 last:border-b-0',
-				'transition-colors duration-200',
 				// 얼룩말 효과 - 홀수 행
 				'odd:bg-background/50',
 				// 얼룩말 효과 - 짝수 행
@@ -144,7 +143,6 @@ const GridFormLabel = React.forwardRef<
 				'text-sm font-medium text-foreground',
 				'flex items-center px-4 py-3 font-multilang',
 				'border-r border-border/40',
-				'transition-colors duration-200',
 				className
 			)}
 			{...props}
@@ -183,7 +181,6 @@ const GridFormContent = React.forwardRef<
 			ref={ref}
 			className={cn(
 				'flex px-4 py-3',
-				'transition-colors duration-200',
 				directionClasses[direction],
 				className
 			)}
