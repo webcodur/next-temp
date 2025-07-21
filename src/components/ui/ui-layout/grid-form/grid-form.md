@@ -12,7 +12,8 @@ graph TD
         A[GridForm<br>(Grid Container)] --> B[GridForm.Row<br>(Row Wrapper)]
         B --> C[GridForm.Label<br>(Label Column)]
         B --> D[GridForm.Content<br>(Content Column)]
-        D --> E[내부 요소들<br>(Flexbox Layout)]
+        D --> E[내부 요소들<br>(Input + Feedback)]
+        D --> F[GridForm.Feedback<br>(Optional)]
     end
 
     style A fill:#e3f2fd,stroke:#333
@@ -20,6 +21,7 @@ graph TD
     style C fill:#e8f5e9,stroke:#333
     style D fill:#fffde7,stroke:#333
     style E fill:#fce4ec,stroke:#333
+    style F fill:#e1f5fe,stroke:#333
 ```
 
 ## 2. 컴포넌트 구성
@@ -36,15 +38,17 @@ graph TD
 ### GridForm.Content
 실제 입력 요소들을 포함하는 컨테이너로, 내부 요소들을 Flexbox로 배치합니다.
 
+### GridForm.Feedback
+유효성 검사 메시지나 도움말을 표시하는 컴포넌트로, Content 내부에서 사용됩니다.
+
 ## 3. Props 설명
 
 ### GridForm Props
 
 | Props       | 타입     | 기본값   | 설명                           |
 |-------------|----------|----------|--------------------------------|
-| labelWidth  | string   | '150px'  | 라벨 컬럼의 너비               |
+| labelWidth  | string   | '300px'  | 라벨 컬럼의 너비               |
 | gap         | string   | '20px'   | 그리드 셀 간의 간격            |
-| maxWidth    | string   | '800px'  | 폼의 최대 너비                 |
 | className   | string   | -        | 추가 CSS 클래스                |
 
 ### GridForm.Row Props
@@ -70,6 +74,13 @@ graph TD
 | gap       | string                  | '12px'    | 내부 요소들 간의 간격     |
 | className | string                  | -         | 추가 CSS 클래스           |
 
+### GridForm.Feedback Props
+
+| Props     | 타입                              | 기본값  | 설명                      |
+|-----------|-----------------------------------|---------|---------------------------|
+| type      | 'info' \| 'success' \| 'warning' \| 'error' | 'info'  | 피드백 메시지 타입        |
+| className | string                            | -       | 추가 CSS 클래스           |
+
 ## 4. 사용 예시
 
 ### 기본 사용법
@@ -91,16 +102,26 @@ graph TD
 </GridForm>
 ```
 
-### 복잡한 폼 예시
+### 피드백 포함 폼 예시
 
 ```tsx
 <GridForm labelWidth="120px" gap="16px">
   <GridForm.Row>
-    <GridForm.Label required htmlFor="vote-title">
-      투표제목
+    <GridForm.Label required htmlFor="email">
+      이메일
     </GridForm.Label>
     <GridForm.Content>
-      <input id="vote-title" type="text" />
+      <input 
+        id="email" 
+        type="email" 
+        className="w-full p-2 border rounded" 
+      />
+      <GridForm.Feedback type="info">
+        <div className="flex gap-2 items-center">
+          <Info className="w-4 h-4" />
+          올바른 이메일 형식을 입력해주세요
+        </div>
+      </GridForm.Feedback>
     </GridForm.Content>
   </GridForm.Row>
   
@@ -117,9 +138,30 @@ graph TD
           복수 선택
         </label>
       </div>
-      <p className="text-sm text-muted-foreground">
-        투표 유형을 선택해주세요.
-      </p>
+      <GridForm.Feedback type="info">
+        <div className="flex gap-2 items-center">
+          <Info className="w-4 h-4" />
+          투표 유형을 선택해주세요
+        </div>
+      </GridForm.Feedback>
+    </GridForm.Content>
+  </GridForm.Row>
+</GridForm>
+```
+
+### 복잡한 폼 예시
+
+```tsx
+<GridForm labelWidth="120px" gap="16px">
+  <GridForm.Row>
+    <GridForm.Label required htmlFor="vote-title">
+      투표제목
+    </GridForm.Label>
+    <GridForm.Content>
+      <input id="vote-title" type="text" />
+      <GridForm.Feedback type="info">
+        유효성 검사: 제목을 입력해주세요
+      </GridForm.Feedback>
     </GridForm.Content>
   </GridForm.Row>
   
@@ -133,6 +175,9 @@ graph TD
         rows={4}
         className="w-full p-2 border rounded resize-none"
       />
+      <GridForm.Feedback type="info">
+        유효성 검사: 상세 설명을 입력해주세요
+      </GridForm.Feedback>
     </GridForm.Content>
   </GridForm.Row>
 </GridForm>
@@ -164,4 +209,5 @@ GridForm은 작은 화면에서 스택 레이아웃으로 자동 전환됩니다
 2. **높은 재사용성**: Compound Component 패턴으로 유연한 조합 가능
 3. **접근성 향상**: 의미적으로 올바른 HTML 구조
 4. **반응형 대응**: 각 레이어에서 독립적인 반응형 처리
-5. **개발 효율성**: 일관된 API로 빠른 폼 구현 
+5. **개발 효율성**: 일관된 API로 빠른 폼 구현
+6. **레이아웃 안정성**: 피드백 영역이 컨텐츠 내부에 위치해 레이아웃 충격 방지 

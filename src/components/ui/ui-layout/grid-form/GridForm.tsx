@@ -11,7 +11,6 @@ interface GridFormContextValue {
 
 const GridFormContext = createContext<GridFormContextValue | null>(null);
 
-
 // #endregion
 
 // #region 타입 정의
@@ -38,6 +37,12 @@ export interface GridFormLabelProps {
 export interface GridFormContentProps {
 	direction?: 'column' | 'row';
 	gap?: string;
+	className?: string;
+	children: React.ReactNode;
+}
+
+export interface GridFormFeedbackProps {
+	type?: 'info' | 'success' | 'warning' | 'error';
 	className?: string;
 	children: React.ReactNode;
 }
@@ -90,8 +95,8 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 	};
 
 	// Label과 Content를 찾아서 직접 렌더링
-	let labelElement = null;
-	let contentElement = null;
+	let labelElement: React.ReactElement | null = null;
+	let contentElement: React.ReactElement | null = null;
 
 	React.Children.forEach(children, (child) => {
 		if (React.isValidElement(child)) {
@@ -99,13 +104,13 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 				labelElement = React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
 					className: cn(
 						// 박스 스타일링 - 가운데 정렬 (세로, 가로)
-						'flex items-center justify-center px-4 py-3',
+						'flex items-center justify-center px-4 py-2',
 						'bg-muted/30 border-r border-b border-border/40',
-						'font-medium text-sm text-foreground',
+						'font-medium text-base text-foreground text-center',
 						// 높이 맞춤
 						'min-h-full',
-						// 마지막에서 두 번째 요소의 하단 테두리 제거 (라벨)
-						'[&:nth-last-child(2)]:border-b-0',
+						// 마지막 요소의 하단 테두리 제거 (라벨)
+						'last:border-b-0',
 						alignClasses[align],
 						(child.props as GridFormLabelProps)?.className
 					),
@@ -150,9 +155,9 @@ const GridFormLabel = React.forwardRef<
 		<label
 			ref={ref}
 			className={cn(
-				'text-sm font-medium text-foreground',
-				'flex items-center px-4 py-3 font-multilang',
-				'border-r border-border/40',
+				'text-base font-medium text-foreground',
+				'flex justify-center items-center px-4 py-2 font-multilang',
+				'text-center border-r border-border/40',
 				className
 			)}
 			{...props}
@@ -190,7 +195,7 @@ const GridFormContent = React.forwardRef<
 		<div
 			ref={ref}
 			className={cn(
-				'flex px-4 py-3 min-h-full',
+				'flex px-4 py-2 min-h-full',
 				directionClasses[direction],
 				// direction이 column일 때는 justify-center, row일 때는 items-center
 				direction === 'column' ? 'justify-center' : 'items-center',
@@ -209,11 +214,47 @@ const GridFormContent = React.forwardRef<
 GridFormContent.displayName = 'GridFormContent';
 // #endregion
 
+// #region GridForm.Feedback 컴포넌트
+const GridFormFeedback = React.forwardRef<
+	HTMLDivElement,
+	GridFormFeedbackProps & React.HTMLAttributes<HTMLDivElement>
+>(({
+	type = 'info',
+	className,
+	children,
+	...props
+}, ref) => {
+	const iconColorClasses = {
+		info: '[&_svg]:text-muted-foreground',
+		success: '[&_svg]:text-primary', // 파란색으로 변경
+		warning: '[&_svg]:text-warning',
+		error: '[&_svg]:text-destructive',
+	};
+
+	return (
+		<div
+			ref={ref}
+			className={cn(
+				'mt-2 text-sm font-multilang text-gray-900', // 텍스트는 진한 블랙, 위쪽 마진 추가
+				iconColorClasses[type], // 아이콘만 색상 적용
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</div>
+	);
+});
+
+GridFormFeedback.displayName = 'GridFormFeedback';
+// #endregion
+
 // #region Compound Components 구성
 const CompoundGridForm = Object.assign(GridForm, {
 	Row: GridFormRow,
 	Label: GridFormLabel,
 	Content: GridFormContent,
+	Feedback: GridFormFeedback,
 });
 
 export default CompoundGridForm;

@@ -1,9 +1,10 @@
-'use server';
+'use client';
 
 import { fetchDefault } from '../fetchClient';
+import { ApiMessageResponse } from '@/types/auth';
 
 /**
- * 로그아웃 Server Action
+ * 로그아웃 클라이언트 함수
  */
 export async function logout() {
   try {
@@ -12,14 +13,17 @@ export async function logout() {
     });
 
     if (!response.ok) {
+      const errorData = await response.json();
       return {
         success: false,
-        errorMsg: '로그아웃 실패',
+        errorMsg: errorData.message || '로그아웃 실패',
       };
     }
 
+    const data: ApiMessageResponse = await response.json();
     return {
       success: true,
+      message: data.message,
     };
   } catch {
     return {

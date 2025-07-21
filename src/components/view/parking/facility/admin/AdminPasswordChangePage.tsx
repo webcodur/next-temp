@@ -206,9 +206,6 @@ export default function AdminPasswordChangePage() {
                 placeholder="새 비밀번호를 입력해주세요 (최소 6자리)"
                 disabled={isSubmitting}
               />
-              <p className="mt-1 text-xs text-muted-foreground">
-                최소 6자리 이상 입력해주세요.
-              </p>
             </GridForm.Content>
           </GridForm.Row>
 

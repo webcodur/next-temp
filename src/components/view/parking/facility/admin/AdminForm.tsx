@@ -38,13 +38,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
   onChange,
   disabled = false,
 }) => {
-  const isReadOnly = mode === 'view';
-  const showPassword = mode === 'create'; // edit 모드에서는 비밀번호 필드를 숨김
+  const isReadOnly = disabled || mode === 'view';
+  const showPassword = mode === 'create'; // create 모드에서만 비밀번호 필드 표시
   const passwordRequired = mode === 'create';
-
-  // 검증
-  const passwordsMatch = data.password === data.confirm || data.confirm === '';
-  const showPasswordError = data.password.trim() && data.confirm.trim() && !passwordsMatch;
 
   const handleFieldChange = (field: keyof AdminFormData, value: string) => {
     onChange({
@@ -65,6 +61,10 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('account', value)}
             placeholder="계정명을 입력해주세요"
             disabled={disabled || mode !== 'create'}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -78,7 +78,11 @@ const AdminForm: React.FC<AdminFormProps> = ({
             value={data.name}
             onChange={(value) => handleFieldChange('name', value)}
             placeholder="이름을 입력해주세요"
-            disabled={disabled || isReadOnly}
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -89,10 +93,15 @@ const AdminForm: React.FC<AdminFormProps> = ({
         </GridForm.Label>
         <GridForm.Content>
           <SimpleTextInput
+            type="email"
             value={data.email}
             onChange={(value) => handleFieldChange('email', value)}
             placeholder="이메일을 입력해주세요"
-            disabled={disabled || isReadOnly}
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'email',
+              mode: mode
+            }}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -106,7 +115,11 @@ const AdminForm: React.FC<AdminFormProps> = ({
             value={data.phone}
             onChange={(value) => handleFieldChange('phone', value)}
             placeholder="010-0000-0000"
-            disabled={disabled || isReadOnly}
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'phone',
+              mode: mode
+            }}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -121,11 +134,16 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('role', value)}
             options={ROLE_OPTIONS}
             placeholder="권한을 선택하세요"
-            disabled={disabled || isReadOnly}
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
           />
         </GridForm.Content>
       </GridForm.Row>
 
+      {/* create 모드에서만 비밀번호 필드 표시 */}
       {showPassword && (
         <>
           <GridForm.Row>
@@ -139,6 +157,10 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 onChange={(value) => handleFieldChange('password', value)}
                 placeholder="비밀번호를 입력해주세요"
                 disabled={disabled}
+                validationRule={{
+                  type: 'password',
+                  mode: mode
+                }}
               />
             </GridForm.Content>
           </GridForm.Row>
@@ -154,18 +176,19 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 onChange={(value) => handleFieldChange('confirm', value)}
                 placeholder="비밀번호를 다시 입력해주세요"
                 disabled={disabled}
+                validationRule={{
+                  type: 'password-confirm',
+                  originalPassword: data.password,
+                  mode: mode
+                }}
               />
-              {showPasswordError && (
-                <p className="mt-1 text-sm text-destructive">
-                  비밀번호가 일치하지 않습니다.
-                </p>
-              )}
             </GridForm.Content>
           </GridForm.Row>
         </>
       )}
 
-      {mode === 'view' && admin && (
+      {/* view/edit 모드에서 항상 표시되는 추가 정보 */}
+      {mode !== 'create' && (
         <>
           <GridForm.Row>
             <GridForm.Label>
@@ -173,9 +196,13 @@ const AdminForm: React.FC<AdminFormProps> = ({
             </GridForm.Label>
             <GridForm.Content>
               <SimpleTextInput
-                value={admin.parkinglot?.name || '-'}
+                value={admin?.parkinglot?.name || '-'}
                 onChange={() => {}}
                 disabled={true}
+                validationRule={{
+                  type: 'free',
+                  mode: mode
+                }}
               />
             </GridForm.Content>
           </GridForm.Row>
@@ -186,13 +213,17 @@ const AdminForm: React.FC<AdminFormProps> = ({
             </GridForm.Label>
             <GridForm.Content>
               <SimpleTextInput
-                value={new Date(admin.createdAt).toLocaleDateString('ko-KR', {
+                value={admin ? new Date(admin.createdAt).toLocaleDateString('ko-KR', {
                   year: 'numeric',
                   month: '2-digit',
                   day: '2-digit',
-                })}
+                }) : '-'}
                 onChange={() => {}}
                 disabled={true}
+                validationRule={{
+                  type: 'free',
+                  mode: mode
+                }}
               />
             </GridForm.Content>
           </GridForm.Row>

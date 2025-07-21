@@ -53,7 +53,7 @@ export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
 			</div>
 
 			<div
-				className={`flex items-center h-8 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+				className={`flex items-center h-11 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
 				onClick={handleChange}
 				onKeyDown={handleKeyDown}
 				tabIndex={disabled ? -1 : 0}

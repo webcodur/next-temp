@@ -1,9 +1,10 @@
-'use server';
+'use client';
 
 import { fetchDefault } from '../fetchClient';
+import { TokenResponse } from '@/types/auth';
 
 /**
- * 로그인 Server Action
+ * 로그인 클라이언트 함수
  */
 export async function signInWithCredentials(account: string, password: string) {
   try {
@@ -20,7 +21,7 @@ export async function signInWithCredentials(account: string, password: string) {
       };
     }
 
-    const data = await response.json();
+    const data: TokenResponse = await response.json();
     return {
       success: true,
       data,

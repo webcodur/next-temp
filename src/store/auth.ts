@@ -4,7 +4,7 @@ import { atomWithStorage } from 'jotai/utils';
 export const isAuthenticatedAtom = atomWithStorage<boolean>( 'isAuthenticated', false );
 
 // 사용자 정보
-interface User {
+export interface User {
 	id: string;
 	name: string;
 	email: string;
@@ -13,16 +13,15 @@ interface User {
 }
 export const userAtom = atomWithStorage<User | null>('user', null);
 
-// 주차장 정보 - 실제 API 응답에 맞춰 수정
+// 주차장 정보 - API 응답 형식에 맞춤
 export interface ParkingLot {
-	id: string;
+	id: number;
 	code: string;
 	name: string;
 	description: string;
-	isActive: boolean;
-	createdAt: string;
-	updatedAt: string;
-	deletedAt: string | null;
 }
 
 export const parkingLotsAtom = atomWithStorage<ParkingLot[]>('parkinglots', []);
+
+// 선택된 주차장 ID - API 헤더용
+export const selectedParkingLotIdAtom = atomWithStorage<number | null>('selected-parkinglot-id', null);

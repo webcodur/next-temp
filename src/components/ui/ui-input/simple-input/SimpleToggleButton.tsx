@@ -27,9 +27,9 @@ export const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
 	};
 
 	const sizeStyles = {
-		sm: 'px-3 py-1.5 text-sm h-7',
-		md: 'px-4 py-2 text-sm h-8',
-		lg: 'px-5 py-2.5 text-base h-10',
+		sm: 'px-3 py-1.5 text-sm h-9',
+		md: 'px-4 py-2 text-sm h-11',
+		lg: 'px-5 py-2.5 text-base h-12',
 	};
 
 	const variantStyles = {

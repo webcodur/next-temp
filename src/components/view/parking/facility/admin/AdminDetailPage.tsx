@@ -220,7 +220,7 @@ export default function AdminDetailPage() {
       <div className="flex justify-between items-center">
         <div className="flex gap-4 items-center">
           <Button
-            variant="ghost"
+            variant="default"
             size="sm"
             onClick={handleBack}
             className="flex gap-2 items-center"

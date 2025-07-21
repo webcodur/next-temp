@@ -1,13 +1,10 @@
-'use server';
+'use client';
 
 import { fetchDefault } from '../fetchClient';
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
+import { TokenResponse } from '@/types/auth';
 
 /**
- * 토큰 갱신 Server Action
+ * 토큰 갱신 클라이언트 함수
  */
 export async function refreshTokenWithString(refreshTokenString: string) {
   try {
@@ -24,7 +21,7 @@ export async function refreshTokenWithString(refreshTokenString: string) {
       };
     }
 
-    const data = await response.json();
+    const data: TokenResponse = await response.json();
     return {
       success: true,
       data,

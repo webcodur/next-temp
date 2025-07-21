@@ -36,29 +36,29 @@ export const SimpleToggleSwitch: React.FC<SimpleToggleSwitchProps> = ({
 
 	const sizeStyles = {
 		sm: {
-			track: 'w-8 h-4',
-			thumb: 'w-3 h-3',
+			track: 'w-8 h-5',
+			thumb: 'w-4 h-4',
 			translate: checked 
 				? (isRTL ? '-translate-x-4' : 'translate-x-4') 
 				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
 		},
 		md: {
-			track: 'w-10 h-5',
-			thumb: 'w-4 h-4',
+			track: 'w-10 h-6',
+			thumb: 'w-5 h-5',
 			translate: checked 
 				? (isRTL ? '-translate-x-5' : 'translate-x-5') 
 				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
 		},
 		lg: {
-			track: 'w-12 h-6',
-			thumb: 'w-5 h-5',
+			track: 'w-12 h-7',
+			thumb: 'w-6 h-6',
 			translate: checked 
 				? (isRTL ? '-translate-x-6' : 'translate-x-6') 
 				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
 		},
 		xl: {
-			track: 'w-16 h-8',
-			thumb: 'w-7 h-7',
+			track: 'w-16 h-9',
+			thumb: 'w-8 h-8',
 			translate: checked 
 				? (isRTL ? '-translate-x-8' : 'translate-x-8') 
 				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),

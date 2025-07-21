@@ -2,10 +2,10 @@
 
 import { useAtom } from 'jotai';
 import { useEffect, useTransition, useCallback } from 'react';
-import { signInWithCredentials } from '../services/auth/auth_signin_POST';
-import { logout as logoutAction } from '../services/auth/auth_logout_GET';
-import { refreshTokenWithString } from '../services/auth/auth_refresh_POST';
-import { isAuthenticatedAtom, userAtom, parkingLotsAtom } from '../store/auth';
+import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
+import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
+import { refreshTokenWithString } from '@/services/auth/auth_refresh_POST';
+import { isAuthenticatedAtom, userAtom, parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
 
 /**
  * 쿠키에서 토큰 가져오기
@@ -39,6 +39,7 @@ export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
   const [user, setUser] = useAtom(userAtom);
   const [parkingLots, setParkingLots] = useAtom(parkingLotsAtom);
+  const [selectedParkingLotId, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
 
   /**
    * 토큰 자동 갱신
@@ -58,7 +59,7 @@ export function useAuth() {
         setTokenToCookie('access-token', result.data.accessToken);
         setTokenToCookie('refresh-token', result.data.refreshToken);
         
-        // 주차장 정보 업데이트 (있는 경우)
+        // 현장 정보(주차장) 업데이트 - 로그인 시 미리 받는 정보
         if (result.data.parkinglots) {
           setParkingLots(result.data.parkinglots);
         }
@@ -89,6 +90,7 @@ export function useAuth() {
             setIsLoggedIn(false);
             setUser(null);
             setParkingLots([]);
+            setSelectedParkingLotId(null);
           }
         });
       } else {
@@ -96,9 +98,10 @@ export function useAuth() {
         setIsLoggedIn(false);
         setUser(null);
         setParkingLots([]);
+        setSelectedParkingLotId(null);
       }
     }
-  }, [isLoggedIn, setIsLoggedIn, setUser, setParkingLots, refreshToken]);
+  }, [isLoggedIn, setIsLoggedIn, setUser, setParkingLots, setSelectedParkingLotId, refreshToken]);
 
   /**
    * 로그인
@@ -124,18 +127,33 @@ export function useAuth() {
     // 로그인 상태 업데이트
     setIsLoggedIn(true);
     
-    // 사용자 정보가 있다면 설정
-    if (result.data.user) {
-      setUser(result.data.user);
-    }
-    
-    // 주차장 정보가 있다면 설정
+    // 현장 정보(주차장) 설정 - 로그인 시 미리 받는 중요 정보
     if (result.data.parkinglots) {
       setParkingLots(result.data.parkinglots);
+      
+      // 첫 번째 주차장을 기본 선택
+      if (result.data.parkinglots.length > 0 && !selectedParkingLotId) {
+        setSelectedParkingLotId(result.data.parkinglots[0].id);
+      }
     }
 
     return { success: true };
   };
+
+  /**
+   * 주차장 선택
+   */
+  const selectParkingLot = useCallback((parkingLotId: number) => {
+    setSelectedParkingLotId(parkingLotId);
+  }, [setSelectedParkingLotId]);
+
+  /**
+   * 선택된 주차장 정보 가져오기
+   */
+  const getSelectedParkingLot = useCallback(() => {
+    if (!selectedParkingLotId) return null;
+    return parkingLots.find(lot => lot.id === selectedParkingLotId) || null;
+  }, [selectedParkingLotId, parkingLots]);
 
   /**
    * 로그아웃
@@ -152,6 +170,7 @@ export function useAuth() {
       setIsLoggedIn(false);
       setUser(null);
       setParkingLots([]);
+      setSelectedParkingLotId(null);
     });
   };
 
@@ -164,5 +183,8 @@ export function useAuth() {
     isPending,
     user,
     parkingLots,
+    selectedParkingLotId,
+    selectedParkingLot: getSelectedParkingLot(),
+    selectParkingLot,
   };
 } 

@@ -1,26 +1,8 @@
 import { atom } from 'jotai';
-import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
 // 사이드바 상태
 export const sidebarCollapsedAtom = atom(false);
 export const headerCollapsedAtom = atom(false);
-
-
-
-// 사용자 정보
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  avatar?: string;
-}
-
-export const userAtom = atomWithStorage<User | null>(
-  'user',
-  null,
-  createJSONStorage(() => sessionStorage)
-);
 
 // 관리자 모드
 export const isAdminModeAtom = atom(false);

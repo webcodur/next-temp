@@ -40,3 +40,14 @@
 @import url('../styles/system/04-neumorphism.css');
 @import url('../styles/system/05-animations.css');
 @import url('../styles/system/06-utilities.css');
+
+/* #region Placeholder 드래그 방지 */
+/* 모든 input과 textarea의 placeholder 텍스트 선택 방지 */
+input::placeholder,
+textarea::placeholder {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+/* #endregion */

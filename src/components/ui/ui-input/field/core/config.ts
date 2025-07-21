@@ -6,7 +6,7 @@ export const FIELD_STYLES = {
 	container: 'neu-flat focus:neu-inset border-border',
 	height: 'h-10',
 	padding: 'px-3 py-2',
-	text: 'font-multilang text-sm font-medium placeholder:text-muted-foreground text-foreground',
+	text: 'font-multilang text-sm font-medium placeholder:text-muted-foreground placeholder:select-none text-foreground',
 	sortIcon:
 		'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 cursor-pointer neu-icon-inactive',
 	startIcon:

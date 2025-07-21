@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
-import { Plus, Key, Trash2, Eye } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePageDescription } from '@/hooks/usePageDescription';
 
@@ -66,10 +66,6 @@ export default function AdminListPage() {
     console.log('handleRowClick 호출, admin:', admin, 'adminId:', admin.id);
     console.log('이동할 경로:', `/parking/facility/admin/${admin.id}`);
     router.push(`/parking/facility/admin/${admin.id}`);
-  }, [router]);
-
-  const handlePasswordChange = useCallback((admin: Admin) => {
-    router.push(`/parking/facility/admin/${admin.id}/password`);
   }, [router]);
 
   const handleDeleteClick = useCallback((id: number) => {
@@ -152,7 +148,7 @@ export default function AdminListPage() {
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '10%',
+      width: '14%',
       cell: (item: Admin) => {
         const date = new Date(item.createdAt);
         return date.toLocaleDateString('ko-KR', {
@@ -165,34 +161,10 @@ export default function AdminListPage() {
     {
       header: '관리',
       align: 'center',
-      width: '13%',
+      width: '9%',
       sortable: false,
       cell: (item: Admin) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log('상세보기 버튼 클릭, admin:', item, 'adminId:', item.id);
-              console.log('이동할 경로:', `/parking/facility/admin/${item.id}`);
-              router.push(`/parking/facility/admin/${item.id}`);
-            }}
-            title="상세보기"
-          >
-            <Eye size={16} />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePasswordChange(item);
-            }}
-            title="비밀번호 변경"
-          >
-            <Key size={16} />
-          </Button>
           <Button
             variant="destructive"
             size="sm"

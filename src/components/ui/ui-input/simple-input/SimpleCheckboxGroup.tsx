@@ -58,7 +58,7 @@ export const SimpleCheckboxGroup: React.FC<SimpleCheckboxGroupProps> = ({
 				)}
 			</div>
 
-			<div className={`flex min-h-8 ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4 justify-between'}`}>
+			<div className={`flex min-h-11 ${layout === 'vertical' ? 'flex-col gap-3' : 'flex-row flex-wrap gap-4 justify-between'}`}>
 				{options.map((option) => {
 					const isChecked = value.includes(option.value);
 					const isDisabled = disabled || option.disabled;
@@ -67,7 +67,7 @@ export const SimpleCheckboxGroup: React.FC<SimpleCheckboxGroupProps> = ({
 					return (
 						<div
 							key={option.value}
-							className={`flex items-center h-8 p-2 rounded-lg border border-transparent transition-all duration-200 ${
+							className={`flex items-center h-11 p-2 rounded-lg border border-transparent transition-all duration-200 ${
 								layout === 'horizontal' ? 'flex-1' : ''
 							} ${
 								isDisabled 
