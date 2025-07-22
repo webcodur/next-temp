@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocale } from '@/hooks/useI18n';
 
+// #region 타입
 export interface TimelineItem {
 	id: string;
 	title: string;
@@ -15,14 +16,18 @@ interface TimelineProps {
 	orientation?: 'vertical' | 'horizontal';
 	className?: string;
 }
+// #endregion
 
 const Timeline: React.FC<TimelineProps> = ({
 	items,
 	orientation = 'vertical',
 	className = '',
 }) => {
+	// #region 훅
 	const { isRTL } = useLocale();
+	// #endregion
 
+	// #region 핸들러
 	const getStatusColor = (status?: string) => {
 		switch (status) {
 			case 'completed':
@@ -35,7 +40,9 @@ const Timeline: React.FC<TimelineProps> = ({
 				return 'bg-primary';
 		}
 	};
+	// #endregion
 
+	// #region 렌더링
 	if (orientation === 'vertical') {
 		return (
 			<div className={`relative ${className}`}>

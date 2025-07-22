@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLocale } from '@/hooks/useI18n';
 import Image from 'next/image';
 
+// #region 타입
 interface CarouselProps {
 	items: Array<{
 		id: string;
@@ -19,6 +20,7 @@ interface CarouselProps {
 	showArrows?: boolean;
 	className?: string;
 }
+// #endregion
 
 const Carousel: React.FC<CarouselProps> = ({
 	items,
@@ -29,10 +31,16 @@ const Carousel: React.FC<CarouselProps> = ({
 	showArrows = true,
 	className = '',
 }) => {
+	// #region 상태
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(autoSlide);
-	const { isRTL } = useLocale();
+	// #endregion
 
+	// #region 훅
+	const { isRTL } = useLocale();
+	// #endregion
+
+	// #region 핸들러
 	useEffect(() => {
 		if (!isPlaying) return;
 
@@ -60,7 +68,9 @@ const Carousel: React.FC<CarouselProps> = ({
 	const toggleAutoPlay = () => {
 		setIsPlaying(!isPlaying);
 	};
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className={`relative w-full max-w-4xl mx-auto neu-flat rounded-lg overflow-hidden ${className}`}>
 			{/* 메인 슬라이드 영역 */}
@@ -175,6 +185,7 @@ const Carousel: React.FC<CarouselProps> = ({
 			</div>
 		</div>
 	);
+	// #endregion
 };
 
 export default Carousel;

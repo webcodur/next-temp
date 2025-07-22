@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
-//#region 상수 및 타입 정의
+// #region 상수
 const morphTime = 1.5;
 const cooldownTime = 0.5;
+// #endregion
 
+// #region 타입
 interface MorphingTextProps {
   className?: string;
   texts: string[];
@@ -14,9 +16,9 @@ interface MorphingTextProps {
   autoPlay?: boolean; // 자동 순환 여부 (기본값: true)
   onTextChange?: (index: number) => void; // 텍스트 변경 시 콜백
 }
-//#endregion
+// #endregion
 
-//#region 커스텀 훅
+// #region 훅
 const useMorphingText = (
   texts: string[], 
   currentIndex?: number, 

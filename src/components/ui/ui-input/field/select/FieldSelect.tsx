@@ -7,6 +7,7 @@ import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/useI18n';
 import { useSelectLogic } from '../shared/useSelectLogic';
 
+// #region 타입
 interface FieldSelectProps {
 	id: string;
 	label?: string;
@@ -20,6 +21,7 @@ interface FieldSelectProps {
 	onFocus?: () => void;
 	onBlur?: () => void;
 }
+// #endregion
 
 const FieldSelect: React.FC<FieldSelectProps> = ({
 	id,
@@ -34,9 +36,15 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	onFocus,
 	onBlur,
 }) => {
+	// #region 상태
 	const [isFocused, setIsFocused] = useState(false);
-	const { isRTL } = useLocale();
+	// #endregion
 
+	// #region 훅
+	const { isRTL } = useLocale();
+	// #endregion
+
+	// #region 핸들러
 	// use shared select logic (handles outside click & keyboard nav)
 	const {
 		isOpen,
@@ -46,6 +54,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 		selectedOption,
 		handleOptionSelect,
 	} = useSelectLogic(options, value, onChange);
+	// #endregion
 
 	const handleSelect = (optionValue: string) => {
 		const opt = options.find((o) => o.value === optionValue);

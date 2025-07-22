@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
+// #region 타입
 interface AccordionProps {
 	title?: string;
 	children: ReactNode;
@@ -12,6 +13,7 @@ interface AccordionProps {
 	contentClassName?: string;
 	disabled?: boolean;
 }
+// #endregion
 
 export const Accordion: React.FC<AccordionProps> = ({
 	title = 'Accordion',
@@ -24,8 +26,11 @@ export const Accordion: React.FC<AccordionProps> = ({
 	contentClassName = '',
 	disabled = false,
 }) => {
+	// #region 상태
 	const [isOpen, setIsOpen] = useState(defaultOpen);
+	// #endregion
 
+	// #region 핸들러
 	const handleToggle = () => {
 		if (disabled) return;
 		
@@ -33,7 +38,9 @@ export const Accordion: React.FC<AccordionProps> = ({
 		setIsOpen(newState);
 		onToggle?.(newState);
 	};
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className={`neu-flat bg-muted rounded-2xl ${className}`}>
 			{/* 헤더 */}
@@ -78,6 +85,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 			</div>
 		</div>
 	);
+	// #endregion
 };
 
 // 다중 Accordion을 위한 그룹 컴포넌트

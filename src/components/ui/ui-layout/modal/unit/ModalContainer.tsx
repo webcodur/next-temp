@@ -4,6 +4,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 
+// #region 타입
 interface ModalContainerProps {
 	isOpen: boolean;
 	onClose?: () => void;
@@ -11,6 +12,7 @@ interface ModalContainerProps {
 	className?: string;
 	closeOnBackdropClick?: boolean;
 }
+// #endregion
 
 const ModalContainer: React.FC<ModalContainerProps> = ({
 	isOpen,
@@ -19,9 +21,12 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 	className = '',
 	closeOnBackdropClick = true,
 }) => {
+	// #region 상태
 	// 클라이언트 마운트 여부 확인 (Hydration mismatch 방지)
 	const [mounted, setMounted] = useState(false);
+	// #endregion
 
+	// #region 핸들러
 	useEffect(() => {
 		setMounted(true);
 	}, []);
@@ -59,7 +64,9 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 			onClose();
 		}
 	};
+	// #endregion
 
+	// #region 렌더링
 	const modalContent = (
 		<div
 			className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-sm bg-background/40"
@@ -74,6 +81,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 	// 클라이언트에서만 렌더링
 	if (typeof window !== 'undefined') return createPortal(modalContent, document.body);
 	return null;
+	// #endregion
 };
 
 export default ModalContainer; 

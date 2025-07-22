@@ -17,11 +17,14 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// #region SortableItem 컴포넌트
+// #region 타입
 interface Item {
 	id: string;
 	name: string;
 }
+// #endregion
+
+// #region SortableItem 컴포넌트
 
 const SortableItem: React.FC<Item> = ({ id, name }) => {
 	const { attributes, listeners, setNodeRef, transform, transition } =
@@ -45,14 +48,20 @@ const SortableItem: React.FC<Item> = ({ id, name }) => {
 // #endregion
 
 const DragAndDrop: React.FC = () => {
+	// #region 상태
 	const [items, setItems] = useState<Item[]>([
 		{ id: '1', name: 'Item 1' },
 		{ id: '2', name: 'Item 2' },
 		{ id: '3', name: 'Item 3' },
 		{ id: '4', name: 'Item 4' },
 	]);
-	const sensors = useSensors(useSensor(PointerSensor));
+	// #endregion
 
+	// #region 훅
+	const sensors = useSensors(useSensor(PointerSensor));
+	// #endregion
+
+	// #region 핸들러
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
 		if (!over || active.id === over.id) return;
@@ -62,7 +71,9 @@ const DragAndDrop: React.FC = () => {
 			return arrayMove(items, oldIndex, newIndex);
 		});
 	};
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="p-4">
 			<h2 className="text-lg font-bold mb-2">Drag And Drop</h2>
@@ -82,6 +93,7 @@ const DragAndDrop: React.FC = () => {
 			</DndContext>
 		</div>
 	);
+	// #endregion
 };
 
 export default DragAndDrop;

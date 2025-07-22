@@ -5,6 +5,7 @@ import { Search, Type, X } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
 
+// #region 타입
 interface FieldTextProps {
 	id: string;
 	label?: string;
@@ -19,6 +20,7 @@ interface FieldTextProps {
 	onFocus?: () => void;
 	onBlur?: () => void;
 }
+// #endregion
 
 const FieldText: React.FC<FieldTextProps> = ({
 	id,
@@ -35,12 +37,20 @@ const FieldText: React.FC<FieldTextProps> = ({
 	onBlur,
 	...rest
 }) => {
+	// #region 상태
 	const [isFocused, setIsFocused] = useState(false);
+	// #endregion
+
+	// #region 훅
 	const inputRef = useRef<HTMLInputElement>(null);
 	const { isRTL } = useLocale();
+	// #endregion
 
+	// #region 상수
 	const StartIcon = showSearchIcon ? Search : Type;
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
 			{label && (

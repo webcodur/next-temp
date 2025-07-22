@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useLocale } from '@/hooks/useI18n';
 
+// #region 타입
 interface PaginationControlsProps {
 	currentPage: number;
 	totalPages: number;
@@ -14,6 +15,7 @@ interface PaginationControlsProps {
 	showFirstLast?: boolean;
 	disabled?: boolean;
 }
+// #endregion
 
 const PaginationControls: React.FC<PaginationControlsProps> = ({
 	currentPage,
@@ -22,8 +24,11 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 	showFirstLast = true,
 	disabled = false,
 }) => {
+	// #region 훅
 	const { isRTL } = useLocale();
+	// #endregion
 
+	// #region 핸들러 및 상수
 	const handlePageChange = (page: number) => {
 		if (page >= 1 && page <= totalPages && !disabled) {
 			onPageChange(page);
@@ -43,7 +48,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 		flex items-center justify-center px-3 py-2 text-sm font-medium rounded-md
 		opacity-50 cursor-not-allowed neu-flat
 	`;
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className="flex items-center space-x-2">
 			{/* 첫 페이지 버튼 */}

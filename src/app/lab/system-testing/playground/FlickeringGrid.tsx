@@ -30,6 +30,7 @@ import React, {
   useState,
 } from "react";
 
+// #region 타입
 interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement> {
   squareSize?: number;
   gridGap?: number;
@@ -40,6 +41,7 @@ interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   maxOpacity?: number;
 }
+// #endregion
 
 export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   squareSize = 4,

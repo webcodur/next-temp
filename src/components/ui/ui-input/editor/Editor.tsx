@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
 import { useLocale, useTranslations } from '@/hooks/useI18n';
 
+// #region 타입
 interface EditorProps {
 	value?: string;
 	onChange?: (content: string) => void;
@@ -14,6 +15,7 @@ interface EditorProps {
 	plugins?: string[];
 	className?: string;
 }
+// #endregion
 
 const Editor: React.FC<EditorProps> = ({
 	value = '',
@@ -25,11 +27,14 @@ const Editor: React.FC<EditorProps> = ({
 	plugins,
 	className = '',
 }) => {
+	// #region 훅
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const editorRef = useRef<any>(null);
 	const { isRTL, currentLocale } = useLocale();
 	const t = useTranslations();
+	// #endregion
 	
+	// #region 상수
 	// 다국어 처리된 placeholder 사용
 	const resolvedPlaceholder = placeholder || t('에디터_플레이스홀더_내용입력');
 
@@ -48,7 +53,9 @@ const Editor: React.FC<EditorProps> = ({
 		'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
 		'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
 	];
+	// #endregion
 
+	// #region 핸들러
 	// RTL에 따른 에디터 설정
 	const getEditorConfig = () => ({
 		height,
@@ -86,7 +93,9 @@ const Editor: React.FC<EditorProps> = ({
 			editorRef.current.setContent(value);
 		}
 	}, [value]);
+	// #endregion
 
+	// #region 렌더링
 	return (
 		<div className={`overflow-hidden rounded-lg neu-flat ${className}`}>
 			<TinyMCEEditor
@@ -97,6 +106,7 @@ const Editor: React.FC<EditorProps> = ({
 			/>
 		</div>
 	);
+	// #endregion
 };
 
 export default Editor; 
