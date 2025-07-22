@@ -68,28 +68,15 @@ export function MainLayout({ children }: MainLayoutProps) {
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
 	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
-	const [windowWidth, setWindowWidth] = useState(0);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [shouldShow, setShouldShow] = useState(false);
 	// #endregion
 
-	// #region 반응형 처리
-	const MOBILE_BREAKPOINT = 1024;
-	const isMobile = windowWidth < MOBILE_BREAKPOINT && windowWidth > 0;
-	const showSecondaryPanelOverlay = isMobile && !isCollapsed;
+	// #region 애니메이션 처리
+	const showSecondaryPanel = !isCollapsed;
 
 	useEffect(() => {
-		const handleResize = () => setWindowWidth(window.innerWidth);
-		
-		setWindowWidth(window.innerWidth);
-		window.addEventListener('resize', handleResize);
-		
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
-
-	// 애니메이션 상태 관리
-	useEffect(() => {
-		if (showSecondaryPanelOverlay) {
+		if (showSecondaryPanel) {
 			setIsAnimating(true);
 			requestAnimationFrame(() => {
 				setShouldShow(true);
@@ -99,7 +86,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 			const timer = setTimeout(() => setIsAnimating(false), 300);
 			return () => clearTimeout(timer);
 		}
-	}, [showSecondaryPanelOverlay]);
+	}, [showSecondaryPanel]);
 	// #endregion
 
 	// #region 초기화 및 부가 효과
@@ -121,27 +108,13 @@ export function MainLayout({ children }: MainLayoutProps) {
 			<div className="flex overflow-hidden flex-col flex-1 h-screen">
 				<Header />
 				<div className="flex overflow-hidden relative flex-1">
-					{/* Desktop SecondaryPanel */}
-					{!isMobile && (
-						<div 
-							className={`flex-shrink-0 h-full transition-all duration-300 ease-in-out ${isCollapsed ? 'overflow-hidden' : ''}`}
-							style={{ width: isCollapsed ? '0px' : `${defaults.expandedWidth}px` }}>
-							<div className={`h-full transition-transform duration-300 ease-in-out ${
-								isCollapsed ? 'transform -translate-x-full' : 'transform translate-x-0'
-							}`}
-							style={{ width: `${defaults.expandedWidth}px` }}>
-								<SecondaryPanel />
-							</div>
-						</div>
-					)}
-
-					{/* Mobile SecondaryPanel Overlay */}
-					{(showSecondaryPanelOverlay || isAnimating) && (
+					{/* SecondaryPanel Overlay */}
+					{(showSecondaryPanel || isAnimating) && (
 						<>
 							{/* Backdrop */}
 							<div 
 								className={`absolute inset-0 z-40 bg-black/50 transition-opacity duration-300 ease-in-out ${
-									showSecondaryPanelOverlay ? 'opacity-100' : 'opacity-0'
+									showSecondaryPanel ? 'opacity-100' : 'opacity-0'
 								}`}
 								onClick={() => setIsCollapsed(true)}
 							/>
