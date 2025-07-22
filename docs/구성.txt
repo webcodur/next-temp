@@ -1,3 +1,4 @@
 guide: 나를 위한 설명
 rules: cursor 를 위한 설명 (일반론적인)
 developing: cursor 를 위한 설명 (프로젝트적인)
+todo: 할일

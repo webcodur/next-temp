@@ -50,7 +50,6 @@
   - 디자인 시스템의 HSL 변수 기반 색상 체계에 맞춰 border 색상도 CSS 변수로 관리한다.
 */
 
-@import "tailwindcss/preflight";
 @tailwind utilities;
 
 @layer base {

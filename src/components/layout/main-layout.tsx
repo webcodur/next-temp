@@ -19,6 +19,7 @@ import { sidebarCollapsedAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
 // components
 import Login from '@/components/view/login/Login';
+import ParkingLotSelectionPage from '@/components/view/parking-lot-selection/ParkingLotSelectionPage';
 import PageWrapper from '@/components/layout/PageWrapper';
 import Header from '@/components/layout/header/Header';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
@@ -64,10 +65,10 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
 	// #region 상태 및 훅
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, selectedParkingLotId } = useAuth();
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
-	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [shouldShow, setShouldShow] = useState(false);
 	// #endregion
@@ -83,7 +84,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 			});
 		} else {
 			setShouldShow(false);
-			const timer = setTimeout(() => setIsAnimating(false), 300);
+			const timer = setTimeout(() => setIsAnimating(false), 100);
 			return () => clearTimeout(timer);
 		}
 	}, [showSecondaryPanel]);
@@ -99,8 +100,16 @@ export function MainLayout({ children }: MainLayoutProps) {
 	// #endregion
 
 	// #region 렌더링
-	// 로딩 중
+	// 로그인하지 않은 경우
 	if (!isLoggedIn) return <Login />;
+	
+	// 로그인했지만 현장을 선택하지 않은 경우
+	if (isLoggedIn && !selectedParkingLotId) {
+		return <ParkingLotSelectionPage onSelectionComplete={() => {
+			// 현장 선택 완료 후 추가 작업이 필요하면 여기에 추가
+			console.log('현장 선택 완료:', selectedParkingLotId);
+		}} />;
+	}
 	return (
 		<ToastProvider>
 			<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
@@ -111,16 +120,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 					{/* SecondaryPanel Overlay */}
 					{(showSecondaryPanel || isAnimating) && (
 						<>
-							{/* Backdrop */}
-							<div 
-								className={`absolute inset-0 z-40 bg-black/50 transition-opacity duration-300 ease-in-out ${
-									showSecondaryPanel ? 'opacity-100' : 'opacity-0'
-								}`}
-								onClick={() => setIsCollapsed(true)}
-							/>
 							{/* Overlay Panel */}
 							<div 
-								className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-300 ease-in-out bg-surface-2 ${
+								className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out bg-surface-2 ${
 									isRTL ? 'right-0' : 'left-0'
 								} ${
 									shouldShow 

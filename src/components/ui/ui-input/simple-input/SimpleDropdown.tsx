@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { List, ChevronDown, ChevronUp, CheckCircle, AlertCircle } from 'lucide-react';
+import { List, ChevronDown, ChevronUp, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
 
 interface DropdownOption {
@@ -57,6 +57,13 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	const handleSelect = (optionValue: string) => {
 		if (disabled) return;
 		onChange?.(optionValue);
+		setIsOpen(false);
+	};
+
+	const handleClear = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (disabled) return;
+		onChange?.('');
 		setIsOpen(false);
 	};
 
@@ -155,8 +162,17 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				{/* 왼쪽 리스트 아이콘 */}
 				<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 
-				{/* 우측 화살표 아이콘 */}
-				<div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+				{/* 우측 아이콘들 */}
+				<div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+					{selectedOption && !disabled && (
+						<button
+							type="button"
+							onClick={handleClear}
+							className="p-1 rounded-full hover:bg-muted transition-colors duration-200"
+							aria-label="값 지우기">
+							<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+						</button>
+					)}
 					{isOpen ? (
 						<ChevronUp className="w-4 h-4 text-muted-foreground" />
 					) : (

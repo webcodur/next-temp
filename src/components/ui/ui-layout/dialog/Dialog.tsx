@@ -120,7 +120,7 @@ export const Dialog: React.FC<DialogProps> = ({
 						`}>
 						{/* Header */}
 						{(title || showCloseButton) && (
-							<div className="flex justify-between items-center p-6 border-b border-border">
+							<div className="relative flex justify-center items-center p-6 border-b border-border">
 								<div className="flex items-center space-x-3">
 									{IconComponent && (
 										<IconComponent
@@ -136,7 +136,7 @@ export const Dialog: React.FC<DialogProps> = ({
 								{showCloseButton && (
 									<button
 										onClick={onClose}
-										className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-foreground neu-raised">
+										className="absolute p-2 rounded-lg transition-colors text-muted-foreground hover:text-foreground neu-raised end-4">
 										<X className="w-5 h-5" />
 									</button>
 								)}

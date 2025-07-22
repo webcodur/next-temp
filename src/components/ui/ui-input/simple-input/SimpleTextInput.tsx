@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, CheckCircle, AlertCircle } from 'lucide-react';
+import { Type, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
 
 interface SimpleTextInputProps {
@@ -48,6 +48,13 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		if (e.key === 'Escape') {
 			inputRef.current?.blur();
 		}
+	};
+
+	const handleClear = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (disabled) return;
+		onChange?.('');
+		inputRef.current?.focus();
 	};
 
 	// validation 결과 계산
@@ -114,6 +121,17 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					disabled={disabled}
 					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
 				/>
+
+				{/* 우측 X 아이콘 */}
+				{value && !disabled && (
+					<button
+						type="button"
+						onClick={handleClear}
+						className="flex-shrink-0 p-1 rounded-full hover:bg-muted transition-colors duration-200"
+						aria-label="값 지우기">
+						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+					</button>
+				)}
 			</div>
 		</div>
 	);

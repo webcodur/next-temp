@@ -58,8 +58,8 @@ const Modal: React.FC<ModalProps> = ({
 
 			{/* 제목 */}
 			{title && (
-				<div className="px-6 py-4 border-b border-border">
-					<h2 className="text-xl font-semibold text-foreground font-multilang">
+				<div className="relative px-6 py-4 border-b border-border">
+					<h2 className="text-center text-xl font-semibold text-foreground font-multilang">
 						{title}
 					</h2>
 				</div>

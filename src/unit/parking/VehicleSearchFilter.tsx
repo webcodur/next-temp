@@ -5,7 +5,7 @@ import { useTranslations } from '@/hooks/useI18n';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { Search } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 
 interface VehicleSearchFilterProps {
 	filters: SearchFilters;
@@ -55,6 +55,16 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 		{ value: '출구B', label: t('주차_필터_출구B') },
 	];
 
+	// 필터 초기화 함수
+	const handleResetFilters = () => {
+		onFiltersChange({
+			car_type: '',
+			in_out_status: '',
+			entrance_status: '',
+			keyword: '',
+		});
+	};
+
 	return (
 		<div className="p-3 mb-3 rounded-lg bg-background">
 				<div className="flex flex-col gap-3 md:flex-row">
@@ -92,8 +102,17 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 						/>
 					</div>
 
-					{/* 검색 버튼 영역 */}
-					<div className="flex justify-center items-stretch shrink-0">
+					{/* 검색/초기화 버튼 영역 */}
+					<div className="flex flex-col justify-center items-stretch shrink-0 gap-2">
+						<Button
+							onClick={handleResetFilters}
+							variant="outline"
+							size="icon"
+							className="w-10 h-full text-muted-foreground hover:text-primary hover:bg-accent neu-raised"
+							type="button"
+						>
+							<RefreshCw className="w-4 h-4" />
+						</Button>
 						<Button
 							onClick={onSearch}
 							variant="default"

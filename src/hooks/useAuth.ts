@@ -131,10 +131,10 @@ export function useAuth() {
     if (result.data.parkinglots) {
       setParkingLots(result.data.parkinglots);
       
-      // 첫 번째 주차장을 기본 선택
-      if (result.data.parkinglots.length > 0 && !selectedParkingLotId) {
-        setSelectedParkingLotId(result.data.parkinglots[0].id);
-      }
+      // 자동 선택 제거 - 사용자가 직접 선택하도록 함
+      // if (result.data.parkinglots.length > 0 && !selectedParkingLotId) {
+      //   setSelectedParkingLotId(result.data.parkinglots[0].id);
+      // }
     }
 
     return { success: true };

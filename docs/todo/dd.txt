@@ -1,0 +1,2 @@
+ @ErrorBoundary.tsx 디자인 개편 작업 수행
+ @design-guidelines.mdc 참고

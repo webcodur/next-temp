@@ -8,7 +8,6 @@ alwaysApply: false
 - **통합 스타일**: `src/styles/design-system.css`
 - **전역 스타일**: `src/styles/globals.css`
 - **Tailwind 설정**: `tailwind.config.js`
-- **스타일 가이드**: `src/styles/README.md`
 
 ## 2. 🏗️ 핵심 아키텍처
 

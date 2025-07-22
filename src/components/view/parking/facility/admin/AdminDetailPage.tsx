@@ -269,12 +269,12 @@ export default function AdminDetailPage() {
               {isEditMode ? (
                 <>
                   <Unlock size={16} />
-                  잠금 해제됨
+                  잠금 해제
                 </>
               ) : (
                 <>
                   <Lock size={16} />
-                  편집 잠금
+                  잠금 상태
                 </>
               )}
             </Button>
