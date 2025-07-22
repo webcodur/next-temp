@@ -10,6 +10,7 @@ export interface AuthRequest {
 export interface TokenResponse {
   accessToken: string;
   refreshToken: string;
+  parkingLotId?: number;
   parkinglots?: { id: number; code: string; name: string; description: string }[];
 }
 

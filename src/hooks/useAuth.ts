@@ -64,6 +64,17 @@ export function useAuth() {
           setParkingLots(result.data.parkinglots);
         }
         
+        // parkingLotId 처리 - 슈퍼어드민(0) 또는 일반사용자의 기본 현장
+        if (result.data.parkingLotId !== undefined) {
+          setSelectedParkingLotId(result.data.parkingLotId);
+        } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
+          // API에서 parkingLotId를 명시하지 않았지만 현장이 1개뿐인 경우 자동 선택
+          setSelectedParkingLotId(result.data.parkinglots[0].id);
+        } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
+          // 여러 현장이 있는 경우 슈퍼어드민으로 간주하고 0 설정
+          setSelectedParkingLotId(0);
+        }
+        
         return true;
       }
       
@@ -130,11 +141,17 @@ export function useAuth() {
     // 현장 정보(주차장) 설정 - 로그인 시 미리 받는 중요 정보
     if (result.data.parkinglots) {
       setParkingLots(result.data.parkinglots);
-      
-      // 자동 선택 제거 - 사용자가 직접 선택하도록 함
-      // if (result.data.parkinglots.length > 0 && !selectedParkingLotId) {
-      //   setSelectedParkingLotId(result.data.parkinglots[0].id);
-      // }
+    }
+    
+    // parkingLotId 처리 - 슈퍼어드민(0) 또는 일반사용자의 기본 현장
+    if (result.data.parkingLotId !== undefined) {
+      setSelectedParkingLotId(result.data.parkingLotId);
+    } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
+      // API에서 parkingLotId를 명시하지 않았지만 현장이 1개뿐인 경우 자동 선택
+      setSelectedParkingLotId(result.data.parkinglots[0].id);
+    } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
+      // 여러 현장이 있는 경우 슈퍼어드민으로 간주하고 0 설정
+      setSelectedParkingLotId(0);
     }
 
     return { success: true };

@@ -103,8 +103,11 @@ export function MainLayout({ children }: MainLayoutProps) {
 	// 로그인하지 않은 경우
 	if (!isLoggedIn) return <Login />;
 	
-	// 로그인했지만 현장을 선택하지 않은 경우
-	if (isLoggedIn && !selectedParkingLotId) {
+	// 로그인했지만 selectedParkingLotId가 아직 설정되지 않은 경우 (로딩 중)
+	if (selectedParkingLotId === null) return <Login />;
+	
+	// 슈퍼어드민(parkingLotId: 0)인 경우에만 현장선택 페이지 표시
+	if (selectedParkingLotId === 0) {
 		return <ParkingLotSelectionPage onSelectionComplete={() => {
 			// 현장 선택 완료 후 추가 작업이 필요하면 여기에 추가
 			console.log('현장 선택 완료:', selectedParkingLotId);
