@@ -14,7 +14,7 @@ export interface User {
 export const userAtom = atomWithStorage<User | null>('user', null);
 
 // 주차장 정보 - API 응답 형식에 맞춤
-export interface ParkingLot {
+export interface ParkingLot extends Record<string, unknown> {
 	id: number;
 	code: string;
 	name: string;
