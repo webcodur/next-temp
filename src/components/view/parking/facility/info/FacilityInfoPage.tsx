@@ -73,14 +73,14 @@ export default function FacilityInfoPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-12 mx-auto w-full max-w-5xl">
+    <div className="flex flex-col w-full max-w-5xl mx-auto">
       {/* ----------------------------- 기본 정보 ----------------------------- */}
-      <section className="p-6 rounded-lg neu-flat">
+      <section className="py-6">
         <h2 className="mb-6 text-xl font-semibold text-foreground">기본 정보</h2>
         <GridForm labelWidth="200px">
           {basicInfo.map(({ label, value, icon: Icon }) => (
             <GridForm.Row key={label}>
-              <GridForm.Label className="flex gap-2 items-center">
+              <GridForm.Label className="flex items-center gap-2">
                 <Icon className="w-4 h-4 neu-icon-active" />
                 {label}
               </GridForm.Label>
@@ -92,13 +92,14 @@ export default function FacilityInfoPage() {
         </GridForm>
       </section>
 
+
       {/* ----------------------------- 시설 규모 ----------------------------- */}
-      <section className="p-6 rounded-lg neu-flat">
+      <section className="py-6">
         <h2 className="mb-6 text-xl font-semibold text-foreground">시설 규모</h2>
         <GridForm labelWidth="200px">
           {facilityScale.map(({ label, value, icon: Icon }) => (
             <GridForm.Row key={label}>
-              <GridForm.Label className="flex gap-2 items-center">
+              <GridForm.Label className="flex items-center gap-2">
                 <Icon className="w-4 h-4 neu-icon-active" />
                 {label}
               </GridForm.Label>
@@ -110,13 +111,14 @@ export default function FacilityInfoPage() {
         </GridForm>
       </section>
 
+
       {/* ------------------------- 디지털 서비스 현황 ------------------------- */}
-      <section className="p-6 rounded-lg neu-flat">
+      <section className="py-6">
         <h2 className="mb-6 text-xl font-semibold text-foreground">디지털 서비스 현황</h2>
         <GridForm labelWidth="200px">
           {digitalStatus.map(({ label, value, icon: Icon }) => (
             <GridForm.Row key={label}>
-              <GridForm.Label className="flex gap-2 items-center">
+              <GridForm.Label className="flex items-center gap-2">
                 <Icon className="w-4 h-4 neu-icon-active" />
                 {label}
               </GridForm.Label>
@@ -128,13 +130,14 @@ export default function FacilityInfoPage() {
         </GridForm>
       </section>
 
+
       {/* ----------------------------- 운영 현황 ----------------------------- */}
-      <section className="p-6 rounded-lg neu-flat">
+      <section className="py-6">
         <h2 className="mb-6 text-xl font-semibold text-foreground">운영 현황</h2>
         <GridForm labelWidth="200px">
           {operationStatus.map(({ label, value, icon: Icon }) => (
             <GridForm.Row key={label}>
-              <GridForm.Label className="flex gap-2 items-center">
+              <GridForm.Label className="flex items-center gap-2">
                 <Icon className="w-4 h-4 neu-icon-active" />
                 {label}
               </GridForm.Label>
@@ -146,13 +149,14 @@ export default function FacilityInfoPage() {
         </GridForm>
       </section>
 
+
       {/* --------------------------- 계약 및 관리 --------------------------- */}
-      <section className="p-6 rounded-lg neu-flat">
+      <section className="py-6">
         <h2 className="mb-6 text-xl font-semibold text-foreground">계약 및 관리</h2>
         <GridForm labelWidth="200px">
           {contractManagement.map(({ label, value, icon: Icon }) => (
             <GridForm.Row key={label}>
-              <GridForm.Label className="flex gap-2 items-center">
+              <GridForm.Label className="flex items-center gap-2">
                 <Icon className="w-4 h-4 neu-icon-active" />
                 {label}
               </GridForm.Label>

@@ -20,6 +20,7 @@ import { defaults } from '@/data/sidebarConfig';
 // components
 import Login from '@/components/view/login/Login';
 import ParkingLotSelectionPage from '@/components/view/parking-lot-selection/ParkingLotSelectionPage';
+import { ParkingLotSelectionModal } from '@/components/view/parking-lot-selection/ParkingLotSelectionModal';
 import PageWrapper from '@/components/layout/PageWrapper';
 import Header from '@/components/layout/header/Header';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
@@ -117,9 +118,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 		<ToastProvider>
 			<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<Sidebar />
-			<div className="flex overflow-hidden flex-col flex-1 h-screen">
+			<div className="flex flex-col flex-1 h-screen overflow-hidden">
 				<Header />
-				<div className="flex overflow-hidden relative flex-1">
+				<div className="relative flex flex-1 overflow-hidden">
 					{/* SecondaryPanel Overlay */}
 					{(showSecondaryPanel || isAnimating) && (
 						<>
@@ -140,8 +141,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 						</>
 					)}
 
-					<main className="overflow-y-auto flex-1 p-6 scrollbar-gutter-stable">
-						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-surface-1 neu-flat">
+					<main className="flex-1 p-6 overflow-y-auto scrollbar-gutter-stable">
+						<div className="p-8 mx-auto rounded-lg max-w-7xl bg-surface-1 neu-flat">
 							<PageWrapper>
 								{children}
 							</PageWrapper>
@@ -149,6 +150,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 					</main>
 				</div>
 			</div>
+			
+			{/* 현장 선택 모달 */}
+			<ParkingLotSelectionModal />
 		</div>
 		</ToastProvider>
 	);

@@ -3,7 +3,7 @@
 import { useSetAtom } from 'jotai';
 import { Search } from 'lucide-react';
 import { useTranslations } from '@/hooks/useI18n';
-import { searchModalOpenAtom } from '@/store/searchModal';
+import { parkingLotSelectionModalOpenAtom } from '@/store/searchModal';
 
 interface SearchButtonProps {
 	className?: string;
@@ -11,7 +11,7 @@ interface SearchButtonProps {
 
 export function SearchButton({ className }: SearchButtonProps) {
 	const t = useTranslations();
-	const setIsOpen = useSetAtom(searchModalOpenAtom);
+	const setIsOpen = useSetAtom(parkingLotSelectionModalOpenAtom);
 
 	return (
 		<button

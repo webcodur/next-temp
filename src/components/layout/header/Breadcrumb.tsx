@@ -57,6 +57,7 @@ export function Breadcrumb() {
 	// #endregion
 
 	// #region 유틸리티
+  // 경로에 따라 브레드크럼 아이템을 생성하는 함수
 	const getBreadcrumbItems = () => {
 		const items = [];
 
@@ -97,14 +98,15 @@ export function Breadcrumb() {
 		return items;
 	};
 
+  // 브레드크럼 아이템을 렌더링하는 함수
 	const renderFullBreadcrumb = () => (
-		<div className="flex gap-2 items-center min-w-0">
+		<div className="flex items-center min-w-0 gap-2">
 			<h2 className="text-lg font-semibold truncate text-foreground">
 				{breadcrumbItems[0].label}
 			</h2>
-			<div className="flex overflow-hidden gap-2 items-center">
+			<div className="flex items-center gap-2 overflow-hidden">
 				{breadcrumbItems.slice(1).map((item, index) => (
-					<div key={index} className="flex flex-shrink-0 gap-2 items-center">
+					<div key={index} className="flex items-center flex-shrink-0 gap-2">
 						<Separator />
 						<BreadcrumbItem
 							label={item.label}
@@ -116,6 +118,7 @@ export function Breadcrumb() {
 		</div>
 	);
 
+  // 드롭다운 메뉴로 축약된 브레드크럼을 렌더링하는 함수
 	const renderCollapsedBreadcrumb = () => (
 		<DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
 			<DropdownMenu.Trigger className="neu-flat hover:neu-inset transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium">
