@@ -103,10 +103,10 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 			if (child.type === GridFormLabel) {
 				labelElement = React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
 					className: cn(
-						// 박스 스타일링 - 가운데 정렬 (세로, 가로)
-						'flex items-center justify-center px-4 py-2',
+						// 박스 스타일링 - 시작 정렬 (세로는 중앙, 가로는 시작)
+						'flex items-center justify-start px-4 py-2',
 						'bg-muted/30 border-r border-b border-border/40',
-						'font-medium text-base text-foreground text-center',
+						'font-medium text-base text-foreground text-start',
 						// 높이 맞춤
 						'min-h-full',
 						// 마지막 요소의 하단 테두리 제거 (라벨)
@@ -156,8 +156,8 @@ const GridFormLabel = React.forwardRef<
 			ref={ref}
 			className={cn(
 				'text-base font-medium text-foreground',
-				'flex justify-center items-center px-4 py-2 font-multilang',
-				'text-center border-r border-border/40',
+				'flex justify-start items-center px-4 py-2 font-multilang',
+				'text-start border-r border-border/40',
 				className
 			)}
 			{...props}
