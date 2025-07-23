@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft, Lock, Unlock, Save, Key } from 'lucide-react';
+import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { usePageDescription } from '@/hooks/usePageDescription';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import AdminForm, { AdminFormData } from './AdminForm';
+import AdminPasswordSection from './AdminPasswordSection';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, ROLE_ID_MAP } from '@/types/admin';
@@ -120,9 +121,6 @@ export default function AdminDetailPage() {
     router.push('/parking/facility/admin');
   };
 
-  const handlePasswordChange = () => {
-    router.push(`/parking/facility/admin/${adminId}/password`);
-  };
 
   const handleLockToggle = useCallback(() => {
     if (isEditMode && hasChanges) {
@@ -233,21 +231,14 @@ export default function AdminDetailPage() {
           </h1>
         </div>
 
-        <div className="flex gap-3 items-center">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePasswordChange}
-            className="flex gap-2 items-center"
-          >
-            <Key size={16} />
-            비밀번호 변경
-          </Button>
-        </div>
       </div>
 
-      {/* 폼 섹션 */}
+      {/* 관리자 상세 정보 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
+        <div className="flex gap-2 items-center mb-4">
+          <h2 className="text-lg font-semibold text-foreground">관리자 상세 정보</h2>
+        </div>
+        
         <AdminForm
           mode={currentMode}
           admin={admin}
@@ -296,6 +287,12 @@ export default function AdminDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* 비밀번호 설정 섹션 */}
+      <AdminPasswordSection 
+        admin={admin} 
+        adminId={adminId}
+      />
     </div>
   );
 } 

@@ -25,9 +25,9 @@ interface AdminFormProps {
 }
 
 const ROLE_OPTIONS = [
-  { value: '근무자', label: '근무자' },
-  { value: '운영자', label: '운영자' },
   { value: '현장 관리자', label: '현장 관리자' },
+  { value: '운영자', label: '운영자' },
+  { value: '근무자', label: '근무자' },
   { value: '상업자', label: '상업자' },
 ];
 

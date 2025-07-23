@@ -70,8 +70,53 @@ export interface SearchAdminRequest {
  * 역할명 → ID 매핑
  */
 export const ROLE_ID_MAP: Record<string, number> = {
-  '근무자': 4,
-  '운영자': 3, 
+  '관리자': 1,
   '현장 관리자': 2,
+  '운영자': 3, 
+  '근무자': 4,
   '상업자': 5,
-} as const; 
+} as const;
+
+/**
+ * 역할 ID → 역할명 매핑
+ */
+export const ROLE_NAME_MAP: Record<number, string> = {
+  4: '근무자',
+  3: '운영자',
+  2: '현장 관리자',
+  5: '상업자',
+  1: '관리자', // Super Admin 추가
+} as const;
+
+/**
+ * 권한 레벨 정의
+ */
+export const ROLE_HIERARCHY: Record<number, number> = {
+  1: 100, // 관리자 (최고 권한)
+  2: 80,  // 현장 관리자
+  3: 60,  // 운영자
+  5: 40,  // 상업자
+  4: 20,  // 근무자
+} as const;
+
+/**
+ * 비밀번호 재설정 권한 확인
+ * - 본인만 자신의 비밀번호 재설정 가능
+ */
+export function canManagePassword(currentUserRoleId: number, targetUserRoleId: number): boolean {
+  // 자기 자신만 비밀번호 재설정 가능
+  return currentUserRoleId === targetUserRoleId;
+}
+
+/**
+ * 비밀번호 초기화 권한 확인
+ * - 관리자 (super_admin, admin): 직원의 비밀번호 초기화 가능
+ * - 직원: 초기화 불가능
+ */
+export function canResetPassword(currentUserRoleId: number, targetUserRoleId: number): boolean {
+  // 관리자 (roleId 1, 2)만 직원(roleId 3,4,5)의 비밀번호 초기화 가능
+  const isCurrentAdmin = currentUserRoleId === 1 || currentUserRoleId === 2;
+  const isTargetEmployee = targetUserRoleId >= 3; // 운영자, 근무자, 상업자
+  
+  return isCurrentAdmin && isTargetEmployee;
+} 

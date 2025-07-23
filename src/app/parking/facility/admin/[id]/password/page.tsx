@@ -1,1 +1,0 @@
-export { default } from '@/components/view/parking/facility/admin/AdminPasswordChangePage'; 
