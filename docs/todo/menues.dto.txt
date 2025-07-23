@@ -1,0 +1,111 @@
+MenuListResponseDto{
+menus*	[
+계층 구조로 정렬된 메뉴 목록
+
+MenuResponseDto{
+id*	[...]
+name*	[...]
+url	[...]
+parentId	[...]
+sort*	[...]
+depth*	[...]
+children*	[...]
+}]
+totalCount*	number
+example: 15
+총 메뉴 개수
+
+userRole	{
+description:	
+사용자 역할 정보
+
+id*	[...]
+code*	[...]
+name*	[...]
+}
+parkingLot	{
+description:	
+주차장 정보
+
+id*	[...]
+code*	[...]
+name*	[...]
+description	[...]
+}
+version*	number
+example: 1704067200000
+데이터 버전 (마지막 메뉴 업데이트 시간의 타임스탬프)
+
+cacheMaxAge	number
+example: 1800
+캐시 유효 시간 (초)
+
+}
+UpdateMenuOrderDto{
+newOrder*	number
+example: 3
+변경할 순서 (1부터 시작)
+
+}
+MenuOrderItem{
+menuId*	number
+example: 1
+메뉴 ID
+
+order*	number
+example: 1
+새 순서
+
+}
+BatchUpdateMenuOrderDto{
+items*	[
+example: List [ OrderedMap { "menuId": 1, "order": 2 }, OrderedMap { "menuId": 2, "order": 1 }, OrderedMap { "menuId": 3, "order": 3 } ]
+순서를 변경할 메뉴 목록
+
+MenuOrderItem{...}]
+}
+ParkingLotMenuResponseDto{
+parkingLot*	{
+description:	
+주차장 정보
+
+id*	[...]
+code*	[...]
+name*	[...]
+description	[...]
+}
+menus*	[
+주차장에 할당된 메뉴 목록
+
+MenuResponseDto{...}]
+totalCount*	number
+example: 15
+총 메뉴 개수
+
+}
+AssignMenuToParkingLotDto{
+menuIds*	[
+example: List [ 1, 2, 3 ]
+할당할 메뉴 ID 목록
+
+[...]]
+}
+RemoveMenuFromParkingLotDto{
+menuIds*	[
+example: List [ 1, 2 ]
+제거할 메뉴 ID 목록
+
+number]
+}
+BulkAssignMenuToParkingLotsDto{
+parkingLotIds*	[
+example: List [ 1, 2, 3 ]
+대상 주차장 ID 목록
+
+[...]]
+menuIds*	[
+example: List [ 1, 2, 3 ]
+할당할 메뉴 ID 목록
+
+[...]]
+}

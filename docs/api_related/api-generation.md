@@ -57,7 +57,7 @@ alwaysApply: false
 
 ### 필수 구조
 ```typescript
-'use server';
+'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
 /**
@@ -157,7 +157,7 @@ export async function {함수명}({파라미터들}) {
    - `fetchDefault`: 일반 JSON API 요청
    - `fetchForm`: FormData/파일 업로드 요청
 
-2. **서버 액션**: Next.js 환경에서는 'use server' 지시어 필수
+2. **클라이언트 사이드**: fetchClient가 브라우저 API(localStorage, cookie)를 사용하므로 'use client' 지시어 필수
 
 3. **파일명 규칙 엄수**:
    - 도메인은 **반드시 단수형** (users ❌, user ✅)
