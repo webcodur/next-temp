@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 
 import { Provider } from 'jotai';
 
-import { MainLayout } from '@/components/layout/main-layout';
+import MainLayout from '@/components/layout/main-layout';
 import { AppProviders } from '@/providers/AppProviders';
 
 import './globals.css';

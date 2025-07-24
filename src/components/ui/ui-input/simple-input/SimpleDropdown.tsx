@@ -184,7 +184,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 			{/* 드롭다운 메뉴 */}
 			{isOpen && (
 				<div 
-					className="absolute right-0 left-0 top-full z-50 mt-1 rounded-lg border shadow-lg border-border bg-background"
+					className="absolute right-0 left-0 top-full z-[9999] mt-1 rounded-lg border shadow-lg border-border bg-background"
 				>
 					<ul id="dropdown-listbox" role="listbox" className="overflow-auto py-1 max-h-60">
 						{options.map((option) => (

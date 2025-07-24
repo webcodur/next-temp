@@ -13,6 +13,7 @@ import { LucideIcon } from 'lucide-react';
  * - 실제 페이지로 이동하는 링크 메뉴
  */
 export interface BotMenu {
+	id?: number; // API에서 받은 메뉴 ID (DND 순서 변경용)
 	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	href: string; // 페이지 경로
 	icon?: LucideIcon; // 아이콘 (선택사항)

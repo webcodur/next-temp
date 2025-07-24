@@ -44,16 +44,16 @@ export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
 
 	return (
 		<div className={`relative ${className}`}>
-			<div className="flex justify-between items-center h-6">
-				{label && (
+			{label && (
+				<div className="flex justify-between items-center h-6">
 					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
 					</label>
-				)}
-			</div>
+				</div>
+			)}
 
 			<div
-				className={`flex items-center h-11 ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+				className={`flex items-center ${label ? 'h-11' : 'h-6'} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
 				onClick={handleChange}
 				onKeyDown={handleKeyDown}
 				tabIndex={disabled ? -1 : 0}

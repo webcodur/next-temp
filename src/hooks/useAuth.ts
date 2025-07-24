@@ -6,6 +6,7 @@ import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
 import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
 import { refreshTokenWithString } from '@/services/auth/auth_refresh_POST';
 import { isAuthenticatedAtom, userAtom, parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
+import { loadMenuDataAtom } from '@/store/menu';
 
 /**
  * 쿠키에서 토큰 가져오기
@@ -40,6 +41,7 @@ export function useAuth() {
   const [user, setUser] = useAtom(userAtom);
   const [parkingLots, setParkingLots] = useAtom(parkingLotsAtom);
   const [selectedParkingLotId, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
+  const [, loadMenuData] = useAtom(loadMenuDataAtom); // 간단한 메뉴 로딩 액션
 
   /**
    * 토큰 자동 갱신
@@ -65,14 +67,24 @@ export function useAuth() {
         }
         
         // parkingLotId 처리 - 슈퍼어드민(0) 또는 일반사용자의 기본 현장
+        let finalParkingLotId: number | null = null;
         if (result.data.parkingLotId !== undefined) {
+          finalParkingLotId = result.data.parkingLotId;
           setSelectedParkingLotId(result.data.parkingLotId);
         } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
           // API에서 parkingLotId를 명시하지 않았지만 현장이 1개뿐인 경우 자동 선택
+          finalParkingLotId = result.data.parkinglots[0].id;
           setSelectedParkingLotId(result.data.parkinglots[0].id);
         } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
           // 여러 현장이 있는 경우 슈퍼어드민으로 간주하고 0 설정
+          finalParkingLotId = 0;
           setSelectedParkingLotId(0);
+        }
+        
+        // 🎯 토큰 갱신 완료 후 메뉴 초기화
+        if (finalParkingLotId !== null) {
+          const menuParkingLotId = finalParkingLotId > 0 ? finalParkingLotId : undefined;
+          await loadMenuData(menuParkingLotId);
         }
         
         return true;
@@ -82,7 +94,7 @@ export function useAuth() {
     } catch {
       return false;
     }
-  }, [setParkingLots]);
+  }, [setParkingLots, loadMenuData]); // initializeMenuAfterLogin 제거
 
   // 초기 토큰 확인 및 자동 갱신 설정
   useEffect(() => {
@@ -114,6 +126,14 @@ export function useAuth() {
     }
   }, [isLoggedIn, setIsLoggedIn, setUser, setParkingLots, setSelectedParkingLotId, refreshToken]);
 
+  // 로그인 상태 변경 시 메뉴 로딩
+  useEffect(() => {
+    if (isLoggedIn && selectedParkingLotId !== null) {
+      const menuParkingLotId = selectedParkingLotId > 0 ? selectedParkingLotId : undefined;
+      loadMenuData(menuParkingLotId);
+    }
+  }, [isLoggedIn, selectedParkingLotId, loadMenuData]);
+
   /**
    * 로그인
    */
@@ -138,20 +158,28 @@ export function useAuth() {
     // 로그인 상태 업데이트
     setIsLoggedIn(true);
     
-    // 현장 정보(주차장) 설정 - 로그인 시 미리 받는 중요 정보
+    // 현장 정보(주차장) 설정
     if (result.data.parkinglots) {
       setParkingLots(result.data.parkinglots);
     }
     
-    // parkingLotId 처리 - 슈퍼어드민(0) 또는 일반사용자의 기본 현장
+    // parkingLotId 처리
+    let finalParkingLotId: number | null = null;
     if (result.data.parkingLotId !== undefined) {
+      finalParkingLotId = result.data.parkingLotId;
       setSelectedParkingLotId(result.data.parkingLotId);
     } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
-      // API에서 parkingLotId를 명시하지 않았지만 현장이 1개뿐인 경우 자동 선택
+      finalParkingLotId = result.data.parkinglots[0].id;
       setSelectedParkingLotId(result.data.parkinglots[0].id);
     } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
-      // 여러 현장이 있는 경우 슈퍼어드민으로 간주하고 0 설정
+      finalParkingLotId = 0;
       setSelectedParkingLotId(0);
+    }
+
+    // 🎯 메뉴 로딩 - 간단하고 확실한 방법
+    if (finalParkingLotId !== null) {
+      const menuParkingLotId = finalParkingLotId > 0 ? finalParkingLotId : undefined;
+      await loadMenuData(menuParkingLotId);
     }
 
     return { success: true };

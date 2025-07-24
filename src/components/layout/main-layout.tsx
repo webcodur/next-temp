@@ -11,6 +11,7 @@ import { useAtom } from 'jotai';
 import { useLocale } from '@/hooks/useI18n';
 import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
 import { useAuth } from '@/hooks/useAuth';
+// import { useMenuData } from '@/hooks/useMenuData';
 // store
 import { initPrimaryColorAtom } from '@/store/primary';
 import { initTheme } from '@/store/theme';
@@ -24,7 +25,7 @@ import { ParkingLotSelectionModal } from '@/components/view/parking-lot-selectio
 import PageWrapper from '@/components/layout/PageWrapper';
 import Header from '@/components/layout/header/Header';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
-import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel';
+import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel/SecondaryPanel';
 import { ToastProvider } from '@/components/ui/ui-effects/toast/Toast';
 
 // #region 타입
@@ -64,14 +65,22 @@ interface MainLayoutProps {
  * 오버레이 모드에서는 absolute positioning과 높은 z-index를 사용하여 다른 요소들 위에 표시된다.
  */
 
-export function MainLayout({ children }: MainLayoutProps) {
-	// #region 상태 및 훅
+export default function MainLayout({ children }: MainLayoutProps) {
+	// #region 훅
 	const { isLoggedIn, selectedParkingLotId } = useAuth();
-	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	const { isRTL } = useLocale();
+	// const { menuData, loading: menuLoading, error: menuError } = useMenuData(); // 메뉴 데이터를 최상위에서 관리
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [shouldShow, setShouldShow] = useState(false);
+
+	// 테마 및 컬러 초기화
+	useThemeKeyboard();
+	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
+	useEffect(() => {
+		initTheme();
+		initPrimaryColor();
+	}, [initPrimaryColor]);
 	// #endregion
 
 	// #region 애니메이션 처리
@@ -89,15 +98,6 @@ export function MainLayout({ children }: MainLayoutProps) {
 			return () => clearTimeout(timer);
 		}
 	}, [showSecondaryPanel]);
-	// #endregion
-
-	// #region 초기화 및 부가 효과
-	useEffect(() => {
-		// 테마 및 프라이머리 컬러 초기화
-		initPrimaryColor();
-    initTheme();
-	}, [initPrimaryColor]);
-	useThemeKeyboard();
 	// #endregion
 
 	// #region 렌더링
@@ -118,9 +118,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 		<ToastProvider>
 			<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<Sidebar />
-			<div className="flex flex-col flex-1 h-screen overflow-hidden">
+			<div className="flex overflow-hidden flex-col flex-1 h-screen">
 				<Header />
-				<div className="relative flex flex-1 overflow-hidden">
+				<div className="flex overflow-hidden relative flex-1">
 					{/* SecondaryPanel Overlay */}
 					{(showSecondaryPanel || isAnimating) && (
 						<>
@@ -141,8 +141,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 						</>
 					)}
 
-					<main className="flex-1 p-6 overflow-y-auto scrollbar-gutter-stable">
-						<div className="p-8 mx-auto rounded-lg max-w-7xl bg-surface-1 neu-flat">
+					<main className="overflow-y-auto flex-1 p-6 scrollbar-gutter-stable">
+						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-surface-1 neu-flat">
 							<PageWrapper>
 								{children}
 							</PageWrapper>

@@ -33,12 +33,6 @@ export default function ParkingLotSelectionPage({ onSelectionComplete }: Parking
   const { parkingLots, selectParkingLot } = useAuth();
   const { isRTL } = useLocale();
   // #endregion
-  
-  console.log('ParkingLotSelectionPage 렌더링:', { 
-    parkingLotsCount: parkingLots.length, 
-    selectedId,
-    parkingLots: parkingLots.map(p => ({ id: p.id, name: p.name }))
-  });
 
   // #region 핸들러
   const handleParkingLotSelect = (parkingLot: ParkingLot) => {
@@ -74,8 +68,8 @@ export default function ParkingLotSelectionPage({ onSelectionComplete }: Parking
           fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
         }}
       >
-        <div className="w-full max-w-2xl mx-4">
-          <div className="p-8 neu-elevated rounded-xl">
+        <div className="mx-4 w-full max-w-2xl">
+          <div className="p-8 rounded-xl neu-elevated">
             {/* 페이지 헤더 */}
             <div className="mb-8 text-center">
               <h1 className="mb-2 text-2xl font-bold text-foreground">
