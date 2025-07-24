@@ -348,7 +348,7 @@ export default function HouseholdListPage() {
   return (
     <div className="p-6 space-y-6 font-multilang animate-fadeIn">
       {/* 페이지 헤더 */}
-      <div className="neu-flat p-6 rounded-xl">
+      <div className="p-6 rounded-xl neu-flat">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-foreground">세대 관리</h1>
@@ -359,14 +359,14 @@ export default function HouseholdListPage() {
           <div className="flex gap-3">
             <button
               onClick={handleExport}
-              className="flex gap-2 items-center px-4 py-2 text-sm font-medium neu-raised rounded-xl transition-all duration-200 hover:animate-click-feedback"
+              className="flex gap-2 items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
             >
               <Download className="w-4 h-4" />
               엑셀 다운로드
             </button>
             <Link
               href="/temp/household/create"
-              className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary neu-raised-primary rounded-xl transition-all duration-200 hover:animate-click-feedback"
+              className="flex gap-2 items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-primary-foreground bg-primary neu-raised-primary hover:animate-click-feedback"
             >
               <Plus className="w-4 h-4" />
               새 세대 등록
@@ -381,7 +381,6 @@ export default function HouseholdListPage() {
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        statusText={`총 ${households.length}개 세대 중 ${filteredHouseholds.length}개 표시`}
         defaultOpen={true}
       />
 

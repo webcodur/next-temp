@@ -39,7 +39,7 @@ export default function MenuManagementPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleParkingLotSelect = (parkingLotId: number) => {
+  const handleParkingLotSelect = (parkingLotId: number | null) => {
     setSelectedParkingLot(parkingLotId);
   };
   // #endregion

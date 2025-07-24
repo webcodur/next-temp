@@ -3,6 +3,7 @@
 import { atom } from 'jotai';
 import { defaults } from '@/data/sidebarConfig';
 
+// #region localStorage 유틸리티 함수들
 // localStorage에서 저장된 패널 폭을 가져오는 함수
 const getSavedPanelWidth = () => {
   if (typeof window === 'undefined') return defaults.expandedWidth;
@@ -14,8 +15,56 @@ const getSavedPanelWidth = () => {
   }
 };
 
-// 사이드바의 접힘/펼침 상태 (메인 토글)
-export const sidebarCollapsedAtom = atom<boolean>(false);
+// localStorage에서 사이드바 접힘 상태 가져오기
+const getSavedCollapsedState = () => {
+  if (typeof window === 'undefined') return false;
+  try {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  } catch {
+    return false;
+  }
+};
+
+// localStorage에서 활성 탑 메뉴 가져오기
+const getSavedActiveTopMenu = () => {
+  if (typeof window === 'undefined') return '주차';
+  try {
+    const saved = localStorage.getItem('sidebarActiveTopMenu');
+    return saved || '주차';
+  } catch {
+    return '주차';
+  }
+};
+
+// localStorage에서 단일 열기 모드 상태 가져오기
+const getSavedSingleOpenMode = () => {
+  if (typeof window === 'undefined') return false;
+  try {
+    const saved = localStorage.getItem('sidebarSingleOpenMode');
+    return saved ? JSON.parse(saved) : false;
+  } catch {
+    return false;
+  }
+};
+// #endregion
+
+// #region 사이드바 상태 atom들
+// 사이드바의 접힘/펼침 상태 (localStorage 연동)
+export const sidebarCollapsedAtom = atom(
+  getSavedCollapsedState(),
+  (get, set, newValue: boolean) => {
+    set(sidebarCollapsedAtom, newValue);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sidebarCollapsed', JSON.stringify(newValue));
+      } catch {
+        // localStorage 저장 실패 시 무시
+      }
+    }
+  }
+);
+
 // 사이드바 끝 패널 너비 (localStorage 연동)
 export const endPanelWidthAtom = atom(
   getSavedPanelWidth(),
@@ -31,12 +80,42 @@ export const endPanelWidthAtom = atom(
     }
   }
 );
+
+// 현재 활성화된 Top 메뉴를 관리하는 atom (localStorage 연동)
+export const activeTopMenuAtom = atom(
+  getSavedActiveTopMenu(),
+  (get, set, newValue: string) => {
+    set(activeTopMenuAtom, newValue);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sidebarActiveTopMenu', newValue);
+      } catch {
+        // localStorage 저장 실패 시 무시
+      }
+    }
+  }
+);
+
+// 단일 열기 모드 상태 (localStorage 연동)
+export const singleOpenModeAtom = atom(
+  getSavedSingleOpenMode(),
+  (get, set, newValue: boolean) => {
+    set(singleOpenModeAtom, newValue);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sidebarSingleOpenMode', JSON.stringify(newValue));
+      } catch {
+        // localStorage 저장 실패 시 무시
+      }
+    }
+  }
+);
+// #endregion
+
+// #region 기타 상태 atom들
 // 리사이징 상태
 export const isResizingAtom = atom(false);
 export const isSideResizeControlHoveredAtom = atom(false);
-
-// 현재 활성화된 Top 메뉴를 관리하는 atom
-export const activeTopMenuAtom = atom('주차');
 
 export const headerCollapsedAtom = atom<boolean>(false);
 
@@ -46,10 +125,9 @@ export const headerToggleVisibleAtom = atom<boolean>(true);
 export const currentTopMenuAtom = atom<string>('');
 export const currentMidMenuAtom = atom<string>('');
 export const currentBotMenuAtom = atom<string>('');
+// #endregion
 
-// Hydration-safe: 초기화 시 localStorage 읽지 않음
-export const singleOpenModeAtom = atom<boolean>(false);
-
+// #region 검색 관련 atom들
 // 메뉴 검색 관련 atom들 - 언어팩 시스템 사용
 export const menuSearchQueryAtom = atom<string>('');
 export const menuSearchResultsAtom = atom<
@@ -97,3 +175,4 @@ export const recentSitesAtom = atom<
 		name: string;
 	}>
 >([]);
+// #endregion

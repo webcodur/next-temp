@@ -116,11 +116,9 @@ export function useMenuOperations() {
         const topLevelMenuIds = new Set(flatMenus.filter(m => m.level === 1).map(m => m.id));
         setExpandedMenus(topLevelMenuIds);
         
-        console.log('📋 전체 메뉴 (평면화):', flatMenus);
-        console.log('🌳 메뉴 트리:', treeMenus);
+
       }
-    } catch (error) {
-      console.error('메뉴 로딩 실패:', error);
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -136,18 +134,21 @@ export function useMenuOperations() {
         const menuIds = new Set(flatMenus.map(menu => menu.id));
         setAssignedMenuIds(menuIds);
         setOriginalAssignedMenuIds(menuIds); // 저장용 백업
-        console.log('📋 주차장 할당 메뉴 (평면화):', flatMenus);
       } else {
         setAssignedMenuIds(new Set());
         setOriginalAssignedMenuIds(new Set());
       }
-    } catch (error) {
-      console.error('주차장 메뉴 로딩 실패:', error);
+    } catch {
       setAssignedMenuIds(new Set());
       setOriginalAssignedMenuIds(new Set());
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const clearAssignedMenus = useCallback(() => {
+    setAssignedMenuIds(new Set());
+    setOriginalAssignedMenuIds(new Set());
   }, []);
   // #endregion
 
@@ -183,13 +184,7 @@ export function useMenuOperations() {
     setAssignedMenuIds(newAssignedMenuIds);
   }, [assignedMenuIds, allMenus]);
 
-  const toggleAllMenus = useCallback(() => {
-    if (assignedMenuIds.size === allMenus.length) {
-      setAssignedMenuIds(new Set());
-    } else {
-      setAssignedMenuIds(new Set(allMenus.map(menu => menu.id)));
-    }
-  }, [assignedMenuIds, allMenus]);
+
 
   const toggleMenuExpansion = (menuId: number) => {
     setExpandedMenus(prev => {
@@ -229,8 +224,7 @@ export function useMenuOperations() {
       
       alert('변경사항이 저장되었습니다.');
       
-    } catch (error) {
-      console.error('저장 실패:', error);
+    } catch {
       alert('저장에 실패했습니다.');
     } finally {
       setSaving(false);
@@ -329,7 +323,7 @@ export function useMenuOperations() {
         const newOrder = siblingsWithSameParent.findIndex(m => m.id === overId) + 1;
         
         await updateMenuOrder(activeId, newOrder);
-        console.log(`메뉴 ${activeId}의 순서를 ${newOrder}로 변경했습니다.`);
+
       }
     } catch (error) {
       console.error('메뉴 순서 변경 실패:', error);
@@ -352,9 +346,9 @@ export function useMenuOperations() {
     loadAllMenus,
     loadParkingLotMenus,
     toggleMenu,
-    toggleAllMenus,
     toggleMenuExpansion,
     saveChanges,
+    clearAssignedMenus,
     
     // DND 함수
     handleDragEnd,

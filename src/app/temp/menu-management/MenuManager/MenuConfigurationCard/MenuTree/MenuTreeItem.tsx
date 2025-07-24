@@ -6,7 +6,7 @@
 
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { ChevronRight, ChevronDown, GripVertical } from 'lucide-react';
-import { 
+import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -24,6 +24,7 @@ interface MenuTreeItemProps {
   assignedMenuIds: Set<number>;
   isReadOnly?: boolean;
   isDragOver?: boolean;
+  selectedParkingLot?: number | null;
   onToggleMenu: (menuId: number) => void;
   onToggleExpansion: (menuId: number) => void;
 }
@@ -37,6 +38,7 @@ export function MenuTreeItem({
   assignedMenuIds,
   isReadOnly = false,
   isDragOver = false,
+  selectedParkingLot,
   onToggleMenu,
   onToggleExpansion,
 }: MenuTreeItemProps) {
@@ -45,8 +47,11 @@ export function MenuTreeItem({
   const isExpanded = expandedMenus.has(menu.id);
   const isAssigned = assignedMenuIds.has(menu.id);
   
-  // mid(level 2)와 bot(level 3) 메뉴에만 DND 활성화
-  const isDragEnabled = !isReadOnly && (menu.level === 2 || menu.level === 3);
+  // mid(level 2)와 bot(level 3) 메뉴에만 드래그 핸들 표시
+  const shouldShowDragHandle = !isReadOnly && (menu.level === 2 || menu.level === 3);
+  
+  // 실제 드래그 활성화는 주차장이 선택된 경우에만
+  const isDragEnabled = !isReadOnly && selectedParkingLot && (menu.level === 2 || menu.level === 3);
   
   let nextRowIndex = rowIndex + 1;
   // #endregion
@@ -80,27 +85,35 @@ export function MenuTreeItem({
           !isReadOnly ? 'cursor-pointer' : 'cursor-default'
         } ${
           isDragOver 
-            ? 'border-l-4 border-blue-500 bg-blue-50' 
+            ? 'bg-primary/10' 
             : isAssigned 
-              ? 'border-l-4 bg-primary/10 border-primary/50' 
+              ? 'bg-primary/5' 
               : isReadOnly 
-                ? 'border-l-4 border-transparent hover:bg-gray-50' 
-                : 'border-l-4 border-transparent hover:bg-gray-50 hover:border-gray-300'
-        } ${isDragging ? 'z-50' : ''}`}
+                ? 'hover:bg-accent active:scale-[0.998]' 
+                : 'hover:bg-accent active:scale-[0.998]'
+        } ${isDragging ? 'z-50' : ''} transition-all duration-150`}
       >
         <div
           className="flex items-center gap-1 py-2 px-4 min-h-[44px]"
-          style={{ marginLeft: `${level * 20}px` }}
+          style={{ marginLeft: `${level * 50}px` }}
         >
           {/* 드래그 핸들 (mid/bot 메뉴에만 표시) */}
-          {isDragEnabled && (
+          {shouldShowDragHandle && (
             <div
-              {...attributes}
-              {...listeners}
+              {...(isDragEnabled ? attributes : {})}
+              {...(isDragEnabled ? listeners : {})}
               onClick={(e) => e.stopPropagation()}
-              className="flex flex-shrink-0 justify-center items-center w-6 h-6 cursor-grab active:cursor-grabbing"
+              className={`flex flex-shrink-0 justify-center items-center w-6 h-6 ${
+                isDragEnabled 
+                  ? 'cursor-grab active:cursor-grabbing' 
+                  : 'cursor-not-allowed'
+              }`}
             >
-              <GripVertical className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+              <GripVertical className={`w-4 h-4 transition-colors duration-150 ${
+                isDragEnabled 
+                  ? 'text-muted-foreground hover:text-foreground' 
+                  : 'text-muted-foreground/50'
+              }`} />
             </div>
           )}
 
@@ -112,17 +125,17 @@ export function MenuTreeItem({
                   e.stopPropagation();
                   onToggleExpansion(menu.id);
                 }}
-                className="flex justify-center items-center w-5 h-5 rounded-full hover:bg-gray-200 active:bg-gray-300"
+                className="neu-flat flex justify-center items-center w-5 h-5 rounded-full cursor-pointer hover:bg-accent active:scale-95 transition-all duration-150"
               >
                 {isExpanded ? (
-                  <ChevronDown className="w-3 h-3 text-gray-600" />
+                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
                 ) : (
-                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
                 )}
               </button>
             ) : (
               <div className="flex justify-center items-center w-5 h-5 rounded-full">
-                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full" />
               </div>
             )}
           </div>
@@ -139,7 +152,8 @@ export function MenuTreeItem({
                 : (menu.level === 1 ? 'font-bold text-foreground text-lg group-hover:text-primary' : 
                    menu.level === 2 ? 'font-semibold text-muted-foreground text-base group-hover:text-foreground' : 
                    'font-medium text-muted-foreground text-sm group-hover:text-foreground')
-            }`}
+            } transition-colors duration-150`}
+
           >
             {menu.name}
           </span>
@@ -149,7 +163,7 @@ export function MenuTreeItem({
             className="flex flex-shrink-0 justify-center items-center ml-2"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-1 rounded-lg">
+            <div className="neu-flat p-1 rounded-lg hover:bg-accent active:scale-95 transition-all duration-150">
               <SimpleCheckbox
                 checked={isAssigned}
                 onChange={() => !isReadOnly && onToggleMenu(menu.id)}
@@ -174,6 +188,7 @@ export function MenuTreeItem({
                   expandedMenus={expandedMenus}
                   assignedMenuIds={assignedMenuIds}
                   isReadOnly={isReadOnly}
+                  selectedParkingLot={selectedParkingLot}
                   onToggleMenu={onToggleMenu}
                   onToggleExpansion={onToggleExpansion}
                 />

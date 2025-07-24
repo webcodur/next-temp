@@ -4,9 +4,7 @@
   책임: 메뉴 데이터 관리, 주차장별 메뉴 설정 조율
 */ // ------------------------------
 
-import { useEffect } from 'react';
-
-import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { useEffect, useState } from 'react';
 import { MenuTree } from './MenuConfigurationCard/MenuTree/MenuTree';
 import { useMenuOperations } from './useMenuOperations';
 
@@ -20,7 +18,7 @@ interface ParkingLot {
 interface MenuManagerProps {
   parkingLots: ParkingLot[];
   selectedParkingLot: number | null;
-  onParkingLotSelect: (parkingLotId: number) => void;
+  onParkingLotSelect: (parkingLotId: number | null) => void;
   showSaveButton?: boolean;
 }
 
@@ -43,7 +41,7 @@ export function SaveButton({ selectedParkingLot }: SaveButtonProps) {
     <button
       onClick={handleSaveChanges}
       disabled={saving || !selectedParkingLot}
-      className="px-6 py-3 text-sm font-semibold rounded-xl bg-blue-600 text-white border border-blue-700 shadow-md hover:bg-blue-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      className="neu-raised-primary px-6 py-3 text-sm font-semibold text-primary-foreground rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
     >
       {saving ? '저장 중...' : '변경사항 저장'}
     </button>
@@ -52,6 +50,10 @@ export function SaveButton({ selectedParkingLot }: SaveButtonProps) {
 // #endregion
 
 export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelect, showSaveButton = true }: MenuManagerProps) {
+  // #region 내부 상태
+  const [tempSelectedParkingLot, setTempSelectedParkingLot] = useState<number | null>(selectedParkingLot);
+  // #endregion
+
   // #region 훅
   const {
     allMenus,
@@ -63,9 +65,9 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
     loadAllMenus,
     loadParkingLotMenus,
     toggleMenu,
-    toggleAllMenus,
     toggleMenuExpansion,
     saveChanges,
+    clearAssignedMenus,
     handleDragEnd,
   } = useMenuOperations();
   // #endregion
@@ -76,10 +78,26 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
   }, [loadAllMenus]);
 
   useEffect(() => {
-    if (selectedParkingLot) {
-      loadParkingLotMenus(selectedParkingLot);
+    setTempSelectedParkingLot(selectedParkingLot);
+  }, [selectedParkingLot]);
+
+  useEffect(() => {
+    const loadMenusAsync = async () => {
+      if (tempSelectedParkingLot) {
+        await loadParkingLotMenus(tempSelectedParkingLot);
+        // API 로딩 완료 후에만 실제 상태 업데이트
+        onParkingLotSelect(tempSelectedParkingLot);
+      } else {
+        clearAssignedMenus();
+        onParkingLotSelect(null);
+      }
+    };
+
+    // tempSelectedParkingLot이 selectedParkingLot과 다를 때만 API 호출
+    if (tempSelectedParkingLot !== selectedParkingLot) {
+      loadMenusAsync();
     }
-  }, [selectedParkingLot, loadParkingLotMenus]);
+  }, [tempSelectedParkingLot, selectedParkingLot, loadParkingLotMenus, clearAssignedMenus, onParkingLotSelect]);
   // #endregion
 
   // #region 이벤트 핸들러
@@ -88,87 +106,93 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
       saveChanges(selectedParkingLot);
     }
   };
+
+  const handleParkingLotChange = (value: string) => {
+    if (value === '' || value === undefined || value === null) {
+      setTempSelectedParkingLot(null);
+    } else {
+      const parsedValue = parseInt(value);
+      if (!isNaN(parsedValue)) {
+        setTempSelectedParkingLot(parsedValue);
+      }
+    }
+  };
+
+  // UI에 표시할 실제 값 (로딩 중에는 이전 상태 유지)
+  const displayedParkingLot = loading ? selectedParkingLot : tempSelectedParkingLot;
   // #endregion
 
   // #region 렌더링
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-lg bg-white">
-      <div className="p-6">
-        {/* 상단: 주차장 선택 + 저장 버튼 */}
-        <div className="mb-6">
-          <div className="flex gap-8 items-center justify-between">
-            {/* 왼쪽: 주차장 선택 */}
-            <div className="flex gap-6 items-center flex-1">
-              <h2 className="flex-shrink-0 text-xl font-bold text-foreground">
-                ※ 주차장 선택
-              </h2>
-              <div className="flex-1 max-w-sm relative z-[100]">
-                <SimpleDropdown
-                  options={parkingLots.map(lot => ({
-                    value: lot.id.toString(),
-                    label: `${lot.name} (${lot.code})`
-                  }))}
-                  value={selectedParkingLot?.toString() || ''}
-                  onChange={(value) => onParkingLotSelect(parseInt(value))}
-                  placeholder="주차장을 선택하세요"
-                />
+    <div className="neu-elevated overflow-hidden bg-card rounded-2xl">
+
+      {/* 메뉴 목록 선택 영역 - 좌측 통계, 중앙 드롭다운, 우측 저장 버튼 */}
+      <div className="px-6 pt-6 pb-4">
+        <div className="neu-flat flex justify-between items-center px-4 py-3 bg-muted rounded-lg">
+          {/* 좌측 통계 */}
+          <div className="flex gap-2 items-center">
+            <div className="neu-icon-active w-3 h-3 rounded-full bg-primary"></div>
+            <span className="text-sm font-semibold text-foreground">
+              {assignedMenuIds.size}/{allMenus.length}개 선택됨
+            </span>
+          </div>
+          
+          {/* 중앙 드롭다운 */}
+          <div className="flex-1 mx-4 max-w-xs">
+            <div className="relative">
+              <select
+                value={displayedParkingLot?.toString() || ''}
+                onChange={(e) => handleParkingLotChange(e.target.value)}
+                className="neu-inset px-3 py-2 w-full text-sm font-medium text-foreground bg-input rounded-lg appearance-none cursor-pointer hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:bg-background active:scale-[0.998] transition-all duration-200"
+              >
+                <option value="" className="text-muted-foreground font-semibold">
+                  전체 메뉴 목록
+                </option>
+                {parkingLots.map(lot => (
+                  <option 
+                    key={lot.id} 
+                    value={lot.id.toString()}
+                    className="text-foreground"
+                  >
+                    {lot.name} ({lot.code})
+                  </option>
+                ))}
+              </select>
+              <div className="flex absolute inset-y-0 right-0 items-center pr-2 pointer-events-none">
+                <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
-            
-            {/* 오른쪽: 저장 버튼 */}
-            {showSaveButton && (
-              <button
-                onClick={handleSaveChanges}
-                disabled={saving || !selectedParkingLot}
-                className="px-6 py-3 text-sm font-semibold rounded-xl bg-blue-600 text-white border border-blue-700 shadow-md hover:bg-blue-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {saving ? '저장 중...' : '변경사항 저장'}
-              </button>
-            )}
           </div>
-        </div>
-
-        {/* 메뉴 통계 및 액션 버튼 */}
-        <div className="mb-4">
-          <div className="flex gap-4 items-center">
-            <div className="flex gap-3 items-center">
-              <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-              <span className="text-base font-semibold text-foreground w-[150]">
-                {assignedMenuIds.size}/{allMenus.length}개 선택됨
-              </span>
-            </div>
-            
+          
+          {/* 우측 저장 버튼 */}
+          {showSaveButton && (
             <button
-              onClick={toggleAllMenus}
-              className="bg-white border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium rounded-lg text-foreground hover:bg-gray-50 hover:shadow-md active:bg-gray-100"
+              onClick={handleSaveChanges}
+              disabled={saving || !selectedParkingLot}
+              className="neu-raised-primary px-4 py-2 text-sm font-semibold text-primary-foreground rounded-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
             >
-              {assignedMenuIds.size === allMenus.length ? (
-                <div className='flex items-center'>
-                  <span className="mr-2">👁️‍🗨️</span>
-                  전체 해제
-                </div>  
-              ) : (
-                <div className='flex items-center'>
-                  <span className="mr-2">👁️</span>
-                  전체 선택
-                </div>
-              )}
+              {saving ? '저장 중...' : '변경사항 저장'}
             </button>
-          </div>
+          )}
         </div>
       </div>
 
       {/* 메뉴 목록 */}
-      <MenuTree
-        menuTree={menuTree}
-        loading={loading}
-        expandedMenus={expandedMenus}
-        assignedMenuIds={assignedMenuIds}
-        isReadOnly={false}
-        onToggleMenu={toggleMenu}
-        onToggleExpansion={toggleMenuExpansion}
-        onDragEnd={handleDragEnd}
-      />
+      <div className='p-6'>
+        <MenuTree
+          menuTree={menuTree}
+          loading={loading}
+          expandedMenus={expandedMenus}
+          assignedMenuIds={assignedMenuIds}
+          isReadOnly={false}
+          selectedParkingLot={displayedParkingLot}
+          onToggleMenu={toggleMenu}
+          onToggleExpansion={toggleMenuExpansion}
+          onDragEnd={handleDragEnd}
+        />
+      </div>
     </div>
   );
   // #endregion

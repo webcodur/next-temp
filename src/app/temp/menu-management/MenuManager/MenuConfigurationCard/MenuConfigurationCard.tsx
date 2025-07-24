@@ -15,7 +15,7 @@ import type { MenuItem } from '../useMenuOperations';
 interface MenuConfigurationCardProps {
   title?: string;
   stepNumber?: string;
-  selectedParkingLotName: string;
+  selectedParkingLot?: number | null;
   allMenus: MenuItem[];
   menuTree: MenuItem[];
   assignedMenuIds: Set<number>;
@@ -36,6 +36,7 @@ export function MenuConfigurationCard({
   expandedMenus,
   loading,
   isReadOnly = false,
+  selectedParkingLot,
   onToggleMenu,
   onToggleAllMenus,
   onToggleExpansion,
@@ -79,16 +80,19 @@ export function MenuConfigurationCard({
       </div>
 
       {/* 메뉴 목록 (트리 구조) */}
-      <MenuTree
-        menuTree={menuTree}
-        loading={loading}
-        expandedMenus={expandedMenus}
-        assignedMenuIds={assignedMenuIds}
-        isReadOnly={isReadOnly}
-        onToggleMenu={onToggleMenu}
-        onToggleExpansion={onToggleExpansion}
-        onDragEnd={onDragEnd}
-      />
+      <div className=''>
+        <MenuTree
+          menuTree={menuTree}
+          loading={loading}
+          expandedMenus={expandedMenus}
+          assignedMenuIds={assignedMenuIds}
+          isReadOnly={isReadOnly}
+          selectedParkingLot={selectedParkingLot}
+          onToggleMenu={onToggleMenu}
+          onToggleExpansion={onToggleExpansion}
+          onDragEnd={onDragEnd}
+        />
+      </div>
     </div>
   );
   // #endregion

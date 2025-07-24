@@ -1,12 +1,65 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { singleOpenModeAtom } from '@/store/sidebar';
+import { activeTopMenuAtom, singleOpenModeAtom } from '@/store/sidebar';
+
+// #region 로컬스토리지 키 상수
+const SIDEBAR_EXPANDED_KEY = 'sidebar_mid_expanded';
+// #endregion
+
+// #region 유틸리티 함수
+/**
+ * localStorage에서 펼침 상태 복원
+ */
+const loadExpandedState = (topMenuKey: string): Set<string> => {
+	try {
+		const stored = localStorage.getItem(`${SIDEBAR_EXPANDED_KEY}_${topMenuKey}`);
+		if (stored) {
+			const parsed = JSON.parse(stored);
+			return new Set(Array.isArray(parsed) ? parsed : []);
+		}
+	} catch (error) {
+		console.warn('메뉴 펼침 상태 로딩 실패:', error);
+	}
+	return new Set<string>();
+};
+
+/**
+ * localStorage에 펼침 상태 저장
+ */
+const saveExpandedState = (topMenuKey: string, expanded: Set<string>) => {
+	try {
+		localStorage.setItem(
+			`${SIDEBAR_EXPANDED_KEY}_${topMenuKey}`,
+			JSON.stringify(Array.from(expanded))
+		);
+	} catch (error) {
+		console.warn('메뉴 펼침 상태 저장 실패:', error);
+	}
+};
+// #endregion
 
 export function useSecondaryMenu() {
-	const [midExpanded, setMidExpanded] = useState(new Set<string>());
+	const [activeTopMenu] = useAtom(activeTopMenuAtom);
 	const [singleOpenMode, setSingleOpenMode] = useAtom(singleOpenModeAtom);
+	const [midExpanded, setMidExpanded] = useState<Set<string>>(new Set());
+
+	// #region 초기 상태 복원
+	useEffect(() => {
+		if (activeTopMenu) {
+			const savedState = loadExpandedState(activeTopMenu);
+			setMidExpanded(savedState);
+		}
+	}, [activeTopMenu]);
+
+	// #region 상태 변경 시 저장
+	useEffect(() => {
+		if (activeTopMenu) {
+			saveExpandedState(activeTopMenu, midExpanded);
+		}
+	}, [activeTopMenu, midExpanded]);
+	// #endregion
 
 	const handleMidClick = useCallback(
 		(midKey: string) => {
@@ -37,11 +90,28 @@ export function useSecondaryMenu() {
 	);
 
 	const handleSingleOpenToggle = useCallback(() => setSingleOpenMode((prev) => !prev), [setSingleOpenMode]);
+	
 	const handleExpandAll = useCallback(
 		(allKeys: string[]) => setMidExpanded(new Set(allKeys)),
 		[]
 	);
+	
 	const handleCollapseAll = useCallback(() => setMidExpanded(new Set()), []);
+
+	// 새로운 메뉴에 대해 기본 펼침 상태 설정 (저장된 상태가 없을 때만)
+	const initializeExpandedState = useCallback(
+		(allKeys: string[]) => {
+			setMidExpanded((prev) => {
+				// 저장된 상태가 있으면 그대로 유지
+				if (prev.size > 0) {
+					return prev;
+				}
+				// 저장된 상태가 없으면 모든 항목 펼치기
+				return new Set(allKeys);
+			});
+		},
+		[]
+	);
 
 	return {
 		midExpanded,
@@ -50,5 +120,6 @@ export function useSecondaryMenu() {
 		handleSingleOpenToggle,
 		handleExpandAll,
 		handleCollapseAll,
+		initializeExpandedState,
 	};
 }

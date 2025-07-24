@@ -67,20 +67,19 @@ export function SortableMidMenu({
     >
       <Collapsible open={isExpanded} onOpenChange={onToggle}>
         <div className={`flex items-center gap-2 p-2 w-full rounded-lg transition-colors ${
-          isDynamic ? 'hover:bg-surface-3' : ''
-        } neu-raised`}>
+          isDynamic ? 'hover:bg-surface-3' : ''} neu-raised`}>
           {/* 드래그 핸들 (동적 메뉴만) */}
           {isDynamic && (
             <div
               {...attributes}
               {...listeners}
-              className="flex flex-shrink-0 justify-center items-center w-4 h-4 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+              className="flex flex-shrink-0 justify-center items-center w-4 h-4 opacity-0 transition-opacity cursor-grab active:cursor-grabbing group-hover:opacity-100"
             >
-              <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground transition-colors" />
+              <GripVertical className="w-3 h-3 transition-colors text-muted-foreground hover:text-foreground" />
             </div>
           )}
           
-          <CollapsibleTrigger className="flex justify-between items-center flex-1">
+          <CollapsibleTrigger className="flex flex-1 justify-between items-center">
             <span className="font-semibold text-foreground">{t(midItem.key)}</span>
             <ChevronRight
               className={`w-5 h-5 transition-transform duration-200 ${
@@ -90,7 +89,7 @@ export function SortableMidMenu({
         </div>
         
         <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col">
             {midItem.botItems.map((botItem) => {
               const isActive = pathname === botItem.href;
               

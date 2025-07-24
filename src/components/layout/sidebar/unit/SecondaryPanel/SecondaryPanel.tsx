@@ -52,6 +52,7 @@ function SecondaryPanel() {
 		handleSingleOpenToggle,
 		handleExpandAll,
 		handleCollapseAll,
+		initializeExpandedState,
 	} = useSecondaryMenu();
 
 	const {
@@ -78,9 +79,9 @@ function SecondaryPanel() {
 		if (topData) {
 			setLocalMidItems(topData.midItems);
 			const allMidKeys = Object.keys(topData.midItems);
-			handleExpandAll(allMidKeys);
+			initializeExpandedState(allMidKeys);
 		}
-	}, [activeTopMenu, topData, handleExpandAll]);
+	}, [activeTopMenu, topData, initializeExpandedState]);
 	// #endregion
 
 	// #region 유틸리티
