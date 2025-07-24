@@ -13,6 +13,7 @@ interface SimpleTextInputProps {
 	className?: string;
 	type?: 'text' | 'email' | 'password' | 'number';
 	validationRule?: ValidationRule;
+	colorVariant?: 'primary' | 'secondary';
 }
 
 export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
@@ -24,6 +25,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 	className = '',
 	type = 'text',
 	validationRule,
+	colorVariant = 'primary',
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -101,7 +103,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			<div
 				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 ${
 					isFocused
-						? 'shadow-inner neu-inset border-primary/30'
+						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
 						: 'shadow-md neu-flat border-border hover:shadow-lg'
 				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
 				

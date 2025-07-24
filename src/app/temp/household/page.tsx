@@ -368,7 +368,7 @@ export default function HouseholdListPage() {
               href="/temp/household/create"
               className="flex gap-2 items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-primary-foreground bg-primary neu-raised-primary hover:animate-click-feedback"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-primary-foreground" />
               새 세대 등록
             </Link>
           </div>

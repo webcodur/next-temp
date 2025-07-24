@@ -157,3 +157,35 @@
 	/* 구형 브라우저 호환성을 위한 fallback */
 	overflow-y: scroll;
 }
+
+/* #region Datepicker 색상 variant */
+/* React DatePicker 컴포넌트의 primary/secondary 색상 variant 스타일 */
+
+.datepicker-primary .react-datepicker__day--selected,
+.datepicker-primary .react-datepicker__day--keyboard-selected {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.datepicker-primary .react-datepicker__day--in-range {
+  background-color: hsl(var(--primary) / 0.2) !important;
+}
+
+.datepicker-primary .react-datepicker__day:hover {
+  background-color: hsl(var(--primary) / 0.1) !important;
+}
+
+.datepicker-secondary .react-datepicker__day--selected,
+.datepicker-secondary .react-datepicker__day--keyboard-selected {
+  background-color: hsl(var(--secondary)) !important;
+  color: hsl(var(--secondary-foreground)) !important;
+}
+
+.datepicker-secondary .react-datepicker__day--in-range {
+  background-color: hsl(var(--secondary) / 0.2) !important;
+}
+
+.datepicker-secondary .react-datepicker__day:hover {
+  background-color: hsl(var(--secondary) / 0.1) !important;
+}
+/* #endregion */

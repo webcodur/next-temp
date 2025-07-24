@@ -23,6 +23,7 @@ export interface NestedTabsProps {
 	variant?: 'default' | 'filled';
 	align?: 'start' | 'center' | 'end';
 	size?: 'sm' | 'md' | 'lg';
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 // #endregion
@@ -36,6 +37,7 @@ const NestedTabs = React.forwardRef<
 	variant = 'default',
 	align = 'start',
 	size = 'md',
+	colorVariant = 'primary',
 	className,
 	...props
 }, ref) => {
@@ -54,6 +56,12 @@ const NestedTabs = React.forwardRef<
 	const activeSubTabContent = useMemo(() => {
 		return activeTopTab?.subTabs.find(subTab => subTab.id === activeSubId)?.content;
 	}, [activeTopTab, activeSubId]);
+
+	// 색상 variant에 따른 스타일
+	const colorStyles = {
+		active: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+		hover: colorVariant === 'primary' ? 'hover:text-primary' : 'hover:text-secondary',
+	};
 	
 	const alignClasses = {
 		start: 'justify-start',
@@ -88,8 +96,8 @@ const NestedTabs = React.forwardRef<
 								'relative px-6 mx-1 rounded-lg font-medium transition-all duration-200',
 								sizeClasses[size],
 								activeTopId === tab.id
-									? 'text-primary neu-inset'
-									: 'text-muted-foreground hover:text-primary neu-raised'
+									? `${colorStyles.active} neu-inset`
+									: `text-muted-foreground ${colorStyles.hover} neu-raised`
 							)}
 						>
 							{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
@@ -111,8 +119,8 @@ const NestedTabs = React.forwardRef<
 									'relative px-4 mx-1 rounded-md font-medium transition-all duration-200',
 									sizeClasses.sm, // 서브탭은 작은 사이즈로 고정
 									activeSubId === subTab.id
-										? 'text-primary neu-inset'
-										: 'text-muted-foreground hover:text-primary neu-raised'
+										? `${colorStyles.active} neu-inset`
+										: `text-muted-foreground ${colorStyles.hover} neu-raised`
 								)}
 							>
 								{subTab.icon && <span className="inline-block me-2">{subTab.icon}</span>}

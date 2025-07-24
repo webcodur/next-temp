@@ -10,6 +10,7 @@ interface SimpleToggleButtonProps {
 	size?: 'sm' | 'md' | 'lg';
 	disabled?: boolean;
 	className?: string;
+	colorVariant?: 'primary' | 'secondary';
 }
 
 export const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
@@ -20,6 +21,7 @@ export const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
 	size = 'md',
 	disabled = false,
 	className = '',
+	colorVariant = 'primary',
 }) => {
 	const handleClick = () => {
 		if (disabled) return;
@@ -34,13 +36,13 @@ export const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
 
 	const variantStyles = {
 		default: pressed
-			? 'neu-inset bg-primary/10 text-primary border-primary/20 shadow-inner'
+			? `neu-inset ${colorVariant === 'secondary' ? 'bg-secondary/10 text-secondary border-secondary/20' : 'bg-primary/10 text-primary border-primary/20'} shadow-inner`
 			: 'neu-raised bg-background text-foreground shadow-md hover:shadow-lg',
 		'outline-solid': pressed
-			? 'neu-inset bg-primary/10 text-primary border-primary/30 shadow-inner'
+			? `neu-inset ${colorVariant === 'secondary' ? 'bg-secondary/10 text-secondary border-secondary/30' : 'bg-primary/10 text-primary border-primary/30'} shadow-inner`
 			: 'neu-flat bg-background text-foreground border border-border shadow-xs hover:shadow-md',
 		ghost: pressed
-			? 'bg-primary/10 text-primary'
+			? `${colorVariant === 'secondary' ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`
 			: 'bg-transparent text-foreground hover:bg-muted',
 	};
 

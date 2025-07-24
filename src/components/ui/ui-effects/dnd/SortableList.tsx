@@ -26,7 +26,11 @@ interface Item {
 
 // #region SortableItem 컴포넌트
 
-const SortableItem: React.FC<Item> = ({ id, name }) => {
+interface SortableItemProps extends Item {
+	colorVariant?: 'primary' | 'secondary';
+}
+
+const SortableItem: React.FC<SortableItemProps> = ({ id, name, colorVariant = 'primary' }) => {
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({ id });
 	const style: React.CSSProperties = {
@@ -34,11 +38,16 @@ const SortableItem: React.FC<Item> = ({ id, name }) => {
 		transition,
 	};
 
+	// 색상 variant에 따른 스타일
+	const hoverStyles = colorVariant === 'primary' 
+		? 'hover:border-primary hover:bg-primary/10'
+		: 'hover:border-secondary hover:bg-secondary/10';
+
 	return (
 		<li
 			ref={setNodeRef}
 			style={style}
-			className="p-2 border border-border rounded bg-background mb-2 cursor-grab hover:border-primary hover:bg-primary/10"
+			className={`p-2 border border-border rounded bg-background mb-2 cursor-grab ${hoverStyles}`}
 			{...attributes}
 			{...listeners}>
 			{name}
@@ -47,7 +56,11 @@ const SortableItem: React.FC<Item> = ({ id, name }) => {
 };
 // #endregion
 
-const DragAndDrop: React.FC = () => {
+interface DragAndDropProps {
+	colorVariant?: 'primary' | 'secondary';
+}
+
+const DragAndDrop: React.FC<DragAndDropProps> = ({ colorVariant = 'primary' }) => {
 	// #region 상태
 	const [items, setItems] = useState<Item[]>([
 		{ id: '1', name: 'Item 1' },
@@ -86,7 +99,7 @@ const DragAndDrop: React.FC = () => {
 					strategy={rectSortingStrategy}>
 					<ul>
 						{items.map((item) => (
-							<SortableItem key={item.id} id={item.id} name={item.name} />
+							<SortableItem key={item.id} id={item.id} name={item.name} colorVariant={colorVariant} />
 						))}
 					</ul>
 				</SortableContext>

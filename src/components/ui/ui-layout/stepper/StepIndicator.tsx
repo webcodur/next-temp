@@ -12,6 +12,7 @@ interface StepIndicatorProps {
 	onStepClick?: (step: number) => void;
 	maxVisibleSteps?: number;
 	title?: string;
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 
@@ -22,11 +23,13 @@ interface StepNodeProps {
 	isViewing: boolean;
 	isClickable: boolean;
 	currentStep: number;
+	colorVariant: 'primary' | 'secondary';
 	onClick: () => void;
 }
 
 interface StepLineProps {
 	isCompleted: boolean;
+	colorVariant: 'primary' | 'secondary';
 }
 
 interface StepNameProps {
@@ -34,6 +37,7 @@ interface StepNameProps {
 	stepNumber: number;
 	viewStep: number;
 	currentStep: number;
+	colorVariant: 'primary' | 'secondary';
 }
 //#endregion
 
@@ -119,6 +123,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 	onStepClick,
 	maxVisibleSteps = 3,
 	title,
+	colorVariant = 'primary',
 	className = '',
 }) => {
 	const t = useTranslations();

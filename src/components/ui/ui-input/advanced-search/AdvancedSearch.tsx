@@ -30,6 +30,7 @@ interface AdvancedSearchProps {
 	showButtons?: boolean;
 	statusText?: string;
 	fieldControlsLabel?: string;
+	colorVariant?: 'primary' | 'secondary';
 }
 // #endregion
 
@@ -43,8 +44,21 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	defaultOpen = true,
 	showButtons = true,
 	statusText,
+	colorVariant = 'primary',
 }) => {
 	const { isRTL } = useLocale();
+
+	// 색상 variant에 따른 스타일 정의
+	const colorStyles = {
+		primary: {
+			searchButton: 'text-primary-foreground bg-primary hover:bg-primary/90',
+			resetButton: 'text-muted-foreground bg-background hover:text-primary',
+		},
+		secondary: {
+			searchButton: 'text-secondary-foreground bg-secondary hover:bg-secondary/90',
+			resetButton: 'text-muted-foreground bg-background hover:text-secondary',
+		},
+	};
 
 	// 필드 제어 관련 상태 및 함수 완전 제거
 
@@ -67,13 +81,13 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 					<div className={`flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
 						<button
 							onClick={onReset}
-							className="flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors text-muted-foreground bg-background neu-raised hover:text-primary">
+							className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[colorVariant].resetButton}`}>
 							<RotateCcw className="w-4 h-4" />
 							{resetLabel}
 						</button>
 						<button
 							onClick={onSearch}
-							className="flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors text-primary-foreground bg-primary neu-raised hover:bg-primary/90">
+							className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[colorVariant].searchButton}`}>
 							<Search className="w-4 h-4" />
 							{searchLabel}
 						</button>

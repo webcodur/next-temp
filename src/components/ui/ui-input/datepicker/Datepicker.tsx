@@ -120,6 +120,7 @@ export type PickDateProps = {
 	minDate?: Date | null;
 	maxDate?: Date | null;
 	disabled?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 };
 
 export function PickDate({
@@ -132,21 +133,28 @@ export function PickDate({
 	minDate,
 	maxDate,
 	disabled = false,
+	colorVariant = 'primary',
 }: PickDateProps) {
+	const colorVariantClass = colorVariant === 'primary' 
+		? 'datepicker-primary' 
+		: 'datepicker-secondary';
+
 	return (
-		<DatePicker
-			selected={selected ?? undefined}
-			onChange={onChange}
-			dateFormat={dateFormat}
-			placeholderText={placeholderText}
-			locale={ko}
-			showTimeSelect={showTimeSelect}
-			className={className}
-			minDate={minDate ?? undefined}
-			maxDate={maxDate ?? undefined}
-			disabled={disabled}
-			renderCustomHeader={renderCustomHeader}
-		/>
+		<div className={`${colorVariantClass} ${className}`}>
+			<DatePicker
+				selected={selected ?? undefined}
+				onChange={onChange}
+				dateFormat={dateFormat}
+				placeholderText={placeholderText}
+				locale={ko}
+				showTimeSelect={showTimeSelect}
+				className="w-full"
+				minDate={minDate ?? undefined}
+				maxDate={maxDate ?? undefined}
+				disabled={disabled}
+				renderCustomHeader={renderCustomHeader}
+			/>
+		</div>
 	);
 }
 // #endregion
@@ -159,6 +167,7 @@ export type PickDateRangeProps = {
 	dateFormat?: string;
 	placeholderText?: string;
 	className?: string;
+	colorVariant?: 'primary' | 'secondary';
 };
 
 export function PickDateRange({
@@ -168,19 +177,26 @@ export function PickDateRange({
 	dateFormat = 'yyyy-MM-dd',
 	placeholderText = '날짜 범위 선택',
 	className = '',
+	colorVariant = 'primary',
 }: PickDateRangeProps) {
+	const colorVariantClass = colorVariant === 'primary' 
+		? 'datepicker-primary' 
+		: 'datepicker-secondary';
+
 	return (
-		<DatePicker
-			selectsRange={true}
-			startDate={startDate ?? undefined}
-			endDate={endDate ?? undefined}
-			onChange={onChange}
-			dateFormat={dateFormat}
-			placeholderText={placeholderText}
-			locale={ko}
-			className={className}
-			renderCustomHeader={renderCustomHeader}
-		/>
+		<div className={`${colorVariantClass} ${className}`}>
+			<DatePicker
+				selectsRange={true}
+				startDate={startDate ?? undefined}
+				endDate={endDate ?? undefined}
+				onChange={onChange}
+				dateFormat={dateFormat}
+				placeholderText={placeholderText}
+				locale={ko}
+				className="w-full"
+				renderCustomHeader={renderCustomHeader}
+			/>
+		</div>
 	);
 }
 // #endregion

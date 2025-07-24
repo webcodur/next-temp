@@ -21,10 +21,10 @@ export function ActionButtons({ selectedId, isLoading, onConfirm }: ActionButton
       <button
         onClick={onConfirm}
         disabled={!selectedId || isLoading}
-        className={`neu-raised px-8 py-3 rounded-lg font-medium transition-all min-w-32 ${
+        className={`px-8 py-3 rounded-lg font-medium transition-all min-w-32 ${
           (!selectedId || isLoading) 
-            ? 'opacity-50 cursor-not-allowed' 
-            : 'text-primary'
+            ? 'neu-flat opacity-50 cursor-not-allowed text-foreground' 
+            : 'neu-raised bg-primary text-white hover:scale-[1.02]'
         }`}
       >
         {isLoading ? '처리 중...' : '확인'}

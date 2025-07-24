@@ -172,7 +172,7 @@ export default function CreateHouseholdPage() {
 
           {/* 추가 정보 섹션 */}
           <div>
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">추가 정보</h2>
+            <h2 className="mb-4 text-lg font-semibold text-foreground">추가 정보</h2>
             <FieldText
               id="memo"
               label="메모"

@@ -14,6 +14,7 @@ export interface DialogProps {
 	footer?: React.ReactNode;
 	size?: 'sm' | 'md' | 'lg' | 'xl';
 	variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+	colorVariant?: 'primary' | 'secondary';
 	showCloseButton?: boolean;
 	closeOnEscape?: boolean;
 	closeOnOverlay?: boolean;
@@ -27,11 +28,11 @@ const sizeClasses = {
 	xl: 'max-w-4xl',
 };
 
-const variantConfig = {
+const getVariantConfig = (colorVariant: 'primary' | 'secondary') => ({
 	default: {
 		icon: null,
 		iconColor: '',
-		borderColor: 'border-primary/20',
+		borderColor: colorVariant === 'primary' ? 'border-primary/20' : 'border-secondary/20',
 	},
 	success: {
 		icon: CheckCircle,
@@ -50,10 +51,10 @@ const variantConfig = {
 	},
 	info: {
 		icon: Info,
-		iconColor: 'text-primary',
-		borderColor: 'border-primary/20',
+		iconColor: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+		borderColor: colorVariant === 'primary' ? 'border-primary/20' : 'border-secondary/20',
 	},
-};
+});
 
 export const Dialog: React.FC<DialogProps> = ({
 	isOpen,
@@ -63,12 +64,14 @@ export const Dialog: React.FC<DialogProps> = ({
 	footer,
 	size = 'md',
 	variant = 'default',
+	colorVariant = 'primary',
 	showCloseButton = true,
 	closeOnEscape = true,
 	closeOnOverlay = true,
 	className = '',
 }) => {
 	const [mounted, setMounted] = useState(false);
+	const variantConfig = getVariantConfig(colorVariant);
 	const variantInfo = variantConfig[variant];
 	const IconComponent = variantInfo.icon;
 

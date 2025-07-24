@@ -14,6 +14,7 @@ export interface TimelineItem {
 interface TimelineProps {
 	items: TimelineItem[];
 	orientation?: 'vertical' | 'horizontal';
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 // #endregion
@@ -21,6 +22,7 @@ interface TimelineProps {
 const Timeline: React.FC<TimelineProps> = ({
 	items,
 	orientation = 'vertical',
+	colorVariant = 'primary',
 	className = '',
 }) => {
 	// #region 훅
@@ -29,15 +31,17 @@ const Timeline: React.FC<TimelineProps> = ({
 
 	// #region 핸들러
 	const getStatusColor = (status?: string) => {
+		const currentColor = colorVariant === 'primary' ? 'bg-primary' : 'bg-secondary';
+		
 		switch (status) {
 			case 'completed':
 				return 'bg-green-500';
 			case 'current':
-				return 'bg-blue-500';
+				return currentColor;
 			case 'upcoming':
 				return 'bg-gray-300';
 			default:
-				return 'bg-primary';
+				return currentColor;
 		}
 	};
 	// #endregion

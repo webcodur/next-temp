@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface GridFormContextValue {
 	labelWidth: string;
 	gap: string;
+	colorVariant: 'primary' | 'secondary';
 }
 
 const GridFormContext = createContext<GridFormContextValue | null>(null);
@@ -17,6 +18,7 @@ const GridFormContext = createContext<GridFormContextValue | null>(null);
 export interface GridFormProps {
 	labelWidth?: string;  // 옵션 프롭 (필수 아님)
 	gap?: string;
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	children: React.ReactNode;
 }
@@ -55,12 +57,13 @@ const GridForm = React.forwardRef<
 >(({
 	labelWidth = '300px',  // 기본값 설정
 	gap = '20px',
+	colorVariant = 'primary',
 	className,
 	children,
 	...props
 }, ref) => {
 	return (
-		<GridFormContext.Provider value={{ labelWidth, gap }}>
+		<GridFormContext.Provider value={{ labelWidth, gap, colorVariant }}>
 			<div
 				ref={ref}
 				className={cn(
@@ -224,9 +227,14 @@ const GridFormFeedback = React.forwardRef<
 	children,
 	...props
 }, ref) => {
+	const context = React.useContext(GridFormContext);
+	const colorVariant = context?.colorVariant || 'primary';
+	
+	const successColor = colorVariant === 'primary' ? '[&_svg]:text-primary' : '[&_svg]:text-secondary';
+	
 	const iconColorClasses = {
 		info: '[&_svg]:text-muted-foreground',
-		success: '[&_svg]:text-primary', // 파란색으로 변경
+		success: successColor,
 		warning: '[&_svg]:text-warning',
 		error: '[&_svg]:text-destructive',
 	};

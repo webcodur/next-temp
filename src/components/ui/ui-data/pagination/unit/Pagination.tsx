@@ -17,6 +17,7 @@ interface PaginationProps {
 	groupSize?: number;
 	totalItems?: number;
 	itemName?: string;
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 
@@ -30,6 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({
 	groupSize = 5,
 	totalItems,
 	itemName = "항목",
+	colorVariant = 'primary',
 	className = '',
 }) => {
 	const { isRTL } = useLocale();
@@ -104,9 +106,16 @@ const Pagination: React.FC<PaginationProps> = ({
 		neu-raised cursor-pointer
 	`;
 
+	// 색상 variant에 따른 스타일
+	const colorStyles = {
+		text: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+		border: colorVariant === 'primary' ? 'focus:border-primary' : 'focus:border-secondary',
+		ring: colorVariant === 'primary' ? 'focus:ring-primary' : 'focus:ring-secondary',
+	};
+
 	const currentPageClasses = `
 		flex items-center justify-center min-w-[40px] h-10 px-3 text-sm font-medium rounded-md
-		bg-muted text-primary neu-inset
+		bg-muted ${colorStyles.text} neu-inset
 	`;
 
 	// 데이터가 없더라도 UI skeleton을 유지하기 위해 렌더링은 계속한다.
@@ -193,7 +202,7 @@ const Pagination: React.FC<PaginationProps> = ({
 						value={pageSize}
 						disabled={noData || !onPageSizeChange}
 						onChange={handlePageSizeChange}
-						className="px-2 py-1 rounded-md border cursor-pointer border-border bg-background text-foreground focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+						className={`px-2 py-1 rounded-md border cursor-pointer border-border bg-background text-foreground ${colorStyles.border} focus:ring-1 ${colorStyles.ring} disabled:opacity-50 disabled:cursor-not-allowed`}>
 						{pageSizeOptions.map((size) => (
 							<option key={size} value={size}>
 								{size}

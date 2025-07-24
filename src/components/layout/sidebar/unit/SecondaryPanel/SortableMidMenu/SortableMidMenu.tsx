@@ -46,7 +46,6 @@ export function SortableMidMenu({
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging,
   } = useSortable({ 
     id,
@@ -55,7 +54,6 @@ export function SortableMidMenu({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
     opacity: isDragging ? 0.5 : 1,
   };
 
@@ -66,23 +64,23 @@ export function SortableMidMenu({
       className={`group ${isDragging ? 'z-50' : ''}`}
     >
       <Collapsible open={isExpanded} onOpenChange={onToggle}>
-        <div className={`flex items-center gap-2 p-2 w-full rounded-lg transition-colors ${
+        <div className={`flex items-center gap-2 p-2 w-full rounded-lg ${
           isDynamic ? 'hover:bg-surface-3' : ''} neu-raised`}>
           {/* 드래그 핸들 (동적 메뉴만) */}
           {isDynamic && (
             <div
               {...attributes}
               {...listeners}
-              className="flex flex-shrink-0 justify-center items-center w-4 h-4 opacity-0 transition-opacity cursor-grab active:cursor-grabbing group-hover:opacity-100"
+              className="flex flex-shrink-0 justify-center items-center w-4 h-4 opacity-0 cursor-grab active:cursor-grabbing group-hover:opacity-100"
             >
-              <GripVertical className="w-3 h-3 transition-colors text-muted-foreground hover:text-foreground" />
+              <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground" />
             </div>
           )}
           
           <CollapsibleTrigger className="flex flex-1 justify-between items-center">
             <span className="font-semibold text-foreground">{t(midItem.key)}</span>
             <ChevronRight
-              className={`w-5 h-5 transition-transform duration-200 ${
+              className={`w-5 h-5 ${
                 isExpanded ? 'rotate-90' : ''}`}
             />
           </CollapsibleTrigger>

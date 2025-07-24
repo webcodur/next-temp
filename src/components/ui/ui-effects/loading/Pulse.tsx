@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface PulseProps extends ComponentPropsWithoutRef<"div"> {
   size?: 'small' | 'medium' | 'large';
-  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary';
+  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary' | 'secondary';
 }
 
 const sizeMap = {
@@ -18,6 +18,7 @@ const colorMap = {
   red: 'bg-red-500',
   purple: 'bg-purple-500',
   primary: 'bg-primary',
+  secondary: 'bg-secondary',
 };
 
 export const Pulse = React.memo(function Pulse({
@@ -42,7 +43,9 @@ export const Pulse = React.memo(function Pulse({
         className={cn(
           "absolute top-0 left-0 rounded-full border-2 animate-ping",
           sizeMap[size],
-          color === 'primary' ? 'border-primary' : `border-${color}-500`
+          color === 'primary' ? 'border-primary' : 
+          color === 'secondary' ? 'border-secondary' : 
+          `border-${color}-500`
         )}
         style={{ opacity: 0.75 }}
       />

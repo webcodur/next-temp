@@ -10,6 +10,7 @@ interface SimpleCheckboxProps {
 	indeterminate?: boolean;
 	disabled?: boolean;
 	className?: string;
+	colorVariant?: 'primary' | 'secondary';
 }
 
 export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
@@ -19,6 +20,7 @@ export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
 	indeterminate = false,
 	disabled = false,
 	className = '',
+	colorVariant = 'primary',
 }) => {
 	const checkboxRef = useRef<HTMLInputElement>(null);
 
@@ -71,13 +73,13 @@ export const SimpleCheckbox: React.FC<SimpleCheckboxProps> = ({
 					<div
 						className={`w-6 h-6 flex items-center justify-center rounded-md border focus-within:neu-inset ${
 							isChecked || indeterminate
-								? 'neu-inset bg-primary/10 border-primary/30 shadow-inner'
+								? `neu-inset ${colorVariant === 'secondary' ? 'bg-secondary/10 border-secondary/30' : 'bg-primary/10 border-primary/30'} shadow-inner`
 								: 'neu-raised bg-background border-border shadow-md hover:shadow-lg'
 						}`}>
 						{indeterminate ? (
-							<Minus className="w-4 h-4 text-primary" />
+							<Minus className={`w-4 h-4 ${colorVariant === 'secondary' ? 'text-secondary' : 'text-primary'}`} />
 						) : isChecked ? (
-							<Check className="w-4 h-4 text-primary" />
+							<Check className={`w-4 h-4 ${colorVariant === 'secondary' ? 'text-secondary' : 'text-primary'}`} />
 						) : null}
 					</div>
 				</div>

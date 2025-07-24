@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { List, ChevronDown } from 'lucide-react';
-import { FIELD_STYLES } from '../core/config';
+import { FIELD_STYLES, getColorVariantStyles } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/useI18n';
 import { useSelectLogic } from '../shared/useSelectLogic';
@@ -18,6 +18,7 @@ interface FieldSelectProps {
 	className?: string;
 	disabled?: boolean;
 	startIcon?: React.ReactNode;
+	colorVariant?: 'primary' | 'secondary';
 	onFocus?: () => void;
 	onBlur?: () => void;
 }
@@ -33,6 +34,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	className = '',
 	disabled = false,
 	startIcon,
+	colorVariant = 'primary',
 	onFocus,
 	onBlur,
 }) => {
@@ -42,6 +44,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 
 	// #region 훅
 	const { isRTL } = useLocale();
+	const colorStyles = getColorVariantStyles(colorVariant);
 	// #endregion
 
 	// #region 핸들러
@@ -78,7 +81,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						${FIELD_STYLES.padding}
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
-						${isFocused ? 'ring-2 ring-primary' : ''}
+						${isFocused ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
 						w-full bg-transparent flex items-center justify-between
 					`}
@@ -93,7 +96,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 					}}
 				>
 					<span className={`${FIELD_STYLES.startIcon}`}>
-						{startIcon || <List className="w-4 h-4 neu-icon-active" />}
+						{startIcon || <List className={`w-4 h-4 ${colorStyles.activeIcon}`} />}
 					</span>
 					<span className={`${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}>
 						{selectedOption ? selectedOption.label : placeholder}

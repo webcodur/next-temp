@@ -16,7 +16,13 @@ type MaterialType = 'basic' | 'lambert' | 'phong' | 'standard' | 'physical';
 type LightType = 'ambient' | 'directional' | 'point' | 'spot';
 // #endregion
 
-export default function ThreejsMaterialsLightsExample() {
+interface ThreejsMaterialsLightsProps {
+	colorVariant?: 'primary' | 'secondary';
+}
+
+export default function ThreejsMaterialsLightsExample({ 
+	colorVariant = 'primary' 
+}: ThreejsMaterialsLightsProps = {}) {
 	// #region 훅 및 참조
 	const t = useTranslations();
 	const mountRef = useRef<HTMLDivElement>(null);
@@ -26,12 +32,15 @@ export default function ThreejsMaterialsLightsExample() {
 	const lightsRef = useRef<THREE.Light[]>([]);
 	// #endregion
 
+	// #region 색상 variant에 따른 기본 색상
+	const baseColor = colorVariant === 'primary' ? 0x3b82f6 : 0x06b6d4; // blue-500 vs cyan-500
+	
 	// #region 상수: 재질 및 조명 데이터
 	const materialData = {
 		basic: {
 			name: t('3D_기본재질'),
 			description: t('3D_기본재질설명'),
-			create: (color: number) => new THREE.MeshBasicMaterial({ color }),
+			create: (color: number = baseColor) => new THREE.MeshBasicMaterial({ color }),
 		},
 		lambert: {
 			name: t('3D_램버트재질'),

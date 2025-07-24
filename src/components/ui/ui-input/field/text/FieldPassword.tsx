@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Key, Eye, EyeOff, X } from 'lucide-react';
-import { FIELD_STYLES } from '../core/config';
+import { FIELD_STYLES, getColorVariantStyles } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
 
 interface FieldPasswordProps {
@@ -15,6 +15,7 @@ interface FieldPasswordProps {
 	disabled?: boolean;
 	showClearButton?: boolean;
 	showToggle?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 	onFocus?: () => void;
 	onBlur?: () => void;
 	error?: boolean;
@@ -31,6 +32,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 	disabled = false,
 	showClearButton = true,
 	showToggle = true,
+	colorVariant = 'primary',
 	onFocus,
 	onBlur,
 	error = false,
@@ -40,6 +42,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 	const [showPassword, setShowPassword] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const { isRTL } = useLocale();
+	const colorStyles = getColorVariantStyles(colorVariant);
 
 	return (
 		<div className={`${FIELD_STYLES.fieldWrapper} ${className}`}>
@@ -56,7 +59,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 				</div>
 			)}
 			<div className="relative">
-				<Key className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
+				<Key className={`${FIELD_STYLES.startIcon} ${colorStyles.activeIcon}`} />
 				<input
 					ref={inputRef}
 					id={id}
@@ -82,7 +85,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-20 ps-12' : 'pl-12 pr-20'}
-						${isFocused ? 'ring-2 ring-primary' : ''}
+						${isFocused && !error ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${error ? 'ring-2 ring-destructive' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
 						w-full bg-transparent

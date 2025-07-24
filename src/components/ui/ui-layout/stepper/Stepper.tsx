@@ -25,6 +25,7 @@ export interface StepperProps {
   ) => React.ReactNode;
   maxVisibleSteps?: number;
   title?: string;
+  colorVariant?: 'primary' | 'secondary';
   className?: string;
 }
 // #endregion
@@ -43,6 +44,7 @@ export const Stepper: React.FC<StepperProps> = ({
   renderStep,
   maxVisibleSteps = 4,
   title,
+  colorVariant = 'primary',
   className = '',
 }) => {
   const t = useTranslations();
@@ -82,6 +84,7 @@ export const Stepper: React.FC<StepperProps> = ({
         onStepClick={handleStepClick}
         maxVisibleSteps={maxVisibleSteps}
         title={defaultTitle}
+        colorVariant={colorVariant}
       />
 
       <ContentArea>

@@ -35,7 +35,6 @@ export function SortableBotMenuItem({
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging,
   } = useSortable({ 
     id,
@@ -44,7 +43,6 @@ export function SortableBotMenuItem({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? 'none' : transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 1000 : 1,
   };
@@ -53,10 +51,10 @@ export function SortableBotMenuItem({
     <li 
       ref={setNodeRef} 
       style={style} 
-      className="group relative"
+      className="relative group"
     >
       {isDynamic ? (
-        <div className={`flex items-center gap-2 p-2 rounded-md text-sm transition-colors ${
+        <div className={`flex items-center gap-2 p-2 rounded-md text-sm ${
           isActive
             ? 'text-primary-foreground bg-primary'
             : 'text-foreground hover:bg-surface-3'
@@ -65,9 +63,9 @@ export function SortableBotMenuItem({
           <div
             {...attributes}
             {...listeners}
-            className="flex flex-shrink-0 justify-center items-center w-4 h-4 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+            className="flex flex-shrink-0 justify-center items-center w-4 h-4 opacity-0 cursor-grab active:cursor-grabbing group-hover:opacity-100"
           >
-            <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground transition-colors" />
+            <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground" />
           </div>
           
           {/* 클릭 가능한 링크 */}
@@ -81,7 +79,7 @@ export function SortableBotMenuItem({
       ) : (
         <Link
           href={botItem.href}
-          className={`block p-2 rounded-md text-sm transition-colors ${
+          className={`block p-2 rounded-md text-sm ${
             isActive
               ? 'text-primary-foreground bg-primary'
               : 'text-foreground hover:bg-surface-3'

@@ -18,6 +18,8 @@ export interface FlipTextProps extends MotionProps {
 	children: React.ReactNode;
 	/** 애니메이션 변형 */
 	variants?: Variants;
+	/** 색상 variant */
+	colorVariant?: 'primary' | 'secondary';
 }
 
 const defaultVariants: Variants = {
@@ -32,10 +34,14 @@ export function FlipText({
 	className,
 	as: Component = 'span',
 	variants,
+	colorVariant = 'primary',
 	...props
 }: FlipTextProps) {
 	const MotionComponent = motion(Component);
 	const characters = React.Children.toArray(children).join('').split('');
+	
+	// 색상 variant에 따른 스타일
+	const textColorClass = colorVariant === 'primary' ? 'text-primary' : 'text-secondary';
 
 	return (
 		<div className="flex justify-center space-x-1">
@@ -49,7 +55,8 @@ export function FlipText({
 						variants={variants || defaultVariants}
 						transition={{ duration, delay: i * delayMultiple }}
 						className={cn(
-							'origin-center drop-shadow-sm inline-block text-primary',
+							'origin-center drop-shadow-sm inline-block',
+							textColorClass,
 							className
 						)}
 						{...props}>

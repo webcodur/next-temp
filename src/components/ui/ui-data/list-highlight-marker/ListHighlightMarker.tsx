@@ -13,6 +13,7 @@ export interface ListHighlightMarkerProps {
 	isHighlighted?: boolean; // 하이라이트됨 여부 (키보드 네비게이션)
 	disabled?: boolean; // 비활성화 여부
 	onClick?: () => void; // 클릭 핸들러
+	colorVariant?: 'primary' | 'secondary'; // 색상 variant
 	className?: string; // 커스텀 클래스명
 	children: React.ReactNode;
 }
@@ -26,22 +27,32 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 	isHighlighted = false,
 	disabled = false,
 	onClick,
+	colorVariant = 'primary',
 	className = '',
 	children,
 }) => {
 	const { isRTL } = useLocale();
 	const isActive = isSelected || isHighlighted;
 
+	// 색상 variant에 따른 스타일
+	const colorStyles = {
+		bg: colorVariant === 'primary' ? 'bg-primary/5' : 'bg-secondary/5',
+		borderActive: colorVariant === 'primary' ? 'border-primary' : 'border-secondary',
+		text: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+		hoverBg: colorVariant === 'primary' ? 'hover:bg-primary/5' : 'hover:bg-secondary/5',
+		hoverBorder: colorVariant === 'primary' ? 'hover:border-primary' : 'hover:border-secondary',
+	};
+
 	// RTL에 따른 색상 바 위치와 transform 방향 결정
 	const getBorderClass = () => {
 		if (isRTL) {
 			return isActive
-				? 'bg-primary/5 border-r-4 border-r-primary -translate-x-1'
-				: 'hover:border-r-4 hover:border-r-primary hover:-translate-x-1 hover:bg-primary/5';
+				? `${colorStyles.bg} border-r-4 ${colorStyles.borderActive} -translate-x-1`
+				: `hover:border-r-4 ${colorStyles.hoverBorder} hover:-translate-x-1 ${colorStyles.hoverBg}`;
 		} else {
 			return isActive
-				? 'bg-primary/5 border-l-4 border-l-primary translate-x-1'
-				: 'hover:border-l-4 hover:border-l-primary hover:translate-x-1 hover:bg-primary/5';
+				? `${colorStyles.bg} border-l-4 ${colorStyles.borderActive} translate-x-1`
+				: `hover:border-l-4 ${colorStyles.hoverBorder} hover:translate-x-1 ${colorStyles.hoverBg}`;
 		}
 	};
 
@@ -94,7 +105,7 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 				{/* Check 아이콘 - active 상태에서만 보임 */}
 				<Check
 					className={cn(
-						'absolute inset-0 w-4 h-4 text-primary transition-all duration-200',
+						`absolute inset-0 w-4 h-4 ${colorStyles.text} transition-all duration-200`,
 						'transform',
 						isActive
 							? 'opacity-100 scale-100 rotate-0'

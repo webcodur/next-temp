@@ -9,12 +9,14 @@ import { createPortal } from 'react-dom';
 
 interface LanguageSwitcherProps {
 	variant?: 'header' | 'sidebar' | 'inline';
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	hideChevron?: boolean;
 }
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 	variant = 'inline',
+	colorVariant = 'primary',
 	className = '',
 	hideChevron = false,
 }) => {
@@ -48,21 +50,27 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 	const currentMeta = allLocaleMetadata[currentLocale];
 
 	const getVariantStyles = () => {
+		// 색상 variant에 따른 hover 배경색
+		const hoverBg = colorVariant === 'primary' ? 'hover:bg-primary/10' : 'hover:bg-secondary/10';
+		
 		switch (variant) {
 			case 'header':
 				return {
-					trigger: 'p-2 hover:bg-muted/50 rounded-md transition-colors',
+					trigger: `p-2 ${hoverBg} rounded-md transition-colors`,
 					dropdown: 'w-16',
+					itemHover: `${hoverBg}`,
 				};
 			case 'sidebar':
 				return {
-					trigger: 'p-2 hover:bg-muted/50 rounded-md transition-colors',
+					trigger: `p-2 ${hoverBg} rounded-md transition-colors`,
 					dropdown: 'w-16',
+					itemHover: `${hoverBg}`,
 				};
 			default: // inline
 				return {
-					trigger: 'p-2 border border-border hover:bg-muted/50 rounded-md transition-colors',
+					trigger: `p-2 border border-border ${hoverBg} rounded-md transition-colors`,
 					dropdown: 'w-16',
+					itemHover: `${hoverBg}`,
 				};
 		}
 	};
@@ -112,7 +120,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 								<button
 									key={locale}
 									onClick={() => handleLanguageChange(locale)}
-									className="w-full p-2 hover:bg-muted/50 transition-colors flex items-center justify-center"
+									className={`w-full p-2 ${styles.itemHover} transition-colors flex items-center justify-center`}
 								>
 									<div className="relative w-8 h-8">
 										<Image src={meta.flag} alt={meta.name} width={32} height={32} className="w-full h-full rounded-full object-cover" />

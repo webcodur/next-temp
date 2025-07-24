@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface SpinnerProps extends ComponentPropsWithoutRef<"div"> {
   size?: 'small' | 'medium' | 'large';
-  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary';
+  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary' | 'secondary';
 }
 
 const sizeMap = {
@@ -18,6 +18,7 @@ const colorMap = {
   red: 'border-red-500',
   purple: 'border-purple-500',
   primary: 'border-primary',
+  secondary: 'border-secondary',
 };
 
 export const Spinner = React.memo(function Spinner({

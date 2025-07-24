@@ -13,6 +13,7 @@ interface EditorProps {
 	disabled?: boolean;
 	toolbar?: string;
 	plugins?: string[];
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 // #endregion
@@ -25,6 +26,7 @@ const Editor: React.FC<EditorProps> = ({
 	disabled = false,
 	toolbar,
 	plugins,
+	colorVariant = 'primary',
 	className = '',
 }) => {
 	// #region 훅
@@ -56,6 +58,9 @@ const Editor: React.FC<EditorProps> = ({
 	// #endregion
 
 	// #region 핸들러
+	// 색상 variant에 따른 색상 설정
+	const themeColor = colorVariant === 'primary' ? 'var(--primary)' : 'var(--secondary)';
+
 	// RTL에 따른 에디터 설정
 	const getEditorConfig = () => ({
 		height,
@@ -75,6 +80,8 @@ const Editor: React.FC<EditorProps> = ({
 			.mce-content-body { 
 				${isRTL ? 'margin-right: 22px;' : 'margin-left: 22px;'}
 			}
+			a { color: ${themeColor}; }
+			.primary-color { color: ${themeColor}; }
 		`,
 		branding: false,
 		resize: false,

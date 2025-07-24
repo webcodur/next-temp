@@ -14,10 +14,18 @@ import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle'
 import { useTranslations } from '@/hooks/useI18n';
 import { themeAtom } from '@/store/theme';
 
-export default function ThemeTestExample() {
+interface ThemeTestProps {
+	colorVariant?: 'primary' | 'secondary';
+}
+
+export default function ThemeTestExample({ colorVariant = 'primary' }: ThemeTestProps = {}) {
 	// #region 훅 및 상태
 	const [theme] = useAtom(themeAtom);
 	const t = useTranslations();
+	// #endregion
+
+	// #region 색상 variant에 따른 스타일
+	const primaryColorClass = colorVariant === 'primary' ? 'text-primary' : 'text-secondary';
 	// #endregion
 
 	// #region 상수: 색상 및 뉴모피즘 요소
@@ -50,7 +58,7 @@ export default function ThemeTestExample() {
 					</h1>
 					<div className="flex gap-4 items-center">
 						<div className="text-sm text-muted-foreground">
-							{t('테마테스트_현재테마')} <span className="font-semibold text-primary">{theme}</span>
+							{t('테마테스트_현재테마')} <span className={`font-semibold ${primaryColorClass}`}>{theme}</span>
 						</div>
 						<ThemeToggle showLabel={true} />
 					</div>
@@ -94,7 +102,7 @@ export default function ThemeTestExample() {
 								{element.name}
 							</h3>
 							<p className="text-sm text-muted-foreground font-multilang">
-								CSS 클래스: <code className="text-primary">{element.class}</code>
+								CSS 클래스: <code className={primaryColorClass}>{element.class}</code>
 							</p>
 						</div>
 					))}

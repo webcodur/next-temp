@@ -5,6 +5,7 @@ interface CardProps {
 	children: ReactNode;
 	className?: string;
 	variant?: 'flat' | 'raised' | 'inset';
+	colorVariant?: 'default' | 'primary' | 'secondary';
 	title?: string;
 	description?: string;
 	actions?: ReactNode;
@@ -22,6 +23,7 @@ const Card: React.FC<CardProps> = ({
 	children,
 	className = '',
 	variant = 'flat',
+	colorVariant = 'default',
 	title,
 	description,
 	actions,
@@ -35,9 +37,16 @@ const Card: React.FC<CardProps> = ({
 		inset: 'neu-inset',
 	};
 
+	const colorVariantClasses = {
+		default: 'bg-background border-border',
+		primary: 'bg-primary/5 border-primary/20',
+		secondary: 'bg-secondary/5 border-secondary/20',
+	};
+
 	const baseClasses = cn(
-		'relative p-6 rounded-lg bg-background transition-all duration-200',
+		'relative p-6 rounded-lg transition-all duration-200 border',
 		variantClasses[variant],
+		colorVariantClasses[colorVariant],
 		hover && 'hover:shadow-lg',
 		clickable && 'cursor-pointer hover:neu-raised',
 		className

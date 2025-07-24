@@ -10,6 +10,7 @@ interface TableRowProps<T> {
 	rowClassName?: string | ((item: T, index: number) => string);
 	cellClassName?: string;
 	onRowClick?: (item: T, index: number) => void;
+	colorVariant?: 'primary' | 'secondary';
 	isRTL: boolean;
 }
 
@@ -21,6 +22,7 @@ export const TableRow = <T extends Record<string, unknown>>({
 	rowClassName = '',
 	cellClassName = '',
 	onRowClick,
+	colorVariant = 'primary',
 	isRTL,
 }: TableRowProps<T>) => {
 	// 행 클래스 이름 계산
@@ -31,12 +33,17 @@ export const TableRow = <T extends Record<string, unknown>>({
 		return rowClassName;
 	};
 
+	// 색상 variant에 따른 hover 스타일
+	const hoverClass = colorVariant === 'primary' 
+		? 'hover:bg-primary-2/[0.6]' 
+		: 'hover:bg-secondary-2/[0.6]';
+
 	return (
 		<tr
 			onClick={() => onRowClick?.(item, index)}
 			className={`
 				${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
-				hover:bg-primary-2/[0.6]
+				${hoverClass}
 				${onRowClick ? 'cursor-pointer' : ''}
 				${getRowClassName()}
 			`}

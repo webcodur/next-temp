@@ -17,6 +17,7 @@ interface SimpleDropdownProps {
 	options: DropdownOption[];
 	placeholder?: string;
 	disabled?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	validationRule?: ValidationRule;
 }
@@ -28,6 +29,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	options,
 	placeholder = '선택하세요',
 	disabled = false,
+	colorVariant = 'primary',
 	className = '',
 	validationRule,
 }) => {
@@ -100,6 +102,13 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	// validation 결과 계산
 	const validationResult = validationRule ? getValidationResult(value || '', validationRule) : null;
 	
+	// 색상 variant에 따른 스타일
+	const colorStyles = {
+		borderFocus: colorVariant === 'primary' ? 'border-primary/30' : 'border-secondary/30',
+		bgSelected: colorVariant === 'primary' ? 'bg-primary/10' : 'bg-secondary/10',
+		textSelected: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+	};
+	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
 	
@@ -143,7 +152,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 					type="text"
 					className={`w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg bg-background ${
 						isOpen
-							? 'shadow-inner neu-inset border-primary/30'
+							? `shadow-inner neu-inset ${colorStyles.borderFocus}`
 							: 'shadow-md neu-flat border-border hover:shadow-lg'
 					} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'} 
 					${selectedOption ? 'text-foreground' : 'text-muted-foreground'} placeholder:select-none`}
@@ -196,7 +205,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 										: 'hover:bg-muted'
 								} ${
 									option.value === value
-										? 'bg-primary/10 text-primary font-medium'
+										? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
 										: 'text-foreground'
 								}`}
 								style={{ transition: 'none' }}

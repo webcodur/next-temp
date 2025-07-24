@@ -15,6 +15,7 @@ interface MorphingTextProps {
   currentIndex?: number; // 현재 표시할 텍스트 인덱스 (외부 제어용)
   autoPlay?: boolean; // 자동 순환 여부 (기본값: true)
   onTextChange?: (index: number) => void; // 텍스트 변경 시 콜백
+  colorVariant?: 'primary' | 'secondary'; // 색상 variant
 }
 // #endregion
 
@@ -178,10 +179,16 @@ export const MorphingText: React.FC<MorphingTextProps> = ({
   currentIndex,
   autoPlay = true,
   onTextChange,
-}) => (
+  colorVariant = 'primary',
+}) => {
+  // 색상 variant에 따른 스타일
+  const textColorClass = colorVariant === 'primary' ? 'text-primary' : 'text-secondary';
+  
+  return (
   <div
     className={cn(
-      "relative mx-auto h-16 w-full max-w-screen-md text-center font-multilang font-extrabold leading-none [filter:url(#morphing-threshold)_blur(0.6px)] md:h-24 text-4xl md:text-5xl lg:text-6xl text-primary",
+      "relative mx-auto h-16 w-full max-w-screen-md text-center font-multilang font-extrabold leading-none [filter:url(#morphing-threshold)_blur(0.6px)] md:h-24 text-4xl md:text-5xl lg:text-6xl",
+      textColorClass,
       className,
     )}
   >
@@ -193,5 +200,6 @@ export const MorphingText: React.FC<MorphingTextProps> = ({
     />
     <SvgFilters />
   </div>
-);
+  );
+};
 //#endregion 

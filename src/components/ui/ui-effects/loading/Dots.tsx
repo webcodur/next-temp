@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface DotsProps extends ComponentPropsWithoutRef<"div"> {
   size?: 'small' | 'medium' | 'large';
-  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary';
+  color?: 'blue' | 'green' | 'red' | 'purple' | 'primary' | 'secondary';
 }
 
 const sizeMap = {
@@ -18,6 +18,7 @@ const colorMap = {
   red: 'bg-red-500',
   purple: 'bg-purple-500',
   primary: 'bg-primary',
+  secondary: 'bg-secondary',
 };
 
 export const Dots = React.memo(function Dots({

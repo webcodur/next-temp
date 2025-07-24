@@ -18,6 +18,7 @@ interface CarouselProps {
 	showThumbnails?: boolean;
 	showDots?: boolean;
 	showArrows?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
 // #endregion
@@ -29,11 +30,19 @@ const Carousel: React.FC<CarouselProps> = ({
 	showThumbnails = false,
 	showDots = true,
 	showArrows = true,
+	colorVariant = 'primary',
 	className = '',
 }) => {
 	// #region 상태
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(autoSlide);
+	// #endregion
+
+	// #region 색상 variant에 따른 스타일
+	const colorStyles = {
+		dotActive: colorVariant === 'primary' ? 'bg-primary' : 'bg-secondary',
+		ringActive: colorVariant === 'primary' ? 'ring-primary' : 'ring-secondary',
+	};
 	// #endregion
 
 	// #region 훅
@@ -112,7 +121,7 @@ const Carousel: React.FC<CarouselProps> = ({
 								onClick={() => goToSlide(index)}
 								className={`w-3 h-3 rounded-full transition-all duration-200 ${
 									index === currentIndex
-										? 'bg-primary neu-inset'
+										? `${colorStyles.dotActive} neu-inset`
 										: 'bg-background/50 neu-flat hover:bg-background/70'
 								}`}
 							/>
@@ -130,7 +139,7 @@ const Carousel: React.FC<CarouselProps> = ({
 							onClick={() => goToSlide(index)}
 							className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden transition-all duration-200 ${
 								index === currentIndex
-									? 'ring-2 ring-primary neu-inset'
+									? `ring-2 ${colorStyles.ringActive} neu-inset`
 									: 'neu-flat hover:neu-raised'
 							}`}
 						>

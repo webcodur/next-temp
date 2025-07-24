@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Search, Type, X } from 'lucide-react';
-import { FIELD_STYLES } from '../core/config';
+import { FIELD_STYLES, getColorVariantStyles } from '../core/config';
 import { useLocale } from '@/hooks/useI18n';
 
 // #region 타입
@@ -17,6 +17,7 @@ interface FieldTextProps {
 	showSearchIcon?: boolean;
 	showClearButton?: boolean;
 	maxLength?: number;
+	colorVariant?: 'primary' | 'secondary';
 	onFocus?: () => void;
 	onBlur?: () => void;
 }
@@ -33,6 +34,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 	showSearchIcon = false,
 	showClearButton = true,
 	maxLength,
+	colorVariant = 'primary',
 	onFocus,
 	onBlur,
 	...rest
@@ -48,6 +50,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 
 	// #region 상수
 	const StartIcon = showSearchIcon ? Search : Type;
+	const colorStyles = getColorVariantStyles(colorVariant);
 	// #endregion
 
 	// #region 렌더링
@@ -59,7 +62,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 				</label>
 			)}
 			<div className="relative">
-				<StartIcon className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
+				<StartIcon className={`${FIELD_STYLES.startIcon} ${colorStyles.activeIcon}`} />
 				<input
 					ref={inputRef}
 					id={id}
@@ -86,7 +89,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 						${FIELD_STYLES.padding} 
 						${FIELD_STYLES.text}
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
-						${isFocused ? 'ring-2 ring-primary' : ''}
+						${isFocused ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
 						w-full bg-transparent
 					`}

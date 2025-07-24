@@ -25,6 +25,8 @@ interface ChipProps {
   size?: 'sm' | 'md' | 'lg';
   /** 스타일 변형 */
   variant?: 'default' | 'outline';
+  /** 색상 변형 */
+  colorVariant?: 'primary' | 'secondary';
   /** 토글 이벤트 핸들러 */
   onToggle: () => void;
   /** 추가 CSS 클래스 */
@@ -41,15 +43,27 @@ const SIZE_STYLES = {
 
 const VARIANT_STYLES = {
   default: {
-    active: 'neu-inset bg-primary/10 text-primary border-primary/30 shadow-inner',
+    active: {
+      primary: 'neu-inset bg-primary/10 text-primary border-primary/30 shadow-inner',
+      secondary: 'neu-inset bg-secondary/10 text-secondary border-secondary/30 shadow-inner',
+    },
     inactive: 'neu-raised bg-background text-foreground shadow-md hover:shadow-lg',
-    disabledActive: 'neu-inset bg-muted/40 text-primary font-semibold drop-shadow-sm',
+    disabledActive: {
+      primary: 'neu-inset bg-muted/40 text-primary font-semibold drop-shadow-sm',
+      secondary: 'neu-inset bg-muted/40 text-secondary font-semibold drop-shadow-sm',
+    },
     disabledInactive: 'neu-elevated bg-muted/40 text-foreground font-semibold drop-shadow-sm',
   },
   outline: {
-    active: 'neu-inset bg-primary/5 text-primary border-2 border-primary/50',
+    active: {
+      primary: 'neu-inset bg-primary/5 text-primary border-2 border-primary/50',
+      secondary: 'neu-inset bg-secondary/5 text-secondary border-2 border-secondary/50',
+    },
     inactive: 'neu-flat bg-background text-foreground border border-border hover:bg-muted/50',
-    disabledActive: 'neu-inset bg-muted/40 text-primary font-semibold drop-shadow-sm border border-muted/70',
+    disabledActive: {
+      primary: 'neu-inset bg-muted/40 text-primary font-semibold drop-shadow-sm border border-muted/70',
+      secondary: 'neu-inset bg-muted/40 text-secondary font-semibold drop-shadow-sm border border-muted/70',
+    },
     disabledInactive: 'neu-elevated bg-muted/40 text-foreground font-semibold drop-shadow-sm border border-muted/70',
   },
 } as const;
@@ -61,6 +75,7 @@ export function Chip({
   disabled = false, 
   size = 'md', 
   variant = 'default',
+  colorVariant = 'primary',
   onToggle, 
   className = '' 
 }: ChipProps) {
@@ -84,10 +99,10 @@ export function Chip({
   const sizeClass = SIZE_STYLES[size];
   const variantClass = disabled
     ? active 
-      ? VARIANT_STYLES[variant].disabledActive
+      ? VARIANT_STYLES[variant].disabledActive[colorVariant]
       : VARIANT_STYLES[variant].disabledInactive
     : active 
-      ? VARIANT_STYLES[variant].active 
+      ? VARIANT_STYLES[variant].active[colorVariant]
       : VARIANT_STYLES[variant].inactive;
   
   const baseClass = 'relative inline-flex items-center justify-center rounded-md font-multilang select-none transition-all duration-150';
@@ -111,7 +126,9 @@ export function Chip({
       {active && (
         <Check
           size={12}
-          className="absolute right-1 pointer-events-none text-primary"
+          className={`absolute right-1 pointer-events-none ${
+            colorVariant === 'primary' ? 'text-primary' : 'text-secondary'
+          }`}
         />
       )}
     </div>
@@ -130,7 +147,7 @@ interface ChipGroupProps {
   /** 그룹 레이아웃 */
   layout?: 'grid' | 'flex';
   /** 개별 칩 속성 */
-  chipProps?: Partial<Pick<ChipProps, 'size' | 'variant'>>;
+  chipProps?: Partial<Pick<ChipProps, 'size' | 'variant' | 'colorVariant'>>;
   /** 추가 CSS 클래스 */
   className?: string;
 }

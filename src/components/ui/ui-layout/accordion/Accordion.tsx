@@ -12,6 +12,7 @@ interface AccordionProps {
 	headerClassName?: string;
 	contentClassName?: string;
 	disabled?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 }
 // #endregion
 
@@ -25,9 +26,18 @@ export const Accordion: React.FC<AccordionProps> = ({
 	headerClassName = '',
 	contentClassName = '',
 	disabled = false,
+	colorVariant = 'primary',
 }) => {
 	// #region 상태
 	const [isOpen, setIsOpen] = useState(defaultOpen);
+	// #endregion
+
+	// #region 색상 variant에 따른 스타일
+	const colorStyles = {
+		backgroundActive: colorVariant === 'primary' ? 'bg-primary/10' : 'bg-secondary/10',
+		backgroundHover: colorVariant === 'primary' ? 'hover:bg-primary/10' : 'hover:bg-secondary/10',
+		textColor: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+	};
 	// #endregion
 
 	// #region 핸들러
@@ -42,26 +52,26 @@ export const Accordion: React.FC<AccordionProps> = ({
 
 	// #region 렌더링
 	return (
-		<div className={`neu-flat bg-muted rounded-2xl ${className}`}>
+		<div className={`rounded-2xl neu-flat bg-muted ${className}`}>
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
-				className={`flex items-center justify-between p-4 ${isOpen ? 'bg-primary/10' : 'bg-background'} cursor-pointer neu-raised rounded-2xl transition-colors ${
+				className={`flex items-center justify-between p-4 ${isOpen ? colorStyles.backgroundActive : 'bg-background'} cursor-pointer neu-raised rounded-2xl transition-colors ${
 					disabled 
 						? 'cursor-not-allowed opacity-60' 
-						: 'hover:bg-primary/10'
+						: colorStyles.backgroundHover
 				} ${headerClassName}`}>
 				<h2 className="text-sm font-medium text-foreground">{title}</h2>
-				<div className="flex items-center gap-3">
+				<div className="flex gap-3 items-center">
 					{/* 상태 텍스트 */}
 					{statusText && (
-						<span className="text-xs font-medium text-primary">
+						<span className={`text-xs font-medium ${colorStyles.textColor}`}>
 							{statusText}
 						</span>
 					)}
 					{/* 토글 아이콘 */}
 					<div className={`transition-transform duration-200 ${
-						disabled ? 'neu-icon-inactive opacity-60' : 'neu-icon-inactive hover:neu-icon-active'
+						disabled ? 'opacity-60 neu-icon-inactive' : 'neu-icon-inactive hover:neu-icon-active'
 					} ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
 						{isOpen ? (
 							<ChevronUp className="w-4 h-4" />
@@ -76,8 +86,8 @@ export const Accordion: React.FC<AccordionProps> = ({
 			<div
 				className={`transition-all duration-300 ease-in-out ${
 					isOpen 
-						? 'max-h-[1000px] opacity-100 mt-2' 
-						: 'max-h-0 opacity-0 overflow-hidden'
+						? 'mt-2 opacity-100 max-h-[1000px]' 
+						: 'overflow-hidden max-h-0 opacity-0'
 				}`}>
 				<div className={`p-4 ${contentClassName}`}>
 					{children}

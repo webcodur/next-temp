@@ -10,6 +10,7 @@ interface SectionPanelProps {
 	contentClassName?: string;
 	headerActions?: ReactNode; // 헤더 우측에 추가 요소
 	icon?: ReactNode; // 헤더 좌측 아이콘
+	colorVariant?: 'primary' | 'secondary';
 }
 
 interface SectionPanelHeaderProps {
@@ -32,8 +33,14 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	contentClassName = '',
 	headerActions,
 	icon,
+	colorVariant = 'primary',
 }) => {
 	const hasHeader = title || headerActions || icon;
+
+	// 색상 variant에 따른 듀얼 그라데이션 스타일 (Primary + Secondary 조합)
+	const headerGradientClass = colorVariant === 'primary' 
+		? 'bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60 text-white'
+		: 'bg-gradient-to-r from-secondary/90 via-secondary/70 to-primary/60 text-white';
 
 	return (
 		<div className={clsx(
@@ -42,8 +49,8 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 		)}>
 			{hasHeader && (
 				<div className={clsx(
-					'flex items-center px-4 py-3 flex-shrink-0 rounded-t-lg',
-					'bg-gradient-to-r from-primary/80 to-primary/60 text-primary-foreground',
+					'flex flex-shrink-0 items-center px-4 py-3 rounded-t-lg',
+					headerGradientClass,
 					headerClassName
 				)}>
 					{/* 헤더: 중앙 배치 스타일 */}
@@ -79,7 +86,7 @@ export const SectionPanelHeader: React.FC<SectionPanelHeaderProps> = ({
 }) => {
 	return (
 		<div className={clsx(
-			'flex flex-shrink-0 justify-between items-center px-4 py-3 border-b border-border/20 rounded-t-lg',
+			'flex flex-shrink-0 justify-between items-center px-4 py-3 rounded-t-lg border-b border-border/20',
 			className
 		)}>
 			{children}

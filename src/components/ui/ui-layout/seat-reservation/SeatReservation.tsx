@@ -15,6 +15,7 @@ interface SeatReservationProps {
   facility: FacilityLayout;
   onReservationComplete: (reservation: ReservationData) => void;
   onCancel?: () => void;
+  colorVariant?: 'primary' | 'secondary';
 }
 
 interface TimeSlot {
@@ -35,9 +36,14 @@ const DEFAULT_TIME_SLOTS: TimeSlot[] = [
 export const SeatReservation = ({ 
   facility, 
   onReservationComplete, 
-  onCancel 
+  onCancel,
+  colorVariant = 'primary'
 }: SeatReservationProps) => {
   const t = useTranslations();
+  
+  // 색상 variant에 따른 스타일
+  const buttonBgClass = colorVariant === 'primary' ? 'bg-primary' : 'bg-secondary';
+  
   const [selectedSeat, setSelectedSeat] = useState<string | undefined>(undefined);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | undefined>(undefined);
   const [reservationDate, setReservationDate] = useState<string>(
@@ -125,7 +131,7 @@ export const SeatReservation = ({
         <div className="flex justify-end">
           <button
             onClick={() => setStep('confirm')}
-            className="px-6 py-3 rounded-lg neu-raised hover:scale-105 bg-primary text-white font-multilang"
+            className={`px-6 py-3 rounded-lg neu-raised hover:scale-105 ${buttonBgClass} text-white font-multilang`}
           >
             {t('시설_예약시간선택')}
           </button>

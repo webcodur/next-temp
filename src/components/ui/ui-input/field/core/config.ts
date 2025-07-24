@@ -47,6 +47,15 @@ export const getIconPosition = (isRTL: boolean) => ({
 		: 'absolute end-3 top-1/2 w-4 h-4 transform -translate-y-1/2',
 });
 
+// ColorVariant 지원 함수
+export const getColorVariantStyles = (colorVariant: 'primary' | 'secondary' = 'primary') => ({
+	focusRing: colorVariant === 'primary' ? 'ring-primary' : 'ring-secondary',
+	selectedOption: colorVariant === 'primary' 
+		? 'neu-inset bg-primary text-primary-foreground font-bold'
+		: 'neu-inset bg-secondary text-secondary-foreground font-bold',
+	activeIcon: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
+});
+
 export const FIELD_CONSTANTS = {
 	DEFAULT_MAX_HEIGHT: 200,
 	DEFAULT_PLACEHOLDER: '항목 선택',
