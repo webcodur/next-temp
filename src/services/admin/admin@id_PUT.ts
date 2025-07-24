@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '../fetchClient';
 import { UpdateAdminRequest } from '@/types/admin';
+import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 
 // 관리자 계정 정보를 수정한다 (UpdateAdminDto 기준)
 export async function updateAdmin(
@@ -15,15 +16,18 @@ export async function updateAdmin(
     roleId
   } = data;
 
+  // 요청 데이터에서 id는 제외하고 변환
+  const requestBody = camelToSnake({
+    name,
+    email,
+    phone,
+    password,
+    roleId
+  });
+
   const response = await fetchDefault(`/admins/${id}`, {
     method: 'PUT',
-    body: JSON.stringify({
-      name,
-      email,
-      phone,
-      password,
-      roleId
-    }),
+    body: JSON.stringify(requestBody), // 🔥 camelCase → snake_case 변환
   });
 
   const result = await response.json();
@@ -39,6 +43,6 @@ export async function updateAdmin(
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

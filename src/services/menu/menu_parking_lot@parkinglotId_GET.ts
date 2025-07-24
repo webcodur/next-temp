@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 주차장에 할당된 메뉴 목록을 계층 구조로 반환
@@ -24,6 +25,6 @@ export async function getParkingLotMenuList(parkinglotId: number) {
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

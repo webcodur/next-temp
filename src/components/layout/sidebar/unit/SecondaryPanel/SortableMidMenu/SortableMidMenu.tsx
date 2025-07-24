@@ -5,8 +5,9 @@
 */
 'use client';
 
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, GripVertical } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { usePathname } from 'next/navigation';
 
 import { useTranslations } from '@/hooks/useI18n';
@@ -41,41 +42,71 @@ export function SortableMidMenu({
   const id = getMidMenuId(midKey);
   
   const {
+    attributes,
+    listeners,
     setNodeRef,
+    transform,
+    transition,
+    isDragging,
   } = useSortable({ 
     id,
-    disabled: !isDynamic // 동적 메뉴가 아니면 드래그 비활성화
+    disabled: !isDynamic
   });
 
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   return (
-    <Collapsible open={isExpanded} onOpenChange={onToggle}>
-      <CollapsibleTrigger 
-        ref={setNodeRef}
-        className="flex justify-between items-center p-2 w-full rounded-lg transition-colors hover:bg-surface-3 neu-raised"
-      >
-        <span className="font-semibold text-foreground">{t(midItem.key)}</span>
-        <ChevronRight
-          className={`w-5 h-5 transition-transform duration-200 ${
-            isExpanded ? 'rotate-90' : ''}`}
-        />
-      </CollapsibleTrigger>
-      <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
-        <ul className="flex flex-col gap-1">
-          {midItem.botItems.map((botItem) => {
-            const isActive = pathname === botItem.href;
-            
-            return (
-              <SortableBotMenuItem
-                key={botItem.key}
-                botItem={botItem}
-                midKey={midKey}
-                isActive={isActive}
-                isDynamic={isDynamic}
-              />
-            );
-          })}
-        </ul>
-      </CollapsibleContent>
-    </Collapsible>
+    <div 
+      ref={setNodeRef}
+      style={style}
+      className={`group ${isDragging ? 'z-50' : ''}`}
+    >
+      <Collapsible open={isExpanded} onOpenChange={onToggle}>
+        <div className={`flex items-center gap-2 p-2 w-full rounded-lg transition-colors ${
+          isDynamic ? 'hover:bg-surface-3' : ''
+        } neu-raised`}>
+          {/* 드래그 핸들 (동적 메뉴만) */}
+          {isDynamic && (
+            <div
+              {...attributes}
+              {...listeners}
+              className="flex flex-shrink-0 justify-center items-center w-4 h-4 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground transition-colors" />
+            </div>
+          )}
+          
+          <CollapsibleTrigger className="flex justify-between items-center flex-1">
+            <span className="font-semibold text-foreground">{t(midItem.key)}</span>
+            <ChevronRight
+              className={`w-5 h-5 transition-transform duration-200 ${
+                isExpanded ? 'rotate-90' : ''}`}
+            />
+          </CollapsibleTrigger>
+        </div>
+        
+        <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
+          <ul className="flex flex-col gap-1">
+            {midItem.botItems.map((botItem) => {
+              const isActive = pathname === botItem.href;
+              
+              return (
+                <SortableBotMenuItem
+                  key={botItem.key}
+                  botItem={botItem}
+                  midKey={midKey}
+                  isActive={isActive}
+                  isDynamic={isDynamic}
+                />
+              );
+            })}
+          </ul>
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
   );
 } 

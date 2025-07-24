@@ -4,7 +4,7 @@
   책임: 필드 제어와 반응형 레이아웃을 통한 동적 검색 조건 관리
 */ // ------------------------------
 
-import React, { ReactElement, cloneElement } from 'react';
+import React, { ReactElement } from 'react';
 
 import { RotateCcw, Search } from 'lucide-react';
 
@@ -56,7 +56,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{fields.map(field => (
 							<div key={field.key}>
-								{cloneElement(field.element, { key: field.key })}
+								{field.element}
 							</div>
 						))}
 					</div>

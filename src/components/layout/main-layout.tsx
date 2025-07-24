@@ -15,9 +15,7 @@ import { useAuth } from '@/hooks/useAuth';
 // store
 import { initPrimaryColorAtom } from '@/store/primary';
 import { initTheme } from '@/store/theme';
-import { sidebarCollapsedAtom } from '@/store/sidebar';
-// data
-import { defaults } from '@/data/sidebarConfig';
+import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/sidebar';
 // components
 import Login from '@/components/view/login/Login';
 import ParkingLotSelectionPage from '@/components/view/parking-lot-selection/ParkingLotSelectionPage';
@@ -71,6 +69,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	const { isRTL } = useLocale();
 	// const { menuData, loading: menuLoading, error: menuError } = useMenuData(); // 메뉴 데이터를 최상위에서 관리
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
+	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [shouldShow, setShouldShow] = useState(false);
 
@@ -135,7 +134,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 											? 'translate-x-full' 
 											: '-translate-x-full'
 								}`}
-								style={{ width: `${defaults.expandedWidth}px` }}>
+								style={{ width: `${endPanelWidth}px` }}>
 								<SecondaryPanel />
 							</div>
 						</>

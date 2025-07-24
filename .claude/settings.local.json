@@ -4,7 +4,8 @@
       "Bash(npm run dev:*)",
       "Bash(npm run lint:*)",
       "Bash(npx eslint:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

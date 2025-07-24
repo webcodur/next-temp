@@ -1,11 +1,11 @@
 import { atom } from 'jotai';
 import { menuData as staticMenuData } from '@/data/menuData';
-import { getMyMenuList } from '@/services/menu/menu_my_menu$_GET';
+import { getParkingLotMenuList } from '@/services/menu/menu_parking_lot@parkinglotId_GET';
 import { mapApiIconToComponent } from '@/data/iconMapping';
 import type { MenuData, MidMenu, BotMenu } from '@/components/layout/sidebar/types';
 
 /**
- * 메뉴 관련 상태 관리 - 간단하고 확실한 버전
+ * 메뉴 관련 상태 관리
  */
 
 // 현재 메뉴 데이터
@@ -27,67 +27,83 @@ interface ApiMenu {
 }
 
 /**
- * API 응답을 MenuData로 변환 - 단순하고 확실한 버전
+ * 기존 정적 데이터 구조 분석:
+ * menuData = {
+ *   topKey: {
+ *     icon: Icon,
+ *     key: 'topKey',
+ *     midItems: {
+ *       midKey: {
+ *         key: 'midKey',
+ *         botItems: [
+ *           { key: 'botKey', href: '/path' }
+ *         ]
+ *       }
+ *     }
+ *   }
+ * }
+ * 
+ * API 데이터 구조:
+ * - depth 1: Top 메뉴
+ * - depth 2: Mid 메뉴 (children 있을 수도, 없을 수도)
+ * - depth 3: Bot 메뉴
+ */
+
+/**
+ * API 응답을 MenuData 형식으로 변환
+ * 정적 메뉴 + 동적 메뉴 합성
  */
 function convertApiToMenuData(apiMenus: ApiMenu[]): MenuData {
-  const result: MenuData = {};
+  // 1. 정적 메뉴로 시작
+  const result: MenuData = { ...staticMenuData };
   
-  // 정적 메뉴 먼저 추가
-  Object.entries(staticMenuData).forEach(([key, value]) => {
-    result[key] = value;
-  });
+  // 2. API에서 Top 메뉴들 추출 (depth: 1)
+  const topMenus = apiMenus.filter(menu => menu.depth === 1);
   
-  // API 메뉴 추가 (depth 1만)
-  apiMenus.filter(menu => menu.depth === 1).forEach(topMenu => {
+  // 3. 각 Top 메뉴 처리
+  topMenus.forEach(topMenu => {
     const topKey = topMenu.name;
-    const topIcon = mapApiIconToComponent(topMenu.name);
     const midItems: { [key: string]: MidMenu } = {};
     
+    // 4. Mid 메뉴들 처리 (depth: 2)
     if (topMenu.children && topMenu.children.length > 0) {
-      // children이 있는 경우 - Mid 메뉴로 분류
-      const hasGrandChildren = topMenu.children.some(child => child.children && child.children.length > 0);
+      const midMenus = topMenu.children.filter(child => child.depth === 2);
       
-      if (hasGrandChildren) {
-        // 3단계 구조: Top > Mid > Bot
-        topMenu.children.forEach(midMenu => {
-          if (midMenu.children && midMenu.children.length > 0) {
-            const botItems: BotMenu[] = midMenu.children.map(botMenu => ({
-              id: botMenu.id, // API ID 보존
+      midMenus.forEach(midMenu => {
+        const midKey = midMenu.name;
+        
+        // 5. Bot 메뉴들 처리 (depth: 3)
+        const botItems: BotMenu[] = [];
+        if (midMenu.children && midMenu.children.length > 0) {
+          const botMenus = midMenu.children.filter(child => child.depth === 3);
+          
+          botMenus.forEach(botMenu => {
+            botItems.push({
+              id: botMenu.id,
               key: botMenu.name,
               href: botMenu.url || '#',
-            }));
-            
-            midItems[midMenu.name] = {
-              key: midMenu.name,
-              botItems: botItems.sort((a, b) => {
-                const aMenu = midMenu.children!.find(m => m.name === a.key);
-                const bMenu = midMenu.children!.find(m => m.name === b.key);
-                return (aMenu?.sort || 0) - (bMenu?.sort || 0);
-              }),
-            };
-          }
-        });
-      } else {
-        // 2단계 구조: Top > Bot (Mid 생략)
-        const botItems: BotMenu[] = topMenu.children.map(botMenu => ({
-          id: botMenu.id, // API ID 보존
-          key: botMenu.name,
-          href: botMenu.url || '#',
-        }));
+            });
+          });
+          
+          // sort 정렬
+          botItems.sort((a, b) => {
+            const aBot = botMenus.find(bot => bot.name === a.key);
+            const bBot = botMenus.find(bot => bot.name === b.key);
+            return (aBot?.sort || 0) - (bBot?.sort || 0);
+          });
+        }
         
-        midItems[topKey] = {
-          key: topKey,
-          botItems: botItems.sort((a, b) => {
-            const aMenu = topMenu.children!.find(m => m.name === a.key);
-            const bMenu = topMenu.children!.find(m => m.name === b.key);
-            return (aMenu?.sort || 0) - (bMenu?.sort || 0);
-          }),
+        // 6. Mid 메뉴 생성
+        midItems[midKey] = {
+          key: midKey,
+          botItems: botItems,
         };
-      }
+      });
     }
     
+    // 7. Top 메뉴 생성  
     result[topKey] = {
-      icon: topIcon,
+      icon: mapApiIconToComponent(topKey),
       key: topKey,
       midItems: midItems,
     };
@@ -97,25 +113,29 @@ function convertApiToMenuData(apiMenus: ApiMenu[]): MenuData {
 }
 
 /**
- * 메뉴 로딩 액션 - 간단하고 확실한 버전
+ * 메뉴 로딩 액션
  */
 export const loadMenuDataAtom = atom(
   null,
   async (get, set, parkingLotId?: number) => {
+    set(menuLoadingAtom, true);
+    
     try {
-      set(menuLoadingAtom, true);
+      if (!parkingLotId) {
+        set(menuDataAtom, staticMenuData);
+        return;
+      }
+
+      const result = await getParkingLotMenuList(parkingLotId);
       
-      // API 호출
-      const response = await getMyMenuList(parkingLotId);
-      
-      if (response.success && response.data?.menus) {
-        const convertedMenuData = convertApiToMenuData(response.data.menus);
+      if (result.success && result.data?.menus) {
+        const convertedMenuData = convertApiToMenuData(result.data.menus);
         set(menuDataAtom, convertedMenuData);
       } else {
         set(menuDataAtom, staticMenuData);
       }
     } catch (error) {
-      console.error('❌ 메뉴 로딩 에러:', error);
+      console.error('메뉴 로딩 오류:', error);
       set(menuDataAtom, staticMenuData);
     } finally {
       set(menuLoadingAtom, false);

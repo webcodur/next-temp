@@ -2,6 +2,7 @@
 
 import { fetchDefault } from '../fetchClient';
 import { ApiMessageResponse } from '@/types/auth';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 로그아웃 클라이언트 함수
@@ -23,7 +24,7 @@ export async function logout() {
     const data: ApiMessageResponse = await response.json();
     return {
       success: true,
-      message: data.message,
+      data: snakeToCamel(data), // 🔥 snake_case → camelCase 변환
     };
   } catch {
     return {

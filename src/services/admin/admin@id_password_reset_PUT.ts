@@ -3,7 +3,8 @@
  * PUT /admin/{id}/password/reset
  */
 
-import { fetchDefault } from '@/services/fetchClient';
+// import { fetchDefault } from '@/services/fetchClient';
+// import { snakeToCamel } from '@/utils/caseConverter';
 
 interface ResetAdminPasswordRequest {
 	id: number;
@@ -11,12 +12,13 @@ interface ResetAdminPasswordRequest {
 
 interface ResetAdminPasswordResponse {
 	success: boolean;
-	data?: any;
+	data?: unknown;
 	errorMsg?: string;
 }
 
 export async function resetAdminPassword(
-	params: ResetAdminPasswordRequest
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	_params: ResetAdminPasswordRequest
 ): Promise<ResetAdminPasswordResponse> {
 	// TODO: 실존하지 않는 API - 임시 구현
 	console.warn('resetAdminPassword API is not implemented on server');
@@ -30,7 +32,19 @@ export async function resetAdminPassword(
 	//   const response = await fetchDefault(`/admin/${params.id}/password/reset`, {
 	//     method: 'PUT',
 	//   });
-	//   return response;
+	//   const result = await response.json();
+	//   
+	//   if (!response.ok) {
+	//     return {
+	//       success: false,
+	//       errorMsg: result.message || '비밀번호 초기화 실패',
+	//     };
+	//   }
+	//   
+	//   return {
+	//     success: true,
+	//     data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+	//   };
 	// } catch (error) {
 	//   console.error('관리자 비밀번호 초기화 API 호출 실패:', error);
 	//   return {

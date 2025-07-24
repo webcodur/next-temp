@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '../fetchClient';
 import { SearchAdminRequest } from '@/types/admin';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 // 쿼리 조건에 따라 관리자 계정 목록과 페이지 정보를 검색한다 (SearchAdminDto 기준)
 export async function searchAdmin(
@@ -42,6 +43,6 @@ export async function searchAdmin(
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

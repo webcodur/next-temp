@@ -1,6 +1,7 @@
 'use client';
 
 import { fetchDefault } from '../fetchClient';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 차단 이력 검색
@@ -95,6 +96,6 @@ export async function searchIpBlockHistory({
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   }
 } 

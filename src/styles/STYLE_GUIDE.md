@@ -256,7 +256,77 @@ flowchart TD
     style R fill:#f3e5f5
 ```
 
-### 5. 다국어 폰트 시스템
+### 5. 뉴모피즘 클래스별 분할 시스템
+
+```mermaid
+flowchart TD
+    subgraph "🎨 뉴모피즘 파일 구조"
+        A[04-neumorphism.css<br/>메인 import 파일<br/>46줄, 2.6KB]
+        
+        B[neu-flat.css<br/>📦 평면 컨테이너<br/>256줄, 11KB]
+        C[neu-raised.css<br/>🔘 양각 버튼<br/>225줄, 10KB]
+        D[neu-elevated.css<br/>📋 고정 패널<br/>156줄, 7.6KB]
+        E[neu-inset.css<br/>⚡ 음각 상태<br/>261줄, 13KB]
+        F[neu-icons.css<br/>🎯 아이콘<br/>70줄, 2.5KB]
+        G[neu-utilities.css<br/>⚡ 유틸리티<br/>70줄, 3.4KB]
+        H[neu-specials.css<br/>🔧 특수 목적<br/>55줄, 2.5KB]
+    end
+    
+    subgraph "🎯 주요 사용 빈도"
+        I[neu-flat<br/>90% 컨테이너/패널]
+        J[neu-raised<br/>80% 버튼/클릭요소]
+        K[neu-elevated<br/>60% 카드/고정패널]
+        L[기타 클래스<br/>10% 특수 용도]
+    end
+    
+    subgraph "🔧 개발 시나리오"
+        M["neu-flat 호버 수정"<br/>→ neu-flat.css 열기]
+        N["RTL inset 문제"<br/>→ neu-inset.css 열기]
+        O["버튼 누름 효과"<br/>→ neu-raised.css 열기]
+        P["아이콘 상태 변경"<br/>→ neu-icons.css 열기]
+    end
+    
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+    
+    B --> I
+    C --> J
+    D --> K
+    E --> L
+    F --> L
+    G --> L
+    H --> L
+    
+    I --> M
+    E --> N
+    C --> O
+    F --> P
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+    style I fill:#fce4ec
+    style M fill:#f3e5f5
+```
+
+**🎯 클래스별 분할의 장점:**
+
+1. **개발자 직관성** - neu-flat 수정 → neu-flat.css 바로 접근
+2. **완전한 컨텍스트** - 모든 상태가 한 파일에 (기본, hover, focus, RTL, 브랜드)  
+3. **적정 크기** - 각 파일 60~200줄로 한 눈에 파악 가능
+4. **유지보수성** - 클래스 추가/수정 시 한 파일만 수정
+
+**💡 90% 상황은 이 3개면 충분:**
+- `neu-flat` - 컨테이너, 패널 (가장 많이 사용)
+- `neu-raised` - 버튼, 클릭 요소 (두 번째로 많이 사용)
+- `neu-elevated` - 카드, 고정 패널 (세 번째로 많이 사용)
+
+### 6. 다국어 폰트 시스템
 
 ```mermaid
 flowchart TD
@@ -316,7 +386,7 @@ flowchart TD
 
 ## 🗂️ 파일 구조 맵
 
-### 6. 스타일 파일 디펜던시
+### 7. 스타일 파일 디펜던시
 
 ```mermaid
 graph TD
@@ -330,22 +400,32 @@ graph TD
     end
     
     subgraph "시스템 파일들"
-        D[01-fonts.css<br/>285줄, 7.8KB]
-        E[02-variables.css<br/>192줄, 8.2KB]
-        F[03-base.css<br/>78줄, 2.4KB]
-        G[04-neumorphism.css<br/>946줄, 44KB]
-        H[05-animations.css<br/>112줄, 2.7KB]
-        I[06-utilities.css<br/>85줄, 3.2KB]
+        D[01-fonts.css<br/>289줄, 7.6KB]
+        E[02-variables.css<br/>186줄, 7.7KB]
+        F[03-base.css<br/>96줄, 2.8KB]
+        G[04-neumorphism.css<br/>46줄, 2.6KB]
+        H[05-animations.css<br/>148줄, 3.2KB]
+        I[06-utilities.css<br/>83줄, 3.0KB]
+    end
+    
+    subgraph "뉴모피즘 세부 파일들"
+        J[neu-flat.css<br/>256줄, 11KB]
+        K[neu-raised.css<br/>225줄, 10KB]
+        L[neu-elevated.css<br/>156줄, 7.6KB]
+        M[neu-inset.css<br/>261줄, 13KB]
+        N[neu-icons.css<br/>70줄, 2.5KB]
+        O[neu-utilities.css<br/>70줄, 3.4KB]
+        P[neu-specials.css<br/>55줄, 2.5KB]
     end
     
     subgraph "외부 시스템"
-        J[Tailwind CSS]
-        K[PostCSS]
+        Q[Tailwind CSS]
+        R[PostCSS]
     end
     
     A --> B
     B --> C
-    B --> J
+    B --> Q
     
     C --> D
     C --> E
@@ -353,6 +433,14 @@ graph TD
     C --> G
     C --> H
     C --> I
+    
+    G --> J
+    G --> K
+    G --> L
+    G --> M
+    G --> N
+    G --> O
+    G --> P
     
     E -.-> D
     E -.-> F
@@ -363,17 +451,25 @@ graph TD
     G -.-> E
     D -.-> E
     
-    B --> K
-    J --> K
+    J -.-> E
+    K -.-> E
+    L -.-> E
+    M -.-> E
+    N -.-> E
+    O -.-> E
+    P -.-> E
+    
+    B --> R
+    Q --> R
     
     style A fill:#e3f2fd
     style C fill:#fff3e0
     style E fill:#e8f5e8
     style G fill:#fce4ec
-    style J fill:#f3e5f5
+    style Q fill:#f3e5f5
 ```
 
-### 7. 변수 상속 관계
+### 8. 변수 상속 관계
 
 ```mermaid
 flowchart TB
@@ -429,7 +525,7 @@ flowchart TB
 
 ## 🎯 변수 시스템
 
-### 8. 그레이스케일 매핑
+### 9. 그레이스케일 매핑
 
 ```mermaid
 graph LR
@@ -470,7 +566,7 @@ graph LR
     style N fill:#f2f2f2
 ```
 
-### 9. 프라이머리 색상 스케일
+### 10. 프라이머리 색상 스케일
 
 ```mermaid
 graph TB
@@ -520,7 +616,7 @@ graph TB
 
 ## 🔄 데이터 플로우
 
-### 10. 테마 변경 시퀀스
+### 11. 테마 변경 시퀀스
 
 ```mermaid
 sequenceDiagram
@@ -553,7 +649,7 @@ sequenceDiagram
     Note over UI,DOM: 전체 프로세스 < 16ms<br/>한 프레임 내 완료
 ```
 
-### 11. 프라이머리 색상 업데이트
+### 12. 프라이머리 색상 업데이트
 
 ```mermaid
 sequenceDiagram

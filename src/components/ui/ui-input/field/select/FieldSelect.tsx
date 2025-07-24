@@ -54,6 +54,8 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 		selectedOption,
 		handleOptionSelect,
 	} = useSelectLogic(options, value, onChange);
+
+
 	// #endregion
 
 	const handleSelect = (optionValue: string) => {

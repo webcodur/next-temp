@@ -36,7 +36,6 @@ export default function ParkingLotSelectionPage({ onSelectionComplete }: Parking
 
   // #region 핸들러
   const handleParkingLotSelect = (parkingLot: ParkingLot) => {
-    console.log('주차장 선택:', parkingLot.id, parkingLot.name);
     setSelectedId(parkingLot.id);
   };
 

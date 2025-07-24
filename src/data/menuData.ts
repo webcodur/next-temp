@@ -17,6 +17,23 @@ export const menuData: MenuData = {
 					},
 				],
 			},
+			세대관리: {
+				key: '세대관리',
+				botItems: [
+					{
+						key: '세대목록',
+						href: '/temp/household',
+					},
+					{
+						key: '세대등록',
+						href: '/temp/household/create',
+					},
+					{
+						key: '거주이력',
+						href: '/temp/household/instances',
+					},
+				],
+			},
 		},
 	},
 	

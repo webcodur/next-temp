@@ -1,7 +1,7 @@
 /* 
   파일명: /components/layout/sidebar/unit/SecondaryPanel/SecondaryPanel.tsx
   기능: 사이드바의 세컨더리 패널 컴포넌트
-  책임: 확장된 메뉴 트리와 네비게이션 링크를 제공하는 패널 (DND 지원)
+  책임: 확장된 메뉴 트리와 네비게이션 링크를 제공하는 패널 (DND 지원, 리사이즈 가능)
 */
 'use client';
 
@@ -24,23 +24,25 @@ import {
 
 import { useTranslations } from '@/hooks/useI18n';
 import { useMenuData } from '@/hooks/useMenuData';
-import { useDragAndDropMenu, getBotMenuId } from '@/hooks/useDragAndDropMenu';
-import { activeTopMenuAtom } from '@/store/sidebar';
+import { useDragAndDropMenu, getBotMenuId, getMidMenuId } from '@/hooks/useDragAndDropMenu';
+import { activeTopMenuAtom, endPanelWidthAtom } from '@/store/sidebar';
+import { defaults } from '@/data/sidebarConfig';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/ui-effects/tooltip/Tooltip';
 
-import { defaults } from '@/data/sidebarConfig';
 import type { MidMenu } from '@/components/layout/sidebar/types';
 
 import { useSecondaryMenu } from '../useSecondaryMenu';
 import { SortableMidMenu } from './SortableMidMenu/SortableMidMenu';
+import { ResizeHandle } from '../ResizeHandle/ResizeHandle';
 
 function SecondaryPanel() {
 	// #region 훅
 	const t = useTranslations();
 	const { menuData, loading, error } = useMenuData();
 	const [activeTopMenu] = useAtom(activeTopMenuAtom);
+	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [localMidItems, setLocalMidItems] = useState<{ [key: string]: MidMenu }>({});
 
 	const {
@@ -116,17 +118,36 @@ function SecondaryPanel() {
 		});
 		return ids;
 	};
+
+	// 모든 드래그 가능한 아이템 ID 수집 (mid + bot)
+	const getAllDragableIds = () => {
+		const ids: string[] = [];
+		
+		// 동적 메뉴인 경우만 처리
+		if (isDynamicMenu(activeTopMenu)) {
+			// Mid 메뉴 ID들 추가
+			Object.keys(localMidItems).forEach(midKey => {
+				ids.push(getMidMenuId(midKey));
+			});
+			
+			// Bot 메뉴 ID들 추가
+			ids.push(...getAllBotMenuIds());
+		}
+		
+		return ids;
+	};
 	// #endregion
 
 	// #region 렌더링
 	if (loading) {
 		return (
 			<div
-				style={{ width: `${defaults.expandedWidth}px` }}
-				className="flex flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
+				style={{ width: `${endPanelWidth}px` }}
+				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
 				<div className="flex justify-center items-center h-full">
 					<div className="w-8 h-8 rounded-full border-b-2 animate-spin border-primary"></div>
 				</div>
+				<ResizeHandle minWidth={defaults.minResizeWidth} maxWidth={defaults.maxResizeWidth} />
 			</div>
 		);
 	}
@@ -134,8 +155,8 @@ function SecondaryPanel() {
 	if (error) {
 		return (
 			<div
-				style={{ width: `${defaults.expandedWidth}px` }}
-				className="flex flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
+				style={{ width: `${endPanelWidth}px` }}
+				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
 				<div className="flex flex-col justify-center items-center p-4 h-full">
 					<div className="text-sm text-center text-red-500">
 						메뉴 로딩 실패
@@ -144,6 +165,7 @@ function SecondaryPanel() {
 						{error}
 					</div>
 				</div>
+				<ResizeHandle minWidth={defaults.minResizeWidth} maxWidth={defaults.maxResizeWidth} />
 			</div>
 		);
 	}
@@ -156,8 +178,8 @@ function SecondaryPanel() {
 	return (
 		<TooltipProvider delayDuration={100}>
 			<div
-				style={{ width: `${defaults.expandedWidth}px` }}
-				className="flex flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
+				style={{ width: `${endPanelWidth}px` }}
+				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
 				{/* Menu Controls */}
 				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-border/50">
 					{/* Mode Toggle */}
@@ -210,7 +232,7 @@ function SecondaryPanel() {
 							)}
 
 							<SortableContext 
-								items={getAllBotMenuIds()} 
+								items={getAllDragableIds()} 
 								strategy={verticalListSortingStrategy}
 							>
 								{Object.entries(localMidItems).map(([midKey, midItem]) => (
@@ -241,6 +263,9 @@ function SecondaryPanel() {
 						))}
 					</div>
 				)}
+
+				{/* 리사이즈 핸들 */}
+				<ResizeHandle minWidth={defaults.minResizeWidth} maxWidth={defaults.maxResizeWidth} />
 			</div>
 		</TooltipProvider>
 	);

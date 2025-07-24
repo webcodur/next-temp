@@ -3,10 +3,34 @@
 import { atom } from 'jotai';
 import { defaults } from '@/data/sidebarConfig';
 
+// localStorage에서 저장된 패널 폭을 가져오는 함수
+const getSavedPanelWidth = () => {
+  if (typeof window === 'undefined') return defaults.expandedWidth;
+  try {
+    const saved = localStorage.getItem('sidebarEndPanelWidth');
+    return saved ? parseInt(saved, 10) : defaults.expandedWidth;
+  } catch {
+    return defaults.expandedWidth;
+  }
+};
+
 // 사이드바의 접힘/펼침 상태 (메인 토글)
 export const sidebarCollapsedAtom = atom<boolean>(false);
-// 사이드바 끝 패널 너비
-export const endPanelWidthAtom = atom(defaults.expandedWidth);
+// 사이드바 끝 패널 너비 (localStorage 연동)
+export const endPanelWidthAtom = atom(
+  getSavedPanelWidth(),
+  (get, set, newWidth: number) => {
+    set(endPanelWidthAtom, newWidth);
+    // localStorage에 저장
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sidebarEndPanelWidth', newWidth.toString());
+      } catch {
+        // localStorage 저장 실패 시 무시
+      }
+    }
+  }
+);
 // 리사이징 상태
 export const isResizingAtom = atom(false);
 export const isSideResizeControlHoveredAtom = atom(false);

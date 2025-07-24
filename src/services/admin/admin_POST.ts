@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '../fetchClient';
 import { CreateAdminRequest } from '@/types/admin';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 // 새로운 관리자 계정을 생성한다 (CreateAdminDto 기준)
 export async function createAdmin(
@@ -42,6 +43,6 @@ export async function createAdmin(
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

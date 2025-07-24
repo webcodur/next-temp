@@ -24,6 +24,7 @@ export interface BotMenu {
  * - Bot 메뉴들을 그룹화하는 카테고리
  */
 export interface MidMenu {
+	id?: number; // API에서 받은 메뉴 ID (DND 순서 변경용)
 	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	icon?: LucideIcon; // 아이콘 (선택사항)
 	botItems: BotMenu[]; // 하위 Bot 메뉴 목록

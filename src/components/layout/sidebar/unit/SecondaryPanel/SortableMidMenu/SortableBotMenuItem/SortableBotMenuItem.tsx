@@ -8,6 +8,7 @@
 import Link from 'next/link';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { GripVertical } from 'lucide-react';
 
 import { useTranslations } from '@/hooks/useI18n';
 import { getBotMenuId } from '@/hooks/useDragAndDropMenu';
@@ -38,14 +39,14 @@ export function SortableBotMenuItem({
     isDragging,
   } = useSortable({ 
     id,
-    disabled: !isDynamic // 동적 메뉴가 아니면 드래그 비활성화
+    disabled: !isDynamic
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? 'none' : transition, // 드래그 중일 때는 transition 제거
-    opacity: isDragging ? 0.3 : 1, // 드래그 중일 때 더 투명하게
-    zIndex: isDragging ? 1000 : 1, // 드래그 중일 때 위에 표시
+    transition: isDragging ? 'none' : transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1000 : 1,
   };
 
   return (
@@ -55,28 +56,29 @@ export function SortableBotMenuItem({
       className="group relative"
     >
       {isDynamic ? (
-        // 동적 메뉴: 드래그와 클릭 분리
-        <div className="relative">
-          {/* 드래그 핸들 영역 (투명한 오버레이) */}
+        <div className={`flex items-center gap-2 p-2 rounded-md text-sm transition-colors ${
+          isActive
+            ? 'text-primary-foreground bg-primary'
+            : 'text-foreground hover:bg-surface-3'
+        }`}>
+          {/* 드래그 핸들 */}
           <div
-            className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing"
             {...attributes}
             {...listeners}
-          />
+            className="flex flex-shrink-0 justify-center items-center w-4 h-4 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <GripVertical className="w-3 h-3 text-muted-foreground hover:text-foreground transition-colors" />
+          </div>
+          
           {/* 클릭 가능한 링크 */}
           <Link
             href={botItem.href}
-            className={`block p-2 rounded-md text-sm transition-colors ${
-              isActive
-                ? 'text-primary-foreground bg-primary'
-                : 'text-foreground hover:bg-surface-3'
-            }`}
+            className="flex-1"
           >
             {t(botItem.key)}
           </Link>
         </div>
       ) : (
-        // 정적 메뉴: 클릭만
         <Link
           href={botItem.href}
           className={`block p-2 rounded-md text-sm transition-colors ${

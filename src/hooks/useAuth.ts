@@ -1,108 +1,45 @@
 /* 
   파일명: /hooks/useAuth.ts
-  기능: 전역 인증 상태 관리 훅
-  책임: 로그인/로그아웃, 토큰 관리, 주차장 선택 기능
-  
-  주요 기능:
-  - 로그인/로그아웃 처리
-  - 토큰 자동 갱신 및 쿠키 관리
-  - 주차장 선택 및 메뉴 데이터 로딩
-  - 로그인 상태 유지 및 동기화
+  기능: 전역 인증 상태 관리 훅 (메인 컨트롤러)
+  책임: 로그인/로그아웃, 인증 상태 관리, 하위 훅들 조합
 */ // ------------------------------
 
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect, useTransition, useCallback } from 'react';
+import { useEffect, useTransition } from 'react';
 import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
 import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
-import { refreshTokenWithString } from '@/services/auth/auth_refresh_POST';
 import { isAuthenticatedAtom, userAtom, parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
 import { loadMenuDataAtom } from '@/store/menu';
-
-// #region 쿠키 관리 유틸리티
-// 쿠키에서 토큰 가져오기
-const getTokenFromCookie = (tokenName: string): string | null => {
-  return document.cookie
-    .split('; ')
-    .find(row => row.startsWith(`${tokenName}=`))
-    ?.split('=')[1] || null;
-};
-
-// 쿠키에 토큰 설정 (기본 24시간)
-const setTokenToCookie = (tokenName: string, token: string, maxAge: number = 86400) => {
-  document.cookie = `${tokenName}=${token}; path=/; max-age=${maxAge}`;
-};
-
-// 쿠키에서 토큰 제거
-const removeTokenFromCookie = (tokenName: string) => {
-  document.cookie = `${tokenName}=; path=/; max-age=0`;
-};
-// #endregion
+import { useTokenManagement } from './useTokenManagement';
+import { useParkingLotManagement } from './useParkingLotManagement';
+import { 
+  getTokenFromCookie, 
+  setTokenToCookie, 
+  clearAllTokens,
+  ACCESS_TOKEN_NAME, 
+  REFRESH_TOKEN_NAME 
+} from '@/utils/tokenUtils';
 
 // #region 메인 인증 훅
-// 전역 상태 기반 인증 훅
 export function useAuth() {
   const [isPending, startTransition] = useTransition();
   const [isLoggedIn, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
   const [user, setUser] = useAtom(userAtom);
-  const [parkingLots, setParkingLots] = useAtom(parkingLotsAtom);
-  const [selectedParkingLotId, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
+  const [, setParkingLots] = useAtom(parkingLotsAtom);
+  const [, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
   const [, loadMenuData] = useAtom(loadMenuDataAtom);
 
-  // 토큰 자동 갱신
-  const refreshToken = useCallback(async (): Promise<boolean> => {
-    const refreshTokenString = getTokenFromCookie('refresh-token');
-    
-    if (!refreshTokenString) {
-      return false;
-    }
+  // 분리된 훅들 사용
+  const { refreshToken } = useTokenManagement();
+  const { parkingLots, selectedParkingLotId, selectedParkingLot, selectParkingLot } = useParkingLotManagement();
 
-    try {
-      const result = await refreshTokenWithString(refreshTokenString);
-      
-      if (result.success && result.data) {
-        // 새로운 토큰들 저장
-        setTokenToCookie('access-token', result.data.accessToken);
-        setTokenToCookie('refresh-token', result.data.refreshToken);
-        
-        // 현장 정보(주차장) 업데이트
-        if (result.data.parkinglots) {
-          setParkingLots(result.data.parkinglots);
-        }
-        
-        // parkingLotId 처리
-        let finalParkingLotId: number | null = null;
-        if (result.data.parkingLotId !== undefined) {
-          finalParkingLotId = result.data.parkingLotId;
-          setSelectedParkingLotId(result.data.parkingLotId);
-        } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
-          finalParkingLotId = result.data.parkinglots[0].id;
-          setSelectedParkingLotId(result.data.parkinglots[0].id);
-        } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
-          finalParkingLotId = 0;
-          setSelectedParkingLotId(0);
-        }
-        
-        // 토큰 갱신 완료 후 메뉴 초기화
-        if (finalParkingLotId !== null) {
-          const menuParkingLotId = finalParkingLotId > 0 ? finalParkingLotId : undefined;
-          await loadMenuData(menuParkingLotId);
-        }
-        
-        return true;
-      }
-      
-      return false;
-    } catch {
-      return false;
-    }
-  }, [setParkingLots, loadMenuData]);
-
+  // #region 상태 동기화
   // 초기 토큰 확인 및 자동 갱신 설정
   useEffect(() => {
-    const accessToken = getTokenFromCookie('access-token');
-    const refreshTokenString = getTokenFromCookie('refresh-token');
+    const accessToken = getTokenFromCookie(ACCESS_TOKEN_NAME);
+    const refreshTokenString = getTokenFromCookie(REFRESH_TOKEN_NAME);
     
     // 쿠키 토큰 유무와 로그인 상태 동기화
     if (accessToken && !isLoggedIn) {
@@ -136,7 +73,9 @@ export function useAuth() {
       loadMenuData(menuParkingLotId);
     }
   }, [isLoggedIn, selectedParkingLotId, loadMenuData]);
+  // #endregion
 
+  // #region 인증 액션
   // 로그인 처리
   const login = async (account: string, password: string) => {
     const result = await signInWithCredentials(account, password);
@@ -150,10 +89,10 @@ export function useAuth() {
     }
 
     // 토큰들을 쿠키에 저장
-    setTokenToCookie('access-token', result.data.accessToken);
+    setTokenToCookie(ACCESS_TOKEN_NAME, result.data.accessToken);
     
     if (result.data.refreshToken) {
-      setTokenToCookie('refresh-token', result.data.refreshToken);
+      setTokenToCookie(REFRESH_TOKEN_NAME, result.data.refreshToken);
     }
     
     // 로그인 상태 업데이트
@@ -186,25 +125,13 @@ export function useAuth() {
     return { success: true };
   };
 
-  // 주차장 선택
-  const selectParkingLot = useCallback((parkingLotId: number) => {
-    setSelectedParkingLotId(parkingLotId);
-  }, [setSelectedParkingLotId]);
-
-  // 선택된 주차장 정보 가져오기
-  const getSelectedParkingLot = useCallback(() => {
-    if (!selectedParkingLotId) return null;
-    return parkingLots.find(lot => lot.id === selectedParkingLotId) || null;
-  }, [selectedParkingLotId, parkingLots]);
-
   // 로그아웃 처리
   const logout = async () => {
     startTransition(async () => {
       await logoutAction();
       
       // 쿠키 제거
-      removeTokenFromCookie('access-token');
-      removeTokenFromCookie('refresh-token');
+      clearAllTokens();
       
       // 상태 초기화
       setIsLoggedIn(false);
@@ -213,7 +140,9 @@ export function useAuth() {
       setSelectedParkingLotId(null);
     });
   };
+  // #endregion
 
+  // #region 반환 인터페이스
   return {
     isLoggedIn,
     isLoading: false,
@@ -224,8 +153,9 @@ export function useAuth() {
     user,
     parkingLots,
     selectedParkingLotId,
-    selectedParkingLot: getSelectedParkingLot(),
+    selectedParkingLot,
     selectParkingLot,
   };
+  // #endregion
 }
 // #endregion 

@@ -33,7 +33,6 @@ export function ParkingLotSelectionModal() {
 
   // #region 핸들러
   const handleParkingLotSelect = (parkingLot: ParkingLot) => {
-    console.log('주차장 선택:', parkingLot.id, parkingLot.name);
     setSelectedId(parkingLot.id);
   };
 
@@ -72,10 +71,10 @@ export function ParkingLotSelectionModal() {
       onClick={handleClose}
     >
       <div 
-        className="w-full max-w-2xl mx-4"
+        className="mx-4 w-full max-w-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-8 neu-elevated rounded-xl bg-background">
+        <div className="p-8 rounded-xl neu-elevated bg-background">
           {/* 모달 헤더 */}
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -88,7 +87,7 @@ export function ParkingLotSelectionModal() {
             </div>
             <button
               onClick={handleClose}
-              className="p-2 text-muted-foreground hover:text-foreground rounded-lg neu-flat hover:neu-pressed transition-all"
+              className="p-2 rounded-lg transition-all text-muted-foreground hover:text-foreground neu-flat hover:neu-pressed"
               aria-label="닫기"
             >
               <X size={20} />

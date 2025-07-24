@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '../fetchClient';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 // 시스템 관리자가 계정 ID로 관리자 계정을 삭제한다
 export async function deleteAdmin(
@@ -30,6 +31,6 @@ export async function deleteAdmin(
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

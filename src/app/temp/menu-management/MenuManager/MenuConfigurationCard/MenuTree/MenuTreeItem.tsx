@@ -5,7 +5,11 @@
 */ // ------------------------------
 
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, GripVertical } from 'lucide-react';
+import { 
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
 
@@ -18,6 +22,8 @@ interface MenuTreeItemProps {
   rowIndex: number;
   expandedMenus: Set<number>;
   assignedMenuIds: Set<number>;
+  isReadOnly?: boolean;
+  isDragOver?: boolean;
   onToggleMenu: (menuId: number) => void;
   onToggleExpansion: (menuId: number) => void;
 }
@@ -29,6 +35,8 @@ export function MenuTreeItem({
   rowIndex,
   expandedMenus,
   assignedMenuIds,
+  isReadOnly = false,
+  isDragOver = false,
   onToggleMenu,
   onToggleExpansion,
 }: MenuTreeItemProps) {
@@ -36,70 +44,118 @@ export function MenuTreeItem({
   const hasChildren = menu.children && menu.children.length > 0;
   const isExpanded = expandedMenus.has(menu.id);
   const isAssigned = assignedMenuIds.has(menu.id);
-  const isEven = rowIndex % 2 === 0;
+  
+  // mid(level 2)와 bot(level 3) 메뉴에만 DND 활성화
+  const isDragEnabled = !isReadOnly && (menu.level === 2 || menu.level === 3);
   
   let nextRowIndex = rowIndex + 1;
+  // #endregion
+
+  // #region DND 설정
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    isDragging,
+  } = useSortable({
+    id: menu.id,
+    disabled: !isDragEnabled,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
   // #endregion
 
   // #region 렌더링
   return (
     <div className="w-full">
       <div 
-        className={`group cursor-pointer transition-all duration-200 ${
-          isEven ? 'bg-muted/30' : 'bg-background'
+        ref={setNodeRef}
+        style={style}
+        onClick={() => !isReadOnly && onToggleMenu(menu.id)}
+        className={`group ${
+          !isReadOnly ? 'cursor-pointer' : 'cursor-default'
         } ${
-          isAssigned 
-            ? 'border-l-2 border-primary/30 hover:bg-primary/5' 
-            : 'border-l-2 border-transparent hover:bg-muted/50 hover:border-border'
-        }`}
+          isDragOver 
+            ? 'border-l-4 border-blue-500 bg-blue-50' 
+            : isAssigned 
+              ? 'border-l-4 bg-primary/10 border-primary/50' 
+              : isReadOnly 
+                ? 'border-l-4 border-transparent hover:bg-gray-50' 
+                : 'border-l-4 border-transparent hover:bg-gray-50 hover:border-gray-300'
+        } ${isDragging ? 'z-50' : ''}`}
       >
-        <div 
-          className="flex items-center gap-3 py-3 px-4 min-h-[44px]"
-          style={{ marginLeft: `${level * 16}px` }}
+        <div
+          className="flex items-center gap-1 py-2 px-4 min-h-[44px]"
+          style={{ marginLeft: `${level * 20}px` }}
         >
+          {/* 드래그 핸들 (mid/bot 메뉴에만 표시) */}
+          {isDragEnabled && (
+            <div
+              {...attributes}
+              {...listeners}
+              onClick={(e) => e.stopPropagation()}
+              className="flex flex-shrink-0 justify-center items-center w-6 h-6 cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+            </div>
+          )}
+
           {/* 확장/축소 버튼 영역 */}
-          <div className="flex flex-shrink-0 justify-center items-center w-5 h-5">
+          <div className="flex flex-shrink-0 justify-center items-center w-6 h-6">
             {hasChildren ? (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggleExpansion(menu.id);
                 }}
-                className="flex justify-center items-center w-5 h-5 rounded-full transition-all duration-200 hover:bg-muted group-hover:scale-110"
+                className="flex justify-center items-center w-5 h-5 rounded-full hover:bg-gray-200 active:bg-gray-300"
               >
                 {isExpanded ? (
-                  <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                  <ChevronDown className="w-3 h-3 text-gray-600" />
                 ) : (
-                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
                 )}
               </button>
             ) : (
-              <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+              <div className="flex justify-center items-center w-5 h-5 rounded-full">
+                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+              </div>
             )}
           </div>
           
           {/* 메뉴명 */}
           <span 
-            className={`flex-1 cursor-pointer select-none flex items-center transition-all duration-200 ${
+            className={`flex-1 select-none flex items-center ${
+              !isReadOnly ? 'cursor-pointer' : 'cursor-default'
+            } ${
               isAssigned 
-                ? (menu.level === 1 ? 'font-semibold text-primary text-base' : 
-                   menu.level === 2 ? 'font-medium text-primary/80 text-sm' : 
-                   'font-normal text-primary/70 text-sm')
-                : (menu.level === 1 ? 'font-semibold text-foreground text-base group-hover:text-foreground' : 
-                   menu.level === 2 ? 'font-medium text-muted-foreground text-sm group-hover:text-foreground' : 
-                   'font-normal text-muted-foreground text-sm group-hover:text-foreground')
+                ? (menu.level === 1 ? 'font-bold text-primary text-lg' : 
+                   menu.level === 2 ? 'font-semibold text-primary/90 text-base' : 
+                   'font-medium text-primary/80 text-sm')
+                : (menu.level === 1 ? 'font-bold text-foreground text-lg group-hover:text-primary' : 
+                   menu.level === 2 ? 'font-semibold text-muted-foreground text-base group-hover:text-foreground' : 
+                   'font-medium text-muted-foreground text-sm group-hover:text-foreground')
             }`}
-            onClick={() => onToggleMenu(menu.id)}
           >
             {menu.name}
           </span>
 
-          {/* 체크박스 - 우측 정렬 */}
-          <div className="flex flex-shrink-0 justify-center items-center ml-3">
-            <SimpleCheckbox
-              checked={isAssigned}
-              onChange={() => onToggleMenu(menu.id)}
-            />
+          {/* 체크박스 */}
+          <div 
+            className="flex flex-shrink-0 justify-center items-center ml-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-1 rounded-lg">
+              <SimpleCheckbox
+                checked={isAssigned}
+                onChange={() => !isReadOnly && onToggleMenu(menu.id)}
+                disabled={isReadOnly}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +173,7 @@ export function MenuTreeItem({
                   rowIndex={nextRowIndex}
                   expandedMenus={expandedMenus}
                   assignedMenuIds={assignedMenuIds}
+                  isReadOnly={isReadOnly}
                   onToggleMenu={onToggleMenu}
                   onToggleExpansion={onToggleExpansion}
                 />

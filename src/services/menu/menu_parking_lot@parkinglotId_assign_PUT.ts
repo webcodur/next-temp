@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 주차장에 메뉴를 할당 (이미 할당된 메뉴는 제외됨)
@@ -10,7 +11,7 @@ import { fetchDefault } from '@/services/fetchClient';
 export async function assignMenuToParkingLot(parkinglotId: number, menuIds: number[]) {
   const response = await fetchDefault(`/menus/parking-lot/${parkinglotId}/assign`, {
     method: 'PUT',
-    body: JSON.stringify({ menuIds }),
+    body: JSON.stringify(camelToSnake({ menuIds })), // 🔥 camelCase → snake_case 변환
   });
 
   const result = await response.json();
@@ -26,6 +27,6 @@ export async function assignMenuToParkingLot(parkinglotId: number, menuIds: numb
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

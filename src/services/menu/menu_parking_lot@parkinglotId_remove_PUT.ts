@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 주차장에서 메뉴를 제거
@@ -10,7 +11,7 @@ import { fetchDefault } from '@/services/fetchClient';
 export async function removeMenuFromParkingLot(parkinglotId: number, menuIds: number[]) {
   const response = await fetchDefault(`/menus/parking-lot/${parkinglotId}/remove`, {
     method: 'PUT',
-    body: JSON.stringify({ menuIds }),
+    body: JSON.stringify(camelToSnake({ menuIds })), // 🔥 camelCase → snake_case 변환
   });
 
   const result = await response.json();
@@ -26,6 +27,6 @@ export async function removeMenuFromParkingLot(parkinglotId: number, menuIds: nu
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

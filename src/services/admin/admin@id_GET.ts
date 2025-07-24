@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '../fetchClient';
+import { snakeToCamel } from '@/utils/caseConverter';
 
 // 관리자 계정 정보를 조회한다
 export async function getAdminDetail(
@@ -28,6 +29,6 @@ export async function getAdminDetail(
   
   return {
     success: true,
-    data: result,
+    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
   };
 } 

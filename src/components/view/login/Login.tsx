@@ -19,13 +19,9 @@ interface LoginFormData {
 	password: string;
 	rememberUsername: boolean;
 }
-
-interface LoginPageProps {
-	onLoginSuccess?: () => void;
-}
 // #endregion
 
-export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
+export default function LoginPage() {
 	// #region 상수
 	const { login } = useAuth();
 	const { isRTL } = useLocale();
@@ -63,13 +59,9 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 	const handleLogin = async (data: LoginFormData) => {
 		setIsLoading(true);
 		setErrorMessage('');
-
 		try {
 			const result = await login(data.username, data.password);
-
-			if (result.success) {
-				onLoginSuccess?.();
-			} else {
+			if (!result.success) {
 				setErrorMessage(result.error || '로그인에 실패했습니다.');
 			}
 		} catch {
