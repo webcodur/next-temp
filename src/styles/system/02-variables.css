@@ -5,28 +5,28 @@
 🎨 TESLA GRAYSCALE SYSTEM - 체계적인 다크모드 매핑
 
 🎯 매핑 원칙
-┌─ 배경 요소 (Layout)  │ 순차 매핑 - 명도 관계 유지
-├─ 텍스트/UI (Content) │ 역순 매핑 - 의미적 역할 유지
-├─ 상태 색상          │ 채도 조정 - 다크모드에서 더 부드럽게
-└─ 브랜드 색상        │ 10단계 스케일 + 테마별 최적화
+┌─ 배경 요소 (Layout)  │ 파스텔 틴트 적용 (220° 15% 채도)
+├─ 텍스트/UI (Content) │ 그레이 스케일 역순 매핑
+├─ 상태 색상          │ destructive, warning, success
+└─ 브랜드 색상        │ primary(220°), secondary(280°) + 10단계
 
 🔧 10단계 그레이 스케일
-├─ gray-0~9: 라이트 (100% → 5%)
-├─ gray-0~9: 다크 (5% → 95%)
-├─ 배경: background, card, muted (순차)
-└─ 텍스트: foreground, primary, secondary (역순)
+├─ 라이트: gray-0(98%) → gray-9(4%)
+├─ 다크: gray-0(5%) → gray-9(95%)
+├─ 배경: background(96%), card(98%), muted(93%)
+└─ 텍스트: foreground(gray-9), accent(gray-6), muted-foreground(gray-6)
 
 💡 뉴모피즘 변수
-┌─ 라이트: 밝은 하이라이트 + 어두운 그림자
-├─ 다크: 어두운 하이라이트 + 더 짙은 그림자
-├─ nm-offset: 2-3px (테마별 조정)
-└─ nm-blur: 5-6px (부드러운 확산)
+┌─ 라이트: nm-light-rgba(흰색0.95) + nm-dark-rgba(검정0.08)
+├─ 다크: nm-light-rgba(흰색0.05) + nm-dark-rgba(검정0.35)
+├─ nm-offset: 라이트3px, 다크2px
+└─ nm-blur: 라이트6px, 다크5px
 
 🎨 브랜드 컬러 시스템
-- 기본: 220 90% 55% (파랑 계열)
-- 10단계: primary-0 (97%) → primary-9 (15%)
-- 테마별: 라이트 55%, 다크 60%
-- 상태: destructive, warning, success
+- primary: 220° 90% 라이트50% 다크75%
+- secondary: 280° 80% 라이트60% 다크65%  
+- 10단계: -0(밝음) → -9(어둠)
+- 상태 호버: 라이트(어둡게), 다크(밝게)
 
 ⚡ 성능 최적화
 - CSS 변수 기반 테마 전환

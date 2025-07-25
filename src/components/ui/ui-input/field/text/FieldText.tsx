@@ -91,7 +91,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
 						${isFocused ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						w-full bg-transparent
+						w-full ${FIELD_STYLES.background.inner}
 					`}
 					{...rest}
 				/>

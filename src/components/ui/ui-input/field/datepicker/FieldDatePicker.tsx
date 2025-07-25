@@ -59,7 +59,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 			${FIELD_STYLES.text}
 			${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
 			${disabled ? FIELD_STYLES.disabled : ''}
-			w-full bg-transparent border-0 focus:outline-none focus:ring-0
+			w-full ${FIELD_STYLES.background.inner} border-0 focus:outline-none focus:ring-0
 		`;
 	};
 

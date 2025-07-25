@@ -44,13 +44,12 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				setIsOpen(false);
 			}
 		};
-		// click 이벤트 사용으로 변경 (mousedown보다 안정적)
-		document.addEventListener('click', handleClickOutside);
+		
+		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
-			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
-
 
 	const handleToggle = () => {
 		if (disabled) return;
@@ -67,11 +66,11 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 		e.stopPropagation();
 		if (disabled) return;
 		onChange?.('');
-		setIsOpen(false);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (disabled) return;
+		
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
 			setIsOpen(!isOpen);
@@ -110,7 +109,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 		textSelected: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
 	};
 	
-	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
+	// 검증 아이콘 렌더링
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
 	
 	// 피드백 타입 결정
@@ -124,13 +123,14 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 
 	return (
 		<div className={`relative ${className}`} ref={dropdownRef}>
-			<div className="flex justify-between items-center">
-				{label && (
+			{/* 라벨 */}
+			{label && (
+				<div className="flex justify-between items-center">
 					<label className="text-sm font-medium leading-6 text-foreground">
 						{label}
 					</label>
-				)}
-			</div>
+				</div>
+			)}
 
 			{/* Validation Rule 표시 */}
 			{validationRule && (
@@ -139,47 +139,53 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 						<span>{validationResult?.message}</span>
 						{shouldShowIcon && (
 							validationResult.isValid ? (
-								<CheckCircle className="w-4 h-4 text-blue-500 ml-2" />
+								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
 							) : (
-								<AlertCircle className="w-4 h-4 text-red-500 ml-2" />
+								<AlertCircle className="ml-2 w-4 h-4 text-red-500" />
 							)
 						)}
 					</div>
 				</div>
 			)}
 
+			{/* 드롭다운 입력 영역 */}
 			<div className="relative">
-				<input
-					type="text"
-					className={`w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg bg-background ${
-						isOpen
+				<div
+					className={`
+						w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg 
+						flex items-center cursor-pointer
+						${isOpen
 							? `shadow-inner neu-inset ${colorStyles.borderFocus}`
 							: 'shadow-md neu-flat border-border hover:shadow-lg'
-					} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'} 
-					${selectedOption ? 'text-foreground' : 'text-muted-foreground'} placeholder:select-none`}
-					value={selectedOption ? selectedOption.label : ''}
-					placeholder={!selectedOption ? placeholder : ''}
-					readOnly
+						} 
+						${disabled ? 'opacity-60 cursor-not-allowed' : ''} 
+						${selectedOption ? 'text-foreground' : 'text-muted-foreground'}
+						bg-background
+					`}
 					onClick={handleToggle}
 					onKeyDown={handleKeyDown}
 					tabIndex={disabled ? -1 : 0}
-					role="combobox"
 					aria-expanded={isOpen}
 					aria-haspopup="listbox"
-					aria-controls={isOpen ? 'dropdown-listbox' : undefined}
-				/>
+				>
+					{/* 표시 텍스트 */}
+					<span className="flex-1 select-none">
+						{selectedOption ? selectedOption.label : placeholder}
+					</span>
+				</div>
 				
 				{/* 왼쪽 리스트 아이콘 */}
 				<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 
 				{/* 우측 아이콘들 */}
-				<div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+				<div className="flex absolute right-3 top-1/2 gap-1 items-center transform -translate-y-1/2">
 					{selectedOption && !disabled && (
 						<button
 							type="button"
 							onClick={handleClear}
-							className="p-1 rounded-full hover:bg-muted transition-colors duration-200"
-							aria-label="값 지우기">
+							className="p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+							aria-label="값 지우기"
+						>
 							<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 						</button>
 					)}
@@ -191,44 +197,39 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				</div>
 			</div>
 
-			{/* 드롭다운 메뉴 */}
+			{/* 드롭다운 메뉴 - 완전 불투명 처리 */}
 			{isOpen && (
-				<div 
-					className="absolute right-0 left-0 top-full z-[9999] mt-1 rounded-lg border shadow-lg border-border bg-background/95 backdrop-blur-sm"
-					style={{ backgroundColor: 'hsl(var(--background))' }}
-				>
-					<ul id="dropdown-listbox" role="listbox" className="overflow-auto py-1 max-h-60">
-						{options.map((option) => (
-							<li
-								key={option.value}
-								className={`px-3 py-2 text-sm cursor-pointer ${
-									option.disabled
-										? 'opacity-50 cursor-not-allowed'
-										: 'hover:bg-muted transition-colors duration-150'
-								} ${
-									option.value === value
-										? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
-										: 'text-foreground'
-								}`}
-								onMouseDown={(e) => {
-									// preventDefault로 input blur 방지
-									e.preventDefault();
-									e.stopPropagation();
-								}}
-								onClick={(e) => {
-									e.preventDefault();
-									e.stopPropagation();
-									if (!option.disabled) {
-										handleSelect(option.value);
-									}
-								}}
-								role="option"
-								aria-selected={option.value === value}
-								aria-disabled={option.disabled}>
-								{option.label}
-							</li>
-						))}
-					</ul>
+				<div className="absolute left-0 right-0 top-full z-[10000] mt-1">
+					<div className="rounded-lg border shadow-xl border-border bg-background">
+						<ul role="listbox" className="overflow-auto py-1 max-h-60">
+							{options.map((option) => (
+								<li
+									key={option.value}
+									className={`
+										px-3 py-2 text-sm transition-colors duration-150
+										${option.disabled
+											? 'opacity-50 cursor-not-allowed'
+											: 'cursor-pointer hover:bg-muted'
+										} 
+										${option.value === value
+											? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
+											: 'text-foreground'
+										}
+									`}
+									onClick={() => {
+										if (!option.disabled) {
+											handleSelect(option.value);
+										}
+									}}
+									role="option"
+									aria-selected={option.value === value}
+									aria-disabled={option.disabled}
+								>
+									{option.label}
+								</li>
+							))}
+						</ul>
+					</div>
 				</div>
 			)}
 		</div>

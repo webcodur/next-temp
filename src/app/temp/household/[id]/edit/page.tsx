@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Save, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
-import { createHousehold } from '@/services/household';
-import type { CreateHouseholdRequest, HouseholdType } from '@/types/household';
+import { getHouseholdDetail, updateHousehold } from '@/services/household';
+import type { Household, UpdateHouseholdRequest, HouseholdType } from '@/types/household';
 
 // #region Types
-interface CreateHouseholdForm {
+interface EditHouseholdForm {
   address1Depth: string;
   address2Depth: string;
   address3Depth: string;
@@ -25,7 +26,7 @@ interface FormErrors {
 // #endregion
 
 // #region Form Validation
-function validateForm(formData: CreateHouseholdForm): FormErrors {
+function validateForm(formData: EditHouseholdForm): FormErrors {
   const errors: FormErrors = {};
 
   if (!formData.address1Depth.trim()) {
@@ -45,10 +46,15 @@ function validateForm(formData: CreateHouseholdForm): FormErrors {
 // #endregion
 
 // #region Main Component
-export default function CreateHouseholdPage() {
+export default function EditHouseholdPage() {
   const router = useRouter();
+  const params = useParams();
+  const householdId = parseInt(params.id as string);
+  
+  const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<CreateHouseholdForm>({
+  const [household, setHousehold] = useState<Household | null>(null);
+  const [formData, setFormData] = useState<EditHouseholdForm>({
     address1Depth: '',
     address2Depth: '',
     address3Depth: '',
@@ -62,6 +68,36 @@ export default function CreateHouseholdPage() {
     { value: 'TEMP', label: '임시세대' },
     { value: 'COMMERCIAL', label: '상업세대' }
   ];
+
+  useEffect(() => {
+    const fetchHousehold = async () => {
+      try {
+        const result = await getHouseholdDetail(householdId);
+        
+        if (result.success && result.data) {
+          const householdData = result.data as Household;
+          setHousehold(householdData);
+          setFormData({
+            address1Depth: householdData.address1Depth,
+            address2Depth: householdData.address2Depth,
+            address3Depth: householdData.address3Depth || '',
+            householdType: householdData.householdType,
+            memo: householdData.memo || ''
+          });
+        } else {
+          console.error('세대 정보 조회 실패:', result.errorMsg);
+          setHousehold(null);
+        }
+      } catch (error) {
+        console.error('세대 정보 조회 중 오류:', error);
+        setHousehold(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHousehold();
+  }, [householdId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +113,7 @@ export default function CreateHouseholdPage() {
     setErrors({});
 
     try {
-      const requestData: CreateHouseholdRequest = {
+      const requestData: UpdateHouseholdRequest = {
         address1Depth: formData.address1Depth,
         address2Depth: formData.address2Depth,
         address3Depth: formData.address3Depth || undefined,
@@ -85,17 +121,17 @@ export default function CreateHouseholdPage() {
         memo: formData.memo || undefined
       };
 
-      const result = await createHousehold(requestData);
+      const result = await updateHousehold(householdId, requestData);
       
       if (result.success) {
-        alert('세대가 성공적으로 등록되었습니다.');
-        router.push('/temp/household');
+        alert('세대 정보가 성공적으로 수정되었습니다.');
+        router.push(`/temp/household/${householdId}`);
       } else {
-        alert(`세대 등록 실패: ${result.errorMsg}`);
+        alert(`세대 수정 실패: ${result.errorMsg}`);
       }
     } catch (error) {
-      console.error('세대 등록 중 오류:', error);
-      alert('세대 등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error('세대 수정 중 오류:', error);
+      alert('세대 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);
     }
@@ -103,11 +139,11 @@ export default function CreateHouseholdPage() {
 
   const handleCancel = () => {
     if (confirm('작성중인 내용이 사라집니다. 정말로 취소하시겠습니까?')) {
-      router.push('/temp/household');
+      router.push(`/temp/household/${householdId}`);
     }
   };
 
-  const updateFormData = (field: keyof CreateHouseholdForm) => (value: string) => {
+  const updateFormData = (field: keyof EditHouseholdForm) => (value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // 해당 필드의 에러 제거
     if (errors[field as keyof FormErrors]) {
@@ -115,20 +151,51 @@ export default function CreateHouseholdPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-muted-foreground">로딩 중...</div>
+      </div>
+    );
+  }
+
+  if (!household) {
+    return (
+      <div className="p-6 space-y-6 font-multilang animate-fadeIn">
+        <div className="p-6 rounded-xl neu-flat">
+          <div className="flex gap-4 items-center">
+            <button
+              onClick={() => router.push('/temp/household')}
+              className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
+            >
+              <ArrowLeft className="w-5 h-5 text-foreground" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">세대를 찾을 수 없습니다</h1>
+              <p className="mt-1 text-sm text-muted-foreground">요청하신 세대 정보가 존재하지 않습니다</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6 font-multilang animate-fadeIn">
       {/* 페이지 헤더 */}
       <div className="p-6 rounded-xl neu-flat">
         <div className="flex gap-4 items-center">
           <button
-            onClick={() => router.push('/temp/household')}
+            onClick={() => router.push(`/temp/household/${householdId}`)}
             className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">새 세대 등록</h1>
-            <p className="mt-1 text-sm text-muted-foreground">세대 기본 정보를 입력하여 새로운 세대를 등록합니다</p>
+            <h1 className="text-2xl font-bold text-foreground">세대 정보 수정</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {household.address1Depth} {household.address2Depth} 정보를 수정합니다
+            </p>
           </div>
         </div>
       </div>
@@ -188,7 +255,7 @@ export default function CreateHouseholdPage() {
 
           {/* 미리보기 */}
           <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="mb-2 text-sm font-medium text-gray-700">입력 정보 미리보기</h3>
+            <h3 className="mb-2 text-sm font-medium text-gray-700">수정 정보 미리보기</h3>
             <div className="space-y-1 text-sm text-gray-600">
               <p><span className="font-medium">주소:</span> {formData.address1Depth || '(미입력)'} {formData.address2Depth || '(미입력)'} {formData.address3Depth}</p>
               <p><span className="font-medium">세대 유형:</span> {
@@ -198,6 +265,37 @@ export default function CreateHouseholdPage() {
               }</p>
               {formData.memo && <p><span className="font-medium">메모:</span> {formData.memo}</p>}
             </div>
+          </div>
+
+          {/* 변경사항 표시 */}
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <h3 className="mb-2 text-sm font-medium text-blue-700">변경사항</h3>
+            <div className="space-y-1 text-sm text-blue-600">
+              {formData.address1Depth !== household.address1Depth && (
+                <p>• 동: {household.address1Depth} → {formData.address1Depth}</p>
+              )}
+              {formData.address2Depth !== household.address2Depth && (
+                <p>• 호수: {household.address2Depth} → {formData.address2Depth}</p>
+              )}
+              {formData.address3Depth !== (household.address3Depth || '') && (
+                <p>• 기타: {household.address3Depth || '(없음)'} → {formData.address3Depth || '(없음)'}</p>
+              )}
+              {formData.householdType !== household.householdType && (
+                <p>• 세대 유형: {householdTypeOptions.find(opt => opt.value === household.householdType)?.label} → {householdTypeOptions.find(opt => opt.value === formData.householdType)?.label}</p>
+              )}
+              {formData.memo !== (household.memo || '') && (
+                <p>• 메모: {household.memo || '(없음)'} → {formData.memo || '(없음)'}</p>
+              )}
+            </div>
+            {JSON.stringify(formData) === JSON.stringify({
+              address1Depth: household.address1Depth,
+              address2Depth: household.address2Depth,
+              address3Depth: household.address3Depth || '',
+              householdType: household.householdType,
+              memo: household.memo || ''
+            }) && (
+              <p className="text-sm text-blue-600">변경사항이 없습니다.</p>
+            )}
           </div>
         </div>
 
@@ -218,7 +316,7 @@ export default function CreateHouseholdPage() {
             className="flex gap-2 items-center px-6 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-primary-foreground bg-primary neu-raised-primary hover:animate-click-feedback disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />
-            {isSubmitting ? '등록 중...' : '세대 등록'}
+            {isSubmitting ? '저장 중...' : '변경사항 저장'}
           </button>
         </div>
       </form>

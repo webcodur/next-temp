@@ -7,13 +7,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-
 import { useAtom } from 'jotai';
-
 import { useAuth } from '@/hooks/useAuth';
 import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
-
 import { MenuManager } from './MenuManager/MenuManager';
 
 export default function MenuManagementPage() {

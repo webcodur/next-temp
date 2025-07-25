@@ -88,7 +88,7 @@ const FieldPassword: React.FC<FieldPasswordProps> = ({
 						${isFocused && !error ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${error ? 'ring-2 ring-destructive' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						w-full bg-transparent
+						w-full ${FIELD_STYLES.background.inner}
 					`}
 				/>
 				

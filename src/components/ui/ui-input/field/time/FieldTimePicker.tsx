@@ -151,7 +151,7 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
 						${isOpen ? 'ring-2 ring-primary' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						bg-transparent w-full focus:outline-none
+						${FIELD_STYLES.background.inner} w-full focus:outline-none
 					`}
 				/>
 

@@ -12,7 +12,6 @@ interface AccordionProps {
 	headerClassName?: string;
 	contentClassName?: string;
 	disabled?: boolean;
-	colorVariant?: 'primary' | 'secondary';
 }
 // #endregion
 
@@ -26,18 +25,9 @@ export const Accordion: React.FC<AccordionProps> = ({
 	headerClassName = '',
 	contentClassName = '',
 	disabled = false,
-	colorVariant = 'primary',
 }) => {
 	// #region 상태
 	const [isOpen, setIsOpen] = useState(defaultOpen);
-	// #endregion
-
-	// #region 색상 variant에 따른 스타일
-	const colorStyles = {
-		backgroundActive: colorVariant === 'primary' ? 'bg-primary/10' : 'bg-secondary/10',
-		backgroundHover: colorVariant === 'primary' ? 'hover:bg-primary/10' : 'hover:bg-secondary/10',
-		textColor: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
-	};
 	// #endregion
 
 	// #region 핸들러
@@ -52,20 +42,24 @@ export const Accordion: React.FC<AccordionProps> = ({
 
 	// #region 렌더링
 	return (
-		<div className={`rounded-2xl neu-flat bg-muted ${className}`}>
+		<div className={`rounded-2xl neu-flat bg-surface-3 ${className}`}>
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
-				className={`flex items-center justify-between p-4 ${isOpen ? colorStyles.backgroundActive : 'bg-background'} cursor-pointer neu-raised rounded-2xl transition-colors ${
+				className={`flex items-center justify-between p-4 cursor-pointer neu-raised rounded-2xl transition-colors ${
+					isOpen 
+						? 'bg-primary-1' 
+						: 'bg-surface-2'
+				} ${
 					disabled 
 						? 'cursor-not-allowed opacity-60' 
-						: colorStyles.backgroundHover
+						: 'hover:bg-primary-2'
 				} ${headerClassName}`}>
-				<h2 className="text-sm font-medium text-foreground">{title}</h2>
+				<h2 className="text-sm font-medium text-foreground font-multilang">{title}</h2>
 				<div className="flex gap-3 items-center">
 					{/* 상태 텍스트 */}
 					{statusText && (
-						<span className={`text-xs font-medium ${colorStyles.textColor}`}>
+						<span className="text-xs font-medium text-primary-6 font-multilang">
 							{statusText}
 						</span>
 					)}

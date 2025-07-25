@@ -83,7 +83,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						${isRTL ? 'pe-12 ps-12' : 'pl-12 pr-12'}
 						${isFocused ? `ring-2 ${colorStyles.focusRing}` : ''}
 						${disabled ? FIELD_STYLES.disabled : 'cursor-pointer'}
-						w-full bg-transparent flex items-center justify-between
+						w-full ${FIELD_STYLES.background.inner} flex items-center justify-between
 					`}
 					onClick={() => !disabled && setIsOpen(!isOpen)}
 					onFocus={() => {

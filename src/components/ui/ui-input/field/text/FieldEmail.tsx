@@ -93,7 +93,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 						${error ? 'ring-2 ring-destructive' : ''}
 						${!isValid ? 'ring-2 ring-red-500' : ''}
 						${disabled ? FIELD_STYLES.disabled : ''}
-						w-full bg-transparent
+						w-full ${FIELD_STYLES.background.inner}
 					`}
 				/>
 				

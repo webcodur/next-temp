@@ -5,10 +5,11 @@
 */ // ------------------------------
 
 import { useEffect, useState } from 'react';
-import { FolderOpen, Folder, Filter, RotateCcw, Search, X } from 'lucide-react';
+import { FolderOpen, Folder, Filter, RotateCcw } from 'lucide-react';
 import { MenuTree } from './MenuConfigurationCard/MenuTree/MenuTree';
 import { useMenuOperations } from './useMenuOperations';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 
 // #region 타입 정의
 interface ParkingLot {
@@ -55,20 +56,20 @@ export function SaveButton({ selectedParkingLot }: SaveButtonProps) {
     >
       {/* 글로우 효과 */}
       {!saving && selectedParkingLot && (
-        <div className="absolute inset-0 bg-primary/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+        <div className="absolute inset-0 rounded-xl opacity-0 blur-sm transition-opacity duration-300 bg-primary/20 group-hover:opacity-100 -z-10"></div>
       )}
       
       {/* 버튼 텍스트 */}
-      <span className="relative z-10 flex items-center gap-2">
+      <span className="flex relative z-10 gap-2 items-center">
         {saving && (
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-4 h-4 rounded-full border-2 border-current animate-spin border-t-transparent"></div>
         )}
         {saving ? '저장 중...' : '변경사항 저장'}
       </span>
       
       {/* 하이라이트 효과 */}
       {!saving && selectedParkingLot && (
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent to-transparent transition-transform duration-500 transform -translate-y-full via-white/30 group-hover:translate-y-0"></div>
       )}
     </button>
   );
@@ -158,15 +159,14 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
 
   // #region 렌더링
   return (
-    <div className="neu-elevated overflow-hidden rounded-2xl">
+    <div className="overflow-hidden rounded-2xl neu-elevated">
 
       {/* 메뉴 목록 선택 영역 - 좌측 통계, 중앙 드롭다운, 우측 저장 버튼 */}
       <div className="px-6 pt-6 pb-4">
-        <div className="neu-flat flex justify-between items-center px-4 py-3 rounded-lg">
+        <div className="flex justify-between items-center px-4 py-3 rounded-lg neu-flat">
           {/* 좌측 통계 박스 */}
           <div className="neu-inset flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-muted/30 min-w-[140px]">
-            <div className="neu-icon-active w-3 h-3 rounded-full"></div>
-            <span className="text-sm font-semibold text-foreground whitespace-nowrap">
+            <span className="text-sm font-semibold whitespace-nowrap text-foreground">
               {assignedMenuIds.size}/{allMenus.length}개 선택됨
             </span>
           </div>
@@ -204,13 +204,13 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
             >
               {/* 글로우 효과 */}
               {!saving && selectedParkingLot && (
-                <div className="absolute inset-0 bg-primary/20 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                <div className="absolute inset-0 rounded-lg opacity-0 blur-sm transition-opacity duration-300 bg-primary/20 group-hover:opacity-100 -z-10"></div>
               )}
               
               {/* 버튼 텍스트 */}
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="flex relative z-10 gap-2 items-center">
                 {saving && (
-                  <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-3 h-3 rounded-full border-2 border-current animate-spin border-t-transparent"></div>
                 )}
                 {saving ? '저장 중...' : '변경사항 저장'}
               </span>
@@ -227,8 +227,8 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
       {/* 메뉴 목록 */}
       <div className='px-6 pb-6'>
         {/* 유틸리티 버튼 영역 */}
-        <div className="neu-flat mb-4 p-3 rounded-lg">
-          <div className="flex flex-wrap gap-2 items-center justify-between">
+        <div className="p-3 mb-4 rounded-lg neu-flat">
+          <div className="flex flex-wrap gap-2 justify-between items-center">
             {/* 좌측 유틸리티 버튼들 */}
             <div className="flex flex-wrap gap-2">
               {/* 전체 확장/축소 */}
@@ -237,7 +237,7 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
                 className="neu-raised px-3 py-1.5 text-xs font-medium rounded-md text-foreground hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                 title={expandedMenus.size === allMenus.length ? "전체 접기" : "전체 펼치기"}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex gap-2 items-center">
                   {expandedMenus.size === allMenus.length ? (
                     <Folder className="w-4 h-4" />
                   ) : (
@@ -257,7 +257,7 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
                 }`}
                 title="선택된 항목만 보기"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex gap-2 items-center">
                   <Filter className="w-4 h-4" />
                   <span>{showSelectedOnly ? "선택된 것만" : "전체 보기"}</span>
                 </div>
@@ -269,7 +269,7 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
                 className="neu-raised px-3 py-1.5 text-xs font-medium rounded-md text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                 title="모든 필터 초기화"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex gap-2 items-center">
                   <RotateCcw className="w-4 h-4" />
                   <span>초기화</span>
                 </div>
@@ -277,27 +277,15 @@ export function MenuManager({ parkingLots, selectedParkingLot, onParkingLotSelec
             </div>
 
             {/* 우측 검색 및 정렬 */}
-            <div className="flex items-center gap-2">
+            <div className="flex gap-2 items-center">
               {/* 검색 */}
-              <div className="relative">
-                <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
-                  <Search className="w-3 h-3 text-muted-foreground" />
-                </div>
-                <input
-                  type="text"
+              <div className="w-32">
+                <SimpleTextInput
                   value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onChange={handleSearchChange}
                   placeholder="메뉴 검색..."
-                  className="neu-inset pl-7 pr-8 py-1.5 text-xs w-32 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200"
+                  className="text-xs"
                 />
-                {searchTerm && (
-                  <button
-                    onClick={() => handleSearchChange('')}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 w-3 h-3 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
               </div>
 
               {/* 정렬 */}
