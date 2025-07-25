@@ -1,6 +1,5 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 import { SearchHouseholdRequest } from '@/types/household';
 
 /**
@@ -14,9 +13,9 @@ export async function searchHousehold(params?: SearchHouseholdRequest) {
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
   if (params?.householdType) searchParams.append('householdType', params.householdType);
-  if (params?.address1Depth) searchParams.append('address1depth', params.address1Depth);
-  if (params?.address2Depth) searchParams.append('address2depth', params.address2Depth);
-  if (params?.address3Depth) searchParams.append('address3depth', params.address3Depth);
+  if (params?.address1Depth) searchParams.append('address1Depth', params.address1Depth);
+  if (params?.address2Depth) searchParams.append('address2Depth', params.address2Depth);
+  if (params?.address3Depth) searchParams.append('address3Depth', params.address3Depth);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/households?${queryString}` : '/households';
@@ -38,6 +37,6 @@ export async function searchHousehold(params?: SearchHouseholdRequest) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

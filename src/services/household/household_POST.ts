@@ -1,6 +1,5 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 import { CreateHouseholdRequest } from '@/types/household';
 
 /**
@@ -11,7 +10,7 @@ import { CreateHouseholdRequest } from '@/types/household';
 export async function createHousehold(data: CreateHouseholdRequest) {
   const response = await fetchDefault('/households', {
     method: 'POST',
-    body: JSON.stringify(camelToSnake(data)), // 🔥 camelCase → snake_case 변환
+    body: JSON.stringify(data), // 🔥 자동 변환됨 (camelCase → snake_case)
   });
 
   const result = await response.json();
@@ -27,6 +26,6 @@ export async function createHousehold(data: CreateHouseholdRequest) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

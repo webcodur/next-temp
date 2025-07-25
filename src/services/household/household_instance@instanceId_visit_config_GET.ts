@@ -1,14 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 세대 인스턴스의 방문 설정을 조회한다
- * @param instanceId 인스턴스 ID
+ * @param instance_id 인스턴스 ID
  * @returns 방문 설정 정보
  */
-export async function getHouseholdVisitConfig(instanceId: number) {
-  const response = await fetchDefault(`/households/instances/${instanceId}/visit-config`, {
+export async function getHouseholdVisitConfig(instance_id: number) {
+  const response = await fetchDefault(`/households/instances/${instance_id}/config/visit`, {
     method: 'GET',
   });
 
@@ -25,6 +24,6 @@ export async function getHouseholdVisitConfig(instanceId: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

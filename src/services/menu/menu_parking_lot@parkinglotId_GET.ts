@@ -1,14 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 주차장에 할당된 메뉴 목록을 계층 구조로 반환
- * @param parkinglotId 주차장 ID
+ * @param parkinglot_id 주차장 ID
  * @returns ParkingLotMenuResponseDto - 주차장 정보와 할당된 메뉴 목록
  */
-export async function getParkingLotMenuList(parkinglotId: number) {
-  const response = await fetchDefault(`/menus/parking-lot/${parkinglotId}`, {
+export async function getParkingLotMenuList(parkinglot_id: number) {
+  const response = await fetchDefault(`/menus/parkinglot/${parkinglot_id}`, {
     method: 'GET',
   });
 
@@ -25,6 +24,6 @@ export async function getParkingLotMenuList(parkinglotId: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

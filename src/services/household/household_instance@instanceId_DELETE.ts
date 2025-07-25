@@ -1,14 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 세대 인스턴스를 삭제한다 (이사 처리)
- * @param instanceId 인스턴스 ID
+ * @param instance_id 인스턴스 ID
  * @returns 삭제 성공 여부
  */
-export async function deleteHouseholdInstance(instanceId: number) {
-  const response = await fetchDefault(`/households/instances/${instanceId}`, {
+export async function deleteHouseholdInstance(instance_id: number) {
+  const response = await fetchDefault(`/households/instances/${instance_id}`, {
     method: 'DELETE',
   });
 
@@ -25,6 +24,6 @@ export async function deleteHouseholdInstance(instanceId: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

@@ -1,33 +1,32 @@
 'use client';
-import { fetchDefault } from '../fetchClient';
+import { fetchDefault } from '@/services/fetchClient';
 import { CreateAdminRequest } from '@/types/admin';
-import { snakeToCamel } from '@/utils/caseConverter';
 
-// 새로운 관리자 계정을 생성한다 (CreateAdminDto 기준)
+// 관리자 계정을 생성한다 (CreateAdminDto 기준)
 export async function createAdmin(
   data: CreateAdminRequest
 ) {
   const {
     account,
-    password,
     name,
-    roleId,
     email,
     phone,
-    parkinglotId: bodyParkinglotId
+    password,
+    roleId
   } = data;
 
-  const response = await fetchDefault('/admins', {
+  const requestBody = {
+    account,
+    name,
+    email,
+    phone,
+    password,
+    roleId
+  };
+
+  const response = await fetchDefault('/admin', {
     method: 'POST',
-    body: JSON.stringify({
-      account,
-      password,
-      name,
-      roleId,
-      email,
-      phone,
-      parkinglotId: bodyParkinglotId
-    }),
+    body: JSON.stringify(requestBody), // 🔥 자동 변환됨 (camelCase → snake_case)
   });
 
   const result = await response.json();
@@ -43,6 +42,6 @@ export async function createAdmin(
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

@@ -1,8 +1,7 @@
 'use client';
 
-import { fetchDefault } from '../fetchClient';
+import { fetchDefault } from '@/services/fetchClient';
 import { ApiMessageResponse } from '@/types/auth';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 로그아웃 클라이언트 함수
@@ -24,7 +23,7 @@ export async function logout() {
     const data: ApiMessageResponse = await response.json();
     return {
       success: true,
-      data: snakeToCamel(data), // 🔥 snake_case → camelCase 변환
+      data: data, // 🔥 자동 변환됨 (snake_case → camelCase)
     };
   } catch {
     return {

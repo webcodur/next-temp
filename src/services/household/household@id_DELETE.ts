@@ -1,6 +1,5 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 세대를 삭제한다 (소프트 삭제)
@@ -25,6 +24,6 @@ export async function deleteHousehold(id: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

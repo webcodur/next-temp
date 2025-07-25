@@ -1,6 +1,5 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 import { SearchHouseholdInstanceRequest } from '@/types/household';
 
 /**
@@ -14,8 +13,8 @@ export async function getHouseholdInstanceList(householdId: number, params?: Sea
   
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
-  if (params?.householdId) searchParams.append('household_id', params.householdId.toString());
-  if (params?.instanceName) searchParams.append('instance_name', params.instanceName);
+  if (params?.householdId) searchParams.append('householdId', params.householdId.toString());
+  if (params?.instanceName) searchParams.append('instanceName', params.instanceName);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/households/${householdId}/instances?${queryString}` : `/households/${householdId}/instances`;
@@ -37,6 +36,6 @@ export async function getHouseholdInstanceList(householdId: number, params?: Sea
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

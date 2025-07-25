@@ -1,17 +1,16 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 메뉴의 순서를 변경 (같은 부모를 가진 메뉴들 내에서만 순서 변경 가능)
- * @param menuId 순서를 변경할 메뉴 ID
+ * @param menu_id 순서를 변경할 메뉴 ID
  * @param newOrder 변경할 순서 (1부터 시작)
  * @returns 순서 변경 결과
  */
-export async function updateMenuOrder(menuId: number, newOrder: number) {
-  const response = await fetchDefault(`/menus/${menuId}/order`, {
+export async function updateMenuOrder(menu_id: number, newOrder: number) {
+  const response = await fetchDefault(`/menus/${menu_id}/order`, {
     method: 'PUT',
-    body: JSON.stringify(camelToSnake({ newOrder })), // 🔥 camelCase → snake_case 변환
+    body: JSON.stringify({ newOrder }), // 🔥 자동 변환됨 (camelCase → snake_case)
   });
 
   const result = await response.json();
@@ -27,6 +26,6 @@ export async function updateMenuOrder(menuId: number, newOrder: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

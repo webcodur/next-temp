@@ -1,17 +1,16 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 주차장에서 메뉴를 제거
- * @param parkinglotId 주차장 ID
+ * @param parkinglot_id 주차장 ID
  * @param menuIds 제거할 메뉴 ID 목록
  * @returns 메뉴 제거 결과
  */
-export async function removeMenuFromParkingLot(parkinglotId: number, menuIds: number[]) {
-  const response = await fetchDefault(`/menus/parking-lot/${parkinglotId}/remove`, {
+export async function removeMenuFromParkingLot(parkinglot_id: number, menuIds: number[]) {
+  const response = await fetchDefault(`/menus/parkinglot/${parkinglot_id}/remove`, {
     method: 'PUT',
-    body: JSON.stringify(camelToSnake({ menuIds })), // 🔥 camelCase → snake_case 변환
+    body: JSON.stringify({ menuIds }), // 🔥 자동 변환됨 (camelCase → snake_case)
   });
 
   const result = await response.json();
@@ -27,6 +26,6 @@ export async function removeMenuFromParkingLot(parkinglotId: number, menuIds: nu
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

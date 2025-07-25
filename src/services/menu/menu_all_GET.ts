@@ -1,6 +1,5 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 시스템의 모든 메뉴를 계층 구조로 반환 (관리자 권한 필요)
@@ -24,6 +23,6 @@ export async function getAllMenuList() {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

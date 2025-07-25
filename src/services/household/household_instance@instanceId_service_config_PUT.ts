@@ -1,18 +1,17 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { camelToSnake, snakeToCamel } from '@/utils/caseConverter';
 import { UpdateHouseholdServiceConfigRequest } from '@/types/household';
 
 /**
  * 세대 인스턴스의 서비스 설정을 수정한다
- * @param instanceId 인스턴스 ID
+ * @param instance_id 인스턴스 ID
  * @param data 서비스 설정 데이터
  * @returns 수정된 서비스 설정 정보
  */
-export async function updateHouseholdServiceConfig(instanceId: number, data: UpdateHouseholdServiceConfigRequest) {
-  const response = await fetchDefault(`/households/instances/${instanceId}/service-config`, {
+export async function updateHouseholdServiceConfig(instance_id: number, data: UpdateHouseholdServiceConfigRequest) {
+  const response = await fetchDefault(`/households/instances/${instance_id}/config/service`, {
     method: 'PUT',
-    body: JSON.stringify(camelToSnake(data)), // 🔥 camelCase → snake_case 변환
+    body: JSON.stringify(data), // 🔥 자동 변환됨 (camelCase → snake_case)
   });
 
   const result = await response.json();
@@ -28,6 +27,6 @@ export async function updateHouseholdServiceConfig(instanceId: number, data: Upd
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

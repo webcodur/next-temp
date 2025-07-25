@@ -1,14 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { snakeToCamel } from '@/utils/caseConverter';
 
 /**
  * 특정 세대 인스턴스의 상세 정보를 조회한다 (삭제된 세대 포함)
- * @param instanceId 인스턴스 ID
+ * @param instance_id 인스턴스 ID
  * @returns 세대 인스턴스 상세 정보
  */
-export async function getHouseholdInstanceDetail(instanceId: number) {
-  const response = await fetchDefault(`/households/instances/${instanceId}`, {
+export async function getHouseholdInstanceDetail(instance_id: number) {
+  const response = await fetchDefault(`/households/instances/${instance_id}`, {
     method: 'GET',
   });
 
@@ -25,6 +24,6 @@ export async function getHouseholdInstanceDetail(instanceId: number) {
   
   return {
     success: true,
-    data: snakeToCamel(result), // 🔥 snake_case → camelCase 변환
+    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
   };
 } 

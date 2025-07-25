@@ -9,8 +9,7 @@ src/services/
 ├── fetchClient.ts              # 공통 HTTP 클라이언트
 ├── auth/                       # 인증 관련 API
 ├── admin/                      # 관리자 관리 API
-
-├── systemConfig/               # 시스템 설정 API
+├── config/                     # 시스템 설정 API
 ├── ipBlock/                    # IP 차단 관리 API
 ├── cache/                      # 캐시 관리 API
 ├── menu/                       # 메뉴 관리 API
@@ -98,6 +97,36 @@ const handleAdminCreate = async (formData) => {
   } else {
     console.error('관리자 생성 실패:', result.errorMsg);
     // 에러 처리
+  }
+};
+
+// 시스템 설정 조회
+import { getConfigByKey, updateConfig } from '@/services/config';
+
+const handleConfigUpdate = async () => {
+  const configResult = await getConfigByKey('maintenance_mode');
+  if (configResult.success) {
+    await updateConfig('maintenance_mode', { configValue: 'true' });
+  }
+};
+
+// IP 차단 관리
+import { getBlockedIpList, deleteBlockedIp } from '@/services/ipBlock';
+
+const handleIpManagement = async () => {
+  const blockedIps = await getBlockedIpList();
+  if (blockedIps.success) {
+    await deleteBlockedIp('192.168.1.100');
+  }
+};
+
+// 캐시 관리
+import { getCacheStats, deleteCacheNamespace } from '@/services/cache';
+
+const handleCacheManagement = async () => {
+  const stats = await getCacheStats();
+  if (stats.success) {
+    await deleteCacheNamespace('user_sessions');
   }
 };
 ```
@@ -233,6 +262,18 @@ NEXT_PUBLIC_API_URL=https://api.example.com
 - **에러 처리**: 일관된 에러 메시지와 로깅
 - **타입 안전성**: TypeScript 타입 정의
 
+## 추가된 API 도메인
+
+### ✅ 완료된 도메인들
+
+- **config**: 시스템 설정 관리 (특정 설정값 조회/수정, 모든 설정값 조회)
+- **ipBlock**: IP 차단 관리 (차단 목록 조회, 차단 해제, 차단 내역 검색)  
+- **cache**: 캐시 관리 (통계 조회, 네임스페이스별 관리)
+- **admin**: 관리자 관리 (CRUD 작업)
+- **auth**: 인증 관리 (로그인, 토큰 갱신, 로그아웃)
+- **menu**: 메뉴 관리 (메뉴 조회, 순서 변경, 주차장별 할당)
+- **household**: 세대 관리 (세대 및 인스턴스 CRUD, 설정 관리)
+
 ## 추가 API 생성
 
-새로운 API를 추가할 때는 `docs/rules/api-mapping.md`의 매핑 테이블을 참고하여 일관된 패턴으로 생성하세요. 
+새로운 API를 추가할 때는 `docs/api_related/api-generation.md`의 가이드라인을 참고하여 일관된 패턴으로 생성하세요. 
