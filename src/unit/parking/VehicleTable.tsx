@@ -5,7 +5,7 @@ import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { InfiniteTable, BaseTableColumn } from '@/components/ui/ui-data/infiniteTable/InfiniteTable';
 import { BaseTable } from '@/components/ui/ui-data/baseTable/BaseTable';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import LicensePlate from '@/components/ui/system-testing/license-plate/LicensePlate';
+
 import { useTranslations } from '@/hooks/useI18n';
 
 interface VehicleTableProps {
@@ -67,11 +67,15 @@ const VehicleTable: React.FC<VehicleTableProps> = ({
       align: 'center',
       cell: (item) => (
         <div className="flex flex-col gap-1">
-          <LicensePlate plateNumber={item.car_number} width={sz.plateWidth} />
+          <span className="font-mono text-sm bg-muted px-2 py-1 rounded">
+            {item.car_number}
+          </span>
           {item.modify_car_number && (
             <>
               <span className="text-xs text-warning">→</span>
-              <LicensePlate plateNumber={item.modify_car_number} width={sz.plateWidth} />
+              <span className="font-mono text-sm bg-muted px-2 py-1 rounded">
+                {item.modify_car_number}
+              </span>
             </>
           )}
         </div>

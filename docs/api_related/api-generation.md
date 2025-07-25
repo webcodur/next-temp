@@ -22,7 +22,7 @@ alwaysApply: false
   - `src/services/auth/` (인증)
   - `src/services/household/` (세대 관리)
   - `src/services/config/` (시스템 설정)
-  - `src/services/ipBlock/` (IP 차단 관리)
+  - `src/services/ip/` (IP 차단 관리)
   - `src/services/cache/` (캐시 관리)
   - `src/services/menu/` (메뉴 관리)
 - 공통 HTTP 클라이언트는 `src/services/` 레벨에 배치
@@ -51,7 +51,7 @@ alwaysApply: false
 #### 검색/필터
 - `admin$_GET.ts` (관리자 검색 - 모든 쿼리 파라미터)
 - `household$_GET.ts` (세대 검색/필터)
-- `ipBlock_history$_GET.ts` (IP 차단 내역 검색)
+- `block_history$_GET.ts` (IP 차단 내역 검색)
 
 #### 중첩 리소스 (실제 예시)
 - `household@id_instance_POST.ts` (특정 세대의 인스턴스 생성)
@@ -168,7 +168,7 @@ if (response.status === 204) {
 | `admin@id_DELETE.ts` | `deleteAdmin()` | 관리자 삭제 |
 | `household_instance@instance_id_GET.ts` | `getHouseholdInstanceDetail()` | 세대 인스턴스 상세 |
 | `config@key_GET.ts` | `getConfigByKey()` | 특정 설정값 조회 |
-| `ipBlock_history$_GET.ts` | `searchBlockHistory()` | IP 차단 내역 검색 |
+| `block_history$_GET.ts` | `searchBlockHistory()` | IP 차단 내역 검색 |
 
 ## 🔧 타입 활용 가이드
 

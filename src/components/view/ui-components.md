@@ -70,10 +70,10 @@
 | [Toast](./ui-effects/toast/toast.md)                         | 작업 결과나 간단한 정보를 잠시 보여주는 팝업 알림입니다.                |
 | [Tooltip](./ui-effects/tooltip/tooltip.md)                   | 특정 요소에 대한 추가 정보를 제공하는 작은 말풍선입니다.                |
 | [Loading](./ui-effects/loading/loading.md)                   | 다양한 로딩 애니메이션 효과를 제공하는 컴포넌트들입니다.                |
+| [Animation](./ui-effects/animation/animation.md)             | 다양한 애니메이션 효과들을 제공하는 컴포넌트들입니다.                  |
 
-### 3D 및 시스템 (`ui-3d` & `system-testing`)
+### 3D (`ui-3d`)
 
 | 컴포넌트                                                         | 설명                                                            |
 | :--------------------------------------------------------------- | :-------------------------------------------------------------- |
 | [Barrier3D](./ui-3d/barrier/barrier3d.md)                        | 3D 주차장 차단기를 시뮬레이션하는 인터랙티브 컴포넌트입니다.    |
-| [License Plate](./system-testing/license-plate/license-plate.md) | 다양한 종류의 대한민국 자동차 번호판을 시각적으로 렌더링합니다. |

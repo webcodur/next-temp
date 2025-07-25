@@ -4,16 +4,16 @@ import type { MenuData } from '@/components/layout/sidebar/types';
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-	temp: {
+	프리뷰: {
 		icon: Construction,
-		key: 'temp',
+		key: '프리뷰',
 		midItems: {
 			시스템관리: {
 				key: '시스템관리',
 				botItems: [
 					{
 						key: '메뉴관리',
-						href: '/temp/menu-management',
+						href: '/preview/menu-management',
 					},
 				],
 			},
@@ -22,15 +22,15 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '세대목록',
-						href: '/temp/household',
+						href: '/preview/household',
 					},
 					{
 						key: '세대등록',
-						href: '/temp/household/create',
+						href: '/preview/household/create',
 					},
 					{
 						key: '거주이력',
-						href: '/temp/household/instances',
+						href: '/preview/household/instances',
 					},
 				],
 			},
@@ -125,6 +125,10 @@ export const menuData: MenuData = {
 						key: '드래그드롭',
 						href: '/lab/ui-effects/drag-and-drop',
 					},
+					{
+						key: '애니메이션',
+						href: '/lab/ui-effects/animation',
+					},
 				],
 			},
 			UI입력: {
@@ -177,68 +181,12 @@ export const menuData: MenuData = {
 				key: 'UI_3D',
 				botItems: [
 					{
-						key: 'Three.js기초',
-						href: '/lab/ui-3d/threejs-basics',
-					},
-					{
-						key: 'Three.js도형',
-						href: '/lab/ui-3d/threejs-geometries',
-					},
-					{
-						key: 'Three.js소재조명',
-						href: '/lab/ui-3d/threejs-materials-lights',
-					},
-					{
-						key: 'Three.js인터렉션',
-						href: '/lab/ui-3d/threejs-interactions',
-					},
-					{
-						key: 'Three.js애니메이션',
-						href: '/lab/ui-3d/threejs-animations',
-					},
-					{
-						key: 'Three.js고급',
-						href: '/lab/ui-3d/threejs-advanced',
-					},
-					{
 						key: '차단기3D',
 						href: '/lab/ui-3d/barrier-3d',
 					},
 				],
 			},
-			시스템테스팅: {
-				key: '시스템테스팅',
-				botItems: [
-					{
-						key: '다국어테스트',
-						href: '/lab/system-testing/i18n-test',
-					},
-					{
-						key: '폰트테스트',
-						href: '/lab/system-testing/font-test',
-					},
-					{
-						key: '테마테스트',
-						href: '/lab/system-testing/theme-test',
-					},
-					{
-						key: 'RTL데모',
-						href: '/lab/system-testing/rtl-demo',
-					},
-					{
-						key: '번호판',
-						href: '/lab/system-testing/license-plate',
-					},
-					{
-						key: '필드날짜선택',
-						href: '/lab/system-testing/field-datepicker',
-					},
-					{
-						key: '플레이그라운드',
-						href: '/lab/system-testing/playground',
-					},
-				],
-			},
+
 		},
 	},
 };

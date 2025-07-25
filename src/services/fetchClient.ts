@@ -10,7 +10,7 @@ const baseUrl = deployMode === 'production' ? URL_PROD : URL_TEST;
 /**
  * localStorage에서 값 가져오기 (안전한 접근)
  */
-const getFromStorage = (key: string): string | null => {
+const getPidFromStorage = (key: string): string | null => {
   if (typeof window === 'undefined') return null;
   try {
     return localStorage.getItem(key);
@@ -80,7 +80,7 @@ export const fetchDefault = returnFetch({
     request: async (args) => {
       if (args[1]) {
         const accessToken = getTokenFromCookie('access-token');
-        const parkingLotId = getFromStorage('selected-parkinglot-id');
+        const parkingLotId = getPidFromStorage('selected-parkinglot-id');
         
         // 🔄 URL 쿼리 파라미터 자동 변환 (camelCase → snake_case)
         if (typeof args[0] === 'string') {
@@ -146,7 +146,7 @@ export const fetchForm = returnFetch({
     request: async (args) => {
       if (args[1]) {
         const accessToken = getTokenFromCookie('access-token');
-        const parkingLotId = getFromStorage('selected-parkinglot-id');
+        const parkingLotId = getPidFromStorage('selected-parkinglot-id');
         
         args[1].headers = {
           ...args[1].headers,

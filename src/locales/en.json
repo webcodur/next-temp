@@ -613,5 +613,6 @@
 	"시설_예약완료": "Reservation Complete",
 	"시설_예약완료메시지": "Your seat reservation has been completed successfully.",
 	"시설_예약정보": "Reservation Information",
-	"시설_다시예약": "Make Another Reservation"
+	"시설_다시예약": "Make Another Reservation",
+	"메뉴_설명_animation": "Animation effects component test"
 }

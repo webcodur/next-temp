@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { usePageDescription } from '@/hooks/usePageDescription';
@@ -16,6 +16,8 @@ export default function AdminDetailPage() {
   const router = useRouter();
   const params = useParams();
   const adminId = Number(params.id);
+  const routerRef = useRef(router);
+  routerRef.current = router;
   
   console.log('AdminDetailPage 렌더링, params:', params, 'adminId:', adminId);
   
@@ -79,17 +81,17 @@ export default function AdminDetailPage() {
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
         alert(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        router.push('/parking/facility/admin');
+        routerRef.current.push('/parking/facility/admin');
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
       alert('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      router.push('/parking/facility/admin');
+      routerRef.current.push('/parking/facility/admin');
     } finally {
       setLoading(false);
       console.log('loadAdminData 완료');
     }
-  }, [adminId]); // router 의존성 제거
+  }, [adminId]);
 
   useEffect(() => {
     console.log('useEffect 실행, loadAdminData 호출');

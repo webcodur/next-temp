@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { Car, Check } from 'lucide-react';
 
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import { LicensePlate } from '@/components/ui/system-testing/license-plate';
+
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
 
@@ -85,7 +85,9 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 							<div className="mb-6 text-center">
 								<div className="flex flex-col gap-3 justify-center items-center">
 									<div className="relative cursor-pointer" onClick={() => handlePlateClick(vehicle.car_number)}>
-										<LicensePlate plateNumber={vehicle.car_number} width="320px" />
+										<span className="font-mono text-lg bg-muted px-4 py-2 rounded border">
+											{vehicle.car_number}
+										</span>
 										{copiedPlate === vehicle.car_number && (
 											<div className="absolute -top-8 left-1/2 px-2 py-0.5 text-xs rounded-lg shadow-lg transform -translate-x-1/2 text-success-foreground bg-success neu-raised animate-fadeIn">
 												<Check size={12} className="inline me-1" /> 복사됨
@@ -96,7 +98,9 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 										<div className="flex gap-2 justify-center items-center">
 											<span className="text-sm text-warning">변경됨</span>
 											<div className="relative cursor-pointer" onClick={() => handlePlateClick(vehicle.modify_car_number!)}>
-												<LicensePlate plateNumber={vehicle.modify_car_number} width="280px" />
+												<span className="font-mono text-base bg-muted px-3 py-1.5 rounded border">
+													{vehicle.modify_car_number}
+												</span>
 												{copiedPlate === vehicle.modify_car_number && (
 													<div className="absolute -top-8 left-1/2 px-2 py-0.5 text-xs rounded-lg shadow-lg transform -translate-x-1/2 text-success-foreground bg-success neu-raised animate-fadeIn">
 														<Check size={12} className="inline me-1" /> 복사됨
