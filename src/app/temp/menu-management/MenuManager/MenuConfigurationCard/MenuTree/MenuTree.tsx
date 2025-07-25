@@ -87,43 +87,63 @@ export function MenuTree({
   // #endregion
 
   // #region 렌더링
+  if (loading) {
+    return (
+      <div className="neu-inset rounded-xl p-8 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="neu-flat w-8 h-8 rounded-full animate-pulse"></div>
+          <span className="text-sm text-muted-foreground font-medium">메뉴 목록을 불러오는 중...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (menuTree.length === 0) {
+    return (
+      <div className="neu-inset rounded-xl p-8 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="neu-icon-inactive w-6 h-6 rounded-full"></div>
+          <span className="text-sm text-muted-foreground font-medium">메뉴 목록이 없습니다</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="neu-inset border-border max-h-[500px] overflow-y-auto scrollbar-gutter-stable p-2 rounded-xl bg-muted">
-      {!loading && menuTree.length > 0 ? (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
+    <div className="neu-inset rounded-xl max-h-[500px] overflow-y-auto scrollbar-gutter-stable">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <SortableContext
+          items={menuTree.map(menu => menu.id)}
+          strategy={verticalListSortingStrategy}
         >
-          <SortableContext
-            items={menuTree.map(menu => menu.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="space-y-0">
-              {menuTree.map((menu, index) => (
-                <MenuTreeItem
-                  key={menu.id}
-                  menu={menu}
-                  level={0}
-                  rowIndex={index}
-                  expandedMenus={expandedMenus}
-                  assignedMenuIds={assignedMenuIds}
-                  isReadOnly={isReadOnly}
-                  selectedParkingLot={selectedParkingLot}
-                  onToggleMenu={onToggleMenu}
-                  onToggleExpansion={onToggleExpansion}
-                  isDragOver={overId === menu.id}
-                />
-              ))}
-            </div>
-          </SortableContext>
-          
-          {/* DragOverlay 제거 - 기본 드래그 동작 사용 (더 안정적) */}
-        </DndContext>
-      ) : null}
+          <div className="p-2">
+            {menuTree.map((menu, index) => (
+              <MenuTreeItem
+                key={menu.id}
+                menu={menu}
+                level={0}
+                rowIndex={index}
+                expandedMenus={expandedMenus}
+                assignedMenuIds={assignedMenuIds}
+                isReadOnly={isReadOnly}
+                selectedParkingLot={selectedParkingLot}
+                onToggleMenu={onToggleMenu}
+                onToggleExpansion={onToggleExpansion}
+                isDragOver={overId === menu.id}
+              />
+            ))}
+          </div>
+        </SortableContext>
+        
+        {/* DragOverlay 제거 - 기본 드래그 동작 사용 (더 안정적) */}
+      </DndContext>
     </div>
   );
   // #endregion

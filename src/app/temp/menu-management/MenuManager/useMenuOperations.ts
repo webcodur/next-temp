@@ -4,7 +4,7 @@
   책임: 메뉴 데이터 로딩, 할당/해제, 저장 등의 작업 처리
 */ // ------------------------------
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { DragEndEvent } from '@dnd-kit/core';
 
 import { getAllMenuList } from '@/services/menu/menu_all_GET';
@@ -35,6 +35,11 @@ export function useMenuOperations() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<Set<number>>(new Set());
+  
+  // 유틸리티 상태
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSelectedOnly, setShowSelectedOnly] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'name' | 'level' | 'original'>('original');
   // #endregion
 
   // #region 유틸리티 함수
@@ -333,14 +338,137 @@ export function useMenuOperations() {
   }, [menuTree, allMenus, reorderMenusInTree]);
   // #endregion
 
+  // #region 유틸리티 함수
+  const toggleAllMenus = useCallback(() => {
+    const allMenuIds = allMenus.map(menu => menu.id);
+    if (expandedMenus.size === allMenuIds.length) {
+      setExpandedMenus(new Set());
+    } else {
+      setExpandedMenus(new Set(allMenuIds));
+    }
+  }, [allMenus, expandedMenus.size]);
+
+  const toggleSelectedOnlyView = useCallback(() => {
+    setShowSelectedOnly(!showSelectedOnly);
+  }, [showSelectedOnly]);
+
+  const handleSearchChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
+  const handleSortChange = useCallback((order: 'name' | 'level' | 'original') => {
+    setSortOrder(order);
+  }, []);
+
+  const resetAllFilters = useCallback(() => {
+    setSearchTerm('');
+    setShowSelectedOnly(false);
+    setSortOrder('original');
+  }, []);
+
+  // 메뉴 검색 함수
+  const searchInMenu = useCallback((menu: MenuItem, term: string): boolean => {
+    // 메뉴명에서 검색
+    if (menu.name.toLowerCase().includes(term.toLowerCase())) {
+      return true;
+    }
+    // 하위 메뉴에서 검색
+    if (menu.children) {
+      return menu.children.some(child => searchInMenu(child, term));
+    }
+    return false;
+  }, []);
+
+  // 선택된 하위 항목이 있는지 확인하는 헬퍼 함수
+  const hasSelectedDescendants = useCallback((menu: MenuItem): boolean => {
+    if (assignedMenuIds.has(menu.id)) {
+      return true;
+    }
+    if (menu.children) {
+      return menu.children.some(child => hasSelectedDescendants(child));
+    }
+    return false;
+  }, [assignedMenuIds]);
+
+  // 메뉴 필터링 함수
+  const filterMenu = useCallback((menu: MenuItem): MenuItem | null => {
+    const filteredMenu = { ...menu };
+    
+    // 하위 메뉴 필터링
+    if (menu.children) {
+      const filteredChildren = menu.children
+        .map(child => filterMenu(child))
+        .filter((child): child is MenuItem => child !== null);
+      
+      filteredMenu.children = filteredChildren;
+    }
+    
+    // 검색어 필터링
+    if (searchTerm && !searchInMenu(menu, searchTerm)) {
+      return null;
+    }
+    
+    // 선택된 항목만 보기 필터링
+    if (showSelectedOnly) {
+      const isCurrentSelected = assignedMenuIds.has(menu.id);
+      const hasSelectedChildren = menu.children?.some(child => 
+        child.children ? hasSelectedDescendants(child) : assignedMenuIds.has(child.id)
+      );
+      
+      if (!isCurrentSelected && !hasSelectedChildren) {
+        return null;
+      }
+    }
+    
+    return filteredMenu;
+  }, [searchTerm, showSelectedOnly, assignedMenuIds, searchInMenu, hasSelectedDescendants]);
+
+  // 메뉴 정렬 함수
+  const sortMenus = useCallback((menus: MenuItem[]): MenuItem[] => {
+    const sortedMenus = [...menus];
+    
+    if (sortOrder === 'name') {
+      sortedMenus.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    } else if (sortOrder === 'level') {
+      sortedMenus.sort((a, b) => a.level - b.level);
+    }
+    // 'original'인 경우 원래 순서 유지
+    
+    // 하위 메뉴도 재귀적으로 정렬
+    return sortedMenus.map(menu => ({
+      ...menu,
+      children: menu.children ? sortMenus(menu.children) : undefined
+    }));
+  }, [sortOrder]);
+
+  // 필터링된 메뉴 트리 계산
+  const filteredMenuTree = useMemo(() => {
+    let filtered = menuTree
+      .map(menu => filterMenu(menu))
+      .filter((menu): menu is MenuItem => menu !== null);
+    
+    // 정렬 적용
+    if (sortOrder !== 'original') {
+      filtered = sortMenus(filtered);
+    }
+    
+    return filtered;
+  }, [menuTree, filterMenu, sortMenus, sortOrder]);
+  // #endregion
+
   return {
     // 상태
     allMenus,
-    menuTree,
+    menuTree: filteredMenuTree, // 필터링된 메뉴 트리 반환
     assignedMenuIds,
     loading,
     saving,
     expandedMenus,
+    
+    // 유틸리티 상태
+    searchTerm,
+    showSelectedOnly,
+    sortOrder,
     
     // 함수
     loadAllMenus,
@@ -349,6 +477,13 @@ export function useMenuOperations() {
     toggleMenuExpansion,
     saveChanges,
     clearAssignedMenus,
+    
+    // 유틸리티 함수
+    toggleAllMenus,
+    toggleSelectedOnlyView,
+    handleSearchChange,
+    handleSortChange,
+    resetAllFilters,
     
     // DND 함수
     handleDragEnd,

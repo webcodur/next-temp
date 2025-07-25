@@ -22,6 +22,20 @@ export interface CarAllowType {
 	deleted_at?: string | null;
 }
 
+// 차량 유형 정책 타입
+export type VehicleType = 
+	| '입주'
+	| '방문'
+	| '업무'
+	| '정기'
+	| '임대'
+	| '상가'
+	| '미등록'
+	| '택시(택배 포함)';
+
+// 차량 유형별 통과 정책
+export type VehicleAccessPolicy = Record<VehicleType, boolean>;
+
 // 차단기 운행 모드 타입
 export type OperationMode = 'always-open' | 'auto-operation' | 'bypass';
 

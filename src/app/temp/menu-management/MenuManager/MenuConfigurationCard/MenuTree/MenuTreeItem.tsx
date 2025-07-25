@@ -81,21 +81,23 @@ export function MenuTreeItem({
         ref={setNodeRef}
         style={style}
         onClick={() => !isReadOnly && onToggleMenu(menu.id)}
-        className={`group ${
+        className={`group relative ${
           !isReadOnly ? 'cursor-pointer' : 'cursor-default'
         } ${
           isDragOver 
-            ? 'bg-primary/10' 
+            ? 'neu-flat-brand' 
             : isAssigned 
-              ? 'bg-primary/5' 
-              : isReadOnly 
-                ? 'hover:bg-accent active:scale-[0.998]' 
-                : 'hover:bg-accent active:scale-[0.998]'
-        } ${isDragging ? 'z-50' : ''} transition-all duration-150`}
+              ? // active 상태: 연한 accent 배경 + 호버시 더 진한 accent
+                'bg-accent/8 neu-flat hover:bg-accent/15 hover:neu-raised focus-within:bg-accent/15 focus-within:neu-raised' 
+              : // normal 상태: 기본 배경 + 호버시 연한 배경
+                'bg-transparent neu-flat hover:bg-muted/50 hover:neu-raised focus-within:bg-muted/50 focus-within:neu-raised'
+        } ${isDragging ? 'z-50' : ''} 
+        rounded-lg mx-1 my-0.5 transition-all duration-200 focus-within:ring-2 focus-within:ring-accent/30`}
       >
         <div
-          className="flex items-center gap-1 py-2 px-4 min-h-[44px]"
-          style={{ marginLeft: `${level * 50}px` }}
+          className={`flex items-center gap-1 py-2 px-4 h-[44px] ${
+            level > 0 ? `ms-[${level * 50}px]` : ''
+          }`}
         >
           {/* 드래그 핸들 (mid/bot 메뉴에만 표시) */}
           {shouldShowDragHandle && (
@@ -103,16 +105,19 @@ export function MenuTreeItem({
               {...(isDragEnabled ? attributes : {})}
               {...(isDragEnabled ? listeners : {})}
               onClick={(e) => e.stopPropagation()}
-              className={`flex flex-shrink-0 justify-center items-center w-6 h-6 ${
+              className={`flex flex-shrink-0 justify-center items-center w-6 h-6 rounded ${
                 isDragEnabled 
-                  ? 'cursor-grab active:cursor-grabbing' 
+                  ? 'cursor-grab active:cursor-grabbing hover:bg-accent/30' 
                   : 'cursor-not-allowed'
-              }`}
+              } transition-all duration-150`}
+              tabIndex={isDragEnabled ? 0 : -1}
+              role={isDragEnabled ? "button" : undefined}
+              aria-label={isDragEnabled ? "메뉴 순서 변경" : undefined}
             >
               <GripVertical className={`w-4 h-4 transition-colors duration-150 ${
                 isDragEnabled 
-                  ? 'text-muted-foreground hover:text-foreground' 
-                  : 'text-muted-foreground/50'
+                  ? 'text-muted-foreground group-hover:text-foreground' 
+                  : 'text-muted-foreground/30'
               }`} />
             </div>
           )}
@@ -125,17 +130,25 @@ export function MenuTreeItem({
                   e.stopPropagation();
                   onToggleExpansion(menu.id);
                 }}
-                className="neu-flat flex justify-center items-center w-5 h-5 rounded-full cursor-pointer hover:bg-accent active:scale-95 transition-all duration-150"
+                className={`flex justify-center items-center w-5 h-5 rounded-full cursor-pointer transition-all duration-150 ${
+                  isAssigned
+                    ? 'bg-accent/15 hover:bg-accent/25 focus:bg-accent/25'
+                    : 'bg-muted/30 hover:bg-muted/50 focus:bg-muted/50'
+                } focus:outline-none active:scale-95`}
+                aria-label={isExpanded ? "하위 메뉴 접기" : "하위 메뉴 펼치기"}
+                aria-expanded={isExpanded}
               >
                 {isExpanded ? (
-                  <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                  <ChevronDown className={`w-3 h-3 ${isAssigned ? 'text-accent-foreground' : 'text-muted-foreground'}`} />
                 ) : (
-                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                  <ChevronRight className={`w-3 h-3 ${isAssigned ? 'text-accent-foreground' : 'text-muted-foreground'}`} />
                 )}
               </button>
             ) : (
               <div className="flex justify-center items-center w-5 h-5 rounded-full">
-                <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full" />
+                <div className={`w-1.5 h-1.5 rounded-full ${
+                  isAssigned ? 'bg-accent/50' : 'bg-muted-foreground/40'
+                }`} />
               </div>
             )}
           </div>
@@ -146,28 +159,32 @@ export function MenuTreeItem({
               !isReadOnly ? 'cursor-pointer' : 'cursor-default'
             } ${
               isAssigned 
-                ? (menu.level === 1 ? 'font-bold text-primary text-lg' : 
-                   menu.level === 2 ? 'font-semibold text-primary/90 text-base' : 
-                   'font-medium text-primary/80 text-sm')
-                : (menu.level === 1 ? 'font-bold text-foreground text-lg group-hover:text-primary' : 
+                ? (menu.level === 1 ? 'font-bold text-foreground text-lg group-hover:text-foreground/90' : 
+                   menu.level === 2 ? 'font-semibold text-foreground text-base group-hover:text-foreground/90' : 
+                   'font-medium text-foreground/90 text-sm group-hover:text-foreground/80')
+                : (menu.level === 1 ? 'font-bold text-foreground text-lg group-hover:text-foreground' : 
                    menu.level === 2 ? 'font-semibold text-muted-foreground text-base group-hover:text-foreground' : 
                    'font-medium text-muted-foreground text-sm group-hover:text-foreground')
-            } transition-colors duration-150`}
-
+            } transition-colors duration-200`}
           >
             {menu.name}
           </span>
 
           {/* 체크박스 */}
           <div 
-            className="flex flex-shrink-0 justify-center items-center ml-2"
+            className="flex flex-shrink-0 justify-center items-center ms-2"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="neu-flat p-1 rounded-lg hover:bg-accent active:scale-95 transition-all duration-150">
+            <div className={`p-1 rounded-lg transition-all duration-150 ${
+              isAssigned
+                ? 'bg-accent/10 hover:bg-accent/20 focus-within:bg-accent/20'
+                : 'bg-muted/20 hover:bg-muted/40 focus-within:bg-muted/40'
+            }`}>
               <SimpleCheckbox
                 checked={isAssigned}
                 onChange={() => !isReadOnly && onToggleMenu(menu.id)}
                 disabled={isReadOnly}
+                aria-label={`${menu.name} 메뉴 ${isAssigned ? '해제' : '선택'}`}
               />
             </div>
           </div>

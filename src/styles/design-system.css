@@ -2,32 +2,52 @@
 
 /*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚗 TESLA BLACK/WHITE DESIGN SYSTEM - 완전한 무채색 그레이스케일
+🚗 TESLA BLACK/WHITE DESIGN SYSTEM - 완전한 무채색 그레이스케일 + 동적 브랜드 컬러
 
 🎨 테마 철학
-┌─ 100% 무채색      │ HSL Hue: 0, Saturation: 0%
+┌─ 100% 무채색      │ HSL Hue: 0, Saturation: 0% (그레이스케일 기본)
 ├─ 밝기로만 계층구분 │ Lightness만으로 모든 UI 계층 표현
 ├─ 테슬라 미니멀리즘 │ 차량 대시보드의 직관적 인터페이스
+├─ 동적 브랜드 컬러  │ 6개 테마별 Primary + Secondary 듀얼 색상 시스템
 └─ 즉각적 반응성    │ 부드럽고 빠른 사용자 인터랙션
 
 📐 시스템 구조
 ├─ 01-fonts.css       │ MultiLang 폰트 (한국어/아랍어/영어)
-├─ 02-variables.css    │ 무채색 변수 + 테마 매핑
+├─ 02-variables.css    │ 무채색 변수 + 동적 브랜드 컬러 시스템
 ├─ 03-base.css         │ 기본 HTML 스타일
-├─ 04-neumorphism.css  │ 뉴모피즘 컴포넌트 시스템
+├─ 04-neumorphism.css  │ 뉴모피즘 컴포넌트 시스템 (Primary/Secondary 지원)
 ├─ 05-animations.css   │ 애니메이션 유틸리티
 └─ 06-utilities.css    │ 기타 유틸리티 클래스
 
-🎯 사용 가이드
-┌─ 배경 요소  │ --background, --card, --muted (순차 매핑)
-├─ 텍스트 요소│ --foreground, --primary, --secondary (역순 매핑)
-├─ 뉴모피즘   │ neu-flat (평면), neu-raised (양각), neu-inset (음각)
-└─ 애니메이션 │ 0.15s 즉시 반응, 0.25s 부드러운 전환
+🎯 색상 사용 가이드
+┌─ 배경 요소      │ --background, --card, --muted (순차 매핑)
+├─ 텍스트 요소    │ --foreground, --secondary, --accent (역순 매핑)
+├─ 브랜드 Primary │ --primary, --primary-0~9 (10단계 동적 스케일)
+├─ 브랜드 Secondary │ --secondary, --secondary-0~9 (10단계 동적 스케일)
+├─ 뉴모피즘       │ neu-flat, neu-raised, neu-inset (Primary/Secondary)
+└─ 애니메이션     │ 0.15s 즉시 반응, 0.25s 부드러운 전환
+
+🌈 동적 색상 테마 시스템
+┌─ 로맨틱 핑크     │ 'pink-purple' (기본) - 따뜻하고 친근한 느낌
+├─ 에너제틱 코랄  │ 'coral-orange' - 활기차고 에너지 넘치는 느낌
+├─ 프로페셔널 인디고│ 'indigo-violet' - 차분하고 신뢰감 있는 프리미엄
+├─ 모던 틸       │ 'teal-cyan' - 모던하고 테크적인 느낌
+├─ 프레시 라임    │ 'lime-green' - 신선하고 역동적인 느낌
+└─ 패셔너블 로즈  │ 'rose-red' - 세련되고 감각적인 느낌
+
+🔧 색상 스케일 시스템
+각 테마는 Primary 10단계 + Secondary 10단계로 총 20개 색상 변수 제공:
+┌─ 라이트 테마: 0(가장밝음) → 9(가장어둠)
+├─ 다크 테마: 0(가장어둠) → 9(가장밝음) - 자동 반전
+├─ 호버 상태: primary-hover, secondary-hover (8% 변화)
+├─ 액티브 상태: primary-active, secondary-active (15% 변화)
+└─ 런타임 변경: useColorSet() 훅으로 즉시 테마 전환
 
 💡 라이트/다크 모드
-- 라이트: 밝은 배경(98%) + 어두운 텍스트(5%)
-- 다크: 어두운 배경(8%) + 밝은 텍스트(95%)
+- 라이트: 밝은 배경(98%) + 어두운 텍스트(5%) + 적정 브랜드 명도
+- 다크: 어두운 배경(8%) + 밝은 텍스트(95%) + 최적화된 브랜드 명도
 - 배경 요소는 명도 관계 유지, 텍스트는 의미적 역할 유지
+- 브랜드 컬러는 각 테마별로 가독성과 미감을 고려한 명도 조정
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */
 

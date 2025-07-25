@@ -6,16 +6,11 @@ interface SectionPanelProps {
 	title?: string;
 	children: ReactNode;
 	className?: string;
-	headerClassName?: string;
 	contentClassName?: string;
 	headerActions?: ReactNode; // 헤더 우측에 추가 요소
 	icon?: ReactNode; // 헤더 좌측 아이콘
 	colorVariant?: 'primary' | 'secondary';
-}
-
-interface SectionPanelHeaderProps {
-	children: ReactNode;
-	className?: string;
+	headerContent?: ReactNode; // 완전 커스텀 헤더 (title, icon, headerActions 무시)
 }
 
 interface SectionPanelContentProps {
@@ -29,13 +24,13 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	title,
 	children,
 	className = '',
-	headerClassName = '',
 	contentClassName = '',
 	headerActions,
 	icon,
 	colorVariant = 'primary',
+	headerContent,
 }) => {
-	const hasHeader = title || headerActions || icon;
+	const hasHeader = title || headerActions || icon || headerContent;
 
 	// 색상 variant에 따른 듀얼 그라데이션 스타일 (Primary + Secondary 조합)
 	const headerGradientClass = colorVariant === 'primary' 
@@ -44,52 +39,46 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 
 	return (
 		<div className={clsx(
-			'flex flex-col neu-flat bg-surface-2',
+			'flex overflow-hidden flex-col rounded-lg neu-flat',
 			className
 		)}>
 			{hasHeader && (
 				<div className={clsx(
-					'flex flex-shrink-0 items-center px-4 py-3 rounded-t-lg',
-					headerGradientClass,
-					headerClassName
+					'flex flex-shrink-0 items-center',
+					// headerContent가 있으면 패딩 제거, 없으면 패딩과 그라데이션 적용
+					headerContent ? '' : 'px-4 py-2',
+					!headerContent && headerGradientClass,
 				)}>
-					{/* 헤더: 중앙 배치 스타일 */}
-					<div className="flex flex-1 justify-center items-center h-10">
-						{icon && <span className="flex-shrink-0 mr-2">{icon}</span>}
-						{title && (
-							<h2 className="text-lg font-bold text-white font-multilang">
-								{title}
-							</h2>
-						)}
-					</div>
-					{headerActions && (
-						<div className="flex-shrink-0">
-							{headerActions}
-						</div>
+					{headerContent ? (
+						// 완전 커스텀 헤더
+						headerContent
+					) : (
+						// 기본 헤더 구조
+						<>
+							{/* 헤더: 중앙 배치 스타일 */}
+							<div className="flex flex-1 justify-center items-center h-8">
+								{icon && <span className="flex-shrink-0 mr-2">{icon}</span>}
+								{title && (
+									<h2 className="text-base font-bold text-white font-multilang">
+										{title}
+									</h2>
+								)}
+							</div>
+							{headerActions && (
+								<div className="flex-shrink-0">
+									{headerActions}
+								</div>
+							)}
+						</>
 					)}
 				</div>
 			)}
 			<SectionPanelContent className={clsx(
-				hasHeader ? 'rounded-b-lg' : 'rounded-lg',
+				'bg-surface-2',
 				contentClassName
 			)}>
 				{children}
 			</SectionPanelContent>
-		</div>
-	);
-};
-
-// 독립적으로 사용할 수 있는 헤더 컴포넌트 (고정 스타일링)
-export const SectionPanelHeader: React.FC<SectionPanelHeaderProps> = ({
-	children,
-	className = '',
-}) => {
-	return (
-		<div className={clsx(
-			'flex flex-shrink-0 justify-between items-center px-4 py-3 rounded-t-lg border-b border-border/20',
-			className
-		)}>
-			{children}
 		</div>
 	);
 };

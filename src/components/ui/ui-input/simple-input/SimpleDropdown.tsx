@@ -44,9 +44,10 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				setIsOpen(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
+		// click 이벤트 사용으로 변경 (mousedown보다 안정적)
+		document.addEventListener('click', handleClickOutside);
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('click', handleClickOutside);
 		};
 	}, []);
 
@@ -193,7 +194,8 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 			{/* 드롭다운 메뉴 */}
 			{isOpen && (
 				<div 
-					className="absolute right-0 left-0 top-full z-[9999] mt-1 rounded-lg border shadow-lg border-border bg-background"
+					className="absolute right-0 left-0 top-full z-[9999] mt-1 rounded-lg border shadow-lg border-border bg-background/95 backdrop-blur-sm"
+					style={{ backgroundColor: 'hsl(var(--background))' }}
 				>
 					<ul id="dropdown-listbox" role="listbox" className="overflow-auto py-1 max-h-60">
 						{options.map((option) => (
@@ -202,14 +204,19 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 								className={`px-3 py-2 text-sm cursor-pointer ${
 									option.disabled
 										? 'opacity-50 cursor-not-allowed'
-										: 'hover:bg-muted'
+										: 'hover:bg-muted transition-colors duration-150'
 								} ${
 									option.value === value
 										? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
 										: 'text-foreground'
 								}`}
-								style={{ transition: 'none' }}
+								onMouseDown={(e) => {
+									// preventDefault로 input blur 방지
+									e.preventDefault();
+									e.stopPropagation();
+								}}
 								onClick={(e) => {
+									e.preventDefault();
 									e.stopPropagation();
 									if (!option.disabled) {
 										handleSelect(option.value);

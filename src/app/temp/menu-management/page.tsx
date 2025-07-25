@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from 'react';
 
+
 import { useAtom } from 'jotai';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -30,7 +31,6 @@ export default function MenuManagementPage() {
   useEffect(() => {
     setPageTitle('메뉴 관리');
     setPageDescription('주차장별 메뉴 권한을 설정합니다.');
-
     return () => {
       setPageTitle(null);
       setPageDescription('');

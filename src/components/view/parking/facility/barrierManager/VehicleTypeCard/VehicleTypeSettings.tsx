@@ -1,23 +1,13 @@
 import React from 'react';
 
+import { VehicleAccessPolicy, VehicleType } from '@/types/parking';
+import { VEHICLE_TYPES } from '@/data/vehiclePolicyData';
+
 interface VehicleTypeSettingsProps {
-  policies: Record<string, boolean>;
-  onPolicyUpdate: (policies: Record<string, boolean>) => void;
+  policies: VehicleAccessPolicy;
+  onPolicyUpdate: (policies: VehicleAccessPolicy) => void;
   isEditMode?: boolean;
 }
-
-// #region 차량 유형 카테고리
-const vehicleTypeCategories = [
-  '입주',
-  '방문',
-  '업무',
-  '정기',
-  '임대',
-  '상가',
-  '미등록',
-  '택시(택배 포함)',
-];
-// #endregion
 
 // #region 출입 유형 차량 설정 컴포넌트
 const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
@@ -27,7 +17,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
 }) => {
 
   // 정책 토글
-  const handleTogglePolicy = (category: string) => {
+  const handleTogglePolicy = (category: VehicleType) => {
     if (!isEditMode) return;
     
     const newPolicies = {
@@ -43,7 +33,7 @@ const VehicleTypeSettings: React.FC<VehicleTypeSettingsProps> = ({
 
       {/* 정책 목록 */}
       <div className="grid grid-cols-2 gap-2">
-        {vehicleTypeCategories.map((category) => {
+        {VEHICLE_TYPES.map((category) => {
           const isEnabled = policies[category] || false;
           
           return (
