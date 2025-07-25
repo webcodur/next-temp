@@ -10,7 +10,6 @@ import { useCallback } from 'react';
 import { useAtom } from 'jotai';
 import { refreshTokenWithString } from '@/services/auth/auth_refresh_POST';
 import { parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
-import { loadMenuDataAtom } from '@/store/menu';
 import { 
   getTokenFromCookie, 
   setTokenToCookie, 
@@ -21,7 +20,6 @@ import {
 export function useTokenManagement() {
   const [, setParkingLots] = useAtom(parkingLotsAtom);
   const [, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
-  const [, loadMenuData] = useAtom(loadMenuDataAtom);
 
   // 토큰 자동 갱신 처리
   const refreshToken = useCallback(async (): Promise<boolean> => {
@@ -45,22 +43,12 @@ export function useTokenManagement() {
         }
         
         // parkingLotId 처리
-        let finalParkingLotId: number | null = null;
         if (result.data.parkingLotId !== undefined) {
-          finalParkingLotId = result.data.parkingLotId;
           setSelectedParkingLotId(result.data.parkingLotId);
         } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
-          finalParkingLotId = result.data.parkinglots[0].id;
           setSelectedParkingLotId(result.data.parkinglots[0].id);
         } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
-          finalParkingLotId = 0;
           setSelectedParkingLotId(0);
-        }
-        
-        // 토큰 갱신 완료 후 메뉴 초기화
-        if (finalParkingLotId !== null) {
-          const menuParkingLotId = finalParkingLotId > 0 ? finalParkingLotId : undefined;
-          await loadMenuData(menuParkingLotId);
         }
         
         return true;
@@ -70,7 +58,7 @@ export function useTokenManagement() {
     } catch {
       return false;
     }
-  }, [setParkingLots, loadMenuData, setSelectedParkingLotId]);
+  }, [setParkingLots, setSelectedParkingLotId]);
 
   return {
     refreshToken,

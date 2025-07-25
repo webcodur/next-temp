@@ -10,13 +10,12 @@ import { useState } from 'react';
 import { useAtom } from 'jotai';
 import { Menu } from 'lucide-react';
 
-import { useMenuData } from '@/hooks/useMenuData';
+import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
 import { sidebarCollapsedAtom, activeTopMenuAtom } from '@/store/sidebar';
 
 export function PrimaryBar() {
 	// #region 상태
-	const { menuData, loading, error } = useMenuData();
 	const [isCollapsed, setIsCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [activeTopMenu, setActiveTopMenu] = useAtom(activeTopMenuAtom);
 	const [clickedMenu, setClickedMenu] = useState<string>('');
@@ -76,19 +75,7 @@ export function PrimaryBar() {
 
 			{/* 메뉴 아이콘 리스트 */}
 			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
-				{loading && (
-					<div className="w-12 h-12 rounded-xl flex items-center justify-center animate-pulse bg-surface-3">
-						<div className="w-6 h-6 bg-surface-4 rounded"></div>
-					</div>
-				)}
-				
-				{error && (
-					<div className="w-12 h-12 rounded-xl flex items-center justify-center bg-red-100 border border-red-300">
-						<span className="text-xs text-red-600">!</span>
-					</div>
-				)}
-				
-				{!loading && !error && topKeys.map((topKey) => {
+				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = activeTopMenu === topKey;
 					const isClicked = clickedMenu === topKey;

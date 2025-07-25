@@ -11,7 +11,6 @@ import { useAtom } from 'jotai';
 import { useLocale } from '@/hooks/useI18n';
 import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
 import { useAuth } from '@/hooks/useAuth';
-// import { useMenuData } from '@/hooks/useMenuData';
 // store
 import { initPrimaryColorAtom } from '@/store/primary';
 import { initTheme } from '@/store/theme';
@@ -67,7 +66,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	// #region 훅
 	const { isLoggedIn, selectedParkingLotId } = useAuth();
 	const { isRTL } = useLocale();
-	// const { menuData, loading: menuLoading, error: menuError } = useMenuData(); // 메뉴 데이터를 최상위에서 관리
 	const [isCollapsed] = useAtom(sidebarCollapsedAtom);
 	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [isAnimating, setIsAnimating] = useState(false);

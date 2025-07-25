@@ -23,7 +23,7 @@ import {
 } from '@dnd-kit/sortable';
 
 import { useTranslations } from '@/hooks/useI18n';
-import { useMenuData } from '@/hooks/useMenuData';
+import { menuData } from '@/data/menuData';
 import { useDragAndDropMenu, getBotMenuId, getMidMenuId } from '@/hooks/useDragAndDropMenu';
 import { activeTopMenuAtom, endPanelWidthAtom } from '@/store/sidebar';
 import { defaults } from '@/data/sidebarConfig';
@@ -40,7 +40,6 @@ import { ResizeHandle } from '../ResizeHandle/ResizeHandle';
 function SecondaryPanel() {
 	// #region 훅
 	const t = useTranslations();
-	const { menuData, loading, error } = useMenuData();
 	const [activeTopMenu] = useAtom(activeTopMenuAtom);
 	const [endPanelWidth] = useAtom(endPanelWidthAtom);
 	const [localMidItems, setLocalMidItems] = useState<{ [key: string]: MidMenu }>({});
@@ -140,37 +139,6 @@ function SecondaryPanel() {
 	// #endregion
 
 	// #region 렌더링
-	if (loading) {
-		return (
-			<div
-				style={{ width: `${endPanelWidth}px` }}
-				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
-				<div className="flex justify-center items-center h-full">
-					<div className="w-8 h-8 rounded-full border-b-2 animate-spin border-primary"></div>
-				</div>
-				<ResizeHandle minWidth={defaults.minResizeWidth} maxWidth={defaults.maxResizeWidth} />
-			</div>
-		);
-	}
-
-	if (error) {
-		return (
-			<div
-				style={{ width: `${endPanelWidth}px` }}
-				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
-				<div className="flex flex-col justify-center items-center p-4 h-full">
-					<div className="text-sm text-center text-red-500">
-						메뉴 로딩 실패
-					</div>
-					<div className="mt-2 text-xs text-center text-muted-foreground">
-						{error}
-					</div>
-				</div>
-				<ResizeHandle minWidth={defaults.minResizeWidth} maxWidth={defaults.maxResizeWidth} />
-			</div>
-		);
-	}
-
 	if (!topData) return null;
 
 	const allMidKeys = Object.keys(localMidItems);

@@ -11,7 +11,6 @@ import { useEffect, useTransition } from 'react';
 import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
 import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
 import { isAuthenticatedAtom, userAtom, parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
-import { loadMenuDataAtom } from '@/store/menu';
 import { useTokenManagement } from './useTokenManagement';
 import { useParkingLotManagement } from './useParkingLotManagement';
 import { 
@@ -29,7 +28,6 @@ export function useAuth() {
   const [user, setUser] = useAtom(userAtom);
   const [, setParkingLots] = useAtom(parkingLotsAtom);
   const [, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
-  const [, loadMenuData] = useAtom(loadMenuDataAtom);
 
   // 분리된 훅들 사용
   const { refreshToken } = useTokenManagement();
@@ -65,14 +63,6 @@ export function useAuth() {
       }
     }
   }, [isLoggedIn, setIsLoggedIn, setUser, setParkingLots, setSelectedParkingLotId, refreshToken]);
-
-  // 로그인 상태 변경 시 메뉴 로딩
-  useEffect(() => {
-    if (isLoggedIn && selectedParkingLotId !== null) {
-      const menuParkingLotId = selectedParkingLotId > 0 ? selectedParkingLotId : undefined;
-      loadMenuData(menuParkingLotId);
-    }
-  }, [isLoggedIn, selectedParkingLotId, loadMenuData]);
   // #endregion
 
   // #region 인증 액션
@@ -104,22 +94,12 @@ export function useAuth() {
     }
     
     // parkingLotId 처리
-    let finalParkingLotId: number | null = null;
     if (result.data.parkingLotId !== undefined) {
-      finalParkingLotId = result.data.parkingLotId;
       setSelectedParkingLotId(result.data.parkingLotId);
     } else if (result.data.parkinglots && result.data.parkinglots.length === 1) {
-      finalParkingLotId = result.data.parkinglots[0].id;
       setSelectedParkingLotId(result.data.parkinglots[0].id);
     } else if (result.data.parkinglots && result.data.parkinglots.length > 1) {
-      finalParkingLotId = 0;
       setSelectedParkingLotId(0);
-    }
-
-    // 메뉴 로딩
-    if (finalParkingLotId !== null) {
-      const menuParkingLotId = finalParkingLotId > 0 ? finalParkingLotId : undefined;
-      await loadMenuData(menuParkingLotId);
     }
 
     return { success: true };

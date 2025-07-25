@@ -1,43 +1,199 @@
-import { FlaskConical, Construction } from 'lucide-react';
+import { Car, Network, Megaphone, FlaskConical } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-	프리뷰: {
-		icon: Construction,
-		key: '프리뷰',
+	주차: {
+		icon: Car,
+		key: '주차',
 		midItems: {
-			시스템관리: {
-				key: '시스템관리',
+			시설관리: {
+				key: '시설관리',
 				botItems: [
 					{
-						key: '메뉴관리',
-						href: '/preview/menu-management',
+						key: '주차장정보 (목업)',
+						href: '/parking/facility/info',
+					},
+					{
+						key: '근무자관리',
+						href: '/parking/facility/admin',
+					},
+					{
+						key: '차단기설정 (목업)',
+						href: '/parking/facility/barrier',
+					},
+					{
+						key: '출입정책 (목업)',
+						href: '/parking/facility/entry',
 					},
 				],
 			},
-			세대관리: {
-				key: '세대관리',
+			이용자관리: {
+				key: '이용자관리',
 				botItems: [
 					{
-						key: '세대목록',
-						href: '/preview/household',
+						key: '입출차관리',
+						href: '/member/entryexit',
 					},
 					{
-						key: '세대등록',
-						href: '/preview/household/create',
+						key: '차량등록',
+						href: '/member/member',
 					},
 					{
-						key: '거주이력',
-						href: '/preview/household/instances',
+						key: '방문자관리',
+						href: '/member/visitor',
+					},
+					{
+						key: '세대관리',
+						href: '/member/resident-household',
+					},
+					{
+						key: '블랙리스트',
+						href: '/member/blacklist',
+					},
+				],
+			},
+			상가관리: {
+				key: '상가관리',
+				botItems: [
+					{
+						key: '점포현황',
+						href: '/parking/stores/status',
+					},
+				],
+			},
+			보안순찰: {
+				key: '보안순찰',
+				botItems: [
+					{
+						key: '순찰일지',
+						href: '/parking/security/patrol-log',
+					},
+					{
+						key: '순찰설정',
+						href: '/parking/security/patrol-config',
+					},
+				],
+			},
+			결제정산: {
+				key: '결제정산',
+				botItems: [
+					{
+						key: '할인권관리',
+						href: '/parking/payment/discounts',
+					},
+					{
+						key: '정산기관리',
+						href: '/parking/payment/settlement',
+					},
+					{
+						key: '결제관리',
+						href: '/parking/payment/billing',
 					},
 				],
 			},
 		},
 	},
-	
-	연구소: {
+	커뮤니티: {
+		icon: Network,
+		key: '커뮤니티',
+		midItems: {
+			시설서비스: {
+				key: '시설서비스',
+				botItems: [
+					{
+						key: '시설상품등록',
+						href: '/community/facilities/registration',
+					},
+					{
+						key: '예약현황',
+						href: '/community/facilities/reservations',
+					},
+					{
+						key: '출입관리',
+						href: '/community/facilities/access',
+					},
+					{
+						key: '정산관리',
+						href: '/community/facilities/settlement',
+					},
+				],
+			},
+			소통관리: {
+				key: '소통관리',
+				botItems: [
+					{
+						key: '일대일게시판',
+						href: '/community/communication/board',
+					},
+					{
+						key: '신문고관리',
+						href: '/community/communication/suggestions',
+					},
+				],
+			},
+			생활서비스: {
+				key: '생활서비스',
+				botItems: [
+					{
+						key: '관리비',
+						href: '/community/services/maintenance-fee',
+					},
+					{
+						key: '전자투표',
+						href: '/community/services/voting',
+					},
+					{
+						key: '택배관리',
+						href: '/community/services/delivery',
+					},
+				],
+			},
+		},
+	},
+	공지사항: {
+		icon: Megaphone,
+		key: '공지사항',
+		midItems: {
+			공지관리: {
+				key: '공지관리',
+				botItems: [
+					{
+						key: '일반공지',
+						href: '/announcement/notices/general',
+					},
+					{
+						key: '긴급공지',
+						href: '/announcement/notices/emergency',
+					},
+					{
+						key: '이벤트공지',
+						href: '/announcement/notices/event',
+					},
+				],
+			},
+			푸시알림: {
+				key: '푸시알림',
+				botItems: [
+					{
+						key: '알림발송',
+						href: '/announcement/push/send',
+					},
+					{
+						key: '발송이력',
+						href: '/announcement/push/history',
+					},
+					{
+						key: '템플릿관리',
+						href: '/announcement/push/template',
+					},
+				],
+			},
+		},
+	},
+
+  연구소: {
 		icon: FlaskConical,
 		key: '연구소',
 		midItems: {
@@ -186,7 +342,6 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-
 		},
 	},
 };
