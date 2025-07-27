@@ -22,10 +22,12 @@ interface LoginFormData {
 interface LoginFormProps {
 	onSubmit: (data: LoginFormData) => void;
 	isLoading?: boolean;
+	isDevelopment?: boolean;
+	onDevBypass?: () => void;
 }
 // #endregion
 
-export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
+export function LoginForm({ onSubmit, isLoading = false, isDevelopment = false, onDevBypass }: LoginFormProps) {
 	// #region 상태
 	const [formData, setFormData] = useState<LoginFormData>({
 		username: '',
@@ -186,6 +188,19 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 				>
 					{isLoading ? '로그인 중...' : '로그인'}
 				</Button>
+
+				{/* 개발자 모드 우회 버튼 */}
+				{isDevelopment && (
+					<Button 
+						type="button"
+						onClick={onDevBypass}
+						className="w-full h-11 mt-3 font-multilang border-2 border-dashed" 
+						variant="secondary"
+						disabled={isLoading}
+					>
+						🚀 개발자 로그인 우회
+					</Button>
+				)}
 			</form>
 		</div>
 	);

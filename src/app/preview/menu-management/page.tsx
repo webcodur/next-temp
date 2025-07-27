@@ -2,36 +2,22 @@
   파일명: /app/preview/menu-management/page.tsx
   기능: 주차장별 메뉴 권한 관리 페이지
   책임: 페이지 타이틀 관리 및 하위 컴포넌트 조율
+  메뉴 설명: 주차장별 메뉴 권한을 설정
 */ // ------------------------------
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAtom } from 'jotai';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
 import { MenuManager } from './MenuManager/MenuManager';
 
 export default function MenuManagementPage() {
   // #region 상태
-  const [, setPageTitle] = useAtom(pageTitleAtom);
-  const [, setPageDescription] = useAtom(pageDescriptionAtom);
   const [selectedParkingLot, setSelectedParkingLot] = useState<number | null>(null);
   // #endregion
 
   // #region 훅
   const { parkingLots } = useAuth();
-  // #endregion
-
-  // #region 생명주기
-  useEffect(() => {
-    setPageTitle('메뉴 관리');
-    setPageDescription('주차장별 메뉴 권한을 설정합니다.');
-    return () => {
-      setPageTitle(null);
-      setPageDescription('');
-    };
-  }, [setPageTitle, setPageDescription]);
   // #endregion
 
   // #region 이벤트 핸들러

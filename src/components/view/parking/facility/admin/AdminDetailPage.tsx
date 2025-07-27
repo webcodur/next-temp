@@ -1,9 +1,10 @@
+/* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { usePageDescription } from '@/hooks/usePageDescription';
+
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import AdminForm, { AdminFormData } from './AdminForm';
@@ -21,7 +22,7 @@ export default function AdminDetailPage() {
   
   console.log('AdminDetailPage 렌더링, params:', params, 'adminId:', adminId);
   
-  usePageDescription('관리자 상세 정보를 조회하고 수정합니다.');
+  
 
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);

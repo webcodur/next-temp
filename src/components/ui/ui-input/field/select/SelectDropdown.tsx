@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Option } from '../core/types';
 import { FIELD_STYLES } from '../core/config';
 import { Portal } from '../shared/Portal';
@@ -26,7 +26,8 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 }) => {
 	const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
 
-	useEffect(() => {
+	// 위치 계산 함수를 useCallback으로 최적화
+	const calculatePosition = useCallback(() => {
 		if (triggerRef?.current && isOpen) {
 			const rect = triggerRef.current.getBoundingClientRect();
 			const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -45,6 +46,32 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 			});
 		}
 	}, [isOpen, options.length, maxHeight, triggerRef]);
+
+	// 위치 계산을 위한 useEffect - 의존성 개선
+	useEffect(() => {
+		calculatePosition();
+	}, [calculatePosition]);
+
+	// window resize 이벤트 처리 추가
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const handleResize = () => {
+			calculatePosition();
+		};
+
+		const handleScroll = () => {
+			calculatePosition();
+		};
+
+		window.addEventListener('resize', handleResize);
+		window.addEventListener('scroll', handleScroll, true);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			window.removeEventListener('scroll', handleScroll, true);
+		};
+	}, [isOpen, calculatePosition]);
 
 	if (!isOpen) return null;
 
@@ -91,7 +118,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
 									`.replace(/\s+/g, ' ').trim()}>
 									<div className="flex justify-between items-center">
 										<div className="flex gap-2 items-center">
-											<span className={`font-multilang text-xs font-mono ${isSelected ? 'text-primary-foreground' : isHighlighted ? 'text-foreground' : 'text-muted-foreground'}`}>
+											<span className={`font-multilang text-xs ${isSelected ? 'text-primary-foreground' : isHighlighted ? 'text-foreground' : 'text-muted-foreground'}`}>
 												{numberLabel}
 											</span>
 											<span className={`font-multilang ${isSelected ? '!text-primary-foreground':''}`}>{option.label}</span>

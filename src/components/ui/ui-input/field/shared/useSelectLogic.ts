@@ -42,12 +42,21 @@ export const useSelectLogic = (
 		};
 
 		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				containerRef.current &&
-				!containerRef.current.contains(event.target as Node)
-			) {
-				setIsOpen(false);
+			const target = event.target as Node;
+
+			// 컨테이너 내부 클릭 체크
+			if (containerRef.current && containerRef.current.contains(target)) {
+				return;
 			}
+
+			// Portal 내부 클릭 체크 (dropdown이 Portal로 렌더링됨)
+			const portalRoot = document.getElementById('portal-root');
+			if (portalRoot && portalRoot.contains(target)) {
+				return;
+			}
+
+			// 외부 클릭으로 판단하여 닫기
+			setIsOpen(false);
 		};
 
 		if (isOpen) {

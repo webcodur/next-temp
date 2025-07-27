@@ -7,7 +7,9 @@ import { useLocale } from '@/hooks/useI18n';
 import { FieldDatePickerComponentProps } from '../core/types';
 import {
 	PickDate,
-	PickTime
+	PickDateRange,
+	PickTime,
+	PickMonth
 } from '@/components/ui/ui-input/datepicker/Datepicker';
 
 const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> = ({
@@ -32,8 +34,8 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 	// 아이콘 선택
 	const getIcon = () => {
 		return datePickerType === 'time' ? 
-			<Clock className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} /> :
-			<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active z-10`} />;
+			<Clock className={`${FIELD_STYLES.startIcon} neu-icon-active`} /> :
+			<Calendar className={`${FIELD_STYLES.startIcon} neu-icon-active`} />;
 	};
 
 	// 클리어 버튼 처리
@@ -71,44 +73,30 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				</label>
 			)}
 
-			{/* 범위 선택기 - 두 개의 PickDate 사용 */}
+			{/* 범위 선택기 - PickDateRange 사용 */}
 			{datePickerType === 'range' && (
-				<div className="datepicker-container">
-					<div className="datepicker-range">
-						<div className="start-date">
-							<label>시작 날짜</label>
-							<PickDate
-								selected={startDate ?? null}
-								onChange={(date) => {
-									onStartDateChange?.(date);
-									if (onChange) {
-										(onChange as unknown as (value: (Date | null)[]) => void)([date, endDate ?? null]);
-									}
-								}}
-								placeholderText="시작 날짜 선택"
-								maxDate={endDate ?? null}
-							/>
-						</div>
-						<div className="end-date">
-							<label>종료 날짜</label>
-							<PickDate
-								selected={endDate ?? null}
-								onChange={(date) => {
-									onEndDateChange?.(date);
-									if (onChange) {
-										(onChange as unknown as (value: (Date | null)[]) => void)([startDate ?? null, date]);
-									}
-								}}
-								placeholderText="종료 날짜 선택"
-								minDate={startDate ?? null}
-							/>
-						</div>
-					</div>
+				<div className="relative">
+					{getIcon()}
+					<PickDateRange
+						startDate={startDate ?? null}
+						endDate={endDate ?? null}
+						onChange={(dates) => {
+							const [start, end] = dates;
+							onStartDateChange?.(start);
+							onEndDateChange?.(end);
+							if (onChange) {
+								(onChange as unknown as (value: (Date | null)[]) => void)([start, end]);
+							}
+						}}
+						dateFormat={dateFormat}
+						placeholderText={placeholder}
+						className={getDatePickerClassName()}
+					/>
 					{hasValue && (
 						<button
 							type="button"
 							onClick={handleClear}
-							className={`${FIELD_STYLES.clearButton} ml-auto`}
+							className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton}`}
 						>
 							<X className="w-3 h-3" />
 						</button>
@@ -138,8 +126,34 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				</div>
 			)}
 
-			{/* 단일 선택기 (single, datetime, month) */}
-			{datePickerType !== 'range' && datePickerType !== 'time' && (
+			{/* 월 선택기 */}
+			{datePickerType === 'month' && (
+				<div className="relative">
+					{getIcon()}
+					<PickMonth
+						selected={value as Date | null}
+						onChange={(date) => onChange?.(date)}
+						dateFormat="yyyy-MM"
+						placeholderText={placeholder}
+						minDate={minDate ?? null}
+						maxDate={maxDate ?? null}
+						disabled={disabled}
+						className={getDatePickerClassName()}
+					/>
+					{hasValue && (
+						<button
+							type="button"
+							onClick={handleClear}
+							className={`${FIELD_STYLES.endIcon} ${FIELD_STYLES.clearButton}`}
+						>
+							<X className="w-3 h-3" />
+						</button>
+					)}
+				</div>
+			)}
+
+			{/* 단일 선택기 및 날짜시간 선택기 */}
+			{(datePickerType === 'single' || datePickerType === 'datetime') && (
 				<div className="relative">
 					{getIcon()}
 					<PickDate
@@ -150,6 +164,7 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 						showTimeSelect={datePickerType === 'datetime'}
 						minDate={minDate ?? null}
 						maxDate={maxDate ?? null}
+						disabled={disabled}
 						className={getDatePickerClassName()}
 					/>
 					{hasValue && (

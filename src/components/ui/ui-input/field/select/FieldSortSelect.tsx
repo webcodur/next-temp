@@ -55,7 +55,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					type="button"
 					onClick={handleSortToggle}
 					disabled={disabled}
-					className={`${FIELD_STYLES.sortIcon} ${disabled ? FIELD_STYLES.disabled : ''} z-10`}>
+					className={`${FIELD_STYLES.sortIcon} ${disabled ? FIELD_STYLES.disabled : ''}`}>
 											<ArrowUpDown className="w-4 h-4 neu-icon-active" />
 				</button>
 

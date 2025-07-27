@@ -112,7 +112,7 @@ function TimeInput({ value, onChange, type, label }: TimeInputProps) {
 					<Portal>
 						<div 
 							ref={dropdownRef}
-							className="neu-elevated fixed z-50 p-2 animate-fadeIn"
+							className="neu-elevated fixed z-[9999] p-2 animate-fadeIn"
 							style={{
 								top: dropdownPosition.top,
 								left: dropdownPosition.left,

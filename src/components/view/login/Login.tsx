@@ -7,10 +7,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
 import { LoginForm } from '@/components/layout/login/LoginForm';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocale } from '@/hooks/useI18n';
+import { isAuthenticatedAtom, parkingLotsAtom, selectedParkingLotIdAtom } from '@/store/auth';
+import { setTokenToCookie, ACCESS_TOKEN_NAME, REFRESH_TOKEN_NAME } from '@/utils/tokenUtils';
 // import { initThemeAtom } from '@/store/theme';
 
 // #region 타입
@@ -25,6 +28,12 @@ export default function LoginPage() {
 	// #region 상수
 	const { login } = useAuth();
 	const { isRTL } = useLocale();
+	const [, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
+	const [, setParkingLots] = useAtom(parkingLotsAtom);
+	const [, setSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
+	
+	// 개발자 모드 체크
+	const isDevelopment = process.env.NODE_ENV === 'development';
 	// #endregion
 
 	// #region 상태
@@ -70,6 +79,41 @@ export default function LoginPage() {
 			setIsLoading(false);
 		}
 	};
+
+	const handleDevBypass = () => {
+		setIsLoading(true);
+		setErrorMessage('');
+		
+		try {
+			// 개발자 모드 가짜 토큰 설정
+			const fakeAccessToken = 'dev-access-token-' + Date.now();
+			const fakeRefreshToken = 'dev-refresh-token-' + Date.now();
+			
+			setTokenToCookie(ACCESS_TOKEN_NAME, fakeAccessToken);
+			setTokenToCookie(REFRESH_TOKEN_NAME, fakeRefreshToken);
+			
+			// 기본 현장 정보 설정 (개발자 모드)
+			const mockParkingLots = [
+				{ 
+					id: 1, 
+					code: 'DEV001', 
+					name: '개발 테스트 현장', 
+					description: '개발자 모드 테스트용 현장입니다.' 
+				}
+			];
+			
+			setParkingLots(mockParkingLots);
+			setSelectedParkingLotId(1);
+			setIsLoggedIn(true);
+			
+			console.log('🚀 개발자 모드 로그인 우회 완료');
+		} catch (error) {
+			console.error('개발자 우회 로그인 실패:', error);
+			setErrorMessage('개발자 우회 로그인에 실패했습니다.');
+		} finally {
+			setIsLoading(false);
+		}
+	};
 	// #endregion
 
 	// #region 렌더링
@@ -88,7 +132,12 @@ export default function LoginPage() {
 							{errorMessage}
 						</div>
 					)}
-					<LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+					<LoginForm 
+						onSubmit={handleLogin} 
+						isLoading={isLoading}
+						isDevelopment={isDevelopment}
+						onDevBypass={handleDevBypass}
+					/>
 				</div>
 			</div>
 		</Portal>

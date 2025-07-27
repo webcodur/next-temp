@@ -1,9 +1,10 @@
+/* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 
 import React, { useState, useMemo } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { usePageDescription } from '@/hooks/usePageDescription';
+
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import AdminForm, { AdminFormData } from './AdminForm';
@@ -22,7 +23,7 @@ export interface AdminInput {
 
 export default function AdminCreatePage() {
   const router = useRouter();
-  usePageDescription('새로운 관리자를 등록합니다.');
+  
 
   // #region 폼 상태
   const [formData, setFormData] = useState<AdminFormData>({

@@ -38,10 +38,9 @@
 	cursor: pointer;
 	/* 테슬라 스타일: 즉각적인 반응성 */
 	transition:
-		transform 0.1s ease-out,
 		box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
 		border-color 0.2s ease-out;
-	will-change: transform, box-shadow;
+	will-change: box-shadow;
 	box-shadow:
 		/* 우하단 메인 그림자 */
 		var(--nm-offset) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
@@ -60,8 +59,6 @@
 .neu-raised:hover {
 	/* 호버 시 border 약간 진하게 */
 	border-color: hsl(var(--border) / 0.3);
-	/* 테슬라 스타일: 미세한 리프트 효과 */
-	transform: translateY(-1px);
 	box-shadow:
 		/* 우하단 강화된 그림자 */
 		calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
@@ -82,7 +79,6 @@
 
 .neu-raised:active {
 	/* 테슬라 스타일: 즉각적인 눌림 효과 */
-	transform: translateY(1px);
 	transition: all 0.05s ease-in;
 	box-shadow:
 		/* 내부 우하단 그림자 */
@@ -162,10 +158,9 @@
 	border: 1px solid hsl(var(--primary-4) / 0.3);
 	cursor: pointer;
 	transition:
-		transform 0.1s ease-out,
 		box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
 		border-color 0.2s ease-out;
-	will-change: transform, box-shadow;
+	will-change: box-shadow;
 	box-shadow:
 		/* 우하단 메인 그림자 */
 		var(--nm-offset) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
@@ -177,7 +172,6 @@
 .neu-raised-primary:hover {
 	/* 호버 시 브랜드 칼라 강화 */
 	border-color: hsl(var(--primary-5) / 0.5);
-	transform: translateY(-1px);
 	box-shadow:
 		/* 우하단 강화된 그림자 */
 		calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
@@ -189,7 +183,6 @@
 }
 
 .neu-raised-primary:active {
-	transform: translateY(1px);
 	transition: all 0.05s ease-in;
 	box-shadow:
 		/* 내부 우하단 그림자 */

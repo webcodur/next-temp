@@ -1,8 +1,9 @@
+/* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { usePageDescription } from '@/hooks/usePageDescription';
+
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -18,7 +19,7 @@ import { Admin } from '@/types/admin';
 
 export default function AdminListPage() {
   const router = useRouter();
-  usePageDescription('관리자 계정 정보를 관리합니다.');
+  
   
   // #region 상태 관리
   const [adminList, setAdminList] = useState<Admin[]>([]);

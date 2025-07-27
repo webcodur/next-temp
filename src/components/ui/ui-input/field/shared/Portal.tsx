@@ -28,12 +28,15 @@ export const Portal: React.FC<PortalProps> = ({
 
 		setContainer(portalContainer);
 
-		// 클린업 함수 (컴포넌트 언마운트 시)
+		// 클린업 함수 개선 - setTimeout으로 지연 제거
 		return () => {
-			// 컨테이너가 비어있으면 제거
-			if (portalContainer && portalContainer.children.length === 0) {
-				document.body.removeChild(portalContainer);
-			}
+			// 다른 Portal들이 사용 중일 수 있으므로 지연 후 확인
+			setTimeout(() => {
+				const currentContainer = document.getElementById(containerId);
+				if (currentContainer && currentContainer.children.length === 0) {
+					document.body.removeChild(currentContainer);
+				}
+			}, 100); // 100ms 지연으로 다른 Portal들의 cleanup 대기
 		};
 	}, [containerId]);
 

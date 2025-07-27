@@ -2,19 +2,17 @@
   파일명: /components/view/Home.tsx
   기능: 주차 관리 시스템의 메인 홈페이지 컴포넌트
   책임: 차량 입출차 관리와 차단기 제어 기능을 탭으로 제공한다.
+  메뉴 설명: 주차 시스템을 통합 관리하는 메인 페이지
 */
 
 'use client';
 
 import React, { useState, useEffect } from 'react';
 
-import { useSetAtom } from 'jotai';
 import { Car, Shield } from 'lucide-react';
 
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import BarrierManager from '@/components/view/parking/facility/barrierManager/BarrierManager';
-import { useTranslations } from '@/hooks/useI18n';
-import { pageTitleAtom, pageDescriptionAtom } from '@/store/page';
+import AccessControlManager from '@/components/view/parking/access-control/AccessControlManager';
 import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
 import VehicleListTable from '@/unit/parking/VehicleListTable';
 
@@ -35,19 +33,15 @@ import {
 
 export default function Home() {
 	// #region 상수
-	const t = useTranslations();
-	const setPageTitle = useSetAtom(pageTitleAtom);
-	const setPageDescription = useSetAtom(pageDescriptionAtom);
-
 	const tabs = [
 		{
 			id: 'vehicles',
-			label: t('주차_입출차관리'),
+			label: '차량 입출차 관리',
 			icon: <Car size={16} />,
 		},
 		{
-			id: 'barriers',
-			label: t('주차_차단기제어'),
+			id: 'access-control',
+			label: '출입제어 관리',
 			icon: <Shield size={16} />,
 		},
 	];
@@ -66,17 +60,6 @@ export default function Home() {
 	// #endregion
 
 	// #region 훅
-	// 페이지 헤더 설정
-	useEffect(() => {
-		setPageTitle(t('주차_시스템제목'));
-		setPageDescription(t('주차_시스템설명'));
-
-		return () => {
-			setPageTitle(null);
-			setPageDescription('');
-		};
-	}, [setPageTitle, setPageDescription, t]);
-
 	// 초기 데이터 로드
 	useEffect(() => {
 		const initialData = generateMockVehicleEntries(50);
@@ -183,9 +166,9 @@ export default function Home() {
 				</div>
 			)}
 
-			{activeTab === 'barriers' && (
+			{activeTab === 'access-control' && (
 				<div className="space-y-4">
-					<BarrierManager
+					<AccessControlManager
 						barriers={barriers}
 						onBarrierOpen={handleBarrierOpen}
 						onBarrierClose={handleBarrierClose}

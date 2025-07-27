@@ -1,9 +1,10 @@
+/* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ArrowLeft, Lock, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { usePageDescription } from '@/hooks/usePageDescription';
+
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
@@ -29,7 +30,7 @@ export default function AdminPasswordChangePage() {
   const params = useParams();
   const adminId = Number(params.id);
 
-  usePageDescription('관리자 비밀번호를 변경합니다.');
+  
 
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);

@@ -1,12 +1,13 @@
+/* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 import React from 'react';
-import { usePageDescription } from '@/hooks/usePageDescription';
+
 import { Building2, Users, Smartphone, Settings, FileText } from 'lucide-react';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 
 export default function FacilityInfoPage() {
   // 페이지 설명 설정
-  usePageDescription('시설 기본 정보를 표시합니다.');
+  
 
   /* -------------------------------------------------------------------------- */
   /*                                 MOCK DATA                                  */

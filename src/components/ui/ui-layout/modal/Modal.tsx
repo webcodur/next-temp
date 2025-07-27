@@ -42,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({
 			onClose={onClose}
 			closeOnBackdropClick={closeOnBackdropClick}
 			className={cn(
-				'mx-4 w-full rounded-lg shadow-xl bg-background animate-fadeIn',
+				'mx-4 w-full rounded-lg shadow-xl bg-background',
 				sizeClasses[size],
 				className
 			)}
@@ -59,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({
 			{/* 제목 */}
 			{title && (
 				<div className="relative px-6 py-4 border-b border-border">
-					<h2 className="text-center text-xl font-semibold text-foreground font-multilang">
+					<h2 className="text-xl font-semibold text-center text-foreground font-multilang">
 						{title}
 					</h2>
 				</div>

@@ -1,0 +1,404 @@
+/* 
+  파일명: BarrierCard.tsx
+  기능: 개별 차단기 제어 카드 컴포넌트
+  책임: 차단기 제어, 운영모드 설정, 세부 정책 설정을 통합 관리한다.
+*/
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Settings as SettingsIcon, GripVertical, Edit3, Check, ChevronDown } from 'lucide-react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+import { ParkingBarrier, OperationMode } from '@/types/parking';
+import { toast } from '@/components/ui/ui-effects/toast/Toast';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+
+import PolicySettings from './policySettings/PolicySettings';
+
+// #region 타입 정의
+interface BarrierPolicy {
+  workHour: boolean;
+  blacklist: boolean;
+}
+
+interface BarrierCardProps {
+  barrier: ParkingBarrier;
+  policy: BarrierPolicy;
+  onToggle: () => void;
+  onOperationModeChange: (mode: OperationMode) => void;
+  onPolicyUpdate: (barrierId: string, policy: BarrierPolicy) => void;
+  isDragOverlay?: boolean;
+  returnHourEnabled?: boolean;
+}
+// #endregion
+
+// #region 운영 모드 옵션
+const operationModeOptions = [
+  { value: 'always-open', label: '항시 열림' },
+  { value: 'bypass', label: '바이패스' },
+  { value: 'auto-operation', label: '자동 운행' },
+] as const;
+// #endregion
+
+// #region 메인 컴포넌트
+const BarrierCard: React.FC<BarrierCardProps> = ({
+  barrier,
+  policy,
+  onToggle,
+  onOperationModeChange,
+  onPolicyUpdate,
+  isDragOverlay = false,
+  returnHourEnabled = false,
+}) => {
+  // #region 상태
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(barrier.name);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showNameChangeConfirmModal, setShowNameChangeConfirmModal] = useState(false);
+  const [isEditingSettings, setIsEditingSettings] = useState(false);
+  
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const nameEditRef = useRef<HTMLDivElement>(null);
+  // #endregion
+
+  // #region 훅
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ 
+    id: barrier.id,
+    disabled: isDragOverlay
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  // 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  // 이름 편집 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (nameEditRef.current && !nameEditRef.current.contains(event.target as Node)) {
+        const hasChanges = editedName !== barrier.name;
+        if (hasChanges) {
+          setShowNameChangeConfirmModal(true);
+        } else {
+          setIsEditingName(false);
+        }
+      }
+    };
+
+    if (isEditingName) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isEditingName, editedName, barrier.name]);
+  // #endregion
+
+  // #region 핸들러
+  const handleBarrierOpen = () => {
+    if (barrier.isOpen) return;
+    onToggle();
+    toast.success(`"${barrier.name}" 차단기가 열렸습니다.`);
+  };
+
+  const handleBarrierClose = () => {
+    if (!barrier.isOpen) return;
+    onToggle();
+    toast.success(`"${barrier.name}" 차단기가 닫혔습니다.`);
+  };
+
+  const handleStartEditName = () => {
+    setIsEditingName(true);
+    setEditedName(barrier.name);
+  };
+
+  const handleSaveName = () => {
+    // TODO: 실제 이름 변경 API 호출
+    console.log('차단기 이름 변경:', editedName);
+    toast.success(`차단기 이름이 "${editedName}"(으)로 변경되었습니다.`);
+    setIsEditingName(false);
+    setShowNameChangeConfirmModal(false);
+  };
+
+  const handleCancelNameEdit = () => {
+    setIsEditingName(false);
+    setEditedName(barrier.name);
+    setShowNameChangeConfirmModal(false);
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSaveName();
+    } else if (e.key === 'Escape') {
+      const hasChanges = editedName !== barrier.name;
+      if (hasChanges) {
+        setShowNameChangeConfirmModal(true);
+      } else {
+        setIsEditingName(false);
+      }
+    }
+  };
+
+  const handleOperationModeSelect = (mode: OperationMode) => {
+    onOperationModeChange(mode);
+    setIsDropdownOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    if (!isDragOverlay) {
+      setIsDropdownOpen(!isDropdownOpen);
+    }
+  };
+
+  const getCurrentModeLabel = () => {
+    return operationModeOptions.find(option => option.value === barrier.operationMode)?.label || '알 수 없음';
+  };
+
+  const handlePolicyUpdate = (newPolicy: BarrierPolicy) => {
+    onPolicyUpdate(barrier.id, newPolicy);
+  };
+
+  const toggleSettingsEdit = () => {
+    setIsEditingSettings(!isEditingSettings);
+  };
+  // #endregion
+
+  // #region 렌더링
+  return (
+    <div 
+      ref={isDragOverlay ? undefined : setNodeRef}
+      style={isDragOverlay ? {} : style}
+      className={`${isDragging && !isDragOverlay ? 'opacity-50' : ''}`}
+    >
+      <SectionPanel 
+        className="h-full"
+        colorVariant="primary"
+        headerContent={
+          <div className="flex items-center w-full px-4 py-2 text-white bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60">
+            {/* 드래그 핸들 */}
+            <div 
+              {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
+              className={`flex items-center justify-center transition-colors ${
+                isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-white/20 p-1 rounded'}`}
+            >
+              <GripVertical className="w-4 h-4 text-white/80" />
+            </div>
+
+            {/* 차단기 이름 */}
+            <div className="flex flex-1 justify-center items-center h-8" ref={nameEditRef}>
+              {isEditingName ? (
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  onKeyDown={handleNameKeyDown}
+                  className="px-2 py-1 w-full max-w-xs text-base font-bold text-center text-white rounded border bg-white/20 border-white/30 placeholder-white/60 font-multilang"
+                  autoFocus
+                  spellCheck={false}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ) : (
+                <h3 className="text-base font-bold text-white font-multilang">
+                  {barrier.name}
+                </h3>
+              )}
+            </div>
+
+            {/* 헤더 액션 */}
+            {!isDragOverlay && (
+              <div className="flex gap-2 items-center">
+                {isEditingName ? (
+                  <button
+                    onClick={handleSaveName}
+                    className="p-2 text-white rounded-full transition-all bg-green-600/80 hover:bg-green-600 neu-raised hover:neu-flat"
+                    title="이름 저장"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleStartEditName}
+                    className="p-2 text-white rounded-full transition-all bg-white/20 hover:bg-white/30 neu-raised hover:neu-flat"
+                    title="이름 수정"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        }
+      >
+          <div className="p-4 space-y-4">
+            {/* 차단기 개폐 설정 + 운영모드 */}
+            <div>
+              <div className="flex gap-2 items-center mb-3">
+                <h4 className="text-sm font-semibold text-foreground">차단기 제어</h4>
+                <div className="flex-1 h-px bg-border"></div>
+              </div>
+              
+              <div className="grid grid-cols-4 gap-3">
+                {/* 차단기 열기 */}
+                <button
+                  onClick={handleBarrierOpen}
+                  disabled={isDragOverlay || barrier.isOpen}
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
+                    isDragOverlay || barrier.isOpen ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
+                >
+                  열기
+                </button>
+                
+                {/* 차단기 닫기 */}
+                <button
+                  onClick={handleBarrierClose}
+                  disabled={isDragOverlay || !barrier.isOpen}
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
+                    isDragOverlay || !barrier.isOpen ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
+                >
+                  닫기
+                </button>
+                
+                {/* 운영모드 설정 */}
+                <div className="relative col-span-2" ref={dropdownRef}>
+                  <button
+                    onClick={toggleDropdown}
+                    disabled={isDragOverlay}
+                    className={`w-full flex gap-2 items-center p-3 rounded-lg bg-background neu-elevated text-left transition-all ${
+                      isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
+                    } ${isDropdownOpen ? 'neu-inset' : ''}`}
+                  >
+                    <SettingsIcon className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
+                    <span className="flex-1 text-sm font-medium truncate text-foreground">
+                      {getCurrentModeLabel()}
+                    </span>
+                    <ChevronDown className={`flex-shrink-0 w-4 h-4 text-muted-foreground transition-transform ${
+                      isDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* 드롭다운 옵션들 */}
+                  {isDropdownOpen && !isDragOverlay && (
+                    <div className="absolute right-0 left-0 top-full z-10 py-1 mt-1 rounded-lg border shadow-lg bg-background border-border neu-elevated">
+                      {operationModeOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => handleOperationModeSelect(option.value as OperationMode)}
+                          className={`w-full px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-muted/50 first:rounded-t-md last:rounded-b-md ${
+                            barrier.operationMode === option.value 
+                              ? 'bg-primary/10 text-primary' 
+                              : 'text-foreground'
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 차단기 상태 표시 */}
+            <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+              <span className="text-sm font-medium text-muted-foreground">현재 상태</span>
+              <span className={`text-sm font-bold ${barrier.isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                {barrier.isOpen ? '열림' : '닫힘'}
+              </span>
+            </div>
+
+            {/* 정책 설정 */}
+            <div>
+              <div className="flex gap-2 items-center mb-3">
+                <h4 className="text-sm font-semibold text-foreground">정책 설정</h4>
+                <div className="flex-1 h-px bg-border"></div>
+                <button
+                  onClick={toggleSettingsEdit}
+                  disabled={isDragOverlay}
+                  className={`p-1 rounded transition-all ${
+                    isEditingSettings 
+                      ? 'bg-primary/20 text-primary' 
+                      : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                  } ${isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  title={isEditingSettings ? '편집 완료' : '편집 모드'}
+                >
+                  {isEditingSettings ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </button>
+              </div>
+              
+              <PolicySettings
+                barrierName={barrier.name}
+                policy={policy}
+                onPolicyUpdate={handlePolicyUpdate}
+                isEditMode={isEditingSettings}
+                disabled={isDragOverlay}
+                globalReturnHourEnabled={returnHourEnabled}
+              />
+            </div>
+          </div>
+      </SectionPanel>
+
+      {/* 이름 변경 확인 모달 */}
+      <Modal
+        isOpen={showNameChangeConfirmModal}
+        onClose={() => setShowNameChangeConfirmModal(false)}
+        title="이름 변경 확인"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-foreground">
+            차단기 이름에 변경사항이 있습니다.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            변경사항을 저장하시겠습니까?
+          </p>
+          
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={handleCancelNameEdit}
+              className="px-4 py-2 text-sm rounded-md neu-raised bg-background text-foreground hover:neu-flat"
+            >
+              취소 (복구)
+            </button>
+            <button
+              onClick={handleSaveName}
+              className="px-4 py-2 text-sm rounded-md neu-raised bg-primary text-primary-foreground hover:neu-flat"
+            >
+              저장
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+  // #endregion
+};
+
+export default BarrierCard;
+// #endregion 

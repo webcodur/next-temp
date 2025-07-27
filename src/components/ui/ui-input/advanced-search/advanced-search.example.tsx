@@ -8,7 +8,25 @@ import FieldDatePicker from '../field/datepicker/FieldDatePicker';
 import FieldTimePicker from '../field/time/FieldTimePicker';
 import { SortDirection } from '../field/core/types';
 
-// 필드 컴포넌트 예시들
+export default function AdvancedSearchExample() {
+	// 기본 HTML 요소용 state들 (추가)
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [date, setDate] = useState('');
+	const [status, setStatus] = useState('');
+	const [role, setRole] = useState('');
+	const [phone, setPhone] = useState('');
+
+	// Field 컴포넌트용 state들
+	const [username, setUsername] = useState('');
+	const [userEmail, setUserEmail] = useState('');
+	const [department, setDepartment] = useState('');
+	const [sortBy, setSortBy] = useState('');
+	const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+	const [joinDate, setJoinDate] = useState<Date | null>(null);
+	const [workTime, setWorkTime] = useState('');
+
+// 필드 컴포넌트 예시들 (상태 연결)
 const NameField = () => (
 	<div>
 		<label className="block mb-1 text-sm font-medium">이름</label>
@@ -16,6 +34,8 @@ const NameField = () => (
 			type="text" 
 			placeholder="이름을 입력하세요"
 			className="px-3 py-2 w-full rounded-md border"
+			value={name}
+			onChange={(e) => setName(e.target.value)}
 		/>
 	</div>
 );
@@ -27,6 +47,8 @@ const EmailField = () => (
 			type="email" 
 			placeholder="이메일을 입력하세요"
 			className="px-3 py-2 w-full rounded-md border"
+			value={email}
+			onChange={(e) => setEmail(e.target.value)}
 		/>
 	</div>
 );
@@ -37,6 +59,8 @@ const DateField = () => (
 		<input 
 			type="date"
 			className="px-3 py-2 w-full rounded-md border"
+			value={date}
+			onChange={(e) => setDate(e.target.value)}
 		/>
 	</div>
 );
@@ -44,7 +68,11 @@ const DateField = () => (
 const StatusField = () => (
 	<div>
 		<label className="block mb-1 text-sm font-medium">상태</label>
-		<select className="px-3 py-2 w-full rounded-md border">
+		<select 
+			className="px-3 py-2 w-full rounded-md border"
+			value={status}
+			onChange={(e) => setStatus(e.target.value)}
+		>
 			<option value="">전체</option>
 			<option value="active">활성</option>
 			<option value="inactive">비활성</option>
@@ -55,7 +83,11 @@ const StatusField = () => (
 const RoleField = () => (
 	<div>
 		<label className="block mb-1 text-sm font-medium">역할</label>
-		<select className="px-3 py-2 w-full rounded-md border">
+		<select 
+			className="px-3 py-2 w-full rounded-md border"
+			value={role}
+			onChange={(e) => setRole(e.target.value)}
+		>
 			<option value="">전체</option>
 			<option value="admin">관리자</option>
 			<option value="user">사용자</option>
@@ -71,19 +103,11 @@ const PhoneField = () => (
 			type="tel" 
 			placeholder="연락처를 입력하세요"
 			className="px-3 py-2 w-full rounded-md border"
+			value={phone}
+			onChange={(e) => setPhone(e.target.value)}
 		/>
 	</div>
 );
-
-export default function AdvancedSearchExample() {
-	// Field 컴포넌트용 state들
-	const [username, setUsername] = useState('');
-	const [userEmail, setUserEmail] = useState('');
-	const [department, setDepartment] = useState('');
-	const [sortBy, setSortBy] = useState('');
-	const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-	const [joinDate, setJoinDate] = useState<Date | null>(null);
-	const [workTime, setWorkTime] = useState('');
 
 	// 검색 필드 설정
 	const searchFields = [
@@ -227,23 +251,36 @@ export default function AdvancedSearchExample() {
 	];
 
 	const handleSearch = () => {
-		console.log('검색 실행');
+		console.log('검색 실행', { name, email, date, status, role, phone });
 		// 검색 로직 구현
 	};
 
 	const handleReset = () => {
 		console.log('리셋 실행');
 		// 리셋 로직 구현
+		setName('');
+		setEmail('');
+		setDate('');
+		setStatus('');
+		setRole('');
+		setPhone('');
 	};
 
 	const handleSearch2 = () => {
-		console.log('두 번째 검색 실행');
+		console.log('두 번째 검색 실행', { username, userEmail, department, sortBy, sortDirection, joinDate, workTime });
 		// 두 번째 검색 로직 구현
 	};
 
 	const handleReset2 = () => {
 		console.log('두 번째 리셋 실행');
 		// 두 번째 리셋 로직 구현
+		setUsername('');
+		setUserEmail('');
+		setDepartment('');
+		setSortBy('');
+		setSortDirection('asc');
+		setJoinDate(null);
+		setWorkTime('');
 	};
 
 	return (

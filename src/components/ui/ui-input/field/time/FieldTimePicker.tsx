@@ -109,7 +109,7 @@ const FieldTimePicker: React.FC<FieldTimePickerProps> = ({
 				</label>
 			)}
 			<div ref={containerRef} className="relative">
-				<Clock className={`${FIELD_STYLES.startIcon} neu-icon-active z-20`} />
+				<Clock className={`${FIELD_STYLES.startIcon} neu-icon-active`} />
 				
 				{/* 메인 입력 필드 (직접 입력 허용) */}
 				<input
