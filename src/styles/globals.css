@@ -151,11 +151,11 @@
 	height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-	background: hsl(var(--primary) / 0.6);
+	background: hsl(var(--border));
 	border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: hsl(var(--primary));
+	background: hsl(var(--muted-foreground) / 0.6);
 }
 
 /* --- scrollbar gutter stable --- */
