@@ -187,8 +187,8 @@ export const useAccessControl = ({
 			warningCount,
 		});
 
-		// 편집모드 종료
-		setIsLocked(false);
+		// 편집모드 종료 -> 잠금상태로 변경
+		setIsLocked(true);
 	};
 	// #endregion
 

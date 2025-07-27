@@ -50,8 +50,6 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 	return (
 		<SectionPanel 
 			title={showTitle ? t('주차_카드_차량정보') : undefined}
-			className="h-full"
-			contentClassName="overflow-auto"
 		>
 			<div className="flex flex-col gap-4 p-6">
 				{/* 차량 이미지 영역 */}
@@ -85,7 +83,7 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 							<div className="mb-6 text-center">
 								<div className="flex flex-col gap-3 justify-center items-center">
 									<div className="relative cursor-pointer" onClick={() => handlePlateClick(vehicle.car_number)}>
-										<span className="font-mono text-lg bg-muted px-4 py-2 rounded border">
+										<span className="px-4 py-2 font-mono text-lg rounded border bg-muted">
 											{vehicle.car_number}
 										</span>
 										{copiedPlate === vehicle.car_number && (

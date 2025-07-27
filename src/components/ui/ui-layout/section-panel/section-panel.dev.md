@@ -1,183 +1,202 @@
-# SectionPanel 개발 문서
+# SectionPanel 개발 가이드
 
-## 개요
+## 변경사항 (최신)
 
-SectionPanel은 헤더와 콘텐츠 영역으로 구성된 섹션 패널 컴포넌트입니다. BarrierManager 기준의 고정 스타일링으로 일관된 디자인 시스템을 제공합니다.
+### 2024년 커스텀 스타일링 제거
+
+- **모든 커스텀 스타일링 옵션 제거**: `className`, `contentClassName`, `colorVariant`, `headerContent` 완전 제거
+- **고정 스타일링 전용**: 일관된 디자인 시스템을 위해 스타일 변경 불가
+- **단순화된 Props**: `title`, `children`, `icon`, `headerActions`만 지원
 
 ## 컴포넌트 구조
 
-### 1. SectionPanel (메인 컴포넌트)
-- 헤더와 콘텐츠를 포함하는 컨테이너
-- 고정 gradient 스타일링 적용
-- 중앙 정렬 타이틀, h-10 고정 높이
+```
+SectionPanel/
+├── SectionPanel.tsx          # 메인 컴포넌트 (커스텀 스타일링 제거됨)
+├── section-panel.example.tsx # 사용 예제
+├── section-panel.md         # 사용자 문서
+└── section-panel.dev.md     # 개발자 문서 (이 파일)
+```
 
-### 2. SectionPanelHeader (독립 컴포넌트) 
-- 독립적으로 사용 가능한 헤더
-- px-4 py-3 고정 패딩
-- justify-between 레이아웃
+## 타입 정의
 
-### 3. SectionPanelContent (독립 컴포넌트)
-- 독립적으로 사용 가능한 콘텐츠 영역
-- flex-1 레이아웃
+```tsx
+interface SectionPanelProps {
+	title?: string;
+	children: ReactNode;
+	headerActions?: ReactNode; // 헤더 우측에 추가 요소
+	icon?: ReactNode; // 헤더 좌측 아이콘
+	// 제거된 옵션들:
+	// className?: string;
+	// contentClassName?: string;
+	// colorVariant?: 'primary' | 'secondary';
+	// headerContent?: ReactNode;
+}
+
+interface SectionPanelContentProps {
+	children: ReactNode;
+	// 제거된 옵션:
+	// className?: string;
+}
+```
 
 ## 고정 스타일링 세부사항
 
-### 컨테이너 스타일
-```css
-.container {
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.5rem; /* rounded-lg = 8px */
-  /* neu-flat bg-surface-2 */
-}
-```
+### 헤더 스타일 (변경 불가)
 
-### 헤더 스타일 (고정)
 ```css
+/* 헤더 컨테이너 */
 .header {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem; /* px-4 py-3 */
-  flex-shrink: 0;
-  background: linear-gradient(to right, rgb(var(--primary) / 0.8), rgb(var(--primary) / 0.6));
-  color: rgb(var(--primary-foreground));
+	@apply flex flex-shrink-0 items-center px-4 py-2;
+	@apply bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60;
+	@apply text-white;
 }
 
-.title-container {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  height: 2.5rem; /* h-10 = 40px */
+/* 헤더 타이틀 영역 */
+.title-area {
+	@apply flex flex-1 justify-center items-center h-8;
 }
 
+/* 타이틀 텍스트 */
 .title {
-  font-size: 1.125rem; /* text-lg */
-  font-weight: 700; /* font-bold */
-  color: white;
-  /* font-multilang 클래스 적용 */
+	@apply text-base font-bold text-white font-multilang;
 }
 ```
 
-## 컴포넌트 인터페이스
+### 컨테이너 스타일 (변경 불가)
 
-### SectionPanelProps
-```typescript
-interface SectionPanelProps {
-  title?: string;                    // 헤더 제목
-  children: ReactNode;               // 콘텐츠 (필수)
-  className?: string;                // 컨테이너 CSS 클래스
-  headerClassName?: string;          // 헤더 CSS 클래스  
-  contentClassName?: string;         // 콘텐츠 CSS 클래스
-  headerActions?: ReactNode;         // 헤더 우측 액션
-  icon?: ReactNode;                  // 헤더 좌측 아이콘
+```css
+/* 메인 컨테이너 */
+.container {
+	@apply flex overflow-hidden flex-col rounded-lg neu-flat;
+}
+
+/* 콘텐츠 영역 */
+.content {
+	@apply flex-1 bg-surface-2;
 }
 ```
 
-### SectionPanelHeaderProps  
-```typescript
-interface SectionPanelHeaderProps {
-  children: ReactNode;               // 헤더 콘텐츠 (필수)
-  className?: string;                // CSS 클래스
-}
-```
+## 사용 제한사항
 
-### SectionPanelContentProps
-```typescript
-interface SectionPanelContentProps {
-  children: ReactNode;               // 콘텐츠 (필수)
-  className?: string;                // CSS 클래스
-}
-```
+### 금지된 사용 패턴
 
-## 사용 시나리오
-
-### 1. 차량 관리 패널 (VehicleDetailCard)
 ```tsx
-<SectionPanel 
-  title={t('주차_카드_차량정보')}
-  className="h-full"
-  contentClassName="overflow-auto"
+// ❌ 더 이상 지원되지 않음
+<SectionPanel
+	title="제목"
+	className="custom-style" // 제거됨
+	contentClassName="custom-content" // 제거됨
+	colorVariant="secondary" // 제거됨
+	headerContent={<CustomHeader />} // 제거됨
 >
-  {/* 차량 상세 정보 */}
+	콘텐츠
 </SectionPanel>
 ```
 
-### 2. 테이블 컨테이너 (VehicleListTable)
+### 권장 사용 패턴
+
 ```tsx
-<SectionPanel 
-  title={t('주차_테이블_제목_금일입출차현황')}
-  className="w-full h-full"
-  contentClassName="flex flex-col min-h-0 overflow-hidden"
->
-  {/* 검색 필터 + 테이블 */}
+// ✅ 올바른 사용법
+<SectionPanel
+	title="제목"
+	icon={<Car className="w-5 h-5 text-white" />}
+	headerActions={
+		<button className="px-2 py-1 text-sm bg-white text-primary rounded">
+			액션
+		</button>
+	}>
+	<div className="p-6">콘텐츠 (여기서 패딩 직접 관리)</div>
 </SectionPanel>
 ```
 
-### 3. 커스텀 레이아웃
+## 마이그레이션 가이드
+
+### 기존 코드에서 제거해야 할 props
+
+1. `className` → 제거 (고정 스타일 사용)
+2. `contentClassName` → 콘텐츠 내부에서 직접 스타일링
+3. `colorVariant` → 제거 (primary gradient 고정)
+4. `headerContent` → `title`, `icon`, `headerActions` 조합 사용
+
+### 예시 마이그레이션
+
 ```tsx
-<div className="neu-flat bg-surface-2 rounded-lg">
-  <SectionPanelHeader>
-    <h3>커스텀 헤더</h3>
-    <button>액션</button>
-  </SectionPanelHeader>
-  <SectionPanelContent>
-    {/* 커스텀 콘텐츠 */}
-  </SectionPanelContent>
-</div>
+// Before (제거된 기능)
+<SectionPanel
+  className="custom-container"
+  contentClassName="custom-content"
+  colorVariant="secondary"
+  headerContent={
+    <div className="custom-header">
+      <h3>커스텀 제목</h3>
+      <button>버튼</button>
+    </div>
+  }
+>
+  콘텐츠
+</SectionPanel>
+
+// After (현재 지원)
+<SectionPanel
+  title="커스텀 제목"
+  headerActions={
+    <button className="px-2 py-1 bg-white text-primary rounded">
+      버튼
+    </button>
+  }
+>
+  <div className="custom-content p-6">
+    콘텐츠
+  </div>
+</SectionPanel>
 ```
 
-## 설계 원칙
+## 테스트 시나리오
 
-### 1. 일관성 (Consistency)
-- BarrierManager의 VehicleTypeCard와 동일한 스타일링
-- 모든 패널이 동일한 헤더 높이, 타이틀 스타일 사용
-- px-4 py-3 패딩으로 헤더 높이 통일
+### 필수 테스트 케이스
 
-### 2. 단순성 (Simplicity)  
-- 조건부 처리 제거로 복잡성 감소
-- 고정 스타일링으로 예측 가능한 동작
-- 명확한 컴포넌트 구조
+1. **기본 렌더링**: title만 있는 경우
+2. **아이콘 포함**: icon + title 조합
+3. **액션 포함**: title + headerActions 조합
+4. **완전체**: icon + title + headerActions 모든 조합
+5. **콘텐츠만**: SectionPanelContent 단독 사용
 
-### 3. 유연성 (Flexibility)
-- 독립 컴포넌트로 세밀한 제어 가능
-- className props로 추가 스타일링 지원
-- headerActions, icon props로 확장성 제공
+### 예제 테스트 코드
 
-## 개발 가이드라인
+```tsx
+describe('SectionPanel', () => {
+	test('커스텀 className이 적용되지 않음', () => {
+		render(<SectionPanel title="테스트">콘텐츠</SectionPanel>);
+		// className prop이 존재하지 않음을 확인
+	});
 
-### 1. 스타일링
-- **DO**: 고정 스타일링 활용, className으로 추가 스타일링
-- **DON'T**: 내부 스타일을 임의로 변경하지 않기
+	test('고정 gradient 배경 적용', () => {
+		render(<SectionPanel title="테스트">콘텐츠</SectionPanel>);
+		expect(screen.getByRole('heading')).toHaveClass('text-white');
+	});
+});
+```
 
-### 2. 레이아웃
-- **DO**: contentClassName으로 콘텐츠 레이아웃 제어
-- **DON'T**: 헤더의 h-10 고정 높이 변경하지 않기
+## 성능 최적화
 
-### 3. 접근성
-- **DO**: font-multilang 클래스 사용
-- **DO**: 의미 있는 title 제공
-- **DON'T**: 색상만으로 정보 전달하지 않기
+### 제거된 동적 스타일링으로 인한 이점
 
-## 성능 고려사항
+1. **조건부 className 연산 제거**: `clsx` 의존성 제거
+2. **고정 CSS 클래스**: 런타임 스타일 계산 불필요
+3. **번들 크기 감소**: 스타일 옵션 로직 제거
 
-### 1. 렌더링 최적화
-- 헤더 존재 여부를 hasHeader로 조건부 렌더링
-- clsx 사용으로 효율적인 클래스 합성
+## 향후 계획
 
-### 2. 메모리 사용
-- 불필요한 조건부 처리 제거
-- 단순한 컴포넌트 구조로 메모리 효율성 향상
+### 추가 예정 기능 (스타일링 외)
 
-## 버전 히스토리
+1. **접근성 향상**: ARIA 라벨 자동 추가
+2. **키보드 네비게이션**: 액션 버튼 포커스 관리
+3. **애니메이션**: 고정 스타일 내에서 자연스러운 전환 효과
 
-### v1.1.0 (현재)
-- variant prop 제거
-- 고정 gradient 스타일링 적용  
-- BarrierManager 기준 디자인 통일
-- 조건부 처리 제거로 단순화
+### 금지된 기능 (영구적)
 
-### v1.0.0
-- 초기 구현
-- variant='default' | 'gradient' 지원
-- 조건부 스타일링 적용 
+- 커스텀 CSS 클래스
+- 동적 색상 변경
+- 헤더 레이아웃 변경
+- 컨테이너 스타일 오버라이드

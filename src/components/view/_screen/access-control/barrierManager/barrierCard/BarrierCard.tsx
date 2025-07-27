@@ -5,7 +5,7 @@
 */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings as SettingsIcon, GripVertical, Edit3, ChevronDown, Sliders } from 'lucide-react';
+import { Settings as SettingsIcon, GripVertical, ChevronDown, Sliders } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -56,13 +56,14 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
 }) => {
   // #region 상태
   const [editedName, setEditedName] = useState(barrier.name);
+  const [isEditingName, setIsEditingName] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showNameChangeConfirmModal, setShowNameChangeConfirmModal] = useState(false);
   const [showVehicleConfigModal, setShowVehicleConfigModal] = useState(false);
   const [vehiclePolicies, setVehiclePolicies] = useState<VehicleAccessPolicy>(createEmptyAccessPolicy);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const nameEditRef = useRef<HTMLDivElement>(null);
+  const nameEditRef = useRef<HTMLInputElement>(null);
   // #endregion
 
   // #region 훅
@@ -108,19 +109,27 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
         if (hasChanges) {
           setShowNameChangeConfirmModal(true);
         } else {
-          // setIsEditingName(false); // This line is removed as per the edit hint
+          setIsEditingName(false);
         }
       }
     };
 
-    // if (isEditingName) { // This line is removed as per the edit hint
-    //   document.addEventListener('mousedown', handleClickOutside);
-    // }
+    if (isEditingName) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [editedName, barrier.name]);
+  }, [isEditingName, editedName, barrier.name]);
+
+  // 편집 모드 포커스
+  useEffect(() => {
+    if (isEditingName && nameEditRef.current) {
+      nameEditRef.current.focus();
+      nameEditRef.current.select();
+    }
+  }, [isEditingName]);
   // #endregion
 
   // #region 핸들러
@@ -137,20 +146,39 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
   };
 
   const handleStartEditName = () => {
-    // setIsEditingName(true); // This line is removed as per the edit hint
+    if (isLocked || isDragOverlay) return;
+    setIsEditingName(true);
     setEditedName(barrier.name);
   };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const hasChanges = editedName.trim() !== barrier.name;
+      if (hasChanges && editedName.trim()) {
+        setShowNameChangeConfirmModal(true);
+      } else {
+        setIsEditingName(false);
+        setEditedName(barrier.name);
+      }
+    } else if (e.key === 'Escape') {
+      setIsEditingName(false);
+      setEditedName(barrier.name);
+    }
+  };
+
+
 
   const handleSaveName = () => {
     // TODO: 실제 이름 변경 API 호출
     console.log('차단기 이름 변경:', editedName);
     toast.success(`차단기 이름이 "${editedName}"(으)로 변경되었습니다.`);
-    // setIsEditingName(false); // This line is removed as per the edit hint
+    setIsEditingName(false);
     setShowNameChangeConfirmModal(false);
   };
 
   const handleCancelNameEdit = () => {
-    // setIsEditingName(false); // This line is removed as per the edit hint
+    setIsEditingName(false);
     setEditedName(barrier.name);
     setShowNameChangeConfirmModal(false);
   };
@@ -196,71 +224,44 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
     <div 
       ref={isDragOverlay ? undefined : setNodeRef}
       style={isDragOverlay ? {} : style}
-      className={`${isDragging && !isDragOverlay ? 'opacity-50' : ''}`}
+      className={`h-full ${isDragging && !isDragOverlay ? 'opacity-50' : ''}`}
     >
-      <SectionPanel 
-        className="h-full"
-        colorVariant="primary"
-        headerContent={
-          <div className="flex items-center px-4 py-2 w-full text-white bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60">
-            {/* 드래그 핸들 */}
-            <div 
-              {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
-              className={`flex items-center justify-center transition-colors ${
-                isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-white/20 p-1 rounded'}`}
+      <SectionPanel
+        title={
+          isEditingName ? (
+            <input
+              ref={nameEditRef}
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              onKeyDown={handleNameKeyDown}
+              className="w-full h-8 px-2 text-center text-base font-bold text-white bg-transparent border border-white/30 rounded focus:outline-none focus:border-white/50 focus:bg-white/10"
+              placeholder="차단기 이름"
+            />
+          ) : (
+            <div
+              onClick={handleStartEditName}
+              className={`w-full h-8 px-2 flex items-center justify-center text-center text-base font-bold text-white rounded transition-colors ${
+                !isLocked && !isDragOverlay 
+                  ? 'cursor-pointer hover:bg-white/10' 
+                  : ''
+              }`}
+              title={!isLocked && !isDragOverlay ? '클릭하여 이름 수정' : ''}
             >
-              <GripVertical className="w-4 h-4 text-white/80" />
+              <span className="truncate">{barrier.name}</span>
             </div>
-
-            {/* 차단기 이름 */}
-            <div className="flex flex-1 justify-center items-center h-8" ref={nameEditRef}>
-              {/* {isEditingName ? ( // This line is removed as per the edit hint
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  onKeyDown={handleNameKeyDown}
-                  className="px-2 py-1 w-full max-w-xs text-base font-bold text-center text-white rounded border bg-white/20 border-white/30 placeholder-white/60 font-multilang"
-                  autoFocus
-                  spellCheck={false}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : ( */}
-                <h3 className="text-base font-bold text-white font-multilang">
-                  {barrier.name}
-                </h3>
-              {/* )} */}
-            </div>
-
-            {/* 헤더 액션 */}
-            {!isDragOverlay && (
-              <div className="flex gap-2 items-center">
-                {/* {isEditingName ? ( // This line is removed as per the edit hint
-                  <button
-                    onClick={handleSaveName}
-                    className="p-2 text-white rounded-full transition-all bg-green-600/80 hover:bg-green-600 neu-raised hover:neu-flat"
-                    title="이름 저장"
-                  >
-                    <Check className="w-4 h-4" />
-                  </button>
-                ) : ( */}
-                  <button
-                    onClick={handleStartEditName}
-                    disabled={isLocked}
-                    className={`p-2 text-white rounded-full transition-all neu-raised hover:neu-flat ${
-                      isLocked 
-                        ? 'bg-white/20 hover:bg-white/30' 
-                        : 'bg-white/10 opacity-50 cursor-not-allowed'
-                    }`}
-                    title="이름 수정"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                {/* )} */}
-              </div>
-            )}
+          )
+        }
+        icon={
+          <div 
+            {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
+            className={`flex items-center justify-center transition-colors ${
+              isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-white/20 p-1 rounded'}`}
+          >
+            <GripVertical className="w-4 h-4 text-white/80" />
           </div>
         }
+        headerActions={undefined}
       >
           <div className="p-4 space-y-4">
             {/* 차단기 개폐 설정 + 운영모드 */}
@@ -341,18 +342,6 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 <div className="flex gap-2 items-center mb-3">
                   <h4 className="text-sm font-semibold text-foreground">회차 정책 설정</h4>
                   <div className="flex-1 h-px bg-border"></div>
-                  {/* <button // This line is removed as per the edit hint
-                    onClick={toggleSettingsEdit}
-                    disabled={isDragOverlay || !isEditMode}
-                    className={`p-1 rounded transition-all ${
-                      isEditingSettings 
-                        ? 'bg-primary/20 text-primary' 
-                        : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                    } ${isDragOverlay || !isEditMode ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                    title={isEditingSettings ? '편집 완료' : '편집 모드'}
-                  >
-                    {isEditingSettings ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                  </button> */}
                 </div>
                 
                 <div className="pl-4 space-y-3">

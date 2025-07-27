@@ -21,9 +21,7 @@ import {
   rectSortingStrategy
 } from '@dnd-kit/sortable';
 import { Construction } from 'lucide-react';
-
 import { ParkingBarrier, OperationMode } from '@/types/parking';
-
 import BarrierCard from './barrierCard/BarrierCard';
 
 // #region 타입 정의
