@@ -8,7 +8,7 @@ import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 
-import { EntryPolicyType } from '../useAccessControl';
+import { EntryPolicyType } from '../hooks/useAccessControl';
 
 // #region 타입 정의
 interface GlobalPolicyPanelProps {
@@ -40,18 +40,10 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
   // #region 렌더링
   return (
     <div className="space-y-8">
-      {/* 섹션 헤더 - 신문지 스타일 */}
-      <div className="flex gap-3 items-baseline">
-        <div className="w-3 h-3 bg-foreground"></div> 
-          <h2 className="font-black tracking-tight text-2XL text-foreground font-multilang">
-            출입 정책 설정
-          </h2>
-          <div className="flex-1 mt-3 border-t border-foreground/10"></div>
-        </div>
-
       {/* 정책 설정 그리드 - 컬럼 레이아웃 */}
       <div className="grid gap-1 lg:grid-cols-3">
-        {/* 출입 허용 정책 */}
+        
+        {/* 출입 허용 대상 */}
         <div className="p-6 border-r border-border/30 lg:border-r-2">
           <div className="space-y-4">
             <div className="pb-2 border-b border-foreground/10">
@@ -84,7 +76,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
           </div>
         </div>
 
-        {/* 회차시간 제어 */}
+        {/* 회차 정책 */}
         <div className="p-6 border-r border-border/30 lg:border-r-2">
           <div className="space-y-4">
             <div className="pb-2 border-b border-foreground/10">
@@ -133,14 +125,6 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
           </div>
         </div>
       </div>
-
-      <div className="flex gap-4 items-center">
-          <div className="w-3 h-3 bg-foreground"></div>
-          <h2 className="text-lg font-black text-foreground font-multilang">
-            차단기 관리
-          </h2>
-          <div className="flex-1 border-t border-foreground/10"></div>
-        </div>
     </div>
   );
   // #endregion

@@ -37,9 +37,9 @@ const BarrierDiagonalView: React.FC<BarrierDiagonalViewProps> = ({
 	showTitle = true,
 }) => {
 	return (
-		<div className="flex flex-col items-center gap-1">
+		<div className="flex flex-col gap-1 items-center">
 			{showTitle && (
-				<div className="text-center mb-1">
+				<div className="mb-1 text-center">
 					<h3 className="text-sm font-semibold text-foreground">대각선 시점</h3>
 					<p className="text-xs text-muted-foreground">입체감이 가장 좋은 기본 시점</p>
 				</div>

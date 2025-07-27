@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarrierDiagonalView, OperationMode } from '@/unit/barrier/barrier';
+import { BarrierDiagonalView, OperationMode } from '@/components/ui/ui-3d/barrier/barrierView/BarrierView';
 import { ParkingBarrier } from '@/types/parking';
 
 interface ParkingBarrierCardProps {

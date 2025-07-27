@@ -11,9 +11,9 @@ import { CSS } from '@dnd-kit/utilities';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import BarrierDiagonalView from '@/unit/barrier/BarrierDiagonalView';
-import BarrierDriverView from '@/unit/barrier/BarrierDriverView';
-import BarrierSecurityView from '@/unit/barrier/BarrierSecurityView';
+import BarrierDiagonalView from '@/components/ui/ui-3d/barrier/barrierView/BarrierDiagonalView';
+import BarrierDriverView from '@/components/ui/ui-3d/barrier/barrierView/BarrierDriverView';
+import BarrierSecurityView from '@/components/ui/ui-3d/barrier/barrierView/BarrierSecurityView';
 
 // #region 타입
 type ViewType = 'diagonal' | 'driver' | 'security';

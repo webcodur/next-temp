@@ -13,8 +13,8 @@ import {
 	BarrierDiagonalView,
 	BarrierDriverView,
 	BarrierSecurityView,
-} from '@/unit/barrier/barrier';
-import type { OperationMode, ViewAngle } from '@/unit/barrier/barrier';
+} from '@/components/ui/ui-3d/barrier/barrierView/BarrierView';
+import type { OperationMode, ViewAngle } from '@/components/ui/ui-3d/barrier/barrierView/BarrierView';
 
 export default function Barrier3DExample() {
 	// #region 훅

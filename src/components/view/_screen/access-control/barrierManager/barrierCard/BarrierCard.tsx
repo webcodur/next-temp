@@ -5,16 +5,17 @@
 */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings as SettingsIcon, GripVertical, Edit3, Check, ChevronDown } from 'lucide-react';
+import { Settings as SettingsIcon, GripVertical, Edit3, Check, ChevronDown, Sliders } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-import { ParkingBarrier, OperationMode } from '@/types/parking';
+import { ParkingBarrier, OperationMode, VehicleAccessPolicy } from '@/types/parking';
+import { createEmptyAccessPolicy } from '@/data/vehiclePolicyData';
 import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-
-import PolicySettings from '@/components/view/parking/access-control/barrierGrid/barrierCard/PolicySettings';
+import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
+import VehicleConfig from './VehicleConfig';
 
 // #region 타입 정의
 interface BarrierPolicy {
@@ -29,7 +30,7 @@ interface BarrierCardProps {
   onOperationModeChange: (mode: OperationMode) => void;
   onPolicyUpdate: (barrierId: string, policy: BarrierPolicy) => void;
   isDragOverlay?: boolean;
-  returnHourEnabled?: boolean;
+  globalReturnHourEnabled?: boolean;
 }
 // #endregion
 
@@ -49,7 +50,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
   onOperationModeChange,
   onPolicyUpdate,
   isDragOverlay = false,
-  returnHourEnabled = false,
+  globalReturnHourEnabled = false,
 }) => {
   // #region 상태
   const [isEditingName, setIsEditingName] = useState(false);
@@ -57,6 +58,8 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showNameChangeConfirmModal, setShowNameChangeConfirmModal] = useState(false);
   const [isEditingSettings, setIsEditingSettings] = useState(false);
+  const [showVehicleConfigModal, setShowVehicleConfigModal] = useState(false);
+  const [vehiclePolicies, setVehiclePolicies] = useState<VehicleAccessPolicy>(createEmptyAccessPolicy);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const nameEditRef = useRef<HTMLDivElement>(null);
@@ -180,12 +183,27 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
     return operationModeOptions.find(option => option.value === barrier.operationMode)?.label || '알 수 없음';
   };
 
-  const handlePolicyUpdate = (newPolicy: BarrierPolicy) => {
-    onPolicyUpdate(barrier.id, newPolicy);
-  };
-
   const toggleSettingsEdit = () => {
     setIsEditingSettings(!isEditingSettings);
+  };
+
+  const handleWorkHourChange = (value: boolean) => {
+    if (isDragOverlay) return;
+    onPolicyUpdate(barrier.id, { ...policy, workHour: value });
+  };
+
+  const handleBlacklistChange = (value: boolean) => {
+    if (isDragOverlay) return;
+    onPolicyUpdate(barrier.id, { ...policy, blacklist: value });
+  };
+
+  const handleVehiclePolicyUpdate = (newPolicies: VehicleAccessPolicy) => {
+    setVehiclePolicies(newPolicies);
+  };
+
+  const handleOpenVehicleConfig = () => {
+    if (isDragOverlay) return;
+    setShowVehicleConfigModal(true);
   };
   // #endregion
 
@@ -261,6 +279,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               <div className="flex gap-2 items-center mb-3">
                 <h4 className="text-sm font-semibold text-foreground">차단기 제어</h4>
                 <div className="flex-1 h-px bg-border"></div>
+                <span className={`text-sm font-bold ${barrier.isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                  {barrier.isOpen ? '열림' : '닫힘'}
+                </span>
               </div>
               
               <div className="grid grid-cols-4 gap-3">
@@ -325,41 +346,65 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               </div>
             </div>
 
-            {/* 차단기 상태 표시 */}
-            <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-              <span className="text-sm font-medium text-muted-foreground">현재 상태</span>
-              <span className={`text-sm font-bold ${barrier.isOpen ? 'text-green-600' : 'text-red-600'}`}>
-                {barrier.isOpen ? '열림' : '닫힘'}
-              </span>
-            </div>
+            {/* 회차 정책 설정 - 전역 설정이 활성화된 경우에만 표시 */}
+            {globalReturnHourEnabled && (
+              <div>
+                <div className="flex gap-2 items-center mb-3">
+                  <h4 className="text-sm font-semibold text-foreground">회차 정책 설정</h4>
+                  <div className="flex-1 h-px bg-border"></div>
+                  <button
+                    onClick={toggleSettingsEdit}
+                    disabled={isDragOverlay}
+                    className={`p-1 rounded transition-all ${
+                      isEditingSettings 
+                        ? 'bg-primary/20 text-primary' 
+                        : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                    } ${isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    title={isEditingSettings ? '편집 완료' : '편집 모드'}
+                  >
+                    {isEditingSettings ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                  </button>
+                </div>
+                
+                <div className="pl-4 space-y-3">
+                  {/* 회차시간 토글 */}
+                  <SimpleToggleSwitch
+                    label="회차시간"
+                    checked={policy.workHour}
+                    onChange={handleWorkHourChange}
+                    size="sm"
+                    disabled={isDragOverlay || !isEditingSettings}
+                  />
 
-            {/* 정책 설정 */}
+                  {/* 블랙리스트 토글 */}
+                  <SimpleToggleSwitch
+                    label="블랙리스트"
+                    checked={policy.blacklist}
+                    onChange={handleBlacklistChange}
+                    size="sm"
+                    disabled={isDragOverlay || !isEditingSettings}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 출입 유형 설정 */}
             <div>
               <div className="flex gap-2 items-center mb-3">
-                <h4 className="text-sm font-semibold text-foreground">정책 설정</h4>
+                <h4 className="text-sm font-semibold text-foreground">출입 유형 설정</h4>
                 <div className="flex-1 h-px bg-border"></div>
-                <button
-                  onClick={toggleSettingsEdit}
-                  disabled={isDragOverlay}
-                  className={`p-1 rounded transition-all ${
-                    isEditingSettings 
-                      ? 'bg-primary/20 text-primary' 
-                      : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                  } ${isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                  title={isEditingSettings ? '편집 완료' : '편집 모드'}
-                >
-                  {isEditingSettings ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                </button>
               </div>
               
-              <PolicySettings
-                barrierName={barrier.name}
-                policy={policy}
-                onPolicyUpdate={handlePolicyUpdate}
-                isEditMode={isEditingSettings}
+              <button
+                onClick={handleOpenVehicleConfig}
                 disabled={isDragOverlay}
-                globalReturnHourEnabled={returnHourEnabled}
-              />
+                className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground flex items-center justify-center gap-2 ${
+                  isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+              >
+                <Sliders className="w-4 h-4" />
+                출입 유형 설정
+              </button>
             </div>
           </div>
       </SectionPanel>
@@ -391,6 +436,35 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               className="px-4 py-2 text-sm rounded-md neu-raised bg-primary text-primary-foreground hover:neu-flat"
             >
               저장
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 차량 유형 설정 모달 */}
+      <Modal
+        isOpen={showVehicleConfigModal}
+        onClose={() => setShowVehicleConfigModal(false)}
+        title={`${barrier.name} - 출입 유형 설정`}
+        size="md"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            이 차단기를 통과할 수 있는 차량 유형을 설정하세요.
+          </p>
+          
+          <VehicleConfig
+            policies={vehiclePolicies}
+            onPolicyUpdate={handleVehiclePolicyUpdate}
+            isEditMode={true}
+          />
+          
+          <div className="flex gap-3 justify-end pt-4 border-t border-border">
+            <button
+              onClick={() => setShowVehicleConfigModal(false)}
+              className="px-4 py-2 text-sm rounded-md neu-raised bg-background text-foreground hover:neu-flat"
+            >
+              닫기
             </button>
           </div>
         </div>

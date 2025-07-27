@@ -6,7 +6,7 @@
 
 import { notFound } from 'next/navigation';
 
-import { PageTemplate } from '@/unit/PageTemplate';
+import { PageTemplate } from '@/components/view/_etc/PageTemplate';
 import {
 	findBotMenuByParams,
 	generateBotMenuParams,

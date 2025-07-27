@@ -26,7 +26,7 @@ import { ParkingBarrier, OperationMode } from '@/types/parking';
 import { SimpleRadioGroup } from '@/components/ui/ui-input/simple-input/SimpleRadioGroup';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 
-import BarrierCard from './BarrierCard/BarrierCard';
+import BarrierCard from '../barrierManager/barrierCard/BarrierCard';
 
 // #region 타입 정의
 export type EntryPolicyType = 'all' | 'office';

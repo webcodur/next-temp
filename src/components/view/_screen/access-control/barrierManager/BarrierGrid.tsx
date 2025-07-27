@@ -118,7 +118,7 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
                     onOperationModeChange(barrier.id, mode)
                   }
                   onPolicyUpdate={onPolicyUpdate}
-                  returnHourEnabled={returnHourEnabled}
+                  globalReturnHourEnabled={returnHourEnabled}
                 />
               ))}
             </div>

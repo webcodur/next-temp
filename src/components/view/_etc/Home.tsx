@@ -12,9 +12,9 @@ import React, { useState, useEffect } from 'react';
 import { Car, Shield } from 'lucide-react';
 
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import AccessControlManager from '@/components/view/parking/access-control/AccessControlManager';
-import VehicleDetailCard from '@/unit/parking/VehicleDetailCard';
-import VehicleListTable from '@/unit/parking/VehicleListTable';
+import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
+import VehicleDetailCard from '@/components/view/_screen/access-control/vehicleManager/VehicleDetailCard';
+import VehicleListTable from '@/components/view/_screen/access-control/vehicleManager/VehicleListTable';
 
 import type {
 	VehicleEntry,
