@@ -70,7 +70,7 @@ export async function verifyToken(token: string | undefined): Promise<boolean> {
 		process.env.NODE_ENV === 'development' &&
 		token.startsWith('dev-access-token-')
 	) {
-		console.log('🚀 개발자 모드 토큰 검증 우회:', token);
+		console.log('개발자 모드: 토큰 검증 우회:', token);
 		return true;
 	}
 

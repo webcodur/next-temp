@@ -41,26 +41,11 @@ export async function middleware(request: NextRequest) {
 	const isTokenValid = token && (await verifyToken(token));
 
 	if (!isTokenValid) {
-		if (isDevelopment) {
-			console.log('❌ Middleware - 토큰 검증 실패:', pathname);
-		}
-
 		// 홈페이지가 아닌 곳에 접근하면 홈페이지로 리다이렉트
 		if (pathname !== '/') {
-			if (isDevelopment) {
-				console.log(
-					'🔄 Middleware - 홈페이지로 리다이렉트:',
-					pathname,
-					'→',
-					'/'
-				);
-			}
 			return NextResponse.redirect(new URL('/', request.url));
 		}
-	} else if (isDevelopment) {
-		console.log('✅ Middleware - 토큰 검증 성공:', pathname);
 	}
-
 	return NextResponse.next();
 }
 
