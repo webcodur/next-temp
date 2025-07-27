@@ -13,7 +13,7 @@ import { VEHICLE_TYPES } from '@/data/vehiclePolicyData';
 interface VehicleConfigProps {
   policies: VehicleAccessPolicy;
   onPolicyUpdate: (policies: VehicleAccessPolicy) => void;
-  isEditMode?: boolean;
+  isLocked?: boolean;
 }
 // #endregion
 
@@ -21,12 +21,12 @@ interface VehicleConfigProps {
 const VehicleConfig: React.FC<VehicleConfigProps> = ({
   policies,
   onPolicyUpdate,
-  isEditMode = false,
+  isLocked = true,
 }) => {
 
   // #region 핸들러
   const handleTogglePolicy = (category: VehicleType) => {
-    if (!isEditMode) return;
+    if (isLocked) return;
     
     const newPolicies = {
       ...policies,
@@ -48,7 +48,7 @@ const VehicleConfig: React.FC<VehicleConfigProps> = ({
             <label
               key={category}
               className={`flex items-center gap-2 p-2 rounded-md transition-all ${
-                isEditMode
+                !isLocked
                   ? 'cursor-pointer hover:neu-inset'
                   : 'cursor-default opacity-60'
               } ${
@@ -61,7 +61,7 @@ const VehicleConfig: React.FC<VehicleConfigProps> = ({
                 type="checkbox"
                 checked={isEnabled}
                 onChange={() => handleTogglePolicy(category)}
-                disabled={!isEditMode}
+                disabled={isLocked}
                 className="w-3 h-3 rounded border border-border"
               />
               <span className="font-medium font-multilang">

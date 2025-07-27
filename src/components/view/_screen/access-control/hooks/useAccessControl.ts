@@ -30,6 +30,7 @@ interface UseAccessControlReturn {
 	entryPolicy: EntryPolicyType;
 	returnHourEnabled: boolean;
 	warningCount: number;
+	isLocked: boolean;
 
 	// 핸들러
 	handleBarrierToggle: (barrierId: string) => void;
@@ -39,19 +40,16 @@ interface UseAccessControlReturn {
 	handleEntryPolicyChange: (policy: EntryPolicyType) => void;
 	handleReturnHourEnabledChange: (enabled: boolean) => void;
 	handleWarningCountChange: (count: number) => void;
+	handleLockToggle: () => void;
+	handleSaveChanges: () => void;
 }
 // #endregion
 
-// #region 초기 정책 데이터
-const createInitialBarrierPolicies = (
-	barriers: ParkingBarrier[]
-): Record<string, BarrierPolicy> => {
+// #region 유틸리티 함수
+const createInitialBarrierPolicies = (barriers: ParkingBarrier[]) => {
 	const policies: Record<string, BarrierPolicy> = {};
 	barriers.forEach((barrier) => {
-		policies[barrier.id] = {
-			workHour: false,
-			blacklist: false,
-		};
+		policies[barrier.id] = { workHour: false, blacklist: false };
 	});
 	return policies;
 };
@@ -75,6 +73,7 @@ export const useAccessControl = ({
 	const [entryPolicy, setEntryPolicy] = useState<EntryPolicyType>('office');
 	const [returnHourEnabled, setReturnHourEnabled] = useState<boolean>(false);
 	const [warningCount, setWarningCount] = useState<number>(2);
+	const [isLocked, setIsLocked] = useState<boolean>(true);
 	// #endregion
 
 	// #region 이펙트
@@ -172,6 +171,25 @@ export const useAccessControl = ({
 	const handleWarningCountChange = (count: number) => {
 		setWarningCount(Math.max(1, count)); // 최소 1 이상
 	};
+
+	const handleLockToggle = () => {
+		setIsLocked((prev) => !prev);
+	};
+
+	const handleSaveChanges = () => {
+		// 변경사항 저장 로직
+		console.log('변경사항 저장:', {
+			barriers,
+			barrierPolicies,
+			barrierOrder,
+			entryPolicy,
+			returnHourEnabled,
+			warningCount,
+		});
+
+		// 편집모드 종료
+		setIsLocked(false);
+	};
 	// #endregion
 
 	// #region 반환
@@ -183,6 +201,7 @@ export const useAccessControl = ({
 		entryPolicy,
 		returnHourEnabled,
 		warningCount,
+		isLocked,
 
 		// 핸들러
 		handleBarrierToggle,
@@ -192,7 +211,8 @@ export const useAccessControl = ({
 		handleEntryPolicyChange,
 		handleReturnHourEnabledChange,
 		handleWarningCountChange,
+		handleLockToggle,
+		handleSaveChanges,
 	};
 	// #endregion
 };
-// #endregion

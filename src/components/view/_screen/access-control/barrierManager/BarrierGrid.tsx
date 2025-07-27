@@ -37,6 +37,7 @@ interface BarrierGridProps {
   barrierPolicies: Record<string, BarrierPolicy>;
   barrierOrder: string[];
   returnHourEnabled: boolean;
+  isLocked?: boolean;
   onBarrierToggle: (barrierId: string) => void;
   onOperationModeChange: (barrierId: string, mode: OperationMode) => void;
   onPolicyUpdate: (barrierId: string, policy: BarrierPolicy) => void;
@@ -56,6 +57,7 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
   barrierPolicies,
   barrierOrder,
   returnHourEnabled,
+  isLocked,
   onBarrierToggle,
   onOperationModeChange,
   onPolicyUpdate,
@@ -119,6 +121,7 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
                   }
                   onPolicyUpdate={onPolicyUpdate}
                   globalReturnHourEnabled={returnHourEnabled}
+                  isLocked={isLocked}
                 />
               ))}
             </div>

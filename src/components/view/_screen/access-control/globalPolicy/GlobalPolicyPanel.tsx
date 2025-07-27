@@ -45,6 +45,7 @@ interface GlobalPolicyPanelProps {
   entryPolicy: EntryPolicyType;
   returnHourEnabled: boolean;
   warningCount: number;
+  isLocked?: boolean;
   onEntryPolicyChange: (policy: EntryPolicyType) => void;
   onReturnHourEnabledChange: (enabled: boolean) => void;
   onWarningCountChange: (count: number) => void;
@@ -56,6 +57,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
   entryPolicy,
   returnHourEnabled,
   warningCount,
+  isLocked = true,
   onEntryPolicyChange,
   onReturnHourEnabledChange,
   onWarningCountChange,
@@ -89,6 +91,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     size="default"
                     onClick={() => handleEntryPolicyChange('all')}
                     className="flex-1"
+                    disabled={isLocked}
                   >
                     전체 차량
                   </Button>
@@ -97,6 +100,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     size="default"
                     onClick={() => handleEntryPolicyChange('office')}
                     className="flex-1"
+                    disabled={isLocked}
                   >
                     등록된 차량
                   </Button>
@@ -121,6 +125,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                   checked={returnHourEnabled}
                   onChange={onReturnHourEnabledChange}
                   size="md"
+                  disabled={isLocked}
                 />
               </div>
             </div>
@@ -147,6 +152,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     className={STYLES.numberInput}
                     value={warningCount}
                     onChange={(e) => onWarningCountChange(Number(e.target.value))}
+                    disabled={isLocked}
                   />
                   <span className={STYLES.label}>회 이상</span>
                 </div>

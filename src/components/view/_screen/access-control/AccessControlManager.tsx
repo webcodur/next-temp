@@ -5,10 +5,13 @@
 */
 
 import React from 'react';
+import { Lock, Unlock, Send } from 'lucide-react';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
 import { useAccessControl } from './hooks/useAccessControl';
 import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierGrid from './barrierManager/BarrierGrid';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import SectionDivider from '@/components/ui/ui-layout/section-divider/SectionDivider';
 
 // #region 타입 정의
 interface AccessControlManagerProps {
@@ -34,6 +37,7 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 		entryPolicy,
 		returnHourEnabled,
 		warningCount,
+		isLocked,
 		handleBarrierToggle,
 		handleOperationModeChange,
 		handlePolicyUpdate,
@@ -41,6 +45,8 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 		handleEntryPolicyChange,
 		handleReturnHourEnabledChange,
 		handleWarningCountChange,
+		handleLockToggle,
+		handleSaveChanges,
 	} = useAccessControl({
 		initialBarriers,
 		onBarrierOpen,
@@ -52,36 +58,47 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 	// #region 렌더링
 	return (
 		<div className="flex flex-col gap-10">
-			{/* 현장 출입 정책 설정 */}
-			<div className="flex gap-3 items-baseline">
-				<div className="w-3 h-3 bg-foreground"></div>
-				<h2 className="text-xl text-foreground font-multilang">
-					현장 출입 정책 설정
-				</h2>
-				<div className="flex-1 mt-3 border-t border-foreground/10"></div>
+			{/* 잠금상태 컨트롤 버튼 */}
+			<div className="flex gap-2 justify-end mb-4">
+				<Button
+					onClick={handleLockToggle}
+					variant={!isLocked ? 'default' : 'outline'}
+					size="lg"
+				>
+					{!isLocked ? <Unlock /> : <Lock />}
+					{!isLocked ? '편집상태' : '잠금상태'}
+				</Button>
+				<Button
+					onClick={handleSaveChanges}
+					disabled={isLocked}
+					variant={!isLocked ? 'default' : 'outline'}
+					size="lg"
+				>
+					<Send />
+					완료
+				</Button>
 			</div>
+
+			{/* 현장 출입 정책 설정 */}
+			<SectionDivider title="현장 출입 정책 설정" />
 			<GlobalPolicyPanel
 				entryPolicy={entryPolicy}
 				returnHourEnabled={returnHourEnabled}
 				warningCount={warningCount}
+				isLocked={isLocked}
 				onEntryPolicyChange={handleEntryPolicyChange}
 				onReturnHourEnabledChange={handleReturnHourEnabledChange}
 				onWarningCountChange={handleWarningCountChange}
 			/>
 
 			{/* 개별 차단기 관리 */}
-			<div className="flex gap-4 items-center">
-				<div className="w-3 h-3 bg-foreground"></div>
-				<h2 className="text-xl text-foreground font-multilang">
-					개별 차단기 관리
-				</h2>
-				<div className="flex-1 border-t border-foreground/10"></div>
-			</div>
+			<SectionDivider title="개별 차단기 관리" />
 			<BarrierGrid
 				barriers={barriers}
 				barrierPolicies={barrierPolicies}
 				barrierOrder={barrierOrder}
 				returnHourEnabled={returnHourEnabled}
+				isLocked={isLocked}
 				onBarrierToggle={handleBarrierToggle}
 				onOperationModeChange={handleOperationModeChange}
 				onPolicyUpdate={handlePolicyUpdate}

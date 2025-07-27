@@ -16,20 +16,21 @@
 
 ### 레이아웃 (`ui-layout`)
 
-| 컴포넌트                                                            | 설명                                                      |
-| :------------------------------------------------------------------ | :-------------------------------------------------------- |
-| [Accordion](./ui-layout/accordion/accordion.md)                     | 여러 섹션을 접고 펼칠 수 있는 콘텐츠 컨테이너입니다.      |
-| [Collapsible](./ui-layout/collapsible/collapsible.md)               | 단일 섹션을 접고 펼치는 기능의 컴포넌트입니다.            |
-| [Dialog](./ui-layout/dialog/dialog.md)                              | 사용자에게 작업이나 정보를 요청하는 팝업 창입니다.        |
-| [Modal](./ui-layout/modal/modal.md)                                 | Dialog보다 간소화된 형태의 기본 모달 창입니다.            |
-| [Nested Tabs](./ui-layout/nested-tabs/nested-tabs.md)               | 탭 내부에 또 다른 탭을 중첩하여 사용할 수 있습니다.       |
-| [Stepper](./ui-layout/stepper/stepper.md)                           | 여러 단계로 구성된 프로세스의 진행 상태를 표시합니다.     |
-| [Tabs](./ui-layout/tabs/tabs.md)                                    | 콘텐츠를 여러 패널로 나누어 보여주는 탭 인터페이스입니다. |
-| [SeatMap](./ui-layout/seat-map/seat-map.md)                         | 시설별 좌석 예약 시스템의 좌석 맵 컴포넌트입니다.         |
-| [FacilityEditor](./ui-layout/facility-editor/facility-editor.md)    | 관리자용 시설 레이아웃 편집 도구입니다.                   |
-| [SeatReservation](./ui-layout/seat-reservation/seat-reservation.md) | 사용자 좌석 예약 인터페이스입니다.                        |
-| [GridForm](./ui-layout/grid-form/grid-form.md)                      | CSS Grid와 Flexbox를 계층적으로 조합한 폼 레이아웃 컴포넌트입니다. |
-| [SectionPanel](./ui-layout/section-panel/section-panel.md)           | 헤더와 콘텐츠 영역으로 구성된 섹션 패널 컨테이너입니다. |
+| 컴포넌트                                                            | 설명                                                                     |
+| :------------------------------------------------------------------ | :----------------------------------------------------------------------- |
+| [Accordion](./ui-layout/accordion/accordion.md)                     | 여러 섹션을 접고 펼칠 수 있는 콘텐츠 컨테이너입니다.                     |
+| [Collapsible](./ui-layout/collapsible/collapsible.md)               | 단일 섹션을 접고 펼치는 기능의 컴포넌트입니다.                           |
+| [Dialog](./ui-layout/dialog/dialog.md)                              | 사용자에게 작업이나 정보를 요청하는 팝업 창입니다.                       |
+| [Modal](./ui-layout/modal/modal.md)                                 | Dialog보다 간소화된 형태의 기본 모달 창입니다.                           |
+| [Nested Tabs](./ui-layout/nested-tabs/nested-tabs.md)               | 탭 내부에 또 다른 탭을 중첩하여 사용할 수 있습니다.                      |
+| [Stepper](./ui-layout/stepper/stepper.md)                           | 여러 단계로 구성된 프로세스의 진행 상태를 표시합니다.                    |
+| [Tabs](./ui-layout/tabs/tabs.md)                                    | 콘텐츠를 여러 패널로 나누어 보여주는 탭 인터페이스입니다.                |
+| [SeatMap](./ui-layout/seat-map/seat-map.md)                         | 시설별 좌석 예약 시스템의 좌석 맵 컴포넌트입니다.                        |
+| [FacilityEditor](./ui-layout/facility-editor/facility-editor.md)    | 관리자용 시설 레이아웃 편집 도구입니다.                                  |
+| [SeatReservation](./ui-layout/seat-reservation/seat-reservation.md) | 사용자 좌석 예약 인터페이스입니다.                                       |
+| [GridForm](./ui-layout/grid-form/grid-form.md)                      | CSS Grid와 Flexbox를 계층적으로 조합한 폼 레이아웃 컴포넌트입니다.       |
+| [SectionPanel](./ui-layout/section-panel/section-panel.md)          | 헤더와 콘텐츠 영역으로 구성된 섹션 패널 컨테이너입니다.                  |
+| SectionDivider                                                      | 중앙에 제목이 있고 양쪽에 라인과 정사각형 장식이 있는 섹션 구분선입니다. |
 
 <!-- Theme Toggle 컴포넌트: UI 폴더에서 제거되었으며 개별 페이지/헤더에서 관리합니다. -->
 
@@ -48,12 +49,12 @@
 
 ### 데이터 표시 (`ui-data`)
 
-| 컴포넌트                                                                          | 설명                                                                                       |
-| :-------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| 컴포넌트                                                                          | 설명                                                                                                      |
+| :-------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
 | [Table Components](../app/lab/ui-data/table/page.tsx)                             | 기본 테이블, 무한 스크롤, 페이지네이션 등 다양한 테이블 컴포넌트 통합 _(Lab 페이지: `lab/ui-data/table`)_ |
-| [Infinite Scroll](./ui-data/infinite-scroll/infinite-scroll.md)                   | 사용자가 스크롤을 내리면 새로운 데이터를 계속 불러오는 목록입니다.                         |
-| [List Highlight Marker](./ui-data/list-highlight-marker/list-highlight-marker.md) | 목록에서 현재 선택되거나 호버된 항목을 시각적으로 강조합니다.                              |
-| [Timeline](./ui-data/timeline/timeline.md)                                        | 시간 순서에 따라 이벤트나 기록을 시각적으로 보여줍니다.                                    |
+| [Infinite Scroll](./ui-data/infinite-scroll/infinite-scroll.md)                   | 사용자가 스크롤을 내리면 새로운 데이터를 계속 불러오는 목록입니다.                                        |
+| [List Highlight Marker](./ui-data/list-highlight-marker/list-highlight-marker.md) | 목록에서 현재 선택되거나 호버된 항목을 시각적으로 강조합니다.                                             |
+| [Timeline](./ui-data/timeline/timeline.md)                                        | 시간 순서에 따라 이벤트나 기록을 시각적으로 보여줍니다.                                                   |
 
 ### 효과 및 장식 (`ui-effects`)
 
@@ -70,10 +71,10 @@
 | [Toast](./ui-effects/toast/toast.md)                         | 작업 결과나 간단한 정보를 잠시 보여주는 팝업 알림입니다.                |
 | [Tooltip](./ui-effects/tooltip/tooltip.md)                   | 특정 요소에 대한 추가 정보를 제공하는 작은 말풍선입니다.                |
 | [Loading](./ui-effects/loading/loading.md)                   | 다양한 로딩 애니메이션 효과를 제공하는 컴포넌트들입니다.                |
-| [Animation](./ui-effects/animation/animation.md)             | 다양한 애니메이션 효과들을 제공하는 컴포넌트들입니다.                  |
+| [Animation](./ui-effects/animation/animation.md)             | 다양한 애니메이션 효과들을 제공하는 컴포넌트들입니다.                   |
 
 ### 3D (`ui-3d`)
 
-| 컴포넌트                                                         | 설명                                                            |
-| :--------------------------------------------------------------- | :-------------------------------------------------------------- |
-| [Barrier3D](./ui-3d/barrier/barrier3d.md)                        | 3D 주차장 차단기를 시뮬레이션하는 인터랙티브 컴포넌트입니다.    |
+| 컴포넌트                                  | 설명                                                         |
+| :---------------------------------------- | :----------------------------------------------------------- |
+| [Barrier3D](./ui-3d/barrier/barrier3d.md) | 3D 주차장 차단기를 시뮬레이션하는 인터랙티브 컴포넌트입니다. |

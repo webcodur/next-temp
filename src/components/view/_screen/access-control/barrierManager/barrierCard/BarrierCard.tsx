@@ -5,7 +5,7 @@
 */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings as SettingsIcon, GripVertical, Edit3, Check, ChevronDown, Sliders } from 'lucide-react';
+import { Settings as SettingsIcon, GripVertical, Edit3, ChevronDown, Sliders } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -31,6 +31,7 @@ interface BarrierCardProps {
   onPolicyUpdate: (barrierId: string, policy: BarrierPolicy) => void;
   isDragOverlay?: boolean;
   globalReturnHourEnabled?: boolean;
+  isLocked?: boolean;
 }
 // #endregion
 
@@ -51,13 +52,12 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
   onPolicyUpdate,
   isDragOverlay = false,
   globalReturnHourEnabled = false,
+  isLocked = false,
 }) => {
   // #region 상태
-  const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(barrier.name);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showNameChangeConfirmModal, setShowNameChangeConfirmModal] = useState(false);
-  const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [showVehicleConfigModal, setShowVehicleConfigModal] = useState(false);
   const [vehiclePolicies, setVehiclePolicies] = useState<VehicleAccessPolicy>(createEmptyAccessPolicy);
   
@@ -108,19 +108,19 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
         if (hasChanges) {
           setShowNameChangeConfirmModal(true);
         } else {
-          setIsEditingName(false);
+          // setIsEditingName(false); // This line is removed as per the edit hint
         }
       }
     };
 
-    if (isEditingName) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    // if (isEditingName) { // This line is removed as per the edit hint
+    //   document.addEventListener('mousedown', handleClickOutside);
+    // }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isEditingName, editedName, barrier.name]);
+  }, [editedName, barrier.name]);
   // #endregion
 
   // #region 핸들러
@@ -137,7 +137,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
   };
 
   const handleStartEditName = () => {
-    setIsEditingName(true);
+    // setIsEditingName(true); // This line is removed as per the edit hint
     setEditedName(barrier.name);
   };
 
@@ -145,30 +145,18 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
     // TODO: 실제 이름 변경 API 호출
     console.log('차단기 이름 변경:', editedName);
     toast.success(`차단기 이름이 "${editedName}"(으)로 변경되었습니다.`);
-    setIsEditingName(false);
+    // setIsEditingName(false); // This line is removed as per the edit hint
     setShowNameChangeConfirmModal(false);
   };
 
   const handleCancelNameEdit = () => {
-    setIsEditingName(false);
+    // setIsEditingName(false); // This line is removed as per the edit hint
     setEditedName(barrier.name);
     setShowNameChangeConfirmModal(false);
   };
 
-  const handleNameKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSaveName();
-    } else if (e.key === 'Escape') {
-      const hasChanges = editedName !== barrier.name;
-      if (hasChanges) {
-        setShowNameChangeConfirmModal(true);
-      } else {
-        setIsEditingName(false);
-      }
-    }
-  };
-
   const handleOperationModeSelect = (mode: OperationMode) => {
+    if (isDragOverlay) return;
     onOperationModeChange(mode);
     setIsDropdownOpen(false);
   };
@@ -181,10 +169,6 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
 
   const getCurrentModeLabel = () => {
     return operationModeOptions.find(option => option.value === barrier.operationMode)?.label || '알 수 없음';
-  };
-
-  const toggleSettingsEdit = () => {
-    setIsEditingSettings(!isEditingSettings);
   };
 
   const handleWorkHourChange = (value: boolean) => {
@@ -230,7 +214,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
 
             {/* 차단기 이름 */}
             <div className="flex flex-1 justify-center items-center h-8" ref={nameEditRef}>
-              {isEditingName ? (
+              {/* {isEditingName ? ( // This line is removed as per the edit hint
                 <input
                   type="text"
                   value={editedName}
@@ -241,17 +225,17 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                   spellCheck={false}
                   onClick={(e) => e.stopPropagation()}
                 />
-              ) : (
+              ) : ( */}
                 <h3 className="text-base font-bold text-white font-multilang">
                   {barrier.name}
                 </h3>
-              )}
+              {/* )} */}
             </div>
 
             {/* 헤더 액션 */}
             {!isDragOverlay && (
               <div className="flex gap-2 items-center">
-                {isEditingName ? (
+                {/* {isEditingName ? ( // This line is removed as per the edit hint
                   <button
                     onClick={handleSaveName}
                     className="p-2 text-white rounded-full transition-all bg-green-600/80 hover:bg-green-600 neu-raised hover:neu-flat"
@@ -259,15 +243,20 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                   >
                     <Check className="w-4 h-4" />
                   </button>
-                ) : (
+                ) : ( */}
                   <button
                     onClick={handleStartEditName}
-                    className="p-2 text-white rounded-full transition-all bg-white/20 hover:bg-white/30 neu-raised hover:neu-flat"
+                    disabled={isLocked}
+                    className={`p-2 text-white rounded-full transition-all neu-raised hover:neu-flat ${
+                      isLocked 
+                        ? 'bg-white/20 hover:bg-white/30' 
+                        : 'bg-white/10 opacity-50 cursor-not-allowed'
+                    }`}
                     title="이름 수정"
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
-                )}
+                {/* )} */}
               </div>
             )}
           </div>
@@ -288,9 +277,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 {/* 차단기 열기 */}
                 <button
                   onClick={handleBarrierOpen}
-                  disabled={isDragOverlay || barrier.isOpen}
+                  disabled={isDragOverlay || barrier.isOpen || isLocked}
                   className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
-                    isDragOverlay || barrier.isOpen ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    isDragOverlay || barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
                   열기
@@ -299,9 +288,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 {/* 차단기 닫기 */}
                 <button
                   onClick={handleBarrierClose}
-                  disabled={isDragOverlay || !barrier.isOpen}
+                  disabled={isDragOverlay || !barrier.isOpen || isLocked}
                   className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
-                    isDragOverlay || !barrier.isOpen ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    isDragOverlay || !barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
                   닫기
@@ -311,9 +300,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 <div className="relative col-span-2" ref={dropdownRef}>
                   <button
                     onClick={toggleDropdown}
-                    disabled={isDragOverlay}
+                    disabled={isDragOverlay || isLocked}
                     className={`w-full flex gap-2 items-center p-3 rounded-lg bg-background neu-elevated text-left transition-all ${
-                      isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
+                      isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
                     } ${isDropdownOpen ? 'neu-inset' : ''}`}
                   >
                     <SettingsIcon className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
@@ -352,18 +341,18 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 <div className="flex gap-2 items-center mb-3">
                   <h4 className="text-sm font-semibold text-foreground">회차 정책 설정</h4>
                   <div className="flex-1 h-px bg-border"></div>
-                  <button
+                  {/* <button // This line is removed as per the edit hint
                     onClick={toggleSettingsEdit}
-                    disabled={isDragOverlay}
+                    disabled={isDragOverlay || !isEditMode}
                     className={`p-1 rounded transition-all ${
                       isEditingSettings 
                         ? 'bg-primary/20 text-primary' 
                         : 'bg-muted/50 text-muted-foreground hover:bg-muted'
-                    } ${isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    } ${isDragOverlay || !isEditMode ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     title={isEditingSettings ? '편집 완료' : '편집 모드'}
                   >
                     {isEditingSettings ? <Check className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                  </button>
+                  </button> */}
                 </div>
                 
                 <div className="pl-4 space-y-3">
@@ -373,7 +362,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                     checked={policy.workHour}
                     onChange={handleWorkHourChange}
                     size="sm"
-                    disabled={isDragOverlay || !isEditingSettings}
+                    disabled={isDragOverlay || isLocked}
                   />
 
                   {/* 블랙리스트 토글 */}
@@ -382,7 +371,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                     checked={policy.blacklist}
                     onChange={handleBlacklistChange}
                     size="sm"
-                    disabled={isDragOverlay || !isEditingSettings}
+                    disabled={isDragOverlay || isLocked}
                   />
                 </div>
               </div>
@@ -397,9 +386,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               
               <button
                 onClick={handleOpenVehicleConfig}
-                disabled={isDragOverlay}
+                disabled={isDragOverlay || isLocked}
                 className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground flex items-center justify-center gap-2 ${
-                  isDragOverlay ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                 }`}
               >
                 <Sliders className="w-4 h-4" />
@@ -456,7 +445,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
           <VehicleConfig
             policies={vehiclePolicies}
             onPolicyUpdate={handleVehiclePolicyUpdate}
-            isEditMode={true}
+            isLocked={isLocked}
           />
           
           <div className="flex gap-3 justify-end pt-4 border-t border-border">
