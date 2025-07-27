@@ -5,7 +5,7 @@
 */
 
 import React from 'react';
-import { SimpleRadioGroup } from '@/components/ui/ui-input/simple-input/SimpleRadioGroup';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 
 import { EntryPolicyType } from '../useAccessControl';
@@ -42,38 +42,43 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
     <div className="space-y-8">
       {/* 섹션 헤더 - 신문지 스타일 */}
       <div className="flex gap-3 items-baseline">
-          <h1 className="text-2xl font-black tracking-tight text-foreground font-multilang">
-            전역 정책 설정
-          </h1>
+        <div className="w-3 h-3 bg-foreground"></div> 
+          <h2 className="font-black tracking-tight text-2XL text-foreground font-multilang">
+            출입 정책 설정
+          </h2>
           <div className="flex-1 mt-3 border-t border-foreground/10"></div>
         </div>
 
-      {/* 정책 설정 그리드 - 신문지 컬럼 레이아웃 */}
+      {/* 정책 설정 그리드 - 컬럼 레이아웃 */}
       <div className="grid gap-1 lg:grid-cols-3">
         {/* 출입 허용 정책 */}
         <div className="p-6 border-r border-border/30 lg:border-r-2">
           <div className="space-y-4">
             <div className="pb-2 border-b border-foreground/10">
               <h2 className="text-sm font-black tracking-wide text-foreground font-multilang">
-                01. 출입 제어
+                01. 출입 허용 대상
               </h2>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                기본 접근 권한 설정
-              </p>
             </div>
             <div className="space-y-3">
               <div className="flex items-center h-11">
-                <SimpleRadioGroup
-                  label=""
-                  value={entryPolicy}
-                  onChange={handleEntryPolicyChange}
-                  layout="horizontal"
-                  className="w-full [&>div:last-child]:min-h-0 [&>div:last-child]:h-auto [&>div:last-child]:gap-0 [&>div:last-child>div]:flex-1"
-                  options={[
-                    { label: '전체 차량 허용', value: 'all' },
-                    { label: '등록차량만 허용', value: 'office' },
-                  ]}
-                />
+                <div className="flex gap-2 w-full">
+                  <Button
+                    variant={entryPolicy === 'all' ? 'inset' : 'outline'}
+                    size="default"
+                    onClick={() => handleEntryPolicyChange('all')}
+                    className="flex-1"
+                  >
+                    전체 차량
+                  </Button>
+                  <Button
+                    variant={entryPolicy === 'office' ? 'inset' : 'outline'}
+                    size="default"
+                    onClick={() => handleEntryPolicyChange('office')}
+                    className="flex-1"
+                  >
+                    등록된 차량
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -84,11 +89,8 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
           <div className="space-y-4">
             <div className="pb-2 border-b border-foreground/10">
               <h2 className="text-sm font-black tracking-wide text-foreground font-multilang">
-                02. 시간 정책
+                02. 회차 정책
               </h2>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                시간 기반 정책 활성화
-              </p>
             </div>
             <div className="space-y-3">
               <div className="flex items-center h-11">
@@ -110,15 +112,12 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
               <h2 className="text-sm font-black tracking-wide text-foreground font-multilang">
                 03. 블랙리스트 기준
               </h2>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                자동 차단 임계값 설정
-              </p>
             </div>
             
             <div className="space-y-3">
-              <div className="flex gap-3 items-center h-11">
-                <span className="text-sm font-medium text-foreground font-multilang">경고</span>
-                <div className="relative">
+              <div className="flex gap-3 justify-between items-center h-11">
+                <div className="text-sm font-medium text-foreground font-multilang">경고 횟수</div>
+                <div className="flex relative gap-2 items-center">
                   <input
                     type="number"
                     min={1}
@@ -127,18 +126,17 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     value={warningCount}
                     onChange={(e) => onWarningCountChange(Number(e.target.value))}
                   />
+                  <span className="text-sm font-medium text-foreground font-multilang">회 이상</span>
                 </div>
-                <span className="text-sm font-medium text-foreground font-multilang">회 이상</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 구분선 - 신문지 스타일 */}
       <div className="flex gap-4 items-center">
           <div className="w-3 h-3 bg-foreground"></div>
-          <h2 className="text-lg font-black tracking-wide text-foreground font-multilang">
+          <h2 className="text-lg font-black text-foreground font-multilang">
             차단기 관리
           </h2>
           <div className="flex-1 border-t border-foreground/10"></div>

@@ -60,12 +60,12 @@ export default function AdminPasswordChangePage() {
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
         alert(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        router.push('/parking/facility/admin');
+        router.push('/parking/lot-management/admin');
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
       alert('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      router.push('/parking/facility/admin');
+              router.push('/parking/lot-management/admin');
     } finally {
       setLoading(false);
     }
@@ -93,7 +93,7 @@ export default function AdminPasswordChangePage() {
 
   // #region 핸들러
   const handleBack = () => {
-    router.push(`/parking/facility/admin/${adminId}`);
+    router.push(`/parking/lot-management/admin/${adminId}`);
   };
 
   const handleFieldChange = (field: keyof PasswordChangeData, value: string) => {
@@ -116,7 +116,7 @@ export default function AdminPasswordChangePage() {
 
       if (result.success) {
         alert('비밀번호가 성공적으로 변경되었습니다.');
-        router.push(`/parking/facility/admin/${adminId}`);
+        router.push(`/parking/lot-management/admin/${adminId}`);
       } else {
         console.error('비밀번호 변경 실패:', result.errorMsg);
         alert(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
@@ -130,7 +130,7 @@ export default function AdminPasswordChangePage() {
   };
 
   const handleCancel = () => {
-    router.push(`/parking/facility/admin/${adminId}`);
+    router.push(`/parking/lot-management/admin/${adminId}`);
   };
   // #endregion
 

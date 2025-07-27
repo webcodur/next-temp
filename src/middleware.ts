@@ -27,17 +27,6 @@ export async function middleware(request: NextRequest) {
 
 	// 토큰 체크
 	const token = request.cookies.get('access-token')?.value;
-	const isDevelopment = process.env.NODE_ENV === 'development';
-
-	// 개발자 모드에서 디버깅 정보 출력
-	if (isDevelopment) {
-		console.log('🔍 Middleware - 경로:', pathname);
-		console.log(
-			'🔍 Middleware - 토큰:',
-			token ? `${token.substring(0, 20)}...` : '없음'
-		);
-	}
-
 	const isTokenValid = token && (await verifyToken(token));
 
 	if (!isTokenValid) {

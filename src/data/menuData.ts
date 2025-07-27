@@ -8,24 +8,24 @@ export const menuData: MenuData = {
 		icon: Car,
 		key: '주차',
 		midItems: {
-			시설관리: {
-				key: '시설관리',
+			주차장관리: {
+				key: '주차장관리',
 				botItems: [
 					{
 						key: '주차장정보 (목업)',
-						href: '/parking/facility/info',
+						href: '/parking/lot-management/info',
 					},
 					{
 						key: '근무자관리',
-						href: '/parking/facility/admin',
+						href: '/parking/lot-management/admin',
 					},
 					{
 						key: '차단기설정 (목업)',
-						href: '/parking/facility/barrier',
+						href: '/parking/lot-management/barrier',
 					},
 					{
 						key: '출입정책 (목업)',
-						href: '/parking/facility/entry',
+						href: '/parking/lot-management/entry',
 					},
 				],
 			},
@@ -193,7 +193,7 @@ export const menuData: MenuData = {
 		},
 	},
 
-  연구소: {
+	연구소: {
 		icon: FlaskConical,
 		key: '연구소',
 		midItems: {

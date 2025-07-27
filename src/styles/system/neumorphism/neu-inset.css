@@ -34,7 +34,6 @@
 .neu-inset {
 	/* 부드러운 border + 음각 shadow */
 	border: 1px solid hsl(var(--border) / 0.4);
-	color: hsl(var(--primary));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
 		/* 내부 우하단 그림자 */

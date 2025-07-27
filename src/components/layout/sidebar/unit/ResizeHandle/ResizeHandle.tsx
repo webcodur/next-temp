@@ -70,24 +70,31 @@ export function ResizeHandle({
   }, [isResizing, minWidth, maxWidth, setEndPanelWidth, setIsResizing]);
 
   return (
-    <div
-      className={`absolute top-0 right-0 w-1 h-full cursor-col-resize z-50 transition-all duration-200 ${
-        isResizing 
-          ? 'bg-primary' 
-          : isHovered 
-            ? 'bg-primary/60' 
-            : 'bg-transparent hover:bg-primary/30'
-      }`}
-      onMouseDown={handleMouseDown}
+    <div 
+      className="absolute top-0 right-0 z-50 w-1 h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 더 넓은 호버 영역 */}
-      <div className="absolute top-0 right-0 w-2 h-full -translate-x-1/2" />
+      {/* 호버 감지 영역 - 전체 우측 모서리 */}
+      <div
+        className={`absolute top-0 right-0 w-1 h-full transition-all duration-200 ${
+          isResizing 
+            ? 'bg-primary' 
+            : isHovered 
+              ? 'bg-primary/60' 
+              : 'bg-transparent hover:bg-primary/30'
+        }`}
+      >
+        {/* 더 넓은 호버 영역 */}
+        <div className="absolute top-0 right-0 w-2 h-full -translate-x-1/2" />
+      </div>
       
-      {/* 리사이즈 핸들 아이콘 (호버/드래그 시) */}
+      {/* 실제 드래그 가능한 중앙 손잡이 영역 */}
       {(isHovered || isResizing) && (
-        <div className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+        <div 
+          className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 cursor-col-resize"
+          onMouseDown={handleMouseDown}
+        >
           {/* Grip 스타일 아이콘 - 세로 점 3개 */}
           <div className="flex flex-col gap-1 items-center p-2 rounded border shadow-sm backdrop-blur-sm bg-surface-3/80 border-border/30">
             <div className="w-1 h-1 rounded-full bg-primary"></div>

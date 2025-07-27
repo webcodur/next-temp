@@ -1,5 +1,5 @@
 /* 
-  파일명: /components/view/parking/facility/BarrierManagementView/VehicleTypeCard/VehicleTypeCard.tsx
+  파일명: /components/view/parking/lot-management/BarrierManagementView/VehicleTypeCard/VehicleTypeCard.tsx
   기능: 차단기별 출입 유형 차량 설정 카드 컴포넌트
   책임: 드래그 앤 드롭, 차단기 제어, 정책 설정을 통합 관리한다.
 */ // ------------------------------

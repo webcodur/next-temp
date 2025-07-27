@@ -14,7 +14,7 @@ import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 
-import PolicySettings from '@/components/view/parking/access-control/barrierGrid/barrierCard/policySettings/PolicySettings';
+import PolicySettings from '@/components/view/parking/access-control/barrierGrid/barrierCard/PolicySettings';
 
 // #region 타입 정의
 interface BarrierPolicy {

@@ -12,7 +12,7 @@ import { createEmptyAccessPolicy } from '@/data/vehiclePolicyData';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 
-import VehicleConfig from '@/components/view/parking/facility/barrierManager/PolicyPanel/BarrierCard/Settings/VehicleConfig';
+import VehicleConfig from './VehicleConfig'
 
 // #region 타입 정의
 interface BarrierPolicy {
@@ -77,7 +77,7 @@ const Settings: React.FC<SettingsProps> = ({
             onChange={handleWorkHourChange}
             size="sm"
             disabled={disabled || !isEditMode}
-          />
+          />  
         )}
 
         {/* 블랙리스트 토글 - 전역 설정이 활성화된 경우에만 표시 */}
@@ -91,7 +91,7 @@ const Settings: React.FC<SettingsProps> = ({
           />
         )}
 
-        {/* 출입 유형 설정 버튼 - 항상 표시 */}
+        {/* 출입 유형 설정 버튼 */}
         <button
           onClick={handleOpenVehicleConfig}
           disabled={disabled}

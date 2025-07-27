@@ -82,12 +82,12 @@ export default function AdminDetailPage() {
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
         alert(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        routerRef.current.push('/parking/facility/admin');
+        routerRef.current.push('/parking/lot-management/admin');
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
       alert('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      routerRef.current.push('/parking/facility/admin');
+      routerRef.current.push('/parking/lot-management/admin');
     } finally {
       setLoading(false);
       console.log('loadAdminData 완료');
@@ -121,7 +121,7 @@ export default function AdminDetailPage() {
 
   // #region 핸들러
   const handleBack = () => {
-    router.push('/parking/facility/admin');
+    		router.push('/parking/lot-management/admin');
   };
 
 

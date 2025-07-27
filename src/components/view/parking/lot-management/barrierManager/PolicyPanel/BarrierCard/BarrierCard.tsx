@@ -200,7 +200,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
         className="h-full"
         colorVariant="primary"
         headerContent={
-          <div className="flex items-center w-full px-4 py-2 text-white bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60">
+          <div className="flex items-center px-4 py-2 w-full text-white bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60">
             {/* 드래그 핸들 */}
             <div 
               {...(isDragOverlay ? {} : { ...attributes, ...listeners })}

@@ -71,7 +71,7 @@ export default function AdminCreatePage() {
 
       if (result.success) {
         // 성공 시 목록 페이지로 이동
-        router.push('/parking/facility/admin');
+        router.push('/parking/lot-management/admin');
       } else {
         // 에러 처리
         console.error('관리자 생성 실패:', result.errorMsg);
@@ -86,7 +86,7 @@ export default function AdminCreatePage() {
   };
 
   const handleCancel = () => {
-    router.push('/parking/facility/admin');
+    router.push('/parking/lot-management/admin');
   };
 
   const handleFormChange = (data: AdminFormData) => {

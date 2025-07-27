@@ -60,13 +60,13 @@ export default function AdminListPage() {
 
   // #region 이벤트 핸들러
   const handleCreateClick = useCallback(() => {
-    router.push('/parking/facility/admin/create');
+    router.push('/parking/lot-management/admin/create');
   }, [router]);
 
   const handleRowClick = useCallback((admin: Admin, _index: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     console.log('handleRowClick 호출, admin:', admin, 'adminId:', admin.id);
-    console.log('이동할 경로:', `/parking/facility/admin/${admin.id}`);
-    router.push(`/parking/facility/admin/${admin.id}`);
+    console.log('이동할 경로:', `/parking/lot-management/admin/${admin.id}`);
+    router.push(`/parking/lot-management/admin/${admin.id}`);
   }, [router]);
 
   const handleDeleteClick = useCallback((id: number) => {

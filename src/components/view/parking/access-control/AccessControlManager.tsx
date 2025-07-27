@@ -53,7 +53,7 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
   // #region 렌더링
   return (
     <div className="flex flex-col gap-10">
-      {/* 전역 정책 설정 영역역 */}
+      {/* 전역 정책 설정 영역 */}
       <GlobalPolicyPanel
         entryPolicy={entryPolicy}
         returnHourEnabled={returnHourEnabled}
