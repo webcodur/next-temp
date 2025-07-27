@@ -12,7 +12,7 @@ import { createEmptyAccessPolicy } from '@/data/vehiclePolicyData';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 
-import VehicleConfig from './VehicleConfig/VehicleConfig';
+import VehicleConfig from '@/components/view/parking/facility/barrierManager/PolicyPanel/BarrierCard/Settings/VehicleConfig';
 
 // #region 타입 정의
 interface BarrierPolicy {

@@ -24,7 +24,7 @@ import { Construction } from 'lucide-react';
 
 import { ParkingBarrier, OperationMode } from '@/types/parking';
 
-import BarrierCard from './BarrierCard/BarrierCard';
+import BarrierCard from './barrierCard/BarrierCard';
 
 // #region 타입 정의
 interface BarrierPolicy {
