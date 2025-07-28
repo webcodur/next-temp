@@ -25,20 +25,20 @@ const SectionPanelExample = () => {
 				<h1 className="mb-4 text-3xl font-bold font-multilang">
 					SectionPanel 컴포넌트 예제
 				</h1>
-				<div className="p-4 mx-auto max-w-4xl bg-gradient-to-r rounded-lg from-primary/20 to-primary/10">
-					<p className="text-sm font-medium text-left text-primary font-multilang">
-						<strong>BarrierManager 기준 고정 스타일:</strong><br />
-						• 모든 헤더에 gradient 배경 적용 (bg-gradient-to-r from-primary/80 to-primary/60)<br />
-						• 타이틀 중앙 배치, h-10 고정 높이, text-lg font-bold 스타일<br />
-						• px-4 py-3 패딩 통일, rounded-lg border<br />
-						• 조건부 처리 제거로 일관된 디자인 시스템 확보
+				<div className="p-4 mx-auto max-w-4xl bg-gradient-to-r rounded-lg from-muted/30 to-muted/20">
+					<p className="text-sm font-medium text-left text-foreground font-multilang">
+						<strong>중립적인 색상 기준 고정 스타일:</strong><br />
+						• 모든 헤더에 중립 그라데이션 적용 (bg-gradient-to-r from-gray-4 via-gray-5 to-gray-6)<br />
+						• 타이틀 중앙 배치, h-8 고정 높이, text-base font-bold 스타일<br />
+						• px-4 py-2 패딩 통일, rounded-lg<br />
+						• 브랜드 색상 제거로 중립적이고 일관된 디자인 시스템 확보
 					</p>
 				</div>
 			</div>
 
 			{/* 예제 1: 기본 섹션 패널 */}
 			<div className="space-y-4">
-				<h2 className="text-xl font-semibold text-primary font-multilang">
+				<h2 className="text-xl font-semibold text-foreground font-multilang">
 					1. 기본 섹션 패널
 				</h2>
 				<div className="mb-4 text-sm text-muted-foreground font-multilang">
@@ -56,14 +56,14 @@ const SectionPanelExample = () => {
 
 			{/* 예제 2: 아이콘과 액션이 있는 패널 */}
 			<div className="space-y-4">
-				<h2 className="text-xl font-semibold text-primary font-multilang">
+				<h2 className="text-xl font-semibold text-foreground font-multilang">
 					2. 아이콘과 액션이 있는 패널
 				</h2>
 						<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 							{/* 차량 목록 패널 */}
 							<SectionPanel
 								title="차량 목록"
-								icon={<Car className="w-5 h-5 text-white" />}
+								icon={<Car className="w-5 h-5 text-foreground" />}
 								headerActions={
 									<button
 										onClick={handleRefresh}
@@ -78,9 +78,9 @@ const SectionPanelExample = () => {
 								}
 							>
 								<div className="p-4 space-y-3">
-									<div className="p-3 mb-3 rounded-lg bg-primary/10">
-										<p className="text-xs font-medium text-primary">
-											📍 고정 스타일 특징: 타이틀 중앙 배치, h-10 고정 높이, 흰색 텍스트
+									<div className="p-3 mb-3 rounded-lg bg-muted/50">
+										<p className="text-xs font-medium text-foreground">
+											📍 고정 스타일 특징: 타이틀 중앙 배치, h-8 고정 높이, 중립적인 색상
 										</p>
 									</div>
 									<div className="space-y-2">
@@ -99,9 +99,9 @@ const SectionPanelExample = () => {
 							{/* 사용자 정보 패널 */}
 							<SectionPanel
 								title="사용자 정보" 
-								icon={<User className="w-5 h-5 text-white" />}
+								icon={<User className="w-5 h-5 text-foreground" />}
 								headerActions={
-									<Settings className="w-5 h-5 text-white transition-transform cursor-pointer hover:scale-110" />
+									<Settings className="w-5 h-5 text-foreground transition-transform cursor-pointer hover:scale-110" />
 								}
 							>
 								<div className="p-4">
@@ -127,14 +127,14 @@ const SectionPanelExample = () => {
 
 			{/* 예제 3: 다양한 콘텐츠 타입 */}
 			<div className="space-y-4">
-				<h2 className="text-xl font-semibold text-primary font-multilang">
+				<h2 className="text-xl font-semibold text-foreground font-multilang">
 					3. 다양한 콘텐츠 타입
 				</h2>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					{/* 일정 패널 */}
 					<SectionPanel
 						title="오늘의 일정"
-						icon={<Calendar className="w-5 h-5 text-white" />}
+						icon={<Calendar className="w-5 h-5 text-foreground" />}
 					>
 						<div className="p-4">
 							<div className="space-y-3">

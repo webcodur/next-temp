@@ -42,17 +42,17 @@ export const Accordion: React.FC<AccordionProps> = ({
 
 	// #region 렌더링
 	return (
-		<div className={`rounded-2xl neu-flat bg-surface-3 ${className}`}>
+		<div className={`rounded-2xl neu-flat bg-serial-2 ${className}`}>
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
 				className={`flex items-center justify-between p-4 cursor-pointer neu-raised rounded-2xl transition-colors ${
 					isOpen 
 						? 'bg-primary-1' 
-						: 'bg-surface-2'
+						: 'bg-serial-1'
 				} ${
 					disabled 
-						? 'cursor-not-allowed opacity-60' 
+						? 'opacity-60 cursor-not-allowed' 
 						: 'hover:bg-primary-2'
 				} ${headerClassName}`}>
 				<h2 className="text-sm font-medium text-foreground font-multilang">{title}</h2>

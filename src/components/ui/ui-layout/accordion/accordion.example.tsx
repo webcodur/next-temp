@@ -8,7 +8,7 @@ const AccordionExample = () => {
 	const t = useTranslations();
 	
 	return (
-		<div className="p-8 min-h-screen bg-background">
+		<div className="p-8 min-h-screen">
 			<div className="mx-auto max-w-4xl">
 				<div className="mb-8">
 					<h1 className="mb-4 text-3xl font-bold text-foreground font-multilang">{t('아코디언_제목')}</h1>
@@ -17,10 +17,10 @@ const AccordionExample = () => {
 
 				<div className="space-y-8">
 					{/* 기본 아코디언 */}
-					<section className="p-6 rounded-lg bg-card neu-flat">
+					<section className="p-6 rounded-lg neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">{t('아코디언_기본')}</h2>
 						<Accordion title={t('아코디언_기본제목')} defaultOpen={true}>
-							<div className="p-4 rounded-lg bg-muted">
+							<div className="p-4 rounded-lg">
 								<p className="text-foreground font-multilang">
 									{t('아코디언_기본내용')}
 								</p>
@@ -29,7 +29,7 @@ const AccordionExample = () => {
 					</section>
 
 					{/* 상태 텍스트가 있는 아코디언 */}
-					<section className="p-6 rounded-lg bg-card neu-flat">
+					<section className="p-6 rounded-lg neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">{t('아코디언_상태텍스트')}</h2>
 						<Accordion 
 							title={t('아코디언_설정옵션')} 
@@ -61,14 +61,14 @@ const AccordionExample = () => {
 					</section>
 
 					{/* 비활성화된 아코디언 */}
-					<section className="p-6 rounded-lg bg-card neu-flat">
+					<section className="p-6 rounded-lg neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">{t('아코디언_비활성화')}</h2>
 						<Accordion 
 							title={t('아코디언_비활성화섹션')} 
 							statusText={t('아코디언_접근불가')} 
 							disabled={true}
 						>
-							<div className="p-4 rounded-lg bg-muted">
+							<div className="p-4 rounded-lg">
 								<p className="text-muted-foreground font-multilang">
 									{t('아코디언_비활성화내용')}
 								</p>
@@ -77,11 +77,11 @@ const AccordionExample = () => {
 					</section>
 
 					{/* 아코디언 그룹 */}
-					<section className="p-6 rounded-lg bg-card neu-flat">
+					<section className="p-6 rounded-lg neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">{t('아코디언_그룹')}</h2>
 						<AccordionGroup>
 							<Accordion title={t('아코디언_첫번째섹션')} defaultOpen={true}>
-								<div className="p-4 rounded-lg bg-primary/5">
+								<div className="p-4 rounded-lg">
 									<h3 className="mb-2 font-semibold text-primary font-multilang">{t('아코디언_첫번째섹션')}</h3>
 									<p className="text-foreground font-multilang">
 										{t('아코디언_첫번째내용')}
@@ -90,7 +90,7 @@ const AccordionExample = () => {
 							</Accordion>
 							
 							<Accordion title={t('아코디언_두번째섹션')} statusText={t('아코디언_중요')}>
-								<div className="p-4 bg-green-50 rounded-lg">
+								<div className="p-4 rounded-lg">
 									<h3 className="mb-2 font-semibold text-green-800 font-multilang">{t('아코디언_두번째섹션')}</h3>
 									<p className="text-green-700 font-multilang">
 										{t('아코디언_두번째내용')}
@@ -99,7 +99,7 @@ const AccordionExample = () => {
 							</Accordion>
 							
 							<Accordion title={t('아코디언_세번째섹션')}>
-								<div className="p-4 bg-purple-50 rounded-lg">
+								<div className="p-4 rounded-lg">
 									<h3 className="mb-2 font-semibold text-purple-800 font-multilang">{t('아코디언_세번째섹션')}</h3>
 									<ul className="space-y-1 text-purple-700">
 										<li className="font-multilang">• {t('아코디언_목록항목1')}</li>
@@ -112,7 +112,7 @@ const AccordionExample = () => {
 					</section>
 
 					{/* 기능 설명 */}
-					<section className="p-6 rounded-lg bg-card neu-flat">
+					<section className="p-6 rounded-lg neu-flat">
 						<h2 className="mb-4 text-xl font-semibold text-foreground font-multilang">{t('아코디언_주요기능')}</h2>
 						<ul className="space-y-2 text-muted-foreground">
 							<li className="font-multilang">• {t('아코디언_기능1')}</li>

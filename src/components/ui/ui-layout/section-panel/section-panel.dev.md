@@ -48,8 +48,8 @@ interface SectionPanelContentProps {
 /* 헤더 컨테이너 */
 .header {
 	@apply flex flex-shrink-0 items-center px-4 py-2;
-	@apply bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60;
-	@apply text-white;
+	@apply bg-gradient-to-r from-gray-4 via-gray-5 to-gray-6;
+	@apply text-foreground;
 }
 
 /* 헤더 타이틀 영역 */
@@ -59,7 +59,7 @@ interface SectionPanelContentProps {
 
 /* 타이틀 텍스트 */
 .title {
-	@apply text-base font-bold text-white font-multilang;
+	@apply text-base font-bold text-foreground font-multilang;
 }
 ```
 
@@ -73,7 +73,7 @@ interface SectionPanelContentProps {
 
 /* 콘텐츠 영역 */
 .content {
-	@apply flex-1 bg-surface-2;
+	@apply flex-1 bg-serial-2;
 }
 ```
 

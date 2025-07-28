@@ -24,19 +24,19 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 
 	return (
 		<div className="flex overflow-hidden flex-col rounded-lg neu-flat">
-						{hasHeader && (
-				<div className="flex flex-shrink-0 items-center px-4 py-2 bg-gradient-to-r from-primary/90 via-primary/70 to-secondary/60 text-white">
+      {hasHeader && (
+			<div className="flex flex-shrink-0 items-center px-4 py-2 bg-serial-4 text-foreground">
 					{/* 3분할 레이아웃: 왼쪽(icon) | 가운데(title) | 오른쪽(headerActions) */}
 					
 					{/* 왼쪽 영역: 아이콘 */}
-					<div className="flex items-center justify-start w-16 h-8">
+					<div className="flex justify-start items-center w-16 h-8">
 						{icon && <span className="flex-shrink-0">{icon}</span>}
 					</div>
 
 					{/* 가운데 영역: 타이틀 */}
-					<div className="flex flex-1 items-center justify-center h-8 min-w-0">
+					<div className="flex flex-1 justify-center items-center min-w-0 h-8">
 						{title && (
-							<div className="text-base font-bold text-white font-multilang text-center w-full">
+							<div className="w-full text-base font-bold text-center text-foreground font-multilang">
 								{typeof title === 'string' ? (
 									<h2 className="truncate">{title}</h2>
 								) : (
@@ -47,11 +47,12 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 					</div>
 
 					{/* 오른쪽 영역: 헤더 액션 */}
-					<div className="flex items-center justify-end w-16 h-8">
+					<div className="flex justify-end items-center w-16 h-8">
 						{headerActions && (
 							<div className="flex-shrink-0">
 								{headerActions}
 							</div>
+              
 						)}
 					</div>
 				</div>
@@ -68,7 +69,7 @@ export const SectionPanelContent: React.FC<SectionPanelContentProps> = ({
 	children,
 }) => {
 	return (
-		<div className="flex-1 bg-surface-2">
+		<div className="flex-1 bg-serial-2">
 			{children}
 		</div>
 	);

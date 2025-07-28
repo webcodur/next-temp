@@ -16,7 +16,7 @@ export const BaseTableHeader = <T extends Record<string, unknown>>({
 				style={{ tableLayout: 'fixed' }}
 			>
 				<thead
-					className={`border-b bg-surface-2 border-primary-4/30 ${headerClassName}`}
+					className={`border-b bg-serial-4 border-primary-4/30 ${headerClassName}`}
 				>
 					<tr>
 						{columns.map((column, colIndex) => (

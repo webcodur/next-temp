@@ -109,7 +109,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 						display: flex; 
 						align-items: center; 
 						justify-content: center; 
-						background-color: var(--surface-2); 
+						background-color: var(--serial-1); 
 						border-radius: 8px; 
 						color: var(--muted-foreground);
 						font-size: 14px;
@@ -146,7 +146,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 							display: flex; 
 							align-items: center; 
 							justify-content: center; 
-							background-color: var(--surface-2); 
+							background-color: var(--serial-1); 
 							border-radius: 8px; 
 							color: var(--muted-foreground);
 							font-size: 14px;
@@ -235,7 +235,7 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 						display: flex; 
 						align-items: center; 
 						justify-content: center; 
-						background-color: var(--surface-2); 
+						background-color: var(--serial-1); 
 						border-radius: 8px; 
 						color: var(--muted-foreground);
 						font-size: 14px;

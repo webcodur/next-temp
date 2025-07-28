@@ -113,7 +113,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	}
 	return (
 		<ToastProvider>
-			<div className="flex h-screen bg-surface-3" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
+			<div className="flex h-screen bg-serial-6" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 			<Sidebar />
 			<div className="flex overflow-hidden flex-col flex-1 h-screen">
 				<Header />
@@ -123,7 +123,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						<>
 							{/* Overlay Panel */}
 							<div 
-								className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out bg-surface-2 ${
+								className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out bg-serial-3 ${
 									isRTL ? 'right-0' : 'left-0'
 								} ${
 									shouldShow 
@@ -139,7 +139,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 					)}
 
 					<main className="overflow-y-auto flex-1 p-6 scrollbar-gutter-stable">
-						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-surface-1 neu-flat">
+						<div className="p-8 mx-auto max-w-7xl rounded-lg bg-serial-1 neu-flat">
 							<PageWrapper>
 								{children}
 							</PageWrapper>

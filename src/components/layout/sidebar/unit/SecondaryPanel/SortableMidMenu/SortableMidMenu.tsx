@@ -46,7 +46,7 @@ export function SortableMidMenu({
           </CollapsibleTrigger>
         </div>
         
-        <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
+        				<CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-serial-2">
           <ul className="flex flex-col">
             {midItem.botItems.map((botItem) => {
               const isActive = pathname === botItem.href;

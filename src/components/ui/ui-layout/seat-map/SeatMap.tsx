@@ -139,7 +139,7 @@ export const SeatMap = ({
       </div>
 
       {/* 좌석 맵 */}
-      <div className="overflow-auto p-4 rounded-lg neu-inset bg-surface-1">
+      		<div className="overflow-auto p-4 rounded-lg neu-inset bg-serial-0">
         <div 
           className="relative"
           style={{
@@ -197,7 +197,7 @@ export const SeatMap = ({
 
       {/* 선택된 좌석 정보 */}
       {selectedSeat && (
-        <div className="p-4 rounded-lg neu-flat bg-surface-2">
+        		<div className="p-4 rounded-lg neu-flat bg-serial-1">
           {(() => {
             const seat = layout.objects.find(obj => obj.id === selectedSeat);
             if (!seat || seat.type !== 'seat') return null;

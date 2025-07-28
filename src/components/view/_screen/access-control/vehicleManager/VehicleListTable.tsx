@@ -214,8 +214,6 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
     return (
 		<SectionPanel 
 			title={t('주차_테이블_제목_금일입출차현황')}
-			className="w-full h-full"
-			contentClassName="flex flex-col min-h-0 overflow-hidden"
 		>
 			{/* 검색 필터 */}
 			<div className="">
@@ -229,7 +227,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 			{/* 테이블 영역 - 최대 높이 제한 및 스크롤 처리 */}
 			<div className="flex-shrink-0 p-4 pt-0">
 				<div 
-					className="overflow-hidden rounded-lg border bg-background"
+					className="overflow-hidden rounded-lg border"
 					style={{ height: '60vh', maxHeight: '600px', minHeight: '400px' }}
 				>
 					<div className="overflow-y-auto h-full">

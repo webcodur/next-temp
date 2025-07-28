@@ -334,7 +334,7 @@ export default function FacilityReservationExample() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setCurrentView('list')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg neu-raised hover:neu-inset bg-surface-1 text-foreground transition-all duration-150"
+            				className="flex items-center gap-2 px-4 py-2 rounded-lg neu-raised hover:neu-inset bg-serial-0 text-foreground transition-all duration-150"
           >
             <ArrowLeft className="w-4 h-4" />
             뒤로가기

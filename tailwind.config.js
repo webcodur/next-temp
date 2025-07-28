@@ -17,11 +17,24 @@ module.exports = {
 					foreground: 'hsl(var(--card-foreground))',
 				},
 
-				// 레이아웃 계층 전용
-				surface: {
-					1: 'hsl(var(--surface-1))',
-					2: 'hsl(var(--surface-2))',
-					3: 'hsl(var(--surface-3))',
+				// Serial & Counter 듀얼 시스템
+				serial: {
+					0: 'hsl(var(--serial-0))',
+					1: 'hsl(var(--serial-1))',
+					2: 'hsl(var(--serial-2))',
+					3: 'hsl(var(--serial-3))',
+					4: 'hsl(var(--serial-4))',
+					5: 'hsl(var(--serial-5))',
+					6: 'hsl(var(--serial-6))',
+				},
+				counter: {
+					0: 'hsl(var(--counter-0))',
+					1: 'hsl(var(--counter-1))',
+					2: 'hsl(var(--counter-2))',
+					3: 'hsl(var(--counter-3))',
+					4: 'hsl(var(--counter-4))',
+					5: 'hsl(var(--counter-5))',
+					6: 'hsl(var(--counter-6))',
 				},
 
 				// 강조 색상 - 가시성 개선 (브랜드 포인트 색상)

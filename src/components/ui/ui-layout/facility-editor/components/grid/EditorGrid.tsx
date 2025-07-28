@@ -18,7 +18,7 @@ export const EditorGrid = ({
 	onCellDoubleClick,
 }: EditorGridProps) => {
 	return (
-		<div className="overflow-auto p-4 rounded-lg neu-inset bg-surface-1">
+		<div className="overflow-auto p-4 rounded-lg neu-inset bg-serial-0">
 			<div 
 				className="relative"
 				style={{

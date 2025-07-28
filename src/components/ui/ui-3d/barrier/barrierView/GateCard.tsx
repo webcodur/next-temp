@@ -37,7 +37,7 @@ interface GateCardProps {
 
 // #region 상수
 const TITLEBAR_STYLE = 
-  'flex items-center justify-between px-4 py-3 bg-surface-2/50 border-b border-border/30 rounded-t-xl cursor-grab active:cursor-grabbing select-none';
+  		'flex items-center justify-between px-4 py-3 bg-serial-4/50 border-b border-border/30 rounded-t-xl cursor-grab active:cursor-grabbing select-none';
 const TITLEBAR_CONTENT_STYLE = 
   'flex items-center gap-2 flex-1 justify-center';
 
@@ -124,7 +124,7 @@ export default function GateCard({
         {...listeners}>
         
         {/* 순서 번호 (좌측) */}
-        <div className="flex items-center justify-center w-8 h-8 text-sm font-bold text-primary bg-surface-3/30 rounded-full">
+        				<div className="flex items-center justify-center w-8 h-8 text-sm font-bold text-primary bg-serial-5/30 rounded-full">
           {orderLabel.split('/')[0]}
         </div>
 

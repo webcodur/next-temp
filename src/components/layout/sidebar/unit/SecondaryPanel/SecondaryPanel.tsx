@@ -79,9 +79,9 @@ function SecondaryPanel() {
 		<TooltipProvider delayDuration={100}>
 			<div
 				style={{ width: `${endPanelWidth}px` }}
-				className="flex relative flex-col h-full border-e border-border/20 bg-surface-2 sidebar-container">
+				className="flex relative flex-col h-full border-e border-border/20 bg-serial-3 sidebar-container">
 				{/* Menu Controls */}
-				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-border/50">
+				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-serial-3">
 					{/* Mode Toggle */}
 					<Tooltip>
 						<TooltipTrigger asChild>

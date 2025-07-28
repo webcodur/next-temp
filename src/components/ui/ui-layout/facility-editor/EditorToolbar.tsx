@@ -59,7 +59,7 @@ export const EditorToolbar = ({
   return (
     <div className="space-y-3">
       {/* 첫 번째 줄: 도구 선택 및 히스토리 */}
-      <div className="flex items-center gap-4 p-4 neu-flat bg-surface-1 rounded-lg">
+      <div className="flex items-center gap-4 p-4 neu-flat bg-serial-0 rounded-lg">
         {/* 선택 상태 표시 */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-foreground">
@@ -86,8 +86,8 @@ export const EditorToolbar = ({
                   className={clsx(
                     'p-2 rounded-lg transition-all duration-150 flex items-center gap-2',
                     isSelected
-                      ? 'neu-inset bg-surface-2'
-                      : 'neu-raised hover:neu-inset hover:bg-surface-2'
+                      ? 'neu-inset bg-serial-1'
+                      : 'neu-raised hover:neu-inset hover:bg-serial-1'
                   )}
                   title={config.description}
                 >
@@ -110,7 +110,7 @@ export const EditorToolbar = ({
             className={clsx(
               'p-2 rounded-lg transition-all duration-150',
               canUndo
-                ? 'neu-raised hover:neu-inset hover:bg-surface-2 text-foreground'
+                ? 'neu-raised hover:neu-inset hover:bg-serial-1 text-foreground'
                 : 'neu-flat text-gray-400 cursor-not-allowed'
             )}
             title="실행취소 (Ctrl+Z)"
@@ -124,7 +124,7 @@ export const EditorToolbar = ({
             className={clsx(
               'p-2 rounded-lg transition-all duration-150',
               canRedo
-                ? 'neu-raised hover:neu-inset hover:bg-surface-2 text-foreground'
+                ? 'neu-raised hover:neu-inset hover:bg-serial-1 text-foreground'
                 : 'neu-flat text-gray-400 cursor-not-allowed'
             )}
             title="다시실행 (Ctrl+Shift+Z)"
@@ -143,7 +143,7 @@ export const EditorToolbar = ({
       </div>
 
       {/* 두 번째 줄: 크기 조절 컨트롤 */}
-      <div className="flex items-center gap-4 p-4 neu-flat bg-surface-1 rounded-lg">
+      <div className="flex items-center gap-4 p-4 neu-flat bg-serial-0 rounded-lg">
         {/* 셀 크기 조절 */}
         <div className="flex items-center gap-2">
           <Grid className="w-4 h-4 text-gray-600" />
@@ -175,7 +175,7 @@ export const EditorToolbar = ({
               max={MAX_GRID_SIZE.width}
               value={layout.gridSize.width}
               onChange={(e) => onGridSizeChange(parseInt(e.target.value), layout.gridSize.height)}
-              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-surface-2 border-none focus:outline-none focus:neu-flat"
+              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-serial-1 border-none focus:outline-none focus:neu-flat"
             />
           </div>
           
@@ -189,7 +189,7 @@ export const EditorToolbar = ({
               max={MAX_GRID_SIZE.height}
               value={layout.gridSize.height}
               onChange={(e) => onGridSizeChange(layout.gridSize.width, parseInt(e.target.value))}
-              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-surface-2 border-none focus:outline-none focus:neu-flat"
+              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-serial-1 border-none focus:outline-none focus:neu-flat"
             />
           </div>
         </div>

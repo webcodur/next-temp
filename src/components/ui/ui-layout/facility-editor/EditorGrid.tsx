@@ -40,7 +40,7 @@ const getCellDisplayName = (cell: { type: CellType; name: string }) => {
 
 const getCellBackgroundColor = (type: CellType) => {
   const colorMap: Record<CellType, string> = {
-    empty: 'bg-surface-1',
+    		empty: 'bg-serial-0',
     seat: 'bg-green-100 dark:bg-green-900',
     object: 'bg-yellow-100 dark:bg-yellow-900'
   };
@@ -141,7 +141,7 @@ export const EditorGrid = ({
   }, [isDragging, layout.gridSize, cellSize, onDragMove, onDragEnd]);
 
   return (
-    <div className="overflow-auto p-4 rounded-lg neu-inset bg-surface-1">
+    		<div className="overflow-auto p-4 rounded-lg neu-inset bg-serial-0">
       <div
         ref={containerRef}
         className="relative"

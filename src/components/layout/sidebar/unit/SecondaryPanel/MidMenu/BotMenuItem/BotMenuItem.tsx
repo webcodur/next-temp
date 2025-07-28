@@ -28,7 +28,7 @@ export function BotMenuItem({
         className={`block p-2 rounded-md text-sm ${
           isActive
             ? 'text-primary-foreground bg-primary'
-            : 'text-foreground hover:bg-surface-3'
+            				: 'text-foreground hover:bg-serial-4'
         }`}
       >
         {t(botItem.key)}

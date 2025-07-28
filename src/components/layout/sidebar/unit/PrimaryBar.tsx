@@ -57,7 +57,7 @@ export function PrimaryBar() {
 	return (
 		<div
 			style={{ minWidth: `${defaults.startColumnWidth}px` }}
-			className="flex flex-col items-center h-full cursor-pointer border-e border-border/20 shrink-0 sidebar-container"
+			className="flex flex-col items-center h-full cursor-pointer border-e border-border/20 shrink-0 sidebar-container bg-serial-3"
 			onClick={handlePrimaryBarClick}>
 			
       {/* 여닫기 버튼 */}

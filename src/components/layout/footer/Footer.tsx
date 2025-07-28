@@ -14,7 +14,7 @@ export default function Footer() {
 
 	// #region 렌더링
 	return (
-		<footer className="mt-10 bg-gradient-to-b rounded-t-xl border from-surface-2 to-surface-3 border-border/50">
+		<footer className="mt-10 bg-gradient-to-b rounded-t-xl border from-serial-5 to-serial-6 border-border/50">
 			<div className="container px-6 py-16 mx-auto">
 				{/* 메인 콘텐츠 영역 */}
 				<div className="grid grid-cols-1 gap-8 mb-12 lg:grid-cols-3">

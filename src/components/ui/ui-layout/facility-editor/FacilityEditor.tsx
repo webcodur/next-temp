@@ -211,7 +211,7 @@ export const FacilityEditor = ({
       />
 
       {/* 하단 상태 표시 */}
-      <div className="flex items-center justify-between p-3 rounded-lg neu-flat bg-surface-2 text-sm text-foreground">
+      			<div className="flex items-center justify-between p-3 rounded-lg neu-flat bg-serial-1 text-sm text-foreground">
         <div className="flex items-center gap-4">
           <span>
             총 객체: <strong>{layout.cells.length}개</strong>

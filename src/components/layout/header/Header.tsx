@@ -23,7 +23,7 @@ export default function Header() {
 
 	// #region 렌더링
 	return (
-		<header className="flex sticky top-0 z-50 flex-row justify-between items-center px-6 h-16 border-b bg-surface-2 border-border shrink-0">
+		<header className="flex sticky top-0 z-50 flex-row justify-between items-center px-6 h-16 border-b bg-serial-5 border-border shrink-0">
 			{/* Left: Breadcrumb */}
 			<div className="flex gap-4 items-center">
 				<div className="flex-shrink-0">

@@ -96,7 +96,7 @@ export function ResizeHandle({
           onMouseDown={handleMouseDown}
         >
           {/* Grip 스타일 아이콘 - 세로 점 3개 */}
-          <div className="flex flex-col gap-1 items-center p-2 rounded border shadow-sm backdrop-blur-sm bg-surface-3/80 border-border/30">
+          			<div className="flex flex-col gap-1 items-center p-2 rounded border shadow-sm backdrop-blur-sm bg-serial-4/80 border-border/30">
             <div className="w-1 h-1 rounded-full bg-primary"></div>
             <div className="w-1 h-1 rounded-full bg-primary"></div>
             <div className="w-1 h-1 rounded-full bg-primary"></div>

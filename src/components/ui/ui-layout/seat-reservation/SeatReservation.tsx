@@ -159,7 +159,7 @@ export const SeatReservation = ({
         </div>
         
         {/* 선택된 좌석 정보 */}
-        <div className="neu-flat p-4 rounded-lg bg-surface-2">
+        <div className="neu-flat p-4 rounded-lg bg-serial-1">
           <div className="flex items-center gap-3">
             <MapPin className="w-5 h-5 text-primary" />
             <div>
@@ -231,7 +231,7 @@ export const SeatReservation = ({
         
         {/* 예약 요약 */}
         {selectedTimeSlot && (
-          <div className="neu-flat p-4 rounded-lg bg-surface-2">
+          <div className="neu-flat p-4 rounded-lg bg-serial-1">
             <h3 className="font-semibold mb-3 text-foreground font-multilang">
               {t('시설_예약요약')}
             </h3>
@@ -318,7 +318,7 @@ export const SeatReservation = ({
         </p>
       </div>
       
-      <div className="neu-flat p-6 rounded-lg bg-surface-2 text-left">
+      <div className="neu-flat p-6 rounded-lg bg-serial-1 text-left">
         <h3 className="font-semibold mb-4 text-foreground font-multilang">
           {t('시설_예약정보')}
         </h3>

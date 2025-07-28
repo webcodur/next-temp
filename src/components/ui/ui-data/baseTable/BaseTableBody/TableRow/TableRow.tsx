@@ -42,7 +42,7 @@ export const TableRow = <T extends Record<string, unknown>>({
 		<tr
 			onClick={() => onRowClick?.(item, index)}
 			className={`
-				${index % 2 === 0 ? 'bg-surface-1' : 'bg-surface-2'}
+				${index % 2 === 0 ? 'bg-serial-0' : 'bg-serial-1'}
 				${hoverClass}
 				${onRowClick ? 'cursor-pointer' : ''}
 				${getRowClassName()}

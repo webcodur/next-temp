@@ -235,15 +235,15 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
               onKeyDown={handleNameKeyDown}
-              className="w-full h-8 px-2 text-center text-base font-bold text-white bg-transparent border border-white/30 rounded focus:outline-none focus:border-white/50 focus:bg-white/10"
+              className="px-2 w-full h-8 text-base font-bold text-center bg-transparent rounded border text-foreground border-foreground/30 focus:outline-none focus:border-foreground/50 focus:bg-foreground/10"
               placeholder="차단기 이름"
             />
           ) : (
             <div
               onClick={handleStartEditName}
-              className={`w-full h-8 px-2 flex items-center justify-center text-center text-base font-bold text-white rounded transition-colors ${
+              className={`w-full h-8 px-2 flex items-center justify-center text-center text-base font-bold text-foreground rounded transition-colors ${
                 !isLocked && !isDragOverlay 
-                  ? 'cursor-pointer hover:bg-white/10' 
+                  ? 'cursor-pointer hover:bg-foreground/10' 
                   : ''
               }`}
               title={!isLocked && !isDragOverlay ? '클릭하여 이름 수정' : ''}
@@ -256,9 +256,9 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
           <div 
             {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
             className={`flex items-center justify-center transition-colors ${
-              isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-white/20 p-1 rounded'}`}
+              isDragOverlay ? '':'cursor-grab active:cursor-grabbing hover:bg-foreground/20 p-1 rounded'}`}
           >
-            <GripVertical className="w-4 h-4 text-white/80" />
+            <GripVertical className="w-4 h-4 text-foreground/80" />
           </div>
         }
         headerActions={undefined}
@@ -279,7 +279,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 <button
                   onClick={handleBarrierOpen}
                   disabled={isDragOverlay || barrier.isOpen || isLocked}
-                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground ${
                     isDragOverlay || barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
@@ -290,7 +290,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 <button
                   onClick={handleBarrierClose}
                   disabled={isDragOverlay || !barrier.isOpen || isLocked}
-                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground ${
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground ${
                     isDragOverlay || !barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
@@ -302,7 +302,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                   <button
                     onClick={toggleDropdown}
                     disabled={isDragOverlay || isLocked}
-                    className={`w-full flex gap-2 items-center p-3 rounded-lg bg-background neu-elevated text-left transition-all ${
+                    className={`w-full flex gap-2 items-center p-3 rounded-lg neu-elevated text-left transition-all ${
                       isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
                     } ${isDropdownOpen ? 'neu-inset' : ''}`}
                   >
@@ -316,7 +316,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
 
                   {/* 드롭다운 옵션들 */}
                   {isDropdownOpen && !isDragOverlay && (
-                    <div className="absolute right-0 left-0 top-full z-10 py-1 mt-1 rounded-lg border shadow-lg bg-background border-border neu-elevated">
+                    <div className="absolute right-0 left-0 top-full z-10 py-1 mt-1 rounded-lg border shadow-lg border-border neu-elevated">
                       {operationModeOptions.map((option) => (
                         <button
                           key={option.value}
@@ -376,7 +376,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               <button
                 onClick={handleOpenVehicleConfig}
                 disabled={isDragOverlay || isLocked}
-                className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset bg-background text-foreground flex items-center justify-center gap-2 ${
+                className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex items-center justify-center gap-2 ${
                   isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                 }`}
               >
@@ -405,7 +405,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
           <div className="flex gap-3 justify-end">
             <button
               onClick={handleCancelNameEdit}
-              className="px-4 py-2 text-sm rounded-md neu-raised bg-background text-foreground hover:neu-flat"
+              className="px-4 py-2 text-sm rounded-md neu-raised text-foreground hover:neu-flat"
             >
               취소 (복구)
             </button>

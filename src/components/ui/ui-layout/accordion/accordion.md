@@ -39,7 +39,7 @@ function MyComponent() {
 
 ## 색상 시스템
 
-- **닫힌 상태**: `bg-surface-2` (부드러운 회색)
+- **닫힌 상태**: `bg-serial-1` (부드러운 회색)
 - **열린 상태**: `bg-primary-1` (연한 블루)  
 - **호버 상태**: `bg-primary-2` (중간 블루)
 - **상태 텍스트**: `text-primary-6` (진한 블루)

@@ -1,6 +1,6 @@
 export const FIELD_STYLES = {
 	// 필드 전체 래퍼 (label + input 영역 전체)
-	fieldWrapper: 'neu-flat bg-surface-1 border border-border/30 rounded-lg p-4 space-y-2 transition-all hover:bg-card/70 focus-within:neu-inset focus-within:bg-card/80',
+	fieldWrapper: 'neu-flat bg-serial-0 border border-border/30 rounded-lg p-4 space-y-2 transition-all hover:bg-card/70 focus-within:neu-inset focus-within:bg-card/80',
 
 	// 기본 컨테이너 (모든 필드 공통) - 뉴모피즘 + 테마 완전 대응
 	container: 'neu-flat focus:neu-inset border-border',
@@ -10,8 +10,8 @@ export const FIELD_STYLES = {
 	
 	// 배경색 상수
 	background: {
-		outer: 'bg-surface-1', // 바깥쪽 (fieldWrapper)
-		inner: 'bg-surface-2', // 안쪽 (input 요소)
+		outer: 'bg-serial-0', // 바깥쪽 (fieldWrapper)
+		inner: 'bg-serial-1', // 안쪽 (input 요소)
 	},
 	sortIcon:
 		'absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 cursor-pointer neu-icon-inactive',

@@ -36,7 +36,7 @@ export function MidMenu({
   return (
     <div className="group">
       <Collapsible open={isExpanded} onOpenChange={onToggle}>
-        <div className="flex gap-2 items-center p-2 w-full rounded-lg hover:bg-surface-3 neu-raised">
+        				<div className="flex gap-2 items-center p-2 w-full rounded-lg hover:bg-serial-4 neu-raised">
           <CollapsibleTrigger className="flex flex-1 justify-between items-center">
             <span className="font-semibold text-foreground">{t(midItem.key)}</span>
             <ChevronRight
@@ -46,7 +46,7 @@ export function MidMenu({
           </CollapsibleTrigger>
         </div>
         
-        <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-surface-1">
+        				<CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-serial-2">
           <ul className="flex flex-col">
             {midItem.botItems.map((botItem) => {
               const isActive = pathname === botItem.href;

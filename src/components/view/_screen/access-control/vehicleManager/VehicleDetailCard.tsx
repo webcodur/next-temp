@@ -6,14 +6,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-
 import { Car, Check } from 'lucide-react';
-
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-
 import { parseCarAllowType } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/useI18n';
-
 import type { VehicleEntry } from '@/types/parking';
 
 // #region 타입
@@ -113,14 +109,14 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 							{/* 나머지 정보 */}
 							<div className="grid grid-cols-[80px_1fr] gap-y-2 gap-x-4 items-stretch text-sm">
 								{/* 상태 */}
-								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">상태</div>
-								<div className="flex items-center px-2 py-1 rounded-md bg-muted/50 neu-flat">
+								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">상태</div>
+								<div className="flex items-center px-2 py-1 rounded-md neu-flat">
 									<span className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold ${vehicle.status === 1 ? 'bg-primary/10 text-primary' : 'bg-success/10 text-success'}`}>{vehicle.status === 1 ? t('주차_상태_입차') : t('주차_상태_출차')}</span>
 								</div>
 
 								{/* 차량구분 */}
-								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">차량구분</div>
-								<div className="flex items-center px-2 py-1 rounded-md bg-muted/50 neu-flat">
+								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">차량구분</div>
+								<div className="flex items-center px-2 py-1 rounded-md neu-flat">
 									{parseCarAllowType(vehicle.type)}
 									{vehicle.modify_car_type && <span className="ms-1 text-warning">→ {parseCarAllowType(vehicle.modify_car_type)}</span>}
 								</div>
@@ -128,28 +124,28 @@ const VehicleDetailCard: React.FC<VehicleDetailCardProps> = ({ vehicle, showTitl
 								{/* 지역 */}
 								{(vehicle.address_1depth || vehicle.address_2depth) && (
 									<>
-										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">지역</div>
-										<div className="px-2 py-1 rounded-md bg-muted/50 neu-flat">{vehicle.address_1depth} {vehicle.address_2depth}</div>
+										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">지역</div>
+										<div className="px-2 py-1 rounded-md neu-flat">{vehicle.address_1depth} {vehicle.address_2depth}</div>
 									</>
 								)}
 
 								{/* 이용시간 */}
-								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">{vehicle.status === 1 ? '입차시간' : '출차시간'}</div>
-								<div className="px-2 py-1 rounded-md bg-muted/50 neu-flat">{vehicle.use_time}</div>
+								<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">{vehicle.status === 1 ? '입차시간' : '출차시간'}</div>
+								<div className="px-2 py-1 rounded-md neu-flat">{vehicle.use_time}</div>
 
 								{/* 통행입구 */}
 								{vehicle.device_name && (
 									<>
-										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">통행입구</div>
-										<div className="px-2 py-1 rounded-md bg-muted/50 neu-flat">{vehicle.device_name}</div>
+										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">통행입구</div>
+										<div className="px-2 py-1 rounded-md neu-flat">{vehicle.device_name}</div>
 									</>
 								)}
 
 								{/* 블랙리스트 */}
 								{vehicle.is_black === 'Y' && (
 									<>
-										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground bg-muted border-border neu-elevated">블랙리스트</div>
-										<div className="px-2 py-1 font-semibold rounded-md bg-muted/50 neu-flat text-destructive">해당</div>
+										<div className="flex justify-center items-center px-2 py-1 font-medium text-center rounded-md border text-foreground border-border neu-elevated">블랙리스트</div>
+										<div className="px-2 py-1 font-semibold rounded-md neu-flat text-destructive">해당</div>
 									</>
 								)}
 							</div>

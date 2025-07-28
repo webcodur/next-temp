@@ -47,8 +47,6 @@ const updateColorScale = (colorSetKey: ColorSetKey) => {
 			);
 		});
 	});
-
-	console.log(`✅ 색상 적용: ${colorSet.name} (${isDark ? '다크' : '라이트'})`);
 };
 
 /**
@@ -63,8 +61,6 @@ export function useColorSet() {
 
 	// 초기화 (한번만 실행)
 	useEffect(() => {
-		console.log('🚀 색상 시스템 초기화 시작');
-
 		// localStorage에서 불러오기
 		const stored = localStorage.getItem('color-set');
 		if (stored && stored in COLOR_SETS && stored !== colorSet) {
@@ -74,16 +70,12 @@ export function useColorSet() {
 		} else {
 			updateColorScale(colorSet);
 		}
-
-		console.log('✅ 색상 시스템 초기화 완료');
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []); // 빈 배열 - 한번만 실행
 
 	// 다크모드 감지 (한번만 설정)
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
-
-		console.log('🔍 다크모드 감지 설정');
 
 		const observer = new MutationObserver(() => {
 			console.log('🌓 테마 변경 감지 - 색상 업데이트');
@@ -97,7 +89,6 @@ export function useColorSet() {
 
 		return () => {
 			observer.disconnect();
-			console.log('🔍 다크모드 감지 해제');
 		};
 	}, [colorSet]); // colorSet 변경시에도 재설정
 

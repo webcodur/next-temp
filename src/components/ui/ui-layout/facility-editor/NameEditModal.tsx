@@ -89,7 +89,7 @@ export const NameEditModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="neu-flat bg-surface-1 rounded-lg p-6 w-full max-w-md">
+      			<div className="neu-flat bg-serial-0 rounded-lg p-6 w-full max-w-md">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-foreground">
@@ -108,7 +108,7 @@ export const NameEditModal = ({
         </div>
 
         {/* 위치 정보 */}
-        <div className="mb-4 p-3 rounded-lg neu-inset bg-surface-2">
+        				<div className="mb-4 p-3 rounded-lg neu-inset bg-serial-1">
           <div className="text-sm text-gray-600 dark:text-gray-400">
             위치: ({position.x}, {position.y})
           </div>
@@ -130,7 +130,7 @@ export const NameEditModal = ({
             onKeyDown={handleKeyDown}
             className={clsx(
               'w-full px-3 py-2 rounded-lg border-2 transition-all duration-150',
-              'neu-inset bg-surface-2 text-foreground font-multilang',
+              						'neu-inset bg-serial-1 text-foreground font-multilang',
               'focus:outline-none focus:border-primary focus:neu-flat',
               'border-gray-300 dark:border-gray-600'
             )}

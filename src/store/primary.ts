@@ -52,6 +52,5 @@ export const initPrimaryColorAtom = atom(null, (get) => {
     const primaryColor = get(primaryColorAtom);
     document.documentElement.style.setProperty('--primary', primaryColor);
     updatePrimaryScale(primaryColor);
-    console.log('✅ Primary 색상 시스템 초기화 완료');
   }
 }); 

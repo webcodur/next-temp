@@ -21,7 +21,7 @@ export default function Sidebar() {
 			style={{
 				width: `${defaults.startColumnWidth}px`,
 			}}
-			className="flex h-screen bg-surface-2">
+			className="flex h-screen bg-serial-3">
 			<PrimaryBar />
 		</aside>
 	);
