@@ -13,6 +13,8 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
+  DragStartEvent,
 } from '@dnd-kit/core';
 import { 
   arrayMove,
@@ -45,7 +47,7 @@ interface BarrierGridProps {
 
 // #region 반응형 그리드 클래스
 const getResponsiveGridClass = () => {
-  return 'grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+  return 'grid gap-4 grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3';
 };
 // #endregion
 
@@ -61,6 +63,10 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
   onPolicyUpdate,
   onBarrierOrderChange,
 }) => {
+  // #region 상태
+  const [activeId, setActiveId] = React.useState<string | null>(null);
+  // #endregion
+
   // #region 훅
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -75,6 +81,10 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
   // #endregion
 
   // #region 핸들러
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
@@ -84,6 +94,8 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
       const newOrder = arrayMove(barrierOrder, oldIndex, newIndex);
       onBarrierOrderChange(newOrder);
     }
+    
+    setActiveId(null);
   };
   // #endregion
 
@@ -92,18 +104,18 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
   const sortedBarriers = barrierOrder
     .map(id => barriers.find(b => b.id === id))
     .filter(Boolean) as ParkingBarrier[];
+  const activeBarrier = activeId ? sortedBarriers.find(b => b.id === activeId) : null;
   // #endregion
 
   // #region 렌더링
   return (
-    <div className="space-y-6">
-      
-
+    <div className="p-6 space-y-6">
       {/* 차단기가 있을 때 그리드 표시 */}
       {barriers.length > 0 && (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={barrierOrder} strategy={rectSortingStrategy}>
@@ -124,6 +136,26 @@ const BarrierGrid: React.FC<BarrierGridProps> = ({
               ))}
             </div>
           </SortableContext>
+          
+          <DragOverlay dropAnimation={{
+            duration: 200,
+            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+          }}>
+            {activeBarrier ? (
+              <div style={{ cursor: 'grabbing' }}>
+                <BarrierCard
+                  barrier={activeBarrier}
+                  policy={barrierPolicies[activeBarrier.id] || { workHour: false, blacklist: false }}
+                  onToggle={() => {}}
+                  onOperationModeChange={() => {}}
+                  onPolicyUpdate={() => {}}
+                  globalReturnHourEnabled={returnHourEnabled}
+                  isLocked={true}
+                  isDragOverlay={true}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       )}
 

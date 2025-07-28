@@ -5,7 +5,7 @@
 */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings as SettingsIcon, GripVertical, ChevronDown, Sliders } from 'lucide-react';
+import { GripVertical, Sliders, ArrowUpFromLine, ArrowDownFromLine } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -76,12 +76,12 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
     isDragging,
   } = useSortable({ 
     id: barrier.id,
-    disabled: isDragOverlay
+    disabled: isDragOverlay,
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : (transition || 'transform 200ms cubic-bezier(0.25, 1, 0.5, 1)'),
   };
 
   // 드롭다운 외부 클릭 감지
@@ -224,7 +224,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
     <div 
       ref={isDragOverlay ? undefined : setNodeRef}
       style={isDragOverlay ? {} : style}
-      className={`h-full ${isDragging && !isDragOverlay ? 'opacity-50' : ''}`}
+      className={`h-full ${isDragging && !isDragOverlay ? 'opacity-0' : ''}`}
     >
       <SectionPanel
         title={
@@ -266,35 +266,28 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
           <div className="p-4 space-y-4">
             {/* 차단기 개폐 설정 + 운영모드 */}
             <div>
-              <div className="flex gap-2 items-center mb-3">
-                <h4 className="text-sm font-semibold text-foreground">차단기 제어</h4>
-                <div className="flex-1 h-px bg-border"></div>
-                <span className={`text-sm font-bold ${barrier.isOpen ? 'text-green-600' : 'text-red-600'}`}>
-                  {barrier.isOpen ? '열림' : '닫힘'}
-                </span>
-              </div>
               
               <div className="grid grid-cols-4 gap-3">
                 {/* 차단기 열기 */}
                 <button
                   onClick={handleBarrierOpen}
                   disabled={isDragOverlay || barrier.isOpen || isLocked}
-                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground ${
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex items-center justify-center ${
                     isDragOverlay || barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
-                  열기
+                  <ArrowUpFromLine className="w-4 h-4" />
                 </button>
                 
                 {/* 차단기 닫기 */}
                 <button
                   onClick={handleBarrierClose}
                   disabled={isDragOverlay || !barrier.isOpen || isLocked}
-                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground ${
+                  className={`p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex items-center justify-center ${
                     isDragOverlay || !barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                 >
-                  닫기
+                  <ArrowDownFromLine className="w-4 h-4" />
                 </button>
                 
                 {/* 운영모드 설정 */}
@@ -302,21 +295,18 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                   <button
                     onClick={toggleDropdown}
                     disabled={isDragOverlay || isLocked}
-                    className={`w-full flex gap-2 items-center p-3 rounded-lg neu-elevated text-left transition-all ${
+                    className={`w-full flex items-center justify-center p-3 rounded-lg neu-elevated text-center transition-all ${
                       isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
                     } ${isDropdownOpen ? 'neu-inset' : ''}`}
                   >
-                    <SettingsIcon className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
-                    <span className="flex-1 text-sm font-medium truncate text-foreground">
+                    <span className="text-sm font-medium truncate text-foreground">
                       {getCurrentModeLabel()}
                     </span>
-                    <ChevronDown className={`flex-shrink-0 w-4 h-4 text-muted-foreground transition-transform ${
-                      isDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {/* 드롭다운 옵션들 */}
                   {isDropdownOpen && !isDragOverlay && (
-                    <div className="absolute right-0 left-0 top-full z-10 py-1 mt-1 rounded-lg border shadow-lg border-border neu-elevated">
+                    <div className="absolute right-0 left-0 top-full z-50 py-1 rounded-lg border shadow-lg bg-background border-border neu-elevated">
                       {operationModeOptions.map((option) => (
                         <button
                           key={option.value}

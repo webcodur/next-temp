@@ -13,18 +13,17 @@ import { EntryPolicyType } from '../hooks/useAccessControl';
 // #region 스타일 상수
 const STYLES = {
   // 레이아웃
-  container: 'space-y-8',
-  grid: 'grid gap-1 lg:grid-cols-3',
+  container: 'space-y-4 p-6',
+  grid: 'space-y-6',
   
   // 섹션 공통
-  section: 'p-6',
-  sectionWithBorder: 'p-6 border-e border-border/30 lg:border-e-2',
+  section: 'p-4 rounded-lg border bg-background/50',
   sectionContent: 'space-y-4',
   sectionBody: 'space-y-3',
   
   // 헤더
   header: 'pb-2 border-b border-foreground/10',
-  title: 'text-lg text-foreground font-multilang font-bold',
+  title: 'text-base text-foreground font-multilang font-bold',
   
   // 컨테이너
   rowContainer: 'flex items-center h-11',
@@ -76,7 +75,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
       <div className={STYLES.grid}>
         
         {/* 출입 허용 대상 */}
-        <div className={STYLES.sectionWithBorder}>
+        <div className={STYLES.section}>
           <div className={STYLES.sectionContent}>
             <div className={STYLES.header}>
               <h2 className={STYLES.title}>
@@ -111,7 +110,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
         </div>
 
         {/* 회차 정책 */}
-        <div className={STYLES.sectionWithBorder}>
+        <div className={STYLES.section}>
           <div className={STYLES.sectionContent}>
             <div className={STYLES.header}>
               <h2 className={STYLES.title}>
