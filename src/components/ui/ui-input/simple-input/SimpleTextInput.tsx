@@ -91,9 +91,9 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 						<span>{validationResult?.message}</span>
 						{shouldShowIcon && (
 							validationResult.isValid ? (
-								<CheckCircle className="w-4 h-4 text-blue-500 ml-2" />
+								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
 							) : (
-								<AlertCircle className="w-4 h-4 text-red-500 ml-2" />
+								<AlertCircle className="ml-2 w-4 h-4 text-red-500" />
 							)
 						)}
 					</div>
@@ -101,7 +101,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			)}
 
 			<div
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 ${
+				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
 					isFocused
 						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
 						: 'shadow-md neu-flat border-border hover:shadow-lg'
@@ -129,7 +129,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full hover:bg-muted transition-colors duration-200"
+						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>

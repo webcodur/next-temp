@@ -23,9 +23,9 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	const hasHeader = title || headerActions || icon;
 
 	return (
-		<div className="flex overflow-hidden flex-col rounded-lg neu-flat">
+		<div className="flex overflow-hidden flex-col rounded-sm neu-elevated">
       {hasHeader && (
-			<div className="flex flex-shrink-0 items-center px-4 py-2 bg-serial-4 text-foreground">
+			<div className="flex flex-shrink-0 items-center px-4 py-1 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-serial-6 to-serial-3 text-foreground">
 					{/* 3분할 레이아웃: 왼쪽(icon) | 가운데(title) | 오른쪽(headerActions) */}
 					
 					{/* 왼쪽 영역: 아이콘 */}

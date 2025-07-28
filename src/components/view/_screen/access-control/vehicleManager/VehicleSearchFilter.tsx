@@ -66,7 +66,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 	};
 
 	return (
-		<div className="p-3 mb-3 rounded-lg bg-background">
+		<div className="p-3 mb-3 rounded-lg">
 				<div className="flex flex-col gap-3 md:flex-row">
 					{/* 2x2 그리드 영역 */}
 					<div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
@@ -103,7 +103,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 					</div>
 
 					{/* 검색/초기화 버튼 영역 */}
-					<div className="flex flex-col justify-center items-stretch shrink-0 gap-2">
+					<div className="flex flex-col gap-2 justify-center items-stretch shrink-0">
 						<Button
 							onClick={handleResetFilters}
 							variant="outline"

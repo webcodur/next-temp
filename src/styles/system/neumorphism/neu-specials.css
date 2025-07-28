@@ -33,22 +33,22 @@
 .sidebar-container {
 	border: 1px solid hsl(var(--border) / 0.4);
 	box-shadow:
-		var(--nm-offset) var(--nm-offset) var(--nm-blur) rgba(var(--nm-dark-rgba)),
-		calc(var(--nm-offset) * -0.5) calc(var(--nm-offset) * -0.5)
-			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
-		8px 0 20px rgba(0, 0, 0, 0.15),
-		12px 0 30px rgba(0, 0, 0, 0.08);
+		calc(var(--nm-offset) * 1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2) rgba(var(--nm-dark-rgba)),
+		calc(var(--nm-offset) * -0.8) calc(var(--nm-offset) * -0.8)
+			calc(var(--nm-blur) * 0.8) rgba(var(--nm-light-rgba)),
+		12px 0 30px rgba(0, 0, 0, 0.2),
+		18px 0 45px rgba(0, 0, 0, 0.12);
 }
 
 /* RTL 뉴모피즘 - sidebar-container */
 [dir='rtl'] .sidebar-container {
 	box-shadow:
-		/* 우하단 → 좌하단 그림자 */
-		calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
+		/* 우하단 → 좌하단 그림자 - 강화 */
+		calc(var(--nm-offset) * -1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2)
 			rgba(var(--nm-dark-rgba)),
-		/* 좌상단 → 우상단 하이라이트 */ calc(var(--nm-offset) * 0.5)
-			calc(var(--nm-offset) * -0.5) calc(var(--nm-blur) * 0.5)
+		/* 좌상단 → 우상단 하이라이트 - 강화 */ calc(var(--nm-offset) * 0.8)
+			calc(var(--nm-offset) * -0.8) calc(var(--nm-blur) * 0.8)
 			rgba(var(--nm-light-rgba)),
-		/* 우측 → 좌측 그림자 */ -8px 0 20px rgba(0, 0, 0, 0.15),
-		-12px 0 30px rgba(0, 0, 0, 0.08);
+		/* 우측 → 좌측 그림자 - 강화 */ -12px 0 30px rgba(0, 0, 0, 0.2),
+		-18px 0 45px rgba(0, 0, 0, 0.12);
 }

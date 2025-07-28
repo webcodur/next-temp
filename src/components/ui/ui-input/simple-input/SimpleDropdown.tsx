@@ -160,7 +160,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 						} 
 						${disabled ? 'opacity-60 cursor-not-allowed' : ''} 
 						${selectedOption ? 'text-foreground' : 'text-muted-foreground'}
-						bg-background
+						bg-serial-3
 					`}
 					onClick={handleToggle}
 					onKeyDown={handleKeyDown}
