@@ -23,22 +23,22 @@ export default function Home() {
 			id: 'vehicles',
 			label: '입출차 관리(T)',
 			icon: <Car size={16} />,
-			title: '차량 입출차 현황 (실시간)',
-			subtitle: '현재 523대 주차 중 | 오늘 입차 1,247대, 출차 1,108대 | 평균 주차시간 2시간 43분',
+			title: '차량 입출차 내역 탭',
+			subtitle: '실시간 차량 입출차 현황을 조회하고 관리할 수 있습니다.',
 		},
 		{
 			id: 'access-control',
-			label: '출입 제어 관리(T)',
+			label: '주차장 출입 관리(T)',
 			icon: <Shield size={16} />,
-			title: '차단기 제어 시스템 (6개소 운영 중)',
-			subtitle: '정상 4개소, 점검 중 1개소, 오류 1개소 | 마지막 업데이트: 2분 전 | 오늘 총 2,355회 작동',
+			title: '주차장 출입 관리 탭',
+			subtitle: '차단기 제어 및 주차장 보안 시설을 통합 관리할 수 있습니다.',
 		},
     {
       id: 'statistics',
       label: '주차장 통계 정보 (...)',
       icon: <ChartBar size={16} />,
-			title: '이번 달 주차장 운영 현황',
-			subtitle: '월 평균 이용률 78.4% | 피크시간 14:00-18:00 (94.2%) | 수익: ₩24,750,000 (전월 대비 +12%)',
+			title: '이번 달 주차장 운영 내역 탭',
+			subtitle: '주차장 이용률과 수익 현황을 분석하고 리포트를 확인할 수 있습니다.',
     },
 	];
 	// #endregion
@@ -59,7 +59,6 @@ export default function Home() {
 		<div className="flex flex-col gap-6 h-full">
 			<PageHeader 
 				title="통합 대시보드 홈" 
-				subtitle="차량 입출차 및 출입제어 시스템 통합 관리"
 			/>
 			
 			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}

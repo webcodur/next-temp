@@ -9,7 +9,7 @@ import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, canManagePassword, canResetPassword } from '@/types/admin';
-import { userAtom, isAuthenticatedAtom } from '@/store/auth';
+import { userAtom } from '@/store/auth';
 
 interface PasswordChangeData {
   currentPassword: string;
@@ -24,7 +24,6 @@ interface AdminPasswordSectionProps {
 
 export default function AdminPasswordSection({ admin }: AdminPasswordSectionProps) {
   const currentUser = useAtomValue(userAtom);
-  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   
   // #region 상태 관리
   const [formData, setFormData] = useState<PasswordChangeData>({
@@ -54,25 +53,10 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   const currentUserRoleId = currentUser?.role ? parseInt(currentUser.role) : (getJWTRole() || 0);
   const targetUserRoleId = admin.roleId;
   
-  console.log('=== AdminPasswordSection 권한 체크 ===');
-  console.log('isAuthenticated:', isAuthenticated);
-  console.log('currentUser:', currentUser);
-  console.log('currentUser.role:', currentUser?.role);
-  console.log('JWT role:', getJWTRole());
-  console.log('currentUserRoleId:', currentUserRoleId, typeof currentUserRoleId);
-  console.log('admin:', admin);
-  console.log('admin.roleId:', admin.roleId, typeof admin.roleId);
-  console.log('targetUserRoleId:', targetUserRoleId, typeof targetUserRoleId);
-  
   const canManage = canManagePassword(currentUserRoleId, targetUserRoleId);
   const canReset = canResetPassword(currentUserRoleId, targetUserRoleId);
   const isSelfManagement = currentUserRoleId === targetUserRoleId;
   
-  console.log('=== AdminPasswordSection 권한 결과 ===');
-  console.log('canManage:', canManage);
-  console.log('canReset:', canReset);
-  console.log('isSelfManagement:', isSelfManagement);
-  console.log('===========================================');
   // #endregion
 
   // #region 검증
@@ -176,8 +160,8 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
     <div className="space-y-6">
       {/* 비밀번호 재설정 섹션 */}
       {canManage && (
-        <div className="p-6 border rounded-lg bg-card border-border">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="p-6 rounded-lg border bg-card border-border">
+          <div className="flex gap-2 items-center mb-4">
             <Lock size={20} />
             <h2 className="text-lg font-semibold text-foreground">
               {isSelfManagement ? '내 비밀번호 변경' : '비밀번호 재설정'}
@@ -237,22 +221,22 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
           </GridForm>
 
           {/* 액션 버튼 */}
-          <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-border">
+          <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-border">
             <Button 
               variant="ghost" 
               onClick={handleReset}
               disabled={isSubmitting || isResetting}
+              title="초기화"
             >
-              초기화
+              <RotateCcw size={16} />
             </Button>
             <Button 
               variant="accent" 
               onClick={handleSubmit} 
               disabled={!isValid || isSubmitting || isResetting}
-              className="flex items-center gap-2"
+              title={isSubmitting ? '변경 중...' : '비밀번호 변경'}
             >
               <Save size={16} />
-              {isSubmitting ? '변경 중...' : '비밀번호 변경'}
             </Button>
           </div>
         </div>
@@ -260,15 +244,15 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
       {/* 비밀번호 초기화 섹션 */}
       {canReset && (
-        <div className="p-6 border rounded-lg bg-card border-border">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="p-6 rounded-lg border bg-card border-border">
+          <div className="flex gap-2 items-center mb-4">
             <RotateCcw size={20} />
             <h2 className="text-lg font-semibold text-foreground">
               비밀번호 초기화
             </h2>
           </div>
 
-          <div className="text-sm text-muted-foreground mb-4">
+          <div className="mb-4 text-sm text-muted-foreground">
             {admin.name || admin.account}의 비밀번호를 0000으로 초기화합니다.
           </div>
 
@@ -277,10 +261,10 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               variant="outline"
               onClick={handlePasswordReset}
               disabled={isResetting || isSubmitting}
-              className="flex items-center gap-2 text-orange-600 border-orange-200 hover:bg-orange-50"
+              title={isResetting ? '초기화 중...' : '비밀번호 초기화 (0000)'}
+              className="text-orange-600 border-orange-200 hover:bg-orange-50"
             >
               <RotateCcw size={16} />
-              {isResetting ? '초기화 중...' : '비밀번호 초기화 (0000)'}
             </Button>
           </div>
         </div>

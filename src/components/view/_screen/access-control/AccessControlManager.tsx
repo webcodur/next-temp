@@ -15,6 +15,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 // #region 타입 정의
 interface AccessControlManagerProps {
+	showPageHeader?: boolean;
 	showActions?: boolean;
 	onActionsRender?: (actions: React.ReactNode) => void;
 }
@@ -22,6 +23,7 @@ interface AccessControlManagerProps {
 
 // #region 메인 컴포넌트
 const AccessControlManager: React.FC<AccessControlManagerProps> = ({
+	showPageHeader = true,
 	showActions = true,
 	onActionsRender,
 }) => {
@@ -69,24 +71,26 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 		</div>
 	), [isLocked, handleLockToggle, handleSaveChanges]);
 
-	// 액션 버튼들을 부모로 전달
+	// 액션 버튼 부모로 전달
 	React.useEffect(() => {
 		if (onActionsRender) {
 			onActionsRender(actionButtons);
 		}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []); // onActionsRender 제외
+	}, [onActionsRender]); // onActionsRender 제외
 	// #endregion
 
 	// #region 렌더링
 	return (
 		<div className="flex flex-col gap-6">
-			<PageHeader 
-				title="주차장 출입 관리" 
-				subtitle="차단기 제어 시스템과 출입 정책 통합 관리"
-			>
-				{showActions && actionButtons}
-			</PageHeader>
+			{showPageHeader && (
+				<PageHeader 
+					title="주차장 출입 관리" 
+					subtitle="차단기 제어 시스템과 출입 정책 통합 관리"
+				>
+					{showActions && actionButtons}
+				</PageHeader>
+			)}
 
 			{/* 메인 콘텐츠 영역 - 반응형 최적화 */}
 			<div className="flex flex-col gap-4 min-h-0 lg:flex-row lg:items-start">

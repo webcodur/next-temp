@@ -2,15 +2,19 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { ArrowLeft, Lock, Save } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-
+import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
+
+import { currentPageLabelAtom } from '@/store/atom';
 
 // Admin 타입 정의
 interface Admin {
@@ -29,8 +33,16 @@ export default function AdminPasswordChangePage() {
   const router = useRouter();
   const params = useParams();
   const adminId = Number(params.id);
+  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
-  
+  // #region 페이지 라벨 설정
+  useEffect(() => {
+    setCurrentPageLabel({
+      label: '비밀번호 변경',
+      href: window.location.pathname,
+    });
+  }, [setCurrentPageLabel]);
+  // #endregion
 
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);
@@ -129,9 +141,7 @@ export default function AdminPasswordChangePage() {
     }
   };
 
-  const handleCancel = () => {
-    router.push(`/parking/lot-management/admin/${adminId}`);
-  };
+
   // #endregion
 
   if (loading) {
@@ -153,29 +163,20 @@ export default function AdminPasswordChangePage() {
   return (
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
-      <div className="flex gap-4 items-center">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleBack}
-          className="flex gap-2 items-center"
-        >
-          <ArrowLeft size={16} />
-          뒤로가기
-        </Button>
-        <h1 className="flex gap-2 items-center text-2xl font-semibold text-foreground">
-          <Lock size={24} />
-          비밀번호 변경
-        </h1>
-      </div>
-
-      {/* 관리자 정보 */}
-      <div className="p-4 rounded-lg border bg-muted/30 border-border">
-        <div className="text-sm text-muted-foreground">대상 관리자</div>
-        <div className="text-lg font-medium">
-          {admin.name || admin.account} ({admin.account})
-        </div>
-      </div>
+      <PageHeader 
+        title="비밀번호 변경"
+        subtitle={`${admin.name || admin.account} (${admin.account})`}
+        leftActions={
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleBack}
+            title="뒤로가기"
+          >
+            <ArrowLeft size={16} />
+          </Button>
+        }
+      />
 
       {/* 폼 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
@@ -230,26 +231,20 @@ export default function AdminPasswordChangePage() {
             </GridForm.Content>
           </GridForm.Row>
         </GridForm>
+      </div>
 
-        {/* 액션 버튼 */}
-        <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-border">
-          <Button 
-            variant="ghost" 
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            취소
-          </Button>
-          <Button 
-            variant="accent" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            className="flex gap-2 items-center"
-          >
-            <Save size={16} />
-            {isSubmitting ? '변경 중...' : '변경'}
-          </Button>
-        </div>
+      {/* 저장 버튼 - 우하단 고정 */}
+      <div className="fixed right-6 bottom-6 z-50">
+        <Button 
+          variant="accent"
+          size="lg"
+          onClick={handleSubmit} 
+          disabled={!isValid || isSubmitting}
+          title={isSubmitting ? '변경 중...' : '변경'}
+          className="shadow-lg"
+        >
+          <Save size={20} />
+        </Button>
       </div>
     </div>
   );

@@ -75,7 +75,7 @@ export default function FacilityInfoPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+    <div className="flex flex-col gap-6 mx-auto w-full max-w-5xl">
       <PageHeader 
         title="주차장 시설 정보" 
         subtitle="시설 기본정보, 규모, 디지털 서비스 현황 및 운영 관리"
@@ -83,8 +83,8 @@ export default function FacilityInfoPage() {
       
       <div className="flex flex-col w-full">
         {/* ----------------------------- 기본 정보 ----------------------------- */}
-        <section className="py-6">
-          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+        <section className="pb-6">
+          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
             <Building2 className="w-5 h-5 neu-icon-active" />
             기본 정보
           </h2>
@@ -105,7 +105,7 @@ export default function FacilityInfoPage() {
 
         {/* ----------------------------- 시설 규모 ----------------------------- */}
         <section className="py-6">
-          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
             <Users className="w-5 h-5 neu-icon-active" />
             시설 규모
           </h2>
@@ -126,7 +126,7 @@ export default function FacilityInfoPage() {
 
         {/* ------------------------- 디지털 서비스 현황 ------------------------- */}
         <section className="py-6">
-          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
             <Smartphone className="w-5 h-5 neu-icon-active" />
             디지털 서비스 현황
           </h2>
@@ -147,7 +147,7 @@ export default function FacilityInfoPage() {
 
         {/* ----------------------------- 운영 현황 ----------------------------- */}
         <section className="py-6">
-          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
             <Settings className="w-5 h-5 neu-icon-active" />
             운영 현황
           </h2>
@@ -168,7 +168,7 @@ export default function FacilityInfoPage() {
 
         {/* --------------------------- 계약 및 관리 --------------------------- */}
         <section className="py-6">
-          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
             <FileText className="w-5 h-5 neu-icon-active" />
             계약 및 관리
           </h2>

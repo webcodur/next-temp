@@ -1,15 +1,17 @@
 /* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
+import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { ROLE_ID_MAP } from '@/types/admin';
+import { currentPageLabelAtom } from '@/store/atom';
 
 // Admin 타입: 생성 시 필요한 필드만 명시
 export interface AdminInput {
@@ -23,7 +25,16 @@ export interface AdminInput {
 
 export default function AdminCreatePage() {
   const router = useRouter();
+  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
   
+  // #region 페이지 라벨 설정
+  useEffect(() => {
+    setCurrentPageLabel({
+      label: '관리자 추가',
+      href: window.location.pathname,
+    });
+  }, [setCurrentPageLabel]);
+  // #endregion
 
   // #region 폼 상태
   const [formData, setFormData] = useState<AdminFormData>({
@@ -97,20 +108,20 @@ export default function AdminCreatePage() {
   return (
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleCancel}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft size={16} />
-          목록으로
-        </Button>
-        <h1 className="text-2xl font-semibold text-foreground">
-          관리자 추가
-        </h1>
-      </div>
+      <PageHeader 
+        title="관리자 추가"
+        subtitle="새로운 관리자 계정을 생성합니다"
+        leftActions={
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCancel}
+            title="목록으로"
+          >
+            <ArrowLeft size={16} />
+          </Button>
+        }
+      />
 
       {/* 폼 섹션 */}
       <div className="bg-card rounded-lg border border-border p-6">
@@ -120,26 +131,20 @@ export default function AdminCreatePage() {
           onChange={handleFormChange}
           disabled={isSubmitting}
         />
-        
-        {/* 액션 버튼 */}
-        <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-border">
-          <Button 
-            variant="ghost" 
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            취소
-          </Button>
-          <Button 
-            variant="accent" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            className="flex items-center gap-2"
-          >
-            <Save size={16} />
-            {isSubmitting ? '생성 중...' : '생성'}
-          </Button>
-        </div>
+      </div>
+
+      {/* 저장 버튼 - 우하단 고정 */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Button 
+          variant="accent"
+          size="lg"
+          onClick={handleSubmit} 
+          disabled={!isValid || isSubmitting}
+          title={isSubmitting ? '생성 중...' : '생성'}
+          className="shadow-lg"
+        >
+          <Save size={20} />
+        </Button>
       </div>
     </div>
   );

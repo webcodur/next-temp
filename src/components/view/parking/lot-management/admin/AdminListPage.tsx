@@ -190,17 +190,17 @@ export default function AdminListPage() {
       <PageHeader 
         title="관리자 계정 관리" 
         subtitle="시스템 관리자 계정 등록, 수정, 삭제 및 권한 관리"
-      >
-        <Button
-          variant="accent"
-          size="sm"
-          className="flex gap-1 items-center bg-primary-4"
-          onClick={handleCreateClick}
-        >
-          <Plus size={16} />
-          관리자 추가
-        </Button>
-      </PageHeader>
+        rightActions={
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={handleCreateClick}
+            title="관리자 추가"
+          >
+            <Plus size={16} />
+          </Button>
+        }
+      />
       
       {/* 테이블 */}
       <PaginatedTable

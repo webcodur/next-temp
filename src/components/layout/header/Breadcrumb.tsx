@@ -1,161 +1,35 @@
-/* 
-  파일명: /components/layout/header/Breadcrumb.tsx
-  기능: 헤더의 브레드크럼 네비게이션 컴포넌트
-  책임: 현재 페이지 경로를 표시하고 반응형 드롭다운 메뉴 제공
-*/ // ------------------------------
+/*
+  파일명: Breadcrumb.tsx
+  기능: 현재 페이지 위치를 나타내는 브레드크럼 네비게이션 컴포넌트
+  책임: 사용자의 현재 위치를 시각적으로 표시하고, 상위 페이지로의 네비게이션을 제공한다
+*/
+
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import { useAtom } from 'jotai';
+import React from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight } from 'lucide-react';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import clsx from 'clsx';
+import { useAtom } from 'jotai';
+import { ChevronRight, Home } from 'lucide-react';
 
-import { menuData } from '@/data/menuData';
-import {
-	currentTopMenuAtom,
-	currentMidMenuAtom,
+
+import { 
+	currentTopMenuAtom, 
+	currentMidMenuAtom, 
 	currentBotMenuAtom,
-} from '@/store/sidebar';
+	currentPageLabelAtom 
+} from '@/store/atom';
+import { menuData } from '@/data/menuData';
 
-// #region 타입
-interface BreadcrumbItemProps {
-	label: string;
-	isCurrent?: boolean;
-}
-// #endregion
-
-// #region 서브 컴포넌트
-const BreadcrumbItem = ({ label, isCurrent = false }: BreadcrumbItemProps) => (
-	<span
-		className={`truncate ${
-			isCurrent
-				? 'font-medium text-foreground'
-				: 'transition-colors text-muted-foreground hover:text-primary'
-		}`}
-	>
-		{label}
-	</span>
-);
-
-const Separator = () => (
-	<ChevronRight className="flex-shrink-0 w-4 h-4 text-muted-foreground" />
-);
-// #endregion
-
-export function Breadcrumb() {
-	// #region 상태
+export default function Breadcrumb() {
+	const pathname = usePathname();
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [currentMidMenu, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [currentBotMenu, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
-	const pathname = usePathname();
-
-	const [isCollapsed, setIsCollapsed] = useState(false);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	// #endregion
-
-	// #region 유틸리티
-  // 경로에 따라 브레드크럼 아이템을 생성하는 함수
-	const getBreadcrumbItems = () => {
-		const items = [];
-
-		if (currentTopMenu && menuData[currentTopMenu]) {
-			items.push({
-				label: menuData[currentTopMenu].key,
-				href: '#',
-			});
-
-			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
-				items.push({
-					label: menuData[currentTopMenu].midItems[currentMidMenu].key,
-					href: '#',
-				});
-
-				if (currentBotMenu) {
-					const botItem = menuData[currentTopMenu].midItems[
-						currentMidMenu
-					].botItems.find(item => item.key === currentBotMenu);
-					if (botItem) {
-						items.push({ label: currentBotMenu, href: botItem.href });
-					}
-				}
-			}
-		}
-		// 경로가 갱신되지 않았을 경우, pathname에서 임시 이름 생성
-		if (items.length === 1 && pathname !== '/') {
-			const pageName =
-				pathname.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || '';
-			if (pageName) {
-				items.push({
-					label: pageName.charAt(0).toUpperCase() + pageName.slice(1),
-					href: pathname,
-				});
-			}
-		}
-
-		return items;
-	};
-
-  // 브레드크럼 아이템을 렌더링하는 함수
-	const renderFullBreadcrumb = () => (
-		<div className="flex items-center min-w-0 gap-2">
-			<h2 className="text-lg font-semibold truncate text-foreground">
-				{breadcrumbItems[0].label}
-			</h2>
-			<div className="flex items-center gap-2 overflow-hidden">
-				{breadcrumbItems.slice(1).map((item, index) => (
-					<div key={index} className="flex items-center flex-shrink-0 gap-2">
-						<Separator />
-						<BreadcrumbItem
-							label={item.label}
-							isCurrent={index === breadcrumbItems.length - 2}
-						/>
-					</div>
-				))}
-			</div>
-		</div>
-	);
-
-  // 드롭다운 메뉴로 축약된 브레드크럼을 렌더링하는 함수
-	const renderCollapsedBreadcrumb = () => (
-		<DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-			<DropdownMenu.Trigger className="neu-flat hover:neu-inset transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium">
-				<span>메뉴 경로</span>
-				<ChevronRight
-					className={clsx(
-						'w-4 h-4 text-muted-foreground transition-transform duration-200',
-						isDropdownOpen && 'rotate-90',
-					)}
-				/>
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Portal>
-				<DropdownMenu.Content
-					align="start"
-					sideOffset={5}
-					className="neu-flat bg-background rounded-lg p-2 min-w-[180px] shadow-lg animate-fadeIn z-50"
-				>
-					{breadcrumbItems.map((item, index) => (
-						<DropdownMenu.Item
-							key={index}
-							className={`text-sm px-2 py-1.5 rounded-md cursor-pointer hover:neu-inset focus:outline-none transition-colors ${
-								index === breadcrumbItems.length - 1
-									? 'text-foreground font-medium'
-									: 'text-muted-foreground'
-							}`}
-						>
-							{item.label}
-						</DropdownMenu.Item>
-					))}
-				</DropdownMenu.Content>
-			</DropdownMenu.Portal>
-		</DropdownMenu.Root>
-	);
-	// #endregion
+	const [currentPageLabel] = useAtom(currentPageLabelAtom);
 
 	// #region 효과
-	useEffect(() => {
+	React.useEffect(() => {
 		const pathSegments = pathname.split('/').filter(Boolean);
 
 		if (pathSegments.length === 0) {
@@ -165,6 +39,7 @@ export function Breadcrumb() {
 			return;
 		}
 
+		// 먼저 정확한 경로 매칭 시도
 		for (const [topKey, topItem] of Object.entries(menuData)) {
 			for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
 				for (const botItem of midItem.botItems) {
@@ -177,33 +52,109 @@ export function Breadcrumb() {
 				}
 			}
 		}
-	}, [pathname, setCurrentTopMenu, setCurrentMidMenu, setCurrentBotMenu]);
 
-	useEffect(() => {
-		const checkScreenSize = () => {
-			setIsCollapsed(window.innerWidth < 1500);
-		};
-		checkScreenSize();
-		window.addEventListener('resize', checkScreenSize);
-		return () => window.removeEventListener('resize', checkScreenSize);
-	}, []);
+		// 정확한 매칭이 없으면 부분 매칭 시도 (상세 페이지용)
+		for (const [topKey, topItem] of Object.entries(menuData)) {
+			for (const [midKey, midItem] of Object.entries(topItem.midItems)) {
+				for (const botItem of midItem.botItems) {
+					if (pathname.startsWith(botItem.href)) {
+						setCurrentTopMenu(topKey);
+						setCurrentMidMenu(midKey);
+						setCurrentBotMenu(botItem.key);
+						return;
+					}
+				}
+			}
+		}
+	}, [pathname, setCurrentTopMenu, setCurrentMidMenu, setCurrentBotMenu]);
 	// #endregion
 
-	// #region 렌더링
+	// 경로에 따라 브레드크럼 아이템을 생성하는 함수
+	const getBreadcrumbItems = () => {
+		const items: Array<{ label: string; href: string; isClickable?: boolean }> = [];
+
+		// 홈 추가
+		items.push({
+			label: '홈',
+			href: '/',
+			isClickable: true,
+		});
+
+		if (currentTopMenu && menuData[currentTopMenu]) {
+			items.push({
+				label: menuData[currentTopMenu].key,
+				href: '#',
+				isClickable: false,
+			});
+
+			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
+				items.push({
+					label: menuData[currentTopMenu].midItems[currentMidMenu].key,
+					href: '#',
+					isClickable: false,
+				});
+
+				if (currentBotMenu) {
+					const botItem = menuData[currentTopMenu].midItems[
+						currentMidMenu
+					].botItems.find(item => item.key === currentBotMenu);
+					if (botItem) {
+						items.push({ 
+							label: currentBotMenu, 
+							href: botItem.href,
+							isClickable: true 
+						});
+					}
+				}
+			}
+		}
+
+		// atom으로 설정된 페이지 라벨이 있으면 추가
+		if (currentPageLabel && items.length > 0 && pathname !== items[items.length - 1]?.href) {
+			items.push({
+				label: currentPageLabel.label,
+				href: currentPageLabel.href,
+				isClickable: false, // 현재 페이지는 클릭 불가
+			});
+		}
+
+		return items;
+	};
+
 	const breadcrumbItems = getBreadcrumbItems();
 
 	if (breadcrumbItems.length <= 1) {
-		return (
-			<h2 className="text-lg font-semibold truncate text-foreground">
-				{breadcrumbItems.length > 0 ? breadcrumbItems[0].label : '홈'}
-			</h2>
-		);
+		return null;
 	}
 
 	return (
-		<nav aria-label="Breadcrumb" className="w-full">
-			{isCollapsed ? renderCollapsedBreadcrumb() : renderFullBreadcrumb()}
+		<nav className="flex items-center px-1 py-2 space-x-2 text-sm">
+			{breadcrumbItems.map((item, index) => (
+				<React.Fragment key={index}>
+					{index === 0 ? (
+						// 홈 아이콘
+						<Link href={item.href} className="flex items-center transition-colors text-foreground/70 hover:text-foreground">
+							<Home size={16} />
+						</Link>
+					) : (
+						<>
+							<ChevronRight size={14} className="text-muted-foreground/50" />
+							{item.isClickable && item.href !== pathname ? (
+								<Link 
+									href={item.href} 
+									className="transition-colors text-foreground/70 hover:text-foreground"
+								>
+									{item.label}
+								</Link>
+							) : (
+								<span className={pathname === item.href ? 'text-foreground font-medium' : 'text-foreground/70'}>
+									{item.label}
+								</span>
+							)}
+						</>
+					)}
+				</React.Fragment>
+			))}
 		</nav>
 	);
-	// #endregion
 }

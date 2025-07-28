@@ -4,14 +4,16 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-
+import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import AdminForm, { AdminFormData } from './AdminForm';
 import AdminPasswordSection from './AdminPasswordSection';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, ROLE_ID_MAP } from '@/types/admin';
+import { currentPageLabelAtom } from '@/store/atom';
 
 export default function AdminDetailPage() {  
   const router = useRouter();
@@ -19,8 +21,18 @@ export default function AdminDetailPage() {
   const adminId = Number(params.id);
   const routerRef = useRef(router);
   routerRef.current = router;
+  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
   
   console.log('AdminDetailPage 렌더링, params:', params, 'adminId:', adminId);
+  
+  // #region 페이지 라벨 설정
+  useEffect(() => {
+    setCurrentPageLabel({
+      label: '관리자 상세',
+      href: window.location.pathname,
+    });
+  }, [setCurrentPageLabel]);
+  // #endregion
   
   
 
@@ -218,29 +230,34 @@ export default function AdminDetailPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4 items-center">
+      <PageHeader 
+        title="관리자 상세 정보"
+        subtitle={`${admin.name || admin.account} (${admin.account})`}
+        leftActions={
           <Button
-            variant="default"
+            variant="ghost"
             size="sm"
             onClick={handleBack}
-            className="flex gap-2 items-center"
+            title="목록으로"
           >
             <ArrowLeft size={16} />
-            목록으로
           </Button>
-          <h1 className="text-2xl font-semibold text-foreground">
-            관리자 상세 정보
-          </h1>
-        </div>
-
-      </div>
+        }
+        rightActions={
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={handleLockToggle}
+            disabled={isSubmitting}
+            title={isEditMode ? "편집 모드 해제" : "편집 모드 활성화"}
+          >
+            {isEditMode ? <Unlock size={16} /> : <Lock size={16} />}
+          </Button>
+        }
+      />
 
       {/* 관리자 상세 정보 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        <div className="flex gap-2 items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">관리자 상세 정보</h2>
-        </div>
         
         <AdminForm
           mode={currentMode}
@@ -249,46 +266,6 @@ export default function AdminDetailPage() {
           onChange={handleFormChange}
           disabled={isSubmitting}
         />
-        
-        {/* 액션 버튼 */}
-        <div className="flex justify-between items-center pt-6 mt-6 border-t border-border">
-          <div className="flex gap-3">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={handleLockToggle}
-              disabled={isSubmitting}
-              className="flex gap-2 items-center"
-            >
-              {isEditMode ? (
-                <>
-                  <Unlock size={16} />
-                  잠금 해제
-                </>
-              ) : (
-                <>
-                  <Lock size={16} />
-                  잠금 상태
-                </>
-              )}
-            </Button>
-          </div>
-          
-          <div className="flex gap-3">
-            {isEditMode && hasChanges && (
-              <Button 
-                variant="accent" 
-                size="sm"
-                onClick={handleSave} 
-                disabled={!isValid || isSubmitting}
-                className="flex gap-2 items-center"
-              >
-                <Save size={16} />
-                {isSubmitting ? '저장 중...' : '저장'}
-              </Button>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* 비밀번호 설정 섹션 */}
@@ -296,6 +273,22 @@ export default function AdminDetailPage() {
         admin={admin} 
         adminId={adminId}
       />
+
+      {/* 저장 버튼 - 우하단 고정 */}
+      {isEditMode && hasChanges && (
+        <div className="fixed right-6 bottom-6 z-50">
+          <Button 
+            variant="accent" 
+            size="lg"
+            onClick={handleSave} 
+            disabled={!isValid || isSubmitting}
+            title={isSubmitting ? '저장 중...' : '저장'}
+            className="shadow-lg"
+          >
+            <Save size={20} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 } 

@@ -23,6 +23,7 @@ const AccessControlTab: React.FC<AccessControlTabProps> = ({
 	return (
 		<div className="space-y-4">
 			<AccessControlManager
+				showPageHeader={false}
 				showActions={false}
 				onActionsRender={onActionsRender}
 			/>

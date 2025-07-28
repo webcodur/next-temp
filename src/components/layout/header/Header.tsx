@@ -7,7 +7,7 @@
 
 import clsx from 'clsx';
 
-import { Breadcrumb } from '@/components/layout/header/Breadcrumb';
+import Breadcrumb from '@/components/layout/header/Breadcrumb';
 import { GuideButton } from '@/components/layout/header/GuideButton';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
 import { SettingsButton } from '@/components/layout/header/SettingsButton';

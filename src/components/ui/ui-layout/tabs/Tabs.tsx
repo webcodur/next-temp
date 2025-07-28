@@ -118,7 +118,7 @@ const Tabs = React.forwardRef<
 								</h3>
 							)}
 							{activeTab?.subtitle && (
-								<p className="mt-1 text-sm text-muted-foreground">
+								<p className="mt-1 text-md text-foreground">
 									{activeTab.subtitle}
 								</p>
 							)}
