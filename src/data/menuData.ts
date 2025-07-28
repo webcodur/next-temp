@@ -12,19 +12,15 @@ export const menuData: MenuData = {
 				key: '주차장관리',
 				botItems: [
 					{
-						key: '주차장정보 (목업)',
+						key: '주차장정보 (T)',
 						href: '/parking/lot-management/info',
 					},
 					{
-						key: '근무자관리',
+						key: '근무자관리 (R)',
 						href: '/parking/lot-management/admin',
 					},
 					{
-						key: '차단기설정 (목업)',
-						href: '/parking/lot-management/barrier',
-					},
-					{
-						key: '출입정책 (목업)',
+						key: '주차장 출입관리 (T)',
 						href: '/parking/lot-management/entry',
 					},
 				],

@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 // API 호출
 import { searchAdmin } from '@/services/admin/admin$_GET';
@@ -186,8 +187,10 @@ export default function AdminListPage() {
   // #region 렌더링
   return (
     <div className="flex flex-col gap-6">
-      {/* 추가 버튼 */}
-      <div className="flex justify-end items-center">
+      <PageHeader 
+        title="관리자 계정 관리" 
+        subtitle="시스템 관리자 계정 등록, 수정, 삭제 및 권한 관리"
+      >
         <Button
           variant="accent"
           size="sm"
@@ -197,8 +200,8 @@ export default function AdminListPage() {
           <Plus size={16} />
           관리자 추가
         </Button>
-      </div>
-
+      </PageHeader>
+      
       {/* 테이블 */}
       <PaginatedTable
         data={adminList}

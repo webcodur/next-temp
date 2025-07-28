@@ -123,7 +123,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 							<>
 								{/* Overlay Panel */}
 								<div 
-									className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out bg-serial-3 ${
+									className={`absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out ${
 										isRTL ? 'right-0' : 'left-0'
 									} ${
 										shouldShow 
@@ -139,9 +139,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						)}
 
 						{/* 페이지 */}   
-						<main className="overflow-y-auto flex-1 scrollbar-gutter-stable">
+						<main className="overflow-y-auto flex-1 scrollbar-gutter-stable bg-serial-3">
               {/* 콘텐츠 */}
-              <div className="p-10 mx-auto mt-10 max-w-7xl rounded-lg bg-serial-3">
+              <div className="p-10 mx-auto mt-10 max-w-7xl rounded-lg">
                 {children}
               </div>  
               {/* 푸터 */}

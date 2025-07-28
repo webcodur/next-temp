@@ -101,7 +101,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     className="flex-1"
                     disabled={isLocked}
                   >
-                    등록된 차량
+                    등록 차량
                   </Button>
                 </div>
               </div>

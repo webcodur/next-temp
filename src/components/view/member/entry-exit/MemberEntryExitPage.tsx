@@ -167,13 +167,6 @@ export default function MemberEntryExitPage() {
       key: 'vehicleType',
       label: '구분',
       element: (
-      ),
-      visible: true,
-    },
-    {
-      key: 'vehicleType',
-      label: '구분',
-      element: (
         <div className="flex gap-2 items-center">
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">구분</span>
           <Field
@@ -185,13 +178,6 @@ export default function MemberEntryExitPage() {
             className="flex-1"
           />
         </div>
-      ),
-      visible: true,
-    },
-    {
-      key: 'parkingDays',
-      label: '주차시간',
-      element: (
       ),
       visible: true,
     },
@@ -225,13 +211,6 @@ export default function MemberEntryExitPage() {
       key: 'exitStatus',
       label: '출차여부',
       element: (
-      ),
-      visible: true,
-    },
-    {
-      key: 'exitStatus',
-      label: '출차여부',
-      element: (
         <div className="flex gap-4 items-center">
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">출차여부</span>
           <label className="flex gap-1 items-center text-sm">
@@ -255,13 +234,6 @@ export default function MemberEntryExitPage() {
             미출차
           </label>
         </div>
-      ),
-      visible: true,
-    },
-    {
-      key: 'search',
-      label: '검색설정',
-      element: (
       ),
       visible: true,
     },

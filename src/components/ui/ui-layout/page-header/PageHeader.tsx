@@ -32,27 +32,33 @@ export default function PageHeader({
 	return (
 		<div
 			className={cn(
-				'flex gap-4 justify-between items-start mb-6',
+				'flex relative items-start',
 				className
 			)}
 			{...props}
 		>
-			{/* 제목 영역 */}
-			<div className="space-y-1">
-				<h1 className="text-2xl font-bold text-[hsl(var(--foreground))]">
+			{/* 제목 영역 - 전체 너비를 차지하며 중앙 정렬 */}
+			<div className="space-y-3 w-full">
+				<h1 className="text-2xl font-bold text-[hsl(var(--foreground))] text-center">
 					{title}
 				</h1>
-				
 				{subtitle && (
-					<p className="text-sm text-[hsl(var(--muted-foreground))]">
+					<p className="text-center text-md text-foreground">
 						{subtitle}
 					</p>
 				)}
 			</div>
 			
-			{/* 액션 버튼 영역 */}
+			{/* 액션 버튼 영역 - 서브타이틀 위치 기준으로 정렬 */}
 			{children && (
-				<div className="flex gap-2 items-center shrink-0">
+				<div 
+					className={cn(
+						"absolute right-0 flex gap-2 items-center",
+						subtitle 
+							? "bottom-0" // 서브타이틀이 있으면 서브타이틀 라인에 맞춤
+							: "top-1/2 -translate-y-1/2" // 서브타이틀이 없으면 타이틀 중앙에 맞춤
+					)}
+				>
 					{children}
 				</div>
 			)}

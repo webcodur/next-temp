@@ -7,135 +7,60 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-
-import { Car, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Car, Shield, ChartBar } from 'lucide-react';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
-import VehicleDetailCard from '@/components/view/_screen/access-control/vehicleManager/VehicleDetailCard';
-import VehicleListTable from '@/components/view/_screen/access-control/vehicleManager/VehicleListTable';
-
-import type {
-	VehicleEntry,
-	SearchFilters,
-	ParkingBarrier,
-	OperationMode,
-} from '@/types/parking';
-import {
-	generateMockVehicleEntries,
-	mockBarriers,
-} from '@/data/mockParkingData';
-
-// #region 타입
-// 추가 타입이 필요한 경우 여기에 정의
-// #endregion
+import VehicleManagementTab from '@/components/view/_screen/vehicle-management/VehicleManagementTab';
+import AccessControlTab from '@/components/view/_screen/access-control/AccessControlTab';
+import StatisticsTab from '@/components/view/_screen/statistics/StatisticsTab';
 
 export default function Home() {
 	// #region 상수
 	const tabs = [
 		{
 			id: 'vehicles',
-			label: '차량 입출차 관리',
+			label: '입출차 관리(T)',
 			icon: <Car size={16} />,
+			title: '차량 입출차 현황 (실시간)',
+			subtitle: '현재 523대 주차 중 | 오늘 입차 1,247대, 출차 1,108대 | 평균 주차시간 2시간 43분',
 		},
 		{
 			id: 'access-control',
-			label: '출입제어 관리',
+			label: '출입 제어 관리(T)',
 			icon: <Shield size={16} />,
+			title: '차단기 제어 시스템 (6개소 운영 중)',
+			subtitle: '정상 4개소, 점검 중 1개소, 오류 1개소 | 마지막 업데이트: 2분 전 | 오늘 총 2,355회 작동',
 		},
+    {
+      id: 'statistics',
+      label: '주차장 통계 정보 (...)',
+      icon: <ChartBar size={16} />,
+			title: '이번 달 주차장 운영 현황',
+			subtitle: '월 평균 이용률 78.4% | 피크시간 14:00-18:00 (94.2%) | 수익: ₩24,750,000 (전월 대비 +12%)',
+    },
 	];
 	// #endregion
 
 	// #region 상태
-	const [vehicles, setVehicles] = useState<VehicleEntry[]>([]);
-	const [barriers, setBarriers] = useState<ParkingBarrier[]>(mockBarriers);
-	const [selectedVehicle, setSelectedVehicle] = useState<VehicleEntry | null>(
-		null,
-	);
-	const [filters, setFilters] = useState<SearchFilters>({});
-	const [isLoading, setIsLoading] = useState(false);
-	const [hasMore, setHasMore] = useState(true);
 	const [activeTab, setActiveTab] = useState('vehicles');
-	// #endregion
-
-	// #region 훅
-	// 초기 데이터 로드
-	useEffect(() => {
-		const initialData = generateMockVehicleEntries(50);
-		setVehicles(initialData);
-		
-		if (initialData.length > 0) {
-			setSelectedVehicle(initialData[0]);
-		}
-	}, []);
+	const [accessControlActions, setAccessControlActions] = useState<React.ReactNode>(null);
 	// #endregion
 
 	// #region 핸들러
-	const handleLoadMore = () => {
-		if (isLoading || vehicles.length >= 500) {
-			setHasMore(false);
-			return;
-		}
-
-		setIsLoading(true);
-
-		setTimeout(() => {
-			const newData = generateMockVehicleEntries(20);
-			setVehicles((prev) => [...prev, ...newData]);
-			setIsLoading(false);
-
-			if (vehicles.length >= 480) {
-				setHasMore(false);
-			}
-		}, 1000);
-	};
-
-	const handleFiltersChange = (newFilters: SearchFilters) => {
-		setFilters(newFilters);
-	};
-
-	const handleSearch = () => {
-		console.log('검색 실행:', filters);
-	};
-
-	const handleVehicleSelect = (vehicle: VehicleEntry) => {
-		setSelectedVehicle(vehicle);
-	};
-
-	const handleBarrierOpen = (barrierId: string) => {
-		setBarriers((prev) =>
-			prev.map((barrier) =>
-				barrier.id === barrierId ? { ...barrier, isOpen: true } : barrier,
-			),
-		);
-	};
-
-	const handleBarrierClose = (barrierId: string) => {
-		setBarriers((prev) =>
-			prev.map((barrier) =>
-				barrier.id === barrierId ? { ...barrier, isOpen: false } : barrier,
-			),
-		);
-	};
-
-	const handleOperationModeChange = (
-		barrierId: string,
-		mode: OperationMode,
-	) => {
-		setBarriers((prev) =>
-			prev.map((barrier) =>
-				barrier.id === barrierId ? { ...barrier, operationMode: mode } : barrier,
-			),
-		);
-	};
+	const handleAccessControlActions = React.useCallback((actions: React.ReactNode) => {
+		setAccessControlActions(actions);
+	}, []);
 	// #endregion
 
 	// #region 렌더링
 	return (
 		<div className="flex flex-col gap-6 h-full">
-			<PageHeader title="통합 대시보드" />
+			<PageHeader 
+				title="통합 대시보드 홈" 
+				subtitle="차량 입출차 및 출입제어 시스템 통합 관리"
+			/>
 			
 			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}
 			<div className="flex flex-col">
@@ -143,46 +68,14 @@ export default function Home() {
 					tabs={tabs}
 					activeId={activeTab}
 					onTabChange={setActiveTab}
+					endContent={activeTab === 'access-control' ? accessControlActions : undefined}
 				/>
 
 				{/* 콘텐츠 영역 - 탭과 연결된 스타일 */}
 				<div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-					{activeTab === 'vehicles' && (
-						<div className="flex flex-col gap-4 min-h-0 lg:flex-row lg:items-start">
-							{/* 차량 상세정보 패널 */}
-							<div className="w-full lg:max-w-sm xl:max-w-md shrink-0">
-								<VehicleDetailCard vehicle={selectedVehicle} showTitle={true} />
-							</div>
-
-							{/* 차량 목록 테이블 */}
-							<div className="overflow-hidden flex-1 w-full min-w-0">
-								<VehicleListTable
-									vehicles={vehicles}
-									filters={filters}
-									selectedVehicle={selectedVehicle}
-									onVehicleSelect={handleVehicleSelect}
-									onLoadMore={handleLoadMore}
-									hasMore={hasMore}
-									isLoading={isLoading}
-									onFiltersChange={handleFiltersChange}
-									onSearch={handleSearch}
-									size="lg"
-									showTitle={true}
-								/>
-							</div>
-						</div>
-					)}
-
-					{activeTab === 'access-control' && (
-						<div className="space-y-4">
-							<AccessControlManager
-								barriers={barriers}
-								onBarrierOpen={handleBarrierOpen}
-								onBarrierClose={handleBarrierClose}
-								onOperationModeChange={handleOperationModeChange}
-							/>
-						</div>
-					)}
+					{activeTab === 'vehicles' && <VehicleManagementTab />}
+					{activeTab === 'access-control' && <AccessControlTab onActionsRender={handleAccessControlActions} />}
+					{activeTab === 'statistics' && <StatisticsTab />}
 				</div>
 			</div>
 		</div>

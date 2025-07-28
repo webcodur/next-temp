@@ -326,8 +326,27 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
               </div>
             </div>
 
-            {/* 회차 정책 설정 - 전역 설정이 활성화된 경우에만 표시 */}
-            {globalReturnHourEnabled && (
+            {/* 출입 유형 설정 */}
+            <div>
+              <div className="flex gap-2 items-center mb-3">
+                <h4 className="text-sm font-semibold text-foreground">출입 유형 설정</h4>
+                <div className="flex-1 h-px bg-border"></div>
+              </div>
+              
+              <button
+                onClick={handleOpenVehicleConfig}
+                disabled={isDragOverlay || isLocked}
+                className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex items-center justify-center gap-2 ${
+                  isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+              >
+                <Sliders className="w-4 h-4" />
+                출입 유형 설정
+              </button>
+            </div>
+
+              {/* 회차 정책 설정 - 전역 설정이 활성화된 경우에만 표시 */}
+              {globalReturnHourEnabled && (
               <div>
                 <div className="flex gap-2 items-center mb-3">
                   <h4 className="text-sm font-semibold text-foreground">회차 정책 설정</h4>
@@ -355,25 +374,6 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
                 </div>
               </div>
             )}
-
-            {/* 출입 유형 설정 */}
-            <div>
-              <div className="flex gap-2 items-center mb-3">
-                <h4 className="text-sm font-semibold text-foreground">출입 유형 설정</h4>
-                <div className="flex-1 h-px bg-border"></div>
-              </div>
-              
-              <button
-                onClick={handleOpenVehicleConfig}
-                disabled={isDragOverlay || isLocked}
-                className={`w-full p-3 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex items-center justify-center gap-2 ${
-                  isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                }`}
-              >
-                <Sliders className="w-4 h-4" />
-                출입 유형 설정
-              </button>
-            </div>
           </div>
       </SectionPanel>
 

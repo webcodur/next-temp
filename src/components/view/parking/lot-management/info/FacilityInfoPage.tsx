@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Building2, Users, Smartphone, Settings, FileText } from 'lucide-react';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 export default function FacilityInfoPage() {
   // 페이지 설명 설정
@@ -74,110 +75,117 @@ export default function FacilityInfoPage() {
   ];
 
   return (
-    <div className="flex flex-col w-full max-w-5xl mx-auto">
-      {/* ----------------------------- 기본 정보 ----------------------------- */}
-      <section className="py-6">
-        <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
-          <Building2 className="w-5 h-5 neu-icon-active" />
-          기본 정보
-        </h2>
-        <GridForm labelWidth="200px">
-          {basicInfo.map(({ label, value }) => (
-            <GridForm.Row key={label}>
-              <GridForm.Label>
-                {label}
-              </GridForm.Label>
-              <GridForm.Content>
-                <span className="text-base font-medium">{value}</span>
-              </GridForm.Content>
-            </GridForm.Row>
-          ))}
-        </GridForm>
-      </section>
+    <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+      <PageHeader 
+        title="주차장 시설 정보" 
+        subtitle="시설 기본정보, 규모, 디지털 서비스 현황 및 운영 관리"
+      />
+      
+      <div className="flex flex-col w-full">
+        {/* ----------------------------- 기본 정보 ----------------------------- */}
+        <section className="py-6">
+          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+            <Building2 className="w-5 h-5 neu-icon-active" />
+            기본 정보
+          </h2>
+          <GridForm labelWidth="200px">
+            {basicInfo.map(({ label, value }) => (
+              <GridForm.Row key={label}>
+                <GridForm.Label>
+                  {label}
+                </GridForm.Label>
+                <GridForm.Content>
+                  <span className="text-base font-medium">{value}</span>
+                </GridForm.Content>
+              </GridForm.Row>
+            ))}
+          </GridForm>
+        </section>
 
 
-      {/* ----------------------------- 시설 규모 ----------------------------- */}
-      <section className="py-6">
-        <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
-          <Users className="w-5 h-5 neu-icon-active" />
-          시설 규모
-        </h2>
-        <GridForm labelWidth="200px">
-          {facilityScale.map(({ label, value }) => (
-            <GridForm.Row key={label}>
-              <GridForm.Label>
-                {label}
-              </GridForm.Label>
-              <GridForm.Content>
-                <span className="text-base font-medium">{value}</span>
-              </GridForm.Content>
-            </GridForm.Row>
-          ))}
-        </GridForm>
-      </section>
+        {/* ----------------------------- 시설 규모 ----------------------------- */}
+        <section className="py-6">
+          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+            <Users className="w-5 h-5 neu-icon-active" />
+            시설 규모
+          </h2>
+          <GridForm labelWidth="200px">
+            {facilityScale.map(({ label, value }) => (
+              <GridForm.Row key={label}>
+                <GridForm.Label>
+                  {label}
+                </GridForm.Label>
+                <GridForm.Content>
+                  <span className="text-base font-medium">{value}</span>
+                </GridForm.Content>
+              </GridForm.Row>
+            ))}
+          </GridForm>
+        </section>
 
 
-      {/* ------------------------- 디지털 서비스 현황 ------------------------- */}
-      <section className="py-6">
-        <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
-          <Smartphone className="w-5 h-5 neu-icon-active" />
-          디지털 서비스 현황
-        </h2>
-        <GridForm labelWidth="200px">
-          {digitalStatus.map(({ label, value }) => (
-            <GridForm.Row key={label}>
-              <GridForm.Label>
-                {label}
-              </GridForm.Label>
-              <GridForm.Content>
-                <span className="text-base font-medium">{value}</span>
-              </GridForm.Content>
-            </GridForm.Row>
-          ))}
-        </GridForm>
-      </section>
+        {/* ------------------------- 디지털 서비스 현황 ------------------------- */}
+        <section className="py-6">
+          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+            <Smartphone className="w-5 h-5 neu-icon-active" />
+            디지털 서비스 현황
+          </h2>
+          <GridForm labelWidth="200px">
+            {digitalStatus.map(({ label, value }) => (
+              <GridForm.Row key={label}>
+                <GridForm.Label>
+                  {label}
+                </GridForm.Label>
+                <GridForm.Content>
+                  <span className="text-base font-medium">{value}</span>
+                </GridForm.Content>
+              </GridForm.Row>
+            ))}
+          </GridForm>
+        </section>
 
 
-      {/* ----------------------------- 운영 현황 ----------------------------- */}
-      <section className="py-6">
-        <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
-          <Settings className="w-5 h-5 neu-icon-active" />
-          운영 현황
-        </h2>
-        <GridForm labelWidth="200px">
-          {operationStatus.map(({ label, value }) => (
-            <GridForm.Row key={label}>
-              <GridForm.Label>
-                {label}
-              </GridForm.Label>
-              <GridForm.Content>
-                <span className="text-base font-medium">{value}</span>
-              </GridForm.Content>
-            </GridForm.Row>
-          ))}
-        </GridForm>
-      </section>
+        {/* ----------------------------- 운영 현황 ----------------------------- */}
+        <section className="py-6">
+          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+            <Settings className="w-5 h-5 neu-icon-active" />
+            운영 현황
+          </h2>
+          <GridForm labelWidth="200px">
+            {operationStatus.map(({ label, value }) => (
+              <GridForm.Row key={label}>
+                <GridForm.Label>
+                  {label}
+                </GridForm.Label>
+                <GridForm.Content>
+                  <span className="text-base font-medium">{value}</span>
+                </GridForm.Content>
+              </GridForm.Row>
+            ))}
+          </GridForm>
+        </section>
 
 
-      {/* --------------------------- 계약 및 관리 --------------------------- */}
-      <section className="py-6">
-        <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
-          <FileText className="w-5 h-5 neu-icon-active" />
-          계약 및 관리
-        </h2>
-        <GridForm labelWidth="200px">
-          {contractManagement.map(({ label, value }) => (
-            <GridForm.Row key={label}>
-              <GridForm.Label>
-                {label}
-              </GridForm.Label>
-              <GridForm.Content>
-                <span className="text-base font-medium">{value}</span>
-              </GridForm.Content>
-            </GridForm.Row>
-          ))}
-        </GridForm>
-      </section>
+        {/* --------------------------- 계약 및 관리 --------------------------- */}
+        <section className="py-6">
+          <h2 className="flex items-center gap-2 mb-6 text-xl font-semibold text-foreground">
+            <FileText className="w-5 h-5 neu-icon-active" />
+            계약 및 관리
+          </h2>
+          <GridForm labelWidth="200px">
+            {contractManagement.map(({ label, value }) => (
+              <GridForm.Row key={label}>
+                <GridForm.Label>
+                  {label}
+                </GridForm.Label>
+                <GridForm.Content>
+                  <span className="text-base font-medium">{value}</span>
+                </GridForm.Content>
+              </GridForm.Row>
+            ))}
+          </GridForm>
+        </section>
+      </div>
     </div>
   );
 } 

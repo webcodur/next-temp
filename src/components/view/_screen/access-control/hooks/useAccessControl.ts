@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
+import { mockBarriers } from '@/data/mockParkingData';
 
 // #region 타입 정의
 export type EntryPolicyType = 'all' | 'office';
@@ -16,7 +17,6 @@ interface BarrierPolicy {
 }
 
 interface UseAccessControlProps {
-	initialBarriers: ParkingBarrier[];
 	onBarrierOpen?: (barrierId: string) => void;
 	onBarrierClose?: (barrierId: string) => void;
 	onOperationModeChange?: (barrierId: string, mode: OperationMode) => void;
@@ -57,18 +57,17 @@ const createInitialBarrierPolicies = (barriers: ParkingBarrier[]) => {
 
 // #region 메인 훅
 export const useAccessControl = ({
-	initialBarriers,
 	onBarrierOpen,
 	onBarrierClose,
 	onOperationModeChange,
-}: UseAccessControlProps): UseAccessControlReturn => {
+}: UseAccessControlProps = {}): UseAccessControlReturn => {
 	// #region 상태
-	const [barriers, setBarriers] = useState<ParkingBarrier[]>(initialBarriers);
+	const [barriers, setBarriers] = useState<ParkingBarrier[]>(mockBarriers);
 	const [barrierPolicies, setBarrierPolicies] = useState<
 		Record<string, BarrierPolicy>
-	>(() => createInitialBarrierPolicies(initialBarriers));
+	>(() => createInitialBarrierPolicies(mockBarriers));
 	const [barrierOrder, setBarrierOrder] = useState<string[]>(() =>
-		initialBarriers.map((barrier) => barrier.id)
+		mockBarriers.map((barrier) => barrier.id)
 	);
 	const [entryPolicy, setEntryPolicy] = useState<EntryPolicyType>('office');
 	const [returnHourEnabled, setReturnHourEnabled] = useState<boolean>(false);
