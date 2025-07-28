@@ -21,7 +21,7 @@
 /member/entryexit
 /member/member
 /member/visitor
-/member/resident-household
+/member/household
 /member/blacklist
 /parking/stores/status
 /parking/security/patrol-log

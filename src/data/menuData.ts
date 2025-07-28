@@ -45,10 +45,6 @@ export const menuData: MenuData = {
 						href: '/member/visitor',
 					},
 					{
-						key: '세대관리',
-						href: '/member/resident-household',
-					},
-					{
 						key: '블랙리스트',
 						href: '/member/blacklist',
 					},

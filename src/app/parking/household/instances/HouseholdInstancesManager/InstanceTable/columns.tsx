@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/household/instances/HouseholdInstancesManager/InstanceTable/columns.tsx
+  파일명: /app/parking/household/instances/HouseholdInstancesManager/InstanceTable/columns.tsx
   기능: 거주 이력 테이블의 컬럼 정의
   책임: 테이블 구조와 셀 렌더링 로직을 관리한다.
 */ // ------------------------------

@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/household/instances/HouseholdInstancesManager/HouseholdInstancesManager.tsx
+  파일명: /app/parking/household/instances/HouseholdInstancesManager/HouseholdInstancesManager.tsx
   기능: 거주 이력 관리의 핵심 비즈니스 로직과 상태 관리
   책임: 데이터 필터링, 검색, 테이블 렌더링을 조율한다.
 */ // ------------------------------
@@ -230,7 +230,7 @@ export function HouseholdInstancesManager() {
           </div>
           <div className="flex gap-3">
             <Link
-              href="/preview/household"
+              href="/parking/household"
               className="flex gap-2 items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-primary-foreground bg-primary neu-raised-primary hover:animate-click-feedback"
             >
               <Plus className="w-4 h-4" />

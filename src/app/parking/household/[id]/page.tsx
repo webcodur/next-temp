@@ -40,7 +40,7 @@ export default function HouseholdDetailPage() {
   }, [householdId]);
 
   const handleEdit = () => {
-    router.push(`/preview/household/${householdId}/edit`);
+    router.push(`/parking/household/${householdId}/edit`);
   };
 
   const handleDelete = async () => {
@@ -50,7 +50,7 @@ export default function HouseholdDetailPage() {
         
         if (result.success) {
           alert('세대가 삭제되었습니다.');
-          router.push('/preview/household');
+          router.push('/parking/household');
         } else {
           alert(`세대 삭제 실패: ${result.errorMsg}`);
         }
@@ -94,7 +94,7 @@ export default function HouseholdDetailPage() {
         <div className="p-6 rounded-xl neu-flat">
           <div className="flex gap-4 items-center">
             <button
-              onClick={() => router.push('/preview/household')}
+              onClick={() => router.push('/parking/household')}
               className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
             >
               <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -116,7 +116,7 @@ export default function HouseholdDetailPage() {
         <div className="flex justify-between items-center">
           <div className="flex gap-4 items-center">
             <button
-              onClick={() => router.push('/preview/household')}
+              onClick={() => router.push('/parking/household')}
               className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
             >
               <ArrowLeft className="w-5 h-5 text-foreground" />

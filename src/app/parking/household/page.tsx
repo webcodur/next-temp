@@ -211,8 +211,8 @@ export default function HouseholdListPage() {
   // #endregion
 
   // #region 핸들러
-  const handleView = (id: number) => window.location.href = `/preview/household/${id}`;
-  const handleEdit = (id: number) => window.location.href = `/preview/household/${id}/edit`;
+  const handleView = (id: number) => window.location.href = `/parking/household/${id}`;
+  const handleEdit = (id: number) => window.location.href = `/parking/household/${id}/edit`;
 
   const handleDelete = async (id: number) => {
     if (confirm('정말로 이 세대를 삭제하시겠습니까?')) {
@@ -304,7 +304,7 @@ export default function HouseholdListPage() {
               엑셀 다운로드
             </button>
             <Link
-              href="/preview/household/create"
+              href="/parking/household/create"
               className="flex gap-2 items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-primary-foreground bg-primary neu-raised-primary hover:animate-click-feedback"
             >
               <Plus className="w-4 h-4 text-primary-foreground" />

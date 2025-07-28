@@ -126,7 +126,7 @@ export default function EditHouseholdPage() {
       
       if (result.success) {
         alert('세대 정보가 성공적으로 수정되었습니다.');
-        router.push(`/preview/household/${householdId}`);
+        router.push(`/parking/household/${householdId}`);
       } else {
         alert(`세대 수정 실패: ${result.errorMsg}`);
       }
@@ -140,7 +140,7 @@ export default function EditHouseholdPage() {
 
   const handleCancel = () => {
     if (confirm('작성중인 내용이 사라집니다. 정말로 취소하시겠습니까?')) {
-      router.push(`/preview/household/${householdId}`);
+      router.push(`/parking/household/${householdId}`);
     }
   };
 
@@ -166,7 +166,7 @@ export default function EditHouseholdPage() {
         <div className="p-6 rounded-xl neu-flat">
           <div className="flex gap-4 items-center">
             <button
-              onClick={() => router.push('/preview/household')}
+              onClick={() => router.push('/parking/household')}
               className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
             >
               <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -187,7 +187,7 @@ export default function EditHouseholdPage() {
       <div className="p-6 rounded-xl neu-flat">
         <div className="flex gap-4 items-center">
           <button
-            onClick={() => router.push(`/preview/household/${householdId}`)}
+            onClick={() => router.push(`/parking/household/${householdId}`)}
             className="p-3 rounded-xl transition-all duration-200 neu-raised hover:animate-click-feedback"
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />

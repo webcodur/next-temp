@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/household/instances/page.tsx
+  파일명: /app/parking/household/instances/page.tsx
   기능: 세대별 거주 이력 관리 페이지
   책임: Manager 컴포넌트를 렌더링하고 페이지 레이아웃을 제공한다.
 */ // ------------------------------

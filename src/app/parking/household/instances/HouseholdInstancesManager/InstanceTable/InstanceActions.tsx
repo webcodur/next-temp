@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/household/instances/HouseholdInstancesManager/InstanceTable/InstanceActions.tsx
+  파일명: /app/parking/household/instances/HouseholdInstancesManager/InstanceTable/InstanceActions.tsx
   기능: 거주 이력 테이블의 액션 버튼들
   책임: 보기, 설정, 수정, 삭제 버튼을 렌더링한다.
 */ // ------------------------------
