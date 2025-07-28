@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Car, Shield } from 'lucide-react';
 
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
 import VehicleDetailCard from '@/components/view/_screen/access-control/vehicleManager/VehicleDetailCard';
@@ -134,48 +135,56 @@ export default function Home() {
 	// #region 렌더링
 	return (
 		<div className="flex flex-col gap-6 h-full">
-			<Tabs
-				tabs={tabs}
-				activeId={activeTab}
-				onTabChange={setActiveTab}
-			/>
+			<PageHeader title="통합 대시보드" />
+			
+			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}
+			<div className="flex flex-col">
+				<Tabs
+					tabs={tabs}
+					activeId={activeTab}
+					onTabChange={setActiveTab}
+				/>
 
-			{activeTab === 'vehicles' && (
-				<div className="flex flex-col gap-4 min-h-0 lg:flex-row lg:items-start">
-					{/* 차량 상세정보 패널 */}
-					<div className="w-full lg:max-w-sm xl:max-w-md shrink-0">
-						<VehicleDetailCard vehicle={selectedVehicle} showTitle={true} />
-					</div>
+				{/* 콘텐츠 영역 - 탭과 연결된 스타일 */}
+				<div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
+					{activeTab === 'vehicles' && (
+						<div className="flex flex-col gap-4 min-h-0 lg:flex-row lg:items-start">
+							{/* 차량 상세정보 패널 */}
+							<div className="w-full lg:max-w-sm xl:max-w-md shrink-0">
+								<VehicleDetailCard vehicle={selectedVehicle} showTitle={true} />
+							</div>
 
-					{/* 차량 목록 테이블 */}
-					<div className="overflow-hidden flex-1 w-full min-w-0">
-						<VehicleListTable
-							vehicles={vehicles}
-							filters={filters}
-							selectedVehicle={selectedVehicle}
-							onVehicleSelect={handleVehicleSelect}
-							onLoadMore={handleLoadMore}
-							hasMore={hasMore}
-							isLoading={isLoading}
-							onFiltersChange={handleFiltersChange}
-							onSearch={handleSearch}
-							size="lg"
-							showTitle={true}
-						/>
-					</div>
+							{/* 차량 목록 테이블 */}
+							<div className="overflow-hidden flex-1 w-full min-w-0">
+								<VehicleListTable
+									vehicles={vehicles}
+									filters={filters}
+									selectedVehicle={selectedVehicle}
+									onVehicleSelect={handleVehicleSelect}
+									onLoadMore={handleLoadMore}
+									hasMore={hasMore}
+									isLoading={isLoading}
+									onFiltersChange={handleFiltersChange}
+									onSearch={handleSearch}
+									size="lg"
+									showTitle={true}
+								/>
+							</div>
+						</div>
+					)}
+
+					{activeTab === 'access-control' && (
+						<div className="space-y-4">
+							<AccessControlManager
+								barriers={barriers}
+								onBarrierOpen={handleBarrierOpen}
+								onBarrierClose={handleBarrierClose}
+								onOperationModeChange={handleOperationModeChange}
+							/>
+						</div>
+					)}
 				</div>
-			)}
-
-			{activeTab === 'access-control' && (
-				<div className="space-y-4">
-					<AccessControlManager
-						barriers={barriers}
-						onBarrierOpen={handleBarrierOpen}
-						onBarrierClose={handleBarrierClose}
-						onOperationModeChange={handleOperationModeChange}
-					/>
-				</div>
-			)}
+			</div>
 		</div>
 	);
 	// #endregion

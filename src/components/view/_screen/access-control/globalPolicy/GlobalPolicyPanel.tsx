@@ -18,7 +18,7 @@ const STYLES = {
   
   // 섹션 공통
   section: 'p-6',
-  sectionWithBorder: 'p-6 border-r border-border/30 lg:border-r-2',
+  sectionWithBorder: 'p-6 border-e border-border/30 lg:border-e-2',
   sectionContent: 'space-y-4',
   sectionBody: 'space-y-3',
   

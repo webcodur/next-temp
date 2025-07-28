@@ -43,16 +43,16 @@ const ListHighlightMarker: React.FC<ListHighlightMarkerProps> = ({
 		hoverBorder: colorVariant === 'primary' ? 'hover:border-primary' : 'hover:border-secondary',
 	};
 
-	// RTL에 따른 색상 바 위치와 transform 방향 결정
+	// RTL에 따른 색상 바 위치와 transform 방향 결정 (RTL 대응)
 	const getBorderClass = () => {
 		if (isRTL) {
 			return isActive
-				? `${colorStyles.bg} border-r-4 ${colorStyles.borderActive} -translate-x-1`
-				: `hover:border-r-4 ${colorStyles.hoverBorder} hover:-translate-x-1 ${colorStyles.hoverBg}`;
+				? `${colorStyles.bg} border-e-4 ${colorStyles.borderActive} -translate-x-1`
+				: `hover:border-e-4 ${colorStyles.hoverBorder} hover:-translate-x-1 ${colorStyles.hoverBg}`;
 		} else {
 			return isActive
-				? `${colorStyles.bg} border-l-4 ${colorStyles.borderActive} translate-x-1`
-				: `hover:border-l-4 ${colorStyles.hoverBorder} hover:translate-x-1 ${colorStyles.hoverBg}`;
+				? `${colorStyles.bg} border-s-4 ${colorStyles.borderActive} translate-x-1`
+				: `hover:border-s-4 ${colorStyles.hoverBorder} hover:translate-x-1 ${colorStyles.hoverBg}`;
 		}
 	};
 

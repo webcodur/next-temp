@@ -85,7 +85,7 @@ function SecondaryPanel() {
 					{/* Mode Toggle */}
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button variant="ghost" size="icon" className="w-8 h-8" onClick={handleSingleOpenToggle}>
+							<Button variant="ghost" size="icon" className="w-8 h-8 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleSingleOpenToggle}>
 								{singleOpenMode ? (
 									<Focus className="w-5 h-5 text-primary" />
 								) : (
@@ -103,7 +103,7 @@ function SecondaryPanel() {
 					{/* Expand/Collapse All */}
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button variant="ghost" size="icon" className="w-8 h-8" onClick={handleExpandCollapseClick}>
+							<Button variant="ghost" size="icon" className="w-8 h-8 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleExpandCollapseClick}>
 								<ChevronsUpDown className="w-5 h-5 text-muted-foreground" />
 							</Button>
 						</TooltipTrigger>

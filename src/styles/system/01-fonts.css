@@ -5,7 +5,7 @@
 🌍 다국어 폰트 시스템
 
 🎯 기본 원칙 - font-multilang 하나로 해결
-┌─ MultiLang 폰트  │ 한국어(Pretendard) + 아랍어(Cairo) + 영어(DMSerifText)
+┌─ MultiLang 폰트  │ 한국어(Pretendard) + 아랍어(Cairo) + 영어(Pretendard)
 ├─ 자동 폰트 선택  │ unicode-range로 문자별 최적 폰트 적용
 ├─ 성능 최적화    │ 서브셋 폰트 + font-display: swap
 └─ 폴백 시스템    │ Pretendard 단독 폰트도 별도 정의
@@ -13,7 +13,7 @@
 🚀 폰트 로딩 전략
 ├─ 한국어: woff2 서브셋 (9단계 font-weight)
 ├─ 아랍어: Cairo.woff2 (가변 폰트 100-900)
-├─ 영어: DMSerifText.woff2 (세리프 고급감)
+├─ 영어: Pretendard.woff2 (한국어와 통일성)
 └─ 폴백: Pretendard 단독 (MultiLang 실패 시)
 
 💡 사용법
@@ -141,10 +141,11 @@
 		U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
-/* 1-3. MultiLang 폰트 - 영어 */
+/* 1-3. MultiLang 폰트 - 영어 (Pretendard 사용) */
 @font-face {
 	font-family: 'MultiLang';
-	src: url('/fonts/DMSerifText.woff2') format('woff2');
+	src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2')
+		format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -236,16 +237,7 @@
 	font-display: swap;
 }
 
-/* 1-5. Inter 폰트 (영어용) */
-@font-face {
-	font-family: 'Inter';
-	src: url('/fonts/DMSerifText.woff2') format('woff2');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
-/* 1-6. Cairo 폰트 (아랍어용) */
+/* 1-5. Cairo 폰트 (아랍어용) */
 @font-face {
 	font-family: 'Cairo';
 	src: url('/fonts/Cairo.woff2') format('woff2');
@@ -254,7 +246,7 @@
 	font-display: swap;
 }
 
-/* 1-7. HY헤드라인M 폰트 */
+/* 1-6. HY헤드라인M 폰트 */
 @font-face {
 	font-family: 'HY헤드라인M';
 	src: url('/fonts/fe-font.ttf') format('truetype');
@@ -264,7 +256,7 @@
 }
 /* #endregion */
 
-/* #region 1-8. 폰트 클래스 명시적 정의 */
+/* #region 2. 폰트 클래스 명시적 정의 */
 .font-multilang {
 	font-family:
 		'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif !important;

@@ -42,61 +42,58 @@ export default function UnifiedTablePage() {
 					</p>
 				</div>
 
-				{/* 탭 네비게이션 */}
-				<div className="mb-6">
+				{/* 탭 네비게이션과 콘텐츠를 하나의 컨테이너로 묶음 */}
+				<div className="max-w-4xl mx-auto">
 					<Tabs 
 						tabs={tabList} 
 						activeId={activeTab}
 						onTabChange={setActiveTab}
-						className="max-w-4xl mx-auto"
 					/>
-				</div>
 
-				{/* 탭 콘텐츠 */}
-				<div className="bg-white rounded-xl shadow-sm border min-h-[600px]">
-					{activeTab === 'base' && (
-						<div className="p-6">
-							<div className="mb-6">
-								<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
-									{t('테이블_기본테이블')} (A)
-								</h2>
-								<p className="text-gray-600 text-sm font-multilang">
-									{t('테이블_기본설명')}
-								</p>
+					{/* 탭 콘텐츠 - 탭과 연결된 스타일 */}
+					<div className="border-s-2 border-e-2 border-b-2 border-border bg-white rounded-b-lg shadow-sm min-h-[600px]">
+						{activeTab === 'base' && (
+							<div className="p-6">
+								<div className="mb-6">
+									<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
+										{t('테이블_기본테이블')} (A)
+									</h2>
+									<p className="text-gray-600 text-sm font-multilang">
+										{t('테이블_기본설명')}
+									</p>
+								</div>
+								<BaseTableExample />
 							</div>
-							<BaseTableExample />
-						</div>
-					)}
+						)}
 
-					{activeTab === 'infinite' && (
-						<div className="p-6">
-							<div className="mb-6">
-								<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
-									{t('테이블_무한스크롤')} (A+x)
-								</h2>
-								<p className="text-gray-600 text-sm font-multilang">
-									{t('테이블_무한설명')}
-								</p>
+						{activeTab === 'infinite' && (
+							<div className="p-6">
+								<div className="mb-6">
+									<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
+										{t('테이블_무한스크롤')} (A+x)
+									</h2>
+									<p className="text-gray-600 text-sm font-multilang">
+										{t('테이블_무한설명')}
+									</p>
+								</div>
+								<InfiniteTableExample />
 							</div>
-							<InfiniteTableExample />
-						</div>
-					)}
+						)}
 
-					{activeTab === 'paginated' && (
-						<div className="p-6">
-							<div className="mb-6">
-								<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
-									{t('테이블_페이지네이션')} (A+y)
-								</h2>
-								<p className="text-gray-600 text-sm font-multilang">
-									{t('테이블_페이지설명')}
-								</p>
+						{activeTab === 'paginated' && (
+							<div className="p-6">
+								<div className="mb-6">
+									<h2 className="text-xl font-semibold text-gray-800 mb-2 font-multilang">
+										{t('테이블_페이지네이션')} (A+y)
+									</h2>
+									<p className="text-gray-600 text-sm font-multilang">
+										{t('테이블_페이지설명')}
+									</p>
+								</div>
+								<PaginatedTableExample />
 							</div>
-							<PaginatedTableExample />
-						</div>
-					)}
-
-
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

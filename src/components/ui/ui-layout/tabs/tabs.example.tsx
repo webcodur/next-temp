@@ -48,147 +48,150 @@ const TabsExample: React.FC = () => {
 					{t('탭_제목')}
 				</h1>
 
-				<Tabs 
-					tabs={tabList} 
-					activeId={activeTab}
-					onTabChange={setActiveTab}
-					className="p-6"
-				/>
+				{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}
+				<div className="flex flex-col">
+					<Tabs 
+						tabs={tabList} 
+						activeId={activeTab}
+						onTabChange={setActiveTab}
+					/>
 
-				<div className="mt-6 p-6 rounded-xl neu-flat min-h-[300px]">
-					{activeTab === 'tab1' && (
-						<div className="space-y-6">
-							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-								{t('탭_대시보드개요')}
-							</h2>
-							<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_총방문자')}</h3>
-									<p className="text-2xl font-bold text-gray-600">12,345</p>
-								</div>
-								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_월간매출')}</h3>
-									<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
-								</div>
-								<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
-									<h3 className="font-medium text-gray-700 font-multilang">{t('탭_활성사용자')}</h3>
-									<p className="text-2xl font-bold text-gray-600">3,456</p>
+					{/* 콘텐츠 영역 - 탭과 연결된 스타일 */}
+					<div className="border-s-2 border-e-2 border-b-2 border-border bg-background rounded-b-lg p-6 min-h-[300px]">
+						{activeTab === 'tab1' && (
+							<div className="space-y-6">
+								<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+									{t('탭_대시보드개요')}
+								</h2>
+								<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+									<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+										<h3 className="font-medium text-gray-700 font-multilang">{t('탭_총방문자')}</h3>
+										<p className="text-2xl font-bold text-gray-600">12,345</p>
+									</div>
+									<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+										<h3 className="font-medium text-gray-700 font-multilang">{t('탭_월간매출')}</h3>
+										<p className="text-2xl font-bold text-gray-600">₩2,450,000</p>
+									</div>
+									<div className="p-5 rounded-lg neu-inset transition-all duration-200 hover:scale-[1.02]">
+										<h3 className="font-medium text-gray-700 font-multilang">{t('탭_활성사용자')}</h3>
+										<p className="text-2xl font-bold text-gray-600">3,456</p>
+									</div>
 								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{activeTab === 'tab2' && (
-						<div className="space-y-6">
-							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-								{t('탭_설정')}
-							</h2>
-							<div className="space-y-4">
-								<div className="p-4 rounded-lg neu-inset">
-									<div className="flex justify-between items-center">
-										<span className="font-medium text-gray-700 font-multilang">
-											{t('탭_알림설정')}
-										</span>
-										<button
-											onClick={() => setNotifications(!notifications)}
-											className={cn(
-												'relative w-12 h-6 rounded-full transition-all duration-200',
-												notifications ? 'neu-inset' : 'neu-raised',
-												notifications ? 'bg-primary' : 'bg-gray-300',
-											)}
-										>
-											<div
+						{activeTab === 'tab2' && (
+							<div className="space-y-6">
+								<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+									{t('탭_설정')}
+								</h2>
+								<div className="space-y-4">
+									<div className="p-4 rounded-lg neu-inset">
+										<div className="flex justify-between items-center">
+											<span className="font-medium text-gray-700 font-multilang">
+												{t('탭_알림설정')}
+											</span>
+											<button
+												onClick={() => setNotifications(!notifications)}
 												className={cn(
-													'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
-													notifications ? 'translate-x-6' : 'translate-x-0.5',
+													'relative w-12 h-6 rounded-full transition-all duration-200',
+													notifications ? 'neu-inset' : 'neu-raised',
+													notifications ? 'bg-primary' : 'bg-gray-300',
 												)}
-											/>
-										</button>
+											>
+												<div
+													className={cn(
+														'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
+														notifications ? 'translate-x-6' : 'translate-x-0.5',
+													)}
+												/>
+											</button>
+										</div>
 									</div>
-								</div>
-								<div className="p-4 rounded-lg neu-inset">
-									<div className="flex justify-between items-center">
-										<span className="font-medium text-gray-700 font-multilang">
-											{t('탭_다크모드')}
-										</span>
-										<button
-											onClick={() => setDarkMode(!darkMode)}
-											className={cn(
-												'relative w-12 h-6 rounded-full transition-all duration-200',
-												darkMode ? 'neu-inset' : 'neu-raised',
-												darkMode ? 'bg-primary' : 'bg-gray-300',
-											)}
-										>
-											<div
+									<div className="p-4 rounded-lg neu-inset">
+										<div className="flex justify-between items-center">
+											<span className="font-medium text-gray-700 font-multilang">
+												{t('탭_다크모드')}
+											</span>
+											<button
+												onClick={() => setDarkMode(!darkMode)}
 												className={cn(
-													'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
-													darkMode ? 'translate-x-6' : 'translate-x-0.5',
+													'relative w-12 h-6 rounded-full transition-all duration-200',
+													darkMode ? 'neu-inset' : 'neu-raised',
+													darkMode ? 'bg-primary' : 'bg-gray-300',
 												)}
-											/>
-										</button>
+											>
+												<div
+													className={cn(
+														'w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200',
+														darkMode ? 'translate-x-6' : 'translate-x-0.5',
+													)}
+												/>
+											</button>
+										</div>
 									</div>
-								</div>
-								<div className="p-4 rounded-lg neu-inset">
-									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
-										{t('탭_계정정보')}
-									</h3>
-									<div className="space-y-2 text-sm text-gray-600">
-										<p>Email: user@example.com</p>
-										<p>Plan: Premium</p>
-										<p>Status: Active</p>
+									<div className="p-4 rounded-lg neu-inset">
+										<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+											{t('탭_계정정보')}
+										</h3>
+										<div className="space-y-2 text-sm text-gray-600">
+											<p>Email: user@example.com</p>
+											<p>Plan: Premium</p>
+											<p>Status: Active</p>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{activeTab === 'tab3' && (
-						<div className="space-y-6">
-							<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
-								{t('탭_프로필')}
-							</h2>
-							<div className="space-y-4">
-								<div className="p-4 rounded-lg neu-inset">
-									<div className="flex items-center space-x-4">
-										<div className="flex justify-center items-center w-16 h-16 rounded-full neu-inset">
-											<ProfileIcon />
-										</div>
-										<div>
-											<h3 className="font-medium text-gray-700 font-multilang">
-												{t('탭_사용자이름')}
-											</h3>
-											<p className="text-gray-600">Premium User</p>
+						{activeTab === 'tab3' && (
+							<div className="space-y-6">
+								<h2 className="mb-4 text-xl font-semibold text-gray-700 font-multilang">
+									{t('탭_프로필')}
+								</h2>
+								<div className="space-y-4">
+									<div className="p-4 rounded-lg neu-inset">
+										<div className="flex items-center space-x-4">
+											<div className="flex justify-center items-center w-16 h-16 rounded-full neu-inset">
+												<ProfileIcon />
+											</div>
+											<div>
+												<h3 className="font-medium text-gray-700 font-multilang">
+													{t('탭_사용자이름')}
+												</h3>
+												<p className="text-gray-600">Premium User</p>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div className="p-4 rounded-lg neu-inset">
-									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
-										{t('탭_개인정보')}
-									</h3>
-									<div className="space-y-2 text-sm text-gray-600">
-										<p>가입일: 2023년 3월 15일</p>
-										<p>마지막 접속: 2024년 1월 20일</p>
-										<p>총 접속 시간: 245시간</p>
-									</div>
-								</div>
-								<div className="p-4 rounded-lg neu-inset">
-									<h3 className="mb-2 font-medium text-gray-700 font-multilang">
-										{t('탭_사용통계')}
-									</h3>
-									<div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-										<div>
-											<p>작성한 게시물: 23개</p>
-											<p>좋아요: 145개</p>
+									<div className="p-4 rounded-lg neu-inset">
+										<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+											{t('탭_개인정보')}
+										</h3>
+										<div className="space-y-2 text-sm text-gray-600">
+											<p>가입일: 2023년 3월 15일</p>
+											<p>마지막 접속: 2024년 1월 20일</p>
+											<p>총 접속 시간: 245시간</p>
 										</div>
-										<div>
-											<p>댓글: 89개</p>
-											<p>공유: 12개</p>
+									</div>
+									<div className="p-4 rounded-lg neu-inset">
+										<h3 className="mb-2 font-medium text-gray-700 font-multilang">
+											{t('탭_사용통계')}
+										</h3>
+										<div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+											<div>
+												<p>작성한 게시물: 23개</p>
+												<p>좋아요: 145개</p>
+											</div>
+											<div>
+												<p>댓글: 89개</p>
+												<p>공유: 12개</p>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

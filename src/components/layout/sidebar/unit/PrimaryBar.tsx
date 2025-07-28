@@ -8,7 +8,6 @@
 import { useState } from 'react';
 
 import { useAtom } from 'jotai';
-import { Menu } from 'lucide-react';
 
 import { menuData } from '@/data/menuData';
 import { defaults } from '@/data/sidebarConfig';
@@ -22,8 +21,6 @@ export function PrimaryBar() {
 	// #endregion
 
 	// #region 핸들러
-	const handleToggle = () => setIsCollapsed(!isCollapsed);
-	
 	const handleMenuClick = (topKey: string) => {
 		// 마이크로 인터렉션 트리거
 		setClickedMenu(topKey);
@@ -59,19 +56,6 @@ export function PrimaryBar() {
 			style={{ minWidth: `${defaults.startColumnWidth}px` }}
 			className="flex flex-col items-center h-full cursor-pointer border-e border-border/20 shrink-0 sidebar-container bg-serial-3"
 			onClick={handlePrimaryBarClick}>
-			
-      {/* 여닫기 버튼 */}
-			<div className="flex justify-center items-center h-16">
-				<button
-					type="button"
-					onClick={(e) => {
-						stopPropagation(e);
-						handleToggle();
-					}}
-					className="flex justify-center items-center w-12 h-12 rounded-xl transition-all duration-200 cursor-pointer neu-raised hover:neu-inset">
-					<Menu className="w-6 h-6 text-foreground" />
-				</button>
-			</div>
 
 			{/* 메뉴 아이콘 리스트 */}
 			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
