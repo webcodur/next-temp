@@ -53,20 +53,20 @@
 /* 눌림 시 inset 효과 */
 .neu-pressed {
 	box-shadow:
-		/* 내부 우하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * 1.1) calc(var(--nm-offset) * 1.1)
-			calc(var(--nm-blur) * 1.0) rgba(var(--nm-dark-rgba)),
-		/* 내부 좌상단 하이라이트 - 강화 */ inset calc(var(--nm-offset) * -1.1)
-			calc(var(--nm-offset) * -1.1) calc(var(--nm-blur) * 1.0)
+		/* 내부 우하단 그림자 */
+		inset calc(var(--nm-offset) * 0.8) calc(var(--nm-offset) * 0.8)
+			calc(var(--nm-blur) * 0.8) rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 하이라이트 */ inset calc(var(--nm-offset) * -0.8)
+			calc(var(--nm-offset) * -0.8) calc(var(--nm-blur) * 0.8)
 			rgba(var(--nm-light-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.6)
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-dark-rgba)),
-		/* 내부 하단 하이라이트 - 강화 */ inset 0 calc(var(--nm-offset) * -0.6)
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba)),
-		/* 내부 좌측 그림자 - 강화 */ inset calc(var(--nm-offset) * 0.6) 0
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-dark-rgba)),
-		/* 내부 우측 하이라이트 - 강화 */ inset calc(var(--nm-offset) * -0.6) 0
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba));
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 하이라이트 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
 	transition: all 0.15s ease-in;
 }
 
@@ -85,24 +85,33 @@
 			calc(var(--nm-blur) * 0.6) rgba(var(--nm-light-rgba)),
 		/* 내부 좌측 → 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.5) 0
 			calc(var(--nm-blur) * 0.6) rgba(var(--nm-dark-rgba)),
-		/* 내부 우측 → 좌측 하이라이트 - 강화 */ inset calc(var(--nm-offset) * 0.5) 0
-			calc(var(--nm-blur) * 0.6) rgba(var(--nm-light-rgba));
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset calc(var(--nm-offset) * 0.6)
+			calc(var(--nm-offset) * -0.6) calc(var(--nm-blur) * 0.6)
+			rgba(var(--nm-light-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.3)
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.3) 0
+			calc(var(--nm-blur) * 0.4) rgba(var(--nm-light-rgba));
 }
 
 [dir='rtl'] .neu-pressed {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * -1.1) calc(var(--nm-offset) * 1.1)
-			calc(var(--nm-blur) * 1.0) rgba(var(--nm-dark-rgba)),
-		/* 내부 좌상단 → 우상단 하이라이트 - 강화 */ inset calc(var(--nm-offset) * 1.1)
-			calc(var(--nm-offset) * -1.1) calc(var(--nm-blur) * 1.0)
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -0.8) calc(var(--nm-offset) * 0.8)
+			calc(var(--nm-blur) * 0.8) rgba(var(--nm-dark-rgba)),
+		/* 내부 좌상단 → 우상단 하이라이트 */ inset calc(var(--nm-offset) * 0.8)
+			calc(var(--nm-offset) * -0.8) calc(var(--nm-blur) * 0.8)
 			rgba(var(--nm-light-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.6)
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-dark-rgba)),
-		/* 내부 하단 하이라이트 - 강화 */ inset 0 calc(var(--nm-offset) * -0.6)
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.6) 0
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-dark-rgba)),
-		/* 내부 우측 → 좌측 하이라이트 - 강화 */ inset calc(var(--nm-offset) * 0.6) 0
-			calc(var(--nm-blur) * 0.7) rgba(var(--nm-light-rgba));
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 하단 하이라이트 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-dark-rgba)),
+		/* 내부 우측 → 좌측 하이라이트 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-light-rgba));
 }
