@@ -2,6 +2,8 @@
   파일명: /components/layout/sidebar/unit/SecondaryPanel/SortableMidMenu/SortableBotMenuItem/SortableBotMenuItem.tsx
   기능: Bot 메뉴 아이템 컴포넌트
   책임: 개별 Bot 메뉴 아이템의 렌더링 제공
+  기능: Bot 메뉴 아이템 컴포넌트
+  책임: 개별 Bot 메뉴 아이템의 렌더링 제공
 */
 'use client';
 
