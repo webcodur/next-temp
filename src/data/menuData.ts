@@ -1,11 +1,63 @@
-import { Car, Network, Megaphone, FlaskConical, Crown } from 'lucide-react';
+import { FlaskConical, Crown, Globe, SquareParking, House, TreePalm, DollarSign } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
+  기초정보:{
+    icon: Globe,
+    key: '기초정보',
+    midItems: {
+      "종합 정보":{
+        key: '종합 정보',
+        botItems: [
+          {
+            key: '종합 정보',
+            href: '/global/management/overview',
+          },
+          {
+            key: '허브 이용 안내',
+            href: '/global/info/guide',
+          },
+          {
+            key: '허브 통계',
+            href: '/global/hub/statistics',
+          },
+        ]
+      },
+      "기초 정보":{
+        key: '기초 정보',
+        botItems: [
+          {
+            key: '조직도 및 통합 다이어그램',
+            href: '/global/basic/overview',
+          },
+          {
+            key: '기본 건물 관리',
+            href: '/global/basic/building',
+          },
+          {
+            key: '기본 호실 관리',
+            href: '/global/basic/household',
+          },
+          {
+            key: '기본 입주세대 관리',
+            href: '/global/basic/household-instance',
+          },
+          {
+            key: '기본 입주민 관리',
+            href: '/global/basic/resident',
+          },
+          {
+            key: '기본 차량 관리',
+            href: '/global/basic/vehicle',
+          },
+        ],
+      },
+    }
+  },
 	주차: {
-		icon: Car,
+		icon: SquareParking,
 		key: '주차',
 		midItems: {
 			주차장관리: {
@@ -108,9 +160,9 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	커뮤니티: {
-		icon: Network,
-		key: '커뮤니티',
+	공용시설: {
+		icon: House,
+		key: '공용시설',
 		midItems: {
 			시설서비스: {
 				key: '시설서비스',
@@ -165,47 +217,53 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	공지사항: {
-		icon: Megaphone,
-		key: '공지사항',
-		midItems: {
-			공지관리: {
-				key: '공지관리',
-				botItems: [
-					{
-						key: '일반공지',
-						href: '/announcement/notices/general',
-					},
-					{
-						key: '긴급공지',
-						href: '/announcement/notices/emergency',
-					},
-					{
-						key: '이벤트공지',
-						href: '/announcement/notices/event',
-					},
-				],
-			},
-			푸시알림: {
-				key: '푸시알림',
-				botItems: [
-					{
-						key: '알림발송',
-						href: '/announcement/push/send',
-					},
-					{
-						key: '발송이력',
-						href: '/announcement/push/history',
-					},
-					{
-						key: '템플릿관리',
-						href: '/announcement/push/template',
-					},
-				],
-			},
-		},
-	},
-
+  라이프:{
+    icon: TreePalm,
+    key: '라이프',
+    midItems: {
+      "앱 게시판":{
+        key: '앱 게시판',
+        botItems: [
+          {
+            key: '앱 게시판',
+            href: '/life/board/board',
+          }
+        ] 
+      },
+      전자투표:{
+        key: '전자투표',
+        botItems: [
+          {
+            key: '선거 투표',
+            href: '/life/election/election',
+          },
+          {
+            key: '안건 투표',
+            href: '/life/election/candidate',
+          },
+          {
+            key: '설문 조사',
+            href: '/life/survey/survey',
+          },
+        ]
+      }
+    }
+  },
+  정산:{
+    icon: DollarSign,
+    key: '정산',
+    midItems: {
+      할인권관리:{
+        key: '할인권관리',
+        botItems: [
+          {
+            key: '할인권관리',
+            href: '/payment/discount/management',
+          }
+        ] 
+      },
+    }
+  },
 	연구소: {
 		icon: FlaskConical,
 		key: '연구소',
@@ -357,7 +415,6 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-
 	시스템관리: {
 		icon: Crown,
 		key: '시스템관리',
