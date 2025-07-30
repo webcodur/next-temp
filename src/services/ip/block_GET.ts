@@ -11,7 +11,6 @@ export async function getBlockedIpList() {
   });
 
   const result = await response.json();
-  
   if (!response.ok) {
     const errorMsg = result.message || `차단된 IP 목록 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);

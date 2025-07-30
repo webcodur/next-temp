@@ -2,14 +2,13 @@
 
 import React, { useState, useMemo } from 'react';
 import { Lock, Save, RotateCcw } from 'lucide-react';
-import { useAtomValue } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, canManagePassword, canResetPassword } from '@/types/admin';
-import { userAtom } from '@/store/auth';
+import { getRoleIdFromToken } from '@/utils/tokenUtils';
 
 interface PasswordChangeData {
   currentPassword: string;
@@ -23,8 +22,6 @@ interface AdminPasswordSectionProps {
 }
 
 export default function AdminPasswordSection({ admin }: AdminPasswordSectionProps) {
-  const currentUser = useAtomValue(userAtom);
-  
   // #region 상태 관리
   const [formData, setFormData] = useState<PasswordChangeData>({
     currentPassword: '',
@@ -36,27 +33,33 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   // #endregion
 
   // #region 권한 검증
-  // JWT 토큰에서 역할 정보 추출 (user atom이 null일 때 대안)
-  const getJWTRole = () => {
-    if (typeof window === 'undefined') return null;
-    const token = localStorage.getItem('accessToken');
-    if (!token) return null;
-    
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.role;
-    } catch {
-      return null;
+  // 현재 사용자의 roleId 추출 (토큰 기반)
+  const getCurrentUserRoleId = (): number => {
+    // JWT 토큰에서 직접 추출
+    const roleFromToken = getRoleIdFromToken();
+    if (roleFromToken) {
+      return roleFromToken;
     }
+
+    console.warn('사용자 role 정보를 찾을 수 없습니다.');
+    return 0; // 기본값 (권한 없음)
   };
-  
-  const currentUserRoleId = currentUser?.role ? parseInt(currentUser.role) : (getJWTRole() || 0);
+
+  const currentUserRoleId = getCurrentUserRoleId();
   const targetUserRoleId = admin.roleId;
   
   const canManage = canManagePassword(currentUserRoleId, targetUserRoleId);
   const canReset = canResetPassword(currentUserRoleId, targetUserRoleId);
   const isSelfManagement = currentUserRoleId === targetUserRoleId;
   
+  console.log('AdminPasswordSection 권한 검증:', {
+    currentUserRoleId,
+    targetUserRoleId,
+    canManage,
+    canReset,
+    isSelfManagement,
+    adminAccount: admin.account
+  });
   // #endregion
 
   // #region 검증
@@ -88,7 +91,6 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
     setIsSubmitting(true);
 
     try {
-      // 비밀번호 재설정: 기존 관리자 상세 조회 API로 현재 비밀번호 확인 후 변경
       const result = await updateAdmin({
         id: admin.id,
         password: formData.newPassword,
@@ -153,6 +155,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
   // 권한이 없으면 렌더링하지 않음
   if (!canManage && !canReset) {
+    console.log('비밀번호 섹션 권한 없음:', { canManage, canReset });
     return null;
   }
 

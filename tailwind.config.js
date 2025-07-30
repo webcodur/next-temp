@@ -26,6 +26,8 @@ module.exports = {
 					4: 'hsl(var(--serial-4))',
 					5: 'hsl(var(--serial-5))',
 					6: 'hsl(var(--serial-6))',
+					7: 'hsl(var(--serial-7))',
+					8: 'hsl(var(--serial-8))'
 				},
 				counter: {
 					0: 'hsl(var(--counter-0))',
@@ -35,6 +37,8 @@ module.exports = {
 					4: 'hsl(var(--counter-4))',
 					5: 'hsl(var(--counter-5))',
 					6: 'hsl(var(--counter-6))',
+					7: 'hsl(var(--counter-7))',
+					8: 'hsl(var(--counter-8))'
 				},
 
 				// 강조 색상 - 가시성 개선 (브랜드 포인트 색상)

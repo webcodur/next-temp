@@ -4,9 +4,6 @@ import { atom } from 'jotai';
 export const sidebarCollapsedAtom = atom(false);
 export const headerCollapsedAtom = atom(false);
 
-// 관리자 모드
-export const isAdminModeAtom = atom(false);
-
 // API 문서 상태
 export interface ApiEndpoint {
   method: string;

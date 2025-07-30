@@ -33,8 +33,8 @@
 .neu-icon-active {
 	color: hsl(var(--primary));
 	filter: drop-shadow(
-		0 2px 6px hsla(var(--primary), 0.3)
-	); /* primary 컬러 섀도우 - 강화 */
+		0 1px 4px hsla(var(--primary), 0.2)
+	); /* primary 컬러 섀도우 */
 	transition:
 		color 0.15s ease-out,
 		filter 0.15s ease-out,
@@ -42,7 +42,7 @@
 }
 
 .neu-icon-inactive {
-	color: hsl(var(--foreground) / 0.8); /* 0.6 → 0.8로 진하게 */
+	color: hsl(var(--foreground) / 0.7); /* 0.8 → 0.7로 조정 */
 	transition:
 		color 0.15s ease-out,
 		filter 0.15s ease-out,
@@ -50,11 +50,11 @@
 }
 
 .neu-icon-inactive:hover {
-	color: hsl(var(--foreground) / 0.9); /* 더 부드러운 호버 */
+	color: hsl(var(--foreground) / 0.85); /* 더 부드러운 호버 */
 	filter: drop-shadow(
-		0 2px 4px rgba(0, 0, 0, 0.1)
-	); /* 더 강화된 호버 섀도우 */
-	transform: translateY(-1px); /* 테슬라 스타일: 강화된 리프트 */
+		0 1px 3px rgba(0, 0, 0, 0.08)
+	); /* 더 약한 호버 섀도우 */
+	transform: translateY(-0.5px); /* 테슬라 스타일: 약한 리프트 */
 }
 
 /* RTL 아이콘 - 모든 아이콘 좌우반전 */
@@ -65,5 +65,5 @@
 
 /* RTL 아이콘 호버 시 반전 상태 유지 */
 [dir='rtl'] .neu-icon-inactive:hover {
-	transform: translateY(-1px) scaleX(-1);
+	transform: translateY(-0.5px) scaleX(-1);
 }

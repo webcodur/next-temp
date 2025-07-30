@@ -18,7 +18,7 @@ import {
 	currentMidMenuAtom, 
 	currentBotMenuAtom,
 	currentPageLabelAtom 
-} from '@/store/atom';
+} from '@/store/ui';
 import { menuData } from '@/data/menuData';
 
 export default function Breadcrumb() {

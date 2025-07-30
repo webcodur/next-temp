@@ -57,14 +57,14 @@ const MOCK_DATA: EntryExit[] = [
 
 // --------------------------- 테이블 컬럼 ---------------------------
 	const columns: BaseTableColumn<EntryExit>[] = [
-  { key: 'id', header: '순번', width: '80px', align: 'center', sortable: true },
-  { key: 'vehicleType', header: '차량구분', sortable: true },
-  { key: 'plateNumber', header: '차량번호', sortable: true },
-  { key: 'entryTime', header: '입차시간', sortable: true },
-  { key: 'exitTime', header: '출차시간', sortable: true },
-  { key: 'inOutType', header: '입출차', sortable: false },
-  { key: 'note', header: '비고', sortable: false },
-  { key: 'status', header: '상태', sortable: true },
+  { key: 'id', header: '순번', width: '80px', align: 'center' },
+  { key: 'vehicleType', header: '차량구분' },
+  { key: 'plateNumber', header: '차량번호' },
+  { key: 'entryTime', header: '입차시간' },
+  { key: 'exitTime', header: '출차시간' },
+  { key: 'inOutType', header: '입출차' },
+  { key: 'note', header: '비고' },
+  { key: 'status', header: '상태' },
 ];
 
 // --------------------------- 검색 옵션 ---------------------------

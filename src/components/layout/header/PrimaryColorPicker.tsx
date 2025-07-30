@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { setPrimaryColorAtom, primaryColorAtom } from '@/store/primary';
+import { setPrimaryColorAtom, primaryColorAtom } from '@/store/ui';
 import { ChangeEvent } from 'react';
 import clsx from 'clsx';
 

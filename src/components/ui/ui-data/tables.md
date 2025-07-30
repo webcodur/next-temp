@@ -18,7 +18,6 @@ A+y (PaginatedTable) → BaseTable + 페이지네이션
 
 ### 주요 기능
 - 데이터 렌더링
-- 정렬 기능 
 - 긴 텍스트 모달 표시
 - RTL 언어 지원
 - 로딩 상태 처리
@@ -28,8 +27,8 @@ A+y (PaginatedTable) → BaseTable + 페이지네이션
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 
 const columns: BaseTableColumn<User>[] = [
-  { key: 'id', header: 'ID', sortable: true, align: 'center' },
-  { key: 'name', header: '이름', sortable: true },
+  { key: 'id', header: 'ID', align: 'center' },
+  { key: 'name', header: '이름' },
   { key: 'email', header: '이메일' },
 ];
 
@@ -42,7 +41,6 @@ const columns: BaseTableColumn<User>[] = [
 
 ### 언제 사용하나?
 - 간단한 데이터 목록 표시
-- 정렬 기능만 필요한 경우
 - 페이지네이션이나 무한스크롤이 불필요한 소규모 데이터
 
 ## 2. InfiniteTable (A+x) - 무한스크롤 테이블

@@ -11,7 +11,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { ROLE_ID_MAP } from '@/types/admin';
-import { currentPageLabelAtom } from '@/store/atom';
+import { currentPageLabelAtom } from '@/store/ui';
 
 // Admin 타입: 생성 시 필요한 필드만 명시
 export interface AdminInput {

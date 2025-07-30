@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // React Strict Mode 비활성화 (개발 시 콘솔 중복 출력 방지)
+  reactStrictMode: false,
   // Vercel 배포 최적화 (output: standalone 제거)
   experimental: {
     // TypeScript 타입 검사 최적화

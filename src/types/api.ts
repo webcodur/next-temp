@@ -78,7 +78,7 @@ export interface Admin {
 
 export interface CreateAdminRequest {
   account: string;
-  role_id: number;
+  roleId: number;
   name?: string;
   email?: string;
   password: string;
@@ -86,7 +86,7 @@ export interface CreateAdminRequest {
 }
 
 export interface UpdateAdminRequest {
-  role_id?: number;
+  roleId?: number;
   name?: string;
   email?: string;
   password?: string;
@@ -96,7 +96,7 @@ export interface UpdateAdminRequest {
 export interface SearchAdminRequest {
   account?: string;
   name?: string;
-  role_id?: number;
+  roleId?: number;
   email?: string;
   page?: number;
   limit?: number;
@@ -111,6 +111,13 @@ export interface SystemConfig {
   type: 'string' | 'number' | 'boolean' | 'json';
   updatedAt: string;
   updatedBy: number;
+}
+
+export interface CreateSystemConfigRequest {
+  key: string;
+  value: string | number | boolean | object;
+  description?: string;
+  type: 'string' | 'number' | 'boolean' | 'json';
 }
 
 export interface UpdateSystemConfigRequest {

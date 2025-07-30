@@ -32,6 +32,17 @@
 
 @config '../../tailwind.config.js';
 
+/* RTL 지원을 위한 CSS 변수 */
+[dir="ltr"] {
+  --translate-x-hidden: -100%;
+  --translate-x-visible: 0%;
+}
+
+[dir="rtl"] {
+  --translate-x-hidden: 100%;
+  --translate-x-visible: 0%;
+}
+
 /*
   globals.css — 프로젝트 전역 스타일 초기화
 

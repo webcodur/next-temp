@@ -3,33 +3,27 @@ import { atomWithStorage } from 'jotai/utils';
 
 export type Theme = 'light' | 'dark';
 
+// 테마 상태 (localStorage 저장)
 export const themeAtom = atomWithStorage<Theme>('theme', 'light');
 
+// 테마 토글
 export const toggleThemeAtom = atom(null, (get, set) => {
 	const newTheme = get(themeAtom) === 'light' ? 'dark' : 'light';
 	set(themeAtom, newTheme);
 	setTheme(newTheme);
 });
 
+// 테마 초기화
 export const initTheme = () => {
   if (typeof window !== 'undefined') {
     const storedTheme = localStorage.getItem('theme');
-    let theme: 'light' | 'dark' = 'light';
-    if (storedTheme) {
-      try {
-        const parsed = JSON.parse(storedTheme);
-        theme = parsed === 'dark' || parsed === 'light' ? parsed : 'light';
-      } catch {
-        theme = 'light';
-      }
-    }
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    document.documentElement.setAttribute('data-theme', theme);
+    const theme: Theme = storedTheme === 'dark' ? 'dark' : 'light';
+    setTheme(theme);
   }
-}
+};
 
+// 테마 적용
 const setTheme = (theme: Theme) => {
-  console.log('setTheme:', theme)
 	if (typeof window !== 'undefined') {
 		document.documentElement.classList.toggle('dark', theme === 'dark');
 		document.documentElement.setAttribute('data-theme', theme);

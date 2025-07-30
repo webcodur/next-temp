@@ -43,35 +43,30 @@ export default function PaginatedTableExample() {
 		{
 			key: 'id',
 			header: t('테이블_ID'),
-			sortable: true,
 			align: 'center',
 			width: '80px',
 		},
 		{
 			key: 'name',
 			header: t('테이블_이름'),
-			sortable: true,
 			align: 'start',
 			width: '120px',
 		},
 		{
 			key: 'email',
 			header: t('테이블_이메일'),
-			sortable: true,
 			align: 'start',
 			width: '200px',
 		},
 		{
 			key: 'role',
 			header: t('테이블_역할'),
-			sortable: true,
 			align: 'center',
 			width: '100px',
 		},
 		{
 			key: 'status',
 			header: t('테이블_상태'),
-			sortable: true,
 			align: 'center',
 			width: '100px',
 			cell: (user) => {
@@ -87,7 +82,6 @@ export default function PaginatedTableExample() {
 		{
 			key: 'joinDate',
 			header: t('테이블_가입일'),
-			sortable: true,
 			align: 'center',
 			width: '120px',
 			cell: (user) => user.joinDate.toLocaleDateString('ko-KR'),

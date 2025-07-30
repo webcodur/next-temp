@@ -68,7 +68,6 @@ const createColumns = (
 			header: t('주차_테이블_헤더_순번'),
 			width: '4rem', // 최소 너비만 지정
 			align: 'center',
-			sortable: false,
 			cell: (_item, index) => (
 				<div className="font-mono text-base text-center">
 					{(filteredVehicles.length - index)

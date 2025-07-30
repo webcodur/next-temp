@@ -12,7 +12,7 @@ import { ChevronsUpDown, Focus, Layers } from 'lucide-react';
 
 import { useTranslations } from '@/hooks/useI18n';
 import { menuData } from '@/data/menuData';
-import { activeTopMenuAtom, endPanelWidthAtom } from '@/store/sidebar';
+import { activeTopMenuAtom, endPanelWidthAtom } from '@/store/ui';
 import { defaults } from '@/data/sidebarConfig';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -79,8 +79,9 @@ function SecondaryPanel() {
 		<TooltipProvider delayDuration={100}>
 			<div
 				style={{ width: `${endPanelWidth}px` }}
-				className="flex relative flex-col h-full border-e border-border/20 bg-serial-3 sidebar-container">
-				{/* Menu Controls */}
+				className="flex relative flex-col h-full border-e border-border bg-serial-1">
+				
+        {/* Menu Controls */}
 				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-serial-3">
 					{/* Mode Toggle */}
 					<Tooltip>

@@ -59,7 +59,7 @@ export interface ParkingLotMenu {
 /**
  * 주차장 기본 정보 타입 (메뉴 관련)
  */
-export interface ParkingLot {
+export interface ParkingLot extends Record<string, unknown> {
   id: number;
   code: string;
   name: string;

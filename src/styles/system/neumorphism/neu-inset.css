@@ -36,39 +36,39 @@
 	border: 1px solid hsl(var(--border) / 0.4);
 	transition: all 0.15s ease-in-out;
 	box-shadow:
-		/* 내부 우하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * 1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2)
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
 			rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 강화 */ inset calc(var(--nm-offset) * -1.3)
-			calc(var(--nm-offset) * -1.3) calc(var(--nm-blur) * 1.2) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * -0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 강화 */ inset calc(var(--nm-offset) * 0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 좌상단 더 어두운 그림자 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba));
 }
 
 .neu-inset:hover {
 	/* 호버 시 border 더 진하게 */
 	border-color: hsl(var(--border) / 0.5);
 	box-shadow:
-		/* 내부 우하단 그림자 - 호버 강화 */
-		inset calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.1)
+		/* 내부 우하단 그림자 - 호버 */
+		inset calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 더 어두운 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-offset) * -0.9) calc(var(--nm-blur) * 0.9)
 			rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 상단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 - 호버 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 .neu-inset:focus {
@@ -76,20 +76,20 @@
 	/* 포커스 시 border 더 진하게 */
 	border-color: hsl(var(--border) / 0.6);
 	box-shadow:
-		/* 내부 우하단 그림자 - 포커스 강화 */
-		inset calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.1)
+		/* 내부 우하단 그림자 - 포커스 */
+		inset calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 더 어두운 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-offset) * -0.9) calc(var(--nm-blur) * 0.9)
 			rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 상단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 - 포커스 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 /* 4-4. neu-inset-shadow - shadow만 있는 inset (border 없음) */
@@ -98,162 +98,162 @@
 	color: hsl(var(--primary));
 	transition: all 0.15s ease-in-out;
 	box-shadow:
-		/* 내부 우하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * 1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2)
+		/* 내부 우하단 그림자 */
+		inset var(--nm-offset) var(--nm-offset) var(--nm-blur)
 			rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 강화 */ inset calc(var(--nm-offset) * -1.3)
-			calc(var(--nm-offset) * -1.3) calc(var(--nm-blur) * 1.2) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * -0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 강화 */ inset calc(var(--nm-offset) * 0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 좌상단 더 어두운 그림자 */ inset calc(var(--nm-offset) * -1)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba));
 }
 
 .neu-inset-shadow:hover {
 	box-shadow:
-		/* 내부 우하단 그림자 - 호버 강화 */
-		inset calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.1)
+		/* 내부 우하단 그림자 - 호버 */
+		inset calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 더 어두운 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-offset) * -0.9) calc(var(--nm-blur) * 0.9)
 			rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 상단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 - 호버 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 .neu-inset-shadow:focus {
 	outline: none;
 	box-shadow:
-		/* 내부 우하단 그림자 - 포커스 강화 */
-		inset calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 더 어두운 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-offset) * -1.2) calc(var(--nm-blur) * 1.1)
+		/* 내부 우하단 그림자 - 포커스 */
+		inset calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 더 어두운 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-offset) * -0.9) calc(var(--nm-blur) * 0.9)
 			rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 상단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 그림자 - 포커스 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 /* RTL 뉴모피즘 - neu-inset */
 [dir='rtl'] .neu-inset {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * -1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2)
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
 			rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 강화 */ inset calc(var(--nm-offset) * 1.3)
-			calc(var(--nm-offset) * -1.3) calc(var(--nm-blur) * 1.2) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * -0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 강화 */ inset calc(var(--nm-offset) * 0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 */ inset var(--nm-offset)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba));
 }
 
 [dir='rtl'] .neu-inset:hover {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 호버 강화 */
-		inset calc(var(--nm-offset) * -1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 호버 강화 */ inset
-			calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 우하단 → 좌하단 그림자 - 호버 */
+		inset calc(var(--nm-offset) * -0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 호버 */ inset
+			calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 - 호버 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 [dir='rtl'] .neu-inset:focus {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 포커스 강화 */
-		inset calc(var(--nm-offset) * -1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 포커스 강화 */ inset
-			calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 우하단 → 좌하단 그림자 - 포커스 */
+		inset calc(var(--nm-offset) * -0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 포커스 */ inset
+			calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 - 포커스 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 /* RTL 뉴모피즘 - neu-inset-shadow */
 [dir='rtl'] .neu-inset-shadow {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 강화 */
-		inset calc(var(--nm-offset) * -1.3) calc(var(--nm-offset) * 1.3) calc(var(--nm-blur) * 1.2)
+		/* 내부 우하단 → 좌하단 그림자 */
+		inset calc(var(--nm-offset) * -1) var(--nm-offset) var(--nm-blur)
 			rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 강화 */ inset calc(var(--nm-offset) * 1.3)
-			calc(var(--nm-offset) * -1.3) calc(var(--nm-blur) * 1.2) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * 0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 강화 */ inset 0 calc(var(--nm-offset) * -0.8)
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 강화 */ inset calc(var(--nm-offset) * -0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 강화 */ inset calc(var(--nm-offset) * 0.8) 0
-			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 */ inset var(--nm-offset)
+			calc(var(--nm-offset) * -1) var(--nm-blur) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 */ inset 0 calc(var(--nm-offset) * 0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 */ inset 0 calc(var(--nm-offset) * -0.5)
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 */ inset calc(var(--nm-offset) * -0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 */ inset calc(var(--nm-offset) * 0.5) 0
+			calc(var(--nm-blur) * 0.6) rgba(var(--nm-inset-dark-rgba));
 }
 
 [dir='rtl'] .neu-inset-shadow:hover {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 호버 강화 */
-		inset calc(var(--nm-offset) * -1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 호버 강화 */ inset
-			calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 호버 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 호버 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 우하단 → 좌하단 그림자 - 호버 */
+		inset calc(var(--nm-offset) * -0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 호버 */ inset
+			calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 호버 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 - 호버 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 - 호버 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }
 
 [dir='rtl'] .neu-inset-shadow:focus {
 	box-shadow:
-		/* 내부 우하단 → 좌하단 그림자 - 포커스 강화 */
-		inset calc(var(--nm-offset) * -1.2) calc(var(--nm-offset) * 1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 포커스 강화 */ inset
-			calc(var(--nm-offset) * 1.2) calc(var(--nm-offset) * -1.2)
-			calc(var(--nm-blur) * 1.1) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 상단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * 0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 하단 그림자 - 포커스 강화 */ inset 0 calc(var(--nm-offset) * -0.7)
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba)),
-		/* 내부 좌측 → 우측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * -0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-light-rgba)),
-		/* 내부 우측 → 좌측 그림자 - 포커스 강화 */ inset calc(var(--nm-offset) * 0.7) 0
-			calc(var(--nm-blur) * 0.8) rgba(var(--nm-inset-dark-rgba));
+		/* 내부 우하단 → 좌하단 그림자 - 포커스 */
+		inset calc(var(--nm-offset) * -0.9) calc(var(--nm-offset) * 0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 좌상단 → 우상단 더 어두운 그림자 - 포커스 */ inset
+			calc(var(--nm-offset) * 0.9) calc(var(--nm-offset) * -0.9)
+			calc(var(--nm-blur) * 0.9) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 상단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * 0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 하단 그림자 - 포커스 */ inset 0 calc(var(--nm-offset) * -0.4)
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba)),
+		/* 내부 좌측 → 우측 그림자 - 포커스 */ inset calc(var(--nm-offset) * -0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-light-rgba)),
+		/* 내부 우측 → 좌측 그림자 - 포커스 */ inset calc(var(--nm-offset) * 0.4) 0
+			calc(var(--nm-blur) * 0.5) rgba(var(--nm-inset-dark-rgba));
 }

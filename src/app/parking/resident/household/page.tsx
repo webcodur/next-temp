@@ -129,7 +129,6 @@ export default function HouseholdListPage() {
     {
       key: 'id',
       header: '세대 ID',
-      sortable: true,
       align: 'center',
       width: '100px',
       cell: (household) => `#${household.id}`,
@@ -137,7 +136,6 @@ export default function HouseholdListPage() {
     {
       key: 'address',
       header: '주소',
-      sortable: false,
       align: 'start',
       width: '200px',
       cell: (household) => `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ` ${household.address3Depth}` : ''}`,
@@ -145,7 +143,6 @@ export default function HouseholdListPage() {
     {
       key: 'householdType',
       header: '세대 유형',
-      sortable: true,
       align: 'center',
       width: '120px',
       cell: (household) => (
@@ -162,7 +159,6 @@ export default function HouseholdListPage() {
     {
       key: 'instanceCount',
       header: '인스턴스 수',
-      sortable: false,
       align: 'center',
       width: '100px',
       cell: (household) => `${household.instances?.length || 0}개`,
@@ -170,7 +166,6 @@ export default function HouseholdListPage() {
     {
       key: 'createdAt',
       header: '등록일',
-      sortable: true,
       align: 'center',
       width: '120px',
       cell: (household) => new Date(household.createdAt).toLocaleDateString('ko-KR'),
@@ -178,7 +173,6 @@ export default function HouseholdListPage() {
     {
       key: 'actions',
       header: '액션',
-      sortable: false,
       align: 'center',
       width: '120px',
       cell: (household) => (

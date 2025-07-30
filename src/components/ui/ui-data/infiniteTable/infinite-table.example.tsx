@@ -59,10 +59,10 @@ export default function InfiniteTableExample() {
 
 	// #region 컬럼 정의
 	const columns: BaseTableColumn<User>[] = [
-		{ key: 'id', header: t('테이블_ID'), align: 'center', width: '80px', sortable: true },
-		{ key: 'name', header: t('테이블_이름'), width: '140px', sortable: true },
-		{ key: 'email', header: t('테이블_이메일'), width: '220px', sortable: true },
-		{ key: 'role', header: t('테이블_역할'), align: 'center', width: '120px', sortable: true },
+		{ key: 'id', header: t('테이블_ID'), align: 'center', width: '80px' },
+		{ key: 'name', header: t('테이블_이름'), width: '140px' },
+		{ key: 'email', header: t('테이블_이메일'), width: '220px' },
+		{ key: 'role', header: t('테이블_역할'), align: 'center', width: '120px' },
 	];
 	// #endregion
 

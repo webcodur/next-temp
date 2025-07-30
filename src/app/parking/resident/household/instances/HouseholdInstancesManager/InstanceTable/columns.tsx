@@ -28,7 +28,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'id',
       header: 'ID',
-      sortable: true,
       align: 'center',
       width: '80px',
       cell: (instance) => `#${instance.id}`,
@@ -36,7 +35,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'instanceName',
       header: '인스턴스명',
-      sortable: true,
       align: 'start',
       width: '120px',
       cell: (instance) => instance.instanceName || '이름 없음',
@@ -44,7 +42,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'householdId',
       header: '세대 ID',
-      sortable: true,
       align: 'center',
       width: '100px',
       cell: (instance) => `#${instance.householdId}`,
@@ -52,7 +49,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'startDate',
       header: '시작일',
-      sortable: true,
       align: 'center',
       width: '100px',
       cell: (instance) => instance.startDate ? new Date(instance.startDate).toLocaleDateString('ko-KR') : '-',
@@ -60,7 +56,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'endDate',
       header: '종료일',
-      sortable: true,
       align: 'center',
       width: '100px',
       cell: (instance) => instance.endDate ? new Date(instance.endDate).toLocaleDateString('ko-KR') : '진행중',
@@ -68,7 +63,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'duration',
       header: '기간',
-      sortable: false,
       align: 'center',
       width: '120px',
       cell: (instance) => {
@@ -86,7 +80,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'password',
       header: '비밀번호',
-      sortable: false,
       align: 'center',
       width: '100px',
       cell: (instance) => instance.password || '-',
@@ -94,7 +87,6 @@ export function createColumns(config: ColumnsConfig): BaseTableColumn<HouseholdI
     {
       key: 'actions',
       header: '액션',
-      sortable: false,
       align: 'center',
       width: '140px',
       cell: (instance) => (

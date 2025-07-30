@@ -14,7 +14,7 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 
-import { currentPageLabelAtom } from '@/store/atom';
+import { currentPageLabelAtom } from '@/store/ui';
 
 // Admin 타입 정의
 interface Admin {

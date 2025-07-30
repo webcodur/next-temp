@@ -47,8 +47,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	colorVariant = 'primary',
 }) => {
 	const { isRTL } = useLocale();
-
-	// 색상 variant에 따른 스타일 정의
 	const colorStyles = {
 		primary: {
 			searchButton: 'text-primary-foreground bg-primary hover:bg-primary/90',
@@ -61,7 +59,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	};
 
 	// 필드 제어 관련 상태 및 함수 완전 제거
-
 	return (
 		<Accordion title={title} defaultOpen={defaultOpen} statusText={statusText}>
 			<div className="space-y-6">

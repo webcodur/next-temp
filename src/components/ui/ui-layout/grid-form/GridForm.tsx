@@ -160,7 +160,7 @@ const GridFormLabel = React.forwardRef<
 			className={cn(
 				'text-base font-medium text-foreground',
 				'flex justify-start items-center px-4 py-2 font-multilang',
-				'text-start border-r border-border/40',
+				'border-r text-start border-border/40',
 				className
 			)}
 			{...props}

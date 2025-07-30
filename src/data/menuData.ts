@@ -1,4 +1,4 @@
-import { Car, Network, Megaphone, FlaskConical } from 'lucide-react';
+import { Car, Network, Megaphone, FlaskConical, Crown } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
@@ -43,6 +43,27 @@ export const menuData: MenuData = {
 					{
 						key: '블랙리스트',
 						href: '/member/blacklist',
+					},
+				],
+			},
+			세대관리: {
+				key: '세대관리',
+				botItems: [
+					{
+						key: '통합뷰',
+						href: '/parking/household-management/overview',
+					},
+					{
+						key: '호실관리',
+						href: '/parking/household-management/household',
+					},
+					{
+						key: '입주세대관리',
+						href: '/parking/household-management/household-instance',
+					},
+					{
+						key: '입주민관리',
+						href: '/parking/household-management/resident',
 					},
 				],
 			},
@@ -331,6 +352,43 @@ export const menuData: MenuData = {
 					{
 						key: '차단기3D',
 						href: '/lab/ui-3d/barrier-3d',
+					},
+				],
+			},
+		},
+	},
+
+	시스템관리: {
+		icon: Crown,
+		key: '시스템관리',
+		midItems: {
+			'IP 차단 관리': {
+				key: 'IP 차단 관리',
+				botItems: [
+					{
+						key: 'IP 차단 실시간 내역',
+						href: '/system/ip-block-management/realtime',
+					},
+					{
+						key: 'IP 차단 전체 히스토리',
+						href: '/system/ip-block-management/history',
+					},
+					{
+						key: 'IP 차단 설정 관리',
+						href: '/system/ip-block-management/config',
+					},
+				],
+			},
+			캐시관리: {
+				key: '캐시관리',
+				botItems: [
+					{
+						key: '캐시통계',
+						href: '/system/cache/stats',
+					},
+					{
+						key: '캐시관리',
+						href: '/system/cache/manage',
 					},
 				],
 			},

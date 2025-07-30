@@ -1,15 +1,20 @@
 /* 메뉴 설명: 페이지 기능 설명 */
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
+
+// Field 컴포넌트들
+import FieldText from '@/components/ui/ui-input/field/text/FieldText';
+import FieldEmail from '@/components/ui/ui-input/field/text/FieldEmail';
+import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 
 // API 호출
 import { searchAdmin } from '@/services/admin/admin$_GET';
@@ -17,13 +22,30 @@ import { deleteAdmin } from '@/services/admin/admin@id_DELETE';
 
 // 타입 정의
 import { Admin } from '@/types/admin';
+import { Option } from '@/components/ui/ui-input/field/core/types';
+
+// #region 검색 필터 인터페이스
+interface SearchFilters {
+  account: string;
+  name: string;
+  email: string;
+  roleId: string;
+}
+// #endregion
 
 export default function AdminListPage() {
   const router = useRouter();
   
-  
   // #region 상태 관리
   const [adminList, setAdminList] = useState<Admin[]>([]);
+  
+  // 검색 필터 상태
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+    account: '',
+    name: '',
+    email: '',
+    roleId: '',
+  });
   
   // 다이얼로그 관련 상태
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -33,13 +55,36 @@ export default function AdminListPage() {
   const [dialogMessage, setDialogMessage] = useState('');
   // #endregion
 
+  // #region 권한 옵션 생성
+  const roleOptions: Option[] = useMemo(() => {
+    // 현재 로드된 관리자들의 role 정보에서 unique한 role들을 추출
+    const uniqueRoles = adminList.reduce((acc, admin) => {
+      if (admin.role && !acc.find(r => r.value === admin.role!.id.toString())) {
+        acc.push({
+          value: admin.role.id.toString(),
+          label: admin.role.name,
+        });
+      }
+      return acc;
+    }, [] as Option[]);
+    
+    return uniqueRoles;
+  }, [adminList]);
+  // #endregion
+
   // #region 데이터 로드
-  const loadAdminData = useCallback(async () => {
+  const loadAdminData = useCallback(async (filters?: Partial<SearchFilters>) => {
     try {
-      const result = await searchAdmin({
+      const searchParams = {
         page: 1,
-        limit: 100 // 임시로 큰 수치 설정
-      });
+        limit: 100, // 임시로 큰 수치 설정
+        ...(filters?.account && { account: filters.account }),
+        ...(filters?.name && { name: filters.name }),
+        ...(filters?.email && { email: filters.email }),
+        ...(filters?.roleId && { roleId: parseInt(filters.roleId) }),
+      };
+
+      const result = await searchAdmin(searchParams);
       
       if (result.success) {
         console.log('result.data.data', result.data.data)
@@ -57,6 +102,36 @@ export default function AdminListPage() {
   useEffect(() => {
     loadAdminData();
   }, [loadAdminData]);
+  // #endregion
+
+  // #region 검색 관련 핸들러
+  const handleSearch = useCallback(() => {
+    const activeFilters = Object.entries(searchFilters).reduce((acc, [key, value]) => {
+      if (value.trim()) {
+        acc[key as keyof SearchFilters] = value.trim();
+      }
+      return acc;
+    }, {} as Partial<SearchFilters>);
+
+    loadAdminData(activeFilters);
+  }, [searchFilters, loadAdminData]);
+
+  const handleReset = useCallback(() => {
+    setSearchFilters({
+      account: '',
+      name: '',
+      email: '',
+      roleId: '',
+    });
+    loadAdminData(); // 필터 없이 전체 데이터 로드
+  }, [loadAdminData]);
+
+  const updateFilter = useCallback((field: keyof SearchFilters, value: string) => {
+    setSearchFilters(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  }, []);
   // #endregion
 
   // #region 이벤트 핸들러
@@ -98,6 +173,71 @@ export default function AdminListPage() {
       setDeleteTargetId(null);
     }
   }, [deleteTargetId]);
+  // #endregion
+
+  // #region 검색 필드 구성
+  const searchFields = useMemo(() => [
+    {
+      key: 'account',
+      label: '계정명 검색',
+      element: (
+        <FieldText
+          id="search-account"
+          label="계정명"
+          placeholder="계정명을 입력하세요"
+          value={searchFilters.account}
+          onChange={(value) => updateFilter('account', value)}
+          showSearchIcon={true}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'name',
+      label: '이름 검색',
+      element: (
+        <FieldText
+          id="search-name"
+          label="이름"
+          placeholder="이름을 입력하세요"
+          value={searchFilters.name}
+          onChange={(value) => updateFilter('name', value)}
+          showSearchIcon={true}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'email',
+      label: '이메일 검색',
+      element: (
+        <FieldEmail
+          id="search-email"
+          label="이메일"
+          placeholder="이메일을 입력하세요"
+          value={searchFilters.email}
+          onChange={(value) => updateFilter('email', value)}
+          showValidation={false}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'roleId',
+      label: '권한 검색',
+      element: (
+        <FieldSelect
+          id="search-role"
+          label="권한"
+          placeholder="권한을 선택하세요"
+          options={roleOptions}
+          value={searchFilters.roleId}
+          onChange={(value) => updateFilter('roleId', value)}
+        />
+      ),
+      visible: true,
+    },
+  ], [searchFilters, roleOptions, updateFilter]);
   // #endregion
 
   // #region 컬럼 정의
@@ -164,7 +304,6 @@ export default function AdminListPage() {
       header: '관리',
       align: 'center',
       width: '9%',
-      sortable: false,
       cell: (item: Admin) => (
         <div className="flex gap-1 justify-center">
           <Button
@@ -200,6 +339,17 @@ export default function AdminListPage() {
             <Plus size={16} />
           </Button>
         }
+      />
+
+      {/* 고급 검색 */}
+      <AdvancedSearch
+        title="관리자 검색"
+        fields={searchFields}
+        onSearch={handleSearch}
+        onReset={handleReset}
+        searchLabel="검색"
+        resetLabel="초기화"
+        defaultOpen={false}
       />
       
       {/* 테이블 */}
