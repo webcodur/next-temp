@@ -68,9 +68,10 @@ export default function LoginPage() {
 				console.log('✅ 로그인 성공, 리다이렉트 대기 중...');
 			}
 		} catch (error) {
-			const errorMsg = '로그인 중 오류가 발생했습니다. API 서버 연결을 확인해주세요.';
+			const errorMsg = `로그인 중 오류가 발생했습니다. API 서버: ${process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? 'hubtest-api.7meerkat.com' : 'localhost:3003'}`;
 			setErrorMessage(errorMsg);
 			console.error('💥 로그인 예외:', error);
+			console.error('🌐 API Base URL:', process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_API_PROD_URL : process.env.NEXT_PUBLIC_API_TEST_URL);
 		} finally {
 			setIsLoginLoading(false);
 		}
