@@ -1,61 +1,69 @@
-import { FlaskConical, Crown, Globe, SquareParking, House, TreePalm, DollarSign } from 'lucide-react';
+import {
+	FlaskConical,
+	Crown,
+	Globe,
+	SquareParking,
+	House,
+	TreePalm,
+	DollarSign,
+} from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-  기초정보:{
-    icon: Globe,
-    key: '기초정보',
-    midItems: {
-      "종합 정보":{
-        key: '종합 정보',
-        botItems: [
-          {
-            key: '종합 정보',
-            href: '/global/management/overview',
-          },
-          {
-            key: '허브 이용 안내',
-            href: '/global/info/guide',
-          },
-          {
-            key: '허브 통계',
-            href: '/global/hub/statistics',
-          },
-        ]
-      },
-      "기초 정보":{
-        key: '기초 정보',
-        botItems: [
-          {
-            key: '조직도 및 통합 다이어그램',
-            href: '/global/basic/overview',
-          },
-          {
-            key: '기본 건물 관리',
-            href: '/global/basic/building',
-          },
-          {
-            key: '기본 호실 관리',
-            href: '/global/basic/household',
-          },
-          {
-            key: '기본 입주세대 관리',
-            href: '/global/basic/household-instance',
-          },
-          {
-            key: '기본 입주민 관리',
-            href: '/global/basic/resident',
-          },
-          {
-            key: '기본 차량 관리',
-            href: '/global/basic/vehicle',
-          },
-        ],
-      },
-    }
-  },
+	기초정보: {
+		icon: Globe,
+		key: '기초정보',
+		midItems: {
+			'종합 정보': {
+				key: '종합 정보',
+				botItems: [
+					{
+						key: '종합 정보',
+						href: '/global/management/overview',
+					},
+					{
+						key: '허브 이용 안내',
+						href: '/global/info/guide',
+					},
+					{
+						key: '허브 통계',
+						href: '/global/hub/statistics',
+					},
+				],
+			},
+			'기초 정보': {
+				key: '기초 정보',
+				botItems: [
+					{
+						key: '조직도 및 통합 다이어그램',
+						href: '/global/basic/overview',
+					},
+					{
+						key: '기본 건물 관리',
+						href: '/global/basic/building',
+					},
+					{
+						key: '기본 호실 관리',
+						href: '/global/basic/household',
+					},
+					{
+						key: '기본 입주세대 관리',
+						href: '/global/basic/household-instance',
+					},
+					{
+						key: '기본 입주민 관리',
+						href: '/global/basic/resident',
+					},
+					{
+						key: '기본 차량 관리',
+						href: '/global/basic/vehicle',
+					},
+				],
+			},
+		},
+	},
 	주차: {
 		icon: SquareParking,
 		key: '주차',
@@ -217,53 +225,53 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-  라이프:{
-    icon: TreePalm,
-    key: '라이프',
-    midItems: {
-      "앱 게시판":{
-        key: '앱 게시판',
-        botItems: [
-          {
-            key: '앱 게시판',
-            href: '/life/board/board',
-          }
-        ] 
-      },
-      전자투표:{
-        key: '전자투표',
-        botItems: [
-          {
-            key: '선거 투표',
-            href: '/life/election/election',
-          },
-          {
-            key: '안건 투표',
-            href: '/life/election/candidate',
-          },
-          {
-            key: '설문 조사',
-            href: '/life/survey/survey',
-          },
-        ]
-      }
-    }
-  },
-  정산:{
-    icon: DollarSign,
-    key: '정산',
-    midItems: {
-      할인권관리:{
-        key: '할인권관리',
-        botItems: [
-          {
-            key: '할인권관리',
-            href: '/payment/discount/management',
-          }
-        ] 
-      },
-    }
-  },
+	라이프: {
+		icon: TreePalm,
+		key: '라이프',
+		midItems: {
+			'앱 게시판': {
+				key: '앱 게시판',
+				botItems: [
+					{
+						key: '앱 게시판',
+						href: '/life/board/board',
+					},
+				],
+			},
+			전자투표: {
+				key: '전자투표',
+				botItems: [
+					{
+						key: '선거 투표',
+						href: '/life/election/election',
+					},
+					{
+						key: '안건 투표',
+						href: '/life/election/candidate',
+					},
+					{
+						key: '설문 조사',
+						href: '/life/survey/survey',
+					},
+				],
+			},
+		},
+	},
+	정산: {
+		icon: DollarSign,
+		key: '정산',
+		midItems: {
+			할인권관리: {
+				key: '할인권관리',
+				botItems: [
+					{
+						key: '할인권관리',
+						href: '/payment/discount/management',
+					},
+				],
+			},
+		},
+	},
 	연구소: {
 		icon: FlaskConical,
 		key: '연구소',
@@ -410,6 +418,19 @@ export const menuData: MenuData = {
 					{
 						key: '차단기3D',
 						href: '/lab/ui-3d/barrier-3d',
+					},
+				],
+			},
+			UI다이어그램: {
+				key: 'UI다이어그램',
+				botItems: [
+					{
+						key: '플로우차트 (편집형)',
+						href: '/lab/ui-diagram/flow-chart',
+					},
+					{
+						key: '플로우차트 (읽기전용)',
+						href: '/lab/ui-diagram/readonly-flow',
 					},
 				],
 			},

@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
 	if (!isTokenValid) {
 		// 홈페이지가 아닌 곳에 접근하면 홈페이지로 리다이렉트
 		if (pathname !== '/') {
-			return NextResponse.redirect(new URL('/', request.url));
+			// return NextResponse.redirect(new URL('/', request.url));
 		}
 	}
 	return NextResponse.next();
