@@ -83,7 +83,7 @@ export function ParkingLotTable({
   }
 
   return (
-    <div className="mb-8 max-h-96 overflow-y-auto">
+    <div className="overflow-y-auto mb-8 max-h-96">
       <BaseTable
         data={parkingLots}
         columns={columns}
