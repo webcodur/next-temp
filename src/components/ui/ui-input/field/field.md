@@ -77,9 +77,10 @@
 
 #### FieldSelect
 
-기본 드롭다운 선택 필드
+기본 드롭다운 선택 필드 (기본적으로 "전체" 옵션 포함)
 
 ```tsx
+{/* 기본 사용 (전체 옵션 포함) */}
 <FieldSelect
 	label="카테고리"
 	placeholder="카테고리를 선택하세요"
@@ -87,13 +88,35 @@
 	value={category}
 	onChange={setCategory}
 />
+
+{/* 전체 옵션 제외 */}
+<FieldSelect
+	label="카테고리"
+	placeholder="카테고리를 선택하세요"
+	options={categoryOptions}
+	value={category}
+	onChange={setCategory}
+	showAllOption={false}
+/>
+
+{/* 커스텀 전체 옵션 */}
+<FieldSelect
+	label="카테고리"
+	placeholder="카테고리를 선택하세요"
+	options={categoryOptions}
+	value={category}
+	onChange={setCategory}
+	allOptionLabel="모든 카테고리"
+	allOptionValue="all"
+/>
 ```
 
 #### FieldSortSelect
 
-정렬 기능이 내장된 선택 필드
+정렬 기능이 내장된 선택 필드 (기본적으로 "전체" 옵션 포함)
 
 ```tsx
+{/* 기본 사용 (전체 옵션 포함) */}
 <FieldSortSelect
 	label="정렬 방식"
 	placeholder="정렬 기준을 선택하세요"
@@ -102,6 +125,18 @@
 	onChange={setSortField}
 	sortDirection={sortDirection}
 	onSortDirectionChange={setSortDirection}
+/>
+
+{/* 커스텀 전체 옵션 */}
+<FieldSortSelect
+	label="정렬 방식"
+	placeholder="정렬 기준을 선택하세요"
+	options={sortOptions}
+	value={sortField}
+	onChange={setSortField}
+	sortDirection={sortDirection}
+	onSortDirectionChange={setSortDirection}
+	allOptionLabel="정렬안함"
 />
 ```
 
@@ -215,12 +250,21 @@ import { FieldDatePicker } from '@/components/ui/ui-input/field/datepicker/Field
   showSearchIcon={true}
 />
 
-// 카테고리 선택
+// 카테고리 선택 (기본적으로 "전체" 옵션 포함)
 <FieldSelect
   placeholder="카테고리 선택"
   options={categories}
   value={selectedCategory}
   onChange={setSelectedCategory}
+/>
+
+// "전체" 옵션 제외하려면
+<FieldSelect
+  placeholder="카테고리 선택"
+  options={categories}
+  value={selectedCategory}
+  onChange={setSelectedCategory}
+  showAllOption={false}
 />
 
 // 날짜 선택

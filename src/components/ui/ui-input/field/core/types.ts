@@ -77,6 +77,9 @@ export interface FieldSelectComponentProps extends FieldBaseProps {
 	options: Option[];
 	maxHeight?: number;
 	leftIcon?: React.ReactNode;
+	showAllOption?: boolean;
+	allOptionLabel?: string;
+	allOptionValue?: string;
 }
 
 export interface FieldSortSelectComponentProps extends FieldBaseProps {
@@ -88,6 +91,9 @@ export interface FieldSortSelectComponentProps extends FieldBaseProps {
 	maxHeight?: number;
 	sortDirection?: SortDirection;
 	onSortDirectionChange?: (direction: SortDirection) => void;
+	showAllOption?: boolean;
+	allOptionLabel?: string;
+	allOptionValue?: string;
 }
 
 // Factory Component Types
@@ -111,6 +117,9 @@ export interface FieldSelectProps extends FieldBaseProps {
 	options: Option[];
 	maxHeight?: number;
 	categoryName?: string;
+	showAllOption?: boolean;
+	allOptionLabel?: string;
+	allOptionValue?: string;
 }
 
 export interface FieldSortSelectProps extends FieldBaseProps {
@@ -123,6 +132,9 @@ export interface FieldSortSelectProps extends FieldBaseProps {
 	sortDirection?: SortDirection;
 	onSortDirectionChange?: (direction: SortDirection) => void;
 	categoryName?: string;
+	showAllOption?: boolean;
+	allOptionLabel?: string;
+	allOptionValue?: string;
 }
 
 export interface FieldPasswordProps extends FieldBaseProps {

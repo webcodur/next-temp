@@ -144,6 +144,7 @@ export default function FieldExample() {
 								sortDirection={sortDirection}
 								onSortDirectionChange={setSortDirection}
 								maxHeight={120}
+								allOptionLabel="정렬안함"
 							/>
 						</div>
 					</section>

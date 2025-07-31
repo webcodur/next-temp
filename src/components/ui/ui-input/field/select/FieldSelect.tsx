@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { List, ChevronDown } from 'lucide-react';
-import { FIELD_STYLES, getColorVariantStyles } from '../core/config';
+import { FIELD_STYLES, getColorVariantStyles, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/useI18n';
 import { useSelectLogic } from '../shared/useSelectLogic';
@@ -21,6 +21,9 @@ interface FieldSelectProps {
 	colorVariant?: 'primary' | 'secondary';
 	onFocus?: () => void;
 	onBlur?: () => void;
+	showAllOption?: boolean;
+	allOptionLabel?: string;
+	allOptionValue?: string;
 }
 // #endregion
 
@@ -37,6 +40,9 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	colorVariant = 'primary',
 	onFocus,
 	onBlur,
+	showAllOption = true,
+	allOptionLabel = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_LABEL,
+	allOptionValue = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_VALUE,
 }) => {
 	// #region 상태
 	const [isFocused, setIsFocused] = useState(false);
@@ -45,6 +51,11 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	// #region 훅
 	const { isRTL } = useLocale();
 	const colorStyles = getColorVariantStyles(colorVariant);
+	
+	// "전체" 옵션 추가한 최종 옵션 리스트
+	const finalOptions = showAllOption 
+		? [{ value: allOptionValue, label: allOptionLabel }, ...options]
+		: options;
 	// #endregion
 
 	// #region 핸들러
@@ -56,13 +67,13 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 		containerRef,
 		selectedOption,
 		handleOptionSelect,
-	} = useSelectLogic(options, value, onChange);
+	} = useSelectLogic(finalOptions, value, onChange);
 
 
 	// #endregion
 
 	const handleSelect = (optionValue: string) => {
-		const opt = options.find((o) => o.value === optionValue);
+		const opt = finalOptions.find((o) => o.value === optionValue);
 		if (opt) handleOptionSelect(opt);
 	};
 
@@ -113,7 +124,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 				{isOpen && (
 					<SelectDropdown
 						isOpen={isOpen}
-						options={options}
+						options={finalOptions}
 						selectedValue={value}
 						onSelect={handleSelect}
 						highlightedIndex={highlightedIndex}

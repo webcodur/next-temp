@@ -3,7 +3,7 @@
 import React from 'react';
 import { ArrowUpDown, ChevronDown } from 'lucide-react';
 import { FieldSortSelectComponentProps } from '../core/types';
-import { FIELD_STYLES } from '../core/config';
+import { FIELD_STYLES, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useSelectLogic } from '../shared/useSelectLogic';
 
@@ -18,7 +18,15 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	maxHeight = 200,
 	sortDirection = 'asc',
 	onSortDirectionChange,
+	showAllOption = true,
+	allOptionLabel = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_LABEL,
+	allOptionValue = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_VALUE,
 }) => {
+	// "전체" 옵션 추가한 최종 옵션 리스트
+	const finalOptions = showAllOption 
+		? [{ value: allOptionValue, label: allOptionLabel }, ...options]
+		: options;
+
 	const {
 		isOpen,
 		setIsOpen,
@@ -26,10 +34,10 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 		containerRef,
 		selectedOption,
 		handleOptionSelect,
-	} = useSelectLogic(options, value, onChange);
+	} = useSelectLogic(finalOptions, value, onChange);
 
 	const handleSelect = (selectedValue: string) => {
-		const option = options.find((opt) => opt.value === selectedValue);
+		const option = finalOptions.find((opt) => opt.value === selectedValue);
 		if (option) {
 			handleOptionSelect(option);
 		}
@@ -98,7 +106,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 
 				<SelectDropdown
 					isOpen={isOpen}
-					options={options}
+					options={finalOptions}
 					selectedValue={value}
 					onSelect={handleSelect}
 					highlightedIndex={highlightedIndex}
