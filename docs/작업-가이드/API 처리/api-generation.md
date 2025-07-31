@@ -10,7 +10,7 @@ alwaysApply: false
 ### **API 스펙 우선 원칙**
 - **_paths.txt가 절대 기준**: URL 경로, parameter 명명은 API 스펙과 정확히 일치
 - **DTO 불일치 가능성**: DTO가 업데이트되지 않을 수 있으므로 path 기준으로 개발
-- **snake_case 적용**: 모든 API는 snake_case 기준 (fetchClient.ts에서 자동 변환)
+- **snake_case 적용**: 모든 API는 snake_case 기준 (fetchClient.ts에서 카멜로 자동 변환)
 
 ## 디렉토리 구조 및 파일명 규칙
 

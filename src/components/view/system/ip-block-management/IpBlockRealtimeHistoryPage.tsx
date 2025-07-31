@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 // Field 컴포넌트들
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
@@ -351,21 +352,30 @@ export default function IpBlockRealtimeHistoryPage() {
   // #region 렌더링
   return (
     <div className="flex flex-col gap-6">
-      {/* 헤더 영역 - 전체 해제 버튼 */}
-      {!isLoading && Array.isArray(ipBlockList) && ipBlockList.some(item => item.isActive) && (
-        <div className="flex justify-end">
+      {/* 페이지 헤더 */}
+      <PageHeader 
+        title="IP 차단 실시간 내역" 
+        subtitle="실시간 IP 차단 현황 조회 및 관리"
+        rightActions={
           <Button
             variant="outline"
             size="sm"
             onClick={handleDeleteAllClick}
-            title="전체 IP 차단 해제"
-            className="text-orange-600 border-orange-200 hover:bg-orange-50"
+            disabled={isLoading || !Array.isArray(ipBlockList) || !ipBlockList.some(item => item.isActive)}
+            title={
+              isLoading 
+                ? "로딩 중..." 
+                : !Array.isArray(ipBlockList) || !ipBlockList.some(item => item.isActive)
+                ? "차단 중인 IP가 없습니다"
+                : "전체 IP 차단 해제"
+            }
+            className="text-orange-600 border-orange-200 hover:bg-orange-50 disabled:text-gray-400 disabled:border-gray-200 disabled:hover:bg-transparent"
           >
             <Shield size={16} className="mr-2" />
             전체 해제
           </Button>
-        </div>
-      )}
+        }
+      />
 
       {/* 고급 검색 */}
       <AdvancedSearch

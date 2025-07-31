@@ -76,7 +76,7 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
         console.warn('인스턴스 목록 조회 실패:', instancesResponse.errorMsg);
         setInstances([]);
       } else {
-        setInstances(instancesResponse.data?.householdInstances || []);
+        setInstances(instancesResponse.data?.data || []);
       }
 
       const householdData = householdResponse.data;

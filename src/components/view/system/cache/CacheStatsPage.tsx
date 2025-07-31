@@ -28,6 +28,7 @@ export default function CacheStatsPage() {
       const result = await getCacheStats();
       
       if (result.success) {
+        console.log('캐시 통계 API 응답:', result.data); // 디버깅용
         setCacheStats(result.data);
         setLastUpdated(new Date());
       } else {
@@ -61,7 +62,10 @@ export default function CacheStatsPage() {
   };
 
   const formatPercent = (value: number): string => {
-    return `${(value * 100).toFixed(1)}%`;
+    // API에서 이미 퍼센트 값으로 받아오는 경우 (97.1 등)
+    // 0-1 범위면 소수점, 1 초과면 이미 퍼센트 값으로 판단
+    const percentValue = value > 1 ? value : value * 100;
+    return `${percentValue.toFixed(1)}%`;
   };
   // #endregion
 
@@ -95,7 +99,7 @@ export default function CacheStatsPage() {
 
   // #region 네임스페이스 테이블 컴포넌트
   const NamespaceTable = ({ namespaces }: { namespaces: CacheStats['namespaces'] }) => {
-    const sortedNamespaces = Object.entries(namespaces).sort(([,a], [,b]) => b.memory - a.memory);
+    const sortedNamespaces = Object.entries(namespaces ?? {}).sort(([,a], [,b]) => (b?.memory ?? 0) - (a?.memory ?? 0));
 
     return (
       <div className="bg-card rounded-lg border border-border overflow-hidden">
@@ -122,8 +126,8 @@ export default function CacheStatsPage() {
             </thead>
             <tbody className="bg-card divide-y divide-border">
               {sortedNamespaces.map(([namespace, stats], index) => {
-                const totalMemory = cacheStats?.totalMemory || 1;
-                const memoryPercent = (stats.memory / totalMemory) * 100;
+                const totalMemory = cacheStats?.totalMemory ?? 1;
+                const memoryPercent = ((stats?.memory ?? 0) / totalMemory) * 100;
                 
                 return (
                   <tr key={namespace} className={index % 2 === 0 ? 'bg-background' : 'bg-muted/20'}>
@@ -131,10 +135,10 @@ export default function CacheStatsPage() {
                       <span className="font-mono text-sm text-foreground">{namespace}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-foreground">{stats.keys.toLocaleString()}</span>
+                      <span className="text-sm text-foreground">{(stats?.keys ?? 0).toLocaleString()}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-foreground">{formatBytes(stats.memory)}</span>
+                      <span className="text-sm text-foreground">{formatBytes(stats?.memory ?? 0)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -198,55 +202,69 @@ export default function CacheStatsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="총 키 개수"
-              value={cacheStats.totalKeys.toLocaleString()}
+              value={(cacheStats.totalKeys ?? 0).toLocaleString()}
               icon={Database}
               color="blue"
             />
             <StatCard
               title="총 메모리 사용량"
-              value={formatBytes(cacheStats.totalMemory)}
+              value={formatBytes(cacheStats.totalMemory ?? 0)}
               icon={BarChart3}
               color="green"
             />
             <StatCard
               title="캐시 히트율"
-              value={formatPercent(cacheStats.hitRate)}
+              value={formatPercent(cacheStats.hitRate ?? 0)}
               icon={Zap}
               color="purple"
             />
             <StatCard
               title="캐시 미스율"
-              value={formatPercent(cacheStats.missRate)}
+              value={formatPercent(cacheStats.missRate ?? 0)}
               icon={BarChart3}
               color="orange"
             />
           </div>
 
           {/* 히트율 정보 카드 */}
-          <div className="bg-card rounded-lg border border-border p-6">
+          <div className="bg-card rounded-lg border border-border p-6 overflow-hidden">
             <h3 className="text-lg font-semibold text-foreground mb-4">캐시 성능 지표</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+              <div className="min-w-0">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-foreground">히트율</span>
-                  <span className="text-sm text-foreground">{formatPercent(cacheStats.hitRate)}</span>
+                  <span className="text-sm text-foreground">{formatPercent(cacheStats.hitRate ?? 0)}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div 
                     className="bg-green-600 h-3 rounded-full transition-all duration-300" 
-                    style={{ width: `${cacheStats.hitRate * 100}%` }}
+                    style={{ 
+                      width: `${Math.min(
+                        (cacheStats.hitRate ?? 0) > 1 
+                          ? (cacheStats.hitRate ?? 0) 
+                          : (cacheStats.hitRate ?? 0) * 100, 
+                        100
+                      )}%` 
+                    }}
                   />
                 </div>
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-foreground">미스율</span>
-                  <span className="text-sm text-foreground">{formatPercent(cacheStats.missRate)}</span>
+                  <span className="text-sm text-foreground">{formatPercent(cacheStats.missRate ?? 0)}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div 
                     className="bg-red-600 h-3 rounded-full transition-all duration-300" 
-                    style={{ width: `${cacheStats.missRate * 100}%` }}
+                    style={{ 
+                      width: `${Math.min(
+                        (cacheStats.missRate ?? 0) > 1 
+                          ? (cacheStats.missRate ?? 0) 
+                          : (cacheStats.missRate ?? 0) * 100, 
+                        100
+                      )}%` 
+                    }}
                   />
                 </div>
               </div>
@@ -260,11 +278,11 @@ export default function CacheStatsPage() {
           </div>
 
           {/* 네임스페이스별 통계 테이블 */}
-          {Object.keys(cacheStats.namespaces).length > 0 && (
-            <NamespaceTable namespaces={cacheStats.namespaces} />
+          {Object.keys(cacheStats.namespaces ?? {}).length > 0 && (
+            <NamespaceTable namespaces={cacheStats.namespaces ?? {}} />
           )}
 
-          {Object.keys(cacheStats.namespaces).length === 0 && (
+          {Object.keys(cacheStats.namespaces ?? {}).length === 0 && (
             <div className="bg-card rounded-lg border border-border p-12">
               <div className="text-center text-muted-foreground">
                 <Database size={48} className="mx-auto mb-4 opacity-50" />

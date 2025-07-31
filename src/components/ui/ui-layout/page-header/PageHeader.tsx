@@ -2,6 +2,13 @@
   파일명: PageHeader.tsx
   기능: 페이지 상단에 표시되는 헤더 컴포넌트
   책임: 페이지 제목과 좌우측 액션 버튼들을 포함하는 헤더 영역을 제공한다
+
+  사용 예시:
+  <PageHeader 
+    title="IP 차단 전체 히스토리" 
+    subtitle="비정상적인 방식으로 허브에 접속하다가 차단된 모든 IP를 검색 조회합니다."
+    rightActions={<Button>검색</Button>}
+  />
 */
 
 'use client';

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ArrowLeft, Save, Lock, Unlock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAtom } from 'jotai';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -20,6 +21,9 @@ import { updateConfig } from '@/services/config/config@key_PUT';
 
 // 타입 정의
 import { UpdateSystemConfigRequest } from '@/types/api';
+
+// 스토어
+import { currentPageLabelAtom } from '@/store/ui';
 
 // #region 폼 데이터 인터페이스
 interface ConfigFormData {
@@ -39,6 +43,7 @@ interface IpBlockConfigEditPageProps {
 
 export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPageProps) {
   const router = useRouter();
+  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
   
   // #region 상태 관리
   const [configData, setConfigData] = useState<ConfigFormData | null>(null);
@@ -73,6 +78,25 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
     { value: 'boolean', label: '불린' },
     { value: 'json', label: 'JSON' },
   ];
+  // #endregion
+
+  // #region 페이지 라벨 설정
+  useEffect(() => {
+    setCurrentPageLabel({
+      label: '설정 수정',
+      href: window.location.pathname,
+    });
+  }, [setCurrentPageLabel]);
+
+  // 데이터 로드 후 구체적 정보로 업데이트
+  useEffect(() => {
+    if (configData?.key) {
+      setCurrentPageLabel({
+        label: `${configData.key} 설정`,
+        href: window.location.pathname,
+      });
+    }
+  }, [configData?.key, setCurrentPageLabel]);
   // #endregion
 
   // #region 데이터 로드

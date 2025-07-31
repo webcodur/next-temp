@@ -55,7 +55,7 @@ export default function HouseholdInstanceCreatePage() {
       });
 
       if (response.success && response.data) {
-        setHouseholds(response.data.households || []);
+        setHouseholds(response.data.data || []);
       } else {
         throw new Error(response.errorMsg || '호실 목록 조회 실패');
       }

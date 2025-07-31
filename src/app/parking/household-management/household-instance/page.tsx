@@ -17,10 +17,6 @@ interface HouseholdInstanceWithStatus extends HouseholdInstance, Record<string, 
   status: 'active' | 'inactive' | 'moving';
   roomNumber: string;
   householdName: string;
-  ownerName: string;
-  residentCount: number;
-  contact?: string;
-  monthlyFee: number;
 }
 // #endregion
 
@@ -28,7 +24,7 @@ export default function HouseholdInstanceListPage() {
   // #region 상태 관리
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedResidentCount, setSelectedResidentCount] = useState('');
+  const [selectedHouseholdType, setSelectedHouseholdType] = useState('');
   const [moveInDateStart, setMoveInDateStart] = useState<Date | null>(null);
   const [moveInDateEnd, setMoveInDateEnd] = useState<Date | null>(null);
   const [householdInstances, setHouseholdInstances] = useState<HouseholdInstanceWithStatus[]>([]);
@@ -52,19 +48,28 @@ export default function HouseholdInstanceListPage() {
 
       const response = await searchHouseholdInstance(params);
 
+      console.log('🔍 [HouseholdInstance API] Full Response:', response);
+      console.log('🔍 [HouseholdInstance API] Response.data:', response.data);
+      console.log('🔍 [HouseholdInstance API] Response.data.data:', response.data?.data);
+
       if (response.success && response.data) {
+        // API 응답 구조 확인
+        const instances = response.data.data || response.data.householdInstances || response.data || [];
+        console.log('🔍 [HouseholdInstance API] Final instances array:', instances);
+        console.log('🔍 [HouseholdInstance API] Array length:', instances.length);
+        
+        if (instances.length > 0) {
+          console.log('🔍 [HouseholdInstance API] First instance sample:', instances[0]);
+        }
+
         // API 데이터를 UI 형식으로 변환
-        const transformedData: HouseholdInstanceWithStatus[] = response.data.householdInstances.map((instance: HouseholdInstance) => ({
+        const transformedData: HouseholdInstanceWithStatus[] = instances.map((instance: HouseholdInstance) => ({
           ...instance,
           status: instance.endDate && new Date(instance.endDate) < new Date() ? 'inactive' : 'active' as const,
           roomNumber: instance.household ? 
             `${instance.household.address1Depth} ${instance.household.address2Depth}${instance.household.address3Depth ? ' ' + instance.household.address3Depth : ''}` : 
             '정보 없음',
-          householdName: instance.instanceName || '세대명 없음',
-          ownerName: '-', // 거주자 정보는 별도 API에서 조회 필요
-          residentCount: 0, // 거주자 정보는 별도 API에서 조회 필요
-          contact: undefined, // 연락처 정보는 별도 API에서 조회 필요
-          monthlyFee: 0, // 관리비 정보는 별도 API에서 조회 필요
+          householdName: instance.instanceName || '세대명 없음'
         }));
         
         setHouseholdInstances(transformedData);
@@ -87,12 +92,11 @@ export default function HouseholdInstanceListPage() {
   // #region 필터링된 데이터 (클라이언트 사이드 필터링)
   const filteredData = householdInstances.filter((instance) => {
     const matchesKeyword = instance.roomNumber.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-                          instance.householdName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-                          instance.ownerName.toLowerCase().includes(searchKeyword.toLowerCase());
+                          instance.householdName.toLowerCase().includes(searchKeyword.toLowerCase());
     const matchesStatus = !selectedStatus || instance.status === selectedStatus;
-    const matchesResidentCount = !selectedResidentCount || instance.residentCount.toString() === selectedResidentCount;
+    const matchesHouseholdType = !selectedHouseholdType || instance.household?.householdType === selectedHouseholdType;
     
-    return matchesKeyword && matchesStatus && matchesResidentCount;
+    return matchesKeyword && matchesStatus && matchesHouseholdType;
   });
   // #endregion
 
@@ -104,7 +108,7 @@ export default function HouseholdInstanceListPage() {
       element: (
         <Field
           type="text"
-          placeholder="호실번호, 세대명, 세대주명 검색"
+          placeholder="호실번호, 세대명 검색"
           value={searchKeyword}
           onChange={setSearchKeyword}
           showClearButton={true}
@@ -131,20 +135,18 @@ export default function HouseholdInstanceListPage() {
       visible: true,
     },
     {
-      key: 'residentCount',
-      label: '가구원 수',
+      key: 'householdType',
+      label: '호실 타입',
       element: (
         <Field
           type="select"
-          placeholder="가구원 수 선택"
-          value={selectedResidentCount}
-          onChange={setSelectedResidentCount}
+          placeholder="호실 타입 선택"
+          value={selectedHouseholdType}
+          onChange={setSelectedHouseholdType}
           options={[
-            { value: '1', label: '1명' },
-            { value: '2', label: '2명' },
-            { value: '3', label: '3명' },
-            { value: '4', label: '4명' },
-            { value: '5', label: '5명 이상' },
+            { value: 'GENERAL', label: '일반' },
+            { value: 'TEMP', label: '임시' },
+            { value: 'COMMERCIAL', label: '상업' },
           ]}
         />
       ),
@@ -186,21 +188,28 @@ export default function HouseholdInstanceListPage() {
       ),
     },
     {
-      key: 'ownerName',
-      header: '세대주',
-      cell: (instance: HouseholdInstanceWithStatus) => (
-        <div className="text-center">{instance.ownerName}</div>
-      ),
+      key: 'householdType',
+      header: '호실 타입',
+      cell: (instance: HouseholdInstanceWithStatus) => {
+        const typeMap = {
+          GENERAL: '일반',
+          TEMP: '임시',
+          COMMERCIAL: '상업',
+        };
+        const type = instance.household?.householdType;
+        return (
+          <div className="text-center">
+            {type ? typeMap[type as keyof typeof typeMap] || type : '-'}
+          </div>
+        );
+      },
     },
     {
-      key: 'residentCount',
-      header: '가구원 수',
+      key: 'endDate',
+      header: '퇴거 예정일',
       cell: (instance: HouseholdInstanceWithStatus) => (
-        <div className="text-center">
-          <span className="flex items-center justify-center gap-1">
-            <Users className="w-4 h-4" />
-            {instance.residentCount}명
-          </span>
+        <div className="text-center text-sm">
+          {instance.endDate ? new Date(instance.endDate).toLocaleDateString() : '-'}
         </div>
       ),
     },
@@ -231,18 +240,20 @@ export default function HouseholdInstanceListPage() {
       ),
     },
     {
-      key: 'contact',
-      header: '연락처',
+      key: 'createdAt',
+      header: '등록일',
       cell: (instance: HouseholdInstanceWithStatus) => (
-        <div className="text-center text-sm">{instance.contact || '-'}</div>
+        <div className="text-center text-sm">
+          {new Date(instance.createdAt).toLocaleDateString()}
+        </div>
       ),
     },
     {
-      key: 'monthlyFee',
-      header: '월 관리비',
+      key: 'memo',
+      header: '메모',
       cell: (instance: HouseholdInstanceWithStatus) => (
-        <div className="text-right font-medium">
-          {instance.monthlyFee.toLocaleString()}원
+        <div className="text-sm max-w-32 truncate">
+          {instance.memo || '-'}
         </div>
       ),
     },
@@ -281,7 +292,7 @@ export default function HouseholdInstanceListPage() {
   const handleReset = () => {
     setSearchKeyword('');
     setSelectedStatus('');
-    setSelectedResidentCount('');
+    setSelectedHouseholdType('');
     setMoveInDateStart(null);
     setMoveInDateEnd(null);
     setCurrentPage(1);

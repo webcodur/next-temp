@@ -67,7 +67,7 @@ export default function ResidentCreatePage() {
       });
 
       if (response.success && response.data) {
-        setHouseholdInstances(response.data.householdInstances || []);
+        setHouseholdInstances(response.data.data || []);
       } else {
         throw new Error(response.errorMsg || '세대 목록 조회 실패');
       }

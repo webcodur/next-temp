@@ -25,7 +25,7 @@ export default function ResidentListPage() {
   // #region 상태 관리
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedGender, setSelectedGender] = useState<'M' | 'F' | ''>('');
-  const [selectedRelationship, setSelectedRelationship] = useState('');
+  const [selectedBirthYear, setSelectedBirthYear] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [ageRangeMin, setAgeRangeMin] = useState('');
   const [ageRangeMax, setAgeRangeMax] = useState('');
@@ -51,15 +51,26 @@ export default function ResidentListPage() {
 
       const response = await searchResident(params);
 
+      console.log('🔍 [Resident API] Full Response:', response);
+      console.log('🔍 [Resident API] Response.data:', response.data);
+      console.log('🔍 [Resident API] Response.data.data:', response.data?.data);
+
       if (response.success && response.data) {
+        // Resident API는 { data: [...], meta: {...} } 구조
+        const residents = response.data.data || [];
+        console.log('🔍 [Resident API] Final residents array:', residents);
+        console.log('🔍 [Resident API] Array length:', residents.length);
+        console.log('🔍 [Resident API] Meta info:', response.data.meta);
+        
+        if (residents.length > 0) {
+          console.log('🔍 [Resident API] First resident sample:', residents[0]);
+        }
+
         // API 데이터를 UI 형식으로 변환
-        const transformedData: ResidentWithStatus[] = response.data.data.map((resident: ResidentDto) => {
+        const transformedData: ResidentWithStatus[] = residents.map((resident: ResidentDto) => {
           return {
             ...resident,
             status: resident.deletedAt ? 'inactive' : 'active' as const,
-            relationship: '-', // 거주자 관계 정보는 별도 API에서 조회 필요
-            roomNumber: '-', // 호실 정보는 별도 API에서 조회 필요  
-            householdName: '-', // 세대명은 별도 API에서 조회 필요
             isOwner: false, // 세대주 여부는 별도 API에서 조회 필요
           };
         });
@@ -84,12 +95,14 @@ export default function ResidentListPage() {
   // #region 필터링된 데이터 (클라이언트 사이드 필터링)
   const filteredData = residents.filter((resident) => {
     const matchesKeyword = resident.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-                          (resident.roomNumber && resident.roomNumber.toLowerCase().includes(searchKeyword.toLowerCase())) ||
-                          (resident.householdName && resident.householdName.toLowerCase().includes(searchKeyword.toLowerCase()));
-    const matchesRelationship = !selectedRelationship || resident.relationship === selectedRelationship;
+                          (resident.phone && resident.phone.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+                          (resident.email && resident.email.toLowerCase().includes(searchKeyword.toLowerCase()));
+    const matchesGender = !selectedGender || resident.gender === selectedGender;
     const matchesStatus = !selectedStatus || resident.status === selectedStatus;
+    const matchesBirthYear = !selectedBirthYear || 
+      (resident.birthDate && new Date(resident.birthDate).getFullYear().toString() === selectedBirthYear);
     
-    return matchesKeyword && matchesRelationship && matchesStatus;
+    return matchesKeyword && matchesGender && matchesStatus && matchesBirthYear;
   });
   // #endregion
 
@@ -127,21 +140,18 @@ export default function ResidentListPage() {
       visible: true,
     },
     {
-      key: 'relationship',
-      label: '관계',
+      key: 'birthYear',
+      label: '출생년도',
       element: (
         <Field
           type="select"
-          placeholder="관계 선택"
-          value={selectedRelationship}
-          onChange={setSelectedRelationship}
-          options={[
-            { value: '세대주', label: '세대주' },
-            { value: '배우자', label: '배우자' },
-            { value: '자녀', label: '자녀' },
-            { value: '부모', label: '부모' },
-            { value: '기타', label: '기타' },
-          ]}
+          placeholder="출생년도 선택"
+          value={selectedBirthYear}
+          onChange={setSelectedBirthYear}
+          options={Array.from({ length: 80 }, (_, i) => {
+            const year = new Date().getFullYear() - i;
+            return { value: year.toString(), label: `${year}년` };
+          })}
         />
       ),
       visible: true,
@@ -206,10 +216,10 @@ export default function ResidentListPage() {
       ),
     },
     {
-      key: 'relationship',
-      header: '관계',
+      key: 'email',
+      header: '이메일',
       cell: (resident: ResidentWithStatus) => (
-        <div className="text-center">{resident.relationship || '-'}</div>
+        <div className="text-sm text-center">{resident.email || '-'}</div>
       ),
     },
     {
@@ -231,17 +241,19 @@ export default function ResidentListPage() {
       ),
     },
     {
-      key: 'roomNumber',
-      header: '호실',
+      key: 'emergencyContact',
+      header: '비상연락처',
       cell: (resident: ResidentWithStatus) => (
-        <div className="font-medium text-center">{resident.roomNumber || '-'}</div>
+        <div className="text-sm text-center">{resident.emergencyContact || '-'}</div>
       ),
     },
     {
-      key: 'householdName',
-      header: '세대명',
+      key: 'createdAt',
+      header: '등록일',
       cell: (resident: ResidentWithStatus) => (
-        <div className="text-center">{resident.householdName || '-'}</div>
+        <div className="text-sm text-center">
+          {new Date(resident.createdAt).toLocaleDateString()}
+        </div>
       ),
     },
     {
@@ -305,7 +317,7 @@ export default function ResidentListPage() {
   const handleReset = () => {
     setSearchKeyword('');
     setSelectedGender('');
-    setSelectedRelationship('');
+    setSelectedBirthYear('');
     setSelectedStatus('');
     setAgeRangeMin('');
     setAgeRangeMax('');

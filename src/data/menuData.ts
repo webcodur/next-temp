@@ -4,17 +4,13 @@ import type { MenuData } from '@/components/layout/sidebar/types';
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-  기초정보:{
+  "종합 정보":{
     icon: Globe,
-    key: '기초정보',
+    key: '종합 정보',
     midItems: {
-      "종합 정보":{
-        key: '종합 정보',
+      "허브 정보":{
+        key: '허브 정보',
         botItems: [
-          {
-            key: '종합 정보',
-            href: '/global/management/overview',
-          },
           {
             key: '허브 이용 안내',
             href: '/global/info/guide',
@@ -29,27 +25,31 @@ export const menuData: MenuData = {
         key: '기초 정보',
         botItems: [
           {
-            key: '조직도 및 통합 다이어그램',
+            key: '1 - 조직도 및 통합 다이어그램',
             href: '/global/basic/overview',
           },
           {
-            key: '기본 건물 관리',
+            key: '2 - 건물 관리',
             href: '/global/basic/building',
           },
           {
-            key: '기본 호실 관리',
+            key: '3 - 공용 시설 관리',
+            href: '/global/basic/facility',
+          },
+          {
+            key: '4 - 호실 관리',
             href: '/global/basic/household',
           },
           {
-            key: '기본 입주세대 관리',
+            key: '5 - 입주세대 관리',
             href: '/global/basic/household-instance',
           },
           {
-            key: '기본 입주민 관리',
+            key: '6 - 입주민 관리',
             href: '/global/basic/resident',
           },
           {
-            key: '기본 차량 관리',
+            key: '7 - 차량 관리',
             href: '/global/basic/vehicle',
           },
         ],
@@ -431,7 +431,7 @@ export const menuData: MenuData = {
 						href: '/system/ip-block-management/history',
 					},
 					{
-						key: 'IP 차단 설정 관리',
+						key: 'IP 차단인자 관리',
 						href: '/system/ip-block-management/config',
 					},
 				],

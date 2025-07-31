@@ -78,7 +78,7 @@ export default function ResidentMovePage() {
         throw new Error(instanceResponse.errorMsg || '세대 목록 조회 실패');
       }
 
-      const instanceList = instanceResponse.data?.householdInstances || [];
+      const instanceList = instanceResponse.data?.data || [];
       setHouseholdInstances(instanceList);
 
     } catch (err) {

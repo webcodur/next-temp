@@ -78,11 +78,12 @@ export default function CacheManagePage() {
       const result = await getCacheStats();
       
       if (result.success) {
-        const namespaces = result.data.namespaces;
+        console.log('캐시 관리 API 응답:', result.data); // 디버깅용
+        const namespaces = result.data.namespaces ?? {};
         let filteredData = Object.entries(namespaces).map(([namespace, stats]) => ({
           namespace,
-          keys: (stats as { keys: number; memory: number }).keys,
-          memory: (stats as { keys: number; memory: number }).memory,
+          keys: (stats as { keys?: number; memory?: number })?.keys ?? 0,
+          memory: (stats as { keys?: number; memory?: number })?.memory ?? 0,
         }));
         
         // 클라이언트 사이드 필터링
@@ -229,7 +230,7 @@ export default function CacheManagePage() {
       align: 'end',
       width: '20%',
       cell: (item: NamespaceData) => (
-        <span className="text-sm">{item.keys.toLocaleString()}</span>
+        <span className="text-sm">{(item.keys ?? 0).toLocaleString()}</span>
       ),
     },
     {
@@ -238,7 +239,7 @@ export default function CacheManagePage() {
       align: 'end',
       width: '20%',
       cell: (item: NamespaceData) => (
-        <span className="text-sm">{formatBytes(item.memory)}</span>
+        <span className="text-sm">{formatBytes(item.memory ?? 0)}</span>
       ),
     },
     {
@@ -350,11 +351,11 @@ export default function CacheManagePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-muted">
                   <p className="text-sm font-medium text-muted-foreground">키 개수</p>
-                  <p className="text-xl font-bold">{selectedNamespace.keys.toLocaleString()}</p>
+                  <p className="text-xl font-bold">{(selectedNamespace.keys ?? 0).toLocaleString()}</p>
                 </div>
                 <div className="p-4 rounded-lg bg-muted">
                   <p className="text-sm font-medium text-muted-foreground">메모리 사용량</p>
-                  <p className="text-xl font-bold">{formatBytes(selectedNamespace.memory)}</p>
+                  <p className="text-xl font-bold">{formatBytes(selectedNamespace.memory ?? 0)}</p>
                 </div>
               </div>
               

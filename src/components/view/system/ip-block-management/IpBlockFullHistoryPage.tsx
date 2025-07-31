@@ -363,7 +363,7 @@ export default function IpBlockFullHistoryPage() {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title="IP 차단 전체 히스토리" 
-        subtitle="IP 차단 전체 히스토리 검색 및 조회"
+        subtitle="비정상적인 방법으로 허브에 접속하다가 차단된 모든 IP를 검색 조회합니다."
         rightActions={
           <Button
             variant="outline"

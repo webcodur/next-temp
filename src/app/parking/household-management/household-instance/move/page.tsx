@@ -58,7 +58,7 @@ export default function HouseholdInstanceMovePage() {
         throw new Error(instanceResponse.errorMsg || '세대 인스턴스 목록 조회 실패');
       }
 
-      const instanceList = instanceResponse.data?.householdInstances || [];
+      const instanceList = instanceResponse.data?.data || [];
       setInstances(instanceList);
 
       // 호실 목록 조회 (빈 호실 포함)
@@ -71,7 +71,7 @@ export default function HouseholdInstanceMovePage() {
         throw new Error(householdResponse.errorMsg || '호실 목록 조회 실패');
       }
 
-      const householdList = householdResponse.data?.households || [];
+      const householdList = householdResponse.data?.data || [];
       // 빈 호실만 필터링 (인스턴스가 없는 호실)
       const emptyHouseholds = householdList.filter((household: Household) => 
         !household.instances || household.instances.length === 0

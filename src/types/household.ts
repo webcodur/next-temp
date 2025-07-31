@@ -168,32 +168,47 @@ export interface UpdateHouseholdVisitConfigRequest {
 
 // #region 응답 타입
 /**
- * 세대 목록 응답 타입
+ * 페이지네이션된 응답의 공통 구조
  */
-export interface HouseholdListResponse {
-  data: Household[];
+export interface PaginatedResponse<T> {
+  data: T[];
   total: number;
   page: number;
   limit: number;
   totalPages: number;
 }
+
+/**
+ * API 응답의 기본 구조
+ */
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  errorMsg?: string;
+}
+
+/**
+ * 세대 목록 응답 타입
+ */
+export type HouseholdListResponse = ApiResponse<PaginatedResponse<Household>>;
 
 /**
  * 세대 인스턴스 목록 응답 타입
  */
-export interface HouseholdInstanceListResponse {
-  data: HouseholdInstance[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+export type HouseholdInstanceListResponse = ApiResponse<PaginatedResponse<HouseholdInstance>>;
 
 /**
- * 세대 상세 응답 타입
+ * 세대 상세 응답 타입 (단일 객체)
  */
-export interface HouseholdDetailResponse {
-  household: Household;
-  instances: HouseholdInstance[];
-}
+export type HouseholdDetailResponse = ApiResponse<Household>;
+
+/**
+ * 세대 인스턴스 상세 응답 타입 (단일 객체)
+ */
+export type HouseholdInstanceDetailResponse = ApiResponse<HouseholdInstance>;
+
+/**
+ * 세대의 인스턴스 목록 응답 타입
+ */
+export type HouseholdInstanceListByHouseholdResponse = ApiResponse<PaginatedResponse<HouseholdInstance>>;
 // #endregion 

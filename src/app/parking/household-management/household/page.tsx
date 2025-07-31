@@ -16,7 +16,6 @@ import type { Household, HouseholdType } from '@/types/household';
 interface HouseholdWithStatus extends Household, Record<string, unknown> {
   status: 'occupied' | 'vacant' | 'maintenance';
   occupantName?: string;
-  monthlyFee: number;
   roomNumber: string;
 }
 // #endregion
@@ -46,15 +45,27 @@ export default function HouseholdListPage() {
         householdType: selectedType || undefined,
         address1Depth: selectedFloor || undefined,
       });
+      
+      console.log('🔍 [Household API] Full Response:', response);
+      console.log('🔍 [Household API] Response.data:', response.data);
+      console.log('🔍 [Household API] Response.data.data:', response.data?.data);
 
       if (response.success && response.data) {
+        // API 응답 구조 확인
+        const households = response.data.data || response.data.households || response.data || [];
+        console.log('🔍 [Household API] Final households array:', households);
+        console.log('🔍 [Household API] Array length:', households.length);
+        
+        if (households.length > 0) {
+          console.log('🔍 [Household API] First household sample:', households[0]);
+        }
+
         // API 데이터를 UI 형식으로 변환
-        const transformedData: HouseholdWithStatus[] = response.data.households.map((household: Household) => ({
+        const transformedData: HouseholdWithStatus[] = households.map((household: Household) => ({
           ...household,
           roomNumber: `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`,
           status: household.instances?.length ? 'occupied' : 'vacant' as 'occupied' | 'vacant' | 'maintenance',
-          occupantName: household.instances?.[0]?.instanceName,
-          monthlyFee: 0, // 관리비 정보는 별도 API에서 조회 필요
+          occupantName: household.instances?.[0]?.instanceName
         }));
         
         setHouseholds(transformedData);
@@ -208,11 +219,11 @@ export default function HouseholdListPage() {
       ),
     },
     {
-      key: 'monthlyFee',
-      header: '월 관리비',
+      key: 'instanceCount',
+      header: '입주 이력',
       cell: (household: HouseholdWithStatus) => (
-        <div className="font-medium text-right">
-          {household.monthlyFee.toLocaleString()}원
+        <div className="text-center">
+          {household.instances?.length || 0}건
         </div>
       ),
     },

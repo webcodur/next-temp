@@ -1,4 +1,4 @@
-/* 메뉴 설명: IP 차단 설정 관리 */
+/* 메뉴 설명: IP 차단인자 관리 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Trash2 } from 'lucide-react';
@@ -423,13 +423,13 @@ export default function IpBlockConfigPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="IP 차단 설정 관리" 
-        subtitle="IP 차단 관련 시스템 설정값 조회 및 수정"
+        title="IP 차단인자 관리" 
+        subtitle="IP 차단인자 조회 및 수정"
       />
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="IP 차단 설정 검색"
+        title="IP 차단인자 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
