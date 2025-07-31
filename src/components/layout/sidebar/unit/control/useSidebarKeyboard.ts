@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { sidebarCollapsedAtom } from '@/store/sidebar';
+import { sidebarCollapsedAtom } from '@/store/ui';
 
 /**
  * 사이드바 키보드 단축키를 관리하는 훅

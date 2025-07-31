@@ -110,4 +110,6 @@
 .animate-icon-pulse {
 	animation: iconPulse 150ms ease-out;
 }
+
+/* MidMenu 애니메이션은 컴포넌트에서 Tailwind transition 클래스로 처리 */
 /* #endregion */

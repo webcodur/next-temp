@@ -11,12 +11,6 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from '@/hooks/useI18n';
 import type { MidMenu } from '@/components/layout/sidebar/types';
 
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from '@/components/ui/ui-layout/collapsible/Collapsible';
-
 import { BotMenuItem } from './BotMenuItem/BotMenuItem';
 
 interface MidMenuProps {
@@ -35,31 +29,41 @@ export function MidMenu({
 
   return (
     <div className="group">
-      <Collapsible open={isExpanded} onOpenChange={onToggle}>
-        <CollapsibleTrigger className="flex gap-2 items-center justify-between p-2 w-full rounded-lg hover:bg-serial-4 neu-raised cursor-pointer">
-          <span className="font-semibold text-foreground">{t(midItem.key)}</span>
-          <ChevronRight
-            className={`w-5 h-5 transition-transform duration-200 ${
-              isExpanded ? 'rotate-90' : ''}`}
-          />
-        </CollapsibleTrigger>
-        
-        <CollapsibleContent className="px-2 py-1 mt-1 rounded-lg bg-serial-2">
-          <ul className="flex flex-col">
-            {midItem.botItems.map((botItem) => {
-              const isActive = pathname === botItem.href;
-              
-              return (
-                <BotMenuItem
-                  key={botItem.key}
-                  botItem={botItem}
-                  isActive={isActive}
-                />
-              );
-            })}
-          </ul>
-        </CollapsibleContent>
-      </Collapsible>
+      <button 
+        onClick={onToggle}
+        className="flex gap-2 items-center justify-between p-2 w-full rounded-lg hover:bg-serial-4 neu-raised cursor-pointer"
+      >
+        <span className="font-semibold text-foreground">{t(midItem.key)}</span>
+        <ChevronRight
+          className={`w-5 h-5 transition-transform duration-200 ${
+            isExpanded ? 'rotate-90' : ''}`}
+        />
+      </button>
+      
+      <div 
+        className={`
+          overflow-hidden transition-all duration-300 ease-in-out
+          px-2 py-1 mt-1 rounded-lg bg-serial-2
+          ${isExpanded 
+            ? 'max-h-96 opacity-100' 
+            : 'max-h-0 opacity-0 py-0'
+          }
+        `}
+      >
+        <ul className="flex flex-col">
+          {midItem.botItems.map((botItem) => {
+            const isActive = pathname === botItem.href;
+            
+            return (
+              <BotMenuItem
+                key={botItem.key}
+                botItem={botItem}
+                isActive={isActive}
+              />
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 } 

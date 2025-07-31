@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { activeTopMenuAtom, singleOpenModeAtom } from '@/store/sidebar';
+import { activeTopMenuAtom } from '@/store/ui';
+import { singleOpenModeAtom } from '@/store/sidebar';
 
 // #region 로컬스토리지 키 상수
 const SIDEBAR_EXPANDED_KEY = 'sidebar_mid_expanded';

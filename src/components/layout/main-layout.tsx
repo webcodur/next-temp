@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 // store
 import { initPrimaryColorAtom } from '@/store/primary';
 import { initTheme } from '@/store/theme';
-import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/sidebar';
+import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/ui';
 // components
 import Login from '@/components/view/_etc/login/Login';
 import ParkingLotSelectionPage from '@/components/view/_etc/parking-lot-selection/ParkingLotSelectionPage';
@@ -123,7 +123,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 					<div className="flex overflow-hidden relative flex-1">
 						{/* PC 화면: 일반 flex layout으로 본문을 밀어내는 방식 */}
 						<div 
-							className={`flex-shrink-0 h-full shadow-xl transition-all duration-100 ease-in-out ${
+							className={`flex-shrink-0 h-full shadow-xl transition-all duration-100 ease-in-out bg-serial-1 ${
 								isDesktop && showSecondaryPanel ? 'opacity-100' : 'opacity-0'
 							}`}
 							style={{ 
@@ -135,7 +135,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						{/* 태블릿 이하: 오버레이 방식 */}
 						{!isDesktop && (showSecondaryPanel || isAnimating) && (
 							<div 
-								className="absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out start-0"
+								className="absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out start-0 bg-serial-1"
 								style={{ 
 									width: `${endPanelWidth}px`,
 									transform: `translateX(${shouldShow ? 'var(--translate-x-visible)' : 'var(--translate-x-hidden)'})`
