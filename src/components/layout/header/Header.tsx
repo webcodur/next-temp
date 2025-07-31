@@ -17,24 +17,24 @@ import { SearchButton } from './SearchButton';
 
 export default function Header() {
 	// #region 상수
-	const buttonBase = 'h-9 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';
-	const squareButton = clsx(buttonBase, 'w-9');
+	const buttonBase = 'h-10 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';
+	const squareButton = clsx(buttonBase, 'w-10');
 	// #endregion
 
 	// #region 렌더링
 	return (
-		<header className="flex sticky top-0 z-50 flex-row justify-between items-center px-6 h-16 border-b bg-serial-0 border-border shrink-0">
+		<header className="flex sticky top-0 z-50 flex-row justify-between items-center px-[28px] h-[72px] border-b bg-serial-0 border-border shrink-0">
 			{/* Left: Breadcrumb */}
 			<div className="flex gap-4 items-center">
 				<div className="flex-shrink-0">
 					<Logo />
 				</div>
-				<div className="w-px h-6 bg-border/50" />
+				<div className="w-px h-7 bg-border/50" />
 				<Breadcrumb />
 			</div>
 
 			{/* Right: Buttons */}
-			<div className="flex gap-3 items-center">
+			<div className="flex gap-3.5 items-center">
 				<SearchButton className={squareButton} />
 				<GuideButton className={squareButton} />
 				<SettingsButton className={squareButton} />

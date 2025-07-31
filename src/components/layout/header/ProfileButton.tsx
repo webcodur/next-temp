@@ -79,9 +79,9 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 			<button
 				onClick={() => setIsOpen(!isOpen)}
 				className={clsx('flex gap-1 items-center', className)}>
-				<User className="w-5 h-5 text-muted-foreground" />
+				<User className="w-6 h-6 text-muted-foreground" />
 				<ChevronDown
-					className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${
+					className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
 						isOpen ? 'rotate-180' : ''}`}
 				/>
 			</button>
@@ -94,15 +94,15 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 						<button
 							onClick={handleProfile}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-primary/10">
-							<User className="w-4 h-4 text-muted-foreground" />
-							<span className="text-sm text-foreground font-multilang">프로필</span>
+							<User className="w-5 h-5 text-muted-foreground" />
+							<span className="text-base text-foreground font-multilang">프로필</span>
 						</button>
 
 						<button
 							onClick={handleSettings}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-primary/10">
-							<Settings className="w-4 h-4 text-muted-foreground" />
-							<span className="text-sm text-foreground font-multilang">설정</span>
+							<Settings className="w-5 h-5 text-muted-foreground" />
+							<span className="text-base text-foreground font-multilang">설정</span>
 						</button>
 
 						<div className="my-1 border-t border-border/50" />
@@ -110,8 +110,8 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 						<button
 							onClick={handleLogout}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-destructive/10 text-destructive">
-							<LogOut className="w-4 h-4" />
-							<span className="text-sm font-multilang">로그아웃</span>
+							<LogOut className="w-5 h-5" />
+							<span className="text-base font-multilang">로그아웃</span>
 						</button>
 					</div>
 				</div>

@@ -10,30 +10,45 @@ import { Field } from '@/components/ui/ui-input/field/core/Field';
 import type { BaseTableColumn } from '@/components/ui/ui-data/baseTable/types';
 import { searchResident, type SearchResidentParams, type ResidentDto } from '@/services/resident/resident$_GET';
 import { deleteResident } from '@/services/resident/resident@id_DELETE';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // #region 타입 정의 확장
 interface ResidentWithStatus extends ResidentDto, Record<string, unknown> {
-  status: 'active' | 'moved' | 'inactive';
+  status: 'active' | 'inactive';
   relationship?: string;
   roomNumber?: string;
   householdName?: string;
-  isOwner: boolean;
+  hasHousehold: boolean;
 }
 // #endregion
 
 export default function ResidentListPage() {
   // #region 상태 관리
+  // 기본 검색 조건
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedGender, setSelectedGender] = useState<'M' | 'F' | ''>('');
   const [selectedBirthYear, setSelectedBirthYear] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [ageRangeMin, setAgeRangeMin] = useState('');
   const [ageRangeMax, setAgeRangeMax] = useState('');
+  
+  // 추가 검색 조건 (백엔드 API 지원)
+  const [searchPhone, setSearchPhone] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
+  const [selectedAddress1Depth, setSelectedAddress1Depth] = useState('');
+  const [selectedAddress2Depth, setSelectedAddress2Depth] = useState('');
+  const [selectedAddress3Depth, setSelectedAddress3Depth] = useState('');
+  
   const [residents, setResidents] = useState<ResidentWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  
+  // 모달 관련 상태
+  const [isHouseholdModalOpen, setIsHouseholdModalOpen] = useState(false);
+  const [selectedResidentHouseholds, setSelectedResidentHouseholds] = useState<unknown[]>([]);
+  const [selectedResidentInfo, setSelectedResidentInfo] = useState<ResidentWithStatus | null>(null);
   // #endregion
 
   // #region 데이터 로딩
@@ -46,7 +61,12 @@ export default function ResidentListPage() {
         page: currentPage,
         limit: pageSize,
         name: searchKeyword || undefined,
+        phone: searchPhone || undefined,
+        email: searchEmail || undefined,
         gender: selectedGender || undefined,
+        address1Depth: selectedAddress1Depth || undefined,
+        address2Depth: selectedAddress2Depth || undefined,
+        address3Depth: selectedAddress3Depth || undefined,
       };
 
       const response = await searchResident(params);
@@ -71,7 +91,11 @@ export default function ResidentListPage() {
           return {
             ...resident,
             status: resident.deletedAt ? 'inactive' : 'active' as const,
-            isOwner: false, // 세대주 여부는 별도 API에서 조회 필요
+            hasHousehold: !!(resident.residentHouseholds && resident.residentHouseholds.length > 0),
+            // 세대 관련 정보는 residentHouseholds에서 가져올 수 있지만, 복잡한 구조이므로 별도 처리 필요
+            relationship: undefined,
+            roomNumber: undefined,
+            householdName: undefined,
           };
         });
         
@@ -85,7 +109,7 @@ export default function ResidentListPage() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, selectedGender, searchKeyword]);
+  }, [currentPage, pageSize, selectedGender, searchKeyword, searchPhone, searchEmail, selectedAddress1Depth, selectedAddress2Depth, selectedAddress3Depth]);
 
   useEffect(() => {
     loadResidents();
@@ -114,6 +138,7 @@ export default function ResidentListPage() {
       element: (
         <Field
           type="text"
+          label="검색어"
           placeholder="입주민명, 호실번호, 세대명 검색"
           value={searchKeyword}
           onChange={setSearchKeyword}
@@ -128,6 +153,7 @@ export default function ResidentListPage() {
       element: (
         <Field
           type="select"
+          label="성별"
           placeholder="성별 선택"
           value={selectedGender}
           onChange={(value) => setSelectedGender(value as 'M' | 'F' | '')}
@@ -145,6 +171,7 @@ export default function ResidentListPage() {
       element: (
         <Field
           type="select"
+          label="출생년도"
           placeholder="출생년도 선택"
           value={selectedBirthYear}
           onChange={setSelectedBirthYear}
@@ -162,14 +189,94 @@ export default function ResidentListPage() {
       element: (
         <Field
           type="select"
+          label="거주 상태"
           placeholder="상태 선택"
           value={selectedStatus}
           onChange={setSelectedStatus}
           options={[
             { value: 'active', label: '거주중' },
-            { value: 'moved', label: '이사' },
             { value: 'inactive', label: '퇴거' },
           ]}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'phone',
+      label: '연락처',
+      element: (
+        <Field
+          type="text"
+          label="연락처"
+          placeholder="연락처 검색"
+          value={searchPhone}
+          onChange={setSearchPhone}
+          showClearButton={true}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'email',
+      label: '이메일',
+      element: (
+        <Field
+          type="text"
+          label="이메일"
+          placeholder="이메일 검색"
+          value={searchEmail}
+          onChange={setSearchEmail}
+          showClearButton={true}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'address1Depth',
+      label: '동',
+      element: (
+        <Field
+          type="select"
+          label="동"
+          placeholder="동 선택"
+          value={selectedAddress1Depth}
+          onChange={setSelectedAddress1Depth}
+          options={[
+            { value: '101동', label: '101동' },
+            { value: '102동', label: '102동' },
+            { value: '103동', label: '103동' },
+            { value: '104동', label: '104동' },
+          ]}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'address2Depth',
+      label: '호수',
+      element: (
+        <Field
+          type="text"
+          label="호수"
+          placeholder="호수 검색 (예: 1001호)"
+          value={selectedAddress2Depth}
+          onChange={setSelectedAddress2Depth}
+          showClearButton={true}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'address3Depth',
+      label: '세부 주소',
+      element: (
+        <Field
+          type="text"
+          label="세부 주소"
+          placeholder="세부 주소 검색"
+          value={selectedAddress3Depth}
+          onChange={setSelectedAddress3Depth}
+          showClearButton={true}
         />
       ),
       visible: true,
@@ -181,12 +288,14 @@ export default function ResidentListPage() {
         <div className="grid grid-cols-2 gap-2">
           <Field
             type="text"
+            label="최소 나이"
             placeholder="최소 나이"
             value={ageRangeMin}
             onChange={setAgeRangeMin}
           />
           <Field
             type="text"
+            label="최대 나이"
             placeholder="최대 나이"
             value={ageRangeMax}
             onChange={setAgeRangeMax}
@@ -208,8 +317,17 @@ export default function ResidentListPage() {
           <User className="w-4 h-4 text-muted-foreground" />
           <div>
             <div className="font-medium">{resident.name}</div>
-            {resident.isOwner && (
-              <div className="text-xs text-primary">세대주</div>
+            {resident.hasHousehold && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShowHouseholds(resident);
+                }}
+                className="text-xs cursor-pointer text-primary hover:text-primary/80 hover:underline"
+                title="세대 정보 보기"
+              >
+                세대 등록됨
+              </button>
             )}
           </div>
         </div>
@@ -271,7 +389,6 @@ export default function ResidentListPage() {
       cell: (resident: ResidentWithStatus) => {
         const statusMap: Record<ResidentWithStatus['status'], { label: string; className: string }> = {
           active: { label: '거주중', className: 'bg-green-100 text-green-800' },
-          moved: { label: '이사', className: 'bg-yellow-100 text-yellow-800' },
           inactive: { label: '퇴거', className: 'bg-gray-100 text-gray-800' },
         };
         const status = statusMap[resident.status];
@@ -321,6 +438,12 @@ export default function ResidentListPage() {
     setSelectedStatus('');
     setAgeRangeMin('');
     setAgeRangeMax('');
+    // 새로 추가한 검색 조건들 초기화
+    setSearchPhone('');
+    setSearchEmail('');
+    setSelectedAddress1Depth('');
+    setSelectedAddress2Depth('');
+    setSelectedAddress3Depth('');
     setCurrentPage(1);
     loadResidents();
   };
@@ -352,6 +475,18 @@ export default function ResidentListPage() {
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
     setCurrentPage(1);
+  };
+
+  const handleShowHouseholds = (resident: ResidentWithStatus) => {
+    setSelectedResidentInfo(resident);
+    setSelectedResidentHouseholds(resident.residentHouseholds || []);
+    setIsHouseholdModalOpen(true);
+  };
+
+  const handleCloseHouseholdModal = () => {
+    setIsHouseholdModalOpen(false);
+    setSelectedResidentHouseholds([]);
+    setSelectedResidentInfo(null);
   };
   // #endregion
 
@@ -440,6 +575,75 @@ export default function ResidentListPage() {
           isFetching={loading}
         />
       </div>
+
+      {/* 세대 정보 상세 모달 */}
+      <Modal
+        isOpen={isHouseholdModalOpen}
+        onClose={handleCloseHouseholdModal}
+        title={selectedResidentInfo ? `${selectedResidentInfo.name}님의 세대 정보` : '세대 정보'}
+        size="lg"
+      >
+        <div className="space-y-4">
+          {selectedResidentHouseholds.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              등록된 세대 정보가 없습니다.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {selectedResidentHouseholds.map((householdRelation, index) => {
+                const relation = householdRelation as Record<string, unknown>;
+                const householdInstance = relation.householdInstance as Record<string, unknown> | undefined;
+                const household = householdInstance?.household as Record<string, unknown> | undefined;
+                
+                const roomNumber = household ? 
+                  `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}` : 
+                  '정보 없음';
+                const instanceName = householdInstance?.instanceName as string || '세대명 없음';
+                const relationship = relation.relationship as string || '관계 없음';
+                
+                return (
+                  <div key={relation.id as number || index} className="p-4 bg-gray-50 rounded-lg border">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="font-medium text-gray-900">
+                          {instanceName} ({roomNumber})
+                        </h3>
+                        <div className="mt-2 space-y-1 text-sm text-gray-600">
+                          <div className="flex justify-between">
+                            <span>관계:</span>
+                            <span className="font-medium">{relationship}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>등록일:</span>
+                            <span>{relation.createdAt ? new Date(relation.createdAt as string).toLocaleDateString() : '-'}</span>
+                          </div>
+                          {relation.memo ? (
+                            <div className="mt-2">
+                              <span className="text-gray-700">메모:</span>
+                              <p className="mt-1 text-gray-600">{String(relation.memo)}</p>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        {householdInstance?.id ? (
+                          <Link
+                            href={`/parking/household-management/household-instance/${String(householdInstance.id)}`}
+                            className="text-sm text-blue-600 hover:text-blue-800"
+                            onClick={handleCloseHouseholdModal}
+                          >
+                            세대 상세
+                          </Link>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 } 

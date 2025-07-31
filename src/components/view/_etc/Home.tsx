@@ -59,6 +59,7 @@ export default function Home() {
 		<div className="flex flex-col gap-6 h-full">
 			<PageHeader 
 				title="통합 대시보드 홈" 
+        subtitle="각종 스크린을 추가할 수 있는 메인 페이지입니다."
 			/>
 			
 			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}

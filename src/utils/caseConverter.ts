@@ -9,7 +9,11 @@
  * @returns snake_case 문자열
  */
 function toSnakeCase(str: string): string {
-  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1_$2') // 소문자 뒤 대문자: userId -> user_Id
+    .replace(/([a-z])([0-9])/g, '$1_$2')  // 소문자 뒤 숫자: address1 -> address_1
+    .replace(/([0-9])([A-Z])/g, '$1_$2')  // 숫자 뒤 대문자: 1Depth -> 1_Depth
+    .toLowerCase();
 }
 
 /**
@@ -18,7 +22,19 @@ function toSnakeCase(str: string): string {
  * @returns camelCase 문자열
  */
 function toCamelCase(str: string): string {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  return str.split('_').map((part, index) => {
+    if (index === 0) return part; // 첫 번째 부분은 그대로
+    
+    // 숫자로 시작하는 부분은 숫자 + 나머지 문자의 첫 글자를 대문자로
+    if (/^[0-9]/.test(part)) {
+      return part.replace(/^([0-9]+)(.*)/, (match, numbers, letters) => {
+        return numbers + (letters ? letters.charAt(0).toUpperCase() + letters.slice(1) : '');
+      });
+    }
+    
+    // 일반적인 경우: 첫 글자만 대문자로
+    return part.charAt(0).toUpperCase() + part.slice(1);
+  }).join('');
 }
 
 /**

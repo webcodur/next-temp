@@ -149,7 +149,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               {/* 페이지 컨테이너 기존 값: */}
               {/* <div className="p-10 mx-auto mt-10 max-w-7xl rounded-lg"> */}
               {/* 콘텐츠 */}
-              <div className="px-20 mx-auto mt-10 max-w-[1440px] rounded-lg">
+              <div className="px-[92px] mx-auto mt-12 max-w-[1656px] rounded-lg">
                 {children}
               </div>  
               {/* 푸터 */}

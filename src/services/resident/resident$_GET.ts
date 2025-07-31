@@ -1,54 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-
-export interface SearchResidentParams {
-  page?: number;
-  limit?: number;
-  name?: string;
-  phone?: string;
-  email?: string;
-  gender?: 'M' | 'F';
-  parkinglotId?: number;
-  address1Depth?: string;
-  address2Depth?: string;
-  address3Depth?: string;
-}
-
-export interface ResidentDto {
-  id: number;
-  name: string;
-  phone?: string;
-  email?: string;
-  birthDate?: Date;
-  gender?: string;
-  emergencyContact?: string;
-  memo?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date | null;
-  residentHouseholds?: unknown[];
-}
-
-export interface PageMetaDto {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
-}
-
-export interface SearchResidentResponse {
-  data: ResidentDto[];
-  meta: PageMetaDto;
-}
+import type { Resident, SearchResidentRequest, PaginatedResponse } from '@/types/api';
 
 /**
  * 거주자 목록을 조회한다
  * @param params 검색 조건 및 페이지네이션 정보
- * @returns 거주자 목록과 페이지 정보 (SearchResidentResponse)
+ * @returns 거주자 목록과 페이지 정보 (PaginatedResponse<Resident>)
  */
-export async function searchResident(params?: SearchResidentParams) {
+export async function searchResident(params?: SearchResidentRequest) {
   const searchParams = new URLSearchParams();
   
   if (params?.page) searchParams.append('page', params.page.toString());
@@ -82,6 +41,6 @@ export async function searchResident(params?: SearchResidentParams) {
   
   return {
     success: true,
-    data: result as SearchResidentResponse,
+    data: result as PaginatedResponse<Resident>,
   };
 } 

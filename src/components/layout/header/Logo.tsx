@@ -15,20 +15,20 @@ export const Logo = () => {
 	const { selectedParkingLot } = useAuth();
 	
 	return (
-		<Link href="/" className="flex items-center gap-3 cursor-pointer">
-			<Image src="/icons/testLogo/lg_plus.png" alt="System Logo" width={30} height={30} />
+		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
+			<Image src="/icons/testLogo/lg_plus.png" alt="System Logo" width={35} height={35} />
 			<div className="flex items-baseline gap-2">
 				{selectedParkingLot ? (
 					<>
-						<h1 className="text-lg font-bold text-foreground">{selectedParkingLot.name}</h1>
+						<h1 className="text-xl font-bold text-foreground">{selectedParkingLot.name}</h1>
 						{selectedParkingLot.code && (
-							<p className="text-xs text-muted-foreground">({selectedParkingLot.code})</p>
+							<p className="text-sm text-muted-foreground">({selectedParkingLot.code})</p>
 						)}
 					</>
 				) : (
 					<>
-						<h1 className="text-lg font-bold text-foreground">LG U+</h1>
-						<p className="text-xs text-muted-foreground">시니어 레지던스</p>
+						<h1 className="text-xl font-bold text-foreground">LG U+</h1>
+						<p className="text-sm text-muted-foreground">시니어 레지던스</p>
 					</>
 				)}
 			</div>

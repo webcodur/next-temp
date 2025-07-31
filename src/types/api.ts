@@ -245,11 +245,14 @@ export interface Resident {
   name: string;
   phone?: string;
   email?: string;
-  birthDate?: string;
-  gender?: 'M' | 'F';
-  isHouseholder: boolean;
-  createdAt: string;
-  updatedAt: string;
+  birthDate?: Date;
+  gender?: string;
+  emergencyContact?: string;
+  memo?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  residentHouseholds?: unknown[];
 }
 
 export interface CreateResidentRequest {
@@ -258,7 +261,8 @@ export interface CreateResidentRequest {
   email?: string;
   birthDate?: string;
   gender?: 'M' | 'F';
-  isHouseholder?: boolean;
+  emergencyContact?: string;
+  memo?: string;
 }
 
 export interface UpdateResidentRequest {
@@ -267,14 +271,19 @@ export interface UpdateResidentRequest {
   email?: string;
   birthDate?: string;
   gender?: 'M' | 'F';
-  isHouseholder?: boolean;
+  emergencyContact?: string;
+  memo?: string;
 }
 
 export interface SearchResidentRequest {
   name?: string;
   phone?: string;
   email?: string;
-  isHouseholder?: boolean;
+  gender?: 'M' | 'F';
+  parkinglotId?: number;
+  address1Depth?: string;
+  address2Depth?: string;
+  address3Depth?: string;
   page?: number;
   limit?: number;
 }

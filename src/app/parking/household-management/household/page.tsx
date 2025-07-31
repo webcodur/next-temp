@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
@@ -10,31 +10,59 @@ import { Field } from '@/components/ui/ui-input/field/core/Field';
 import type { BaseTableColumn } from '@/components/ui/ui-data/baseTable/types';
 import { searchHousehold } from '@/services/household/household$_GET';
 import { deleteHousehold } from '@/services/household/household@id_DELETE';
-import type { Household, HouseholdType } from '@/types/household';
+import type { Household, HouseholdType, HouseholdInstance } from '@/types/household';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // #region 타입 정의 확장
+interface ParkingLot {
+  id: number;
+  code: string;
+  name: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
 interface HouseholdWithStatus extends Household, Record<string, unknown> {
-  status: 'occupied' | 'vacant' | 'maintenance';
-  occupantName?: string;
+  status: 'occupied' | 'vacant';
+  occupantName?: string | null;
   roomNumber: string;
+  instanceCount: number;
+  instances?: HouseholdInstance[]; // 모달에서 사용할 인스턴스 목록
+  parkinglot?: ParkingLot; // 주차장 정보
 }
 // #endregion
 
 export default function HouseholdListPage() {
   // #region 상태 관리
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [selectedFloor, setSelectedFloor] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedType, setSelectedType] = useState<HouseholdType | ''>('');
+  const [selectedLv1Address, setSelectedLv1Address] = useState(''); // 동
+  const [selectedLv2Address, setSelectedLv2Address] = useState(''); // 호수
+  const [selectedLv3Address, setSelectedLv3Address] = useState(''); // 상세주소
   const [households, setHouseholds] = useState<HouseholdWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  
+  // 모달 관련 상태
+  const [isInstanceModalOpen, setIsInstanceModalOpen] = useState(false);
+  const [selectedHouseholdInstances, setSelectedHouseholdInstances] = useState<HouseholdInstance[]>([]);
+  const [selectedHouseholdInfo, setSelectedHouseholdInfo] = useState<HouseholdWithStatus | null>(null);
+  
+  // 깊은 객체 모달 상태
+  const [isParkingLotModalOpen, setIsParkingLotModalOpen] = useState(false);
+  const [selectedParkingLot, setSelectedParkingLot] = useState<ParkingLot | null>(null);
   // #endregion
 
   // #region 데이터 로딩
-  const loadHouseholds = useCallback(async () => {
+  const loadHouseholds = useCallback(async (searchParams?: {
+    householdType?: string;
+    address1Depth?: string;
+    address2Depth?: string;
+    address3Depth?: string;
+  }) => {
     setLoading(true);
     setError(null);
     
@@ -42,32 +70,35 @@ export default function HouseholdListPage() {
       const response = await searchHousehold({
         page: currentPage,
         limit: pageSize,
-        householdType: selectedType || undefined,
-        address1Depth: selectedFloor || undefined,
+        householdType: (searchParams?.householdType as HouseholdType) || undefined,
+        address1Depth: searchParams?.address1Depth || undefined,
+        address2Depth: searchParams?.address2Depth || undefined,
+        address3Depth: searchParams?.address3Depth || undefined,
       });
-      
-      console.log('🔍 [Household API] Full Response:', response);
-      console.log('🔍 [Household API] Response.data:', response.data);
-      console.log('🔍 [Household API] Response.data.data:', response.data?.data);
 
       if (response.success && response.data) {
         // API 응답 구조 확인
         const households = response.data.data || response.data.households || response.data || [];
-        console.log('🔍 [Household API] Final households array:', households);
-        console.log('🔍 [Household API] Array length:', households.length);
-        
-        if (households.length > 0) {
-          console.log('🔍 [Household API] First household sample:', households[0]);
-        }
-
+        console.log('households', households)
         // API 데이터를 UI 형식으로 변환
-        const transformedData: HouseholdWithStatus[] = households.map((household: Household) => ({
-          ...household,
-          roomNumber: `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`,
-          status: household.instances?.length ? 'occupied' : 'vacant' as 'occupied' | 'vacant' | 'maintenance',
-          occupantName: household.instances?.[0]?.instanceName
-        }));
-        
+        const transformedData: HouseholdWithStatus[] = households.map((household: Household) => {
+          // 실제 API 응답에서는 householdInstance 배열을 사용
+          const instances = household.householdInstance || [];
+          // 현재 활성 인스턴스 (endDate가 null인 것)
+          const activeInstances = instances.filter((instance: HouseholdInstance) => !instance.endDate);
+          // 현재 활성 입주자 찾기
+          const currentOccupant = activeInstances.length > 0 ? activeInstances[0] : null;
+          
+          return {
+            ...household,
+            roomNumber: `${household.address1Depth} ${household.address2Depth}`,
+            status: activeInstances.length > 0 ? 'occupied' : 'vacant' as const,
+            occupantName: currentOccupant?.instanceName || null,
+            instanceCount: instances.length,
+            instances: instances, // 모달에서 사용할 전체 인스턴스 목록
+            parkinglot: household.parkinglot // 주차장 정보 보존
+          };
+        });
         setHouseholds(transformedData);
       } else {
         throw new Error(response.errorMsg || '데이터 로딩 실패');
@@ -78,90 +109,77 @@ export default function HouseholdListPage() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, selectedType, selectedFloor]);
+  }, [currentPage, pageSize]);
 
+  // 페이지 최초 진입 시에만 데이터 로드
   useEffect(() => {
     loadHouseholds();
   }, [loadHouseholds]);
   // #endregion
 
-  // #region 필터링된 데이터 (클라이언트 사이드 필터링)
-  const filteredData = households.filter((household) => {
-    const matchesKeyword = household.roomNumber.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-                          (household.occupantName && household.occupantName.toLowerCase().includes(searchKeyword.toLowerCase()));
-    const matchesStatus = !selectedStatus || household.status === selectedStatus;
-    
-    return matchesKeyword && matchesStatus;
-  });
-  // #endregion
+
 
   // #region 검색 필드 설정
   const searchFields = [
     {
-      key: 'keyword',
-      label: '검색어',
+      key: 'type',
+      label: '호실 타입',
+      element: (
+        <Field
+          type="select"
+          label="호실 타입"
+          placeholder="타입 선택"
+          value={selectedType}
+          onChange={(value) => setSelectedType(value as HouseholdType | '')}
+          options={[
+            { value: 'GENERAL', label: '거주지' },
+            { value: 'COMMERCIAL', label: '점포' },
+            { value: 'TEMP', label: '미정' },
+          ]}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'lv1Address',
+      label: '동 검색',
       element: (
         <Field
           type="text"
-          placeholder="호실번호 또는 입주자명 검색"
-          value={searchKeyword}
-          onChange={setSearchKeyword}
+          label="동 검색"
+          placeholder="동 정보 입력 (ex: 101동)"
+          value={selectedLv1Address}
+          onChange={setSelectedLv1Address}
+        />
+      ),
+      visible: true,
+    },
+    {
+      key: 'lv2Address',
+      label: '호수 검색',
+      element: (
+        <Field
+          type="text"
+          label="호수 검색"
+          placeholder="호수 정보 입력 (ex: 101호)"
+          value={selectedLv2Address}
+          onChange={setSelectedLv2Address}
           showClearButton={true}
         />
       ),
       visible: true,
     },
     {
-      key: 'floor',
-      label: '동',
+      key: 'lv3Address',
+      label: '상세주소 검색',
       element: (
         <Field
-          type="select"
-          placeholder="동 선택"
-          value={selectedFloor}
-          onChange={setSelectedFloor}
-          options={[
-            { value: '101동', label: '101동' },
-            { value: '102동', label: '102동' },
-            { value: '103동', label: '103동' },
-            { value: '104동', label: '104동' },
-          ]}
-        />
-      ),
-      visible: true,
-    },
-    {
-      key: 'status',
-      label: '상태',
-      element: (
-        <Field
-          type="select"
-          placeholder="상태 선택"
-          value={selectedStatus}
-          onChange={setSelectedStatus}
-          options={[
-            { value: 'occupied', label: '입주중' },
-            { value: 'vacant', label: '공실' },
-            { value: 'maintenance', label: '수리중' },
-          ]}
-        />
-      ),
-      visible: true,
-    },
-    {
-      key: 'type',
-      label: '타입',
-      element: (
-        <Field
-          type="select"
-          placeholder="타입 선택"
-          value={selectedType}
-          onChange={(value) => setSelectedType(value as HouseholdType | '')}
-          options={[
-            { value: 'GENERAL', label: '일반' },
-            { value: 'TEMP', label: '임시' },
-            { value: 'COMMERCIAL', label: '상업' },
-          ]}
+          type="text"
+          label="상세주소 검색"
+          placeholder="상세주소 입력 (ex: 도로명 주소)"
+          value={selectedLv3Address}
+          onChange={setSelectedLv3Address}
+          showClearButton={true}
         />
       ),
       visible: true,
@@ -172,10 +190,48 @@ export default function HouseholdListPage() {
   // #region 테이블 컬럼 설정
   const columns: BaseTableColumn<HouseholdWithStatus>[] = [
     {
-      key: 'roomNumber',
-      header: '호실번호',
+      key: 'address1Depth',
+      header: '동',
       cell: (household: HouseholdWithStatus) => (
-        <div className="font-medium">{household.roomNumber}</div>
+        <div className="font-medium text-center">{household.address1Depth}</div>
+      ),
+    },
+    {
+      key: 'address2Depth',
+      header: '호',
+      cell: (household: HouseholdWithStatus) => (
+        <div className="font-medium text-center">{household.address2Depth}</div>
+      ),
+    },
+    {
+      key: 'address3Depth',
+      header: '상세주소',
+      cell: (household: HouseholdWithStatus) => (
+        <div className="text-center">{household.address3Depth || '-'}</div>
+      ),
+    },
+    {
+      key: 'parkinglot',
+      header: '주차장',
+      cell: (household: HouseholdWithStatus) => (
+        <div>
+          {household.parkinglot ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (household.parkinglot) {
+                  handleShowParkingLot(household.parkinglot);
+                }
+              }}
+              className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+              title="주차장 정보 상세보기"
+            >
+              {household.parkinglot.name}
+            </button>
+          ) : (
+            <span className="text-gray-500">-</span>
+          )}
+        </div>
       ),
     },
     {
@@ -183,9 +239,9 @@ export default function HouseholdListPage() {
       header: '타입',
       cell: (household: HouseholdWithStatus) => {
         const typeMap = {
-          GENERAL: '일반',
-          TEMP: '임시',
-          COMMERCIAL: '상업',
+          GENERAL: '거주지',
+          TEMP: '미정',
+          COMMERCIAL: '점포',
         };
         return (
           <div className="text-center">{typeMap[household.householdType]}</div>
@@ -199,7 +255,6 @@ export default function HouseholdListPage() {
         const statusMap: Record<HouseholdWithStatus['status'], { label: string; className: string }> = {
           occupied: { label: '입주중', className: 'bg-green-100 text-green-800' },
           vacant: { label: '공실', className: 'bg-yellow-100 text-yellow-800' },
-          maintenance: { label: '수리중', className: 'bg-red-100 text-red-800' },
         };
         const status = statusMap[household.status];
         return (
@@ -223,7 +278,20 @@ export default function HouseholdListPage() {
       header: '입주 이력',
       cell: (household: HouseholdWithStatus) => (
         <div className="text-center">
-          {household.instances?.length || 0}건
+          {household.instanceCount > 0 ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShowInstances(household);
+              }}
+              className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+              title="입주 이력 상세보기"
+            >
+              {household.instanceCount}건
+            </button>
+          ) : (
+            <span className="text-gray-500">0건</span>
+          )}
         </div>
       ),
     },
@@ -241,16 +309,11 @@ export default function HouseholdListPage() {
       header: '작업',
       cell: (household: HouseholdWithStatus) => (
         <div className="flex gap-1 justify-center">
-          <Link
-            href={`/parking/household-management/household/${household.id}`}
-            className="p-1 text-blue-600 rounded hover:bg-blue-50"
-            title="상세보기"
-          >
-            <Eye className="w-4 h-4" />
-          </Link>
-
           <button
-            onClick={() => handleDelete(household.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(household.id);
+            }}
             className="p-1 text-red-600 rounded hover:bg-red-50"
             title="삭제"
           >
@@ -265,16 +328,21 @@ export default function HouseholdListPage() {
   // #region 이벤트 핸들러
   const handleSearch = () => {
     setCurrentPage(1);
-    loadHouseholds();
+    loadHouseholds({
+      householdType: selectedType || undefined,
+      address1Depth: selectedLv1Address || undefined,
+      address2Depth: selectedLv2Address || undefined,
+      address3Depth: selectedLv3Address || undefined,
+    });
   };
 
   const handleReset = () => {
-    setSearchKeyword('');
-    setSelectedFloor('');
-    setSelectedStatus('');
     setSelectedType('');
+    setSelectedLv1Address('');
+    setSelectedLv2Address('');
+    setSelectedLv3Address('');
     setCurrentPage(1);
-    loadHouseholds();
+    loadHouseholds(); // 초기화 시에는 검색 파라미터 없이 호출
   };
 
   const handleDelete = async (id: number) => {
@@ -284,7 +352,13 @@ export default function HouseholdListPage() {
       const response = await deleteHousehold(id);
       if (response.success) {
         alert('호실이 삭제되었습니다.');
-        loadHouseholds();
+        // 삭제 후 현재 검색 조건을 유지하여 새로고침
+        loadHouseholds({
+          householdType: selectedType || undefined,
+          address1Depth: selectedLv1Address || undefined,
+          address2Depth: selectedLv2Address || undefined,
+          address3Depth: selectedLv3Address || undefined,
+        });
       } else {
         throw new Error(response.errorMsg || '삭제 실패');
       }
@@ -294,7 +368,7 @@ export default function HouseholdListPage() {
   };
 
   const handleRowClick = (household: HouseholdWithStatus) => {
-    console.log('행 클릭:', household);
+    window.location.href = `/parking/household-management/household/${household.id}`;
   };
 
   const handlePageChange = (page: number) => {
@@ -304,6 +378,28 @@ export default function HouseholdListPage() {
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
     setCurrentPage(1);
+  };
+
+  const handleShowInstances = (household: HouseholdWithStatus) => {
+    setSelectedHouseholdInfo(household);
+    setSelectedHouseholdInstances(household.instances || []);
+    setIsInstanceModalOpen(true);
+  };
+
+  const handleCloseInstanceModal = () => {
+    setIsInstanceModalOpen(false);
+    setSelectedHouseholdInstances([]);
+    setSelectedHouseholdInfo(null);
+  };
+
+  const handleShowParkingLot = (parkinglot: ParkingLot) => {
+    setSelectedParkingLot(parkinglot);
+    setIsParkingLotModalOpen(true);
+  };
+
+  const handleCloseParkingLotModal = () => {
+    setIsParkingLotModalOpen(false);
+    setSelectedParkingLot(null);
   };
   // #endregion
 
@@ -325,13 +421,13 @@ export default function HouseholdListPage() {
       <div className="p-6">
         <PageHeader
           title="호실 관리"
-          subtitle="아파트 호실 정보를 관리합니다"
+          subtitle="건물 호실 정보를 관리합니다"
           rightActions={rightActions}
         />
         <div className="p-4 bg-red-50 rounded-lg border border-red-200">
           <p className="text-red-800">오류가 발생했습니다: {error}</p>
           <button 
-            onClick={loadHouseholds}
+            onClick={() => loadHouseholds()}
             className="px-4 py-2 mt-2 text-white bg-red-600 rounded hover:bg-red-700"
           >
             다시 시도
@@ -346,7 +442,7 @@ export default function HouseholdListPage() {
     <div className="p-6">
       <PageHeader
         title="호실 관리"
-        subtitle="아파트 호실 정보를 관리합니다"
+        subtitle="건물 호실 정보를 관리합니다"
         rightActions={rightActions}
       />
       
@@ -364,7 +460,7 @@ export default function HouseholdListPage() {
 
         {/* 데이터 테이블 */}
         <PaginatedTable
-          data={filteredData}
+          data={households}
           columns={columns}
           onRowClick={handleRowClick}
           itemName="호실"
@@ -376,6 +472,98 @@ export default function HouseholdListPage() {
           isFetching={loading}
         />
       </div>
+
+      {/* 입주 이력 상세 모달 */}
+      <Modal
+        isOpen={isInstanceModalOpen}
+        onClose={handleCloseInstanceModal}
+        title={selectedHouseholdInfo ? `${selectedHouseholdInfo.address1Depth} ${selectedHouseholdInfo.address2Depth} 입주 이력` : '입주 이력'}
+        size="lg"
+      >
+        <div className="space-y-4">
+          {selectedHouseholdInstances.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              입주 이력이 없습니다.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {selectedHouseholdInstances.map((instance, index) => (
+                <div key={instance.id} className="p-4 bg-gray-50 rounded-lg border">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900">
+                        {instance.instanceName || `세대 ${index + 1}`}
+                      </h3>
+                      <div className="mt-2 space-y-1 text-sm text-gray-600">
+                        <div className="flex justify-between">
+                          <span>입주일:</span>
+                          <span>{instance.startDate ? new Date(instance.startDate).toLocaleDateString() : '-'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>퇴거일:</span>
+                          <span>{instance.endDate ? new Date(instance.endDate).toLocaleDateString() : '거주중'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>등록일:</span>
+                          <span>{new Date(instance.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        {instance.memo && (
+                          <div className="mt-2">
+                            <span className="text-gray-700">메모:</span>
+                            <p className="mt-1 text-gray-600">{instance.memo}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <Link
+                        href={`/parking/household-management/household-instance/${instance.id}`}
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                        onClick={handleCloseInstanceModal}
+                      >
+                        상세보기
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* 주차장 정보 상세 모달 */}
+      <Modal
+        isOpen={isParkingLotModalOpen}
+        onClose={handleCloseParkingLotModal}
+        title="주차장 정보"
+        size="md"
+      >
+        {selectedParkingLot && (
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-gray-600">이름:</span>
+              <span className="font-medium">{selectedParkingLot.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">코드:</span>
+              <span className="font-medium">{selectedParkingLot.code}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">설명:</span>
+              <span className="font-medium">{selectedParkingLot.description || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">생성일:</span>
+              <span className="font-medium">{new Date(selectedParkingLot.created_at).toLocaleDateString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">수정일:</span>
+              <span className="font-medium">{new Date(selectedParkingLot.updated_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 } 

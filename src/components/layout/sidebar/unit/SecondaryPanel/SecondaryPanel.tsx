@@ -82,15 +82,15 @@ function SecondaryPanel() {
 				className="flex relative flex-col h-full border-e border-border bg-serial-1">
 				
         {/* Menu Controls */}
-				<div className="flex flex-shrink-0 justify-between items-center px-4 h-14 border-b border-serial-3">
+				<div className="flex flex-shrink-0 justify-between items-center px-[20px] h-16 border-b border-serial-3">
 					{/* Mode Toggle */}
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button variant="ghost" size="icon" className="w-8 h-8 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleSingleOpenToggle}>
+							<Button variant="ghost" size="icon" className="w-9 h-9 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleSingleOpenToggle}>
 								{singleOpenMode ? (
-									<Focus className="w-5 h-5 text-primary" />
+									<Focus className="w-6 h-6 text-primary" />
 								) : (
-									<Layers className="w-5 h-5 text-muted-foreground" />
+									<Layers className="w-6 h-6 text-muted-foreground" />
 								)}
 							</Button>
 						</TooltipTrigger>
@@ -99,13 +99,13 @@ function SecondaryPanel() {
 						</TooltipContent>
 					</Tooltip>
 
-					<h2 className="text-lg font-semibold text-foreground">{t(topData.key)}</h2>
+					<h2 className="text-xl font-semibold text-foreground">{t(topData.key)}</h2>
 
 					{/* Expand/Collapse All */}
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button variant="ghost" size="icon" className="w-8 h-8 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleExpandCollapseClick}>
-								<ChevronsUpDown className="w-5 h-5 text-muted-foreground" />
+							<Button variant="ghost" size="icon" className="w-9 h-9 !shadow-none hover:!shadow-none hover:bg-muted/80" onClick={handleExpandCollapseClick}>
+								<ChevronsUpDown className="w-6 h-6 text-muted-foreground" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="bottom" align="end">
@@ -115,7 +115,7 @@ function SecondaryPanel() {
 				</div>
 
 				{/* Menu List */}
-				<div className="overflow-y-auto flex-1 p-4 space-y-2">
+				<div className="overflow-y-auto flex-1 p-[20px] space-y-[10px]">
 					{Object.entries(localMidItems).map(([midKey, midItem]) => (
 						<MidMenuComponent
 							key={midKey}

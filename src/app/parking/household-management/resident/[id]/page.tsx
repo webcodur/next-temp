@@ -6,11 +6,12 @@ import { ArrowLeft, Trash2, Lock, Unlock, Save, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
+
 import { getResidentDetail } from '@/services/resident/resident@id_GET';
 import { updateResident } from '@/services/resident/resident@id_PATCH';
 import { deleteResident } from '@/services/resident/resident@id_DELETE';
 import type { ResidentDetailResponse } from '@/services/resident/resident@id_GET';
-import type { UpdateResidentRequest } from '@/services/resident/resident@id_PATCH';
+import type { UpdateResidentRequest } from '@/types/api';
 
 interface ResidentDetailPageProps {
   params: Promise<{ id: string }>;

@@ -426,9 +426,9 @@ export default function HouseholdInstanceDetailPage({ params }: HouseholdInstanc
                     <span className="text-gray-600">세대 타입:</span>
                     <span className="font-medium">
                       {instance.household.householdType === 'GENERAL' ? '일반 세대' :
-                       instance.household.householdType === 'TEMP' ? '임시 세대' :
-                       instance.household.householdType === 'COMMERCIAL' ? '상업 세대' : 
-                       instance.household.householdType}
+                      instance.household.householdType === 'TEMP' ? '임시 세대' :
+                      instance.household.householdType === 'COMMERCIAL' ? '상업 세대' : 
+                      instance.household.householdType}
                     </span>
                   </div>
                 </div>

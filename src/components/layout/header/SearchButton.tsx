@@ -20,7 +20,7 @@ export function SearchButton({ className }: SearchButtonProps) {
 			onClick={() => setIsOpen(true)}
 			aria-label={t('헤더_메뉴검색')}
 		>
-			<Search size={20} />
+			<Search size={23} />
 		</button>
 	);
 } 

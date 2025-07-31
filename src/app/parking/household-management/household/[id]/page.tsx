@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect, useCallback, useMemo, use } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Trash2, Plus, Lock, Unlock, Save, X } from 'lucide-react';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import { Field } from '@/components/ui/ui-input/field/core/Field';
+import HouseholdInfoForm from '@/components/view/parking/household-detail/unit/HouseholdInfoForm';
+import HouseholdInstancesList from '@/components/view/parking/household-detail/unit/HouseholdInstancesList';
+import { HouseholdFormData } from '@/components/view/parking/household-detail/types';
 import { getHouseholdDetail } from '@/services/household/household@id_GET';
 import { getHouseholdInstanceList } from '@/services/household/household@id_instance_GET';
 import { updateHousehold } from '@/services/household/household@id_PUT';
@@ -16,16 +18,6 @@ interface HouseholdDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-// #region 타입 정의
-interface HouseholdFormData {
-  address1Depth: string;
-  address2Depth: string;
-  address3Depth: string;
-  householdType: HouseholdType | '';
-  memo: string;
-}
-// #endregion
-
 export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps) {
   // #region 상태 관리
   const resolvedParams = use(params);
@@ -34,22 +26,23 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
   const [instances, setInstances] = useState<HouseholdInstance[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isEditMode, setIsEditMode] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<HouseholdFormData>({
-    address1Depth: '',
-    address2Depth: '',
-    address3Depth: '',
+    lv1Address: '',
+    lv2Address: '',
+    lv3Address: '',
     householdType: '',
     memo: '',
   });
   const [originalData, setOriginalData] = useState<HouseholdFormData>({
-    address1Depth: '',
-    address2Depth: '',
-    address3Depth: '',
+    lv1Address: '',
+    lv2Address: '',
+    lv3Address: '',
     householdType: '',
     memo: '',
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   // #endregion
 
@@ -84,9 +77,9 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
 
       // 폼 데이터 초기화
       const initialData = {
-        address1Depth: householdData.address1Depth,
-        address2Depth: householdData.address2Depth,
-        address3Depth: householdData.address3Depth || '',
+        lv1Address: householdData.address1Depth,
+        lv2Address: householdData.address2Depth,
+        lv3Address: householdData.address3Depth || '',
         householdType: householdData.householdType,
         memo: householdData.memo || '',
       };
@@ -104,37 +97,25 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
   }, [loadHouseholdDetail]);
   // #endregion
 
-  // #region 변경 감지
-  const hasChanges = useMemo(() => {
-    if (!isEditMode) return false;
-    
-    return (
-      formData.address1Depth !== originalData.address1Depth ||
-      formData.address2Depth !== originalData.address2Depth ||
-      formData.address3Depth !== originalData.address3Depth ||
-      formData.householdType !== originalData.householdType ||
-      formData.memo !== originalData.memo
-    );
-  }, [formData, originalData, isEditMode]);
-
+  // #region 유효성 검사
   const isValid = useMemo(() => {
-    if (!isEditMode || !hasChanges) return false;
-    
-    return formData.address1Depth.trim() && 
-           formData.address2Depth.trim() && 
-           formData.householdType;
-  }, [formData, isEditMode, hasChanges]);
+    return Boolean(
+      formData.lv1Address.trim() && 
+      formData.lv2Address.trim() && 
+      formData.householdType
+    );
+  }, [formData]);
   // #endregion
 
-  // #region 유효성 검사
+  // #region 폼 검증
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.address1Depth.trim()) {
-      newErrors.address1Depth = '동을 입력해주세요.';
+    if (!formData.lv1Address.trim()) {
+      newErrors.lv1Address = '1레벨 주소를 입력해주세요.';
     }
-    if (!formData.address2Depth.trim()) {
-      newErrors.address2Depth = '호수를 입력해주세요.';
+    if (!formData.lv2Address.trim()) {
+      newErrors.lv2Address = '2레벨 주소를 입력해주세요.';
     }
     if (!formData.householdType) {
       newErrors.householdType = '세대 타입을 선택해주세요.';
@@ -146,23 +127,8 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleEditToggle = useCallback(() => {
-    if (isEditMode && hasChanges) {
-      const confirmMessage = '편집 중인 내용이 있습니다. 정말로 취소하시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    
-    setIsEditMode(!isEditMode);
-    
-    // 편집 모드 해제 시 원래 데이터로 복원
-    if (isEditMode) {
-      setFormData(originalData);
-      setErrors({});
-    }
-  }, [isEditMode, hasChanges, originalData]);
-
   const handleSave = async () => {
-    if (!household || !validateForm() || !hasChanges) {
+    if (!household || !validateForm()) {
       return;
     }
 
@@ -170,9 +136,9 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
     
     try {
       const requestData: UpdateHouseholdRequest = {
-        address1Depth: formData.address1Depth,
-        address2Depth: formData.address2Depth,
-        address3Depth: formData.address3Depth || undefined,
+        address1Depth: formData.lv1Address,
+        address2Depth: formData.lv2Address,
+        address3Depth: formData.lv3Address || undefined,
         householdType: formData.householdType as HouseholdType,
         memo: formData.memo || undefined,
       };
@@ -183,7 +149,6 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
         alert('호실 정보가 성공적으로 수정되었습니다.');
         // 데이터 새로고침
         await loadHouseholdDetail();
-        setIsEditMode(false);
       } else {
         throw new Error(response.errorMsg || '수정 실패');
       }
@@ -226,25 +191,15 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
   };
 
   const handleReset = () => {
-    if (!household) return;
-    
     setFormData(originalData);
     setErrors({});
   };
+
   // #endregion
 
   // #region 유틸리티 함수
   const formatRoomNumber = (household: Household) => {
     return `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`;
-  };
-
-  const getHouseholdTypeLabel = (type: string) => {
-    const typeMap: Record<string, string> = {
-      GENERAL: '일반 세대',
-      TEMP: '임시 세대',
-      COMMERCIAL: '상업 세대',
-    };
-    return typeMap[type] || type;
   };
   // #endregion
 
@@ -261,22 +216,12 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
 
   const rightActions = household ? (
     <div className="flex gap-2">
-      {/* 편집 모드 토글 버튼 */}
-      <button
-        onClick={handleEditToggle}
-        disabled={isSubmitting}
-        className="flex gap-2 items-center px-4 py-2 rounded-lg border transition-colors border-border hover:bg-muted disabled:opacity-50"
-        title={isEditMode ? "편집 모드 해제" : "편집 모드 활성화"}
-      >
-        {isEditMode ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-        {isEditMode ? '취소' : '편집'}
-      </button>
-      
       {/* 삭제 버튼 */}
       <button
         onClick={handleDelete}
-        disabled={isEditMode || isSubmitting}
+        disabled={isSubmitting}
         className="flex gap-2 items-center px-4 py-2 rounded-lg transition-colors bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-50"
+        title="호실 삭제"
       >
         <Trash2 className="w-4 h-4" />
         삭제
@@ -291,6 +236,7 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
       <div className="p-6">
         <PageHeader
           title="호실 상세"
+          subtitle="상세 호실 정보를 조회합니다"
           leftActions={leftActions}
         />
         <div className="p-8 text-center">
@@ -305,6 +251,7 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
       <div className="p-6">
         <PageHeader
           title="호실 상세"
+          subtitle="상세 호실 정보를 조회합니다"
           leftActions={leftActions}
         />
         <div className="p-4 bg-red-50 rounded-lg border border-red-200">
@@ -312,6 +259,7 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
           <button 
             onClick={loadHouseholdDetail}
             className="px-4 py-2 mt-2 text-white bg-red-600 rounded hover:bg-red-700"
+            title="데이터 다시 로드"
           >
             다시 시도
           </button>
@@ -324,180 +272,29 @@ export default function HouseholdDetailPage({ params }: HouseholdDetailPageProps
   return (
     <div className="p-6">
       <PageHeader
-        title={`호실 상세 - ${formatRoomNumber(household)}`}
-        subtitle={isEditMode ? "호실 정보를 수정합니다" : ""}
+        title={household ? `호실 상세 - ${formatRoomNumber(household)}` : "호실 상세"}
+        subtitle="호실 정보를 조회하고 수정할 수 있습니다"
         leftActions={leftActions}
         rightActions={rightActions}
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* 호실 정보 */}
-        <div className="p-6 bg-white rounded-lg border shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">호실 정보</h2>
-          
-          {isEditMode ? (
-            /* 편집 모드 - 폼 */
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <Field
-                  type="select"
-                  label="동 *"
-                  placeholder="동 선택"
-                  value={formData.address1Depth}
-                  onChange={handleFieldChange('address1Depth')}
-                  options={[
-                    { value: '101동', label: '101동' },
-                    { value: '102동', label: '102동' },
-                    { value: '103동', label: '103동' },
-                    { value: '104동', label: '104동' },
-                    { value: '105동', label: '105동' },
-                  ]}
-                />
-                {errors.address1Depth && (
-                  <div className="col-span-full text-sm text-red-600">{errors.address1Depth}</div>
-                )}
-                
-                <Field
-                  type="text"
-                  label="호수 *"
-                  placeholder="예: 1001호"
-                  value={formData.address2Depth}
-                  onChange={handleFieldChange('address2Depth')}
-                />
-                {errors.address2Depth && (
-                  <div className="col-span-full text-sm text-red-600">{errors.address2Depth}</div>
-                )}
-                
-                <Field
-                  type="text"
-                  label="세부 주소"
-                  placeholder="예: A동"
-                  value={formData.address3Depth}
-                  onChange={handleFieldChange('address3Depth')}
-                />
-                
-                <Field
-                  type="select"
-                  label="세대 타입 *"
-                  placeholder="타입 선택"
-                  value={formData.householdType}
-                  onChange={handleFieldChange('householdType')}
-                  options={[
-                    { value: 'GENERAL', label: '일반 세대' },
-                    { value: 'TEMP', label: '임시 세대' },
-                    { value: 'COMMERCIAL', label: '상업 세대' },
-                  ]}
-                />
-                {errors.householdType && (
-                  <div className="col-span-full text-sm text-red-600">{errors.householdType}</div>
-                )}
-              </div>
+      <div className="flex flex-col gap-6">
+        <HouseholdInfoForm
+          mode="update"
+          household={household}
+          formData={formData}
+          errors={errors}
+          isSubmitting={isSubmitting}
+          isValid={isValid}
+          onFieldChange={handleFieldChange}
+          onReset={handleReset}
+          onSave={handleSave}
+        />
 
-              <Field
-                type="text"
-                label="메모"
-                placeholder="특이사항이나 추가 정보를 입력하세요"
-                value={formData.memo}
-                onChange={handleFieldChange('memo')}
-              />
-
-              {/* 편집 모드 버튼들 */}
-              <div className="flex gap-2 pt-4">
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  disabled={isSubmitting}
-                  className="flex gap-2 items-center px-4 py-2 rounded-lg border transition-colors border-border hover:bg-muted disabled:opacity-50"
-                >
-                  <X className="w-4 h-4" />
-                  초기화
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={isSubmitting || !isValid}
-                  className="flex gap-2 items-center px-4 py-2 rounded-lg transition-colors bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-                >
-                  <Save className="w-4 h-4" />
-                  {isSubmitting ? '저장 중...' : '저장'}
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* 조회 모드 - 읽기 전용 */
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-600">호실번호:</span>
-                <span className="font-medium">{formatRoomNumber(household)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">세대 타입:</span>
-                <span className="font-medium">{getHouseholdTypeLabel(household.householdType)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">등록일:</span>
-                <span className="font-medium">{new Date(household.createdAt).toLocaleDateString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">수정일:</span>
-                <span className="font-medium">{new Date(household.updatedAt).toLocaleDateString()}</span>
-              </div>
-              {household.memo && (
-                <div className="pt-2">
-                  <span className="text-gray-600">메모:</span>
-                  <p className="mt-1 text-sm text-gray-800">{household.memo}</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* 입주세대 목록 */}
-        <div className="p-6 bg-white rounded-lg border shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">입주세대</h2>
-            <Link
-              href={`/parking/household-management/household-instance/create?householdId=${household.id}`}
-              className="flex gap-2 items-center px-3 py-1 text-sm rounded transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Plus className="w-4 h-4" />
-              세대 배정
-            </Link>
-          </div>
-          
-          {instances.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">
-              현재 입주한 세대가 없습니다.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {instances.map((instance) => (
-                <div key={instance.id} className="p-3 bg-gray-50 rounded border">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-medium">{instance.instanceName || '세대명 없음'}</h3>
-                      <p className="text-sm text-gray-600">
-                        입주일: {instance.startDate ? new Date(instance.startDate).toLocaleDateString() : '-'}
-                      </p>
-                      {instance.endDate && (
-                        <p className="text-sm text-gray-600">
-                          예정 퇴거일: {new Date(instance.endDate).toLocaleDateString()}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Link 
-                        href={`/parking/household-management/household-instance/${instance.id}`}
-                        className="text-sm text-blue-600 hover:text-blue-800"
-                      >
-                        상세
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <HouseholdInstancesList
+          householdId={household?.id}
+          instances={instances}
+        />
       </div>
     </div>
   );

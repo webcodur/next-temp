@@ -116,6 +116,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 				<div className="space-y-1">
 					<FieldText
 						id="username"
+						label="아이디"
 						placeholder="아이디를 입력하세요"
 						value={formData.username}
 						onChange={handleUsernameChange}
@@ -130,6 +131,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 				<div className="space-y-1">
 					<FieldPassword
 						id="password"
+						label="비밀번호"
 						placeholder="비밀번호를 입력하세요"
 						value={formData.password}
 						onChange={handlePasswordChange}

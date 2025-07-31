@@ -12,12 +12,12 @@ export const menuData: MenuData = {
         key: '허브 정보',
         botItems: [
           {
-            key: '허브 이용 안내',
-            href: '/global/info/guide',
+            key: '허브 공지사항',
+            href: '/global/hub/notice',
           },
           {
-            key: '허브 통계',
-            href: '/global/hub/statistics',
+            key: '허브 이용 안내',
+            href: '/global/info/guide',
           },
         ]
       },

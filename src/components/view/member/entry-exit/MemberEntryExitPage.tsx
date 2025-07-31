@@ -124,6 +124,7 @@ export default function MemberEntryExitPage() {
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">기간설정</span>
           <Field
             type="datepicker"
+            label="검색 기간"
             datePickerType="range"
             startDate={startDate}
             endDate={endDate}
@@ -143,6 +144,7 @@ export default function MemberEntryExitPage() {
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">시간설정</span>
           <Field
             type="select"
+            label="시간 필터 대상"
             placeholder="전체"
             value={timeFilterTarget}
             onChange={setTimeFilterTarget}
@@ -171,6 +173,7 @@ export default function MemberEntryExitPage() {
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">구분</span>
           <Field
             type="select"
+            label="차량 유형"
             placeholder="차량유형 선택"
             value={vehicleType}
             onChange={setVehicleType}
@@ -189,6 +192,7 @@ export default function MemberEntryExitPage() {
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">주차시간</span>
           <Field
             type="text"
+            label="최소 주차 일수"
             placeholder="0"
             value={parkingMinDays}
             onChange={setParkingMinDays}
@@ -197,6 +201,7 @@ export default function MemberEntryExitPage() {
           <span className="text-sm">일 이상</span>
           <Field
             type="text"
+            label="최대 주차 일수"
             placeholder="0"
             value={parkingMaxDays}
             onChange={setParkingMaxDays}
@@ -245,6 +250,7 @@ export default function MemberEntryExitPage() {
           <span className="py-2 w-20 text-sm text-center shrink-0 neu-flat">검색설정</span>
           <Field
             type="select"
+            label="검색 유형"
             placeholder="차량번호"
             value={searchCategory}
             onChange={setSearchCategory}
@@ -253,6 +259,7 @@ export default function MemberEntryExitPage() {
           />
           <Field
             type="text"
+            label="검색어"
             placeholder={searchCategory === 'plateNumber' ? '차량번호로 검색이 가능해요!' : '세대로 검색이 가능해요!'}
             value={searchQuery}
             onChange={setSearchQuery}

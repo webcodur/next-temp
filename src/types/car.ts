@@ -52,7 +52,7 @@ export interface CreateCarRequest {
 /**
  * 차량 수정 요청 타입 (UpdateCarDto 기준)
  */
-export interface UpdateCarRequest extends Partial<CreateCarRequest> {}
+export type UpdateCarRequest = Partial<CreateCarRequest>;
 
 /**
  * 차량 검색 요청 타입 (SearchCarDto 기준)

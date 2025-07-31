@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { ArrowUpDown, ChevronDown } from 'lucide-react';
 import { FieldSortSelectComponentProps } from '../core/types';
 import { FIELD_STYLES, FIELD_CONSTANTS } from '../core/config';
@@ -22,6 +22,8 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	allOptionLabel = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_LABEL,
 	allOptionValue = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_VALUE,
 }) => {
+	const inputRef = useRef<HTMLButtonElement>(null); // 내부 button ref 추가
+	
 	// "전체" 옵션 추가한 최종 옵션 리스트
 	const finalOptions = showAllOption 
 		? [{ value: allOptionValue, label: allOptionLabel }, ...options]
@@ -68,6 +70,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 				</button>
 
 				<button
+					ref={inputRef}
 					type="button"
 					onClick={toggleDropdown}
 					disabled={disabled}
@@ -111,7 +114,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 					onSelect={handleSelect}
 					highlightedIndex={highlightedIndex}
 					maxHeight={maxHeight}
-					triggerRef={containerRef as React.RefObject<HTMLElement>}
+					triggerRef={inputRef as React.RefObject<HTMLElement>}
 				/>
 			</div>
 		</div>

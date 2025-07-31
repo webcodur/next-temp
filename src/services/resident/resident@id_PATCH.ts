@@ -1,29 +1,8 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import type { UpdateResidentRequest, Resident } from '@/types/api';
 
-export interface UpdateResidentRequest {
-  name?: string;
-  phone?: string;
-  email?: string;
-  birthDate?: string;
-  gender?: 'M' | 'F';
-  emergencyContact?: string;
-  memo?: string;
-}
-
-export interface ResidentResponse {
-  id: number;
-  name: string;
-  phone?: string;
-  email?: string;
-  birthDate?: Date;
-  gender?: string;
-  emergencyContact?: string;
-  memo?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date | null;
-}
+export interface ResidentResponse extends Resident {}
 
 /**
  * 특정 거주자의 정보를 수정한다

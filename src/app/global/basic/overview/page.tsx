@@ -35,7 +35,7 @@ export default function OrganizationOverviewPage() {
   // #endregion
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container p-6 mx-auto space-y-6">
       {/* 페이지 헤더 */}
       <PageHeader
         title="조직도 및 통합 다이어그램"
@@ -43,7 +43,7 @@ export default function OrganizationOverviewPage() {
       />
 
       {/* 메인 콘텐츠 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* 왼쪽: 플로우차트 패널 */}
         <div className="lg:order-1">
           <OrganizationChart 
@@ -59,18 +59,18 @@ export default function OrganizationOverviewPage() {
       </div>
 
       {/* 도움말 섹션 */}
-      <div className="bg-muted/30 rounded-lg p-6 border">
-        <h3 className="font-semibold text-foreground mb-3">💡 사용 안내</h3>
+      <div className="p-6 rounded-lg border bg-muted">
+        <h3 className="mb-3 font-semibold text-foreground">💡 사용 안내</h3>
         <div className="space-y-2 text-sm text-muted-foreground">
-          <div className="flex items-start gap-2">
+          <div className="flex gap-2 items-start">
             <span className="font-medium min-w-fit">클릭:</span>
             <span>왼쪽 다이어그램의 각 요소를 클릭하면 해당 요소의 상세 정보가 오른쪽에 표시됩니다.</span>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex gap-2 items-start">
             <span className="font-medium min-w-fit">계층 구조:</span>
             <span>건물 → 호실 → 조직 → 개인/차량 순서로 관리 계층이 구성됩니다.</span>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex gap-2 items-start">
             <span className="font-medium min-w-fit">관계:</span>
             <span>실선은 상하 계층 관계를, 점선은 수평적 연관 관계를 나타냅니다.</span>
           </div>

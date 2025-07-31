@@ -35,7 +35,7 @@ export function MidMenu({
       >
         <span className="font-semibold text-foreground">{t(midItem.key)}</span>
         <ChevronRight
-          className={`w-5 h-5 transition-transform duration-200 ${
+          className={`w-6 h-6 transition-transform duration-200 ${
             isExpanded ? 'rotate-90' : ''}`}
         />
       </button>

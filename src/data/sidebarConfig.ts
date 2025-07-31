@@ -2,12 +2,12 @@
 export const defaults = {
 	topMenu: 'parking',
 	midMenu: 'facility',
-	startColumnWidth: 80, // 시작 패널 너비
+	startColumnWidth: 92, // 시작 패널 너비 (80 * 1.15)
 	collapsedWidth: 0, // 접혔을 때 끝 패널 너비
-	expandedWidth: 220, // 펼쳐졌을 때 끝 패널 너비
+	expandedWidth: 253, // 펼쳐졌을 때 끝 패널 너비 (220 * 1.15)
 	// 리사이즈 관련 설정
-	minResizeWidth: 180, // 최소 리사이즈 너비
-	maxResizeWidth: 450, // 최대 리사이즈 너비
+	minResizeWidth: 207, // 최소 리사이즈 너비 (180 * 1.15)
+	maxResizeWidth: 517, // 최대 리사이즈 너비 (450 * 1.15)
 };
 
 export const styles = {

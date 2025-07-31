@@ -114,6 +114,7 @@ export default function HouseholdInstanceCreatePage() {
       }
 
       const requestData: CreateHouseholdInstanceRequest = {
+        householdId: householdId,              // 세대 ID 추가
         instanceName: formData.instanceName || undefined,
         password: formData.password,
         startDate: formData.startDate || undefined,

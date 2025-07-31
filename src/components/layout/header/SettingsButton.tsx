@@ -37,7 +37,7 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
         className={clsx('flex justify-center items-center', className)}
         aria-label="설정"
       >
-        <SettingsIcon className="w-5 h-5 text-muted-foreground" />
+        <SettingsIcon className="w-6 h-6 text-muted-foreground" />
       </button>
 
       {/* 설정 모달 */}

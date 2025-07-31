@@ -134,11 +134,11 @@ export default function Breadcrumb() {
 					{index === 0 ? (
 						// 홈 아이콘
 						<Link href={item.href} className="flex items-center transition-colors text-foreground/70 hover:text-foreground">
-							<Home size={16} />
+							<Home size={18} />
 						</Link>
 					) : (
 						<>
-							<ChevronRight size={14} className="text-muted-foreground/50" />
+							<ChevronRight size={16} className="text-muted-foreground/50" />
 							{item.isClickable && item.href !== pathname ? (
 								<Link 
 									href={item.href} 

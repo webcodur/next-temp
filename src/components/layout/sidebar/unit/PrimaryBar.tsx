@@ -58,7 +58,7 @@ export function PrimaryBar() {
 			onClick={handlePrimaryBarClick}>
 
 			{/* 메뉴 아이콘 리스트 */}
-			<div className="flex flex-col items-center px-3 py-3 space-y-3 w-full">
+			<div className="flex flex-col items-center px-[14px] py-[14px] space-y-[14px] w-full">
 				{topKeys.map((topKey) => {
 					const topItem = menuData[topKey];
 					const isActive = activeTopMenu === topKey;
@@ -72,12 +72,12 @@ export function PrimaryBar() {
 								stopPropagation(e);
 								handleMenuClick(topKey);
 							}}
-							className={`w-full h-12 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group cursor-pointer ${
+							className={`w-full h-14 rounded-xl flex items-center justify-center px-2 transition-all duration-200 group cursor-pointer ${
 								isActive ? 'neu-inset' : 'neu-raised'
 							} ${
 								isClicked ? 'animate-click-feedback' : ''}`}>
 							<topItem.icon
-								className={`w-6 h-6 transition-all duration-200 ${
+								className={`w-7 h-7 transition-all duration-200 ${
 									isActive ? 'neu-icon-active' : 'neu-icon-inactive'
 								} ${
 									isClicked && isActive ? 'animate-icon-pulse' : ''

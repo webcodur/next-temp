@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { List, ChevronDown } from 'lucide-react';
 import { FIELD_STYLES, getColorVariantStyles, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
@@ -51,6 +51,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	// #region 훅
 	const { isRTL } = useLocale();
 	const colorStyles = getColorVariantStyles(colorVariant);
+	const inputRef = useRef<HTMLDivElement>(null); // 내부 박스 ref 추가
 	
 	// "전체" 옵션 추가한 최종 옵션 리스트
 	const finalOptions = showAllOption 
@@ -86,6 +87,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 			)}
 			<div className="relative">
 				<div
+					ref={inputRef}
 					className={`
 						${FIELD_STYLES.container}
 						${FIELD_STYLES.height}
@@ -129,7 +131,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 						onSelect={handleSelect}
 						highlightedIndex={highlightedIndex}
 						maxHeight={200}
-						triggerRef={containerRef as React.RefObject<HTMLElement>}
+						triggerRef={inputRef as React.RefObject<HTMLElement>}
 					/>
 				)}
 			</div>

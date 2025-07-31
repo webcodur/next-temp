@@ -22,7 +22,7 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
         className={clsx('flex justify-center items-center', className)}
         aria-label="사용자 가이드"
       >
-        <HelpCircle className="w-5 h-5 text-muted-foreground" />
+        <HelpCircle className="w-6 h-6 text-muted-foreground" />
       </button>
 
       {/* 가이드 다이얼로그 */}

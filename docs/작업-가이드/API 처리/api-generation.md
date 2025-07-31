@@ -170,9 +170,92 @@ if (response.status === 204) {
 | `config@key_GET.ts` | `getConfigByKey()` | 특정 설정값 조회 |
 | `block_history$_GET.ts` | `searchBlockHistory()` | IP 차단 내역 검색 |
 
-## 🔧 타입 활용 가이드
+## 🔧 타입 활용 가이드 (혼합 접근법)
 
-### 1. 기존 타입 우선 사용
+### 🎯 혼합 방식 타입 배치 원칙
+
+현재 프로젝트는 **혼합 접근법**을 사용한다: **도메인별 공통 타입 + API별 특화 타입** 조합
+
+#### 📍 공통 타입 파일 (`src/types/`)에 배치할 것들
+- **도메인 엔티티**: `User`, `Admin`, `Household`, `Resident` 등
+- **페이지네이션**: `PageMetaDto`, `ApiResponse<T>` 등
+- **공통 enum/constant**: 여러 API에서 사용하는 값들
+- **시스템 전반 타입**: `SystemConfig`, `IpBlock` 등
+
+#### 📍 API 파일 내부에 배치할 것들
+- **API별 특화 request DTO**: 해당 엔드포인트만의 파라미터
+- **일회성 response 구조**: 특정 API에만 사용되는 응답 형태
+- **API별 validation 규칙**: 엔드포인트별 제약사항
+- **변환/가공 인터페이스**: 특정 API에서만 필요한 데이터 변환
+
+#### 🔍 타입 배치 결정 기준
+```
+여러 API에서 사용? → types/ 디렉토리
+특정 API에서만 사용? → 해당 API 파일 내부
+```
+
+### 1. 혼합 방식 코드 예시
+
+#### ✅ 공통 타입 + API별 특화 타입 조합
+```typescript
+// types/household.ts - 공통 도메인 타입
+export interface Household {
+  id: number;
+  parkinglotId: number;
+  address1Depth: string;
+  address2Depth: string;
+  address3Depth: string;
+  householdType: 'GENERAL' | 'COMMERCIAL';
+  // ...
+}
+
+// services/household/household$_GET.ts - API별 특화 타입
+interface SearchHouseholdParams {  // 🔥 이 API에서만 사용
+  keyword?: string;
+  status?: 'ACTIVE' | 'INACTIVE';
+  householdType?: 'GENERAL' | 'COMMERCIAL';
+  page?: number;
+}
+
+interface SearchHouseholdResponse {  // 🔥 이 API에서만 사용
+  data: Household[];  // 🔥 공통 타입 재사용
+  meta: PageMetaDto;  // 🔥 공통 타입 재사용
+}
+
+export async function searchHousehold(params?: SearchHouseholdParams): Promise<{
+  success: boolean;
+  data?: SearchHouseholdResponse;
+  errorMsg?: string;
+}> {
+  // ...
+}
+```
+
+#### ✅ API별 특화 Request DTO
+```typescript
+// services/admin/admin_POST.ts
+interface CreateAdminRequest {  // 🔥 생성 API에서만 사용
+  username: string;
+  password: string;
+  role: 'SUPER' | 'GENERAL';
+  parkinglotId?: number;
+}
+
+export async function createAdmin(data: CreateAdminRequest) {
+  // Admin 타입은 공통 types/admin.ts에서 import
+  const response = await fetchDefault('/admin', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  
+  return {
+    success: true,
+    data: result, // 🔥 Admin 타입으로 자동 변환
+  };
+}
+```
+
+### 2. 기존 타입 우선 사용
 ```typescript
 // ✅ 기존 정의된 타입 활용
 import { SearchAdminRequest, AdminDto } from '@/types/admin';
@@ -184,12 +267,13 @@ interface UpdateConfigRequest { // 이미 UpdateSystemConfigRequest가 존재
 }
 ```
 
-### 2. 타입 위치별 역할
+### 3. 타입 위치별 역할
 - `src/types/api.ts`: 공통 시스템 타입 (SystemConfig, IpBlock, CacheStats 등)
-- `src/types/{domain}.ts`: 도메인별 타입 (admin.ts, household.ts 등)
+- `src/types/{domain}.ts`: 도메인별 공통 타입 (admin.ts, household.ts 등)
 - `src/types/facility/`: 시설 관련 특화 타입들
+- `src/services/{domain}/{파일}.ts`: API별 특화 타입들 (내부 정의)
 
-### 3. 반환 타입 명시
+### 4. 반환 타입 명시
 ```typescript
 /**
  * 특정 설정값을 조회한다

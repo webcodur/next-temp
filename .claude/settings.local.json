@@ -6,7 +6,9 @@
       "Bash(npx eslint:*)",
       "Bash(mkdir:*)",
       "Bash(rm:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(ls:*)",
+      "Bash(git rm:*)"
     ],
     "deny": []
   }

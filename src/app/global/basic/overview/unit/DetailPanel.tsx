@@ -202,10 +202,10 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
   
   if (!content) {
     return (
-      <div className="bg-card rounded-lg border border-border p-6">
-        <h3 className="text-lg font-semibold mb-4">상세 정보</h3>
-        <div className="text-center text-muted-foreground py-12">
-          <div className="text-4xl mb-4">👈</div>
+      <div className="p-6 rounded-lg border bg-card border-border">
+        <h3 className="mb-4 text-lg font-semibold">상세 정보</h3>
+        <div className="py-12 text-center text-muted-foreground">
+          <div className="mb-4 text-4xl">👈</div>
           <p>왼쪽 다이어그램에서 항목을 클릭하면</p>
           <p>해당 요소의 상세 정보가 표시됩니다.</p>
         </div>
@@ -214,12 +214,12 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
   }
   
   return (
-    <div className="bg-card rounded-lg border border-border p-6">
+    <div className="p-6 rounded-lg border bg-card border-border">
       <div className="space-y-6">
         {/* 헤더 */}
         <div>
           <h3 className="text-lg font-semibold text-foreground">{content.title}</h3>
-          <p className="text-sm text-muted-foreground mt-2">{content.description}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{content.description}</p>
         </div>
         
         {/* 기능별 그룹 */}
@@ -227,7 +227,7 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
           {content.functions.map((func, funcIndex) => (
             <div key={funcIndex} className="space-y-4">
               {/* 기능 제목 */}
-              <div className="border-l-4 border-primary pl-4">
+              <div className="pl-4 border-l-4 border-primary">
                 <h4 className="font-semibold text-foreground">{func.name}</h4>
                 <p className="text-sm text-muted-foreground">{func.description}</p>
               </div>
@@ -235,14 +235,14 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
               {/* 페이지 목록 */}
               <div className="space-y-3">
                 {func.pages.map((page, pageIndex) => (
-                  <div key={pageIndex} className="bg-muted/30 rounded-lg p-4 border">
+                  <div key={pageIndex} className="p-4 rounded-lg border bg-muted/30">
                     {/* 페이지 헤더 */}
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex gap-2 items-center mb-3">
                       <span className="text-lg">{getPageTypeIcon(page.type)}</span>
                       <span className="font-medium text-foreground">
                         {page.name}
                       </span>
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                      <span className="px-2 py-1 text-xs rounded bg-primary/10 text-primary">
                         {getPageTypeName(page.type)}
                       </span>
                     </div>
@@ -250,7 +250,7 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
                     {/* 기능 목록 */}
                     <div className="space-y-1">
                       {page.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center gap-2 text-sm">
+                        <div key={featureIndex} className="flex gap-2 items-center text-sm">
                           <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
                           <span className="text-muted-foreground">{feature}</span>
                         </div>
@@ -261,15 +261,6 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
               </div>
             </div>
           ))}
-        </div>
-        
-        {/* 관계 설명 */}
-        <div className="mt-6 p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
-          <h5 className="font-medium text-foreground mb-2">📋 시스템 구조</h5>
-          <p className="text-sm text-muted-foreground">
-            이 요소는 전체 관리 시스템의 일부로, 상위 요소에서 하위 요소로 
-            계층적으로 관리되며, 각 단계별로 적절한 권한과 책임을 가집니다.
-          </p>
         </div>
       </div>
     </div>
