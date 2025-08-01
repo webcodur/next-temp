@@ -1,6 +1,56 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { SearchHouseholdInstanceRequest } from '@/types/household';
+import { SearchHouseholdInstanceRequest, HouseholdInstance, PaginatedResponse } from '@/types/household';
+
+// #region 서버 타입 정의 (내부 사용)
+interface HouseholdInstanceServerResponse {
+  id: number;
+  household_id: number;
+  instance_name?: string;
+  password: string;
+  start_date?: string;
+  end_date?: string;
+  memo?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+}
+
+interface PaginatedServerResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}
+// #endregion
+
+// #region 변환 함수 (내부 사용)
+function serverToClient(server: HouseholdInstanceServerResponse): HouseholdInstance {
+  return {
+    id: server.id,
+    householdId: server.household_id,
+    instanceName: server.instance_name,
+    password: server.password,
+    startDate: server.start_date,
+    endDate: server.end_date,
+    memo: server.memo,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+  };
+}
+
+function paginatedServerToClient(server: PaginatedServerResponse<HouseholdInstanceServerResponse>): PaginatedResponse<HouseholdInstance> {
+  return {
+    data: server.data.map(serverToClient),
+    total: server.total,
+    page: server.page,
+    limit: server.limit,
+    totalPages: server.total_pages,
+  };
+}
+// #endregion
 
 /**
  * 세대 인스턴스를 검색한다 (페이지네이션 및 필터링)
@@ -12,8 +62,8 @@ export async function searchHouseholdInstance(params?: SearchHouseholdInstanceRe
   
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
-  if (params?.householdId) searchParams.append('householdId', params.householdId.toString());
-  if (params?.instanceName) searchParams.append('instanceName', params.instanceName);
+  if (params?.householdId) searchParams.append('household_id', params.householdId.toString());
+  if (params?.instanceName) searchParams.append('instance_name', params.instanceName);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/households/instances?${queryString}` : '/households/instances';
@@ -33,8 +83,9 @@ export async function searchHouseholdInstance(params?: SearchHouseholdInstanceRe
     };
   }
   
+  const serverResponse = result as PaginatedServerResponse<HouseholdInstanceServerResponse>;
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: paginatedServerToClient(serverResponse),
   };
 } 

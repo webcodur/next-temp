@@ -1,6 +1,20 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface DeleteAllBlockedIpServerResponse {
+  message?: string;
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: DeleteAllBlockedIpServerResponse) {
+  return {
+    message: server.message,
+  };
+}
+//#endregion
+
 /**
  * Redis에 저장된 모든 차단된 IP 주소를 해제한다
  * @returns 모든 IP 차단 해제 결과
@@ -28,9 +42,12 @@ export async function deleteAllBlockedIp() {
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as DeleteAllBlockedIpServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: clientData,
   };
 } 

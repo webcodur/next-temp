@@ -1,5 +1,26 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { CacheNamespaceStats } from '@/types/api';
+
+// #region 서버 타입 정의 (내부 사용)
+interface CacheNamespaceStatsServerResponse {
+  namespace: string;
+  keys: number;
+  memory: number;
+  key_list: string[];
+}
+// #endregion
+
+// #region 변환 함수 (내부 사용)
+function serverToClient(server: CacheNamespaceStatsServerResponse): CacheNamespaceStats {
+  return {
+    namespace: server.namespace,
+    keys: server.keys,
+    memory: server.memory,
+    keyList: server.key_list,
+  };
+}
+// #endregion
 
 /**
  * 특정 네임스페이스의 캐시 통계를 조회한다
@@ -22,8 +43,9 @@ export async function getCacheStatsByNamespace(namespace: string) {
     };
   }
   
+  const serverResponse = result as CacheNamespaceStatsServerResponse;
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase) - CacheNamespaceStats 타입
+    data: serverToClient(serverResponse),
   };
 } 

@@ -1,5 +1,33 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { CacheStats } from '@/types/api';
+
+// #region 서버 타입 정의 (내부 사용)
+interface CacheStatsServerResponse {
+  total_keys: number;
+  total_memory: number;
+  hit_rate: number;
+  miss_rate: number;
+  namespaces: {
+    [namespace: string]: {
+      keys: number;
+      memory: number;
+    };
+  };
+}
+// #endregion
+
+// #region 변환 함수 (내부 사용)
+function serverToClient(server: CacheStatsServerResponse): CacheStats {
+  return {
+    totalKeys: server.total_keys,
+    totalMemory: server.total_memory,
+    hitRate: server.hit_rate,
+    missRate: server.miss_rate,
+    namespaces: server.namespaces,
+  };
+}
+// #endregion
 
 /**
  * 전체 캐시 상태와 통계를 조회한다
@@ -21,8 +49,9 @@ export async function getCacheStats() {
     };
   }
   
+  const serverResponse = result as CacheStatsServerResponse;
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase) - CacheStats 타입
+    data: serverToClient(serverResponse),
   };
 } 

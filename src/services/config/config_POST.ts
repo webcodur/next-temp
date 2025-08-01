@@ -1,6 +1,44 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { CreateSystemConfigRequest } from '@/types/api';
+import { CreateSystemConfigRequest, SystemConfig } from '@/types/api';
+
+//#region 서버 타입 정의 (파일 내부 사용)
+interface CreateSystemConfigServerRequest {
+  key: string;
+  value: string | number | boolean | object;
+  description?: string;
+  type: 'string' | 'number' | 'boolean' | 'json';
+}
+
+interface SystemConfigServerResponse {
+  key: string;
+  value: string | number | boolean | object;
+  description?: string;
+  type: 'string' | 'number' | 'boolean' | 'json';
+  updated_by: number;  // snake_case
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function clientToServer(client: CreateSystemConfigRequest): CreateSystemConfigServerRequest {
+  return {
+    key: client.key,
+    value: client.value,
+    description: client.description,
+    type: client.type,
+  };
+}
+
+function serverToClient(server: SystemConfigServerResponse): SystemConfig {
+  return {
+    key: server.key,
+    value: server.value,
+    description: server.description,
+    type: server.type,
+    updatedBy: server.updated_by,
+  };
+}
+//#endregion
 
 /**
  * 새로운 시스템 설정을 생성한다
@@ -8,9 +46,11 @@ import { CreateSystemConfigRequest } from '@/types/api';
  * @returns 생성된 설정값 정보 (SystemConfig)
  */
 export async function createConfig(data: CreateSystemConfigRequest) {
+  const serverRequest = clientToServer(data);
+
   const response = await fetchDefault('/configs', {
     method: 'POST',
-    body: JSON.stringify(data), // 🔥 자동 변환됨 (camelCase → snake_case)
+    body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
@@ -23,9 +63,12 @@ export async function createConfig(data: CreateSystemConfigRequest) {
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as SystemConfigServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase) - SystemConfig 타입
+    data: clientData,
   };
 } 

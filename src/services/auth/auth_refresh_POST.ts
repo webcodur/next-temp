@@ -3,14 +3,52 @@
 import { fetchDefault } from '@/services/fetchClient';
 import { TokenResponse } from '@/types/auth';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface TokenServerResponse {
+  access_token: string;      // snake_case
+  refresh_token: string;     // snake_case
+  role_id?: number;          // snake_case
+  parking_lot_id?: number;   // snake_case
+  parkinglots?: { 
+    id: number; 
+    code: string; 
+    name: string; 
+    description: string 
+  }[];
+}
+
+interface RefreshTokenServerRequest {
+  refresh_token: string;     // snake_case
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: TokenServerResponse): TokenResponse {
+  return {
+    accessToken: server.access_token,
+    refreshToken: server.refresh_token,
+    roleId: server.role_id,
+    parkingLotId: server.parking_lot_id,
+    parkinglots: server.parkinglots,
+  };
+}
+
+function clientToServer(refreshTokenString: string): RefreshTokenServerRequest {
+  return {
+    refresh_token: refreshTokenString,
+  };
+}
+//#endregion
+
 /**
  * 토큰 갱신 클라이언트 함수
  */
 export async function refreshTokenWithString(refreshTokenString: string) {
   try {
+    const serverRequest = clientToServer(refreshTokenString);
     const response = await fetchDefault('/auth/refresh', {
       method: 'POST',
-      body: JSON.stringify({ refreshToken: refreshTokenString }),
+      body: JSON.stringify(serverRequest),
     });
 
     if (!response.ok) {
@@ -21,10 +59,11 @@ export async function refreshTokenWithString(refreshTokenString: string) {
       };
     }
 
-    const data: TokenResponse = await response.json();
+    const serverResponse = await response.json() as TokenServerResponse;
+    const clientData = serverToClient(serverResponse);
     return {
       success: true,
-      data: data, // 🔥 자동 변환됨 (snake_case → camelCase)
+      data: clientData,
     };
   } catch {
     return {

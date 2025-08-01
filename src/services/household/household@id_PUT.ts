@@ -1,6 +1,56 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateHouseholdRequest } from '@/types/household';
+import { UpdateHouseholdRequest, Household } from '@/types/household';
+
+// #region 서버 타입 정의 (내부 사용)
+interface HouseholdServerResponse {
+  id: number;
+  parkinglot_id: number;
+  address_1depth: string;
+  address_2depth: string;
+  address_3depth?: string;
+  household_type: 'GENERAL' | 'TEMP' | 'COMMERCIAL';
+  memo?: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+}
+
+interface UpdateHouseholdServerRequest {
+  address_1depth?: string;
+  address_2depth?: string;
+  address_3depth?: string;
+  household_type?: 'GENERAL' | 'TEMP' | 'COMMERCIAL';
+  memo?: string;
+}
+// #endregion
+
+// #region 변환 함수 (내부 사용)
+function serverToClient(server: HouseholdServerResponse): Household {
+  return {
+    id: server.id,
+    parkinglotId: server.parkinglot_id,
+    address1Depth: server.address_1depth,
+    address2Depth: server.address_2depth,
+    address3Depth: server.address_3depth,
+    householdType: server.household_type,
+    memo: server.memo,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+  };
+}
+
+function clientToServer(client: UpdateHouseholdRequest): UpdateHouseholdServerRequest {
+  return {
+    address_1depth: client.address1Depth,
+    address_2depth: client.address2Depth,
+    address_3depth: client.address3Depth,
+    household_type: client.householdType,
+    memo: client.memo,
+  };
+}
+// #endregion
 
 /**
  * 특정 세대의 정보를 수정한다
@@ -9,9 +59,10 @@ import { UpdateHouseholdRequest } from '@/types/household';
  * @returns 수정된 세대 정보
  */
 export async function updateHousehold(id: number, data: UpdateHouseholdRequest) {
+  const serverRequest = clientToServer(data);
   const response = await fetchDefault(`/households/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(data), // 🔥 자동 변환됨 (camelCase → snake_case)
+    body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
@@ -25,8 +76,9 @@ export async function updateHousehold(id: number, data: UpdateHouseholdRequest) 
     };
   }
   
+  const serverResponse = result as HouseholdServerResponse;
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: serverToClient(serverResponse),
   };
 } 

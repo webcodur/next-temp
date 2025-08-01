@@ -419,13 +419,13 @@ export default function SystemConfigPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="시스템 설정 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
         searchLabel="검색"
         resetLabel="초기화"
         defaultOpen={false}
+        searchMode="client"
       />
       
       {/* 테이블 */}

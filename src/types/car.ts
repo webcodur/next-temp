@@ -114,8 +114,7 @@ export interface CarHouseholdResident {
   carId: number;
   householdInstanceId: number;
   residentId: number;
-  exitAlarm: boolean;
-  carShareOnoff: boolean;
+  carAlarm: boolean;
   isPrimary: boolean;
   createdAt: string;
   updatedAt: string;
@@ -129,8 +128,7 @@ export interface CreateCarHouseholdResidentRequest {
   carId: number;
   householdInstanceId: number;
   residentId: number;
-  exitAlarm?: boolean;
-  carShareOnoff?: boolean;
+  carAlarm?: boolean;
   isPrimary?: boolean;
 }
 
@@ -138,8 +136,7 @@ export interface CreateCarHouseholdResidentRequest {
  * 차량-세대-거주자 관계 수정 요청 타입 (UpdateCarHouseholdResidentDto 기준)
  */
 export interface UpdateCarHouseholdResidentRequest {
-  exitAlarm?: boolean;
-  carShareOnoff?: boolean;
+  carAlarm?: boolean;
   isPrimary?: boolean;
 }
 
@@ -202,8 +199,7 @@ export interface SearchCarHouseholdRequest {
  */
 export interface RegisterMyCarRequest {
   carHouseholdId: number;
-  exitAlarm?: boolean;
-  carShareOnoff?: boolean;
+  carAlarm?: boolean;
   isPrimary?: boolean;
 }
 

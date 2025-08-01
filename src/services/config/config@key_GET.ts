@@ -1,5 +1,28 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { SystemConfig } from '@/types/api';
+
+//#region 서버 타입 정의 (파일 내부 사용)
+interface SystemConfigServerResponse {
+  key: string;
+  value: string | number | boolean | object;
+  description?: string;
+  type: 'string' | 'number' | 'boolean' | 'json';
+  updated_by: number;  // snake_case
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: SystemConfigServerResponse): SystemConfig {
+  return {
+    key: server.key,
+    value: server.value,
+    description: server.description,
+    type: server.type,
+    updatedBy: server.updated_by,
+  };
+}
+//#endregion
 
 /**
  * 지정된 키의 설정값을 조회한다
@@ -21,9 +44,12 @@ export async function getConfigByKey(key: string) {
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as SystemConfigServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase) - SystemConfig 타입
+    data: clientData,
   };
 } 

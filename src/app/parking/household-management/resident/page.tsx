@@ -552,13 +552,13 @@ export default function ResidentListPage() {
       <div className="space-y-6">
         {/* 검색/필터 패널 */}
         <AdvancedSearch
-          title="입주민 검색"
           fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
           searchLabel="검색"
           resetLabel="초기화"
           defaultOpen={true}
+          searchMode="client"
         />
 
         {/* 데이터 테이블 */}

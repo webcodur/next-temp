@@ -33,23 +33,23 @@ export const menuData: MenuData = {
             href: '/global/basic/building',
           },
           {
-            key: '3 - 공용 시설 관리',
+            key: '2.a - 공용 시설 관리',
             href: '/global/basic/facility',
           },
           {
-            key: '4 - 호실 관리',
+            key: '2.b - 호실 관리',
             href: '/global/basic/household',
           },
           {
-            key: '5 - 입주세대 관리',
+            key: '3 - 입주세대 관리',
             href: '/global/basic/household-instance',
           },
           {
-            key: '6 - 입주민 관리',
+            key: '3.a - 입주민 관리',
             href: '/global/basic/resident',
           },
           {
-            key: '7 - 차량 관리',
+            key: '3.b - 차량 관리',
             href: '/global/basic/vehicle',
           },
         ],
@@ -77,27 +77,36 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			이용자관리: {
-				key: '이용자관리',
-				botItems: [
+      // 차량관리 (차량 등록/수정) 정기차, 방문차, 입주차, 임대차, 블랙리스트
+      __차량관리: {
+        key: '차량관리',
+        botItems: [
+          {
+            key: '차량등록',
+            href: '/parking/cars/registration',
+          },
+          {
+            key: '정기차관리',
+            href: '/parking/cars/regular',
+          },
+          {
+            key: '방문차관리',
+            href: '/parking/cars/visitor',
+          },
+          {
+            key: '임대차관리',
+            href: '/parking/cars/lease',
+          },
+          {
+            key: '블랙리스트',
+            href: '/parking/cars/blacklist',
+          },
 					{
-						key: '입출차관리',
-						href: '/member/entryexit',
+						key: '위반 차량',
+						href: '/parking/cars/violation',
 					},
-					{
-						key: '차량등록',
-						href: '/member/member',
-					},
-					{
-						key: '방문자관리',
-						href: '/member/visitor',
-					},
-					{
-						key: '블랙리스트',
-						href: '/member/blacklist',
-					},
-				],
-			},
+        ],
+      },
 			세대관리: {
 				key: '세대관리',
 				botItems: [
@@ -119,8 +128,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			상가관리: {
-				key: '상가관리',
+			__상가관리: {
+				key: '__상가관리',
 				botItems: [
 					{
 						key: '점포현황',
@@ -128,8 +137,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			보안순찰: {
-				key: '보안순찰',
+			__보안순찰: {
+				key: '__보안순찰',
 				botItems: [
 					{
 						key: '순찰일지',
@@ -141,8 +150,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			결제정산: {
-				key: '결제정산',
+			__결제정산: {
+				key: '__결제정산',
 				botItems: [
 					{
 						key: '할인권관리',
@@ -160,9 +169,9 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	공용시설: {
+	__공용시설: {
 		icon: House,
-		key: '공용시설',
+		key: '__공용시설',
 		midItems: {
 			시설서비스: {
 				key: '시설서비스',
@@ -185,8 +194,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			소통관리: {
-				key: '소통관리',
+			__소통관리: {
+				key: '__소통관리',
 				botItems: [
 					{
 						key: '일대일게시판',
@@ -198,8 +207,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			생활서비스: {
-				key: '생활서비스',
+			__생활서비스: {
+				key: '__생활서비스',
 				botItems: [
 					{
 						key: '관리비',
@@ -217,9 +226,9 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-  라이프:{
+  __라이프:{
     icon: TreePalm,
-    key: '라이프',
+    key: '__라이프',
     midItems: {
       "앱 게시판":{
         key: '앱 게시판',

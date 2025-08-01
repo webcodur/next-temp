@@ -1,6 +1,20 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface DeleteBlockedIpServerResponse {
+  message?: string;
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: DeleteBlockedIpServerResponse) {
+  return {
+    message: server.message,
+  };
+}
+//#endregion
+
 /**
  * 지정된 IP 주소의 차단을 해제한다
  * @param ip 차단 해제할 IP 주소
@@ -29,9 +43,12 @@ export async function deleteBlockedIp(ip: string) {
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as DeleteBlockedIpServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: clientData,
   };
 } 

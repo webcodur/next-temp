@@ -29,7 +29,7 @@ import { currentPageLabelAtom } from '@/store/ui';
 interface ConfigFormData {
   key: string;
   value: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
+  type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
   description: string;
   originalValue: string | number | boolean | object;
 }
@@ -53,14 +53,14 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
   const [formData, setFormData] = useState<ConfigFormData>({
     key: '',
     value: '',
-    type: 'string',
+    type: 'STRING',
     description: '',
     originalValue: '',
   });
   const [originalData, setOriginalData] = useState<ConfigFormData>({
     key: '',
     value: '',
-    type: 'string',
+    type: 'STRING',
     description: '',
     originalValue: '',
   });
@@ -73,10 +73,10 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
 
   // #region 타입 옵션
   const typeOptions = [
-    { value: 'string', label: '문자열' },
-    { value: 'number', label: '숫자' },
-    { value: 'boolean', label: '불린' },
-    { value: 'json', label: 'JSON' },
+    { value: 'STRING', label: '문자열' },
+    { value: 'INTEGER', label: '숫자' },
+    { value: 'BOOLEAN', label: '불린' },
+    { value: 'JSON', label: 'JSON' },
   ];
   // #endregion
 
@@ -110,7 +110,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
         
         // 값을 문자열로 변환하여 편집 가능하게 만듦
         let valueStr = '';
-        if (config.type === 'json') {
+        if (config.type === 'JSON') {
           valueStr = JSON.stringify(config.value, null, 2);
         } else {
           valueStr = String(config.value);
@@ -206,16 +206,16 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       let convertedValue: string | number | boolean | object = formData.value;
       
       switch (formData.type) {
-        case 'number':
+        case 'INTEGER':
           convertedValue = parseFloat(formData.value);
           if (isNaN(convertedValue)) {
             throw new Error('유효한 숫자를 입력해주세요.');
           }
           break;
-        case 'boolean':
+        case 'BOOLEAN':
           convertedValue = formData.value.toLowerCase() === 'true';
           break;
-        case 'json':
+        case 'JSON':
           try {
             convertedValue = JSON.parse(formData.value);
           } catch {
@@ -357,7 +357,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
           <GridForm.Row>
             <GridForm.Label required>설정 값</GridForm.Label>
             <GridForm.Content>
-              {formData.type === 'json' ? (
+              {formData.type === 'JSON' ? (
                 <div className="space-y-2">
                   <textarea
                     value={formData.value}
@@ -377,18 +377,18 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
                     value={formData.value}
                     onChange={(value) => handleFormChange('value', value)}
                     placeholder={
-                      formData.type === 'number' ? '숫자를 입력하세요 (예: 100)' :
-                      formData.type === 'boolean' ? 'true 또는 false를 입력하세요' :
+                      formData.type === 'INTEGER' ? '숫자를 입력하세요 (예: 100)' :
+                      formData.type === 'BOOLEAN' ? 'true 또는 false를 입력하세요' :
                       '값을 입력하세요'
                     }
                     disabled={!isEditMode || isSubmitting}
                   />
-                  {formData.type === 'boolean' && (
+                  {formData.type === 'BOOLEAN' && (
                     <GridForm.Feedback type="info">
                       불린 값은 &apos;true&apos; 또는 &apos;false&apos;로 입력해주세요.
                     </GridForm.Feedback>
                   )}
-                  {formData.type === 'number' && (
+                  {formData.type === 'INTEGER' && (
                     <GridForm.Feedback type="info">
                       숫자 값은 정수 또는 소수점 형태로 입력 가능합니다.
                     </GridForm.Feedback>

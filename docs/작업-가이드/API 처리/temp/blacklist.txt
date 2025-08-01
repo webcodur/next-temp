@@ -1,0 +1,328 @@
+  "/car-blacklists/manual": {
+      "post": {
+        "description": "관리자가 직접 차량을 블랙리스트에 등록합니다.",
+        "operationId": "create수동블랙리스트등록관리자",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManualBlacklistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "수동 블랙리스트 등록 (관리자 ↑) 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlacklistResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "수동 블랙리스트 등록 (관리자 ↑)",
+        "tags": [
+          "차량 블랙리스트 관리"
+        ]
+      }
+    },
+    "/car-blacklists": {
+      "get": {
+        "description": "등록된 블랙리스트 목록을 페이지네이션과 필터링으로 조회합니다.\n\n기본 정렬은 생성시간 역순으로 정렬합니다.",
+        "operationId": "search블랙리스트목록조회",
+        "parameters": [
+          {
+            "name": "car_number",
+            "required": false,
+            "in": "query",
+            "description": "차량번호",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "blacklist_type",
+            "required": false,
+            "in": "query",
+            "description": "블랙리스트 유형",
+            "schema": {
+              "example": "AUTO",
+              "type": "string",
+              "enum": [
+                "AUTO",
+                "MANUAL"
+              ]
+            }
+          },
+          {
+            "name": "registration_reason",
+            "required": false,
+            "in": "query",
+            "description": "등록 사유",
+            "schema": {
+              "example": "UNAUTHORIZED_PARKING",
+              "type": "string",
+              "enum": [
+                "VIOLATION_ACCUMULATION",
+                "SERIOUS_VIOLATION",
+                "REPEATED_OFFENDER",
+                "SECURITY_THREAT",
+                "CIVIL_COMPLAINT",
+                "COURT_ORDER",
+                "ADMIN_DISCRETION",
+                "OTHER"
+              ]
+            }
+          },
+          {
+            "name": "is_active",
+            "required": false,
+            "in": "query",
+            "description": "활성 상태",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "블랙리스트 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BlacklistResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "블랙리스트 목록 조회",
+        "tags": [
+          "차량 블랙리스트 관리"
+        ]
+      }
+    },
+    "/car-blacklists/{id}/unblock": {
+      "patch": {
+        "description": "블랙리스트에 등록된 차량을 해제합니다.",
+        "operationId": "update블랙리스트해제관리자",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "블랙리스트 ID",
+            "schema": {
+
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnblockBlacklistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "블랙리스트 해제 (관리자 ↑) 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlacklistResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "블랙리스트 해제 (관리자 ↑)",
+        "tags": [
+          "차량 블랙리스트 관리"
+        ]
+      }
+    },
+    "/car-blacklists/status/{carNumber}": {
+      "get": {
+        "description": "특정 차량의 블랙리스트 등록 상태를 확인합니다.",
+        "operationId": "get차량블랙리스트상태확인",
+        "parameters": [
+          {
+            "name": "carNumber",
+            "required": true,
+            "in": "path",
+            "description": "차량번호",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량 블랙리스트 상태 확인 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlacklistStatusDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 블랙리스트 상태 확인",
+        "tags": [
+          "차량 블랙리스트 관리"
+        ]
+      }
+    },
+    "/car-blacklists/process-expired": {
+      "post": {
+        "description": "차단 기간이 만료된 블랙리스트를 자동으로 해제 처리합니다.",
+        "operationId": "create만료된블랙리스트자동해제관리자",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "만료된 블랙리스트 자동 해제 (관리자 ↑)",
+        "tags": [
+          "차량 블랙리스트 관리"
+        ]
+      }
+    }
+  },

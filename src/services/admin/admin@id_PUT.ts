@@ -1,32 +1,79 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateAdminRequest } from '@/types/admin';
+import { UpdateAdminRequest, Admin } from '@/types/admin';
+
+//#region 서버 타입 정의 (파일 내부 사용)
+interface UpdateAdminServerRequest {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  role_id?: number;       // snake_case
+}
+
+interface AdminServerResponse {
+  id: number;
+  account: string;
+  role_id: number;        // snake_case
+  parkinglot_id?: number; // snake_case
+  name?: string;
+  email?: string;
+  phone?: string;
+  created_at: string;     // snake_case
+  updated_at: string;     // snake_case
+  deleted_at?: string;    // snake_case
+  role?: {
+    id: number;
+    code: string;
+    name: string;
+    description?: string;
+  };
+  parkinglot?: {
+    id: number;
+    code: string;
+    name: string;
+    description?: string;
+  };
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function clientToServer(client: UpdateAdminRequest): UpdateAdminServerRequest {
+  return {
+    name: client.name,
+    email: client.email,
+    phone: client.phone,
+    password: client.password,
+    role_id: client.roleId,
+  };
+}
+
+function serverToClient(server: AdminServerResponse): Admin {
+  return {
+    id: server.id,
+    account: server.account,
+    roleId: server.role_id,
+    parkinglotId: server.parkinglot_id,
+    name: server.name,
+    email: server.email,
+    phone: server.phone,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+    role: server.role,
+    parkinglot: server.parkinglot,
+  };
+}
+//#endregion
 
 // 관리자 계정 정보를 수정한다 (UpdateAdminDto 기준)
-export async function updateAdmin(
-  data: UpdateAdminRequest
-) {
-  const {
-    id,
-    name,
-    email,
-    phone,
-    password,
-    roleId
-  } = data;
-
-  // 요청 데이터에서 id는 제외하고 전송
-  const requestBody = {
-    name,
-    email,
-    phone,
-    password,
-    roleId
-  };
+export async function updateAdmin(data: UpdateAdminRequest) {
+  const { id } = data;
+  const serverRequest = clientToServer(data);
 
   const response = await fetchDefault(`/admin/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(requestBody), // 🔥 자동 변환됨 (camelCase → snake_case)
+    body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
@@ -39,9 +86,12 @@ export async function updateAdmin(
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as AdminServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: clientData,
   };
 } 

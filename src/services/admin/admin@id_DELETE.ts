@@ -1,10 +1,22 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface DeleteAdminServerResponse {
+  message?: string;
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: DeleteAdminServerResponse) {
+  return {
+    message: server.message,
+  };
+}
+//#endregion
+
 // 시스템 관리자가 계정 ID로 관리자 계정을 삭제한다
-export async function deleteAdmin(
-  { id }: { id: number }
-) {
+export async function deleteAdmin({ id }: { id: number }) {
   const response = await fetchDefault(`/admin/${id}`, {
     method: 'DELETE',
   });
@@ -27,9 +39,12 @@ export async function deleteAdmin(
       errorMsg: errorMsg,
     };
   }
+
+  const serverResponse = result as DeleteAdminServerResponse;
+  const clientData = serverToClient(serverResponse);
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: clientData,
   };
 } 

@@ -1,6 +1,44 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface UpdateResidentHouseholdServerRequest {
+  relationship?: 'HEAD' | 'SPOUSE' | 'CHILD' | 'PARENT' | 'OTHER';
+  memo?: string;
+}
+
+interface ResidentHouseholdServerResponse {
+  id: number;
+  resident_id: number;                    // snake_case
+  household_instance_id: number;          // snake_case
+  relationship: string;
+  memo?: string;
+  created_at: Date;                       // snake_case
+  updated_at: Date;                       // snake_case
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function clientToServer(client: UpdateResidentHouseholdRequest): UpdateResidentHouseholdServerRequest {
+  return {
+    relationship: client.relationship,
+    memo: client.memo,
+  };
+}
+
+function serverToClient(server: ResidentHouseholdServerResponse): ResidentHouseholdResponse {
+  return {
+    id: server.id,
+    residentId: server.resident_id,
+    householdInstanceId: server.household_instance_id,
+    relationship: server.relationship,
+    memo: server.memo,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+  };
+}
+//#endregion
+
 export interface UpdateResidentHouseholdRequest {
   relationship?: 'HEAD' | 'SPOUSE' | 'CHILD' | 'PARENT' | 'OTHER';
   memo?: string;
@@ -23,9 +61,11 @@ export interface ResidentHouseholdResponse {
  * @returns 거주자-세대 관계 정보 (ResidentHouseholdResponse)
  */
 export async function updateResidentHousehold(id: number, data: UpdateResidentHouseholdRequest) {
+  const serverRequest = clientToServer(data);
+  
   const response = await fetchDefault(`/residents/households/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify(data),
+    body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
@@ -39,8 +79,11 @@ export async function updateResidentHousehold(id: number, data: UpdateResidentHo
     };
   }
   
+  const serverResponse = result as ResidentHouseholdServerResponse;
+  const clientData = serverToClient(serverResponse);
+  
   return {
     success: true,
-    data: result as ResidentHouseholdResponse,
+    data: clientData,
   };
 } 

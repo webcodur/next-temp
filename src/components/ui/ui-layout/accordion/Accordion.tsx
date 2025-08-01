@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 
 // #region 타입
 interface AccordionProps {
-	title?: string;
+	title?: string | ReactNode;
 	children: ReactNode;
 	defaultOpen?: boolean;
 	statusText?: string;
@@ -55,7 +55,13 @@ export const Accordion: React.FC<AccordionProps> = ({
 						? 'opacity-60 cursor-not-allowed' 
 						: 'hover:bg-primary-2'
 				} ${headerClassName}`}>
-				<h2 className="text-sm font-medium text-foreground font-multilang">{title}</h2>
+				<div className="flex items-center gap-2">
+					{typeof title === 'string' ? (
+						<h2 className="text-sm font-medium text-foreground font-multilang">{title}</h2>
+					) : (
+						<div className="text-sm font-medium text-foreground font-multilang">{title}</div>
+					)}
+				</div>
 				<div className="flex gap-3 items-center">
 					{/* 상태 텍스트 */}
 					{statusText && (

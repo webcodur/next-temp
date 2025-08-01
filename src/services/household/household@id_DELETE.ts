@@ -24,6 +24,6 @@ export async function deleteHousehold(id: number) {
   
   return {
     success: true,
-    data: result, // 🔥 자동 변환됨 (snake_case → camelCase)
+    data: result,
   };
 } 

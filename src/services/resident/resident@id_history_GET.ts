@@ -1,6 +1,21 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 
+//#region 서버 타입 정의 (파일 내부 사용)
+interface ResidentHistoryServerResponse {
+  // 정확한 스키마는 API 스펙에 따라 달라질 수 있음
+  data: unknown[];
+}
+//#endregion
+
+//#region 변환 함수 (파일 내부 사용)
+function serverToClient(server: ResidentHistoryServerResponse): ResidentHistoryResponse {
+  return {
+    data: server.data,
+  };
+}
+//#endregion
+
 export interface ResidentHistoryResponse {
   // 정확한 스키마는 API 스펙에 따라 달라질 수 있음
   data: unknown[];
@@ -27,8 +42,11 @@ export async function getResidentHistory(id: number) {
     };
   }
   
+  const serverResponse = result as ResidentHistoryServerResponse;
+  const clientData = serverToClient(serverResponse);
+  
   return {
     success: true,
-    data: result as ResidentHistoryResponse,
+    data: clientData,
   };
 } 

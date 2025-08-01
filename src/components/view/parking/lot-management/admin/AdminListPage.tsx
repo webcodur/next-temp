@@ -87,9 +87,7 @@ export default function AdminListPage() {
       const result = await searchAdmin(searchParams);
       
       if (result.success) {
-        console.log('result.data.data', result.data.data)
-        setAdminList(result.data.data || result.data || []);
-      } else {
+        setAdminList(result.data?.data || []);
         console.error('관리자 목록 로드 실패:', result.errorMsg);
         setAdminList([]);
       }

@@ -31,25 +31,7 @@ interface SearchFilters {
 }
 // #endregion
 
-// #region API 응답 타입 정의
-interface ApiSystemConfigResponse {
-  id: number;
-  config_key: string;
-  config_value: string;
-  description?: string;
-  config_type: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  updated_by?: number;
-  category?: string | null;
-  // camelCase 변환된 필드들 (fetchClient에서 변환되는 경우)
-  configKey?: string;
-  configValue?: string;
-  configType?: string;
-  updatedAt?: string;
-  updatedBy?: number;
-}
+// #region API 응답 타입 정의 (더 이상 필요하지 않음 - SystemConfig 직접 사용)
 // #endregion
 
 export default function IpBlockConfigPage() {
@@ -78,10 +60,10 @@ export default function IpBlockConfigPage() {
 
   // #region 타입 옵션
   const typeOptions: Option[] = useMemo(() => [
-    { value: 'string', label: '문자열' },
-    { value: 'number', label: '숫자' },
-    { value: 'boolean', label: '불린' },
-    { value: 'json', label: 'JSON' },
+    { value: 'STRING', label: '문자열' },
+    { value: 'INTEGER', label: '숫자' },
+    { value: 'BOOLEAN', label: '불린' },
+    { value: 'JSON', label: 'JSON' },
   ], []);
   // #endregion
 
@@ -89,57 +71,23 @@ export default function IpBlockConfigPage() {
   const loadConfigData = useCallback(async (filters?: Partial<SearchFilters>) => {
     try {
       const result = await getAllConfigs();
+      console.log('result~~', result) 
       
-      if (result.success) {
-        // API 응답이 { data: SystemConfig[] } 구조인 경우 처리
-        const rawData = result.data?.data || result.data || [];
+      if (result.success && result.data) {
+        // getAllConfigs는 이제 SystemConfig[] 배열을 직접 반환
+        let filteredData = result.data;
         
-        // API 응답 데이터를 SystemConfig 타입에 맞게 매핑
-        const mappedData: SystemConfig[] = Array.isArray(rawData) ? rawData.map((item: ApiSystemConfigResponse) => {
-          const configType = mapApiTypeToSystemType(item.configType || item.config_type || 'STRING');
-          const rawValue = item.configValue || item.config_value || '';
-          
-          // 타입에 따라 값 파싱
-          let parsedValue: string | number | boolean | object = rawValue;
-          try {
-            switch (configType) {
-              case 'number':
-                parsedValue = parseFloat(rawValue);
-                if (isNaN(parsedValue)) parsedValue = rawValue;
-                break;
-              case 'boolean':
-                parsedValue = rawValue.toLowerCase() === 'true';
-                break;
-              case 'json':
-                parsedValue = JSON.parse(rawValue);
-                break;
-              default:
-                parsedValue = rawValue;
-            }
-          } catch {
-            // 파싱 실패 시 원본 문자열 사용
-            parsedValue = rawValue;
-          }
-          
-          return {
-            key: item.configKey || item.config_key || '',
-            value: parsedValue,
-            type: configType,
-            description: item.description,
-            updatedAt: item.updatedAt || item.updated_at || '',
-            updatedBy: item.updatedBy || item.updated_by || 0,
-          };
-        }) : [];
-        
-        let filteredData = mappedData;
-        
-        // IP 차단과 관련된 설정만 필터링
+        // IP 차단과 관련된 설정만 필터링 (블랙리스트, 보안 관련 포함)
         filteredData = filteredData.filter((item: SystemConfig) => 
+          item.key.toLowerCase().includes('blacklist') || 
+          item.key.toLowerCase().includes('violation') ||
           item.key.toLowerCase().includes('ip') || 
           item.key.toLowerCase().includes('block') ||
           item.key.toLowerCase().includes('security') ||
           item.description?.toLowerCase().includes('ip') ||
           item.description?.toLowerCase().includes('차단') ||
+          item.description?.toLowerCase().includes('블랙리스트') ||
+          item.description?.toLowerCase().includes('위반') ||
           item.description?.toLowerCase().includes('보안')
         );
         
@@ -171,22 +119,7 @@ export default function IpBlockConfigPage() {
     }
   }, []);
 
-  // API 타입을 시스템 타입으로 매핑하는 헬퍼 함수
-  const mapApiTypeToSystemType = (apiType: string): 'string' | 'number' | 'boolean' | 'json' => {
-    switch (apiType?.toUpperCase()) {
-      case 'BOOLEAN':
-        return 'boolean';
-      case 'INTEGER':
-      case 'NUMBER':
-        return 'number';
-      case 'JSON':
-      case 'OBJECT':
-        return 'json';
-      case 'STRING':
-      default:
-        return 'string';
-    }
-  };
+
 
   useEffect(() => {
     loadConfigData();
@@ -336,7 +269,7 @@ export default function IpBlockConfigPage() {
       width: '25%',
       cell: (item: SystemConfig) => {
         let displayValue = '';
-        if (item.type === 'json') {
+        if (item.type === 'JSON') {
           displayValue = JSON.stringify(item.value);
         } else {
           displayValue = String(item.value);
@@ -359,9 +292,9 @@ export default function IpBlockConfigPage() {
       width: '10%',
       cell: (item: SystemConfig) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${
-          item.type === 'string' ? 'bg-blue-100 text-blue-800' :
-          item.type === 'number' ? 'bg-green-100 text-green-800' :
-          item.type === 'boolean' ? 'bg-purple-100 text-purple-800' :
+          item.type === 'STRING' ? 'bg-blue-100 text-blue-800' :
+          item.type === 'INTEGER' ? 'bg-green-100 text-green-800' :
+          item.type === 'BOOLEAN' ? 'bg-purple-100 text-purple-800' :
           'bg-orange-100 text-orange-800'
         }`}>
           {item.type}
@@ -429,13 +362,13 @@ export default function IpBlockConfigPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="IP 차단인자 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
         searchLabel="검색"
         resetLabel="초기화"
         defaultOpen={false}
+        searchMode="client"
       />
       
       {/* 테이블 */}

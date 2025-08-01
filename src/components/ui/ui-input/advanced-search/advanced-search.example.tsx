@@ -287,25 +287,25 @@ const PhoneField = () => (
 		<div className="p-6 mx-auto max-w-4xl">
 			<h1 className="mb-6 text-2xl font-bold">고급 검색 예시</h1>
 			
-			{/* 기존 사용자 검색 */}
+			{/* 클라이언트 사이드 필터링 예시 */}
 			<div className="mb-8">
 				<AdvancedSearch
-					title="사용자 검색 (기본 HTML 요소)"
 					fields={searchFields}
 					onSearch={handleSearch}
 					onReset={handleReset}
 					statusText="총 150명의 사용자"
+					searchMode="client"
 				/>
 			</div>
 
-			{/* Field 컴포넌트를 활용한 새로운 검색 */}
+			{/* 서버 사이드 검색 예시 */}
 			<div className="mb-8">
 				<AdvancedSearch
-					title="직원 검색 (Field 컴포넌트 활용)"
 					fields={searchFields2}
 					onSearch={handleSearch2}
 					onReset={handleReset2}
 					statusText="총 85명의 직원"
+					searchMode="server"
 				/>
 			</div>
 		</div>

@@ -20,8 +20,13 @@ interface RootLayoutProps {
 
 // #region 상수
 export const metadata: Metadata = {
-	title: 'HUB-NEW',
-	description: 'Modern UI components with neumorphism design',
+	title: '허브',
+	description: '건물 주차장 관리 SAAS 시스템',
+	icons: {
+		icon: '/favicon.svg',
+		shortcut: '/favicon.svg',
+		apple: '/favicon.svg',
+	},
 };
 // #endregion
 

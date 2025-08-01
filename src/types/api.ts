@@ -105,12 +105,16 @@ export interface SearchAdminRequest {
 
 // #region 시스템 설정 타입
 export interface SystemConfig {
+  id: number;
   key: string;
   value: string | number | boolean | object;
   description?: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
+  type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  isActive: boolean;
+  category: string;
+  group: string;
+  createdAt: string;
   updatedAt: string;
-  updatedBy: number;
 }
 
 export interface CreateSystemConfigRequest {
