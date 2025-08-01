@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePageTitle } from '@/hooks/usePageTitle';
+
 import { Button } from '@/components/ui/ui-input/button/Button';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -91,7 +91,6 @@ function violationToFormData(violation: CarViolation): FormData {
 
 export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
   const router = useRouter();
-  const pageTitle = usePageTitle('detail');
 
   // #region 상태 관리
   const [violation, setViolation] = useState<CarViolation | null>(null);
@@ -235,8 +234,8 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title={pageTitle} 
-        subtitle={`차량번호: ${violation.carNumber} | 위반 ID: ${violation.id}`}
+        title="위반 차량 상세" 
+        subtitle={`차량 위반 기록의 상세 정보를 조회하고 관리합니다. | 차량번호: ${violation.carNumber} | 위반 ID: ${violation.id}`}
         leftActions={
           <Button
             variant="ghost"

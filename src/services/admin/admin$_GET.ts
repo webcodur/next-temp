@@ -5,10 +5,12 @@ import { SearchAdminRequest, Admin } from '@/types/admin';
 //#region 서버 타입 정의 (파일 내부 사용)
 interface AdminSearchServerResponse {
   data: AdminServerResponse[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;    // snake_case 아니지만 일관성을 위해 명시
+  meta: {
+    total_items: number;
+    current_page: number;
+    items_per_page: number;
+    total_pages: number;
+  };
 }
 
 interface AdminServerResponse {
@@ -71,10 +73,10 @@ function serverToClient(server: AdminServerResponse): Admin {
 function searchResponseToClient(server: AdminSearchServerResponse) {
   return {
     data: server.data.map(serverToClient),
-    total: server.total,
-    page: server.page,
-    limit: server.limit,
-    totalPages: server.totalPages,
+    total: server.meta.total_items,
+    page: server.meta.current_page,
+    limit: server.meta.items_per_page,
+    totalPages: server.meta.total_pages,
   };
 }
 //#endregion

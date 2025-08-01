@@ -70,6 +70,7 @@ const Editor: React.FC<EditorProps> = ({
 		placeholder: resolvedPlaceholder,
 		directionality: (isRTL ? 'rtl' : 'ltr') as 'rtl' | 'ltr',
 		language: currentLocale === 'ar' ? 'ar' : currentLocale === 'en' ? 'en' : 'ko_KR',
+		readonly: false,
 		content_style: `
 			body { 
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
@@ -106,7 +107,6 @@ const Editor: React.FC<EditorProps> = ({
 	return (
 		<div className={`overflow-hidden rounded-lg neu-flat ${className}`}>
 			<TinyMCEEditor
-				apiKey={process.env.NEXT_PUBLIC_API_KEY_EDITOR || "no-api-key"}
 				onInit={(evt, editor) => editorRef.current = editor}
 				init={getEditorConfig()}
 				disabled={disabled}

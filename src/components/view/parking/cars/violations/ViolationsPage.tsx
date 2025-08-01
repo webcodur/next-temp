@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePageHeader } from '@/hooks/usePageTitle';
+
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
@@ -87,7 +87,6 @@ function transformToTableData(violations: CarViolation[]): TableCarViolation[] {
 
 export default function ViolationsPage() {
   const router = useRouter();
-  const { title, subtitle } = usePageHeader();
 
   // #region 상태 관리
   const [violations, setViolations] = useState<TableCarViolation[]>([]);
@@ -268,8 +267,8 @@ export default function ViolationsPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title={title} 
-        subtitle={subtitle}
+        title="위반 차량" 
+        subtitle="주차장 내 차량 위반 기록을 조회하고 관리합니다."
         rightActions={
           <Button
             variant="accent"

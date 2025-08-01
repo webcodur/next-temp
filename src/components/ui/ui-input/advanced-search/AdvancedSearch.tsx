@@ -31,7 +31,7 @@ interface AdvancedSearchProps {
 	statusText?: string;
 	fieldControlsLabel?: string;
 	colorVariant?: 'primary' | 'secondary';
-	searchMode?: 'client' | 'server'; // 새로 추가
+	searchMode?: 'client' | 'server';
 }
 // #endregion
 
@@ -56,7 +56,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 			title: title || (
 				<div className="flex gap-2 items-center">
 					<Globe className="w-4 h-4" />
-					<span>페이지 내 실시간 검색</span>
+					<span>실시간 필터링</span>
 				</div>
 			),
 			defaultOpen: defaultOpen !== undefined ? defaultOpen : true,
@@ -69,7 +69,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 			title: title || (
 				<div className="flex gap-2 items-center">
 					<Database className="w-4 h-4" />
-					<span>DB 데이터 상세 검색</span>
+					<span>상세 검색</span>
 				</div>
 			),
 			defaultOpen: defaultOpen !== undefined ? defaultOpen : false,

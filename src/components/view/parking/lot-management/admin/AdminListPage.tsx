@@ -88,6 +88,7 @@ export default function AdminListPage() {
       
       if (result.success) {
         setAdminList(result.data?.data || []);
+      } else {
         console.error('관리자 목록 로드 실패:', result.errorMsg);
         setAdminList([]);
       }
@@ -278,11 +279,11 @@ export default function AdminListPage() {
       cell: (item: Admin) => item.role?.name || '-',
     },
     {
-      key: 'parkinglot',
-      header: '주차장',
-      align: 'start',
+      key: 'parkinglotId',
+      header: '주차장 ID',
+      align: 'center',
       width: '13%',
-      cell: (item: Admin) => item.parkinglot?.name || '-',
+      cell: (item: Admin) => item.parkinglotId || '-',
     },
     {
       key: 'createdAt',
