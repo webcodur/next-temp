@@ -53,7 +53,7 @@ function paginatedServerToClient(server: PaginatedServerResponse<HouseholdServer
 // #endregion
 
 /**
- * 세대 목록을 조회한다 (페이지네이션 및 필터링)
+ * 세대를 검색한다 (페이지네이션 및 필터링)
  * @param params 검색 조건
  * @returns 세대 목록과 페이지 정보
  */
@@ -62,10 +62,11 @@ export async function searchHousehold(params?: SearchHouseholdRequest) {
   
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
-  if (params?.householdType) searchParams.append('household_type', params.householdType);
+  if (params?.parkinglotId) searchParams.append('parkinglot_id', params.parkinglotId.toString());
   if (params?.address1Depth) searchParams.append('address_1depth', params.address1Depth);
   if (params?.address2Depth) searchParams.append('address_2depth', params.address2Depth);
   if (params?.address3Depth) searchParams.append('address_3depth', params.address3Depth);
+  if (params?.householdType) searchParams.append('household_type', params.householdType);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/households?${queryString}` : '/households';
@@ -77,7 +78,7 @@ export async function searchHousehold(params?: SearchHouseholdRequest) {
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `세대 목록 조회 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `세대 검색 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return {
       success: false,
@@ -90,4 +91,4 @@ export async function searchHousehold(params?: SearchHouseholdRequest) {
     success: true,
     data: paginatedServerToClient(serverResponse),
   };
-} 
+}

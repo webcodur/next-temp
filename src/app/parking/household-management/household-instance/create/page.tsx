@@ -1,15 +1,15 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import HouseholdInstanceCreateView from '@/components/view/parking/household-management/householdInstance/HouseholdInstanceCreateView';
+import { redirect } from 'next/navigation';
 
 export default function HouseholdInstanceCreatePage() {
   const searchParams = useSearchParams();
   const preSelectedHouseholdId = searchParams.get('householdId');
   
-  return (
-    <HouseholdInstanceCreateView 
-      preSelectedHouseholdId={preSelectedHouseholdId || undefined} 
-    />
-  );
+  const redirectUrl = preSelectedHouseholdId 
+    ? `/parking/household-management/instance/create?householdId=${preSelectedHouseholdId}`
+    : '/parking/household-management/instance/create';
+    
+  redirect(redirectUrl);
 } 

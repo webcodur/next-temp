@@ -3,9 +3,7 @@ import {
 	Crown,
 	Globe,
 	SquareParking,
-	House,
 	TreePalm,
-	DollarSign,
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
@@ -123,10 +121,6 @@ export const menuData: MenuData = {
 				key: '__세대관리',
 				botItems: [
 					{
-						key: '__통합뷰',
-						href: '/parking/household-management/overview',
-					},
-					{
 						key: '__호실관리',
 						href: '/parking/household-management/household',
 					},
@@ -162,92 +156,38 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			__결제정산: {
-				key: '__결제정산',
-				botItems: [
-					{
-						key: '__할인권관리',
-						href: '/parking/payment/discounts',
-					},
-					{
-						key: '__정산기관리',
-						href: '/parking/payment/settlement',
-					},
-					{
-						key: '__결제관리',
-						href: '/parking/payment/billing',
-					},
-				],
-			},
-		},
-	},
-	__공용시설: {
-		icon: House,
-		key: '__공용시설',
-		midItems: {
-			__시설서비스: {
-				key: '__시설서비스',
-				botItems: [
-					{
-						key: '__시설상품등록',
-						href: '/community/facilities/registration',
-					},
-					{
-						key: '__예약현황',
-						href: '/community/facilities/reservations',
-					},
-					{
-						key: '__출입관리',
-						href: '/community/facilities/access',
-					},
-					{
-						key: '__정산관리',
-						href: '/community/facilities/settlement',
-					},
-				],
-			},
-			__소통관리: {
-				key: '__소통관리',
-				botItems: [
-					{
-						key: '__일대일게시판',
-						href: '/community/communication/board',
-					},
-					{
-						key: '__신문고관리',
-						href: '/community/communication/suggestions',
-					},
-				],
-			},
-			__생활서비스: {
-				key: '__생활서비스',
-				botItems: [
-					{
-						key: '__관리비',
-						href: '/community/services/maintenance-fee',
-					},
-					{
-						key: '__전자투표',
-						href: '/community/services/voting',
-					},
-					{
-						key: '__택배관리',
-						href: '/community/services/delivery',
-					},
-				],
-			},
 		},
 	},
 	__라이프: {
 		icon: TreePalm,
 		key: '__라이프',
 		midItems: {
-			'__앱 게시판': {
-				key: '__앱 게시판',
+			__공용시설: {
+				key: '__공용시설',
 				botItems: [
 					{
-						key: '__앱 게시판',
-						href: '/life/board/board',
+						key: '__지정석 목록',
+						href: '/life/facility/seats',
+					},
+					{
+						key: '__시설 목록',
+						href: '/life/facility/list',
+					},
+					{
+						key: '__상품 목록',
+						href: '/life/facility/products',
+					},
+					{
+						key: '__예약 관리',
+						href: '/life/facility/reservations',
+					},
+					{
+						key: '__시설 출입 목록',
+						href: '/life/facility/access',
+					},
+					{
+						key: '__정산 관리',
+						href: '/life/facility/settlement',
 					},
 				],
 			},
@@ -256,30 +196,24 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '__선거 투표',
-						href: '/life/election/election',
+						href: '/life/voting/election',
 					},
 					{
 						key: '__안건 투표',
-						href: '/life/election/candidate',
+						href: '/life/voting/agenda',
 					},
 					{
 						key: '__설문 조사',
-						href: '/life/survey/survey',
+						href: '/life/voting/survey',
 					},
 				],
 			},
-		},
-	},
-	__정산: {
-		icon: DollarSign,
-		key: '__정산',
-		midItems: {
-			__할인권관리: {
-				key: '__할인권관리',
+			__커뮤니티: {
+				key: '__커뮤니티',
 				botItems: [
 					{
-						key: '__할인권관리',
-						href: '/payment/discount/management',
+						key: '__게시판 관리',
+						href: '/life/community/board',
 					},
 				],
 			},

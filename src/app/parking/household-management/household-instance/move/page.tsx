@@ -1,5 +1,6 @@
-import HouseholdInstanceMoveView from '@/components/view/parking/household-management/householdInstance/HouseholdInstanceMoveView';
+import { redirect } from 'next/navigation';
 
 export default function HouseholdInstanceMovePage() {
-  return <HouseholdInstanceMoveView />;
+  // TODO: Create InstanceMoveView and proper move route
+  redirect('/parking/household-management/instance');
 }

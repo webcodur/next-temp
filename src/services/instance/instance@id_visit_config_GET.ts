@@ -1,9 +1,9 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { HouseholdVisitConfig } from '@/types/household';
+import { VisitConfig } from '@/types/instance';
 
 // #region 서버 타입 정의 (내부 사용)
-interface HouseholdVisitConfigServerResponse {
+interface VisitConfigServerResponse {
   id: number;
   household_instance_id: number;
   available_visit_time: number;
@@ -15,10 +15,10 @@ interface HouseholdVisitConfigServerResponse {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function serverToClient(server: HouseholdVisitConfigServerResponse): HouseholdVisitConfig {
+function serverToClient(server: VisitConfigServerResponse): VisitConfig {
   return {
     id: server.id,
-    householdInstanceId: server.household_instance_id,
+    instanceId: server.household_instance_id,
     availableVisitTime: server.available_visit_time,
     purchasedVisitTime: server.purchased_visit_time,
     visitRequestLimit: server.visit_request_limit,
@@ -29,19 +29,19 @@ function serverToClient(server: HouseholdVisitConfigServerResponse): HouseholdVi
 // #endregion
 
 /**
- * 세대 인스턴스의 방문 설정을 조회한다
- * @param instance_id 인스턴스 ID
+ * 인스턴스의 방문 설정을 조회한다
+ * @param id 인스턴스 ID
  * @returns 방문 설정 정보
  */
-export async function getHouseholdVisitConfig(instance_id: number) {
-  const response = await fetchDefault(`/households/instances/${instance_id}/config/visit`, {
+export async function getVisitConfig(id: number) {
+  const response = await fetchDefault(`/households/instances/${id}/config/visit`, {
     method: 'GET',
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `세대 방문 설정 조회 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `방문 설정 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return {
       success: false,
@@ -49,9 +49,9 @@ export async function getHouseholdVisitConfig(instance_id: number) {
     };
   }
   
-  const serverResponse = result as HouseholdVisitConfigServerResponse;
+  const serverResponse = result as VisitConfigServerResponse;
   return {
     success: true,
     data: serverToClient(serverResponse),
   };
-} 
+}

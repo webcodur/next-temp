@@ -1,5 +1,5 @@
-import HouseholdInstanceListView from '@/components/view/parking/household-management/householdInstance/HouseholdInstanceListView';
+import { redirect } from 'next/navigation';
 
 export default function HouseholdInstanceListPage() {
-  return <HouseholdInstanceListView />;
+  redirect('/parking/household-management/instance');
 } 

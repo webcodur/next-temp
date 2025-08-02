@@ -8,7 +8,7 @@ import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/Advance
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import type { BaseTableColumn } from '@/components/ui/ui-data/baseTable/types';
-import { searchHousehold } from '@/services/household/household$_GET';
+import { searchInstance } from '@/services/instance/instance$_GET';
 import { deleteHousehold } from '@/services/household/household@id_DELETE';
 import { getHouseholdInstanceList } from '@/services/household/household@id_instance_GET';
 import type { Household, HouseholdType, HouseholdInstance } from '@/types/household';
@@ -61,7 +61,7 @@ export default function HouseholdListView() {
     setError(null);
     
     try {
-      const response = await searchHousehold({
+      const response = await searchInstance({
         page: currentPage,
         limit: pageSize,
         householdType: (searchParams?.householdType as HouseholdType) || undefined,
@@ -289,7 +289,7 @@ export default function HouseholdListView() {
       key: 'actions',
       header: '작업',
       cell: (household: HouseholdWithStatus) => (
-        <div className="flex gap-1 justify-center">
+        <div className="flex justify-center gap-1">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -406,7 +406,7 @@ export default function HouseholdListView() {
   const rightActions = (
     <Link
       href="/parking/household-management/household/create"
-      className="flex gap-2 items-center px-4 py-2 rounded-lg transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
+      className="flex items-center gap-2 px-4 py-2 transition-colors rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
     >
       <Plus className="w-4 h-4" />
       호실 등록
@@ -423,7 +423,7 @@ export default function HouseholdListView() {
           subtitle="건물 호실 정보를 관리합니다"
           rightActions={rightActions}
         />
-        <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+        <div className="p-4 border border-red-200 rounded-lg bg-red-50">
           <p className="text-red-800">오류가 발생했습니다: {error}</p>
           <button 
             onClick={() => loadHouseholds()}
@@ -485,8 +485,8 @@ export default function HouseholdListView() {
           ) : (
             <div className="space-y-3">
               {selectedHouseholdInstances.map((instance, index) => (
-                <div key={instance.id} className="p-4 bg-gray-50 rounded-lg border">
-                  <div className="flex justify-between items-start">
+                <div key={instance.id} className="p-4 border rounded-lg bg-gray-50">
+                  <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900">
                         {instance.instanceName || `세대 ${index + 1}`}
@@ -528,45 +528,6 @@ export default function HouseholdListView() {
           )}
         </div>
       </Modal>
-
-      {/* 주차장 정보 상세 모달 (임시 비활성화 - API에서 데이터 미제공) */}
-      {/* 
-      <Modal
-        isOpen={isParkingLotModalOpen}
-        onClose={handleCloseParkingLotModal}
-        title="주차장 정보"
-        size="md"
-      >
-        {selectedParkingLot && (
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">이름:</span>
-              <span className="font-medium">{selectedParkingLot.name}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">코드:</span>
-              <span className="font-medium">{selectedParkingLot.code || '-'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">설명:</span>
-              <span className="font-medium">{selectedParkingLot.description || '-'}</span>
-            </div>
-            {selectedParkingLot.createdAt && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">생성일:</span>
-                <span className="font-medium">{new Date(selectedParkingLot.createdAt).toLocaleDateString()}</span>
-              </div>
-            )}
-            {selectedParkingLot.updatedAt && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">수정일:</span>
-                <span className="font-medium">{new Date(selectedParkingLot.updatedAt).toLocaleDateString()}</span>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
-      */}
     </div>
   );
 }

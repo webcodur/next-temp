@@ -8,20 +8,21 @@ import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/Advance
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import type { BaseTableColumn } from '@/components/ui/ui-data/baseTable/types';
-import { searchHouseholdInstance } from '@/services/household/household_instance$_GET';
-import { deleteHouseholdInstance } from '@/services/household/household_instance@instanceId_DELETE';
+import { searchInstance } from '@/services/instance/instance$_GET';
+import { deleteInstance } from '@/services/instance/instance@id_DELETE';
 import { searchHousehold } from '@/services/household/household$_GET';
-import type { HouseholdInstance, SearchHouseholdInstanceRequest, Household } from '@/types/household';
+import type { Instance, SearchInstanceRequest } from '@/types/instance';
+import type { Household } from '@/types/household';
 
 // #region 타입 정의 확장
-interface HouseholdInstanceWithStatus extends HouseholdInstance, Record<string, unknown> {
+interface InstanceWithStatus extends Instance, Record<string, unknown> {
   status: 'active' | 'inactive';
   roomNumber: string;
   householdTypeLabel: string;
 }
 // #endregion
 
-export default function HouseholdInstanceListView() {
+export default function InstanceListView() {
   // #region 상태 관리
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -33,7 +34,7 @@ export default function HouseholdInstanceListView() {
   const [selectedHouseholdId, setSelectedHouseholdId] = useState('');
   const [households, setHouseholds] = useState<Household[]>([]);
   
-  const [householdInstances, setHouseholdInstances] = useState<HouseholdInstanceWithStatus[]>([]);
+  const [instances, setInstances] = useState<InstanceWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,29 +42,29 @@ export default function HouseholdInstanceListView() {
   // #endregion
 
   // #region 데이터 로딩
-  const loadHouseholdInstances = useCallback(async () => {
+  const loadInstances = useCallback(async () => {
     setLoading(true);
     setError(null);
     
     try {
-      const params: SearchHouseholdInstanceRequest = {
+      const params: SearchInstanceRequest = {
         page: currentPage,
         limit: pageSize,
         instanceName: searchKeyword || undefined,
         householdId: selectedHouseholdId ? parseInt(selectedHouseholdId) : undefined,
       };
 
-      const response = await searchHouseholdInstance(params);
+      const response = await searchInstance(params);
 
       if (response.success && response.data) {
-        const instances = response.data.data || [];
+        const instanceList = response.data.data || [];
 
         // API 데이터를 UI 형식으로 변환
-        const transformedData: HouseholdInstanceWithStatus[] = instances.map((instance: HouseholdInstance) => ({
+        const transformedData: InstanceWithStatus[] = instanceList.map((instance: Instance) => ({
           ...instance,
           status: instance.endDate && new Date(instance.endDate) < new Date() ? 'inactive' : 'active' as const,
           roomNumber: instance.household ? 
-            `${instance.household.address1Depth} ${instance.household.address2Depth}${instance.household.address3Depth ? ' ' + instance.household.address3Depth : ''}` : 
+            \`\${instance.household.address1Depth} \${instance.household.address2Depth}\${instance.household.address3Depth ? ' ' + instance.household.address3Depth : ''}\` : 
             '정보 없음',
           householdTypeLabel: instance.household?.householdType ? 
             (instance.household.householdType === 'GENERAL' ? '일반' : 
@@ -72,21 +73,21 @@ export default function HouseholdInstanceListView() {
              instance.household.householdType) : '-'
         }));
         
-        setHouseholdInstances(transformedData);
+        setInstances(transformedData);
       } else {
         throw new Error(response.errorMsg || '데이터 로딩 실패');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
-      setHouseholdInstances([]);
+      setInstances([]);
     } finally {
       setLoading(false);
     }
   }, [currentPage, pageSize, searchKeyword, selectedHouseholdId]);
 
   useEffect(() => {
-    loadHouseholdInstances();
-  }, [loadHouseholdInstances]);
+    loadInstances();
+  }, [loadInstances]);
 
   // 세대 목록 로딩
   const loadHouseholds = useCallback(async () => {
@@ -111,7 +112,7 @@ export default function HouseholdInstanceListView() {
   // #endregion
 
   // #region 필터링된 데이터 (클라이언트 사이드 필터링)
-  const filteredData = householdInstances.filter((instance) => {
+  const filteredData = instances.filter((instance) => {
     const matchesKeyword = instance.roomNumber.toLowerCase().includes(searchKeyword.toLowerCase()) ||
                           (instance.instanceName && instance.instanceName.toLowerCase().includes(searchKeyword.toLowerCase()));
     const matchesStatus = !selectedStatus || instance.status === selectedStatus;
@@ -150,7 +151,7 @@ export default function HouseholdInstanceListView() {
           onChange={setSelectedHouseholdId}
           options={households.map(household => ({
             value: household.id.toString(),
-            label: `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`
+            label: \`\${household.address1Depth} \${household.address2Depth}\${household.address3Depth ? ' ' + household.address3Depth : ''}\`
           }))}
         />
       ),
@@ -214,25 +215,25 @@ export default function HouseholdInstanceListView() {
   // #endregion
 
   // #region 테이블 컬럼 설정
-  const columns: BaseTableColumn<HouseholdInstanceWithStatus>[] = [
+  const columns: BaseTableColumn<InstanceWithStatus>[] = [
     {
       key: 'roomNumber',
       header: '호실번호',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="font-medium">{instance.roomNumber}</div>
       ),
     },
     {
       key: 'instanceName',
       header: '세대명',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="font-medium">{instance.instanceName || '세대명 없음'}</div>
       ),
     },
     {
       key: 'householdType',
       header: '호실 타입',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="text-center">
           {instance.householdTypeLabel}
         </div>
@@ -241,7 +242,7 @@ export default function HouseholdInstanceListView() {
     {
       key: 'endDate',
       header: '퇴거 예정일',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="text-sm text-center">
           {instance.endDate ? new Date(instance.endDate).toLocaleDateString() : '-'}
         </div>
@@ -250,14 +251,14 @@ export default function HouseholdInstanceListView() {
     {
       key: 'status',
       header: '상태',
-      cell: (instance: HouseholdInstanceWithStatus) => {
-        const statusMap: Record<HouseholdInstanceWithStatus['status'], { label: string; className: string }> = {
+      cell: (instance: InstanceWithStatus) => {
+        const statusMap: Record<InstanceWithStatus['status'], { label: string; className: string }> = {
           active: { label: '거주중', className: 'bg-green-100 text-green-800' },
           inactive: { label: '퇴거', className: 'bg-gray-100 text-gray-800' },
         };
         const status = statusMap[instance.status];
         return (
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.className}`}>
+          <span className={\`px-2 py-1 rounded-full text-xs font-medium \${status.className}\`}>
             {status.label}
           </span>
         );
@@ -266,7 +267,7 @@ export default function HouseholdInstanceListView() {
     {
       key: 'startDate',
       header: '입주일',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="text-sm text-center">
           {instance.startDate ? new Date(instance.startDate).toLocaleDateString() : '-'}
         </div>
@@ -275,7 +276,7 @@ export default function HouseholdInstanceListView() {
     {
       key: 'createdAt',
       header: '등록일',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="text-sm text-center">
           {new Date(instance.createdAt).toLocaleDateString()}
         </div>
@@ -284,7 +285,7 @@ export default function HouseholdInstanceListView() {
     {
       key: 'memo',
       header: '메모',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="text-sm truncate max-w-32">
           {instance.memo || '-'}
         </div>
@@ -293,10 +294,10 @@ export default function HouseholdInstanceListView() {
     {
       key: 'actions',
       header: '작업',
-      cell: (instance: HouseholdInstanceWithStatus) => (
+      cell: (instance: InstanceWithStatus) => (
         <div className="flex gap-1 justify-center">
           <Link
-            href={`/parking/household-management/household-instance/${instance.id}`}
+            href={\`/parking/household-management/instance/\${instance.id}\`}
             className="p-1 text-blue-600 rounded hover:bg-blue-50"
             title="상세보기"
           >
@@ -319,7 +320,7 @@ export default function HouseholdInstanceListView() {
   // #region 이벤트 핸들러
   const handleSearch = () => {
     setCurrentPage(1);
-    loadHouseholdInstances();
+    loadInstances();
   };
 
   const handleReset = () => {
@@ -331,17 +332,17 @@ export default function HouseholdInstanceListView() {
     // 새로 추가한 검색 조건 초기화
     setSelectedHouseholdId('');
     setCurrentPage(1);
-    loadHouseholdInstances();
+    loadInstances();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('정말로 이 입주세대를 삭제하시겠습니까?')) return;
     
     try {
-      const response = await deleteHouseholdInstance(id);
+      const response = await deleteInstance(id);
       if (response.success) {
         alert('입주세대가 삭제되었습니다.');
-        loadHouseholdInstances();
+        loadInstances();
       } else {
         throw new Error(response.errorMsg || '삭제 실패');
       }
@@ -350,7 +351,7 @@ export default function HouseholdInstanceListView() {
     }
   };
 
-  const handleRowClick = (instance: HouseholdInstanceWithStatus) => {
+  const handleRowClick = (instance: InstanceWithStatus) => {
     console.log('행 클릭:', instance);
   };
 
@@ -368,14 +369,14 @@ export default function HouseholdInstanceListView() {
   const rightActions = (
     <div className="flex gap-2">
       <Link
-        href="/parking/household-management/household-instance/move"
+        href="/parking/household-management/instance/move"
         className="flex gap-2 items-center px-4 py-2 rounded-lg border transition-colors border-border hover:bg-muted"
       >
         <ArrowRightLeft className="w-4 h-4" />
         세대 이동
       </Link>
       <Link
-        href="/parking/household-management/household-instance/create"
+        href="/parking/household-management/instance/create"
         className="flex gap-2 items-center px-4 py-2 rounded-lg transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
       >
         <Plus className="w-4 h-4" />
@@ -397,7 +398,7 @@ export default function HouseholdInstanceListView() {
         <div className="p-4 bg-red-50 rounded-lg border border-red-200">
           <p className="text-red-800">오류가 발생했습니다: {error}</p>
           <button 
-            onClick={loadHouseholdInstances}
+            onClick={loadInstances}
             className="px-4 py-2 mt-2 text-white bg-red-600 rounded hover:bg-red-700"
           >
             다시 시도

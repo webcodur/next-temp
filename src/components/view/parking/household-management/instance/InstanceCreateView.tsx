@@ -8,10 +8,11 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { searchHousehold } from '@/services/household/household$_GET';
 import { createHouseholdInstance } from '@/services/household/household@id_instance_POST';
-import type { Household, CreateHouseholdInstanceRequest } from '@/types/household';
+import type { CreateHouseholdInstanceRequest } from '@/types/household';
+import type { Household } from '@/types/household';
 
 // #region 타입 정의
-interface HouseholdInstanceFormData {
+interface InstanceFormData {
   householdId: string;
   instanceName: string;
   password: string;
@@ -21,16 +22,16 @@ interface HouseholdInstanceFormData {
 }
 // #endregion
 
-interface HouseholdInstanceCreateViewProps {
+interface InstanceCreateViewProps {
   preSelectedHouseholdId?: string;
 }
 
-export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: HouseholdInstanceCreateViewProps) {
+export default function InstanceCreateView({ preSelectedHouseholdId }: InstanceCreateViewProps) {
   // #region 상태 관리
   const router = useRouter();
   
   const [households, setHouseholds] = useState<Household[]>([]);
-  const [formData, setFormData] = useState<HouseholdInstanceFormData>({
+  const [formData, setFormData] = useState<InstanceFormData>({
     householdId: preSelectedHouseholdId || '',
     instanceName: '',
     password: '',
@@ -116,7 +117,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
       }
 
       const requestData: CreateHouseholdInstanceRequest = {
-        householdId: householdId,              // 세대 ID 추가
+        householdId: householdId,
         instanceName: formData.instanceName || undefined,
         password: formData.password,
         startDate: formData.startDate || undefined,
@@ -128,7 +129,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
       
       if (response.success) {
         alert('입주세대가 성공적으로 등록되었습니다.');
-        router.push('/parking/household-management/household-instance');
+        router.push('/parking/household-management/instance');
       } else {
         throw new Error(response.errorMsg || '등록 실패');
       }
@@ -140,7 +141,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
     }
   };
 
-  const handleFieldChange = (field: keyof HouseholdInstanceFormData) => (value: string) => {
+  const handleFieldChange = (field: keyof InstanceFormData) => (value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -169,7 +170,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
 
   // #region 유틸리티 함수
   const formatRoomNumber = (household: Household) => {
-    return `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`;
+    return \`\${household.address1Depth} \${household.address2Depth}\${household.address3Depth ? ' ' + household.address3Depth : ''}\`;
   };
 
   const getHouseholdTypeLabel = (type: string) => {
@@ -190,7 +191,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
   // #region 페이지 액션
   const leftActions = (
     <Link
-      href="/parking/household-management/household-instance"
+      href="/parking/household-management/instance"
       className="flex gap-2 items-center px-3 py-2 transition-colors text-muted-foreground hover:text-foreground"
     >
       <ArrowLeft className="w-4 h-4" />
@@ -280,7 +281,7 @@ export default function HouseholdInstanceCreateView({ preSelectedHouseholdId }: 
               onChange={handleFieldChange('householdId')}
               options={availableHouseholds.map(household => ({
                 value: household.id.toString(),
-                label: `${formatRoomNumber(household)} (${getHouseholdTypeLabel(household.householdType)})`,
+                label: \`\${formatRoomNumber(household)} (\${getHouseholdTypeLabel(household.householdType)})\`,
               }))}
             />
             {errors.householdId && (

@@ -1,5 +1,5 @@
 import { use } from 'react';
-import HouseholdInstanceDetailView from '@/components/view/parking/household-management/householdInstance/HouseholdInstanceDetailView';
+import { redirect } from 'next/navigation';
 
 interface HouseholdInstanceDetailPageProps {
   params: Promise<{ id: string }>;
@@ -7,5 +7,5 @@ interface HouseholdInstanceDetailPageProps {
 
 export default function HouseholdInstanceDetailPage({ params }: HouseholdInstanceDetailPageProps) {
   const resolvedParams = use(params);
-  return <HouseholdInstanceDetailView instanceId={resolvedParams.id} />;
+  redirect(`/parking/household-management/instance/${resolvedParams.id}`);
 } 

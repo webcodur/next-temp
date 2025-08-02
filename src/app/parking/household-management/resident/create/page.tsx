@@ -8,7 +8,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { createResident } from '@/services/resident/resident_POST';
 import { createResidentHousehold } from '@/services/resident/resident_household_POST';
-import { searchHouseholdInstance } from '@/services/household/household_instance$_GET';
+import { searchInstance } from '@/services/instance/instance$_GET';
 import type { CreateResidentRequest } from '@/types/api';
 import type { CreateResidentHouseholdRequest } from '@/services/resident/resident_household_POST';
 import type { HouseholdInstance } from '@/types/household';
@@ -61,7 +61,7 @@ export default function ResidentCreatePage() {
     setError(null);
     
     try {
-      const response = await searchHouseholdInstance({
+      const response = await searchInstance({
         page: 1,
         limit: 100, // 충분히 많은 수를 가져와서 모든 세대 표시
       });

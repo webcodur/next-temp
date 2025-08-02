@@ -6,13 +6,13 @@ import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
-import { getHouseholdInstanceDetail } from '@/services/household/household_instance@instanceId_GET';
-import { updateHouseholdInstance } from '@/services/household/household_instance@instanceId_PUT';
-import { deleteHouseholdInstance } from '@/services/household/household_instance@instanceId_DELETE';
-import type { HouseholdInstance, UpdateHouseholdInstanceRequest } from '@/types/household';
+import { getInstanceDetail } from '@/services/instance/instance@id_GET';
+import { updateInstance } from '@/services/instance/instance@id_PUT';
+import { deleteInstance } from '@/services/instance/instance@id_DELETE';
+import type { Instance, UpdateInstanceRequest } from '@/types/instance';
 
 // #region 타입 정의
-interface HouseholdInstanceFormData {
+interface InstanceFormData {
   instanceName: string;
   startDate: string;
   endDate: string;
@@ -20,26 +20,26 @@ interface HouseholdInstanceFormData {
 }
 // #endregion
 
-interface HouseholdInstanceDetailViewProps {
+interface InstanceDetailViewProps {
   instanceId: string;
 }
 
-export default function HouseholdInstanceDetailView({ instanceId }: HouseholdInstanceDetailViewProps) {
+export default function InstanceDetailView({ instanceId }: InstanceDetailViewProps) {
   // #region 상태 관리
   const router = useRouter();
-  const [instance, setInstance] = useState<HouseholdInstance | null>(null);
+  const [instance, setInstance] = useState<Instance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
 
-  const [formData, setFormData] = useState<HouseholdInstanceFormData>({
+  const [formData, setFormData] = useState<InstanceFormData>({
     instanceName: '',
     startDate: '',
     endDate: '',
     memo: '',
   });
-  const [originalData, setOriginalData] = useState<HouseholdInstanceFormData>({
+  const [originalData, setOriginalData] = useState<InstanceFormData>({
     instanceName: '',
     startDate: '',
     endDate: '',
@@ -60,7 +60,7 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
         throw new Error('잘못된 인스턴스 ID입니다.');
       }
 
-      const response = await getHouseholdInstanceDetail(id);
+      const response = await getInstanceDetail(id);
       if (!response.success || !response.data) {
         throw new Error(response.errorMsg || '인스턴스 정보 조회 실패');
       }
@@ -114,14 +114,14 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
     setIsSubmitting(true);
     
     try {
-      const requestData: UpdateHouseholdInstanceRequest = {
+      const requestData: UpdateInstanceRequest = {
         instanceName: formData.instanceName || undefined,
         startDate: formData.startDate || undefined,
         endDate: formData.endDate || undefined,
         memo: formData.memo || undefined,
       };
 
-      const response = await updateHouseholdInstance(instance.id, requestData);
+      const response = await updateInstance(instance.id, requestData);
       
       if (response.success) {
         alert('세대 정보가 성공적으로 수정되었습니다.');
@@ -141,10 +141,10 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
     if (!instance || !confirm('정말로 이 세대를 삭제하시겠습니까?')) return;
     
     try {
-      const response = await deleteHouseholdInstance(instance.id);
+      const response = await deleteInstance(instance.id);
       if (response.success) {
         alert('세대가 삭제되었습니다.');
-        router.push('/parking/household-management/household-instance');
+        router.push('/parking/household-management/instance');
       } else {
         throw new Error(response.errorMsg || '삭제 실패');
       }
@@ -153,7 +153,7 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
     }
   };
 
-  const handleFieldChange = (field: keyof HouseholdInstanceFormData) => (value: string) => {
+  const handleFieldChange = (field: keyof InstanceFormData) => (value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -174,13 +174,13 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
   // #endregion
 
   // #region 유틸리티 함수
-  const formatRoomNumber = (instance: HouseholdInstance) => {
+  const formatRoomNumber = (instance: Instance) => {
     if (!instance.household) return '정보 없음';
     const household = instance.household;
-    return `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`;
+    return \`\${household.address1Depth} \${household.address2Depth}\${household.address3Depth ? ' ' + household.address3Depth : ''}\`;
   };
 
-  const getStatusInfo = (instance: HouseholdInstance) => {
+  const getStatusInfo = (instance: Instance) => {
     const isActive = !instance.endDate || new Date(instance.endDate) > new Date();
     return {
       status: isActive ? 'active' : 'inactive',
@@ -193,7 +193,7 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
   // #region 액션 버튼
   const leftActions = (
     <Link
-      href="/parking/household-management/household-instance"
+      href="/parking/household-management/instance"
       className="flex gap-2 items-center px-3 py-2 transition-colors text-muted-foreground hover:text-foreground"
     >
       <ArrowLeft className="w-4 h-4" />
@@ -228,75 +228,6 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
       </button>
     </div>
   ) : null;
-  // #endregion
-
-  // #region 탭 콘텐츠 렌더링
-  const renderTabContent = () => {
-    if (activeTab === 'info') {
-      return (
-        <div className="space-y-6">
-          {/* 세대 기본 정보 */}
-          <div className="p-6 rounded-lg border bg-card">
-            <h3 className="mb-4 text-lg font-semibold">세대 정보</h3>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Field
-                type="text"
-                label="세대명"
-                value={formData.instanceName}
-                onChange={handleFieldChange('instanceName')}
-                placeholder="세대명을 입력하세요"
-              />
-              {errors.instanceName && (
-                <div className="text-sm text-red-600">{errors.instanceName}</div>
-              )}
-              
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  입주일
-                </label>
-                <input
-                  type="date"
-                  value={formData.startDate}
-                  onChange={(e) => handleFieldChange('startDate')(e.target.value)}
-                  className="px-3 py-2 w-full rounded-md border"
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  퇴거일
-                </label>
-                <input
-                  type="date"
-                  value={formData.endDate}
-                  onChange={(e) => handleFieldChange('endDate')(e.target.value)}
-                  className="px-3 py-2 w-full rounded-md border"
-                />
-                {errors.endDate && (
-                  <div className="text-sm text-red-600">{errors.endDate}</div>
-                )}
-              </div>
-              
-              <div className="md:col-span-2">
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  메모
-                </label>
-                <textarea
-                  rows={3}
-                  value={formData.memo}
-                  onChange={(e) => handleFieldChange('memo')(e.target.value)}
-                  placeholder="메모를 입력하세요"
-                  className="px-3 py-2 w-full rounded-md border"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return null;
-  };
   // #endregion
 
   // #region 로딩/에러 상태
@@ -342,7 +273,7 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
   return (
     <div className="p-6">
       <PageHeader
-        title={`세대 상세 - ${instance.instanceName || '세대명 없음'}`}
+        title={\`세대 상세 - \${instance.instanceName || '세대명 없음'}\`}
         subtitle="세대 정보를 조회하고 수정할 수 있습니다"
         leftActions={leftActions}
         rightActions={rightActions}
@@ -358,7 +289,7 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
           <div>
             <span className="text-sm text-gray-600">상태:</span>
             <div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.className}`}>
+              <span className={\`px-2 py-1 rounded-full text-xs font-medium \${statusInfo.className}\`}>
                 {statusInfo.label}
               </span>
             </div>
@@ -378,26 +309,64 @@ export default function HouseholdInstanceDetailView({ instanceId }: HouseholdIns
         </div>
       </div>
 
-      {/* 탭 네비게이션 */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('info')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'info'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              세대 정보
-            </button>
-          </nav>
+      {/* 세대 정보 */}
+      <div className="space-y-6">
+        <div className="p-6 rounded-lg border bg-card">
+          <h3 className="mb-4 text-lg font-semibold">세대 정보</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Field
+              type="text"
+              label="세대명"
+              value={formData.instanceName}
+              onChange={handleFieldChange('instanceName')}
+              placeholder="세대명을 입력하세요"
+            />
+            {errors.instanceName && (
+              <div className="text-sm text-red-600">{errors.instanceName}</div>
+            )}
+            
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                입주일
+              </label>
+              <input
+                type="date"
+                value={formData.startDate}
+                onChange={(e) => handleFieldChange('startDate')(e.target.value)}
+                className="px-3 py-2 w-full rounded-md border"
+              />
+            </div>
+            
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                퇴거일
+              </label>
+              <input
+                type="date"
+                value={formData.endDate}
+                onChange={(e) => handleFieldChange('endDate')(e.target.value)}
+                className="px-3 py-2 w-full rounded-md border"
+              />
+              {errors.endDate && (
+                <div className="text-sm text-red-600">{errors.endDate}</div>
+              )}
+            </div>
+            
+            <div className="md:col-span-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                메모
+              </label>
+              <textarea
+                rows={3}
+                value={formData.memo}
+                onChange={(e) => handleFieldChange('memo')(e.target.value)}
+                placeholder="메모를 입력하세요"
+                className="px-3 py-2 w-full rounded-md border"
+              />
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* 탭 콘텐츠 */}
-      {renderTabContent()}
     </div>
   );
 }

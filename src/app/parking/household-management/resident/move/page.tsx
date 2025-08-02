@@ -8,7 +8,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { searchResident } from '@/services/resident/resident$_GET';
 import { getResidentDetail } from '@/services/resident/resident@id_GET';
-import { searchHouseholdInstance } from '@/services/household/household_instance$_GET';
+import { searchInstance } from '@/services/instance/instance$_GET';
 import { moveResident } from '@/services/resident/resident_move_POST';
 import type { Resident } from '@/types/api';
 import type { ResidentDetailResponse } from '@/services/resident/resident@id_GET';
@@ -69,7 +69,7 @@ export default function ResidentMovePage() {
       setResidents(activeResidents);
 
       // 세대 인스턴스 목록 조회
-      const instanceResponse = await searchHouseholdInstance({
+      const instanceResponse = await searchInstance({
         page: 1,
         limit: 100,
       });

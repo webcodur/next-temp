@@ -1,9 +1,9 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateHouseholdServiceConfigRequest, HouseholdServiceConfig } from '@/types/household';
+import { UpdateServiceConfigRequest, ServiceConfig } from '@/types/instance';
 
 // #region 서버 타입 정의 (내부 사용)
-interface HouseholdServiceConfigServerResponse {
+interface ServiceConfigServerResponse {
   id: number;
   household_instance_id: number;
   can_add_new_resident: boolean;
@@ -14,7 +14,7 @@ interface HouseholdServiceConfigServerResponse {
   updated_at: string;
 }
 
-interface UpdateHouseholdServiceConfigServerRequest {
+interface UpdateServiceConfigServerRequest {
   household_instance_id: number;
   can_add_new_resident?: boolean;
   is_common_entrance_subscribed?: boolean;
@@ -24,10 +24,10 @@ interface UpdateHouseholdServiceConfigServerRequest {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function serverToClient(server: HouseholdServiceConfigServerResponse): HouseholdServiceConfig {
+function serverToClient(server: ServiceConfigServerResponse): ServiceConfig {
   return {
     id: server.id,
-    householdInstanceId: server.household_instance_id,
+    instanceId: server.household_instance_id,
     canAddNewResident: server.can_add_new_resident,
     isCommonEntranceSubscribed: server.is_common_entrance_subscribed,
     isTemporaryAccess: server.is_temporary_access,
@@ -37,9 +37,9 @@ function serverToClient(server: HouseholdServiceConfigServerResponse): Household
   };
 }
 
-function clientToServer(client: UpdateHouseholdServiceConfigRequest): UpdateHouseholdServiceConfigServerRequest {
+function clientToServer(client: UpdateServiceConfigRequest): UpdateServiceConfigServerRequest {
   return {
-    household_instance_id: client.householdInstanceId,
+    household_instance_id: client.instanceId,
     can_add_new_resident: client.canAddNewResident,
     is_common_entrance_subscribed: client.isCommonEntranceSubscribed,
     is_temporary_access: client.isTemporaryAccess,
@@ -49,14 +49,14 @@ function clientToServer(client: UpdateHouseholdServiceConfigRequest): UpdateHous
 // #endregion
 
 /**
- * 세대 인스턴스의 서비스 설정을 수정한다
- * @param instance_id 인스턴스 ID
+ * 인스턴스의 서비스 설정을 수정한다
+ * @param id 인스턴스 ID
  * @param data 서비스 설정 데이터
  * @returns 수정된 서비스 설정 정보
  */
-export async function updateHouseholdServiceConfig(instance_id: number, data: UpdateHouseholdServiceConfigRequest) {
+export async function updateServiceConfig(id: number, data: UpdateServiceConfigRequest) {
   const serverRequest = clientToServer(data);
-  const response = await fetchDefault(`/households/instances/${instance_id}/config/service`, {
+  const response = await fetchDefault(`/households/instances/${id}/config/service`, {
     method: 'PUT',
     body: JSON.stringify(serverRequest),
   });
@@ -64,7 +64,7 @@ export async function updateHouseholdServiceConfig(instance_id: number, data: Up
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `세대 서비스 설정 수정 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `서비스 설정 수정 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return {
       success: false,
@@ -72,9 +72,9 @@ export async function updateHouseholdServiceConfig(instance_id: number, data: Up
     };
   }
   
-  const serverResponse = result as HouseholdServiceConfigServerResponse;
+  const serverResponse = result as ServiceConfigServerResponse;
   return {
     success: true,
     data: serverToClient(serverResponse),
   };
-} 
+}
