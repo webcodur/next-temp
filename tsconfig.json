@@ -27,7 +27,7 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"src/app/preview/menu-management/page.tst"
+
 	],
 	"exclude": ["node_modules"]
 }

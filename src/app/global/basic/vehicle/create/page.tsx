@@ -2,11 +2,13 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import VehicleForm from '@/components/view/global/basic/vehicle/VehicleForm';
 import { createCar } from '@/services/car';
-import type { CreateCarRequest } from '@/types/car';
+import type { CreateCarRequest, UpdateCarRequest } from '@/types/car';
 
 export default function VehicleCreatePage() {
   // #region 상태 관리
@@ -15,11 +17,12 @@ export default function VehicleCreatePage() {
   // #endregion
 
   // #region 핸들러
-  const handleSubmit = useCallback(async (data: CreateCarRequest) => {
+  const handleSubmit = useCallback(async (data: CreateCarRequest | UpdateCarRequest) => {
     setLoading(true);
     
     try {
-      const response = await createCar(data);
+      // create mode에서는 항상 CreateCarRequest로 받을 것이므로 타입 단언
+      const response = await createCar(data as CreateCarRequest);
       
       if (response.success) {
         alert('차량이 성공적으로 생성되었습니다.');
@@ -50,7 +53,7 @@ export default function VehicleCreatePage() {
         leftActions={
           <Link href="/global/basic/vehicle">
             <Button variant="ghost">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 w-4 h-4" />
               목록으로
             </Button>
           </Link>

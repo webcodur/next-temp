@@ -95,7 +95,7 @@ export default function IpBlockFullHistoryPage() {
       const result = await searchBlockHistory(searchParams);
       
       if (result.success) {
-        setHistoryList(result.data.data || []);
+        setHistoryList(result.data?.data || []);
       } else {
         console.error('IP 차단 히스토리 로드 실패:', result.errorMsg);
         setHistoryList([]);
@@ -379,12 +379,10 @@ export default function IpBlockFullHistoryPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="IP 차단 전체 히스토리 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        searchLabel="검색"
-        resetLabel="초기화"
+        
         defaultOpen={true}
       />
       

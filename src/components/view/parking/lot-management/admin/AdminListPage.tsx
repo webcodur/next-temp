@@ -342,12 +342,10 @@ export default function AdminListPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="관리자 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        searchLabel="검색"
-        resetLabel="초기화"
+        
         defaultOpen={false}
       />
       

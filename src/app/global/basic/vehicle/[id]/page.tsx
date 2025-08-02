@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import VehicleForm from '@/components/view/global/basic/vehicle/VehicleForm';
+import VehicleForm, { type VehicleFormData } from '@/components/view/global/basic/vehicle/VehicleForm';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { getCarDetail, updateCar } from '@/services/car';
@@ -24,7 +25,7 @@ export default function VehicleDetailPage() {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<UpdateCarRequest | null>(null);
 
-  const router = useRouter();
+  // const router = useRouter(); // 현재 사용되지 않음
   const params = useParams();
   const carId = parseInt(params.id as string);
   // #endregion
@@ -95,7 +96,7 @@ export default function VehicleDetailPage() {
       const newValue = formData[key as keyof UpdateCarRequest];
       
       if (originalValue !== newValue) {
-        (changes as any)[key] = newValue;
+        (changes as Record<string, unknown>)[key] = newValue;
         hasAnyChanges = true;
       }
     });
@@ -142,16 +143,16 @@ export default function VehicleDetailPage() {
   // #endregion
 
   // #region 변경사항 감지
-  const detectChanges = useCallback((formData: any) => {
+  const detectChanges = useCallback((formData: VehicleFormData) => {
     if (!originalData) return;
     
     let hasAnyChanges = false;
-    Object.keys(formData).forEach(key => {
+    (Object.keys(formData) as (keyof VehicleFormData)[]).forEach(key => {
       const originalValue = originalData[key as keyof Car];
       const newValue = formData[key];
       
       // 빈 문자열과 undefined/null 같은 것으로 취급
-      const normalizeValue = (val: any) => {
+      const normalizeValue = (val: unknown) => {
         if (val === '' || val === null || val === undefined) return '';
         return val;
       };

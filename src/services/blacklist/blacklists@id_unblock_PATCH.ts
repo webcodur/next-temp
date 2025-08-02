@@ -1,13 +1,10 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { CreateManualBlacklistRequest, BlacklistResponse } from '@/types/blacklist';
+import { UnblockBlacklistRequest, BlacklistResponse, BlacklistRegistrationReason } from '@/types/blacklist';
 
 // #region 서버 타입 정의 (내부 사용)
-interface CreateManualBlacklistServerRequest {
-  car_number: string;
-  registration_reason: string;
-  block_period_days?: number;
-  description?: string;
+interface UnblockBlacklistServerRequest {
+  unblock_reason: string;
 }
 
 interface BlacklistServerResponse {
@@ -28,12 +25,9 @@ interface BlacklistServerResponse {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function clientToServer(client: CreateManualBlacklistRequest): CreateManualBlacklistServerRequest {
+function clientToServer(client: UnblockBlacklistRequest): UnblockBlacklistServerRequest {
   return {
-    car_number: client.carNumber,
-    registration_reason: client.registrationReason,
-    block_period_days: client.blockPeriodDays,
-    description: client.description,
+    unblock_reason: client.unblockReason,
   };
 }
 
@@ -42,7 +36,7 @@ function serverToClient(server: BlacklistServerResponse): BlacklistResponse {
     id: server.id,
     carNumber: server.car_number,
     blacklistType: server.blacklist_type as 'AUTO' | 'MANUAL',
-    registrationReason: server.registration_reason as any,
+    registrationReason: server.registration_reason as BlacklistRegistrationReason,
     blockPeriodDays: server.block_period_days,
     description: server.description,
     isActive: server.is_active,
@@ -56,18 +50,18 @@ function serverToClient(server: BlacklistServerResponse): BlacklistResponse {
 }
 // #endregion
 
-export async function createManualBlacklist(data: CreateManualBlacklistRequest) {
+export async function unblockBlacklist(id: number, data: UnblockBlacklistRequest) {
   const serverRequest = clientToServer(data);
   
-  const response = await fetchDefault('/car-blacklists/manual', {
-    method: 'POST',
+  const response = await fetchDefault(`/blacklists/${id}/unblock`, {
+    method: 'PATCH',
     body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `수동 블랙리스트 등록 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `블랙리스트 해제 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

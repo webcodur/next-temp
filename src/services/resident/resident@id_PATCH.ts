@@ -60,7 +60,7 @@ function serverToClient(server: ResidentServerResponse): Resident {
 }
 //#endregion
 
-export interface ResidentResponse extends Resident {}
+export type ResidentResponse = Resident;
 
 /**
  * 특정 거주자의 정보를 수정한다

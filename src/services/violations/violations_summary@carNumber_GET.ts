@@ -26,8 +26,8 @@ function serverToClient(server: CarViolationSummaryServerResponse): CarViolation
 }
 // #endregion
 
-export async function getCarViolationSummary(carNumber: string) {
-  const response = await fetchDefault(`/car-violations/summary/${encodeURIComponent(carNumber)}`, {
+export async function getViolationSummary(carNumber: string) {
+  const response = await fetchDefault(`/violations/summary/${encodeURIComponent(carNumber)}`, {
     method: 'GET',
   });
 

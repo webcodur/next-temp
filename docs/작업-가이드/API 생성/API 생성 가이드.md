@@ -10,27 +10,9 @@ alwaysApply: false
 ### **API 스펙 우선 원칙**
 - **명시적 변환 처리**: 각 API 파일에서 서버 타입과 클라이언트 타입 간 명시적 변환 구현
 
-## 디렉토리 구조 및 파일명 규칙
+## 파일명 규칙
 
-### 디렉토리 구조
-```
-src/services/
-├── admin/           # 관리자 관리
-├── auth/            # 인증
-└── ...              # 기타...
-└── fetchClient.ts   # HTTP 클라이언트
-```
-
-### 파일명 규칙
-**패턴**: `{도메인}[@파라미터][_{서브리소스}[@파라미터]][_$]_{HTTP메소드}.ts`
-
-**핵심 예시**:
-- `admin_POST.ts` (생성)
-- `admin$_GET.ts` (검색 - 쿼리 파라미터)
-- `admin@id_GET.ts` (상세 조회)
-- `admin@id_PUT.ts` (수정)
-- `admin@id_DELETE.ts` (삭제)
-- `household@id_instance_POST.ts` (중첩 리소스)
+별도 문서로 분리됨
 
 ## 명시적 타입 변환 시스템
 
@@ -128,14 +110,7 @@ export async function createAdmin(data: CreateAdminRequest) {
 if (params?.roleId) searchParams.append('role_id', params.roleId.toString());
 ```
 
-## 함수명 규칙
 
-**HTTP 메소드별 패턴**:
-- `search{Entity}()` - 검색/목록 (GET with $)
-- `get{Entity}Detail()` - 상세 조회 (GET with @id)
-- `create{Entity}()` - 생성 (POST)
-- `update{Entity}()` - 수정 (PUT)
-- `delete{Entity}()` - 삭제 (DELETE)
 
 ## 타입 시스템
 

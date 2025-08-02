@@ -58,7 +58,7 @@ function serverToClient(server: ResidentServerResponse): Resident {
 }
 //#endregion
 
-export interface ResidentResponse extends Resident {}
+export type ResidentResponse = Resident;
 
 /**
  * 새로운 거주자를 생성한다

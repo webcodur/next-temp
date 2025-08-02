@@ -79,7 +79,7 @@ export default function CacheManagePage() {
       
       if (result.success) {
         console.log('캐시 관리 API 응답:', result.data); // 디버깅용
-        const namespaces = result.data.namespaces ?? {};
+        const namespaces = result.data?.namespaces ?? {};
         let filteredData = Object.entries(namespaces).map(([namespace, stats]) => ({
           namespace,
           keys: (stats as { keys?: number; memory?: number })?.keys ?? 0,
@@ -148,7 +148,7 @@ export default function CacheManagePage() {
       const result = await getCacheStatsByNamespace(namespace);
       
       if (result.success) {
-        setSelectedNamespace(result.data);
+        setSelectedNamespace(result.data || null);
       } else {
         console.error('네임스페이스 상세 정보 로드 실패:', result.errorMsg);
         setSelectedNamespace(null);

@@ -10,7 +10,7 @@ import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/Paginated
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Trash2, Plus } from 'lucide-react';
-import { searchCarViolations } from '@/services/carViolations';
+import { searchViolations } from '@/services/violations';
 
 import type { 
   CarViolation, 
@@ -115,7 +115,7 @@ export default function ViolationsPage() {
   // #region API 호출 함수
   const loadViolations = useCallback(async (filters?: SearchCarViolationRequest) => {
     try {
-      const result = await searchCarViolations(filters || searchFilters);
+      const result = await searchViolations(filters || searchFilters);
       
       if (result.success && result.data) {
         const transformedData = transformToTableData(result.data.data);
@@ -283,7 +283,6 @@ export default function ViolationsPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="검색 조건"
         onSearch={handleSearch}
         onReset={handleReset}
         fields={[

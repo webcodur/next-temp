@@ -86,16 +86,27 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
         
         // 값을 문자열로 변환하여 편집 가능하게 만듦
         let valueStr = '';
-        if (config.type === 'json') {
+        if (config.type === 'JSON') {
           valueStr = JSON.stringify(config.value, null, 2);
         } else {
           valueStr = String(config.value);
         }
         
+        // 타입을 적절한 형태로 변환
+        const convertedType = (() => {
+          switch (config.type) {
+            case 'INTEGER': return 'number';
+            case 'BOOLEAN': return 'boolean';
+            case 'JSON': return 'json';
+            case 'STRING':
+            default: return 'string';
+          }
+        })() as 'string' | 'number' | 'boolean' | 'json';
+        
         const configFormData: ConfigFormData = {
           key: config.key,
           value: valueStr,
-          type: config.type,
+          type: convertedType,
           description: config.description || '',
           originalValue: config.value,
         };

@@ -24,8 +24,6 @@ interface AdvancedSearchProps {
 	fields: FieldConfig[];
 	onSearch?: () => void;
 	onReset?: () => void;
-	searchLabel?: string;
-	resetLabel?: string;
 	defaultOpen?: boolean;
 	showButtons?: boolean;
 	statusText?: string;
@@ -40,8 +38,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	fields,
 	onSearch,
 	onReset,
-	searchLabel = '검색',
-	resetLabel = '리셋',
 	defaultOpen,
 	showButtons,
 	statusText,
@@ -119,13 +115,13 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 							onClick={onReset}
 							className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].resetButton}`}>
 							<RotateCcw className="w-4 h-4" />
-							{resetLabel}
+							리셋
 						</button>
 						<button
 							onClick={onSearch}
 							className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].searchButton}`}>
 							<Database className="w-4 h-4" />
-							{searchLabel}
+							검색
 						</button>
 					</div>
 				)}

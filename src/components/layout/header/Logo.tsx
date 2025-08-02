@@ -17,18 +17,11 @@ export const Logo = () => {
 	return (
 		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
 			<Image src="/icons/testLogo/lg_plus.png" alt="System Logo" width={35} height={35} />
-			<div className="flex items-baseline gap-2">
-				{selectedParkingLot ? (
+			<div className="flex gap-2 items-baseline">
+				{selectedParkingLot &&(
 					<>
 						<h1 className="text-xl font-bold text-foreground">{selectedParkingLot.name}</h1>
-						{selectedParkingLot.code && (
-							<p className="text-sm text-muted-foreground">({selectedParkingLot.code})</p>
-						)}
-					</>
-				) : (
-					<>
-						<h1 className="text-xl font-bold text-foreground">LG U+</h1>
-						<p className="text-sm text-muted-foreground">시니어 레지던스</p>
+						<p className="text-sm text-muted-foreground">({selectedParkingLot.description})</p>
 					</>
 				)}
 			</div>

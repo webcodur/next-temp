@@ -44,6 +44,23 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
               <li>
                 <span className="font-medium text-primary">Ctrl + Y</span> : 다크모드 ON / OFF
               </li>
+              <li>
+                <span className="font-medium text-primary">Alt + 1</span> : 언어 한국어로 전환
+              </li>
+              <li>
+                <span className="font-medium text-primary">Alt + 2</span> : change Language to English
+              </li>
+              <li>
+                <span className="font-medium text-primary">Alt + 3</span> : تغيير اللغة إلى العربية
+              </li>
+            </ul>
+          </section>
+
+          {/* 언어 전환 섹션 */}
+          <section>
+            <h3 className="mb-2 text-base font-semibold text-foreground font-multilang">언어 전환</h3>
+            <ul className="space-y-1 text-sm list-disc ps-4 font-multilang">
+
             </ul>
           </section>
         </div>

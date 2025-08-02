@@ -1,11 +1,13 @@
+import { use } from 'react';
 import ViolationDetailPage from '@/components/view/parking/cars/violations/ViolationDetailPage';
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function Page({ params }: Props) {
-  return <ViolationDetailPage id={parseInt(params.id)} />;
+  const resolvedParams = use(params);
+  return <ViolationDetailPage id={parseInt(resolvedParams.id)} />;
 }

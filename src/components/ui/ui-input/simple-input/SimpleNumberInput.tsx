@@ -1,29 +1,31 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { Hash, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
 
-interface SimpleTextInputProps {
+interface SimpleNumberInputProps {
 	label?: string;
-	value?: string;
-	onChange?: (value: string) => void;
+	value?: number | '';
+	onChange?: (value: number | '') => void;
 	placeholder?: string;
 	disabled?: boolean;
 	className?: string;
-	type?: 'text' | 'email' | 'password' | 'number' | 'datetime-local';
+	min?: number;
+	max?: number;
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 }
 
-export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
+export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 	label,
 	value = '',
 	onChange,
-	placeholder = '텍스트를 입력하세요',
+	placeholder = '숫자를 입력하세요',
 	disabled = false,
 	className = '',
-	type = 'text',
+	min,
+	max,
 	validationRule,
 	colorVariant = 'primary',
 }) => {
@@ -41,7 +43,32 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (disabled) return;
-		onChange?.(e.target.value);
+		
+		const inputValue = e.target.value;
+		
+		// 빈 값인 경우
+		if (inputValue === '') {
+			onChange?.('');
+			return;
+		}
+		
+		// 숫자로 변환
+		const numValue = parseFloat(inputValue);
+		
+		// 유효한 숫자가 아닌 경우 변경하지 않음
+		if (isNaN(numValue)) {
+			return;
+		}
+		
+		// min/max 검증
+		if (min !== undefined && numValue < min) {
+			return;
+		}
+		if (max !== undefined && numValue > max) {
+			return;
+		}
+		
+		onChange?.(numValue);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -59,8 +86,9 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		inputRef.current?.focus();
 	};
 
-	// validation 결과 계산
-	const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
+	// validation 결과 계산 (문자열로 변환하여 검증)
+	const stringValue = value === '' ? '' : String(value);
+	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
@@ -107,13 +135,13 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 						: 'shadow-md neu-flat border-border hover:shadow-lg'
 				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
 				
-				{/* 왼쪽 텍스트 아이콘 */}
-				<Type className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{/* 왼쪽 해시 아이콘 */}
+				<Hash className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
 
 				{/* 중앙 입력 필드 */}
 				<input
 					ref={inputRef}
-					type={type}
+					type="number"
 					value={value}
 					onChange={handleChange}
 					onFocus={handleFocus}
@@ -121,11 +149,13 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					onKeyDown={handleKeyDown}
 					placeholder={placeholder}
 					disabled={disabled}
-					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
+					min={min}
+					max={max}
+					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 				/>
 
 				{/* 우측 X 아이콘 */}
-				{value && !disabled && (
+				{value !== '' && !disabled && (
 					<button
 						type="button"
 						onClick={handleClear}
@@ -137,4 +167,4 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			</div>
 		</div>
 	);
-}; 
+};

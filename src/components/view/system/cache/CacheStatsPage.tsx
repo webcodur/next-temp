@@ -29,7 +29,7 @@ export default function CacheStatsPage() {
       
       if (result.success) {
         console.log('캐시 통계 API 응답:', result.data); // 디버깅용
-        setCacheStats(result.data);
+        setCacheStats(result.data || null);
         setLastUpdated(new Date());
       } else {
         console.error('캐시 통계 로드 실패:', result.errorMsg);

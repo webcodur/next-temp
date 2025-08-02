@@ -10,7 +10,7 @@ import { searchResident } from '@/services/resident/resident$_GET';
 import { getResidentDetail } from '@/services/resident/resident@id_GET';
 import { searchHouseholdInstance } from '@/services/household/household_instance$_GET';
 import { moveResident } from '@/services/resident/resident_move_POST';
-import type { ResidentDto } from '@/services/resident/resident$_GET';
+import type { Resident } from '@/types/api';
 import type { ResidentDetailResponse } from '@/services/resident/resident@id_GET';
 import type { MoveResidentRequest } from '@/services/resident/resident_move_POST';
 import type { HouseholdInstance } from '@/types/household';
@@ -29,7 +29,7 @@ interface MoveFormData {
 export default function ResidentMovePage() {
   // #region 상태 관리
   const router = useRouter();
-  const [residents, setResidents] = useState<ResidentDto[]>([]);
+  const [residents, setResidents] = useState<Resident[]>([]);
   const [householdInstances, setHouseholdInstances] = useState<HouseholdInstance[]>([]);
   const [selectedResident, setSelectedResident] = useState<ResidentDetailResponse | null>(null);
   const [formData, setFormData] = useState<MoveFormData>({
@@ -65,7 +65,7 @@ export default function ResidentMovePage() {
 
       const residentList = residentResponse.data?.data || [];
       // 현재 세대에 속한 거주자만 필터링 (deletedAt이 null인 것)
-      const activeResidents = residentList.filter((resident: ResidentDto) => !resident.deletedAt);
+      const activeResidents = residentList.filter((resident: Resident) => !resident.deletedAt);
       setResidents(activeResidents);
 
       // 세대 인스턴스 목록 조회
@@ -200,7 +200,7 @@ export default function ResidentMovePage() {
   // #endregion
 
   // #region 유틸리티 함수
-  const formatResidentLabel = (resident: ResidentDto) => {
+  const formatResidentLabel = (resident: Resident) => {
     const residentHouseholds = resident.residentHouseholds as unknown[] | undefined;
     const currentHousehold = residentHouseholds?.find((rh: unknown) => {
       const household = rh as Record<string, unknown>;

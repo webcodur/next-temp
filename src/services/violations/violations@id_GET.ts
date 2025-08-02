@@ -1,13 +1,8 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { ProcessCarViolationRequest, CarViolation, CarViolationType, ViolationReporterType, ViolationStatus } from '@/types/carViolation';
+import { CarViolation, CarViolationType, ViolationReporterType, ViolationStatus } from '@/types/carViolation';
 
 // #region 서버 타입 정의 (내부 사용)
-interface ProcessCarViolationServerRequest {
-  processing_note: string;
-  status: string;
-}
-
 interface CarViolationServerResponse {
   id: number;
   parkinglot_id: number;
@@ -34,13 +29,6 @@ interface CarViolationServerResponse {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function clientToServer(client: ProcessCarViolationRequest): ProcessCarViolationServerRequest {
-  return {
-    processing_note: client.processingNote,
-    status: client.status,
-  };
-}
-
 function serverToClient(server: CarViolationServerResponse): CarViolation {
   return {
     id: server.id,
@@ -68,17 +56,15 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
 }
 // #endregion
 
-export async function processCarViolation(id: number, data: ProcessCarViolationRequest) {
-  const serverRequest = clientToServer(data);
-  const response = await fetchDefault(`/car-violations/${id}/process`, {
-    method: 'PATCH',
-    body: JSON.stringify(serverRequest),
+export async function getViolationDetail(id: number) {
+  const response = await fetchDefault(`/violations/${id}`, {
+    method: 'GET',
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `위반 기록 처리 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `위반 기록 상세 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

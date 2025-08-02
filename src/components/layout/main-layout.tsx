@@ -8,7 +8,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 // hooks
 import { useLocale } from '@/hooks/useI18n';
-import { useThemeKeyboard } from '@/hooks/useThemeKeyboard';
+import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
 import { useAuth } from '@/hooks/useAuth';
 // store
 import { initPrimaryColorAtom } from '@/store/primary';
@@ -41,8 +41,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	const [shouldShow, setShouldShow] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
-	// 테마 및 컬러 초기화
-	useThemeKeyboard();
+	// 전역 키보드 단축키 (테마 토글만)
+	useGlobalKeyboard({ enableSidebarToggle: false });
 	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
 	useEffect(() => {
 		initTheme();

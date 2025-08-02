@@ -1,14 +1,20 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateCarViolationRequest, CarViolation, CarViolationType, ViolationReporterType, ViolationStatus } from '@/types/carViolation';
+import { CreateCarViolationRequest, CarViolation, CarViolationType, ViolationReporterType, ViolationStatus } from '@/types/carViolation';
 
 // #region 서버 타입 정의 (내부 사용)
-interface UpdateCarViolationServerRequest {
+interface CreateCarViolationServerRequest {
+  car_number: string;
+  violation_type: string;
+  violation_code: string;
+  violation_location?: string;
+  violation_time: string;
   description?: string;
   evidence_image_urls?: string[];
+  reporter_type?: string;
+  reporter_id?: number;
   severity_level?: number;
   penalty_points?: number;
-  status?: string;
 }
 
 interface CarViolationServerResponse {
@@ -37,13 +43,19 @@ interface CarViolationServerResponse {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function clientToServer(client: UpdateCarViolationRequest): UpdateCarViolationServerRequest {
+function clientToServer(client: CreateCarViolationRequest): CreateCarViolationServerRequest {
   return {
+    car_number: client.carNumber,
+    violation_type: client.violationType,
+    violation_code: client.violationCode,
+    violation_location: client.violationLocation,
+    violation_time: client.violationTime,
     description: client.description,
     evidence_image_urls: client.evidenceImageUrls,
+    reporter_type: client.reporterType,
+    reporter_id: client.reporterId,
     severity_level: client.severityLevel,
     penalty_points: client.penaltyPoints,
-    status: client.status,
   };
 }
 
@@ -74,17 +86,17 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
 }
 // #endregion
 
-export async function updateCarViolation(id: number, data: UpdateCarViolationRequest) {
+export async function createViolation(data: CreateCarViolationRequest) {
   const serverRequest = clientToServer(data);
-  const response = await fetchDefault(`/car-violations/${id}`, {
-    method: 'PUT',
+  const response = await fetchDefault('/violations', {
+    method: 'POST',
     body: JSON.stringify(serverRequest),
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `위반 기록 수정 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `차량 위반 기록 생성 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

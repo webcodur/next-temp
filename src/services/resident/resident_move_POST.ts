@@ -21,9 +21,9 @@ interface ParkingLotServerResponse {
 interface HouseholdServerResponse {
   id: number;
   parkinglot_id: number;                           // snake_case
-  address_1_depth: string;                         // snake_case
-  address_2_depth: string;                         // snake_case
-  address_3_depth?: string;                        // snake_case
+  address_1depth: string;                         // snake_case
+  address_2depth: string;                         // snake_case
+  address_3depth?: string;                        // snake_case
   household_type: string;                          // snake_case
   memo?: string;
   created_at: Date;                                // snake_case
@@ -82,9 +82,9 @@ function serverToClientHousehold(server: HouseholdServerResponse) {
   return {
     id: server.id,
     parkinglotId: server.parkinglot_id,
-    address1Depth: server.address_1_depth,
-    address2Depth: server.address_2_depth,
-    address3Depth: server.address_3_depth,
+    address1Depth: server.address_1depth,
+    address2Depth: server.address_2depth,
+    address3Depth: server.address_3depth,
     householdType: server.household_type,
     memo: server.memo,
     createdAt: server.created_at,

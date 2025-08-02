@@ -10,7 +10,7 @@ import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDrop
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
-import { getCarViolationDetail, updateCarViolation, processCarViolation } from '@/services/carViolations';
+import { getViolationDetail, updateViolation, processViolation } from '@/services/violations';
 import type { 
   CarViolation, 
   UpdateCarViolationRequest,
@@ -112,7 +112,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
   const loadViolation = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getCarViolationDetail(id);
+      const result = await getViolationDetail(id);
       
       if (result.success && result.data) {
         setViolation(result.data);
@@ -173,7 +173,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         status: formData.status,
       };
 
-      const result = await updateCarViolation(violation.id, updateRequest);
+      const result = await updateViolation(violation.id, updateRequest);
       
       if (result.success && result.data) {
         setViolation(result.data);
@@ -201,7 +201,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         status: formData.status,
       };
 
-      const result = await processCarViolation(violation.id, processRequest);
+      const result = await processViolation(violation.id, processRequest);
       
       if (result.success && result.data) {
         setViolation(result.data);

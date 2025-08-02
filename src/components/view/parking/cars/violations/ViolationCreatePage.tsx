@@ -2,12 +2,12 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/ui-effects/button/button';
-import { GridForm } from '@/components/ui/ui-layout/grid-form/grid-form';
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/simple-text-input';
-import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/simple-dropdown';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { ArrowLeft } from 'lucide-react';
-import { createCarViolation } from '@/services/carViolations';
+import { createViolation } from '@/services/violations';
 import type { 
   CreateCarViolationRequest,
   CarViolationType,
@@ -94,7 +94,7 @@ export default function ViolationCreatePage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleInputChange = useCallback((field: keyof FormData, value: any) => {
+  const handleInputChange = useCallback((field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
@@ -124,7 +124,7 @@ export default function ViolationCreatePage() {
         penaltyPoints: formData.penaltyPoints,
       };
 
-      const result = await createCarViolation(createRequest);
+      const result = await createViolation(createRequest);
       
       if (result.success && result.data) {
         console.log('위반 기록이 성공적으로 생성되었습니다');
@@ -164,7 +164,6 @@ export default function ViolationCreatePage() {
             value={formData.carNumber}
             onChange={(value) => handleInputChange('carNumber', value)}
             placeholder="차량번호를 입력하세요 (예: 12가3456)"
-            required
           />
           
           <SimpleDropdown
@@ -172,7 +171,7 @@ export default function ViolationCreatePage() {
             value={formData.violationType}
             options={VIOLATION_TYPE_OPTIONS}
             onChange={(value) => handleInputChange('violationType', value)}
-            required
+
           />
           
           <SimpleTextInput
@@ -180,7 +179,7 @@ export default function ViolationCreatePage() {
             value={formData.violationCode}
             onChange={(value) => handleInputChange('violationCode', value)}
             placeholder="위반 코드를 입력하세요 (예: VP001)"
-            required
+
           />
           
           <SimpleTextInput
@@ -195,7 +194,7 @@ export default function ViolationCreatePage() {
             type="datetime-local"
             value={formData.violationTime}
             onChange={(value) => handleInputChange('violationTime', value)}
-            required
+
           />
           
           <SimpleTextInput
@@ -203,8 +202,7 @@ export default function ViolationCreatePage() {
             value={formData.description}
             onChange={(value) => handleInputChange('description', value)}
             placeholder="위반 상황에 대한 설명을 입력하세요"
-            multiline
-            rows={3}
+
           />
           
           <SimpleTextInput
@@ -212,8 +210,7 @@ export default function ViolationCreatePage() {
             value={formData.evidenceImageUrls}
             onChange={(value) => handleInputChange('evidenceImageUrls', value)}
             placeholder="이미지 URL을 줄바꿈으로 구분하여 입력하세요"
-            multiline
-            rows={3}
+
           />
           
           <SimpleDropdown
@@ -235,20 +232,18 @@ export default function ViolationCreatePage() {
             label="심각도 *"
             type="number"
             value={formData.severityLevel.toString()}
-            onChange={(value) => handleInputChange('severityLevel', parseInt(value) || 1)}
-            min="1"
-            max="10"
-            required
+            onChange={(value) => handleInputChange('severityLevel', (parseInt(value) || 1).toString())}
+
+
           />
           
           <SimpleTextInput
             label="벌점 *"
             type="number"
             value={formData.penaltyPoints.toString()}
-            onChange={(value) => handleInputChange('penaltyPoints', parseInt(value) || 0)}
-            min="0"
-            max="100"
-            required
+            onChange={(value) => handleInputChange('penaltyPoints', (parseInt(value) || 0).toString())}
+
+
           />
         </GridForm>
       </div>

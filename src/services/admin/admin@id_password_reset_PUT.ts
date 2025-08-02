@@ -1,19 +1,9 @@
 'use client';
 // import { fetchDefault } from '@/services/fetchClient';
 
-//#region 서버 타입 정의 (파일 내부 사용)
-interface ResetPasswordServerResponse {
-  message?: string;
-}
-//#endregion
 
-//#region 변환 함수 (파일 내부 사용)
-function serverToClient(server: ResetPasswordServerResponse) {
-  return {
-    message: server.message,
-  };
-}
-//#endregion
+
+
 
 interface ResetAdminPasswordRequest {
   id: number;

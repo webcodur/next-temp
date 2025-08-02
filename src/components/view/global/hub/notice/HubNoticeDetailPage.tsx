@@ -153,7 +153,7 @@ export default function HubNoticeDetailPage() {
     router.back();
   }, [router]);
 
-  const handleFieldChange = useCallback((field: keyof Notice, value: any) => {
+  const handleFieldChange = useCallback((field: keyof Notice, value: string | string[] | boolean) => {
     setFormData(prev => prev ? { ...prev, [field]: value } : null);
   }, []);
 
@@ -194,7 +194,7 @@ export default function HubNoticeDetailPage() {
     } finally {
       setSubmitting(false);
     }
-  }, [formData, hasChanges, isValid, noticeId]);
+  }, [formData, hasChanges, isValid]);
 
   const handleTagsChange = useCallback((value: string) => {
     const tags = value.split(',').map(tag => tag.trim()).filter(tag => tag);

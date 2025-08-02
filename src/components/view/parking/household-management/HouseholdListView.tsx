@@ -448,12 +448,10 @@ export default function HouseholdListView() {
       <div className="space-y-6">
         {/* 검색/필터 패널 */}
         <AdvancedSearch
-          title="호실 검색"
           fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          searchLabel="검색"
-          resetLabel="초기화"
+          
           defaultOpen={true}
         />
 

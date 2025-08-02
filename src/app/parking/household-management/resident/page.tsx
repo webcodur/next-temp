@@ -8,12 +8,13 @@ import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/Advance
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import type { BaseTableColumn } from '@/components/ui/ui-data/baseTable/types';
-import { searchResident, type SearchResidentParams, type ResidentDto } from '@/services/resident/resident$_GET';
+import { searchResident } from '@/services/resident/resident$_GET';
+import type { Resident, SearchResidentRequest } from '@/types/api';
 import { deleteResident } from '@/services/resident/resident@id_DELETE';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // #region 타입 정의 확장
-interface ResidentWithStatus extends ResidentDto, Record<string, unknown> {
+interface ResidentWithStatus extends Resident, Record<string, unknown> {
   status: 'active' | 'inactive';
   relationship?: string;
   roomNumber?: string;
@@ -57,7 +58,7 @@ export default function ResidentListPage() {
     setError(null);
     
     try {
-      const params: SearchResidentParams = {
+      const params: SearchResidentRequest = {
         page: currentPage,
         limit: pageSize,
         name: searchKeyword || undefined,
@@ -76,18 +77,23 @@ export default function ResidentListPage() {
       console.log('🔍 [Resident API] Response.data.data:', response.data?.data);
 
       if (response.success && response.data) {
-        // Resident API는 { data: [...], meta: {...} } 구조
+        // Resident API는 { data: [...], total, page, limit, totalPages } 구조
         const residents = response.data.data || [];
         console.log('🔍 [Resident API] Final residents array:', residents);
         console.log('🔍 [Resident API] Array length:', residents.length);
-        console.log('🔍 [Resident API] Meta info:', response.data.meta);
+        console.log('🔍 [Resident API] Pagination info:', {
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+          totalPages: response.data.totalPages
+        });
         
         if (residents.length > 0) {
           console.log('🔍 [Resident API] First resident sample:', residents[0]);
         }
 
         // API 데이터를 UI 형식으로 변환
-        const transformedData: ResidentWithStatus[] = residents.map((resident: ResidentDto) => {
+        const transformedData: ResidentWithStatus[] = residents.map((resident: Resident) => {
           return {
             ...resident,
             status: resident.deletedAt ? 'inactive' : 'active' as const,
@@ -555,8 +561,7 @@ export default function ResidentListPage() {
           fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          searchLabel="검색"
-          resetLabel="초기화"
+          
           defaultOpen={true}
           searchMode="client"
         />

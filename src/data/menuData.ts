@@ -4,126 +4,130 @@ import type { MenuData } from '@/components/layout/sidebar/types';
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-  "종합 정보":{
+  "__종합 정보":{
     icon: Globe,
-    key: '종합 정보',
+    key: '__종합 정보',
     midItems: {
-      "허브 정보":{
-        key: '허브 정보',
+      "__허브 정보":{
+        key: '__허브 정보',
         botItems: [
           {
-            key: '허브 공지사항',
+            key: '__허브 이용 안내',
+            href: '/global/info/guide',
+          },
+          {
+            key: '__허브 공지사항',
             href: '/global/hub/notice',
           },
           {
-            key: '허브 이용 안내',
-            href: '/global/info/guide',
+            key: '__허브 업데이트 내역',
+            href: '/global/info/update',
           },
         ]
       },
-      "기초 정보":{
-        key: '기초 정보',
+      "__통합 정보":{
+        key: '__통합 정보',
         botItems: [
           {
-            key: '1 - 조직도 및 통합 다이어그램',
-            href: '/global/basic/overview',
+            key: '__1. 전체',
+            href: '/global/flowchart/overview',
           },
           {
-            key: '2 - 건물 관리',
-            href: '/global/basic/building',
+            key: '__2. 건물',
+            href: '/global/flowchart/building',
           },
           {
-            key: '2.a - 공용 시설 관리',
-            href: '/global/basic/facility',
+            key: '__3. 공용 시설',
+            href: '/global/flowchart/facility',
           },
           {
-            key: '2.b - 호실 관리',
-            href: '/global/basic/household',
+            key: '__4. 호실',
+            href: '/global/flowchart/household',
           },
           {
-            key: '3 - 입주세대 관리',
-            href: '/global/basic/household-instance',
+            key: '__5. 입주세대',
+            href: '/global/flowchart/household-instance',
           },
           {
-            key: '3.a - 입주민 관리',
-            href: '/global/basic/resident',
+            key: '__6. 입주민',
+            href: '/global/flowchart/resident',
           },
           {
-            key: '3.b - 차량 관리',
-            href: '/global/basic/vehicle',
+            key: '__7. 차량',
+            href: '/global/flowchart/vehicle',
           },
         ],
       },
     }
   },
-	주차: {
+	__주차: {
 		icon: SquareParking,
-		key: '주차',
+		key: '__주차',
 		midItems: {
 			주차장관리: {
 				key: '주차장관리',
 				botItems: [
 					{
-						key: '주차장정보 (T)',
+						key: '주차장정보',
 						href: '/parking/lot-management/info',
 					},
 					{
-						key: '근무자관리 (R)',
+						key: '근무자관리',
 						href: '/parking/lot-management/admin',
 					},
 					{
-						key: '주차장 출입관리 (T)',
+						key: '주차장 출입관리',
 						href: '/parking/lot-management/entry',
 					},
 				],
 			},
       // 차량관리 (차량 등록/수정) 정기차, 방문차, 입주차, 임대차, 블랙리스트
       __차량관리: {
-        key: '차량관리',
+        key: '__차량관리',
         botItems: [
           {
-            key: '차량등록',
+            key: '__차량등록',
             href: '/parking/cars/registration',
           },
           {
-            key: '정기차관리',
+            key: '__정기차관리',
             href: '/parking/cars/regular',
           },
           {
-            key: '방문차관리',
+            key: '__방문차관리',
             href: '/parking/cars/visitor',
           },
           {
-            key: '임대차관리',
+            key: '__임대차관리',
             href: '/parking/cars/lease',
           },
           {
-            key: '블랙리스트',
+            key: '__블랙리스트',
             href: '/parking/cars/blacklist',
           },
 					{
-						key: '위반 차량',
+						key: '__위반 차량',
 						href: '/parking/cars/violation',
 					},
         ],
       },
-			세대관리: {
-				key: '세대관리',
+			__세대관리: {
+				key: '__세대관리',
 				botItems: [
 					{
-						key: '통합뷰',
+						key: '__통합뷰',
 						href: '/parking/household-management/overview',
 					},
 					{
-						key: '호실관리',
+						key: '__호실관리',
 						href: '/parking/household-management/household',
 					},
 					{
-						key: '입주세대관리',
+						key: '__입주세대관리',
 						href: '/parking/household-management/household-instance',
 					},
 					{
-						key: '입주민관리',
+						key: '__입주민관리',
 						href: '/parking/household-management/resident',
 					},
 				],
@@ -132,7 +136,7 @@ export const menuData: MenuData = {
 				key: '__상가관리',
 				botItems: [
 					{
-						key: '점포현황',
+						key: '__점포현황',
 						href: '/parking/stores/status',
 					},
 				],
@@ -141,11 +145,11 @@ export const menuData: MenuData = {
 				key: '__보안순찰',
 				botItems: [
 					{
-						key: '순찰일지',
+						key: '__순찰일지',
 						href: '/parking/security/patrol-log',
 					},
 					{
-						key: '순찰설정',
+						key: '__순찰설정',
 						href: '/parking/security/patrol-config',
 					},
 				],
@@ -154,15 +158,15 @@ export const menuData: MenuData = {
 				key: '__결제정산',
 				botItems: [
 					{
-						key: '할인권관리',
+						key: '__할인권관리',
 						href: '/parking/payment/discounts',
 					},
 					{
-						key: '정산기관리',
+						key: '__정산기관리',
 						href: '/parking/payment/settlement',
 					},
 					{
-						key: '결제관리',
+						key: '__결제관리',
 						href: '/parking/payment/billing',
 					},
 				],
@@ -173,23 +177,23 @@ export const menuData: MenuData = {
 		icon: House,
 		key: '__공용시설',
 		midItems: {
-			시설서비스: {
-				key: '시설서비스',
+			__시설서비스: {
+				key: '__시설서비스',
 				botItems: [
 					{
-						key: '시설상품등록',
+						key: '__시설상품등록',
 						href: '/community/facilities/registration',
 					},
 					{
-						key: '예약현황',
+						key: '__예약현황',
 						href: '/community/facilities/reservations',
 					},
 					{
-						key: '출입관리',
+						key: '__출입관리',
 						href: '/community/facilities/access',
 					},
 					{
-						key: '정산관리',
+						key: '__정산관리',
 						href: '/community/facilities/settlement',
 					},
 				],
@@ -198,11 +202,11 @@ export const menuData: MenuData = {
 				key: '__소통관리',
 				botItems: [
 					{
-						key: '일대일게시판',
+						key: '__일대일게시판',
 						href: '/community/communication/board',
 					},
 					{
-						key: '신문고관리',
+						key: '__신문고관리',
 						href: '/community/communication/suggestions',
 					},
 				],
@@ -211,15 +215,15 @@ export const menuData: MenuData = {
 				key: '__생활서비스',
 				botItems: [
 					{
-						key: '관리비',
+						key: '__관리비',
 						href: '/community/services/maintenance-fee',
 					},
 					{
-						key: '전자투표',
+						key: '__전자투표',
 						href: '/community/services/voting',
 					},
 					{
-						key: '택배관리',
+						key: '__택배관리',
 						href: '/community/services/delivery',
 					},
 				],
@@ -230,43 +234,43 @@ export const menuData: MenuData = {
     icon: TreePalm,
     key: '__라이프',
     midItems: {
-      "앱 게시판":{
-        key: '앱 게시판',
+      "__앱 게시판":{
+        key: '__앱 게시판',
         botItems: [
           {
-            key: '앱 게시판',
+            key: '__앱 게시판',
             href: '/life/board/board',
           }
         ] 
       },
-      전자투표:{
-        key: '전자투표',
+      __전자투표:{
+        key: '__전자투표',
         botItems: [
           {
-            key: '선거 투표',
+            key: '__선거 투표',
             href: '/life/election/election',
           },
           {
-            key: '안건 투표',
+            key: '__안건 투표',
             href: '/life/election/candidate',
           },
           {
-            key: '설문 조사',
+            key: '__설문 조사',
             href: '/life/survey/survey',
           },
         ]
       }
     }
   },
-  정산:{
+  __정산:{
     icon: DollarSign,
-    key: '정산',
+    key: '__정산',
     midItems: {
-      할인권관리:{
-        key: '할인권관리',
+      __할인권관리:{
+        key: '__할인권관리',
         botItems: [
           {
-            key: '할인권관리',
+            key: '__할인권관리',
             href: '/payment/discount/management',
           }
         ] 

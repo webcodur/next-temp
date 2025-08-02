@@ -81,7 +81,7 @@ function serverMetaToClient(server: PageMetaServerResponse): PageMeta {
 }
 // #endregion
 
-export async function searchCarViolations(params?: SearchCarViolationRequest) {
+export async function searchViolations(params?: SearchCarViolationRequest) {
   const searchParams = new URLSearchParams();
   
   // 쿼리 파라미터는 snake_case로 전송
@@ -96,7 +96,7 @@ export async function searchCarViolations(params?: SearchCarViolationRequest) {
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
 
-  const url = `/car-violations${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+  const url = `/violations${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   const response = await fetchDefault(url, {
     method: 'GET',
   });

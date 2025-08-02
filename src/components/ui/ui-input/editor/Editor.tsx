@@ -70,7 +70,6 @@ const Editor: React.FC<EditorProps> = ({
 		placeholder: resolvedPlaceholder,
 		directionality: (isRTL ? 'rtl' : 'ltr') as 'rtl' | 'ltr',
 		language: currentLocale === 'ar' ? 'ar' : currentLocale === 'en' ? 'en' : 'ko_KR',
-		readonly: false,
 		content_style: `
 			body { 
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 

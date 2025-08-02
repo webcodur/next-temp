@@ -5,14 +5,14 @@
 */ // ------------------------------
 'use client';
 
-import { useSidebarKeyboard } from './unit/control/useSidebarKeyboard';
+import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
 import { PrimaryBar } from './unit/PrimaryBar';
 
 import { defaults } from '@/data/sidebarConfig';
 
 export default function Sidebar() {
 	// #region 훅
-	useSidebarKeyboard();
+	useGlobalKeyboard({ enableThemeToggle: false });
 	// #endregion
 
 	// #region 렌더링

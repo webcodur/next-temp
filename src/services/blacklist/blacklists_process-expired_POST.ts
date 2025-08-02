@@ -2,7 +2,7 @@
 import { fetchDefault } from '@/services/fetchClient';
 
 export async function processExpiredBlacklists() {
-  const response = await fetchDefault('/car-blacklists/process-expired', {
+  const response = await fetchDefault('/blacklists/process-expired', {
     method: 'POST',
   });
 

@@ -11,9 +11,9 @@ interface SearchResidentServerParams {
   email?: string;
   gender?: 'M' | 'F';
   parkinglot_id?: number;        // snake_case
-  address_1_depth?: string;      // snake_case
-  address_2_depth?: string;      // snake_case
-  address_3_depth?: string;      // snake_case
+  address_1depth?: string;       // snake_case
+  address_2depth?: string;       // snake_case
+  address_3depth?: string;       // snake_case
 }
 
 interface ResidentServerResponse {
@@ -28,18 +28,16 @@ interface ResidentServerResponse {
   created_at: Date;              // snake_case
   updated_at: Date;              // snake_case
   deleted_at?: Date | null;      // snake_case
-  resident_households?: unknown[];  // snake_case
+  resident_instance?: unknown[];    // snake_case
 }
 
 interface PaginatedServerResponse<T> {
   data: T[];
   meta: {
     current_page: number;        // snake_case
-    per_page: number;            // snake_case
-    last_page: number;           // snake_case
-    total: number;
-    from: number;
-    to: number;
+    items_per_page: number;      // snake_case
+    total_pages: number;         // snake_case
+    total_items: number;         // snake_case
   };
 }
 //#endregion
@@ -56,9 +54,9 @@ function clientToServerParams(client?: SearchResidentRequest): SearchResidentSer
     email: client.email,
     gender: client.gender,
     parkinglot_id: client.parkinglotId,
-    address_1_depth: client.address1Depth,
-    address_2_depth: client.address2Depth,
-    address_3_depth: client.address3Depth,
+    address_1depth: client.address1Depth,
+    address_2depth: client.address2Depth,
+    address_3depth: client.address3Depth,
   };
 }
 
@@ -75,21 +73,17 @@ function serverToClient(server: ResidentServerResponse): Resident {
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
-    residentHouseholds: server.resident_households,
+    residentHouseholds: server.resident_instance,
   };
 }
 
 function serverToClientPaginated(server: PaginatedServerResponse<ResidentServerResponse>): PaginatedResponse<Resident> {
   return {
     data: server.data.map(serverToClient),
-    meta: {
-      currentPage: server.meta.current_page,
-      perPage: server.meta.per_page,
-      lastPage: server.meta.last_page,
-      total: server.meta.total,
-      from: server.meta.from,
-      to: server.meta.to,
-    },
+    total: server.meta.total_items,
+    page: server.meta.current_page,
+    limit: server.meta.items_per_page,
+    totalPages: server.meta.total_pages,
   };
 }
 //#endregion
@@ -110,9 +104,9 @@ export async function searchResident(params?: SearchResidentRequest) {
   if (serverParams?.email) searchParams.append('email', serverParams.email);
   if (serverParams?.gender) searchParams.append('gender', serverParams.gender);
   if (serverParams?.parkinglot_id) searchParams.append('parkinglot_id', serverParams.parkinglot_id.toString());
-  if (serverParams?.address_1_depth) searchParams.append('address_1_depth', serverParams.address_1_depth);
-  if (serverParams?.address_2_depth) searchParams.append('address_2_depth', serverParams.address_2_depth);
-  if (serverParams?.address_3_depth) searchParams.append('address_3_depth', serverParams.address_3_depth);
+  if (serverParams?.address_1depth) searchParams.append('address_1depth', serverParams.address_1depth);
+  if (serverParams?.address_2depth) searchParams.append('address_2depth', serverParams.address_2depth);
+  if (serverParams?.address_3depth) searchParams.append('address_3depth', serverParams.address_3depth);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/residents?${queryString}` : '/residents';

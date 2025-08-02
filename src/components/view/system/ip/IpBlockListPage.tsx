@@ -90,7 +90,7 @@ export default function IpBlockListPage() {
       const result = await getBlockedIpList();
       
       if (result.success) {
-        const data = Array.isArray(result.data?.data) ? result.data.data : [];
+        const data = Array.isArray(result.data) ? result.data : [];
         setIpBlockList(data);
       } else {
         console.error('IP 차단 목록 로드 실패:', result.errorMsg);
@@ -369,12 +369,10 @@ export default function IpBlockListPage() {
 
       {/* 고급 검색 */}
       <AdvancedSearch
-        title="IP 차단 검색"
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        searchLabel="검색"
-        resetLabel="초기화"
+        
         defaultOpen={false}
       />
 

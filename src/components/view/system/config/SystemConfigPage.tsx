@@ -32,24 +32,6 @@ interface SearchFilters {
 // #endregion
 
 // #region API 응답 타입 정의
-interface ApiSystemConfigResponse {
-  id: number;
-  config_key: string;
-  config_value: string;
-  description?: string;
-  config_type: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  updated_by?: number;
-  category?: string | null;
-  // camelCase 변환된 필드들 (fetchClient에서 변환되는 경우)
-  configKey?: string;
-  configValue?: string;
-  configType?: string;
-  updatedAt?: string;
-  updatedBy?: number;
-}
 // #endregion
 
 export default function SystemConfigPage() {
@@ -91,47 +73,9 @@ export default function SystemConfigPage() {
       const result = await getAllConfigs();
       
       if (result.success) {
-        // API 응답이 { data: SystemConfig[] } 구조인 경우 처리
-        const rawData = result.data?.data || result.data || [];
-        
-        // API 응답 데이터를 SystemConfig 타입에 맞게 매핑
-        const mappedData: SystemConfig[] = Array.isArray(rawData) ? rawData.map((item: ApiSystemConfigResponse) => {
-          const configType = mapApiTypeToSystemType(item.configType || item.config_type || 'STRING');
-          const rawValue = item.configValue || item.config_value || '';
-          
-          // 타입에 따라 값 파싱
-          let parsedValue: string | number | boolean | object = rawValue;
-          try {
-            switch (configType) {
-              case 'number':
-                parsedValue = parseFloat(rawValue);
-                if (isNaN(parsedValue)) parsedValue = rawValue;
-                break;
-              case 'boolean':
-                parsedValue = rawValue.toLowerCase() === 'true';
-                break;
-              case 'json':
-                parsedValue = JSON.parse(rawValue);
-                break;
-              default:
-                parsedValue = rawValue;
-            }
-          } catch {
-            // 파싱 실패 시 원본 문자열 사용
-            parsedValue = rawValue;
-          }
-          
-          return {
-            key: item.configKey || item.config_key || '',
-            value: parsedValue,
-            type: configType,
-            description: item.description,
-            updatedAt: item.updatedAt || item.updated_at || '',
-            updatedBy: item.updatedBy || item.updated_by || 0,
-          };
-        }) : [];
-        
-        let filteredData = mappedData;
+        // API 응답 데이터 처리
+        const rawData = result.data || [];
+        let filteredData = rawData;
         
         // 클라이언트 사이드 필터링
         if (filters?.key) {
@@ -161,22 +105,7 @@ export default function SystemConfigPage() {
     }
   }, []);
 
-  // API 타입을 시스템 타입으로 매핑하는 헬퍼 함수
-  const mapApiTypeToSystemType = (apiType: string): 'string' | 'number' | 'boolean' | 'json' => {
-    switch (apiType?.toUpperCase()) {
-      case 'BOOLEAN':
-        return 'boolean';
-      case 'INTEGER':
-      case 'NUMBER':
-        return 'number';
-      case 'JSON':
-      case 'OBJECT':
-        return 'json';
-      case 'STRING':
-      default:
-        return 'string';
-    }
-  };
+
 
   useEffect(() => {
     loadConfigData();
@@ -326,7 +255,7 @@ export default function SystemConfigPage() {
       width: '25%',
       cell: (item: SystemConfig) => {
         let displayValue = '';
-        if (item.type === 'json') {
+        if (item.type === 'JSON') {
           displayValue = JSON.stringify(item.value);
         } else {
           displayValue = String(item.value);
@@ -349,9 +278,9 @@ export default function SystemConfigPage() {
       width: '10%',
       cell: (item: SystemConfig) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${
-          item.type === 'string' ? 'bg-blue-100 text-blue-800' :
-          item.type === 'number' ? 'bg-green-100 text-green-800' :
-          item.type === 'boolean' ? 'bg-purple-100 text-purple-800' :
+          item.type === 'STRING' ? 'bg-blue-100 text-blue-800' :
+          item.type === 'INTEGER' ? 'bg-green-100 text-green-800' :
+          item.type === 'BOOLEAN' ? 'bg-purple-100 text-purple-800' :
           'bg-orange-100 text-orange-800'
         }`}>
           {item.type}
@@ -422,8 +351,7 @@ export default function SystemConfigPage() {
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        searchLabel="검색"
-        resetLabel="초기화"
+        
         defaultOpen={false}
         searchMode="client"
       />

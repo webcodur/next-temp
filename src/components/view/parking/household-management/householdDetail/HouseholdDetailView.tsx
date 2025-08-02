@@ -72,18 +72,20 @@ export default function HouseholdDetailView({ householdId }: HouseholdDetailView
       }
 
       const householdData = householdResponse.data;
-      setHousehold(householdData);
+      setHousehold(householdData || null);
 
       // 폼 데이터 초기화
-      const initialData = {
-        lv1Address: householdData.address1Depth,
-        lv2Address: householdData.address2Depth,
-        lv3Address: householdData.address3Depth || '',
-        householdType: householdData.householdType,
-        memo: householdData.memo || '',
-      };
-      setFormData(initialData);
-      setOriginalData(initialData);
+      if (householdData) {
+        const initialData = {
+          lv1Address: householdData.address1Depth,
+          lv2Address: householdData.address2Depth,
+          lv3Address: householdData.address3Depth || '',
+          householdType: householdData.householdType,
+          memo: householdData.memo || '',
+        };
+        setFormData(initialData);
+        setOriginalData(initialData);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
     } finally {

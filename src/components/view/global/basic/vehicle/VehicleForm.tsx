@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { GridForm } from '@/components/ui/ui-layout/grid-form/GridForm';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
@@ -92,7 +92,7 @@ export default function VehicleForm({
   // #endregion
 
   // #region 폼 핸들러
-  const handleInputChange = (field: keyof VehicleFormData, value: string | number) => {
+  const handleInputChange = useCallback((field: keyof VehicleFormData, value: string | number) => {
     const updatedData = {
       ...formData,
       [field]: value
@@ -111,7 +111,7 @@ export default function VehicleForm({
         return newErrors;
       });
     }
-  };
+  }, [formData, onChange, errors]);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -129,24 +129,43 @@ export default function VehicleForm({
     
     if (!validateForm()) return;
 
-    const submitData: CreateCarRequest | UpdateCarRequest = {
-      carNumber: formData.carNumber.trim(),
-      brand: formData.brand.trim() || undefined,
-      model: formData.model.trim() || undefined,
-      type: formData.type.trim() || undefined,
-      outerText: formData.outerText.trim() || undefined,
-      year: formData.year ? Number(formData.year) : undefined,
-      externalSticker: formData.externalSticker.trim() || undefined,
-      fuel: formData.fuel.trim() || undefined,
-      inOutStatus: formData.inOutStatus || undefined,
-      lastParkingDeviceId: formData.lastParkingDeviceId ? Number(formData.lastParkingDeviceId) : undefined,
-      frontImageUrl: formData.frontImageUrl.trim() || undefined,
-      rearImageUrl: formData.rearImageUrl.trim() || undefined,
-      sideImageUrl: formData.sideImageUrl.trim() || undefined,
-      topImageUrl: formData.topImageUrl.trim() || undefined
-    };
-
-    onSubmit(submitData);
+    if (mode === 'create') {
+      const submitData: CreateCarRequest = {
+        carNumber: formData.carNumber.trim(),
+        brand: formData.brand.trim() || undefined,
+        model: formData.model.trim() || undefined,
+        type: formData.type.trim() || undefined,
+        outerText: formData.outerText.trim() || undefined,
+        year: formData.year ? Number(formData.year) : undefined,
+        externalSticker: formData.externalSticker.trim() || undefined,
+        fuel: formData.fuel.trim() || undefined,
+        inOutStatus: formData.inOutStatus as 'IN' | 'OUT' | undefined,
+        lastParkingDeviceId: formData.lastParkingDeviceId ? Number(formData.lastParkingDeviceId) : undefined,
+        frontImageUrl: formData.frontImageUrl.trim() || undefined,
+        rearImageUrl: formData.rearImageUrl.trim() || undefined,
+        sideImageUrl: formData.sideImageUrl.trim() || undefined,
+        topImageUrl: formData.topImageUrl.trim() || undefined
+      };
+      onSubmit(submitData);
+    } else {
+      const submitData: UpdateCarRequest = {
+        carNumber: formData.carNumber.trim(),
+        brand: formData.brand.trim() || undefined,
+        model: formData.model.trim() || undefined,
+        type: formData.type.trim() || undefined,
+        outerText: formData.outerText.trim() || undefined,
+        year: formData.year ? Number(formData.year) : undefined,
+        externalSticker: formData.externalSticker.trim() || undefined,
+        fuel: formData.fuel.trim() || undefined,
+        inOutStatus: formData.inOutStatus as 'IN' | 'OUT' | undefined,
+        lastParkingDeviceId: formData.lastParkingDeviceId ? Number(formData.lastParkingDeviceId) : undefined,
+        frontImageUrl: formData.frontImageUrl.trim() || undefined,
+        rearImageUrl: formData.rearImageUrl.trim() || undefined,
+        sideImageUrl: formData.sideImageUrl.trim() || undefined,
+        topImageUrl: formData.topImageUrl.trim() || undefined
+      };
+      onSubmit(submitData);
+    }
   };
   // #endregion
 
@@ -211,7 +230,6 @@ export default function VehicleForm({
           value={formData.carNumber}
           onChange={(value) => handleInputChange('carNumber', value)}
           disabled={isReadOnly || (mode === 'edit')} // 편집 시에도 차량번호는 수정 불가
-          error={errors.carNumber}
         />
       )
     },
@@ -382,21 +400,45 @@ export default function VehicleForm({
         )
       }
     ] : [])
-  ], [formData, errors, isReadOnly, mode, data, brandOptions, vehicleTypeOptions, fuelOptions, statusOptions]);
+  ], [formData, isReadOnly, mode, data, brandOptions, vehicleTypeOptions, fuelOptions, statusOptions, handleInputChange]);
   // #endregion
 
   return (
-    <div className="bg-card rounded-lg border border-border p-6">
-      <GridForm
-        fields={formFields}
-        onSubmit={mode !== 'view' ? handleSubmit : undefined}
-        onCancel={onCancel}
-        submitLabel={mode === 'create' ? '차량 생성' : '저장'}
-        cancelLabel="취소"
-        loading={loading}
-        disabled={disabled}
-        showActions={mode !== 'view'}
-      />
+    <div className="p-6 rounded-lg border bg-card border-border">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {formFields.map((field, index) => (
+          <div key={index} className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
+              {field.label}
+              {field.required && <span className="ml-1 text-red-500">*</span>}
+            </label>
+            {field.content}
+          </div>
+        ))}
+      </div>
+      
+      {mode !== 'view' && (
+        <div className="flex gap-3 justify-end mt-6">
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={loading}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md border border-gray-300 hover:bg-gray-200 disabled:opacity-50"
+            >
+              취소
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading || disabled}
+            className="px-4 py-2 text-sm font-medium text-white rounded-md border border-transparent bg-primary hover:bg-primary/90 disabled:opacity-50"
+          >
+            {loading ? '처리 중...' : (mode === 'create' ? '차량 생성' : '저장')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

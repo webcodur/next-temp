@@ -51,29 +51,9 @@ export default function OrganizationOverviewPage() {
             selectedNodeId={selectedNodeId}
           />
         </div>
-
         {/* 오른쪽: 상세설명 패널 */}
         <div className="lg:order-2">
           <DetailPanel selectedNodeId={selectedNodeId} />
-        </div>
-      </div>
-
-      {/* 도움말 섹션 */}
-      <div className="p-6 rounded-lg border bg-muted">
-        <h3 className="mb-3 font-semibold text-foreground">💡 사용 안내</h3>
-        <div className="space-y-2 text-sm text-muted-foreground">
-          <div className="flex gap-2 items-start">
-            <span className="font-medium min-w-fit">클릭:</span>
-            <span>왼쪽 다이어그램의 각 요소를 클릭하면 해당 요소의 상세 정보가 오른쪽에 표시됩니다.</span>
-          </div>
-          <div className="flex gap-2 items-start">
-            <span className="font-medium min-w-fit">계층 구조:</span>
-            <span>건물 → 호실 → 조직 → 개인/차량 순서로 관리 계층이 구성됩니다.</span>
-          </div>
-          <div className="flex gap-2 items-start">
-            <span className="font-medium min-w-fit">관계:</span>
-            <span>실선은 상하 계층 관계를, 점선은 수평적 연관 관계를 나타냅니다.</span>
-          </div>
         </div>
       </div>
     </div>

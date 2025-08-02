@@ -9,7 +9,7 @@ import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { createResident } from '@/services/resident/resident_POST';
 import { createResidentHousehold } from '@/services/resident/resident_household_POST';
 import { searchHouseholdInstance } from '@/services/household/household_instance$_GET';
-import type { CreateResidentRequest } from '@/services/resident/resident_POST';
+import type { CreateResidentRequest } from '@/types/api';
 import type { CreateResidentHouseholdRequest } from '@/services/resident/resident_household_POST';
 import type { HouseholdInstance } from '@/types/household';
 

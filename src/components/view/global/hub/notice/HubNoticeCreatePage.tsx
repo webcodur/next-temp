@@ -59,7 +59,7 @@ export default function HubNoticeCreatePage() {
     router.push('/global/hub/notice');
   }, [router]);
 
-  const handleFieldChange = useCallback((field: keyof NoticeCreateDto, value: any) => {
+  const handleFieldChange = useCallback((field: keyof NoticeCreateDto, value: string | string[] | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
@@ -90,7 +90,7 @@ export default function HubNoticeCreatePage() {
     } finally {
       setSubmitting(false);
     }
-  }, [formData, isValid, router]);
+  }, [isValid, router]);
   // #endregion
 
   return (

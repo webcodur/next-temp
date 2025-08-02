@@ -19,8 +19,6 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { Badge } from '@/components/ui/ui-effects/badge/Badge';
 
-
-
 // 타입 정의
 import { Notice } from '@/types/notice';
 import { Option } from '@/components/ui/ui-input/field/core/types';
@@ -318,7 +316,7 @@ export default function HubNoticePage() {
     <div className="flex flex-col gap-6">
       {/* 페이지 헤더 */}
       <PageHeader 
-        title="주차 SAAS 서버 공지사항"
+        title="허브 공지사항"
         subtitle="시스템 업데이트, 점검 안내, 이벤트 등 주요 공지사항을 확인하세요."
         rightActions={
           <Button 

@@ -1,6 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { SearchBlacklistRequest, BlacklistResponse, PageResponse } from '@/types/blacklist';
+import { SearchBlacklistRequest, BlacklistResponse, PageResponse, BlacklistRegistrationReason } from '@/types/blacklist';
 
 // #region 서버 타입 정의 (내부 사용)
 interface BlacklistServerResponse {
@@ -38,7 +38,7 @@ function serverToClient(server: BlacklistServerResponse): BlacklistResponse {
     id: server.id,
     carNumber: server.car_number,
     blacklistType: server.blacklist_type as 'AUTO' | 'MANUAL',
-    registrationReason: server.registration_reason as any,
+    registrationReason: server.registration_reason as BlacklistRegistrationReason,
     blockPeriodDays: server.block_period_days,
     description: server.description,
     isActive: server.is_active,
@@ -77,7 +77,7 @@ export async function searchBlacklists(params?: SearchBlacklistRequest) {
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
 
-  const url = `/car-blacklists${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+  const url = `/blacklists${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   
   const response = await fetchDefault(url, {
     method: 'GET',

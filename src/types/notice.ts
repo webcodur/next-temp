@@ -57,4 +57,4 @@ export interface NoticeCreateDto {
   endDate?: string;
 }
 
-export interface NoticeUpdateDto extends Partial<NoticeCreateDto> {}
+export type NoticeUpdateDto = Partial<NoticeCreateDto>;

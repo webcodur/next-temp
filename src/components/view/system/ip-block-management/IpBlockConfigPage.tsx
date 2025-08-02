@@ -365,8 +365,7 @@ export default function IpBlockConfigPage() {
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        searchLabel="검색"
-        resetLabel="초기화"
+        
         defaultOpen={false}
         searchMode="client"
       />

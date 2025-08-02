@@ -56,7 +56,7 @@ export default function HouseholdInstanceListView() {
       const response = await searchHouseholdInstance(params);
 
       if (response.success && response.data) {
-        const instances = response.data.data || response.data.householdInstances || response.data || [];
+        const instances = response.data.data || [];
 
         // API 데이터를 UI 형식으로 변환
         const transformedData: HouseholdInstanceWithStatus[] = instances.map((instance: HouseholdInstance) => ({
@@ -422,8 +422,7 @@ export default function HouseholdInstanceListView() {
           fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          searchLabel="검색"
-          resetLabel="초기화"
+          
           defaultOpen={true}
           searchMode="client"
         />

@@ -1,6 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { BlacklistStatusResponse } from '@/types/blacklist';
+import { BlacklistStatusResponse, BlacklistRegistrationReason } from '@/types/blacklist';
 
 // #region 서버 타입 정의 (내부 사용)
 interface BlacklistStatusServerResponse {
@@ -25,7 +25,7 @@ function serverToClient(server: BlacklistStatusServerResponse): BlacklistStatusR
     blacklistInfo: server.blacklist_info ? {
       id: server.blacklist_info.id,
       blacklistType: server.blacklist_info.blacklist_type as 'AUTO' | 'MANUAL',
-      registrationReason: server.blacklist_info.registration_reason as any,
+      registrationReason: server.blacklist_info.registration_reason as BlacklistRegistrationReason,
       registeredAt: server.blacklist_info.registered_at,
       expiresAt: server.blacklist_info.expires_at,
       description: server.blacklist_info.description,
@@ -35,7 +35,7 @@ function serverToClient(server: BlacklistStatusServerResponse): BlacklistStatusR
 // #endregion
 
 export async function getBlacklistStatus(carNumber: string) {
-  const response = await fetchDefault(`/car-blacklists/status/${encodeURIComponent(carNumber)}`, {
+  const response = await fetchDefault(`/blacklists/status/${encodeURIComponent(carNumber)}`, {
     method: 'GET',
   });
 
