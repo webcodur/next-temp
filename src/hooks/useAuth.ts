@@ -7,7 +7,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect, useTransition, useCallback, useState } from 'react';
+import { useEffect, useTransition, useCallback, useState, useMemo } from 'react';
 import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
 import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
 import { isAuthenticatedAtom, userProfileAtom, parkingLotsAtom, selectedParkingLotIdAtom, manualParkingLotIdAtom } from '@/store/auth';
@@ -26,6 +26,10 @@ import {
 } from '@/utils/tokenUtils';
 
 // #region 메인 인증 훅
+// 전역 초기화 상태 (모든 인스턴스가 공유)
+let globalInitialized = false;
+let globalInitPromise: Promise<void> | null = null;
+
 export function useAuth() {
   const [isPending, startTransition] = useTransition();
   const [isLoggedIn, setIsLoggedIn] = useAtom(isAuthenticatedAtom);
@@ -33,7 +37,7 @@ export function useAuth() {
   const [, setParkingLots] = useAtom(parkingLotsAtom);
   const [tokenSelectedParkingLotId, setTokenSelectedParkingLotId] = useAtom(selectedParkingLotIdAtom);
   const [manualSelectedParkingLotId, setManualSelectedParkingLotId] = useAtom(manualParkingLotIdAtom);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(globalInitialized);
 
   // 분리된 훅들 사용
   const { refreshToken } = useTokenManagement();
@@ -56,12 +60,7 @@ export function useAuth() {
     const parkingLotIdFromToken = getParkinglotIdFromToken();
     setTokenSelectedParkingLotId(parkingLotIdFromToken);
 
-    console.log('🔄 토큰 정보 동기화:', {
-      userId: userInfo.userId,
-      roleId: userInfo.roleId,
-      parkingLotId: parkingLotIdFromToken,
-      timestamp: new Date().toISOString()
-    });
+    // 로깅 제거 (불필요)
 
     return true;
   }, [setTokenSelectedParkingLotId]);
@@ -90,60 +89,80 @@ export function useAuth() {
 
   // #region 초기화 및 토큰 확인 (앱 시작 시)
   useEffect(() => {
+    if (globalInitialized) {
+      setIsInitialized(true);
+      return;
+    }
+
+    if (globalInitPromise) {
+      globalInitPromise.then(() => setIsInitialized(true));
+      return;
+    }
+
     const initializeAuth = async () => {
-      console.log('🚀 인증 상태 초기화 시작');
+      // 개발 모드에서만 로그 출력
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 인증 초기화 (한 번만)');
+      }
       
       const accessToken = getTokenFromCookie(ACCESS_TOKEN_NAME);
       
       if (accessToken) {
-        console.log('🎫 기존 토큰 발견, 검증 중...');
-        
         // 토큰이 있으면 유효성 검사 및 사용자 정보 동기화
         const isValid = syncUserInfoFromToken();
         
         if (isValid) {
-          console.log('✅ 토큰 유효 → 로그인 상태로 복원');
           setIsLoggedIn(true);
         } else {
-          console.log('❌ 토큰 무효 → 자동 로그아웃 처리');
           await handleTokenExpired();
         }
       } else {
-        console.log('🔍 토큰 없음 → 로그아웃 상태');
         setIsLoggedIn(false);
         setTokenSelectedParkingLotId(null);
         setManualSelectedParkingLotId(null); // 수동 선택 주차장 ID도 초기화
       }
       
+      globalInitialized = true;
       setIsInitialized(true);
-      console.log('🏁 인증 상태 초기화 완료');
     };
 
-    initializeAuth();
+    globalInitPromise = initializeAuth();
+    globalInitPromise.finally(() => {
+      globalInitPromise = null;
+    });
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 한 번만 실행
+  }, []); // 진짜 한 번만 실행
   // #endregion
 
-  // #region 주기적 토큰 검증
+  // #region 주기적 토큰 검증 (전역으로 한 번만)
   useEffect(() => {
-    if (!isLoggedIn || !isInitialized) return;
+    if (!isLoggedIn || !isInitialized || !globalInitialized) return;
 
-    console.log('⏲️ 주기적 토큰 검증 시작 (5분 간격)');
+    // 이미 토큰 검증이 시작되었다면 중복 실행 방지
+    if (window.globalTokenCheckStarted) return;
+    window.globalTokenCheckStarted = true;
+
+    // 개발 모드에서만 로그 출력
+    if (process.env.NODE_ENV === 'development') {
+      console.log('⏲️ 토큰 검증 시작 (전역)');
+    }
     
     const tokenCheckInterval = setInterval(async () => {
       const currentToken = getTokenFromCookie(ACCESS_TOKEN_NAME);
       
       if (!currentToken) {
-        console.log('🚨 토큰 손실 감지 → 만료 처리');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🚨 토큰 손실');
+        }
         await handleTokenExpired();
-      } else {
-        console.log('✅ 토큰 상태 양호');
       }
+      // 정상 상태일 때는 로그 출력하지 않음
     }, 5 * 60 * 1000); // 5분마다 확인
 
     return () => {
-      console.log('🛑 토큰 검증 인터벌 정리');
       clearInterval(tokenCheckInterval);
+      window.globalTokenCheckStarted = false;
     };
   }, [isLoggedIn, isInitialized, handleTokenExpired]);
   // #endregion
@@ -240,7 +259,6 @@ export function useAuth() {
   // 현재 사용자 정보 새로고침
   const refreshUserInfo = useCallback(() => {
     if (!isLoggedIn) return false;
-    console.log('🔄 사용자 정보 새로고침');
     return syncUserInfoFromToken();
   }, [isLoggedIn, syncUserInfoFromToken]);
 
@@ -250,8 +268,8 @@ export function useAuth() {
   }, []);
   // #endregion
 
-  // #region 반환 인터페이스
-  return {
+  // #region 반환 인터페이스 (메모이제이션)
+  return useMemo(() => ({
     // 기본 상태
     isLoggedIn,
     isLoading: !isInitialized, // 초기화 전까지는 로딩 상태
@@ -276,6 +294,19 @@ export function useAuth() {
     getUserRoleId: getRoleIdFromToken,
     getCurrentUserInfo,
     debugToken: debugTokenPayload,
-  };
+  }), [
+    isLoggedIn,
+    isInitialized,
+    isPending,
+    userProfile,
+    parkingLots,
+    effectiveSelectedParkingLotId,
+    selectedParkingLot,
+    login,
+    logout,
+    selectParkingLot,
+    refreshToken,
+    refreshUserInfo
+  ]);
   // #endregion
 } 

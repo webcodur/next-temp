@@ -1,5 +1,5 @@
 /*
-  파일명: src/app/global/basic/overview/page.tsx
+  파일명: src/app/global/flowchart/overview/page.tsx
   기능: 조직도 및 통합 다이어그램 페이지
   책임: 시스템의 계층 구조를 시각적으로 표현하고 각 요소의 상세 정보를 제공한다.
 */

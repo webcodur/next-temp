@@ -5,7 +5,7 @@
 */ // ------------------------------
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
@@ -19,7 +19,7 @@ interface ProfileButtonProps {
 }
 // #endregion
 
-export function ProfileButton({ className = '' }: ProfileButtonProps) {
+export const ProfileButton = memo(function ProfileButton({ className = '' }: ProfileButtonProps) {
 	// #region 상태
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -119,4 +119,4 @@ export function ProfileButton({ className = '' }: ProfileButtonProps) {
 		</div>
 	);
 	// #endregion
-}
+});

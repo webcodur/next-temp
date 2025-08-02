@@ -5,6 +5,7 @@
 */ // ------------------------------
 'use client';
 
+import { memo } from 'react';
 import clsx from 'clsx';
 
 import Breadcrumb from '@/components/layout/header/Breadcrumb';
@@ -15,7 +16,7 @@ import { SettingsButton } from '@/components/layout/header/SettingsButton';
 import { Logo } from './Logo';
 import { SearchButton } from './SearchButton';
 
-export default function Header() {
+const Header = memo(function Header() {
 	// #region 상수
 	const buttonBase = 'h-10 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';
 	const squareButton = clsx(buttonBase, 'w-10');
@@ -43,4 +44,6 @@ export default function Header() {
 		</header>
 	);
 	// #endregion
-}
+});
+
+export default Header;

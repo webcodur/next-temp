@@ -61,17 +61,10 @@ export function useParkingLotManagement() {
     
     const selectedLot = parkingLots.find(lot => lot.id === effectiveSelectedParkingLotId) || null;
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 현재 선택된 주차장:', {
-        effectiveId: effectiveSelectedParkingLotId,
-        tokenId: tokenSelectedParkingLotId,
-        manualId: manualSelectedParkingLotId,
-        lotInfo: selectedLot
-      });
-    }
+    // 로깅 제거 (불필요)
     
     return selectedLot;
-  }, [effectiveSelectedParkingLotId, parkingLots, tokenSelectedParkingLotId, manualSelectedParkingLotId]);
+  }, [effectiveSelectedParkingLotId, parkingLots]);
 
   return {
     parkingLots,

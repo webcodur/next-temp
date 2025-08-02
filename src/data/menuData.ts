@@ -1,65 +1,73 @@
-import { FlaskConical, Crown, Globe, SquareParking, House, TreePalm, DollarSign } from 'lucide-react';
+import {
+	FlaskConical,
+	Crown,
+	Globe,
+	SquareParking,
+	House,
+	TreePalm,
+	DollarSign,
+} from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-  "__종합 정보":{
-    icon: Globe,
-    key: '__종합 정보',
-    midItems: {
-      "__허브 정보":{
-        key: '__허브 정보',
-        botItems: [
-          {
-            key: '__허브 이용 안내',
-            href: '/global/info/guide',
-          },
-          {
-            key: '__허브 공지사항',
-            href: '/global/hub/notice',
-          },
-          {
-            key: '__허브 업데이트 내역',
-            href: '/global/info/update',
-          },
-        ]
-      },
-      "__통합 정보":{
-        key: '__통합 정보',
-        botItems: [
-          {
-            key: '__1. 전체',
-            href: '/global/flowchart/overview',
-          },
-          {
-            key: '__2. 건물',
-            href: '/global/flowchart/building',
-          },
-          {
-            key: '__3. 공용 시설',
-            href: '/global/flowchart/facility',
-          },
-          {
-            key: '__4. 호실',
-            href: '/global/flowchart/household',
-          },
-          {
-            key: '__5. 입주세대',
-            href: '/global/flowchart/household-instance',
-          },
-          {
-            key: '__6. 입주민',
-            href: '/global/flowchart/resident',
-          },
-          {
-            key: '__7. 차량',
-            href: '/global/flowchart/vehicle',
-          },
-        ],
-      },
-    }
-  },
+	'__종합 정보': {
+		icon: Globe,
+		key: '__종합 정보',
+		midItems: {
+			'__허브 정보': {
+				key: '__허브 정보',
+				botItems: [
+					{
+						key: '__허브 이용 안내',
+						href: '/global/info/guide',
+					},
+					{
+						key: '__허브 공지사항',
+						href: '/global/info/notice',
+					},
+					{
+						key: '__허브 업데이트 내역',
+						href: '/global/info/update',
+					},
+				],
+			},
+			'__통합 정보': {
+				key: '__통합 정보',
+				botItems: [
+					{
+						key: '__1. 전체',
+						href: '/global/flowchart/overview',
+					},
+					{
+						key: '__2. 건물',
+						href: '/global/flowchart/building',
+					},
+					{
+						key: '__3. 공용 시설',
+						href: '/global/flowchart/facility',
+					},
+					{
+						key: '__4. 호실',
+						href: '/global/flowchart/household',
+					},
+					{
+						key: '__5. 입주세대',
+						href: '/global/flowchart/household-instance',
+					},
+					{
+						key: '__6. 입주민',
+						href: '/global/flowchart/resident',
+					},
+					{
+						key: '__7. 차량',
+						href: '/global/flowchart/vehicle',
+					},
+				],
+			},
+		},
+	},
 	__주차: {
 		icon: SquareParking,
 		key: '__주차',
@@ -81,36 +89,36 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-      // 차량관리 (차량 등록/수정) 정기차, 방문차, 입주차, 임대차, 블랙리스트
-      __차량관리: {
-        key: '__차량관리',
-        botItems: [
-          {
-            key: '__차량등록',
-            href: '/parking/cars/registration',
-          },
-          {
-            key: '__정기차관리',
-            href: '/parking/cars/regular',
-          },
-          {
-            key: '__방문차관리',
-            href: '/parking/cars/visitor',
-          },
-          {
-            key: '__임대차관리',
-            href: '/parking/cars/lease',
-          },
-          {
-            key: '__블랙리스트',
-            href: '/parking/cars/blacklist',
-          },
+			// 차량관리 (차량 등록/수정) 정기차, 방문차, 입주차, 임대차, 블랙리스트
+			__차량관리: {
+				key: '__차량관리',
+				botItems: [
+					{
+						key: '__차량등록',
+						href: '/parking/cars/registration',
+					},
+					{
+						key: '__정기차관리',
+						href: '/parking/cars/regular',
+					},
+					{
+						key: '__방문차관리',
+						href: '/parking/cars/visitor',
+					},
+					{
+						key: '__임대차관리',
+						href: '/parking/cars/lease',
+					},
+					{
+						key: '__블랙리스트',
+						href: '/parking/cars/blacklist',
+					},
 					{
 						key: '__위반 차량',
 						href: '/parking/cars/violation',
 					},
-        ],
-      },
+				],
+			},
 			__세대관리: {
 				key: '__세대관리',
 				botItems: [
@@ -230,53 +238,53 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-  __라이프:{
-    icon: TreePalm,
-    key: '__라이프',
-    midItems: {
-      "__앱 게시판":{
-        key: '__앱 게시판',
-        botItems: [
-          {
-            key: '__앱 게시판',
-            href: '/life/board/board',
-          }
-        ] 
-      },
-      __전자투표:{
-        key: '__전자투표',
-        botItems: [
-          {
-            key: '__선거 투표',
-            href: '/life/election/election',
-          },
-          {
-            key: '__안건 투표',
-            href: '/life/election/candidate',
-          },
-          {
-            key: '__설문 조사',
-            href: '/life/survey/survey',
-          },
-        ]
-      }
-    }
-  },
-  __정산:{
-    icon: DollarSign,
-    key: '__정산',
-    midItems: {
-      __할인권관리:{
-        key: '__할인권관리',
-        botItems: [
-          {
-            key: '__할인권관리',
-            href: '/payment/discount/management',
-          }
-        ] 
-      },
-    }
-  },
+	__라이프: {
+		icon: TreePalm,
+		key: '__라이프',
+		midItems: {
+			'__앱 게시판': {
+				key: '__앱 게시판',
+				botItems: [
+					{
+						key: '__앱 게시판',
+						href: '/life/board/board',
+					},
+				],
+			},
+			__전자투표: {
+				key: '__전자투표',
+				botItems: [
+					{
+						key: '__선거 투표',
+						href: '/life/election/election',
+					},
+					{
+						key: '__안건 투표',
+						href: '/life/election/candidate',
+					},
+					{
+						key: '__설문 조사',
+						href: '/life/survey/survey',
+					},
+				],
+			},
+		},
+	},
+	__정산: {
+		icon: DollarSign,
+		key: '__정산',
+		midItems: {
+			__할인권관리: {
+				key: '__할인권관리',
+				botItems: [
+					{
+						key: '__할인권관리',
+						href: '/payment/discount/management',
+					},
+				],
+			},
+		},
+	},
 	연구소: {
 		icon: FlaskConical,
 		key: '연구소',

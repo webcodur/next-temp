@@ -8,15 +8,22 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 // #region 렌더링
-export const Logo = () => {
+export const Logo = memo(() => {
 	const { selectedParkingLot } = useAuth();
 	
 	return (
 		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
-			<Image src="/icons/testLogo/lg_plus.png" alt="System Logo" width={35} height={35} />
+			<Image 
+				src="/icons/testLogo/lg_plus.png" 
+				alt="System Logo" 
+				width={35} 
+				height={35}
+				style={{ width: 'auto', height: '35px' }}
+			/>
 			<div className="flex gap-2 items-baseline">
 				{selectedParkingLot &&(
 					<>
@@ -27,5 +34,7 @@ export const Logo = () => {
 			</div>
 		</Link>
 	);
-};
+});
+
+Logo.displayName = 'Logo';
 // #endregion 

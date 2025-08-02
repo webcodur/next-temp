@@ -60,10 +60,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 		return () => window.removeEventListener('resize', checkScreenSize);
 	}, []);
 
-	// 페이지 로드 시 토큰 확인 및 상태 동기화
+	// 페이지 로드 시 토큰 확인 및 상태 동기화 (한 번만)
 	useEffect(() => {
-		if (isLoggedIn) {
+		if (isLoggedIn && !window.userInfoRefreshed) {
 			refreshUserInfo();
+			window.userInfoRefreshed = true;
 		}
 	}, [isLoggedIn, refreshUserInfo]);
 	// #endregion
