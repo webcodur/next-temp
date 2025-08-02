@@ -64,7 +64,7 @@ export default function InstanceListView() {
           ...instance,
           status: instance.endDate && new Date(instance.endDate) < new Date() ? 'inactive' : 'active' as const,
           roomNumber: instance.household ? 
-            \`\${instance.household.address1Depth} \${instance.household.address2Depth}\${instance.household.address3Depth ? ' ' + instance.household.address3Depth : ''}\` : 
+            `${instance.household.address1Depth} ${instance.household.address2Depth}${instance.household.address3Depth ? ' ' + instance.household.address3Depth : ''}` : 
             '정보 없음',
           householdTypeLabel: instance.household?.householdType ? 
             (instance.household.householdType === 'GENERAL' ? '일반' : 
@@ -151,7 +151,7 @@ export default function InstanceListView() {
           onChange={setSelectedHouseholdId}
           options={households.map(household => ({
             value: household.id.toString(),
-            label: \`\${household.address1Depth} \${household.address2Depth}\${household.address3Depth ? ' ' + household.address3Depth : ''}\`
+            label: `${household.address1Depth} ${household.address2Depth}${household.address3Depth ? ' ' + household.address3Depth : ''}`
           }))}
         />
       ),
@@ -258,7 +258,7 @@ export default function InstanceListView() {
         };
         const status = statusMap[instance.status];
         return (
-          <span className={\`px-2 py-1 rounded-full text-xs font-medium \${status.className}\`}>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.className}`}>
             {status.label}
           </span>
         );
@@ -297,7 +297,7 @@ export default function InstanceListView() {
       cell: (instance: InstanceWithStatus) => (
         <div className="flex gap-1 justify-center">
           <Link
-            href={\`/parking/household-management/instance/\${instance.id}\`}
+            href={`/parking/household-management/instance/${instance.id}`}
             className="p-1 text-blue-600 rounded hover:bg-blue-50"
             title="상세보기"
           >
@@ -423,7 +423,6 @@ export default function InstanceListView() {
           fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          
           defaultOpen={true}
           searchMode="client"
         />

@@ -1,4 +1,4 @@
- "/cars": {
+  "/cars": {
       "post": {
         "description": "차량이 존재하면 반환하고, 없으면 새로 생성합니다. (deleted_at된 차량이 있어도 되살리지 않으며 새로 생성됩니다.)",
         "operationId": "create차량존재확인후생성",
@@ -154,10 +154,10 @@
             }
           },
           {
-            "name": "household_instance_id",
+            "name": "instance_id",
             "required": false,
             "in": "query",
-            "description": "household_instance_id로 검색",
+            "description": "instance_id로 검색",
             "schema": {
               "type": "string"
             }
@@ -221,7 +221,7 @@
         ]
       }
     },
-    "/cars/household-relation": {
+    "/cars/households": {
       "post": {
         "description": "차량을 세대 인스턴스에 연결합니다.",
         "operationId": "create차량세대연결",
@@ -263,12 +263,10 @@
         "tags": [
           "차량 관리"
         ]
-      }
-    },
-    "/cars/household-relations": {
+      },
       "get": {
         "description": "차량과 세대 간의 연결 관계를 조회합니다.",
-        "operationId": "search차량세대관계조회",
+        "operationId": "search차량세대연결조회",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -302,7 +300,7 @@
         ],
         "responses": {
           "200": {
-            "description": "차량-세대 관계 조회 성공",
+            "description": "차량-세대 연결 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -334,13 +332,321 @@
             "bearer": []
           }
         ],
-        "summary": "차량-세대 관계 조회",
+        "summary": "차량-세대 연결 조회",
         "tags": [
           "차량 관리"
         ]
       }
     },
-    "/cars/household/{carId}/users-settings": {
+    "/cars/households/{id}": {
+      "patch": {
+        "description": "차량과 세대 간의 연결 관계를 수정합니다.",
+        "operationId": "update차량세대연결수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-세대 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCarHouseholdDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차량-세대 연결 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarHouseholdDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-세대 연결 수정",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "delete": {
+        "description": "차량과 세대 간의 연결을 삭제합니다. 연결된 모든 거주자 관계도 함께 삭제됩니다.",
+        "operationId": "delete차량세대연결삭제",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-세대 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차량-세대 연결 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-세대 연결 삭제",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/residents": {
+      "post": {
+        "description": "차량과 거주자 간의 연결 관계를 생성합니다.",
+        "operationId": "create차량거주자연결생성",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCarHouseholdResidentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 생성",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/residents/{id}": {
+      "get": {
+        "description": "특정 차량-거주자 연결의 상세 정보를 조회합니다.",
+        "operationId": "get차량거주자연결상세조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량-거주자 연결 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarHouseholdResidentWithRelationsDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 상세 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "patch": {
+        "description": "차량과 거주자 간의 연결 관계를 수정합니다.",
+        "operationId": "update차량거주자연결수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCarHouseholdResidentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차량-거주자 연결 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarHouseholdResidentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 수정",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "delete": {
+        "description": "차량과 거주자 간의 연결 관계를 제거합니다. (소프트 삭제)",
+        "operationId": "delete차량거주자연결제거",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차량-거주자 연결 제거 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 제거",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/households/{carId}": {
       "get": {
         "description": "세대의 특정 차량의 등록된 사용자 목록 및 설정을 조회합니다.",
         "operationId": "get세대차량상세조회",
@@ -545,13 +851,4 @@
           "차량 관리"
         ]
       }
-    }
-  },
-  "info": {
-    "title": "New Hub",
-    "description": "The New Hub API description",
-    "version": "1.0",
-    "contact": {
-
-    }
-  },
+    },

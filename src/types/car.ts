@@ -68,9 +68,10 @@ export interface SearchCarRequest {
   yearFrom?: number;
   yearTo?: number;
   inOutStatus?: 'IN' | 'OUT';
-  householdInstanceId?: number;
+  parkinglotId?: number;
+  instanceId?: number;
   residentId?: number;
-  status?: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+  status?: string;
 }
 
 /**
@@ -79,16 +80,31 @@ export interface SearchCarRequest {
 export interface CarHousehold {
   id: number;
   carId: number;
-  householdInstanceId: number;
+  instanceId: number;
+  carShareOnoff: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
-  householdInstance: {
+  instance?: {
     id: number;
-    code: string;
-    name: string;
-    description?: string;
+    dong: string;
+    ho: string;
+    householderName?: string;
+    phone?: string;
+    email?: string;
+    moveInDate?: string;
+    moveOutDate?: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
   }[];
+}
+
+/**
+ * 차량-세대 연결 수정 요청 타입 (UpdateCarHouseholdDto 기준)
+ */
+export interface UpdateCarHouseholdRequest {
+  carShareOnoff?: boolean;
 }
 
 /**
@@ -96,7 +112,8 @@ export interface CarHousehold {
  */
 export interface CreateCarHouseholdRequest {
   carNumber: string;
-  householdInstanceId: number;
+  instanceId: number;
+  carShareOnoff?: boolean;
 }
 
 /**
@@ -111,8 +128,7 @@ export interface CarWithHousehold extends Car {
  */
 export interface CarHouseholdResident {
   id: number;
-  carId: number;
-  householdInstanceId: number;
+  carInstanceId: number;
   residentId: number;
   carAlarm: boolean;
   isPrimary: boolean;
@@ -125,8 +141,7 @@ export interface CarHouseholdResident {
  * 차량-세대-거주자 관계 생성 요청 타입 (CreateCarHouseholdResidentDto 기준)
  */
 export interface CreateCarHouseholdResidentRequest {
-  carId: number;
-  householdInstanceId: number;
+  carInstanceId: number;
   residentId: number;
   carAlarm?: boolean;
   isPrimary?: boolean;
@@ -198,7 +213,7 @@ export interface SearchCarHouseholdRequest {
  * 내 차량 등록 요청 타입 (RegisterMyCarDto 기준)
  */
 export interface RegisterMyCarRequest {
-  carHouseholdId: number;
+  carInstanceId: number;
   carAlarm?: boolean;
   isPrimary?: boolean;
 }

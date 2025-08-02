@@ -24,18 +24,26 @@ interface CarWithHouseholdServerResponse {
   created_at: string;            // snake_case
   updated_at: string;            // snake_case
   deleted_at?: string;           // snake_case
-  car_household?: {
+  car_instance?: {
     id: number;
     car_id: number;              // snake_case
-    household_instance_id: number; // snake_case
+    instance_id: number;         // snake_case
+    car_share_onoff: boolean;    // snake_case
     created_at: string;          // snake_case
     updated_at: string;          // snake_case
     deleted_at?: string;         // snake_case
-    household_instance: {
+    instance: {
       id: number;
-      code: string;
-      name: string;
-      description?: string;
+      dong: string;
+      ho: string;
+      householder_name?: string; // snake_case
+      phone?: string;
+      email?: string;
+      move_in_date?: string;     // snake_case
+      move_out_date?: string;    // snake_case
+      is_active: boolean;        // snake_case
+      created_at: string;        // snake_case
+      updated_at: string;        // snake_case
     }[];
   }[];
 }
@@ -62,7 +70,8 @@ function buildServerQueryParams(client: SearchCarRequest): URLSearchParams {
   if (client.yearFrom) searchParams.append('year_from', client.yearFrom.toString());
   if (client.yearTo) searchParams.append('year_to', client.yearTo.toString());
   if (client.inOutStatus) searchParams.append('in_out_status', client.inOutStatus);
-  if (client.householdInstanceId) searchParams.append('household_instance_id', client.householdInstanceId.toString());
+  if (client.parkinglotId) searchParams.append('parkinglot_id', client.parkinglotId.toString());
+  if (client.instanceId) searchParams.append('instance_id', client.instanceId.toString());
   if (client.residentId) searchParams.append('resident_id', client.residentId.toString());
   if (client.status) searchParams.append('status', client.status);
   return searchParams;
@@ -90,14 +99,27 @@ function serverToClient(server: CarWithHouseholdServerResponse): CarWithHousehol
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
-    carHousehold: server.car_household?.map(ch => ({
-      id: ch.id,
-      carId: ch.car_id,
-      householdInstanceId: ch.household_instance_id,
-      createdAt: ch.created_at,
-      updatedAt: ch.updated_at,
-      deletedAt: ch.deleted_at,
-      householdInstance: ch.household_instance,
+    carHousehold: server.car_instance?.map(ci => ({
+      id: ci.id,
+      carId: ci.car_id,
+      instanceId: ci.instance_id,
+      carShareOnoff: ci.car_share_onoff,
+      createdAt: ci.created_at,
+      updatedAt: ci.updated_at,
+      deletedAt: ci.deleted_at,
+      instance: ci.instance?.map(inst => ({
+        id: inst.id,
+        dong: inst.dong,
+        ho: inst.ho,
+        householderName: inst.householder_name,
+        phone: inst.phone,
+        email: inst.email,
+        moveInDate: inst.move_in_date,
+        moveOutDate: inst.move_out_date,
+        isActive: inst.is_active,
+        createdAt: inst.created_at,
+        updatedAt: inst.updated_at,
+      })) || [],
     })) || [],
   };
 }
