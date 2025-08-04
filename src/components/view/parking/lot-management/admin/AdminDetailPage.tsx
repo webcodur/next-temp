@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, Lock, Unlock, Save } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAtom } from 'jotai';
 
@@ -39,7 +39,6 @@ export default function AdminDetailPage() {
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<AdminFormData>({
     account: '',
@@ -114,48 +113,44 @@ export default function AdminDetailPage() {
 
   // #region 변경 감지
   const hasChanges = useMemo(() => {
-    if (!isEditMode) return false;
-    
     return (
       formData.name !== originalData.name ||
       formData.email !== originalData.email ||
       formData.phone !== originalData.phone ||
       formData.role !== originalData.role
     );
-  }, [formData, originalData, isEditMode]);
+  }, [formData, originalData]);
 
   const isValid = useMemo(() => {
-    if (!isEditMode || !hasChanges) return false;
+    if (!hasChanges) return false;
     
-    return formData.name.trim() && formData.role.trim();
-  }, [formData, isEditMode, hasChanges]);
+    return Boolean(formData.name.trim() && formData.role.trim());
+  }, [formData, hasChanges]);
   // #endregion
 
   // #region 핸들러
   const handleBack = () => {
-    		router.push('/parking/lot-management/admin');
-  };
-
-
-  const handleLockToggle = useCallback(() => {
-    if (isEditMode && hasChanges) {
-      const confirmMessage = '편집 중인 내용이 있습니다. 정말로 취소하시겠습니까?';
+    if (hasChanges) {
+      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
       if (!confirm(confirmMessage)) return;
     }
-    
-    setIsEditMode(!isEditMode);
-    
-    // 편집 모드 해제 시 원래 데이터로 복원
-    if (isEditMode) {
-      setFormData(originalData);
-    }
-  }, [isEditMode, hasChanges, originalData]);
+    router.push('/parking/lot-management/admin');
+  };
 
   const handleFormChange = useCallback((data: AdminFormData) => {
     setFormData(data);
   }, []);
 
-  const handleSave = useCallback(async () => {
+  const handleReset = useCallback(() => {
+    if (!hasChanges) return;
+    
+    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
+    if (!confirm(confirmMessage)) return;
+    
+    setFormData(originalData);
+  }, [hasChanges, originalData]);
+
+  const handleSubmit = useCallback(async () => {
     if (!admin || !isValid || isSubmitting) return;
     
     setIsSubmitting(true);
@@ -180,7 +175,7 @@ export default function AdminDetailPage() {
       const result = await updateAdmin(updateData);
 
       if (result.success) {
-        // 성공 시 원본 데이터 업데이트 및 편집 모드 해제
+        // 성공 시 원본 데이터 업데이트
         const newData = {
           ...formData,
           password: '',
@@ -188,7 +183,6 @@ export default function AdminDetailPage() {
         };
         setOriginalData(newData);
         setFormData(newData);
-        setIsEditMode(false);
         
         // 데이터 다시 로드
         await loadAdminData();
@@ -205,6 +199,16 @@ export default function AdminDetailPage() {
       setIsSubmitting(false);
     }
   }, [admin, isValid, isSubmitting, formData, originalData, loadAdminData]);
+
+  const handleDelete = useCallback(() => {
+    if (!admin) return;
+    
+    const confirmMessage = `정말로 관리자 '${admin.name || admin.account}'를 삭제하시겠습니까?`;
+    if (!confirm(confirmMessage)) return;
+    
+    // TODO: 삭제 API 호출 구현
+    alert('삭제 기능은 아직 구현되지 않았습니다.');
+  }, [admin]);
   // #endregion
 
   console.log('렌더링 상태:', { loading, admin, formData });
@@ -225,8 +229,6 @@ export default function AdminDetailPage() {
     );
   }
 
-  const currentMode = isEditMode ? 'edit' : 'view';
-
   return (
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
@@ -235,36 +237,32 @@ export default function AdminDetailPage() {
         subtitle={`${admin.name || admin.account} (${admin.account})`}
         leftActions={
           <Button
-            variant="ghost"
-            size="sm"
+            variant="secondary"
+            size="default"
             onClick={handleBack}
             title="목록으로"
           >
             <ArrowLeft size={16} />
+            목록
           </Button>
         }
-        rightActions={
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={handleLockToggle}
-            disabled={isSubmitting}
-            title={isEditMode ? "편집 모드 해제" : "편집 모드 활성화"}
-          >
-            {isEditMode ? <Unlock size={16} /> : <Lock size={16} />}
-          </Button>
-        }
+        rightActions={null}
       />
 
       {/* 관리자 상세 정보 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        
         <AdminForm
-          mode={currentMode}
+          mode="edit"
           admin={admin}
           data={formData}
           onChange={handleFormChange}
           disabled={isSubmitting}
+          showActions={true}
+          onReset={handleReset}
+          onSubmit={handleSubmit}
+          onDelete={handleDelete}
+          hasChanges={hasChanges}
+          isValid={isValid}
         />
       </div>
 
@@ -273,22 +271,6 @@ export default function AdminDetailPage() {
         admin={admin} 
         adminId={adminId}
       />
-
-      {/* 저장 버튼 - 우하단 고정 */}
-      {isEditMode && hasChanges && (
-        <div className="fixed right-6 bottom-6 z-50">
-          <Button 
-            variant="accent" 
-            size="lg"
-            onClick={handleSave} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : '저장'}
-            className="shadow-lg"
-          >
-            <Save size={20} />
-          </Button>
-        </div>
-      )}
     </div>
   );
 } 

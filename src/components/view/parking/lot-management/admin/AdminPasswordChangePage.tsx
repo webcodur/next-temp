@@ -168,12 +168,13 @@ export default function AdminPasswordChangePage() {
         subtitle={`${admin.name || admin.account} (${admin.account})`}
         leftActions={
           <Button
-            variant="ghost"
-            size="sm"
+            variant="secondary"
+            size="default"
             onClick={handleBack}
             title="뒤로가기"
           >
             <ArrowLeft size={16} />
+            뒤로
           </Button>
         }
       />
@@ -244,6 +245,7 @@ export default function AdminPasswordChangePage() {
           className="shadow-lg"
         >
           <Save size={20} />
+          {isSubmitting ? '변경 중...' : '변경'}
         </Button>
       </div>
     </div>

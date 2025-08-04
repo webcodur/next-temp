@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import { RotateCcw, Send, Trash2 } from 'lucide-react';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import { Admin } from '@/types/admin';
 
 export interface AdminFormData {
@@ -22,6 +24,12 @@ interface AdminFormProps {
   data: AdminFormData;
   onChange: (data: AdminFormData) => void;
   disabled?: boolean;
+  showActions?: boolean;
+  onReset?: () => void;
+  onSubmit?: () => void;
+  onDelete?: () => void;
+  hasChanges?: boolean;
+  isValid?: boolean;
 }
 
 const ROLE_OPTIONS = [
@@ -37,6 +45,12 @@ const AdminForm: React.FC<AdminFormProps> = ({
   data,
   onChange,
   disabled = false,
+  showActions = false,
+  onReset,
+  onSubmit,
+  onDelete,
+  hasChanges = false,
+  isValid = false,
 }) => {
   const isReadOnly = disabled || mode === 'view';
   const showPassword = mode === 'create'; // create 모드에서만 비밀번호 필드 표시
@@ -49,8 +63,52 @@ const AdminForm: React.FC<AdminFormProps> = ({
     });
   };
 
+  // 액션 버튼들 정의
+  const topRightActions = showActions && onDelete ? (
+    <Button 
+      variant="destructive" 
+      size="default"
+      onClick={onDelete}
+      disabled={disabled}
+      title="관리자 삭제"
+    >
+      <Trash2 size={16} />
+      삭제
+    </Button>
+  ) : null;
+
+  const bottomRightActions = showActions ? (
+    <div className="flex gap-3">
+      <Button 
+        variant="secondary" 
+        size="default"
+        onClick={onReset} 
+        disabled={!hasChanges || disabled}
+        title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+      >
+        <RotateCcw size={16} />
+        복구
+      </Button>
+      <Button 
+        variant="accent" 
+        size="default"
+        onClick={onSubmit} 
+        disabled={!isValid || disabled}
+        title={disabled ? '전송 중...' : !isValid ? '필수 항목을 입력해주세요' : '변경사항 저장'}
+      >
+        <Send size={16} />
+        전송
+      </Button>
+    </div>
+  ) : null;
+
   return (
-    <GridForm labelWidth="120px" gap="16px">
+    <GridForm 
+      labelWidth="120px" 
+      gap="16px"
+      topRightActions={topRightActions}
+      bottomRightActions={bottomRightActions}
+    >
       <GridForm.Row>
         <GridForm.Label required={mode === 'create'}>
           아이디
@@ -229,6 +287,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           </GridForm.Row>
         </>
       )}
+
     </GridForm>
   );
 };

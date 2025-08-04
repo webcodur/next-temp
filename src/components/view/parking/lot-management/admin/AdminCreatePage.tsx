@@ -113,12 +113,13 @@ export default function AdminCreatePage() {
         subtitle="새로운 관리자 계정을 생성합니다"
         leftActions={
           <Button
-            variant="ghost"
-            size="sm"
+            variant="secondary"
+            size="default"
             onClick={handleCancel}
             title="목록으로"
           >
             <ArrowLeft size={16} />
+            목록
           </Button>
         }
       />
@@ -144,6 +145,7 @@ export default function AdminCreatePage() {
           className="shadow-lg"
         >
           <Save size={20} />
+          {isSubmitting ? '생성 중...' : '생성'}
         </Button>
       </div>
     </div>

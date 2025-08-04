@@ -116,13 +116,14 @@ export default function AdminListPage() {
   }, [searchFilters, loadAdminData]);
 
   const handleReset = useCallback(() => {
-    setSearchFilters({
+    const resetFilters = {
       account: '',
       name: '',
       email: '',
       roleId: '',
-    });
-    loadAdminData(); // 필터 없이 전체 데이터 로드
+    };
+    setSearchFilters(resetFilters);
+    loadAdminData({}); // 빈 필터로 전체 데이터 로드
   }, [loadAdminData]);
 
   const updateFilter = useCallback((field: keyof SearchFilters, value: string) => {
@@ -331,11 +332,12 @@ export default function AdminListPage() {
         rightActions={
           <Button
             variant="accent"
-            size="sm"
+            size="default"
             onClick={handleCreateClick}
             title="관리자 추가"
           >
             <Plus size={16} />
+            추가
           </Button>
         }
       />
@@ -345,7 +347,6 @@ export default function AdminListPage() {
         fields={searchFields}
         onSearch={handleSearch}
         onReset={handleReset}
-        
         defaultOpen={false}
       />
       

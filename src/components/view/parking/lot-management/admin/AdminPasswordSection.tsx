@@ -226,12 +226,13 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
           {/* 액션 버튼 */}
           <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-border">
             <Button 
-              variant="ghost" 
+              variant="secondary" 
               onClick={handleReset}
               disabled={isSubmitting || isResetting}
               title="초기화"
             >
               <RotateCcw size={16} />
+              초기화
             </Button>
             <Button 
               variant="accent" 
@@ -240,6 +241,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               title={isSubmitting ? '변경 중...' : '비밀번호 변경'}
             >
               <Save size={16} />
+              {isSubmitting ? '변경 중...' : '변경'}
             </Button>
           </div>
         </div>
@@ -261,13 +263,13 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
           <div className="flex justify-end">
             <Button
-              variant="outline"
+              variant="warning"
               onClick={handlePasswordReset}
               disabled={isResetting || isSubmitting}
               title={isResetting ? '초기화 중...' : '비밀번호 초기화 (0000)'}
-              className="text-orange-600 border-orange-200 hover:bg-orange-50"
             >
               <RotateCcw size={16} />
+              {isResetting ? '초기화 중...' : '초기화'}
             </Button>
           </div>
         </div>
