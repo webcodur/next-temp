@@ -92,10 +92,6 @@ export const menuData: MenuData = {
 				key: '__차량관리',
 				botItems: [
 					{
-						key: '__차량등록',
-						href: '/parking/cars/registration',
-					},
-					{
 						key: '__정기차관리',
 						href: '/parking/cars/regular',
 					},
@@ -131,6 +127,10 @@ export const menuData: MenuData = {
 					{
 						key: '__입주민관리',
 						href: '/parking/household-management/resident',
+					},
+          {
+						key: '__차량등록',
+						href: '/parking/household-management/car',
 					},
 				],
 			},

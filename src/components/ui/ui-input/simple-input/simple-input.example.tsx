@@ -172,7 +172,7 @@ export default function SimpleInputExample() {
 							label={t('간단입력_기본토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
-							variant="default"
+							variant="primary"
 							size="md"
 						/>
 
@@ -180,7 +180,7 @@ export default function SimpleInputExample() {
 							label={t('간단입력_아웃라인토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
-							variant="outline-solid"
+							variant="outline"
 							size="md"
 						/>
 
@@ -196,7 +196,7 @@ export default function SimpleInputExample() {
 							label={t('간단입력_Small토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
-							variant="default"
+							variant="primary"
 							size="sm"
 						/>
 
@@ -204,7 +204,7 @@ export default function SimpleInputExample() {
 							label={t('간단입력_Large토글버튼')}
 							pressed={toggleButtonValue}
 							onChange={setToggleButtonValue}
-							variant="default"
+							variant="primary"
 							size="lg"
 						/>
 					</div>

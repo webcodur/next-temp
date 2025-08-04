@@ -115,7 +115,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 						</Button>
 						<Button
 							onClick={onSearch}
-							variant="default"
+							variant="primary"
 							size="icon"
 							className="w-10 h-full bg-primary text-primary-foreground hover:bg-primary/90 neu-raised"
 						>

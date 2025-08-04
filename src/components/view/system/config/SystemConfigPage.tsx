@@ -370,7 +370,7 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
+        variant="primary"
         title="작업 완료"
       >
         <DialogHeader>
@@ -391,7 +391,7 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
+        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>
@@ -412,7 +412,7 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={deleteDialogOpen}
         onClose={handleDeleteCancel}
-        variant="error"
+        variant="destructive"
         title="설정 삭제"
       >
         <DialogHeader>
@@ -433,7 +433,7 @@ export default function SystemConfigPage() {
             취소
           </Button>
           <Button 
-            variant="accent"
+            variant="primary"
             onClick={handleDeleteConfirm}
             disabled={isSubmitting}
             className="text-white bg-red-600 hover:bg-red-700"

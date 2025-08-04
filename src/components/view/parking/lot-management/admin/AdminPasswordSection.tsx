@@ -235,7 +235,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               초기화
             </Button>
             <Button 
-              variant="accent" 
+              variant="primary" 
               onClick={handleSubmit} 
               disabled={!isValid || isSubmitting || isResetting}
               title={isSubmitting ? '변경 중...' : '비밀번호 변경'}
@@ -263,7 +263,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
           <div className="flex justify-end">
             <Button
-              variant="warning"
+              variant="outline"
               onClick={handlePasswordReset}
               disabled={isResetting || isSubmitting}
               title={isResetting ? '초기화 중...' : '비밀번호 초기화 (0000)'}

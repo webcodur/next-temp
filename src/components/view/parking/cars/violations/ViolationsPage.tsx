@@ -271,7 +271,7 @@ export default function ViolationsPage() {
         subtitle="주차장 내 차량 위반 기록을 조회하고 관리합니다."
         rightActions={
           <Button
-            variant="accent"
+            variant="primary"
             size="sm"
             onClick={handleCreateClick}
             title="위반 기록 추가"

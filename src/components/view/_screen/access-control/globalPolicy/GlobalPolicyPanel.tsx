@@ -13,7 +13,7 @@ import { EntryPolicyType } from '../hooks/useAccessControl';
 // #region 스타일 상수
 const STYLES = {
   // 레이아웃
-  container: 'space-y-4 p-6',
+  container: 'space-y-4',
   grid: 'space-y-6',
   
   // 섹션 공통

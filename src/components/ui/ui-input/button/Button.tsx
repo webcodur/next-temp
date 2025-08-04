@@ -1,7 +1,15 @@
 /* 
   파일명: /components/ui/ui-input/button/Button.tsx
   기능: 뉴모피즘 스타일의 재사용 가능한 버튼 컴포넌트
-  책임: 다양한 variant와 size를 제공하는 UI 시스템의 기본 버튼 컴포넌트
+  책임: 6개의 간소화된 variant로 일관된 UI 경험을 제공하는 기본 버튼 컴포넌트
+  
+  🎯 Variant 체계:
+  - primary: 주요 액션 (저장, 생성, 로그인) - 브랜드 블루
+  - secondary: 보조 액션 (취소, 뒤로가기) - 브랜드 퍼플  
+  - destructive: 위험 액션 (삭제, 제거) - 빨강
+  - outline: 중성 액션 (검색, 필터, 리셋) - 회색 테두리
+  - ghost: 최소 액션 (취소, 초기화) - 투명 배경
+  - link: 링크/네비게이션 - 브랜드 블루 텍스트
 */
 
 import * as React from 'react';
@@ -19,20 +27,12 @@ const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]',
-				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02]',
-				success: 'neu-raised bg-success text-success-foreground hover:scale-[1.02]',
-				warning: 'neu-raised bg-warning text-warning-foreground hover:scale-[1.02]',
-				accent: 'neu-raised bg-accent text-accent-foreground hover:scale-[1.02]',
 				primary: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]',
 				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02]',
+				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02]',
 				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50',
-				'outline-primary': 'neu-flat border border-primary/50 bg-background  hover:bg-primary/10',
-				'outline-secondary': 'neu-flat border border-secondary/50 bg-background  hover:bg-secondary/10',
-				'primary-secondary': 'neu-raised bg-gradient-to-r from-primary to-secondary hover:scale-[1.02] hover:from-primary-hover hover:to-secondary-hover',
 				ghost: 'neu-flat hover:bg-muted text-foreground neu-hover',
 				link: 'text-primary underline-offset-4 hover:underline hover:text-accent transition-colors',
-				inset: 'neu-inset bg-muted hover:bg-muted/80',
 			},
 			size: {
 				default: 'h-9 px-4 py-2',
@@ -42,7 +42,7 @@ const buttonVariants = cva(
 			},
 		},
 		defaultVariants: {
-			variant: 'default',
+			variant: 'primary',
 			size: 'default',
 		},
 	}

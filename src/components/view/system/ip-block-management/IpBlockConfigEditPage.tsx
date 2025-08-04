@@ -419,7 +419,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       {isEditMode && hasChanges && (
         <div className="fixed right-6 bottom-6 z-50">
           <Button 
-            variant="accent" 
+            variant="primary" 
             size="lg"
             onClick={handleSave} 
             disabled={!isValid || isSubmitting}
@@ -435,7 +435,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       <Dialog
         isOpen={successDialogOpen}
         onClose={handleGoToList}
-        variant="success"
+        variant="primary"
         title="수정 완료"
       >
         <DialogHeader>
@@ -456,7 +456,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
+        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>

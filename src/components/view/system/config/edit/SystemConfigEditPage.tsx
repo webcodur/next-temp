@@ -406,7 +406,7 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
       {isEditMode && hasChanges && (
         <div className="fixed right-6 bottom-6 z-50">
           <Button 
-            variant="accent" 
+            variant="primary" 
             size="lg"
             onClick={handleSave} 
             disabled={!isValid || isSubmitting}
@@ -422,7 +422,7 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
       <Dialog
         isOpen={successDialogOpen}
         onClose={handleGoToList}
-        variant="success"
+        variant="primary"
         title="수정 완료"
       >
         <DialogHeader>
@@ -443,7 +443,7 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
+        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>

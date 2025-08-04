@@ -21,6 +21,8 @@ export interface GridFormProps {
 	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	children: React.ReactNode;
+	topRightActions?: React.ReactNode;
+	bottomRightActions?: React.ReactNode;
 }
 
 export interface GridFormRowProps {
@@ -60,24 +62,43 @@ const GridForm = React.forwardRef<
 	colorVariant = 'primary',
 	className,
 	children,
+	topRightActions,
+	bottomRightActions,
 	...props
 }, ref) => {
 	return (
 		<GridFormContext.Provider value={{ labelWidth, gap, colorVariant }}>
-			<div
-				ref={ref}
-				className={cn(
-					'w-full overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80',
-					'grid auto-rows-min items-stretch', // 전체를 Grid Container로 만들고 items를 stretch
-					className
+			<div className="w-full">
+				{/* 우상단 액션 버튼 - GridForm 위에 순차적 배치 */}
+				{topRightActions && (
+					<div className="flex justify-end mb-3">
+						{topRightActions}
+					</div>
 				)}
-				style={{
-					gridTemplateColumns: `${labelWidth} 1fr`,
-					gap: 0, // gap을 0으로 설정하여 테두리가 겹치도록 함
-				} as React.CSSProperties}
-				{...props}
-			>
-				{children}
+
+				{/* GridForm 본체 */}
+				<div
+					ref={ref}
+					className={cn(
+						'w-full overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80',
+						'grid auto-rows-min items-stretch', // 전체를 Grid Container로 만들고 items를 stretch
+						className
+					)}
+					style={{
+						gridTemplateColumns: `${labelWidth} 1fr`,
+						gap: 0, // gap을 0으로 설정하여 테두리가 겹치도록 함
+					} as React.CSSProperties}
+					{...props}
+				>
+					{children}
+				</div>
+
+				{/* 우하단 액션 버튼 - GridForm 아래에 순차적 배치 */}
+				{bottomRightActions && (
+					<div className="flex justify-end mt-3">
+						{bottomRightActions}
+					</div>
+				)}
 			</div>
 		</GridFormContext.Provider>
 	);

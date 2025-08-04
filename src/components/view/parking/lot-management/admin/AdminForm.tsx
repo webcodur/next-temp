@@ -90,7 +90,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
         복구
       </Button>
       <Button 
-        variant="accent" 
+        variant="primary" 
         size="default"
         onClick={onSubmit} 
         disabled={!isValid || disabled}

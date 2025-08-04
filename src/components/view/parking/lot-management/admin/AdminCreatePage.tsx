@@ -137,7 +137,7 @@ export default function AdminCreatePage() {
       {/* 저장 버튼 - 우하단 고정 */}
       <div className="fixed bottom-6 right-6 z-50">
         <Button 
-          variant="accent"
+          variant="primary"
           size="lg"
           onClick={handleSubmit} 
           disabled={!isValid || isSubmitting}

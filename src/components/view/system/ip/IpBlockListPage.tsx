@@ -400,7 +400,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        variant="warning"
+        variant="outline"
         title="IP 차단 해제 확인"
       >
         <DialogHeader>
@@ -430,7 +430,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={deleteAllConfirmOpen}
         onClose={() => setDeleteAllConfirmOpen(false)}
-        variant="warning"
+        variant="outline"
         title="전체 IP 차단 해제 확인"
       >
         <DialogHeader>
@@ -460,7 +460,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
+        variant="primary"
         title="작업 완료"
       >
         <DialogHeader>
@@ -481,7 +481,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
+        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>

@@ -461,7 +461,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         </Button>
         
         <Button
-          variant="accent"
+          variant="primary"
           onClick={handleProcess}
           disabled={!formData.processingNote.trim() || processing || saving}
         >

@@ -331,7 +331,7 @@ export default function AdminListPage() {
         subtitle="시스템 관리자 계정 등록, 수정, 삭제 및 권한 관리"
         rightActions={
           <Button
-            variant="accent"
+            variant="primary"
             size="default"
             onClick={handleCreateClick}
             title="관리자 추가"
