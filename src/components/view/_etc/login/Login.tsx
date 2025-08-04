@@ -11,6 +11,7 @@ import { LoginForm } from '@/components/view/_etc/login/LoginForm';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocale } from '@/hooks/useI18n';
+import { loadDevAccounts, type DevAccountSet } from '@/utils/devAccounts';
 
 // #region 타입
 interface LoginFormData {
@@ -18,18 +19,25 @@ interface LoginFormData {
 	password: string;
 	rememberUsername: boolean;
 }
+
+
 // #endregion
 
 export default function LoginPage() {
 	// #region 상수
 	const { login, isLoading: authIsLoading } = useAuth();
 	const { isRTL } = useLocale();
+	const isDev = process.env.NODE_ENV === 'development';
+	
+	// 환경변수에서 개발자 모드 계정 세트 로드
+	const devAccountSets = isDev ? loadDevAccounts() : [];
 	// #endregion
 
 	// #region 상태
 	const [isLoginLoading, setIsLoginLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const [fontLoaded, setFontLoaded] = useState(false);
+	const [selectedDevAccount, setSelectedDevAccount] = useState<DevAccountSet | null>(null);
 	// #endregion
 
 	// #region 폰트 로딩 확인
@@ -76,6 +84,11 @@ export default function LoginPage() {
 			setIsLoginLoading(false);
 		}
 	};
+
+	const handleDevAccountSelect = (account: DevAccountSet) => {
+		setSelectedDevAccount(account);
+		setErrorMessage('');
+	};
 	// #endregion
 
 	// #region 로딩 상태 처리
@@ -109,19 +122,78 @@ export default function LoginPage() {
 					fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
 				}}
 			>
-				<div className="space-y-4 font-multilang">
-					{/* 에러 메시지 */}
-					{errorMessage && (
-						<div className="p-3 text-sm rounded-lg border bg-destructive/10 text-destructive border-destructive/20 font-multilang">
-							{errorMessage}
+				<div className={`flex gap-8 items-start font-multilang ${isDev ? 'flex-row' : 'flex-col'}`}>
+					{/* 메인 로그인 영역 */}
+					<div className="space-y-4">
+						{/* 에러 메시지 */}
+						{errorMessage && (
+							<div className="p-3 text-sm rounded-lg border bg-destructive/10 text-destructive border-destructive/20 font-multilang">
+								{errorMessage}
+							</div>
+						)}
+						
+						{/* 로그인 폼 */}
+						<LoginForm 
+							onSubmit={handleLogin} 
+							isLoading={isLoginLoading}
+							selectedDevAccount={selectedDevAccount}
+						/>
+					</div>
+
+					{/* 개발자 모드 계정 세트 패널 */}
+					{isDev && devAccountSets.length > 0 && (
+						<div className="p-6 w-96 rounded-2xl neu-elevated bg-card">
+							<div className="mb-5">
+								<h2 className="mb-1 text-lg font-bold text-center font-multilang text-foreground">
+									개발자 계정 세트
+								</h2>
+							</div>
+							
+							<div className="space-y-3">
+								{devAccountSets.map((account, index) => (
+									<div 
+										key={index}
+										className={`p-4 rounded-lg cursor-pointer transition-all duration-200 border ${
+											selectedDevAccount?.id === account.id 
+												? 'neu-flat bg-primary/10 border-primary/30' 
+												: 'neu-raised bg-card hover:neu-flat border-border'
+										}`}
+										onClick={() => handleDevAccountSelect(account)}
+									>
+										<div className="space-y-2">
+											{/* 계정 ID */}
+											<div className="flex justify-between items-center">
+												<span className="text-sm font-multilang text-muted-foreground">
+													아이디
+												</span>
+												<span className="font-medium font-multilang text-foreground">
+													{account.id}
+												</span>
+											</div>
+											
+											{/* 비밀번호 */}
+											<div className="flex justify-between items-center">
+												<span className="text-sm font-multilang text-muted-foreground">
+													비밀번호
+												</span>
+												<code className="px-2 py-1 font-mono text-sm font-medium rounded neu-inset bg-muted text-foreground">
+													{account.password}
+												</code>
+											</div>
+											
+											{/* 설명 */}
+											<div className="pt-1 border-t border-border/30">
+												<p className="text-sm font-multilang text-muted-foreground">
+													{account.description}
+												</p>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+							
 						</div>
 					)}
-					
-					{/* 로그인 폼 */}
-					<LoginForm 
-						onSubmit={handleLogin} 
-						isLoading={isLoginLoading}
-					/>
 				</div>
 			</div>
 		</Portal>

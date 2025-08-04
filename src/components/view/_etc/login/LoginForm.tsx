@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldPassword from '@/components/ui/ui-input/field/text/FieldPassword';
+import { type DevAccountSet } from '@/utils/devAccounts';
 
 // #region 타입
 interface LoginFormData {
@@ -19,13 +20,16 @@ interface LoginFormData {
 	rememberUsername: boolean;
 }
 
+
+
 interface LoginFormProps {
 	onSubmit: (data: LoginFormData) => void;
 	isLoading?: boolean;
+	selectedDevAccount?: DevAccountSet | null;
 }
 // #endregion
 
-export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
+export function LoginForm({ onSubmit, isLoading = false, selectedDevAccount = null }: LoginFormProps) {
 	// #region 상태
 	const [formData, setFormData] = useState<LoginFormData>({
 		username: '',
@@ -35,7 +39,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 	const [errors, setErrors] = useState<Partial<LoginFormData>>({});
 	// #endregion
 
-	// #region 로컬스토리지 초기화
+	// #region 초기화
 	useEffect(() => {
 		// 저장된 아이디 불러오기
 		const savedUsername = localStorage.getItem('remembered-username');
@@ -47,6 +51,19 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
 			}));
 		}
 	}, []);
+
+	// 개발자 계정 선택 시 자동 입력
+	useEffect(() => {
+		if (selectedDevAccount) {
+			setFormData(prev => ({
+				...prev,
+				username: selectedDevAccount.id,
+				password: selectedDevAccount.password,
+			}));
+			// 에러 메시지 초기화
+			setErrors({});
+		}
+	}, [selectedDevAccount]);
 	// #endregion
 
 	// #region 핸들러
