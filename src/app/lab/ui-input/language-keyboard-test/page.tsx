@@ -6,6 +6,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
 import { useLocale } from '@/hooks/useI18n';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
@@ -35,9 +36,11 @@ export default function LanguageKeyboardTestPage() {
           <h2 className="text-xl font-semibold mb-4">현재 언어 상태</h2>
           <div className="flex items-center gap-4">
             <div className="w-8 h-8">
-              <img 
+              <Image 
                 src={currentMeta.flag} 
                 alt={currentMeta.name}
+                width={32}
+                height={32}
                 className="w-full h-full rounded-full object-cover"
               />
             </div>

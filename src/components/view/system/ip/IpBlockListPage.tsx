@@ -90,7 +90,7 @@ export default function IpBlockListPage() {
       const result = await getBlockedIpList();
       
       if (result.success) {
-        const data = Array.isArray(result.data) ? result.data : [];
+        const data = result.data?.data || [];
         setIpBlockList(data);
       } else {
         console.error('IP 차단 목록 로드 실패:', result.errorMsg);
@@ -400,7 +400,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        variant="outline"
+        variant="warning"
         title="IP 차단 해제 확인"
       >
         <DialogHeader>
@@ -430,7 +430,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={deleteAllConfirmOpen}
         onClose={() => setDeleteAllConfirmOpen(false)}
-        variant="outline"
+        variant="warning"
         title="전체 IP 차단 해제 확인"
       >
         <DialogHeader>
@@ -460,7 +460,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="primary"
+        variant="success"
         title="작업 완료"
       >
         <DialogHeader>
@@ -481,7 +481,7 @@ export default function IpBlockListPage() {
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="destructive"
+        variant="error"
         title="오류 발생"
       >
         <DialogHeader>

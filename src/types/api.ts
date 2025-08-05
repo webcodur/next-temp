@@ -108,13 +108,12 @@ export interface SystemConfig {
   id: number;
   key: string;
   value: string | number | boolean | object;
-  description?: string;
+  description?: string | null;
   type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
   isActive: boolean;
-  category: string;
-  group: string;
-  createdAt: string;
-  updatedAt: string;
+  category?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateSystemConfigRequest {
@@ -160,19 +159,9 @@ export interface SearchIpBlockHistoryRequest {
   page?: number;
   limit?: number;
   ip?: string;
-  blockType?: string;
-  userAgent?: string;
-  requestMethod?: string;
-  requestUrl?: string;
-  blockReason?: string;
-  matchedPattern?: string;
-  blockDuration?: number;
-  isActive?: number;
-  unblockedStartDate?: string;
-  unblockedEndDate?: string;
-  unblockedBy?: string;
-  startDate?: string;
-  endDate?: string;
+  reason?: string;
+  date_from?: string;
+  date_to?: string;
 }
 // #endregion
 

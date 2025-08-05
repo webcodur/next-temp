@@ -91,7 +91,7 @@ export default function IpBlockRealtimeHistoryPage() {
       const result = await getBlockedIpList();
       
       if (result.success) {
-        const data = Array.isArray(result.data) ? result.data : [];
+        const data = result.data?.data || [];
         setIpBlockList(data);
       } else {
         console.error('IP 차단 목록 로드 실패:', result.errorMsg);

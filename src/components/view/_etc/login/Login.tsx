@@ -182,7 +182,10 @@ export default function LoginPage() {
 											</div>
 											
 											{/* 설명 */}
-											<div className="pt-1 border-t border-border/30">
+											<div className="flex justify-between items-center">
+												<span className="text-sm font-multilang text-muted-foreground">
+													설명
+												</span>
 												<p className="text-sm font-multilang text-muted-foreground">
 													{account.description}
 												</p>

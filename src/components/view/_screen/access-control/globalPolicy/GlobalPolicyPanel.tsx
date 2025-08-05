@@ -15,25 +15,20 @@ const STYLES = {
   // 레이아웃
   container: 'space-y-4',
   grid: 'space-y-6',
-  
   // 섹션 공통
-  section: 'p-4 rounded-lg border bg-background/50',
+  section: 'p-4 rounded-lg border bg-background/50 neu-elevated',
   sectionContent: 'space-y-4',
   sectionBody: 'space-y-3',
-  
   // 헤더
   header: 'pb-2 border-b border-foreground/10',
-  title: 'text-base text-foreground font-multilang font-bold',
-  
+  title: 'text-base text-foreground font-multilang font-bold text-center',
   // 컨테이너
   rowContainer: 'flex items-center h-11',
   buttonContainer: 'flex gap-2 w-full',
   inputContainer: 'flex gap-3 justify-between items-center h-11',
   inputWrapper: 'flex relative gap-2 items-center',
-  
   // 텍스트
   label: 'text-sm font-medium text-foreground font-multilang',
-  
   // 입력 필드
   numberInput: 'px-3 py-2 w-16 h-8 text-lg font-black text-center rounded-lg border transition-all duration-200 outline-none bg-background border-border neu-flat hover:neu-inset focus:neu-inset focus:border-primary/40',
 } as const;
@@ -74,7 +69,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
       {/* 정책 설정 그리드 - 컬럼 레이아웃 */}
       <div className={STYLES.grid}>
         
-        {/* 출입 허용 대상 */}
+        {/* 01. 출입 허용 대상 */}
         <div className={STYLES.section}>
           <div className={STYLES.sectionContent}>
             <div className={STYLES.header}>
@@ -86,7 +81,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
               <div className={STYLES.rowContainer}>
                 <div className={STYLES.buttonContainer}>
                   <Button
-                    variant={entryPolicy === 'all' ? 'inset' : 'outline'}
+                    variant={entryPolicy === 'all' ? 'pressed' : 'outline'}
                     size="default"
                     onClick={() => handleEntryPolicyChange('all')}
                     className="flex-1"
@@ -95,7 +90,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
                     전체 차량
                   </Button>
                   <Button
-                    variant={entryPolicy === 'office' ? 'inset' : 'outline'}
+                    variant={entryPolicy === 'office' ? 'pressed' : 'outline'}
                     size="default"
                     onClick={() => handleEntryPolicyChange('office')}
                     className="flex-1"
@@ -109,7 +104,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
           </div>
         </div>
 
-        {/* 회차 정책 */}
+        {/* 02. 회차 정책 */}
         <div className={STYLES.section}>
           <div className={STYLES.sectionContent}>
             <div className={STYLES.header}>
@@ -131,7 +126,7 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
           </div>
         </div>
 
-        {/* 블랙리스트 기준 */}
+        {/* 03. 블랙리스트 기준 */}
         <div className={STYLES.section}>
           <div className={STYLES.sectionContent}>
             <div className={STYLES.header}>

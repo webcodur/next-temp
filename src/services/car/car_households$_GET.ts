@@ -6,44 +6,60 @@ import { SearchCarHouseholdResidentRequest, CarHouseholdRelationsResponse } from
 interface CarHouseholdRelationsServerResponse {
   data: {
     id: number;
-    car_id: number;                // snake_case
-    household_instance_id: number; // snake_case
-    resident_id: number;           // snake_case
-    car_alarm: boolean;           // snake_case
-    is_primary: boolean;           // snake_case
-    created_at: string;            // snake_case
-    updated_at: string;            // snake_case
-    deleted_at?: string;           // snake_case
+    car_id: number;
+    car_instance_id: number;
+    household_instance_id: number;
+    resident_id: number;
+    car_alarm: boolean;
+    is_primary: boolean;
+    created_at: string;
+    updated_at: string;
+    deleted_at?: string;
     car?: {
       id: number;
-      car_number: string;          // snake_case
+      car_number: string;
       brand?: string;
       model?: string;
-      // ... 나머지 차량 필드들
+      type?: string;
+      outer_text?: string;
+      year?: number;
+      external_sticker?: string;
+      fuel?: string;
+      total_use_number: number;
+      in_out_status?: 'IN' | 'OUT';
+      last_parking_device_id?: number;
+      last_time?: string;
+      front_image_url?: string;
+      rear_image_url?: string;
+      side_image_url?: string;
+      top_image_url?: string;
+      created_at: string;
+      updated_at: string;
+      deleted_at?: string;
     };
     household_instance?: {
       id: number;
       dong: string;
       ho: string;
-      householder_name?: string;   // snake_case
+      householder_name?: string;
       phone?: string;
       email?: string;
-      move_in_date?: string;       // snake_case
-      move_out_date?: string;      // snake_case
-      is_active: boolean;          // snake_case
-      created_at: string;          // snake_case
-      updated_at: string;          // snake_case
+      move_in_date?: string;
+      move_out_date?: string;
+      is_active: boolean;
+      created_at: string;
+      updated_at: string;
     };
     resident?: {
       id: number;
       name: string;
       phone?: string;
       email?: string;
-      birth_date?: string;         // snake_case
-      is_householder: boolean;     // snake_case
-      relationship_type?: string;  // snake_case
-      created_at: string;          // snake_case
-      updated_at: string;          // snake_case
+      birth_date?: string;
+      is_householder: boolean;
+      relationship_type?: string;
+      created_at: string;
+      updated_at: string;
     };
   }[];
   total: number;
@@ -59,6 +75,7 @@ function serverToClient(server: CarHouseholdRelationsServerResponse): CarHouseho
     data: server.data.map(item => ({
       id: item.id,
       carId: item.car_id,
+      carInstanceId: item.car_instance_id,
       householdInstanceId: item.household_instance_id,
       residentId: item.resident_id,
       carAlarm: item.car_alarm,
@@ -71,6 +88,22 @@ function serverToClient(server: CarHouseholdRelationsServerResponse): CarHouseho
         carNumber: item.car.car_number,
         brand: item.car.brand,
         model: item.car.model,
+        type: item.car.type,
+        outerText: item.car.outer_text,
+        year: item.car.year,
+        externalSticker: item.car.external_sticker,
+        fuel: item.car.fuel,
+        totalUseNumber: item.car.total_use_number,
+        inOutStatus: item.car.in_out_status,
+        lastParkingDeviceId: item.car.last_parking_device_id,
+        lastTime: item.car.last_time,
+        frontImageUrl: item.car.front_image_url,
+        rearImageUrl: item.car.rear_image_url,
+        sideImageUrl: item.car.side_image_url,
+        topImageUrl: item.car.top_image_url,
+        createdAt: item.car.created_at,
+        updatedAt: item.car.updated_at,
+        deletedAt: item.car.deleted_at,
       } : undefined,
       householdInstance: item.household_instance ? {
         id: item.household_instance.id,

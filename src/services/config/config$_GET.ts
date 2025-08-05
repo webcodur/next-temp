@@ -7,13 +7,12 @@ interface SystemConfigServerResponse {
   id: number;
   config_key: string;
   config_value: string;
-  description?: string;
+  description?: string | null;
   config_type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
   is_active: boolean;
-  category: string;
-  group: string;
-  created_at: string;
-  updated_at: string;
+  category?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface GetAllConfigsServerResponse {
@@ -61,7 +60,6 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
     type: server.config_type,
     isActive: server.is_active,
     category: server.category,
-    group: server.group,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
   };

@@ -4,8 +4,8 @@
   책임: 드래그앤드롭 기능이 있는 차단기 개폐 제어 카드 그리드를 표시하고 잠금/해제 기능을 제공한다.
 */
 
-import React, { useState } from 'react';
-import { Lock, Unlock } from 'lucide-react';
+import React from 'react';
+
 import { 
   DndContext, 
   DragEndEvent, 
@@ -31,6 +31,7 @@ import BarrierControlCard from './BarrierControlCard';
 interface BarrierControlGridProps {
   barriers: ParkingBarrier[];
   barrierOrder: string[];
+  isLocked: boolean;
   onBarrierToggle: (barrierId: string) => void;
   onOperationModeChange: (barrierId: string, mode: OperationMode) => void;
   onBarrierOrderChange: (newOrder: string[]) => void;
@@ -47,13 +48,13 @@ const getResponsiveGridClass = () => {
 const BarrierControlGrid: React.FC<BarrierControlGridProps> = ({
   barriers,
   barrierOrder,
+  isLocked,
   onBarrierToggle,
   onOperationModeChange,
   onBarrierOrderChange,
 }) => {
   // #region 상태
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  const [isLocked, setIsLocked] = useState(true);
   // #endregion
 
   // #region 훅
@@ -70,10 +71,6 @@ const BarrierControlGrid: React.FC<BarrierControlGridProps> = ({
   // #endregion
 
   // #region 핸들러
-  const handleLockToggle = () => {
-    setIsLocked(!isLocked);
-  };
-
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
@@ -103,21 +100,6 @@ const BarrierControlGrid: React.FC<BarrierControlGridProps> = ({
   // #region 렌더링
   return (
     <div className="p-6 space-y-4">
-      {/* 컨트롤러 헤더 - 잠금/해제 버튼 */}
-      <div className="flex justify-end items-center">
-        <button
-          onClick={handleLockToggle}
-          className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all min-w-24 ${
-            !isLocked 
-              ? 'bg-primary text-primary-foreground neu-raised hover:neu-inset' 
-              : 'bg-muted text-muted-foreground neu-flat hover:neu-raised'
-          }`}
-        >
-          {!isLocked ? <Unlock size={14} /> : <Lock size={14} />}
-          {!isLocked ? '편집상태' : '잠금상태'}
-        </button>
-      </div>
-
       {/* 차단기가 있을 때 그리드 표시 */}
       {barriers.length > 0 && (
         <DndContext

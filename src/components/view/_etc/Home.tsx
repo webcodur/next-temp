@@ -13,7 +13,7 @@ import { Car, Shield, ChartBar } from 'lucide-react';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import VehicleManagementTab from '@/components/view/_screen/vehicle-management/VehicleManagementTab';
-import AccessControlTab from '@/components/view/_screen/access-control/AccessControlTab';
+import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
 import StatisticsTab from '@/components/view/_screen/statistics/StatisticsTab';
 
 export default function Home() {
@@ -45,13 +45,6 @@ export default function Home() {
 
 	// #region 상태
 	const [activeTab, setActiveTab] = useState('vehicles');
-	const [accessControlActions, setAccessControlActions] = useState<React.ReactNode>(null);
-	// #endregion
-
-	// #region 핸들러
-	const handleAccessControlActions = React.useCallback((actions: React.ReactNode) => {
-		setAccessControlActions(actions);
-	}, []);
 	// #endregion
 
 	// #region 렌더링
@@ -68,13 +61,12 @@ export default function Home() {
 					tabs={tabs}
 					activeId={activeTab}
 					onTabChange={setActiveTab}
-					endContent={activeTab === 'access-control' ? accessControlActions : undefined}
 				/>
 
 				{/* 콘텐츠 영역 - 탭과 연결된 스타일 */}
 				<div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
 					{activeTab === 'vehicles' && <VehicleManagementTab />}
-					{activeTab === 'access-control' && <AccessControlTab onActionsRender={handleAccessControlActions} />}
+					{activeTab === 'access-control' && <AccessControlManager showPageHeader={false} />}
 					{activeTab === 'statistics' && <StatisticsTab />}
 				</div>
 			</div>

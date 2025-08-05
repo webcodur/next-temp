@@ -82,14 +82,9 @@ export default function IpBlockFullHistoryPage() {
         page: 1,
         limit: 50,
         ...(filters?.ip && { ip: filters.ip }),
-        ...(filters?.blockType && { blockType: filters.blockType }),
-        ...(filters?.blockReason && { blockReason: filters.blockReason }),
-        ...(filters?.userAgent && { userAgent: filters.userAgent }),
-        ...(filters?.requestMethod && { requestMethod: filters.requestMethod }),
-        ...(filters?.requestUrl && { requestUrl: filters.requestUrl }),
-        ...(filters?.isActive && { isActive: parseInt(filters.isActive) }),
-        ...(filters?.startDate && { startDate: filters.startDate }),
-        ...(filters?.endDate && { endDate: filters.endDate }),
+        ...(filters?.blockReason && { reason: filters.blockReason }),
+        ...(filters?.startDate && { date_from: filters.startDate }),
+        ...(filters?.endDate && { date_to: filters.endDate }),
       };
 
       const result = await searchBlockHistory(searchParams);

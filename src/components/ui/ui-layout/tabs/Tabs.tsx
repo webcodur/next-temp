@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // #region 타입 정의
 export interface Tab {
@@ -63,8 +64,9 @@ const Tabs = React.forwardRef<
 							const isLast = index === tabs.length - 1;
 							
 							return (
-								<button
+								<Button
 									key={tab.id}
+									variant="ghost"
 									onClick={() => onTabChange(tab.id)}
 									className={cn(
 										'relative px-4 py-2 font-medium transition-all duration-200 flex items-center justify-center text-sm cursor-pointer',
@@ -97,7 +99,7 @@ const Tabs = React.forwardRef<
 											}}
 										/>
 									)}
-								</button>
+								</Button>
 							);
 						})}
 					</div>

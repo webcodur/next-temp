@@ -4,32 +4,72 @@ import { UpdateSystemConfigRequest, SystemConfig } from '@/types/api';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface UpdateSystemConfigServerRequest {
-  value: string | number | boolean | object;
+  config_value: string;
 }
 
 interface SystemConfigServerResponse {
-  key: string;
-  value: string | number | boolean | object;
-  description?: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
-  updated_by: number;  // snake_case
+  id: number;
+  config_key: string;
+  config_value: string;
+  description?: string | null;
+  config_type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+  category?: string | null;
 }
 //#endregion
 
 //#region 변환 함수 (파일 내부 사용)
 function clientToServer(client: UpdateSystemConfigRequest): UpdateSystemConfigServerRequest {
+  // 클라이언트 값을 문자열로 변환하여 서버에 전송
+  let stringValue: string;
+  
+  if (typeof client.value === 'object') {
+    stringValue = JSON.stringify(client.value);
+  } else {
+    stringValue = String(client.value);
+  }
+  
   return {
-    value: client.value,
+    config_value: stringValue,
   };
 }
 
 function serverToClient(server: SystemConfigServerResponse): SystemConfig {
+  // config_value (문자열)을 config_type에 따라 적절한 타입으로 변환
+  let parsedValue: string | number | boolean | object = server.config_value;
+  
+  switch (server.config_type) {
+    case 'BOOLEAN':
+      parsedValue = server.config_value === 'true';
+      break;
+    case 'INTEGER':
+      parsedValue = parseInt(server.config_value, 10);
+      break;
+    case 'JSON':
+      try {
+        parsedValue = JSON.parse(server.config_value);
+      } catch {
+        parsedValue = server.config_value; // 파싱 실패시 원본 문자열 유지
+      }
+      break;
+    case 'STRING':
+    default:
+      parsedValue = server.config_value;
+      break;
+  }
+
   return {
-    key: server.key,
-    value: server.value,
+    id: server.id,
+    key: server.config_key,
+    value: parsedValue,
     description: server.description,
-    type: server.type,
-    updatedBy: server.updated_by,
+    type: server.config_type,
+    isActive: server.is_active,
+    category: server.category,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
   };
 }
 //#endregion

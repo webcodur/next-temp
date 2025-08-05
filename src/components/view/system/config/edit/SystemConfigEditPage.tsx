@@ -422,7 +422,6 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
       <Dialog
         isOpen={successDialogOpen}
         onClose={handleGoToList}
-        variant="primary"
         title="수정 완료"
       >
         <DialogHeader>
@@ -443,7 +442,6 @@ export default function SystemConfigEditPage({ configKey }: SystemConfigEditPage
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>

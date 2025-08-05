@@ -5,7 +5,7 @@
 */
 
 import React, { useState } from 'react';
-import { Send, RotateCcw } from 'lucide-react';
+import { Send, RotateCcw, Lock, Unlock } from 'lucide-react';
 import { useAccessControl } from './hooks/useAccessControl';
 import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierControlGrid from './barrierManager/barrierControl/BarrierControlGrid';
@@ -44,6 +44,9 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 	
 	// 인풋 폼 방식을 위한 상태
 	const [hasChanges, setHasChanges] = useState(false);
+	
+	// 차단기 잠금 상태
+	const [isBarrierLocked, setIsBarrierLocked] = useState(true);
 	// #endregion
 
 	// #region 인풋 폼 핸들러
@@ -57,6 +60,10 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 		// 정책 변경사항 초기화
 		toast.info('출입 정책이 초기 상태로 복구되었습니다.');
 		setHasChanges(false);
+	};
+
+	const handleBarrierLockToggle = () => {
+		setIsBarrierLocked(!isBarrierLocked);
 	};
 	// #endregion
 
@@ -74,10 +81,26 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 			<div className="flex flex-col gap-4 min-h-0">
 				{/* 개별 차단기 (상단) */}
 				<div className="neu-elevated">
-					<SectionPanel title="개별 차단기 제어 컨트롤러">
+					<SectionPanel 
+						title="개별 차단기 제어 컨트롤러"
+						headerHeight="h-[70px]"
+						titleAlign="center"
+						headerActions={
+							<Button
+								onClick={handleBarrierLockToggle}
+								variant={!isBarrierLocked ? "primary" : "outline"}
+								size="sm"
+								icon={!isBarrierLocked ? Unlock : Lock}
+								className="min-w-24"
+							>
+								{!isBarrierLocked ? '편집상태' : '잠금상태'}
+							</Button>
+						}
+					>
 						<BarrierControlGrid
 							barriers={barriers}
 							barrierOrder={barrierOrder}
+							isLocked={isBarrierLocked}
 							onBarrierToggle={handleBarrierToggle}
 							onOperationModeChange={handleOperationModeChange}
 							onBarrierOrderChange={handleBarrierOrderChange}
@@ -87,33 +110,35 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 
 				{/* 출입 정책 설정 (하단) - 인풋 폼 방식 */}
 				<div className="neu-elevated">
-					<SectionPanel title="출입 정책 설정">
-						<div className="space-y-4">
-							{/* 인풋 폼 헤더 - 액션 버튼들 */}
-							<div className="flex justify-between items-center p-4 border-b border-border">
-								<h3 className="text-lg font-semibold text-foreground">정책 설정 관리</h3>
-								<div className="flex gap-2">
-									<Button
-										variant="outline"
-										size="sm"
-										icon={RotateCcw}
-										onClick={handleResetPolicyChanges}
-										className="min-w-28"
-									>
-										복구/초기화
-									</Button>
-									<Button
-										variant={hasChanges ? "primary" : "outline"}
-										size="sm"
-										icon={Send}
-										onClick={handleSavePolicyChanges}
-										disabled={!hasChanges}
-										className="min-w-16"
-									>
-										전송
-									</Button>
-								</div>
+					<SectionPanel 
+						title="출입 정책 설정"
+						headerHeight="h-[70px]"
+						titleAlign="center"
+						headerActions={
+							<div className="flex gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									icon={RotateCcw}
+									onClick={handleResetPolicyChanges}
+									className="min-w-28"
+								>
+									복구/초기화
+								</Button>
+								<Button
+									variant={hasChanges ? "primary" : "outline"}
+									size="sm"
+									icon={Send}
+									onClick={handleSavePolicyChanges}
+									disabled={!hasChanges}
+									className="min-w-16"
+								>
+									전송
+								</Button>
 							</div>
+						}
+					>
+						<div className="space-y-4">
 
 							{/* 정책 설정 콘텐츠 */}
 							<div className="flex flex-col gap-4 lg:flex-row lg:items-start">

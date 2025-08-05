@@ -29,6 +29,7 @@ import {
 // 전역 초기화 상태 (모든 인스턴스가 공유)
 let globalInitialized = false;
 let globalInitPromise: Promise<void> | null = null;
+let globalTokenCheckStarted = false;
 
 export function useAuth() {
   const [isPending, startTransition] = useTransition();
@@ -57,10 +58,7 @@ export function useAuth() {
     if (!userInfo) return false;
 
     // 토큰에서 주차장 ID 추출하여 동기화
-    const parkingLotIdFromToken = getParkinglotIdFromToken();
-    setTokenSelectedParkingLotId(parkingLotIdFromToken);
-
-    // 로깅 제거 (불필요)
+    setTokenSelectedParkingLotId(getParkinglotIdFromToken());
 
     return true;
   }, [setTokenSelectedParkingLotId]);
@@ -73,16 +71,15 @@ export function useAuth() {
     const refreshSuccess = await refreshToken();
     
     if (refreshSuccess) {
-      console.log('🔄 토큰 갱신 성공');
       syncUserInfoFromToken();
-    } else {
-      console.log('💀 토큰 갱신 실패 → 완전 로그아웃');
+    } 
+    else {
       clearAllTokens();
       setIsLoggedIn(false);
       setUserProfile(null);
       setParkingLots([]);
       setTokenSelectedParkingLotId(null);
-      setManualSelectedParkingLotId(null); // 수동 선택 주차장 ID도 초기화
+      setManualSelectedParkingLotId(null); 
     }
   }, [refreshToken, syncUserInfoFromToken, setIsLoggedIn, setUserProfile, setParkingLots, setTokenSelectedParkingLotId, setManualSelectedParkingLotId]);
   // #endregion
@@ -100,23 +97,17 @@ export function useAuth() {
     }
 
     const initializeAuth = async () => {
-      // 개발 모드에서만 로그 출력
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🚀 인증 초기화 (한 번만)');
-      }
-      
       const accessToken = getTokenFromCookie(ACCESS_TOKEN_NAME);
-      
+      // 토큰 존재: 유효성 검사 및 사용자 정보 동기화
       if (accessToken) {
-        // 토큰이 있으면 유효성 검사 및 사용자 정보 동기화
         const isValid = syncUserInfoFromToken();
-        
-        if (isValid) {
-          setIsLoggedIn(true);
-        } else {
-          await handleTokenExpired();
-        }
-      } else {
+        // 토큰 유효: 로그인 처리
+        if (isValid) setIsLoggedIn(true);
+        // 토큰 무효: 토큰 갱신 시도
+        else await handleTokenExpired();
+      } 
+      // 토큰 없음: 로그아웃 처리
+      else {
         setIsLoggedIn(false);
         setTokenSelectedParkingLotId(null);
         setManualSelectedParkingLotId(null); // 수동 선택 주차장 ID도 초기화
@@ -140,8 +131,8 @@ export function useAuth() {
     if (!isLoggedIn || !isInitialized || !globalInitialized) return;
 
     // 이미 토큰 검증이 시작되었다면 중복 실행 방지
-    if (window.globalTokenCheckStarted) return;
-    window.globalTokenCheckStarted = true;
+    if (globalTokenCheckStarted) return;
+    globalTokenCheckStarted = true;
 
     // 개발 모드에서만 로그 출력
     if (process.env.NODE_ENV === 'development') {
@@ -162,13 +153,13 @@ export function useAuth() {
 
     return () => {
       clearInterval(tokenCheckInterval);
-      window.globalTokenCheckStarted = false;
+      globalTokenCheckStarted = false;
     };
   }, [isLoggedIn, isInitialized, handleTokenExpired]);
   // #endregion
 
   // #region 로그인 처리
-  const login = async (account: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = useCallback(async (account: string, password: string): Promise<{ success: boolean; error?: string }> => {
     console.log('🔐 로그인 시도:', { account, timestamp: new Date().toISOString() });
     
     try {
@@ -233,10 +224,10 @@ export function useAuth() {
       console.error('💥 로그인 중 오류:', error);
       return { success: false, error: '로그인 중 오류가 발생했습니다.' };
     }
-  };
+  }, [setTokenSelectedParkingLotId, setUserProfile, setParkingLots, setIsLoggedIn, manualSelectedParkingLotId]);
 
   // 로그아웃 처리
-  const logout = async () => {
+  const logout = useCallback(async () => {
     console.log('🚪 로그아웃 처리 시작');
     
     startTransition(async () => {
@@ -252,7 +243,7 @@ export function useAuth() {
       
       console.log('👋 로그아웃 완료');
     });
-  };
+  }, [startTransition, setIsLoggedIn, setUserProfile, setParkingLots, setTokenSelectedParkingLotId, setManualSelectedParkingLotId]);
   // #endregion
 
   // #region 추가 유틸리티 메서드
@@ -306,7 +297,8 @@ export function useAuth() {
     logout,
     selectParkingLot,
     refreshToken,
-    refreshUserInfo
+    refreshUserInfo,
+    getCurrentUserInfo
   ]);
   // #endregion
 } 

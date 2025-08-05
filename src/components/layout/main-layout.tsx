@@ -30,6 +30,9 @@ interface MainLayoutProps {
 }
 // #endregion
 
+// 사용자 정보 새로고침 상태 (전역)
+let userInfoRefreshed = false;
+
 // 상세 구조 및 동작 방식은 main-layout.md 참고
 export default function MainLayout({ children }: MainLayoutProps) {
 	// #region 훅
@@ -62,9 +65,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
 	// 페이지 로드 시 토큰 확인 및 상태 동기화 (한 번만)
 	useEffect(() => {
-		if (isLoggedIn && !window.userInfoRefreshed) {
+		if (isLoggedIn && !userInfoRefreshed) {
 			refreshUserInfo();
-			window.userInfoRefreshed = true;
+			userInfoRefreshed = true;
 		}
 	}, [isLoggedIn, refreshUserInfo]);
 	// #endregion

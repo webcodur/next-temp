@@ -15,6 +15,7 @@ import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import VehicleConfig from '../barrierCard/VehicleConfig';
 
 // #region 타입 정의
@@ -225,18 +226,20 @@ const BarrierPolicyCard: React.FC<BarrierPolicyCardProps> = ({
           </p>
           
           <div className="flex gap-3 justify-end">
-            <button
+            <Button
               onClick={handleCancelNameEdit}
-              className="px-4 py-2 text-sm rounded-md neu-raised text-foreground hover:neu-flat"
+              variant="outline"
+              size="sm"
             >
               취소 (복구)
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleSaveName}
-              className="px-4 py-2 text-sm rounded-md neu-raised bg-primary text-primary-foreground hover:neu-flat"
+              variant="primary"
+              size="sm"
             >
               저장
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>

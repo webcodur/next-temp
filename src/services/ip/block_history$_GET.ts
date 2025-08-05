@@ -6,16 +6,22 @@ import { SearchIpBlockHistoryRequest, IpBlockHistory } from '@/types/api';
 interface IpBlockHistoryServerResponse {
   id: number;
   ip: string;
-  block_type: 'MANUAL' | 'AUTO';   // snake_case
-  user_agent?: string;             // snake_case
-  request_method?: string;         // snake_case
-  request_url?: string;            // snake_case
-  block_reason: string;            // snake_case
-  matched_pattern?: string;        // snake_case
-  block_duration?: number;         // snake_case
-  blocked_at: string;              // snake_case
-  unblocked_at?: string;           // snake_case
-  unblocked_by?: number;           // snake_case
+  block_type_id: number;
+  block_type: {
+    code: string;
+    description: string;
+  };
+  user_agent?: string | null;
+  request_method?: string | null;
+  request_url?: string | null;
+  block_reason: string;
+  matched_pattern?: string | null;
+  block_duration: number;
+  is_active: boolean;
+  unblocked_at?: Date | null;
+  unblocked_by?: number | null;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface IpBlockHistorySearchServerResponse {
@@ -34,19 +40,9 @@ function buildServerQueryParams(client: SearchIpBlockHistoryRequest): URLSearchP
   if (client.page) searchParams.append('page', client.page.toString());
   if (client.limit) searchParams.append('limit', client.limit.toString());
   if (client.ip) searchParams.append('ip', client.ip);
-  if (client.blockType) searchParams.append('block_type', client.blockType);  // snake_case
-  if (client.userAgent) searchParams.append('user_agent', client.userAgent);  // snake_case
-  if (client.requestMethod) searchParams.append('request_method', client.requestMethod);  // snake_case
-  if (client.requestUrl) searchParams.append('request_url', client.requestUrl);  // snake_case
-  if (client.blockReason) searchParams.append('block_reason', client.blockReason);  // snake_case
-  if (client.matchedPattern) searchParams.append('matched_pattern', client.matchedPattern);  // snake_case
-  if (client.blockDuration) searchParams.append('block_duration', client.blockDuration.toString());  // snake_case
-  if (client.isActive !== undefined) searchParams.append('is_active', client.isActive.toString());  // snake_case
-  if (client.unblockedStartDate) searchParams.append('unblocked_start_date', client.unblockedStartDate);  // snake_case
-  if (client.unblockedEndDate) searchParams.append('unblocked_end_date', client.unblockedEndDate);  // snake_case
-  if (client.unblockedBy) searchParams.append('unblocked_by', client.unblockedBy);  // snake_case
-  if (client.startDate) searchParams.append('start_date', client.startDate);  // snake_case
-  if (client.endDate) searchParams.append('end_date', client.endDate);  // snake_case
+  if (client.reason) searchParams.append('reason', client.reason);
+  if (client.date_from) searchParams.append('date_from', client.date_from);
+  if (client.date_to) searchParams.append('date_to', client.date_to);
 
   return searchParams;
 }
@@ -55,16 +51,17 @@ function serverToClient(server: IpBlockHistoryServerResponse): IpBlockHistory {
   return {
     id: server.id,
     ip: server.ip,
-    blockType: server.block_type,
-    userAgent: server.user_agent,
-    requestMethod: server.request_method,
-    requestUrl: server.request_url,
+    blockType: server.block_type.code as 'MANUAL' | 'AUTO',
+    userAgent: server.user_agent || undefined,
+    requestMethod: server.request_method || undefined,
+    requestUrl: server.request_url || undefined,
     blockReason: server.block_reason,
-    matchedPattern: server.matched_pattern,
+    matchedPattern: server.matched_pattern || undefined,
     blockDuration: server.block_duration,
-    blockedAt: server.blocked_at,
-    unblockedAt: server.unblocked_at,
-    unblockedBy: server.unblocked_by,
+    blockedAt: server.created_at.toString(),
+    unblockedAt: server.unblocked_at?.toString(),
+    unblockedBy: server.unblocked_by || undefined,
+    isActive: server.is_active,
   };
 }
 
@@ -81,7 +78,7 @@ function searchResponseToClient(server: IpBlockHistorySearchServerResponse) {
 
 /**
  * 쿼리 조건에 따라 차단 내역을 검색한다
- * @param params 검색 조건
+ * @param params 검색 조건 (ip, reason, date_from, date_to, page, limit)
  * @returns 차단 내역 목록과 페이지 정보 (PageDto<IpBlockHistory>)
  */
 export async function searchBlockHistory(params?: SearchIpBlockHistoryRequest) {

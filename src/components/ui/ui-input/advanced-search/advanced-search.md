@@ -93,8 +93,6 @@ interface AdvancedSearchProps {
   fields: FieldConfig[];             // 필드 구성 (필수)
   onSearch?: () => void;             // 검색 버튼 클릭 핸들러
   onReset?: () => void;              // 리셋 버튼 클릭 핸들러
-  searchLabel?: string;              // 검색 버튼 라벨 (기본: '검색')
-  resetLabel?: string;               // 리셋 버튼 라벨 (기본: '리셋')
   defaultOpen?: boolean;             // 기본 열림 상태 (기본: true)
   showButtons?: boolean;             // 버튼 표시 여부 (기본: true)
   statusText?: string;               // 헤더 상태 텍스트

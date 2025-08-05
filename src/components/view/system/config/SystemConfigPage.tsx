@@ -304,6 +304,9 @@ export default function SystemConfigPage() {
       align: 'center',
       width: '12%',
       cell: (item: SystemConfig) => {
+        if (!item.updatedAt) {
+          return <span className="text-gray-400">-</span>;
+        }
         const date = new Date(item.updatedAt);
         return date.toLocaleString('ko-KR', {
           year: 'numeric',
@@ -370,7 +373,6 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="primary"
         title="작업 완료"
       >
         <DialogHeader>
@@ -391,7 +393,6 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="destructive"
         title="오류 발생"
       >
         <DialogHeader>
@@ -412,7 +413,6 @@ export default function SystemConfigPage() {
       <Dialog
         isOpen={deleteDialogOpen}
         onClose={handleDeleteCancel}
-        variant="destructive"
         title="설정 삭제"
       >
         <DialogHeader>

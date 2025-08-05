@@ -435,7 +435,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       <Dialog
         isOpen={successDialogOpen}
         onClose={handleGoToList}
-        variant="primary"
+        variant="success"
         title="수정 완료"
       >
         <DialogHeader>
@@ -456,7 +456,7 @@ export default function IpBlockConfigEditPage({ configKey }: IpBlockConfigEditPa
       <Dialog
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="destructive"
+        variant="error"
         title="오류 발생"
       >
         <DialogHeader>

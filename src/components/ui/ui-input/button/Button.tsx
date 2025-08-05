@@ -28,6 +28,7 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				primary: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]',
+				pressed: 'neu-inset text-foreground',
 				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02]',
 				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02]',
 				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50',

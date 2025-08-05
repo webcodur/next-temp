@@ -5,12 +5,20 @@ import { IpBlock } from '@/types/api';
 //#region 서버 타입 정의 (파일 내부 사용)
 interface IpBlockServerResponse {
   ip: string;
-  block_type: 'MANUAL' | 'AUTO';  // snake_case
-  block_reason: string;            // snake_case
-  blocked_at: string;              // snake_case
-  unblocked_at?: string;           // snake_case
-  unblocked_by?: number;           // snake_case
-  is_active: boolean;              // snake_case
+  blocked_at: string;
+  reason: string;
+  user_agent?: string;
+  attempts: number;
+  remaining_time?: number;
+  is_permanent?: boolean;
+}
+
+interface IpBlockListServerResponse {
+  data: IpBlockServerResponse[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 //#endregion
 
@@ -18,22 +26,39 @@ interface IpBlockServerResponse {
 function serverToClient(server: IpBlockServerResponse): IpBlock {
   return {
     ip: server.ip,
-    blockType: server.block_type,
-    blockReason: server.block_reason,
+    blockType: 'AUTO', // API 스펙에 따라 기본값 설정
+    blockReason: server.reason,
     blockedAt: server.blocked_at,
-    unblockedAt: server.unblocked_at,
-    unblockedBy: server.unblocked_by,
-    isActive: server.is_active,
+    isActive: true, // 차단된 IP 목록이므로 활성 상태
+  };
+}
+
+function listResponseToClient(server: IpBlockListServerResponse) {
+  return {
+    data: server.data.map(serverToClient),
+    total: server.total,
+    page: server.page,
+    limit: server.limit,
+    totalPages: server.totalPages,
   };
 }
 //#endregion
 
 /**
  * Redis에 저장된 모든 차단된 IP 주소와 상세 정보를 조회한다
- * @returns 차단된 IP 목록 (IpBlock[])
+ * @param page 페이지 번호 (기본값: 1)
+ * @param limit 페이지당 항목 수 (기본값: 10)
+ * @returns 차단된 IP 목록 (PageDto<IpBlock>)
  */
-export async function getBlockedIpList() {
-  const response = await fetchDefault('/ip/block', {
+export async function getBlockedIpList(page?: number, limit?: number) {
+  const searchParams = new URLSearchParams();
+  if (page) searchParams.append('page', page.toString());
+  if (limit) searchParams.append('limit', limit.toString());
+  
+  const queryString = searchParams.toString();
+  const url = queryString ? `/ip/block?${queryString}` : '/ip/block';
+
+  const response = await fetchDefault(url, {
     method: 'GET',
   });
 
@@ -48,8 +73,8 @@ export async function getBlockedIpList() {
     };
   }
 
-  const serverResponse = result as IpBlockServerResponse[];
-  const clientData = serverResponse.map(serverToClient);
+  const serverResponse = result as IpBlockListServerResponse;
+  const clientData = listResponseToClient(serverResponse);
   
   return {
     success: true,

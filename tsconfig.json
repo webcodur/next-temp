@@ -29,5 +29,11 @@
 		".next/types/**/*.ts",
 
 	],
-	"exclude": ["node_modules"]
+	"exclude": [
+		"node_modules",
+		"src/services/household/**/*",
+		"src/services/car/**/*",
+		"src/services/instance/**/*",
+		"src/services/resident/**/*"
+	]
 }

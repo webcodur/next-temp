@@ -13,6 +13,7 @@ import { ParkingBarrier, OperationMode } from '@/types/parking';
 import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // #region 타입 정의
 interface BarrierControlCardProps {
@@ -210,33 +211,33 @@ const BarrierControlCard: React.FC<BarrierControlCardProps> = ({
             </div>
             
             <div className="relative" ref={dropdownRef}>
-              <button
+              <Button
                 onClick={toggleDropdown}
                 disabled={isDragOverlay || isLocked}
-                className={`w-full flex items-center justify-center p-3 rounded-lg neu-elevated text-center transition-all ${
-                  isDragOverlay || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:neu-inset'
-                } ${isDropdownOpen ? 'neu-inset' : ''}`}
+                variant="outline"
+                className={`w-full p-3 ${isDropdownOpen ? 'neu-inset' : ''}`}
               >
                 <span className="text-sm font-medium truncate text-foreground">
                   {getCurrentModeLabel()}
                 </span>
-              </button>
+              </Button>
 
               {/* 드롭다운 옵션들 */}
               {isDropdownOpen && !isDragOverlay && (
                 <div className="absolute right-0 left-0 top-full z-50 py-1 rounded-lg border shadow-lg bg-background border-border neu-elevated">
                   {operationModeOptions.map((option) => (
-                    <button
+                    <Button
                       key={option.value}
                       onClick={() => handleOperationModeSelect(option.value as OperationMode)}
-                      className={`w-full px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-muted/50 first:rounded-t-md last:rounded-b-md ${
+                      variant="ghost"
+                      className={`w-full justify-start px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-muted/50 first:rounded-t-md last:rounded-b-md ${
                         barrier.operationMode === option.value 
                           ? 'bg-primary/10 text-primary' 
                           : 'text-foreground'
                       }`}
                     >
                       {option.label}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               )}
@@ -247,28 +248,26 @@ const BarrierControlCard: React.FC<BarrierControlCardProps> = ({
           <div>
             <div className="grid grid-cols-2 gap-3">
               {/* 차단기 열기 */}
-              <button
+              <Button
                 onClick={handleBarrierOpen}
                 disabled={isDragOverlay || barrier.isOpen || isLocked}
-                className={`p-4 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex flex-col items-center justify-center gap-2 ${
-                  isDragOverlay || barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                }`}
+                variant="outline"
+                className="p-4 h-auto flex-col items-center justify-center gap-2"
               >
                 <ArrowUpFromLine className="w-6 h-6" />
                 <span>열기</span>
-              </button>
+              </Button>
               
               {/* 차단기 닫기 */}
-              <button
+              <Button
                 onClick={handleBarrierClose}
                 disabled={isDragOverlay || !barrier.isOpen || isLocked}
-                className={`p-4 rounded-lg text-sm font-medium transition-all neu-raised hover:neu-inset text-foreground flex flex-col items-center justify-center gap-2 ${
-                  isDragOverlay || !barrier.isOpen || isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                }`}
+                variant="outline"
+                className="p-4 h-auto flex-col items-center justify-center gap-2"
               >
                 <ArrowDownFromLine className="w-6 h-6" />
                 <span>닫기</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -290,18 +289,20 @@ const BarrierControlCard: React.FC<BarrierControlCardProps> = ({
           </p>
           
           <div className="flex gap-3 justify-end">
-            <button
+            <Button
               onClick={handleCancelNameEdit}
-              className="px-4 py-2 text-sm rounded-md neu-raised text-foreground hover:neu-flat"
+              variant="outline"
+              size="sm"
             >
               취소 (복구)
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleSaveName}
-              className="px-4 py-2 text-sm rounded-md neu-raised bg-primary text-primary-foreground hover:neu-flat"
+              variant="primary"
+              size="sm"
             >
               저장
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>
