@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 
@@ -145,6 +145,12 @@ export default function AdminListPage() {
     router.push(`/parking/lot-management/admin/${admin.id}`);
   }, [router]);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }, [handleSearch]);
+
   const handleDeleteClick = useCallback((id: number) => {
     setDeleteTargetId(id);
     setDeleteConfirmOpen(true);
@@ -188,6 +194,7 @@ export default function AdminListPage() {
           value={searchFilters.account}
           onChange={(value) => updateFilter('account', value)}
           showSearchIcon={true}
+          onKeyDown={handleKeyDown}
         />
       ),
       visible: true,
@@ -203,6 +210,7 @@ export default function AdminListPage() {
           value={searchFilters.name}
           onChange={(value) => updateFilter('name', value)}
           showSearchIcon={true}
+          onKeyDown={handleKeyDown}
         />
       ),
       visible: true,
@@ -218,6 +226,7 @@ export default function AdminListPage() {
           value={searchFilters.email}
           onChange={(value) => updateFilter('email', value)}
           showValidation={false}
+          onKeyDown={handleKeyDown}
         />
       ),
       visible: true,
@@ -237,7 +246,7 @@ export default function AdminListPage() {
       ),
       visible: true,
     },
-  ], [searchFilters, roleOptions, updateFilter]);
+  ], [searchFilters, roleOptions, updateFilter, handleKeyDown]);
   // #endregion
 
   // #region 컬럼 정의
@@ -361,76 +370,78 @@ export default function AdminListPage() {
       />
 
       {/* 삭제 확인 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        variant="warning"
         title="관리자 삭제 확인"
+        size="md"
       >
-        <DialogHeader>
-          <DialogTitle>정말로 삭제하시겠습니까?</DialogTitle>
-          <DialogDescription>
-            이 작업은 되돌릴 수 없습니다. 관리자 정보가 영구적으로 삭제됩니다.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button 
-            variant="ghost" 
-            onClick={() => setDeleteConfirmOpen(false)}
-          >
-            취소
-          </Button>
-          <Button 
-            variant="destructive" 
-            onClick={handleDeleteConfirm}
-          >
-            삭제
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">정말로 삭제하시겠습니까?</h3>
+            <p className="text-muted-foreground">
+              이 작업은 되돌릴 수 없습니다. 관리자 정보가 영구적으로 삭제됩니다.
+            </p>
+          </div>
+          
+          <div className="flex gap-3 justify-end pt-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              취소
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteConfirm}
+            >
+              삭제
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 성공 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
         title="작업 완료"
+        size="sm"
       >
-        <DialogHeader>
-          <DialogTitle>성공</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setSuccessDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <p className="text-muted-foreground">{dialogMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setSuccessDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
         title="오류 발생"
+        size="sm"
       >
-        <DialogHeader>
-          <DialogTitle>오류</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setErrorDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <p className="text-muted-foreground">{dialogMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
   // #endregion

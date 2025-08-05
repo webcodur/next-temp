@@ -148,7 +148,7 @@ export function PickDate({
 				placeholderText={placeholderText}
 				locale={ko}
 				showTimeSelect={showTimeSelect}
-				className="w-full"
+				className="w-full text-center"
 				minDate={minDate ?? undefined}
 				maxDate={maxDate ?? undefined}
 				disabled={disabled}
@@ -193,7 +193,7 @@ export function PickDateRange({
 				dateFormat={dateFormat}
 				placeholderText={placeholderText}
 				locale={ko}
-				className="w-full"
+				className="w-full text-center"
 				renderCustomHeader={renderCustomHeader}
 			/>
 		</div>
@@ -210,6 +210,7 @@ export type PickTimeProps = {
 	timeIntervals?: number;
 	minTime?: Date;
 	maxTime?: Date;
+	colorVariant?: 'primary' | 'secondary';
 };
 
 export function PickTime({
@@ -220,21 +221,28 @@ export function PickTime({
 	timeIntervals = 15,
 	minTime,
 	maxTime,
+	colorVariant = 'primary',
 }: PickTimeProps) {
+	const colorVariantClass = colorVariant === 'primary' 
+		? 'datepicker-primary' 
+		: 'datepicker-secondary';
+
 	return (
-		<DatePicker
-			selected={selected ?? undefined}
-			onChange={onChange}
-			showTimeSelect
-			showTimeSelectOnly
-			timeIntervals={timeIntervals}
-			timeFormat="HH:mm"
-			placeholderText={placeholderText}
-			locale={ko}
-			className={className}
-			minTime={minTime}
-			maxTime={maxTime}
-		/>
+		<div className={`${colorVariantClass} ${className}`}>
+			<DatePicker
+				selected={selected ?? undefined}
+				onChange={onChange}
+				showTimeSelect
+				showTimeSelectOnly
+				timeIntervals={timeIntervals}
+				timeFormat="HH:mm"
+				placeholderText={placeholderText}
+				locale={ko}
+				className="w-full text-center"
+				minTime={minTime}
+				maxTime={maxTime}
+			/>
+		</div>
 	);
 }
 // #endregion
@@ -249,6 +257,7 @@ export type PickMonthProps = {
 	minDate?: Date | null;
 	maxDate?: Date | null;
 	disabled?: boolean;
+	colorVariant?: 'primary' | 'secondary';
 };
 
 export function PickMonth({
@@ -260,20 +269,27 @@ export function PickMonth({
 	minDate,
 	maxDate,
 	disabled = false,
+	colorVariant = 'primary',
 }: PickMonthProps) {
+	const colorVariantClass = colorVariant === 'primary' 
+		? 'datepicker-primary' 
+		: 'datepicker-secondary';
+
 	return (
-		<DatePicker
-			selected={selected ?? undefined}
-			onChange={onChange}
-			dateFormat={dateFormat}
-			placeholderText={placeholderText}
-			locale={ko}
-			className={className}
-			minDate={minDate ?? undefined}
-			maxDate={maxDate ?? undefined}
-			disabled={disabled}
-			showMonthYearPicker
-		/>
+		<div className={`${colorVariantClass} ${className}`}>
+			<DatePicker
+				selected={selected ?? undefined}
+				onChange={onChange}
+				dateFormat={dateFormat}
+				placeholderText={placeholderText}
+				locale={ko}
+				className="w-full text-center"
+				minDate={minDate ?? undefined}
+				maxDate={maxDate ?? undefined}
+				disabled={disabled}
+				showMonthYearPicker
+			/>
+		</div>
 	);
 }
 // #endregion

@@ -9,6 +9,7 @@ interface UpdateCarViolationServerRequest {
   severity_level?: number;
   penalty_points?: number;
   status?: string;
+  processing_note?: string;
 }
 
 interface CarViolationServerResponse {
@@ -33,6 +34,7 @@ interface CarViolationServerResponse {
   status: string;
   created_at: string;
   updated_at: string;
+  is_auto_blacklisted: boolean;
 }
 // #endregion
 
@@ -44,6 +46,7 @@ function clientToServer(client: UpdateCarViolationRequest): UpdateCarViolationSe
     severity_level: client.severityLevel,
     penalty_points: client.penaltyPoints,
     status: client.status,
+    processing_note: client.processingNote,
   };
 }
 
@@ -70,6 +73,7 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     status: server.status as ViolationStatus,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
+    isAutoBlacklisted: server.is_auto_blacklisted,
   };
 }
 // #endregion

@@ -20,6 +20,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 // Input 컴포넌트
 // import Editor from '@/components/ui/ui-input/editor/Editor'; // TODO: TinyMCE 이슈 해결 후 다시 활성화
+import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 
 // 타입
 import { Notice } from '@/types/notice';
@@ -349,12 +350,12 @@ export default function HubNoticeDetailPage() {
                 placeholder="공지사항 내용을 입력하세요"
                 height={300}
               /> */}
-              <textarea
+              <SimpleTextArea
                 value={formData.content}
-                onChange={(e) => handleFieldChange('content', e.target.value)}
-                className="w-full min-h-[300px] px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                onChange={(value) => handleFieldChange('content', value)}
                 placeholder="공지사항 내용을 입력하세요"
-                required
+                rows={12}
+                className="min-h-[300px]"
               />
             </GridForm.Content>
           </GridForm.Row>

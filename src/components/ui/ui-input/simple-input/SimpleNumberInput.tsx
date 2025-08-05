@@ -86,6 +86,11 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 		inputRef.current?.focus();
 	};
 
+	const handleContainerClick = () => {
+		if (disabled) return;
+		inputRef.current?.focus();
+	};
+
 	// validation 결과 계산 (문자열로 변환하여 검증)
 	const stringValue = value === '' ? '' : String(value);
 	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
@@ -129,6 +134,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 			)}
 
 			<div
+				onClick={handleContainerClick}
 				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
 					isFocused
 						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`

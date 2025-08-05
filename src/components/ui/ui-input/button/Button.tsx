@@ -1,7 +1,7 @@
 /* 
   파일명: /components/ui/ui-input/button/Button.tsx
   기능: 뉴모피즘 스타일의 재사용 가능한 버튼 컴포넌트
-  책임: 6개의 간소화된 variant로 일관된 UI 경험을 제공하는 기본 버튼 컴포넌트
+  책임: 상태별 인터랙션이 적용된 일관된 UI 경험을 제공하는 기본 버튼 컴포넌트
   
   🎯 Variant 체계:
   - primary: 주요 액션 (저장, 생성, 로그인) - 브랜드 블루
@@ -10,6 +10,32 @@
   - outline: 중성 액션 (검색, 필터, 리셋) - 회색 테두리
   - ghost: 최소 액션 (취소, 초기화) - 투명 배경
   - link: 링크/네비게이션 - 브랜드 블루 텍스트
+  
+  📝 상태별 스타일링 완전 가이드:
+  
+  🔧 상태별 인터랙션:
+  1. 기본 상태 (default): 각 variant의 기본 스타일
+  2. 호버 상태 (hover:): 마우스 오버 시 즉각적인 시각적 피드백
+    - 뉴모피즘: hover:scale-[1.02] hover:shadow-neu-lg
+    - 플랫: hover:bg-color/transparency hover:border-color
+  3. 액티브 상태 (active:): 클릭/터치 시점의 눌린 상태
+    - 뉴모피즘: active:neu-inset active:scale-100
+    - 플랫: active:bg-color/transparency active:scale-[0.98]
+  4. 포커스 상태 (focus-visible:): 키보드 내비게이션 시 접근성
+    - 공통: focus-visible:ring-2 focus-visible:ring-ring
+    - 개별: focus-visible:ring-primary/20
+  5. 비활성 상태 (disabled:): 상호작용 불가능한 상태
+    - 기본: disabled:pointer-events-none disabled:opacity-50
+    - 추가: disabled:bg-color disabled:text-color
+  
+  💡 커스터마이징 방법:
+  - 각 variant 클래스 문자열에서 상태별 클래스 추가/수정
+  - 새 variant 추가: info: 'neu-raised bg-blue-500 text-white hover:scale-[1.02] active:neu-inset'
+  - 트랜지션 조정: transition-all duration-150 ease-in-out (기본값)
+  
+  ⚠️ 주의사항:
+  - neu-* 클래스는 뉴모피즘 스타일 (CSS 변수 기반)
+  - scale 효과는 즉각적인 피드백용, 접근성 필수 포함
 */
 
 import * as React from 'react';
@@ -19,27 +45,39 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-// cusror: pointer 추가
-
 // #region 타입 및 스타일
 const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer',
+	// 기본 공통 스타일: 레이아웃, 타이포그래피, 전환, 접근성
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer min-w-20',
 	{
 		variants: {
 			variant: {
-				primary: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]',
-				pressed: 'neu-inset text-foreground',
-				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02]',
-				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02]',
-				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50',
-				ghost: 'neu-flat hover:bg-muted text-foreground neu-hover',
-				link: 'text-primary underline-offset-4 hover:underline hover:text-accent transition-colors',
+				// 주요 액션: 뉴모피즘 raised → 호버 시 확대 → 액티브 시 inset
+				primary: 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02] hover:shadow-neu-lg active:neu-inset active:scale-100',
+				
+				// 눌린 상태: inset 효과로 눌린 상태 표현
+				pressed: 'neu-inset text-foreground bg-muted',
+				
+				// 보조 액션: 퍼플 계열, primary와 동일한 상호작용
+				secondary: 'neu-raised bg-secondary text-secondary-foreground hover:scale-[1.02] hover:shadow-neu-lg active:neu-inset active:scale-100',
+				
+				// 위험 액션: 빨강 계열, 호버 시 더 진한 빨강
+				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02] hover:bg-destructive/90 active:neu-inset active:scale-100',
+				
+				// 아웃라인: 테두리만, 호버 시 배경 추가
+				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50 hover:border-muted-foreground/20 active:bg-muted/80 active:scale-[0.98]',
+				
+				// 고스트: 최소 스타일, 호버 시에만 배경 표시
+				ghost: 'neu-flat text-foreground hover:bg-muted/60 hover:neu-hover active:bg-muted/80 active:scale-[0.98]',
+				
+				// 링크: 텍스트만, 언더라인 효과
+				link: 'text-primary underline-offset-4 hover:underline hover:text-primary/80 active:text-primary/60 focus-visible:ring-primary/20',
 			},
 			size: {
 				default: 'h-9 px-4 py-2',
 				sm: 'h-8 rounded-md px-3 text-xs',
 				lg: 'h-10 rounded-md px-8',
-				icon: 'h-9 w-9',
+				icon: 'h-9 w-9 min-w-9',
 			},
 		},
 		defaultVariants: {

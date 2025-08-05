@@ -112,19 +112,22 @@ export interface SystemConfig {
   type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
   isActive: boolean;
   category?: string | null;
+  group?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface CreateSystemConfigRequest {
-  key: string;
-  value: string | number | boolean | object;
-  description?: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
-}
-
 export interface UpdateSystemConfigRequest {
   value: string | number | boolean | object;
+}
+
+export interface SystemConfigSearchRequest {
+  page?: number;
+  limit?: number;
+  config_key?: string;
+  config_type?: string;
+  description?: string;
+  category?: string;
 }
 // #endregion
 

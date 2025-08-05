@@ -1,6 +1,6 @@
 # 단순 입력(Simple Input) 컴포넌트 모음
 
-이 문서는 사용자의 입력을 받는 기본적인 UI 컴포넌트 일곱 가지(`Checkbox`, `CheckboxGroup`, `RadioGroup`, `ToggleButton`, `ToggleSwitch`, `Dropdown`, `TextInput`)의 기능과 사용법을 설명합니다.
+이 문서는 사용자의 입력을 받는 기본적인 UI 컴포넌트 열두 가지(`Checkbox`, `CheckboxGroup`, `RadioGroup`, `ToggleButton`, `ToggleSwitch`, `Dropdown`, `TextInput`, `TextArea`, `DatePicker`, `TimePicker`, `DateRangePicker`, `MonthPicker`)의 기능과 사용법을 설명합니다.
 
 ## 1. 컴포넌트 종류 및 핵심 기능
 
@@ -16,6 +16,11 @@ graph TD
         E[FieldToggleSwitch<br/>(토글 스위치)]
         F[FieldDropdown<br/>(드롭다운)]
         G[FieldTextInput<br/>(텍스트 입력)]
+        H[FieldTextArea<br/>(텍스트 영역)]
+        I[FieldDatePicker<br/>(날짜 선택기)]
+        J[FieldTimePicker<br/>(시간 선택기)]
+        K[FieldDateRangePicker<br/>(날짜 범위 선택기)]
+        L[FieldMonthPicker<br/>(월 선택기)]
     end
 
     subgraph "핵심 기능"
@@ -26,6 +31,11 @@ graph TD
         Func_E["- On/Off 상태 전환<br/>- 시각적인 스위치 형태"]
         Func_F["- 여러 옵션 중 선택<br/>- 리스트 아이콘 포함<br/>- 드롭다운 메뉴"]
         Func_G["- 텍스트 입력<br/>- 다양한 입력 타입 지원<br/>- 포커스 상태 관리"]
+        Func_H["- 다중 라인 텍스트 입력<br/>- 글자 수 제한<br/>- 크기 조절 옵션<br/>- 스크롤 지원"]
+        Func_I["- 날짜 선택<br/>- 한국어 로케일 지원<br/>- 커스텀 헤더<br/>- 최소/최대 날짜 제한"]
+        Func_J["- 시간 선택<br/>- 시간 간격 설정<br/>- 최소/최대 시간 제한<br/>- 24시간 형식"]
+        Func_K["- 날짜 범위 선택<br/>- 시작/종료 날짜<br/>- 범위 검증<br/>- 시각적 피드백"]
+        Func_L["- 년월 선택<br/>- 월별 보기<br/>- 년도 빠른 이동<br/>- 월별 필터링"]
     end
 
     A --> Func_A
@@ -35,6 +45,11 @@ graph TD
     E --> Func_E
     F --> Func_F
     G --> Func_G
+    H --> Func_H
+    I --> Func_I
+    J --> Func_J
+    K --> Func_K
+    L --> Func_L
 ```
 
 ---
@@ -127,9 +142,96 @@ graph TD
 
 ---
 
-## 9. 사용 시나리오
+## 8. FieldTextArea
+
+사용자가 여러 줄의 텍스트를 입력할 수 있는 텍스트 영역입니다. 긴 텍스트나 메모, 설명 등을 입력받을 때 사용됩니다.
+
+| Prop          | 설명                                | 예시                              |
+| :------------ | :---------------------------------- | :-------------------------------- |
+| `value`       | 현재 입력된 값                      | `'사용자 입력 텍스트'`            |
+| `onChange`    | 값 변경 시 호출되는 함수            | `(value) => {}`                   |
+| `placeholder` | 입력 전 표시될 안내 텍스트          | "내용을 입력하세요"               |
+| `rows`        | 텍스트 영역의 세로 줄 수            | `4`                               |
+| `maxLength`   | 최대 입력 가능한 글자 수            | `500`                             |
+| `resize`      | 크기 조절 옵션                      | `'vertical' \| 'none' \| 'both'`  |
+| `disabled`    | 비활성화 여부                      | `false`                          |
+| `showCharCount` | 글자 수 표시 여부                 | `true`                           |
+
+---
+
+## 9. FieldDatePicker
+
+사용자가 날짜를 선택할 수 있는 날짜 선택기입니다. 한국어 로케일을 지원하며 커스텀 헤더를 통해 년도와 월을 빠르게 변경할 수 있습니다.
+
+| Prop          | 설명                                | 예시                              |
+| :------------ | :---------------------------------- | :-------------------------------- |
+| `value`       | 선택된 날짜 (Date \| null)         | `new Date()`                      |
+| `onChange`    | 날짜 변경 시 호출되는 함수          | `(date) => {}`                   |
+| `placeholder` | 선택 전 표시될 안내 텍스트          | "날짜를 선택하세요"               |
+| `dateFormat`  | 날짜 표시 형식                      | `'yyyy-MM-dd'`                   |
+| `showTimeSelect` | 시간 선택 포함 여부               | `true`                            |
+| `minDate`     | 선택 가능한 최소 날짜               | `new Date('2023-01-01')`         |
+| `maxDate`     | 선택 가능한 최대 날짜               | `new Date('2024-12-31')`         |
+| `disabled`    | 비활성화 여부                      | `false`                          |
+
+---
+
+## 10. FieldTimePicker
+
+사용자가 시간을 선택할 수 있는 시간 선택기입니다. 15분 간격으로 시간을 선택할 수 있으며, 최소/최대 시간을 설정할 수 있습니다.
+
+| Prop            | 설명                                | 예시                              |
+| :-------------- | :---------------------------------- | :-------------------------------- |
+| `value`         | 선택된 시간 (Date \| null)         | `new Date()`                      |
+| `onChange`      | 시간 변경 시 호출되는 함수          | `(time) => {}`                   |
+| `placeholder`   | 선택 전 표시될 안내 텍스트          | "시간을 선택하세요"               |
+| `timeIntervals` | 시간 선택 간격 (분)                | `15`                              |
+| `minTime`       | 선택 가능한 최소 시간               | `new Date('2023-01-01 09:00')`   |
+| `maxTime`       | 선택 가능한 최대 시간               | `new Date('2023-01-01 18:00')`   |
+| `disabled`      | 비활성화 여부                      | `false`                          |
+
+---
+
+## 11. FieldDateRangePicker
+
+사용자가 날짜 범위를 선택할 수 있는 날짜 범위 선택기입니다. 시작 날짜와 종료 날짜를 순차적으로 선택할 수 있습니다.
+
+| Prop          | 설명                                | 예시                              |
+| :------------ | :---------------------------------- | :-------------------------------- |
+| `startDate`   | 시작 날짜 (Date \| null)           | `new Date()`                      |
+| `endDate`     | 종료 날짜 (Date \| null)           | `new Date()`                      |
+| `onChange`    | 날짜 범위 변경 시 호출되는 함수     | `([start, end]) => {}`           |
+| `placeholder` | 선택 전 표시될 안내 텍스트          | "날짜 범위를 선택하세요"           |
+| `dateFormat`  | 날짜 표시 형식                      | `'yyyy-MM-dd'`                   |
+| `minDate`     | 선택 가능한 최소 날짜               | `new Date('2023-01-01')`         |
+| `maxDate`     | 선택 가능한 최대 날짜               | `new Date('2024-12-31')`         |
+| `disabled`    | 비활성화 여부                      | `false`                          |
+
+---
+
+## 12. FieldMonthPicker
+
+사용자가 년월을 선택할 수 있는 월 선택기입니다. 년도와 월을 빠르게 변경할 수 있으며 월별 필터링이 가능합니다.
+
+| Prop          | 설명                                | 예시                              |
+| :------------ | :---------------------------------- | :-------------------------------- |
+| `value`       | 선택된 년월 (Date \| null)         | `new Date()`                      |
+| `onChange`    | 년월 변경 시 호출되는 함수          | `(date) => {}`                   |
+| `placeholder` | 선택 전 표시될 안내 텍스트          | "년월을 선택하세요"               |
+| `dateFormat`  | 날짜 표시 형식                      | `'yyyy-MM'`                      |
+| `minDate`     | 선택 가능한 최소 날짜               | `new Date('2023-01-01')`         |
+| `maxDate`     | 선택 가능한 최대 날짜               | `new Date('2024-12-31')`         |
+| `disabled`    | 비활성화 여부                      | `false`                          |
+
+---
+
+## 13. 사용 시나리오
 
 - **설정 페이지**: `ToggleSwitch`로 각종 알림 설정을, `RadioGroup`으로 테마 설정을, `Dropdown`으로 언어 선택을 제어합니다.
-- **가입 양식**: `Checkbox`로 개별 약관 동의를, `CheckboxGroup`으로 관심 분야를, `Dropdown`으로 직업을, `TextInput`으로 이름과 이메일을 입력받습니다.
+- **가입 양식**: `Checkbox`로 개별 약관 동의를, `CheckboxGroup`으로 관심 분야를, `Dropdown`으로 직업을, `TextInput`으로 이름과 이메일을, `TextArea`로 자기소개를 입력받습니다.
 - **에디터 툴바**: `ToggleButton`을 사용하여 텍스트 스타일(볼드, 이탤릭)을 켜고 끕니다.
 - **필터링**: `CheckboxGroup`으로 카테고리를, `RadioGroup`으로 정렬 옵션을, `Dropdown`으로 지역을, `TextInput`으로 검색어를 입력받습니다.
+- **게시글 작성**: `TextInput`으로 제목을, `TextArea`로 본문 내용을 입력받으며, 글자 수 제한과 크기 조절 기능을 제공합니다.
+- **일정 관리**: `DatePicker`로 개별 일정 날짜를, `DateRangePicker`로 휴가 기간을, `TimePicker`로 회의 시간을 선택합니다.
+- **예약 시스템**: `DatePicker`로 예약 날짜를, `TimePicker`로 예약 시간을, `DateRangePicker`로 장기 예약 기간을 설정합니다.
+- **보고서 작성**: `MonthPicker`로 보고서 작성 월을, `DateRangePicker`로 데이터 분석 기간을 선택합니다.

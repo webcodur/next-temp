@@ -19,6 +19,7 @@ interface FieldEmailProps {
 	onBlur?: () => void;
 	error?: boolean;
 	errorMessage?: string;
+	onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const FieldEmail: React.FC<FieldEmailProps> = ({
@@ -35,6 +36,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 	onBlur,
 	error = false,
 	errorMessage = '',
+	onKeyDown,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -80,6 +82,7 @@ const FieldEmail: React.FC<FieldEmailProps> = ({
 						setIsFocused(false);
 						onBlur?.();
 					}}
+					onKeyDown={onKeyDown}
 					disabled={disabled}
 					autoComplete="off"
 					dir={isRTL ? 'rtl' : 'ltr'}

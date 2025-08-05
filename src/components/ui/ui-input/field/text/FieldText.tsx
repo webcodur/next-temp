@@ -20,6 +20,7 @@ interface FieldTextProps {
 	colorVariant?: 'primary' | 'secondary';
 	onFocus?: () => void;
 	onBlur?: () => void;
+	onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 // #endregion
 
@@ -37,6 +38,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 	colorVariant = 'primary',
 	onFocus,
 	onBlur,
+	onKeyDown,
 	...rest
 }) => {
 	// #region 상태
@@ -79,6 +81,7 @@ const FieldText: React.FC<FieldTextProps> = ({
 						setIsFocused(false);
 						onBlur?.();
 					}}
+					onKeyDown={onKeyDown}
 					disabled={disabled}
 					autoComplete="off"
 					maxLength={maxLength}

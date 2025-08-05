@@ -5,6 +5,7 @@ import { Lock, Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, canManagePassword, canResetPassword } from '@/types/admin';
@@ -30,6 +31,12 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  
+  // 모달 상태
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   // #endregion
 
   // #region 권한 검증
@@ -97,7 +104,8 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
       });
 
       if (result.success) {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
+        setModalMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setSuccessModalOpen(true);
         // 폼 초기화
         setFormData({
           currentPassword: '',
@@ -106,11 +114,13 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
         });
       } else {
         console.error('비밀번호 변경 실패:', result.errorMsg);
-        alert(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('비밀번호 변경 중 오류:', error);
-      alert('비밀번호 변경 중 오류가 발생했습니다.');
+      setModalMessage('비밀번호 변경 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -134,19 +144,23 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
     try {
       // TODO: API 구현 전까지 임시 처리
-      alert('비밀번호 초기화 기능은 아직 구현되지 않았습니다.');
+      setModalMessage('비밀번호 초기화 기능은 아직 구현되지 않았습니다.');
+      setInfoModalOpen(true);
       
       // 추후 실제 API 연동 시 사용할 코드
       // const result = await resetAdminPassword({ id: admin.id });
       // if (result.success) {
-      //   alert('비밀번호가 0000으로 초기화되었습니다.');
+      //   setModalMessage('비밀번호가 0000으로 초기화되었습니다.');
+      //   setSuccessModalOpen(true);
       // } else {
       //   console.error('비밀번호 초기화 실패:', result.errorMsg);
-      //   alert(`비밀번호 초기화에 실패했습니다: ${result.errorMsg}`);
+      //   setModalMessage(`비밀번호 초기화에 실패했습니다: ${result.errorMsg}`);
+      //   setErrorModalOpen(true);
       // }
     } catch (error) {
       console.error('비밀번호 초기화 중 오류:', error);
-      alert('비밀번호 초기화 중 오류가 발생했습니다.');
+      setModalMessage('비밀번호 초기화 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsResetting(false);
     }
@@ -274,6 +288,69 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
           </div>
         </div>
       )}
+
+      {/* 성공 모달 */}
+      <Modal
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
+        title="작업 완료"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setSuccessModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        title="오류 발생"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 정보 모달 */}
+      <Modal
+        isOpen={infoModalOpen}
+        onClose={() => setInfoModalOpen(false)}
+        title="알림"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-blue-600 mb-2">알림</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setInfoModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

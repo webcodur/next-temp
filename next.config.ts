@@ -18,6 +18,19 @@ const nextConfig = {
   },
   // export 디렉토리 충돌 방지
   distDir: '.next',
+  // 외부 이미지 도메인 허용
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

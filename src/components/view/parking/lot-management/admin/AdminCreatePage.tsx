@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { ROLE_ID_MAP } from '@/types/admin';
@@ -47,6 +48,10 @@ export default function AdminCreatePage() {
     confirm: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 모달 상태
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   // #endregion
 
   // #region 검증
@@ -86,11 +91,13 @@ export default function AdminCreatePage() {
       } else {
         // 에러 처리
         console.error('관리자 생성 실패:', result.errorMsg);
-        alert(`관리자 생성에 실패했습니다: ${result.errorMsg}`);
+        setErrorMessage(`관리자 생성에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('관리자 생성 중 오류:', error);
-      alert('관리자 생성 중 오류가 발생했습니다.');
+      setErrorMessage('관리자 생성 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -148,6 +155,27 @@ export default function AdminCreatePage() {
           {isSubmitting ? '생성 중...' : '생성'}
         </Button>
       </div>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        title="오류 발생"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <p className="text-muted-foreground">{errorMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 } 

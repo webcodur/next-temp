@@ -1,10 +1,10 @@
 # 단순 입력(Simple Input) 기술 명세서
 
-이 문서는 `FieldCheckbox`, `FieldCheckboxGroup`, `FieldRadioGroup`, `FieldToggleButton`, `FieldToggleSwitch`, `FieldDropdown`, `FieldTextInput` 컴포넌트의 내부 아키텍처와 외부 라이브러리와의 연동 방식을 설명합니다.
+이 문서는 `FieldCheckbox`, `FieldCheckboxGroup`, `FieldRadioGroup`, `FieldToggleButton`, `FieldToggleSwitch`, `FieldDropdown`, `FieldTextInput`, `FieldTextArea`, `FieldDatePicker`, `FieldTimePicker`, `FieldDateRangePicker`, `FieldMonthPicker` 컴포넌트의 내부 아키텍처와 외부 라이브러리와의 연동 방식을 설명합니다.
 
 ## 1. 공통 Field 아키텍처
 
-여섯 컴포넌트는 모두 재사용 가능한 `Field` 컴포넌트를 기반으로 설계되었습니다. `Field` 컴포넌트는 라벨, 도움말 텍스트, 오류 메시지 표시 등 입력 필드의 공통적인 UI와 기능을 담당합니다.
+여덟 컴포넌트는 모두 재사용 가능한 `Field` 컴포넌트를 기반으로 설계되었습니다. `Field` 컴포넌트는 라벨, 도움말 텍스트, 오류 메시지 표시 등 입력 필드의 공통적인 UI와 기능을 담당합니다.
 
 ```mermaid
 graph TD
@@ -21,6 +21,11 @@ graph TD
         E[FieldToggleSwitch]
         F[FieldDropdown]
         G[FieldTextInput]
+        H[FieldTextArea]
+        I[FieldDatePicker]
+        J[FieldTimePicker]
+        K[FieldDateRangePicker]
+        L[FieldMonthPicker]
     end
 
     A -- "확장(Extends)" --> F_Core
@@ -30,6 +35,11 @@ graph TD
     E -- "확장(Extends)" --> F_Core
     F -- "확장(Extends)" --> F_Core
     G -- "확장(Extends)" --> F_Core
+    H -- "확장(Extends)" --> F_Core
+    I -- "확장(Extends)" --> F_Core
+    J -- "확장(Extends)" --> F_Core
+    K -- "확장(Extends)" --> F_Core
+    L -- "확장(Extends)" --> F_Core
 
     subgraph "고유 로직"
         Logic_A["- Checkbox UI<br/>- checked/onChange"]
@@ -39,6 +49,11 @@ graph TD
         Logic_E["- Switch UI<br/>- checked/onChange"]
         Logic_F["- Dropdown UI<br/>- 리스트 아이콘<br/>- value/onChange"]
         Logic_G["- TextInput UI<br/>- 텍스트 아이콘<br/>- 포커스 상태 관리<br/>- value/onChange"]
+        Logic_H["- TextArea UI<br/>- 다중 라인 지원<br/>- 크기 조절 옵션<br/>- 글자 수 제한<br/>- value/onChange"]
+        Logic_I["- DatePicker UI<br/>- 캘린더 아이콘<br/>- 한국어 로케일<br/>- 커스텀 헤더<br/>- value/onChange"]
+        Logic_J["- TimePicker UI<br/>- 시계 아이콘<br/>- 시간 간격 설정<br/>- 24시간 형식<br/>- value/onChange"]
+        Logic_K["- DateRangePicker UI<br/>- 날짜 범위 선택<br/>- 시작/종료 날짜<br/>- 범위 검증<br/>- value/onChange"]
+        Logic_L["- MonthPicker UI<br/>- 년월 선택<br/>- 월별 보기<br/>- 년도 빠른 이동<br/>- value/onChange"]
     end
 
     A --> Logic_A
@@ -48,6 +63,11 @@ graph TD
     E --> Logic_E
     F --> Logic_F
     G --> Logic_G
+    H --> Logic_H
+    I --> Logic_I
+    J --> Logic_J
+    K --> Logic_K
+    L --> Logic_L
 
     style F_Core fill:#e3f2fd,stroke:#333
 ```
@@ -113,3 +133,4 @@ graph TD
 - **비활성화 상태**: `disabled` prop이 `true`일 경우, `opacity-60`와 `cursor-not-allowed` 클래스를 적용하여 사용자 입력을 막고 시각적으로 비활성화되었음을 표시합니다.
 - **드롭다운 특화**: `FieldDropdown`은 리스트 아이콘과 화살표 아이콘을 포함하여 명확한 UX를 제공하며, 외부 클릭 감지로 자동 닫힘 기능을 구현합니다.
 - **텍스트 입력 특화**: `FieldTextInput`은 텍스트 아이콘을 포함하며, 포커스 상태에 따른 시각적 피드백을 제공하고 다양한 입력 타입을 지원합니다.
+- **텍스트 영역 특화**: `FieldTextArea`는 다중 라인 텍스트 입력을 지원하며, 크기 조절 옵션, 글자 수 제한, 스크롤 기능을 제공합니다.

@@ -1,6 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { SystemConfig } from '@/types/api';
+import { SystemConfig, SystemConfigSearchRequest } from '@/types/api';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface SystemConfigServerResponse {
@@ -11,6 +11,7 @@ interface SystemConfigServerResponse {
   config_type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
   is_active: boolean;
   category?: string | null;
+  group?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -24,6 +25,8 @@ interface GetAllConfigsServerResponse {
     total_pages: number;
   };
 }
+
+
 //#endregion
 
 
@@ -60,6 +63,7 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
     type: server.config_type,
     isActive: server.is_active,
     category: server.category,
+    group: server.group,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
   };
@@ -67,20 +71,40 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
 //#endregion
 
 /**
- * 모든 설정값을 조회한다
- * @returns 모든 설정값 목록 (SystemConfig[])
+ * 설정값을 조회한다 (페이지네이션 및 검색 지원)
+ * @param params 검색 및 페이지네이션 파라미터
+ * @param parkinglotId 주차장 ID (선택사항)
+ * @returns 설정값 목록 (SystemConfig[])
  */
-export async function getAllConfigs() {
-  const response = await fetchDefault('/configs', {
-    method: 'GET',
-  });
+export async function getAllConfigs(params?: SystemConfigSearchRequest, parkinglotId?: string) {
+  // 쿼리 파라미터 구성
+  const searchParams = new URLSearchParams();
+  
+  if (params?.page) searchParams.append('page', params.page.toString());
+  if (params?.limit) searchParams.append('limit', params.limit.toString());
+  if (params?.config_key) searchParams.append('config_key', params.config_key);
+  if (params?.config_type) searchParams.append('config_type', params.config_type);
+  if (params?.description) searchParams.append('description', params.description);
+  if (params?.category) searchParams.append('category', params.category);
 
-  console.log('response!!~~', response)
+  const queryString = searchParams.toString();
+  const url = `/configs${queryString ? `?${queryString}` : ''}`;
+
+  // 헤더 구성
+  const headers: Record<string, string> = {};
+  if (parkinglotId) {
+    headers['x-parkinglot-id'] = parkinglotId;
+  }
+
+  const response = await fetchDefault(url, {
+    method: 'GET',
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
+  });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `모든 설정값 조회 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `설정값 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return {
       success: false,

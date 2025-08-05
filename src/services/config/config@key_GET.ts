@@ -13,6 +13,7 @@ interface SystemConfigServerResponse {
   created_at?: string;
   updated_at?: string;
   category?: string | null;
+  group?: string | null;
 }
 //#endregion
 
@@ -49,6 +50,7 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
     type: server.config_type,
     isActive: server.is_active,
     category: server.category,
+    group: server.group,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
   };
@@ -58,11 +60,19 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
 /**
  * 지정된 키의 설정값을 조회한다
  * @param key 조회할 설정 키
+ * @param parkinglotId 주차장 ID (선택사항)
  * @returns 설정값 정보 (SystemConfig)
  */
-export async function getConfigByKey(key: string) {
+export async function getConfigByKey(key: string, parkinglotId?: string) {
+  // 헤더 구성
+  const headers: Record<string, string> = {};
+  if (parkinglotId) {
+    headers['x-parkinglot-id'] = parkinglotId;
+  }
+
   const response = await fetchDefault(`/configs/${key}`, {
     method: 'GET',
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
   });
 
   const result = await response.json();

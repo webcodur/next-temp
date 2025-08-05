@@ -8,6 +8,11 @@ import { SimpleToggleSwitch } from './SimpleToggleSwitch';
 import { SimpleRadioGroup } from './SimpleRadioGroup';
 import { SimpleDropdown } from './SimpleDropdown';
 import { SimpleTextInput } from './SimpleTextInput';
+import { SimpleTextArea } from './SimpleTextArea';
+import { SimpleDatePicker } from './SimpleDatePicker';
+import { SimpleTimePicker } from './SimpleTimePicker';
+import { SimpleDateRangePicker } from './SimpleDateRangePicker';
+import { SimpleMonthPicker } from './SimpleMonthPicker';
 import { useTranslations } from '@/hooks/useI18n';
 
 export default function SimpleInputExample() {
@@ -28,6 +33,11 @@ export default function SimpleInputExample() {
 	const [dropdownValue, setDropdownValue] = useState('');
 	const [textValue, setTextValue] = useState('');
 	const [emailValue, setEmailValue] = useState('');
+	const [textAreaValue, setTextAreaValue] = useState('');
+	const [dateValue, setDateValue] = useState<Date | null>(null);
+	const [timeValue, setTimeValue] = useState<Date | null>(null);
+	const [dateRangeValue, setDateRangeValue] = useState<[Date | null, Date | null]>([null, null]);
+	const [monthValue, setMonthValue] = useState<Date | null>(null);
 
 	const checkboxOptions = [
 		{ key: 'notifications', label: t('간단입력_알림받기') },
@@ -255,6 +265,99 @@ export default function SimpleInputExample() {
 							label="비활성화된 입력"
 							value="수정할 수 없음"
 							onChange={setTextValue}
+							disabled={true}
+						/>
+					</div>
+				</div>
+
+				{/* 텍스트 영역 */}
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold font-multilang">텍스트 영역</h2>
+					<div className="space-y-6">
+						<SimpleTextArea
+							label="기본 텍스트 영역"
+							value={textAreaValue}
+							onChange={setTextAreaValue}
+							placeholder="여러 줄의 텍스트를 입력하세요"
+							rows={4}
+						/>
+
+						<SimpleTextArea
+							label="글자 수 제한 텍스트 영역"
+							value={textAreaValue}
+							onChange={setTextAreaValue}
+							placeholder="최대 200자까지 입력 가능"
+							maxLength={200}
+							showCharCount={true}
+							rows={6}
+						/>
+
+						<SimpleTextArea
+							label="크기 조절 불가 텍스트 영역"
+							value={textAreaValue}
+							onChange={setTextAreaValue}
+							placeholder="크기 조절이 불가능한 텍스트 영역"
+							resize="none"
+							rows={3}
+						/>
+
+						<SimpleTextArea
+							label="비활성화된 텍스트 영역"
+							value="이 텍스트는 수정할 수 없습니다"
+							onChange={setTextAreaValue}
+							disabled={true}
+							rows={2}
+						/>
+					</div>
+				</div>
+
+				{/* 날짜/시간 선택기 */}
+				<div className="p-6 rounded-xl neu-flat">
+					<h2 className="mb-4 text-xl font-semibold font-multilang">날짜/시간 선택기</h2>
+					<div className="space-y-6">
+						<SimpleDatePicker
+							label="기본 날짜 선택기"
+							value={dateValue}
+							onChange={setDateValue}
+							placeholder="날짜를 선택하세요"
+						/>
+
+						<SimpleTimePicker
+							label="시간 선택기"
+							value={timeValue}
+							onChange={setTimeValue}
+							placeholder="시간을 선택하세요"
+							timeIntervals={15}
+						/>
+
+						<SimpleDateRangePicker
+							label="날짜 범위 선택기"
+							startDate={dateRangeValue[0]}
+							endDate={dateRangeValue[1]}
+							onChange={setDateRangeValue}
+							placeholder="날짜 범위를 선택하세요"
+						/>
+
+						<SimpleMonthPicker
+							label="년월 선택기"
+							value={monthValue}
+							onChange={setMonthValue}
+							placeholder="년월을 선택하세요"
+						/>
+
+						<SimpleDatePicker
+							label="날짜+시간 선택기"
+							value={dateValue}
+							onChange={setDateValue}
+							showTimeSelect={true}
+							dateFormat="yyyy-MM-dd HH:mm"
+							placeholder="날짜와 시간을 선택하세요"
+						/>
+
+						<SimpleDatePicker
+							label="비활성화된 날짜 선택기"
+							value={dateValue}
+							onChange={setDateValue}
 							disabled={true}
 						/>
 					</div>

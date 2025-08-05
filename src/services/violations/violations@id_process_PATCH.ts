@@ -30,6 +30,7 @@ interface CarViolationServerResponse {
   status: string;
   created_at: string;
   updated_at: string;
+  is_auto_blacklisted: boolean;
 }
 // #endregion
 
@@ -64,6 +65,7 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     status: server.status as ViolationStatus,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
+    isAutoBlacklisted: server.is_auto_blacklisted,
   };
 }
 // #endregion

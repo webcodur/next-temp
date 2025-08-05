@@ -79,6 +79,7 @@
 | [Morphing Text](./ui-effects/morphing-text/morphing-text.md) | 하나의 텍스트가 다른 텍스트로 부드럽게 변형되는 애니메이션입니다.       |
 | [Toast](./ui-effects/toast/toast.md)                         | 작업 결과나 간단한 정보를 잠시 보여주는 팝업 알림입니다.                |
 | [Tooltip](./ui-effects/tooltip/tooltip.md)                   | 특정 요소에 대한 추가 정보를 제공하는 작은 말풍선입니다.                |
+| [Image Preview](./ui-effects/image-preview/image-preview.md) | 이미지를 모달로 미리보고 확대/축소, 회전 등이 가능한 뷰어입니다.         |
 
 ### 3D (`ui-3d`)
 

@@ -7,6 +7,13 @@ const URL_TEST = process.env.NEXT_PUBLIC_API_TEST_URL;
 const deployMode = process.env.NEXT_PUBLIC_NODE_ENV;
 const baseUrl = deployMode === 'production' ? URL_PROD : URL_TEST;
 
+console.log('🌐 API 설정:', {
+  deployMode,
+  URL_PROD,
+  URL_TEST,
+  baseUrl
+});
+
 /**
  * 쿠키에서 토큰 가져오기
  */
@@ -62,6 +69,13 @@ export const fetchDefault = returnFetch({
         const accessToken = getTokenFromCookie('access-token');
         const parkingLotId = getEffectiveParkingLotId();
         
+        console.log('📤 API 요청:', {
+          url: args[0],
+          method: args[1].method,
+          baseUrl,
+          hasToken: !!accessToken,
+          parkingLotId
+        });
 
         
         // 헤더 설정
@@ -78,6 +92,11 @@ export const fetchDefault = returnFetch({
       return args;
     },
     response: async (response) => {
+      console.log('📥 API 응답:', {
+        url: response.url,
+        status: response.status,
+        statusText: response.statusText
+      });
       return response;
     },
   },

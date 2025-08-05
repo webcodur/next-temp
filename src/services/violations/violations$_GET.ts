@@ -25,6 +25,7 @@ interface CarViolationServerResponse {
   status: string;
   created_at: string;
   updated_at: string;
+  is_auto_blacklisted: boolean;
 }
 
 interface PageMetaServerResponse {
@@ -66,6 +67,7 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     status: server.status as ViolationStatus,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
+    isAutoBlacklisted: server.is_auto_blacklisted,
   };
 }
 
@@ -85,7 +87,6 @@ export async function searchViolations(params?: SearchCarViolationRequest) {
   const searchParams = new URLSearchParams();
   
   // 쿼리 파라미터는 snake_case로 전송
-  if (params?.carId) searchParams.append('car_id', params.carId.toString());
   if (params?.carNumber) searchParams.append('car_number', params.carNumber);
   if (params?.violationType) searchParams.append('violation_type', params.violationType);
   if (params?.status) searchParams.append('status', params.status);

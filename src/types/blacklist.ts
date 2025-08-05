@@ -39,6 +39,14 @@ export interface BlacklistResponse {
   updatedAt: string;
 }
 
+// 블랙리스트 수정 요청
+export interface UpdateBlacklistRequest {
+  registrationReason: BlacklistRegistrationReason;
+  blockedUntil: string; // ISO 8601 형식
+  description?: string;
+  unblockReason?: string;
+}
+
 // 블랙리스트 해제 요청
 export interface UnblockBlacklistRequest {
   unblockReason: string;

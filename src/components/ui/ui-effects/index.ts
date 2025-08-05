@@ -1,2 +1,5 @@
 // Animation effects
-export * from './animation'; 
+export * from './animation';
+
+// Image preview
+export * from './image-preview/ImagePreview'; 

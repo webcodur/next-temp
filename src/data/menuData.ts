@@ -70,15 +70,15 @@ export const menuData: MenuData = {
 		icon: SquareParking,
 		key: '__주차',
 		midItems: {
-			주차장관리: {
-				key: '주차장관리',
+			"주차장 관리": {
+				key: '주차장 관리',
 				botItems: [
 					{
-						key: '주차장정보',
+						key: '주차장 정보',
 						href: '/parking/lot-management/info',
 					},
 					{
-						key: '근무자관리',
+						key: '근무자 관리',
 						href: '/parking/lot-management/admin',
 					},
 					{
@@ -87,29 +87,16 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			// 차량관리 (차량 등록/수정) 정기차, 방문차, 입주차, 임대차, 블랙리스트
-			__차량관리: {
-				key: '__차량관리',
+			"규정 위반": {
+				key: '규정 위반',
 				botItems: [
 					{
-						key: '__정기차관리',
-						href: '/parking/cars/regular',
+						key: '규정 위반 내역',
+						href: '/parking/violation/history',
 					},
 					{
-						key: '__방문차관리',
-						href: '/parking/cars/visitor',
-					},
-					{
-						key: '__임대차관리',
-						href: '/parking/cars/lease',
-					},
-					{
-						key: '__블랙리스트',
-						href: '/parking/cars/blacklist',
-					},
-					{
-						key: '__위반 차량',
-						href: '/parking/cars/violation',
+						key: '블랙리스트',
+						href: '/parking/violation/blacklist',
 					},
 				],
 			},
@@ -385,10 +372,6 @@ export const menuData: MenuData = {
 						key: 'IP 차단 전체 히스토리',
 						href: '/system/ip-block-management/history',
 					},
-					{
-						key: 'IP 차단인자 관리',
-						href: '/system/ip-block-management/config',
-					},
 				],
 			},
 			캐시관리: {
@@ -404,6 +387,15 @@ export const menuData: MenuData = {
 					},
 				],
 			},
+      '시스템 설정': {
+        key: '시스템 설정',
+        botItems: [
+          {
+            key: '시스템 설정',
+            href: '/system/config/settings',
+          },
+        ],
+      },
 		},
 	},
 };

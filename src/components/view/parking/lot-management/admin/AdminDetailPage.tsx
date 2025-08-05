@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import AdminPasswordSection from './AdminPasswordSection';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
@@ -58,6 +59,12 @@ export default function AdminDetailPage() {
     password: '',
     confirm: '',
   });
+  
+  // 모달 상태
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   // #endregion
 
   // #region 데이터 로드
@@ -92,13 +99,19 @@ export default function AdminDetailPage() {
         setOriginalData(initialData);
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
-        alert(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        routerRef.current.push('/parking/lot-management/admin');
+        setModalMessage(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
+        setTimeout(() => {
+          routerRef.current.push('/parking/lot-management/admin');
+        }, 2000);
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
-      alert('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      routerRef.current.push('/parking/lot-management/admin');
+      setModalMessage('관리자 정보를 불러오는 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
+      setTimeout(() => {
+        routerRef.current.push('/parking/lot-management/admin');
+      }, 2000);
     } finally {
       setLoading(false);
       console.log('loadAdminData 완료');
@@ -187,14 +200,17 @@ export default function AdminDetailPage() {
         // 데이터 다시 로드
         await loadAdminData();
         
-        alert('관리자 정보가 성공적으로 수정되었습니다.');
+        setModalMessage('관리자 정보가 성공적으로 수정되었습니다.');
+        setSuccessModalOpen(true);
       } else {
         console.error('관리자 수정 실패:', result.errorMsg);
-        alert(`관리자 수정에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`관리자 수정에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('관리자 수정 중 오류:', error);
-      alert('관리자 수정 중 오류가 발생했습니다.');
+      setModalMessage('관리자 수정 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -207,7 +223,8 @@ export default function AdminDetailPage() {
     if (!confirm(confirmMessage)) return;
     
     // TODO: 삭제 API 호출 구현
-    alert('삭제 기능은 아직 구현되지 않았습니다.');
+    setModalMessage('삭제 기능은 아직 구현되지 않았습니다.');
+    setInfoModalOpen(true);
   }, [admin]);
   // #endregion
 
@@ -271,6 +288,69 @@ export default function AdminDetailPage() {
         admin={admin} 
         adminId={adminId}
       />
+
+      {/* 성공 모달 */}
+      <Modal
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
+        title="작업 완료"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setSuccessModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        title="오류 발생"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 정보 모달 */}
+      <Modal
+        isOpen={infoModalOpen}
+        onClose={() => setInfoModalOpen(false)}
+        title="알림"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-blue-600 mb-2">알림</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setInfoModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 } 

@@ -118,7 +118,6 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 							<div className="flex gap-2">
 								<Button
 									variant="outline"
-									size="sm"
 									icon={RotateCcw}
 									onClick={handleResetPolicyChanges}
 									className="min-w-28"
@@ -127,7 +126,6 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 								</Button>
 								<Button
 									variant={hasChanges ? "primary" : "outline"}
-									size="sm"
 									icon={Send}
 									onClick={handleSavePolicyChanges}
 									disabled={!hasChanges}

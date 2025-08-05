@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, ReactNode } from 'react';
-import { AlertCircle, RefreshCw, ArrowLeft, Home } from 'lucide-react';
+import { AlertCircle, RefreshCw, ArrowLeft, Home, Copy } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
@@ -54,6 +54,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     window.location.href = '/';
   };
 
+  handleCopyError = async () => {
+    if (!this.state.error) return;
+    
+    const errorText = `Error: ${this.state.error.message}\n\nStack Trace:\n${this.state.error.stack}`;
+    
+    try {
+      await navigator.clipboard.writeText(errorText);
+      // 복사 성공 피드백 (선택사항)
+      console.log('에러 정보가 클립보드에 복사되었습니다.');
+    } catch (err) {
+      console.error('클립보드 복사 실패:', err);
+    }
+  };
+
   render() {
     if (this.state.hasError) {
       // 사용자 정의 fallback이 있으면 사용
@@ -94,11 +108,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     <summary className="font-medium cursor-pointer text-foreground/80">
                       에러 상세 정보
                     </summary>
-                    <pre className="mt-2 text-red-600 whitespace-pre-wrap text-xs overflow-auto max-h-32">
-                      {this.state.error.message}
-                      {'\n\n'}
-                      {this.state.error.stack}
-                    </pre>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-end">
+                        <Button
+                          onClick={this.handleCopyError}
+                          variant="outline"
+                          size="sm"
+                          className="neu-raised">
+                          <Copy size={14} className="me-1" />
+                          복사
+                        </Button>
+                      </div>
+                      <pre className="overflow-auto max-h-32 text-xs text-red-600 whitespace-pre-wrap">
+                        {this.state.error.message}
+                        {'\n\n'}
+                        {this.state.error.stack}
+                      </pre>
+                    </div>
                   </details>
                 )}
 

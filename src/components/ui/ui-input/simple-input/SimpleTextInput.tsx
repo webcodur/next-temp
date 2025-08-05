@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { Type, CheckCircle, AlertCircle, X, Binary } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
 
 interface SimpleTextInputProps {
@@ -59,6 +59,11 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		inputRef.current?.focus();
 	};
 
+	const handleContainerClick = () => {
+		if (disabled) return;
+		inputRef.current?.focus();
+	};
+
 	// validation 결과 계산
 	const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
 	
@@ -101,14 +106,19 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			)}
 
 			<div
+				onClick={handleContainerClick}
 				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
 					isFocused
 						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
 						: 'shadow-md neu-flat border-border hover:shadow-lg'
 				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
 				
-				{/* 왼쪽 텍스트 아이콘 */}
-				<Type className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{/* 왼쪽 아이콘 */}
+				{type === 'number' ? (
+					<Binary className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				) : (
+					<Type className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				)}
 
 				{/* 중앙 입력 필드 */}
 				<input

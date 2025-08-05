@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
+
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import { Trash2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { searchViolations } from '@/services/violations';
 
 import type { 
@@ -96,10 +96,7 @@ export default function ViolationsPage() {
     limit: 10,
   });
 
-  const [deleteModal, setDeleteModal] = useState<{
-    isOpen: boolean;
-    violation?: TableCarViolation;
-  }>({ isOpen: false });
+
   
   // 검색 폼 상태
   const [searchForm, setSearchForm] = useState({
@@ -130,23 +127,7 @@ export default function ViolationsPage() {
     }
   }, [searchFilters]);
 
-  const handleDeleteViolation = useCallback(async (violation: TableCarViolation) => {
-    try {
-      // 실제 삭제 API가 있다면 여기서 호출
-      // await deleteCarViolation(violation.id);
-      
-      // 로컬 상태에서 제거 (낙관적 업데이트)
-      setViolations(prev => prev.filter(v => v.id !== violation.id));
-      setDeleteModal({ isOpen: false });
-      
-      // TODO: 실제 삭제 API 추가 시 적절한 오류 처리 구현
-      console.log('위반 기록 삭제:', violation.id);
-    } catch (error) {
-      console.error('위반 기록 삭제 중 오류:', error);
-      // 실패 시 다시 로드
-      loadViolations();
-    }
-  }, [loadViolations]);
+
   // #endregion
 
   // #region 이벤트 핸들러
@@ -186,11 +167,11 @@ export default function ViolationsPage() {
   }, [searchFilters, loadViolations]);
 
   const handleRowClick = useCallback((violation: TableCarViolation) => {
-    router.push(`/parking/cars/violation/${violation.id}`);
+    router.push(`/parking/violation/history/${violation.id}`);
   }, [router]);
 
   const handleCreateClick = useCallback(() => {
-    router.push('/parking/cars/violation/create');
+    router.push('/parking/violation/history/create');
   }, [router]);
   // #endregion
 
@@ -230,31 +211,8 @@ export default function ViolationsPage() {
       header: '심각도',
       width: '80px',
     },
-    {
-      key: 'penaltyPoints' as keyof TableCarViolation,
-      header: '벌점',
-      width: '80px',
-    },
-    {
-      key: 'actions' as keyof TableCarViolation,
-      header: '작업',
-      width: '80px',
-      cell: (violation: TableCarViolation) => (
-        <div className="flex gap-2 justify-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            title="삭제"
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteModal({ isOpen: true, violation });
-            }}
-          >
-            <Trash2 className="w-4 h-4 text-red-500" />
-          </Button>
-        </div>
-      ),
-    },
+
+
   ], []);
   // #endregion
 
@@ -267,7 +225,7 @@ export default function ViolationsPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="위반 차량" 
+        title="규정 위반 내역" 
         subtitle="주차장 내 차량 위반 기록을 조회하고 관리합니다."
         rightActions={
           <Button
@@ -358,37 +316,7 @@ export default function ViolationsPage() {
         onPageChange={handlePageChange}
       />
 
-      {/* 삭제 확인 모달 */}
-      <Modal
-        isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false })}
-        title="위반 기록 삭제"
-      >
-        <div className="space-y-4">
-          <p>정말로 이 위반 기록을 삭제하시겠습니까?</p>
-          {deleteModal.violation && (
-            <div className="p-4 rounded-lg bg-muted">
-              <p><strong>차량번호:</strong> {deleteModal.violation.carNumber}</p>
-              <p><strong>위반 유형:</strong> {deleteModal.violation.violationTypeText}</p>
-              <p><strong>위반 시각:</strong> {new Date(deleteModal.violation.violationTime).toLocaleString('ko-KR')}</p>
-            </div>
-          )}
-          <div className="flex gap-2 justify-end">
-            <Button
-              variant="ghost"
-              onClick={() => setDeleteModal({ isOpen: false })}
-            >
-              취소
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => deleteModal.violation && handleDeleteViolation(deleteModal.violation)}
-            >
-              삭제
-            </Button>
-          </div>
-        </div>
-      </Modal>
+
     </div>
   );
 }

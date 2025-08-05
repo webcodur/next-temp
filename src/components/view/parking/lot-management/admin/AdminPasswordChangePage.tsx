@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 
@@ -53,6 +54,11 @@ export default function AdminPasswordChangePage() {
     confirmPassword: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 모달 상태
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   // #endregion
 
   // #region 데이터 로드
@@ -71,13 +77,19 @@ export default function AdminPasswordChangePage() {
         });
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
-        alert(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        router.push('/parking/lot-management/admin');
+        setModalMessage(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
+        setTimeout(() => {
+          router.push('/parking/lot-management/admin');
+        }, 2000);
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
-      alert('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-              router.push('/parking/lot-management/admin');
+      setModalMessage('관리자 정보를 불러오는 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
+      setTimeout(() => {
+        router.push('/parking/lot-management/admin');
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -127,15 +139,20 @@ export default function AdminPasswordChangePage() {
       });
 
       if (result.success) {
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        router.push(`/parking/lot-management/admin/${adminId}`);
+        setModalMessage('비밀번호가 성공적으로 변경되었습니다.');
+        setSuccessModalOpen(true);
+        setTimeout(() => {
+          router.push(`/parking/lot-management/admin/${adminId}`);
+        }, 2000);
       } else {
         console.error('비밀번호 변경 실패:', result.errorMsg);
-        alert(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('비밀번호 변경 중 오류:', error);
-      alert('비밀번호 변경 중 오류가 발생했습니다.');
+      setModalMessage('비밀번호 변경 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -248,6 +265,48 @@ export default function AdminPasswordChangePage() {
           {isSubmitting ? '변경 중...' : '변경'}
         </Button>
       </div>
+
+      {/* 성공 모달 */}
+      <Modal
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
+        title="작업 완료"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setSuccessModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        title="오류 발생"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 } 

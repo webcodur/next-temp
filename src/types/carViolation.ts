@@ -51,6 +51,7 @@ export interface UpdateCarViolationRequest {
   severityLevel?: number;
   penaltyPoints?: number;
   status?: ViolationStatus;
+  processingNote?: string;
 }
 
 export interface ProcessCarViolationRequest {
@@ -59,7 +60,6 @@ export interface ProcessCarViolationRequest {
 }
 
 export interface SearchCarViolationRequest {
-  carId?: number;
   carNumber?: string;
   violationType?: CarViolationType;
   status?: ViolationStatus;
@@ -95,6 +95,7 @@ export interface CarViolation {
   status: ViolationStatus;
   createdAt: string;
   updatedAt: string;
+  isAutoBlacklisted: boolean;
 }
 
 export interface CarViolationSummary {

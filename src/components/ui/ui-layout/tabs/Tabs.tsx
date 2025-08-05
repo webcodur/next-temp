@@ -5,20 +5,35 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/ui-input/button/Button';
 
 // #region 타입 정의
+export interface SubTab {
+	id: string;
+	label: string;
+	count?: number;
+}
+
 export interface Tab {
 	id: string;
 	label: string;
 	icon?: React.ReactNode;
 	title?: string;
 	subtitle?: string;
+	count?: number;
+	subTabs?: SubTab[];
 }
 
 export interface TabsProps {
 	tabs: Tab[];
 	activeId: string;
 	onTabChange: (id: string) => void;
+	// 서브탭 관련
+	activeSubTabId?: string;
+	onSubTabChange?: (subTabId: string) => void;
+	// 스타일링
 	colorVariant?: 'primary' | 'secondary';
 	endContent?: React.ReactNode;
+	// 레이아웃
+	showSubTabs?: boolean;
+	subTabWidth?: string;
 }
 // #endregion
 
@@ -32,8 +47,12 @@ const Tabs = React.forwardRef<
 			tabs,
 			activeId,
 			onTabChange,
+			activeSubTabId,
+			onSubTabChange,
 			colorVariant = 'primary',
 			endContent,
+			showSubTabs = false,
+			subTabWidth = '200px',
 			className,
 			...props
 		},
@@ -48,6 +67,7 @@ const Tabs = React.forwardRef<
 
 		// 현재 활성 탭 정보
 		const activeTab = tabs.find(tab => tab.id === activeId);
+		const hasSubTabs = showSubTabs && activeTab?.subTabs && activeTab.subTabs.length > 0;
 		return (
 			<div
 				ref={ref}
@@ -88,6 +108,11 @@ const Tabs = React.forwardRef<
 								>
 									{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
 									<span>{tab.label}</span>
+									{typeof tab.count === 'number' && (
+										<span className="ml-1 text-xs opacity-70">
+											({tab.count})
+										</span>
+									)}
 									
 									{/* 활성 탭에서 아래쪽을 덮는 덮개 */}
 									{isActive && (
@@ -108,11 +133,59 @@ const Tabs = React.forwardRef<
 				{/* 하단 연결 라인 */}
 				<div className="border-b-2 border-border"></div>
 
-				{/* 활성 탭 정보 표시 영역 */}
-				{(activeTab?.title || activeTab?.subtitle || endContent) && (
+				{/* 서브탭이 있는 경우 */}
+				{hasSubTabs && (
+					<div className="flex border-s-2 border-e-2 border-border bg-background">
+						{/* 서브탭 컬럼 */}
+						<div 
+							className="border-e-2 border-border bg-muted/30"
+							style={{ width: subTabWidth }}
+						>
+							<div className="p-4 space-y-1">
+								{activeTab?.subTabs?.map((subTab) => {
+									const isSubActive = activeSubTabId === subTab.id;
+									return (
+										<Button
+											key={subTab.id}
+											variant="ghost"
+											onClick={() => onSubTabChange?.(subTab.id)}
+											className={cn(
+												'w-full justify-start text-left p-3 h-auto',
+												isSubActive 
+													? 'bg-background text-foreground border border-border shadow-sm' 
+													: 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+											)}
+										>
+											<span className="truncate">
+												{subTab.label}
+												{typeof subTab.count === 'number' && (
+													<span className="ml-1 text-xs opacity-70">
+														({subTab.count})
+													</span>
+												)}
+											</span>
+										</Button>
+									);
+								})}
+							</div>
+						</div>
+
+						{/* 메인 콘텐츠 영역 - AdvancedSearch 전용 */}
+						<div className="flex-1 flex items-center px-4 py-3">
+							{/* 전체 영역 - 사용자 정의 컨텐츠 */}
+							{endContent && (
+								<div className="flex-1">
+									{endContent}
+								</div>
+							)}
+						</div>
+					</div>
+				)}
+
+				{/* 서브탭이 없는 경우 - 기존 레이아웃 */}
+				{!hasSubTabs && (activeTab?.title || activeTab?.subtitle || endContent) && (
 					<div className="flex justify-between items-center px-4 py-3 border-s-2 border-e-2 border-border bg-background">
-						
-            {/* Start 영역 - 제목 & 부제목 */}
+						{/* Start 영역 - 제목 & 부제목 */}
 						<div className="flex flex-col p-4">
 							{activeTab?.title && (
 								<h3 className="text-lg font-semibold text-foreground">

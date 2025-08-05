@@ -9,6 +9,7 @@ import {
 	DialogFooter,
 } from './Dialog';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { useTranslations } from '@/hooks/useI18n';
 
 const DialogExample = () => {
@@ -19,6 +20,7 @@ const DialogExample = () => {
 	const [sizeOpen, setSizeOpen] = useState(false);
 	const [currentSize, setCurrentSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('sm');
 	const [formOpen, setFormOpen] = useState(false);
+	const [selfIntroduction, setSelfIntroduction] = useState('');
 
 	const openVariantDialog = (variant: 'success' | 'warning' | 'error' | 'info') => {
 		setCurrentVariant(variant);
@@ -172,13 +174,12 @@ const DialogExample = () => {
 						</div>
 						
 						<div>
-							<label className="block mb-2 text-sm font-medium text-gray-700">
-								{t('다이얼로그테스트_자기소개')}
-							</label>
-							<textarea
-								rows={4}
-								className="px-3 py-2 w-full rounded-lg border border-primary focus:ring-2 focus:ring-primary focus:border-transparent"
+							<SimpleTextArea
+								label={t('다이얼로그테스트_자기소개')}
+								value={selfIntroduction}
+								onChange={setSelfIntroduction}
 								placeholder={t('다이얼로그테스트_자기소개입력')}
+								rows={4}
 							/>
 						</div>
 						
