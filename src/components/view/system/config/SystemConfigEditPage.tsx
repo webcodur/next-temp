@@ -40,7 +40,9 @@ interface ConfigFormData {
 export default function SystemConfigEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const configKey = searchParams.get('key');
+  const rawConfigKey = searchParams.get('key');
+  // URL 파라미터 디코딩
+  const configKey = rawConfigKey ? decodeURIComponent(rawConfigKey) : null;
   const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
   // #region 페이지 라벨 설정
@@ -69,14 +71,18 @@ export default function SystemConfigEditPage() {
 
   // #region 데이터 로드
   const loadConfigData = useCallback(async () => {
-    if (!configKey) {
-      router.push('/system/config/settings');
+    if (!configKey || configKey.trim() === '') {
+      console.error('설정 키가 없습니다:', { rawConfigKey, configKey });
+      setDialogMessage('설정 키가 제공되지 않았습니다.');
+      setErrorDialogOpen(true);
       return;
     }
 
     setLoading(true);
     try {
+      console.log('설정 로드 시도:', configKey);
       const result = await getConfigByKey(configKey);
+      console.log('설정 로드 결과:', result);
       
       if (result.success && result.data) {
         const config = result.data;
@@ -113,7 +119,7 @@ export default function SystemConfigEditPage() {
     } finally {
       setLoading(false);
     }
-  }, [configKey, router]);
+  }, [configKey, rawConfigKey, router]);
 
   useEffect(() => {
     loadConfigData();

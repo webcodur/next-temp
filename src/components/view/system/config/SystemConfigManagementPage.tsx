@@ -250,7 +250,14 @@ export default function SystemConfigManagementPage() {
   }, []);
 
   const handleRowClick = useCallback((config: SystemConfig) => {
-    router.push(`/system/config/settings/edit?key=${encodeURIComponent(config.key)}`);
+    const encodedKey = encodeURIComponent(config.key);
+    const url = `/system/config/settings/edit?key=${encodedKey}`;
+    console.log('설정 편집 네비게이션:', { 
+      originalKey: config.key, 
+      encodedKey, 
+      url 
+    });
+    router.push(url);
   }, [router]);
 
   // 검색 관련 핸들러

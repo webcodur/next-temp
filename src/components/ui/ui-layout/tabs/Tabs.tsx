@@ -52,6 +52,7 @@ const Tabs = React.forwardRef<
 			colorVariant = 'primary',
 			endContent,
 			showSubTabs = false,
+			subTabWidth,
 			className,
 			...props
 		},
