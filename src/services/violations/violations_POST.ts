@@ -39,7 +39,7 @@ interface CarViolationServerResponse {
   status: string;
   created_at: string;
   updated_at: string;
-  is_auto_blacklisted: boolean;
+  is_blacklisted: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any; // 추가 필드들 (parkinglot, car, reporter_admin 등)
 }
@@ -85,7 +85,7 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     status: server.status as ViolationStatus,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
-    isAutoBlacklisted: server.is_auto_blacklisted,
+    isAutoBlacklisted: server.is_blacklisted,
   };
 }
 // #endregion

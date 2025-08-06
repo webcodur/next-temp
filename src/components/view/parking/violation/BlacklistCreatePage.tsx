@@ -41,8 +41,8 @@ export default function BlacklistCreatePage() {
   const [formData, setFormData] = useState({
     carNumber: '',
     registrationReason: '',
-    blockPeriodDays: '',
-    description: '',
+    blockDays: '',
+    blockReason: '',
   });
   const [isCreating, setIsCreating] = useState(false);
   
@@ -65,7 +65,7 @@ export default function BlacklistCreatePage() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!formData.carNumber.trim() || !formData.registrationReason.trim() || isCreating) {
+    if (!formData.carNumber.trim() || !formData.registrationReason.trim() || !formData.blockReason.trim() || isCreating) {
       return;
     }
     
@@ -75,12 +75,8 @@ export default function BlacklistCreatePage() {
       const createData = {
         carNumber: formData.carNumber.trim(),
         registrationReason: formData.registrationReason as BlacklistRegistrationReason,
-        ...(formData.blockPeriodDays.trim() && { 
-          blockPeriodDays: parseInt(formData.blockPeriodDays.trim()) 
-        }),
-        ...(formData.description.trim() && { 
-          description: formData.description.trim() 
-        }),
+        blockDays: parseInt(formData.blockDays.trim()) || 30,
+        blockReason: formData.blockReason.trim(),
       };
 
       const result = await createManualBlacklist(createData);
@@ -150,18 +146,18 @@ export default function BlacklistCreatePage() {
           
           <SimpleTextInput
             label="차단 기간 (일)"
-            value={formData.blockPeriodDays}
-            onChange={(value) => handleFormChange('blockPeriodDays', value)}
-            placeholder="차단 기간을 입력하세요 (선택사항)"
+            value={formData.blockDays}
+            onChange={(value) => handleFormChange('blockDays', value)}
+            placeholder="차단 기간을 입력하세요 (기본: 30일)"
             type="number"
           />
         </div>
         
         <SimpleTextArea
-          label="설명"
-          value={formData.description}
-          onChange={(value) => handleFormChange('description', value)}
-          placeholder="추가 설명을 입력하세요 (선택사항)"
+          label="차단 사유 *"
+          value={formData.blockReason}
+          onChange={(value) => handleFormChange('blockReason', value)}
+          placeholder="차단 사유를 상세히 입력하세요 (필수)"
           rows={4}
         />
 

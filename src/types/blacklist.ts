@@ -18,33 +18,55 @@ export type BlacklistRegistrationReason =
 export interface CreateManualBlacklistRequest {
   carNumber: string;
   registrationReason: BlacklistRegistrationReason;
-  blockPeriodDays?: number;
-  description?: string;
+  blockReason: string;
+  blockDays: number;
 }
 
 // 블랙리스트 응답
 export interface BlacklistResponse {
   id: number;
+  carId?: number | null;
   carNumber: string;
   blacklistType: BlacklistType;
   registrationReason: BlacklistRegistrationReason;
-  blockPeriodDays?: number;
-  description?: string;
+  totalViolations: number;
+  totalPenaltyPoints: number;
+  blockedAt: string | null;
+  blockedUntil?: string | null;
+  autoUnblock: boolean;
   isActive: boolean;
-  registeredAt: string;
-  expiresAt?: string;
-  unblockReason?: string;
-  unblockedAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  unblockedAt?: string | null;
+  unblockedBy?: number | null;
+  unblockReason?: string | null;
+  blockReason?: string | null;
+  evidenceData?: unknown;
+  registeredBy?: number | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  car?: {
+    id: number;
+    car_number: string;
+    brand: string | null;
+    model: string | null;
+  } | null;
+  registeredAdmin?: {
+    id: number;
+    name: string | null;
+    account: string;
+  } | null;
+  unblockedAdmin?: {
+    id: number;
+    name: string | null;
+    account: string;
+  } | null;
 }
 
 // 블랙리스트 수정 요청
 export interface UpdateBlacklistRequest {
   registrationReason: BlacklistRegistrationReason;
-  blockedUntil: string; // ISO 8601 형식
-  description?: string;
-  unblockReason?: string;
+  blockedUntil?: string | null; // ISO 8601 형식
+  blockReason?: string | null;
+  unblockReason?: string | null;
 }
 
 // 블랙리스트 해제 요청
@@ -54,16 +76,8 @@ export interface UnblockBlacklistRequest {
 
 // 차량 블랙리스트 상태
 export interface BlacklistStatusResponse {
-  carNumber: string;
   isBlacklisted: boolean;
-  blacklistInfo?: {
-    id: number;
-    blacklistType: BlacklistType;
-    registrationReason: BlacklistRegistrationReason;
-    registeredAt: string;
-    expiresAt?: string;
-    description?: string;
-  };
+  blacklist?: BlacklistResponse | null;
 }
 
 // 블랙리스트 목록 검색 요청

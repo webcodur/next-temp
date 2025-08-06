@@ -87,8 +87,8 @@ export default function BlacklistListPage() {
   const [createFormData, setCreateFormData] = useState({
     carNumber: '',
     registrationReason: '',
-    blockPeriodDays: '',
-    description: '',
+    blockDays: '',
+    blockReason: '',
   });
   const [isCreating, setIsCreating] = useState(false);
   
@@ -162,8 +162,8 @@ export default function BlacklistListPage() {
     setCreateFormData({
       carNumber: '',
       registrationReason: '',
-      blockPeriodDays: '',
-      description: '',
+      blockDays: '',
+      blockReason: '',
     });
     setCreateModalOpen(true);
   }, []);
@@ -210,7 +210,7 @@ export default function BlacklistListPage() {
   }, [unblockTargetId, unblockReason]);
 
   const handleCreateSubmit = useCallback(async () => {
-    if (!createFormData.carNumber.trim() || !createFormData.registrationReason.trim() || isCreating) {
+    if (!createFormData.carNumber.trim() || !createFormData.registrationReason.trim() || !createFormData.blockReason.trim() || isCreating) {
       return;
     }
     
@@ -220,12 +220,8 @@ export default function BlacklistListPage() {
       const createData = {
         carNumber: createFormData.carNumber.trim(),
         registrationReason: createFormData.registrationReason as BlacklistRegistrationReason,
-        ...(createFormData.blockPeriodDays.trim() && { 
-          blockPeriodDays: parseInt(createFormData.blockPeriodDays.trim()) 
-        }),
-        ...(createFormData.description.trim() && { 
-          description: createFormData.description.trim() 
-        }),
+        blockDays: parseInt(createFormData.blockDays.trim()) || 30,
+        blockReason: createFormData.blockReason.trim(),
       };
 
       const result = await createManualBlacklist(createData);
@@ -358,13 +354,19 @@ export default function BlacklistListPage() {
       },
     },
     {
-      key: 'blockPeriodDays',
-      header: '차단 기간',
+      key: 'blockedUntil',
+      header: '차단 만료일',
       align: 'center',
       width: '10%',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
-        return blacklist.blockPeriodDays ? `${blacklist.blockPeriodDays}일` : '무기한';
+        if (!blacklist.blockedUntil) return '무기한';
+        const date = new Date(blacklist.blockedUntil);
+        return date.toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
       },
     },
     {
@@ -395,13 +397,14 @@ export default function BlacklistListPage() {
       },
     },
     {
-      key: 'registeredAt',
-      header: '등록일시',
+      key: 'blockedAt',
+      header: '차단일시',
       align: 'center',
       width: '12%',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
-        const date = new Date(blacklist.registeredAt);
+        if (!blacklist.blockedAt) return '-';
+        const date = new Date(blacklist.blockedAt);
         return date.toLocaleDateString('ko-KR', {
           year: 'numeric',
           month: '2-digit',
@@ -410,19 +413,13 @@ export default function BlacklistListPage() {
       },
     },
     {
-      key: 'expiresAt',
-      header: '만료일시',
+      key: 'totalViolations',
+      header: '총 위반 수',
       align: 'center',
-      width: '12%',
+      width: '8%',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
-        if (!blacklist.expiresAt) return '-';
-        const date = new Date(blacklist.expiresAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+        return blacklist.totalViolations.toString();
       },
     },
     {
@@ -630,25 +627,28 @@ export default function BlacklistListPage() {
                 <label className="block mb-2 text-sm font-medium">차단 기간 (일)</label>
                 <input
                   type="number"
-                  value={createFormData.blockPeriodDays}
-                  onChange={(e) => handleCreateFormChange('blockPeriodDays', e.target.value)}
-                  placeholder="차단 기간을 입력해주세요"
+                  value={createFormData.blockDays}
+                  onChange={(e) => handleCreateFormChange('blockDays', e.target.value)}
+                  placeholder="차단 기간을 입력해주세요 (기본: 30일)"
                   className="px-3 py-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}
+                  min="1"
+                  max="999"
                 />
                 <div className="mt-1 text-xs text-muted-foreground">
-                  미입력 시 무기한으로 설정됩니다.
+                  미입력 시 30일로 설정됩니다.
                 </div>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium">상세 설명</label>
+                <label className="block mb-2 text-sm font-medium">차단 사유</label>
                 <textarea
-                  value={createFormData.description}
-                  onChange={(e) => handleCreateFormChange('description', e.target.value)}
-                  placeholder="추가 설명을 입력해주세요"
+                  value={createFormData.blockReason}
+                  onChange={(e) => handleCreateFormChange('blockReason', e.target.value)}
+                  placeholder="차단 사유를 상세히 입력해주세요"
                   rows={3}
                   className="px-3 py-2 w-full rounded-md border resize-none border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}
+                  required
                 />
               </div>
             </div>

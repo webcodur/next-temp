@@ -50,7 +50,7 @@ export default function BlacklistDetailPage({ id }: Props) {
   const [formData, setFormData] = useState({
     registrationReason: '',
     blockedUntil: null as Date | null,
-    description: '',
+    blockReason: '',
     unblockReason: '',
   });
   const [isUpdating, setIsUpdating] = useState(false);
@@ -76,8 +76,8 @@ export default function BlacklistDetailPage({ id }: Props) {
           setBlacklistData(foundItem);
           setFormData({
             registrationReason: foundItem.registrationReason,
-            blockedUntil: foundItem.expiresAt ? new Date(foundItem.expiresAt) : null,
-            description: foundItem.description || '',
+            blockedUntil: foundItem.blockedUntil ? new Date(foundItem.blockedUntil) : null,
+            blockReason: foundItem.blockReason || '',
             unblockReason: foundItem.unblockReason || '',
           });
         } else {
@@ -151,8 +151,8 @@ export default function BlacklistDetailPage({ id }: Props) {
       const updateData = {
         registrationReason: formData.registrationReason as BlacklistRegistrationReason,
         blockedUntil: blockedUntilDate.toISOString(),
-        ...(formData.description.trim() && { 
-          description: formData.description.trim() 
+        ...(formData.blockReason.trim() && { 
+          blockReason: formData.blockReason.trim() 
         }),
         ...(formData.unblockReason.trim() && { 
           unblockReason: formData.unblockReason.trim() 
@@ -279,14 +279,19 @@ export default function BlacklistDetailPage({ id }: Props) {
             </p>
           </div>
           <div>
-            <span className="text-sm text-gray-500">등록일시</span>
-            <p className="font-medium">{new Date(blacklistData.registeredAt).toLocaleString()}</p>
+            <span className="text-sm text-gray-500">차단일시</span>
+            <p className="font-medium">
+              {blacklistData.blockedAt 
+                ? new Date(blacklistData.blockedAt).toLocaleString() 
+                : '-'
+              }
+            </p>
           </div>
           <div>
-            <span className="text-sm text-gray-500">만료일시</span>
+            <span className="text-sm text-gray-500">차단 만료일시</span>
             <p className="font-medium">
-              {blacklistData.expiresAt 
-                ? new Date(blacklistData.expiresAt).toLocaleString() 
+              {blacklistData.blockedUntil 
+                ? new Date(blacklistData.blockedUntil).toLocaleString() 
                 : '무기한'
               }
             </p>
@@ -318,11 +323,11 @@ export default function BlacklistDetailPage({ id }: Props) {
         </div>
         
         <FieldText
-          id="description"
-          label="설명"
-          value={formData.description}
-          onChange={(value) => handleFormChange('description', value)}
-          placeholder="추가 설명을 입력하세요"
+          id="blockReason"
+          label="차단 사유"
+          value={formData.blockReason}
+          onChange={(value) => handleFormChange('blockReason', value)}
+          placeholder="차단 사유를 입력하세요"
         />
         
         <FieldText
