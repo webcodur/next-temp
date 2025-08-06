@@ -12,6 +12,7 @@ import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 
 import { useAuth } from '@/hooks/useAuth';
+import { ROLE_NAME_MAP } from '@/types/admin';
 
 // #region 타입
 interface ProfileButtonProps {
@@ -27,7 +28,13 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 
 	// #region 훅
 	const router = useRouter();
-	const { logout } = useAuth();
+	const { 
+		logout, 
+		userProfile, 
+		getUserRoleId, 
+		selectedParkingLot,
+		selectedParkingLotId 
+	} = useAuth();
 	// #endregion
 
 	// #region 핸들러
@@ -52,16 +59,16 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 		}
 	};
 
-	const handleProfile = () => {
-		console.log('프로필 페이지 이동');
-		setIsOpen(false);
-		router.push('/account/management/users');
-	};
-
 	const handleSettings = () => {
 		console.log('설정 페이지 이동');
 		setIsOpen(false);
 		router.push('/account/security/password-policy');
+	};
+
+	// 역할명 조회 함수
+	const getRoleName = () => {
+		const roleId = getUserRoleId();
+		return roleId ? ROLE_NAME_MAP[roleId] || '알 수 없음' : '알 수 없음';
 	};
 	// #endregion
 
@@ -88,16 +95,43 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 
 			{/* 드롭다운 메뉴 */}
 			{isOpen && (
-				<div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border shadow-lg neu-flat bg-background border-border/50">
+				<div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border shadow-lg neu-flat bg-background border-border/50">
+					{/* 사용자 정보 헤더 */}
+					<div className="px-4 py-3 border-b border-border/50">
+						<div className="flex items-center gap-3 mb-2">
+							<User className="w-8 h-8 text-muted-foreground" />
+							<div className="flex-1">
+								<div className="font-medium text-foreground font-multilang">
+									{userProfile?.name || userProfile?.account || '사용자'}
+								</div>
+								<div className="text-sm text-muted-foreground font-multilang">
+									{getRoleName()}
+								</div>
+							</div>
+						</div>
+						
+						{/* 주차장 정보 (최고관리자가 아닌 경우에만 표시) */}
+						{selectedParkingLotId !== 0 && selectedParkingLot && (
+							<div className="text-xs text-muted-foreground font-multilang">
+								현장: {selectedParkingLot.name || `주차장 ${selectedParkingLotId}`}
+							</div>
+						)}
+						
+						{/* 최고관리자이면서 주차장을 선택한 경우 */}
+						{selectedParkingLotId === 0 && getUserRoleId() === 1 && (
+							<div className="text-xs text-muted-foreground font-multilang">
+								전체 시스템 관리자
+							</div>
+						)}
+						
+						{/* 계정 정보 */}
+						<div className="text-xs text-muted-foreground mt-1 font-multilang">
+							계정: {userProfile?.account}
+						</div>
+					</div>
+
 					{/* 메뉴 아이템 */}
 					<div className="p-1">
-						<button
-							onClick={handleProfile}
-							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-primary/10">
-							<User className="w-5 h-5 text-muted-foreground" />
-							<span className="text-base text-foreground font-multilang">프로필</span>
-						</button>
-
 						<button
 							onClick={handleSettings}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-primary/10">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAtom } from 'jotai';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
-import { ColorSetPicker } from '@/components/ui/ui-input/color-set-picker/ColorSetPicker';
+import { ColorSetDropdown } from '@/components/ui/ui-input/color-set-picker/ColorSetDropdown';
 import { Settings as SettingsIcon } from 'lucide-react';
 import clsx from 'clsx';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -44,7 +44,7 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="설정"
+        title="인터페이스 설정"
         size="md"
       >
         <div className="space-y-6 min-w-[400px]">
@@ -55,16 +55,17 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">표시 언어</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentLanguageName}</span>
-            <LanguageSwitcher variant="inline" hideChevron className="w-12 h-12 neu-flat text-primary" />
+            <LanguageSwitcher variant="inline" hideChevron noBorder className="w-12 h-12 neu-flat text-primary" />
           </div>
 
           {/* 색상 테마 */}
-          <div className="space-y-3">
-            <div className="flex flex-col gap-0.5">
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center justify-items-center">
+            <div className="flex flex-col gap-0.5 justify-self-start">
               <span className="text-sm font-medium text-foreground font-multilang">색상 테마</span>
-              <span className="text-xs text-muted-foreground font-multilang">현재: {currentColorSetName}</span>
+              <span className="text-xs text-muted-foreground font-multilang">색상 조합</span>
             </div>
-            <ColorSetPicker showLabels={false} className="w-full" />
+            <span className="text-sm text-center text-foreground font-multilang">{currentColorSetName}</span>
+            <ColorSetDropdown compact className="w-12 h-12" />
           </div>
 
           {/* 테마 토글 */}

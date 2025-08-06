@@ -12,6 +12,7 @@ interface LanguageSwitcherProps {
 	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	hideChevron?: boolean;
+	noBorder?: boolean;
 }
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
@@ -19,6 +20,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 	colorVariant = 'primary',
 	className = '',
 	hideChevron = false,
+	noBorder = false,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 				};
 			default: // inline
 				return {
-					trigger: `p-2 border border-border ${hoverBg} rounded-md transition-colors`,
+					trigger: `p-2 ${noBorder ? '' : 'border border-border'} ${hoverBg} rounded-md transition-colors`,
 					dropdown: 'w-16',
 					itemHover: `${hoverBg}`,
 				};
