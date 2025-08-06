@@ -469,7 +469,6 @@ export default function BlacklistListPage() {
               title="수동 블랙리스트 등록"
             >
               <Plus size={16} />
-              등록
             </Button>
           </div>
         }

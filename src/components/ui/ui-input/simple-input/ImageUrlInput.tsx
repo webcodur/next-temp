@@ -66,7 +66,6 @@ export function ImageUrlInput({
           className="flex gap-1 items-center px-3 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           <Plus size={16} />
-          추가
         </button>
       </div>
 

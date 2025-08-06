@@ -346,7 +346,6 @@ export default function AdminListPage() {
             title="관리자 추가"
           >
             <Plus size={16} />
-            추가
           </Button>
         }
       />

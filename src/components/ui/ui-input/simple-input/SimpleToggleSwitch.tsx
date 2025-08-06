@@ -38,30 +38,22 @@ export const SimpleToggleSwitch: React.FC<SimpleToggleSwitchProps> = ({
 		sm: {
 			track: 'w-8 h-5',
 			thumb: 'w-4 h-4',
-			translate: checked 
-				? (isRTL ? '-translate-x-4' : 'translate-x-4') 
-				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
+			translateX: checked ? (isRTL ? -12 : 12) : 2,
 		},
 		md: {
 			track: 'w-10 h-6',
 			thumb: 'w-5 h-5',
-			translate: checked 
-				? (isRTL ? '-translate-x-5' : 'translate-x-5') 
-				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
+			translateX: checked ? (isRTL ? -16 : 16) : 2,
 		},
 		lg: {
 			track: 'w-12 h-7',
 			thumb: 'w-6 h-6',
-			translate: checked 
-				? (isRTL ? '-translate-x-6' : 'translate-x-6') 
-				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
+			translateX: checked ? (isRTL ? -20 : 20) : 2,
 		},
 		xl: {
 			track: 'w-16 h-9',
 			thumb: 'w-8 h-8',
-			translate: checked 
-				? (isRTL ? '-translate-x-8' : 'translate-x-8') 
-				: (isRTL ? '-translate-x-0.5' : 'translate-x-0.5'),
+			translateX: checked ? (isRTL ? -28 : 28) : 2,
 		},
 	};
 
@@ -90,15 +82,17 @@ export const SimpleToggleSwitch: React.FC<SimpleToggleSwitchProps> = ({
 						className="sr-only"
 					/>
 					<div
-						className={`${currentSize.track} relative rounded-full transition-all duration-200 border focus-within:neu-inset ${
+						className={`${currentSize.track} relative rounded-full transition-all duration-100 border focus-within:neu-inset ${
 							checked
-								? 'neu-inset bg-primary-1 border-primary-3 shadow-inner'
+								? 'neu-inset bg-primary-3 border-primary-3 shadow-inner'
 								: 'neu-flat bg-muted border-border shadow-xs hover:shadow-md'
 						}`}>
 						<div
-							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised bg-background border rounded-full shadow-lg transition-transform duration-200 ${currentSize.translate} ${
-								checked ? 'border-primary-6 bg-primary-6 text-white shadow-primary/20' : 'border-border'
-							}`}
+							className={`${currentSize.thumb} absolute top-1/2 -translate-y-1/2 neu-raised border rounded-full shadow-lg bg-background border-border`}
+							style={{
+								transform: `translateX(${currentSize.translateX}px)`,
+								transition: 'transform 100ms ease-in-out'
+							}}
 						/>
 					</div>
 				</div>

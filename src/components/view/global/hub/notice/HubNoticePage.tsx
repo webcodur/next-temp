@@ -325,7 +325,6 @@ export default function HubNoticePage() {
             className="flex gap-2 items-center"
           >
             <Plus className="w-4 h-4" />
-            공지사항 작성
           </Button>
         }
       />

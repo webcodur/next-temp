@@ -35,7 +35,7 @@ export default function Home() {
 		},
     {
       id: 'statistics',
-      label: '주차장 통계 정보 (...)',
+      label: '주차장 통계 정보',
       icon: <ChartBar size={16} />,
 			title: '이번 달 주차장 운영 내역 탭',
 			subtitle: '주차장 이용률과 수익 현황을 분석하고 리포트를 확인할 수 있습니다.',

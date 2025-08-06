@@ -3,6 +3,7 @@ import {
 	Crown,
 	Globe,
 	SquareParking,
+	TreePalm,
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
@@ -65,9 +66,9 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	주차: {
+	__주차: {
 		icon: SquareParking,
-		key: '주차',
+		key: '__주차',
 		midItems: {
 			"주차장 관리": {
 				key: '주차장 관리',
@@ -123,7 +124,90 @@ export const menuData: MenuData = {
 						href: '/parking/household-management/car',
 					},
 				],
-			}
+			},
+			__상가관리: {
+				key: '__상가관리',
+				botItems: [
+					{
+						key: '__점포현황',
+						href: '/parking/stores/status',
+					},
+				],
+			},
+			__보안순찰: {
+				key: '__보안순찰',
+				botItems: [
+					{
+						key: '__순찰일지',
+						href: '/parking/security/patrol-log',
+					},
+					{
+						key: '__순찰설정',
+						href: '/parking/security/patrol-config',
+					},
+				],
+			},
+		},
+	},
+	__라이프: {
+		icon: TreePalm,
+		key: '__라이프',
+		midItems: {
+			__공용시설: {
+				key: '__공용시설',
+				botItems: [
+					{
+						key: '__지정석 목록',
+						href: '/life/facility/seats',
+					},
+					{
+						key: '__시설 목록',
+						href: '/life/facility/list',
+					},
+					{
+						key: '__상품 목록',
+						href: '/life/facility/products',
+					},
+					{
+						key: '__예약 관리',
+						href: '/life/facility/reservations',
+					},
+					{
+						key: '__시설 출입 목록',
+						href: '/life/facility/access',
+					},
+					{
+						key: '__정산 관리',
+						href: '/life/facility/settlement',
+					},
+				],
+			},
+			__전자투표: {
+				key: '__전자투표',
+				botItems: [
+					{
+						key: '__선거 투표',
+						href: '/life/voting/election',
+					},
+					{
+						key: '__안건 투표',
+						href: '/life/voting/agenda',
+					},
+					{
+						key: '__설문 조사',
+						href: '/life/voting/survey',
+					},
+				],
+			},
+			__커뮤니티: {
+				key: '__커뮤니티',
+				botItems: [
+					{
+						key: '__게시판 관리',
+						href: '/life/community/board',
+					},
+				],
+			},
 		},
 	},
 	연구소: {

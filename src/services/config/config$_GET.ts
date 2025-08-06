@@ -82,6 +82,8 @@ export async function getAllConfigs(params?: SystemConfigSearchRequest, parkingl
   
   if (params?.page) searchParams.append('page', params.page.toString());
   if (params?.limit) searchParams.append('limit', params.limit.toString());
+  // 기본적으로 limit이 없으면 큰 값으로 설정
+  else searchParams.append('limit', '1000');
   if (params?.config_key) searchParams.append('config_key', params.config_key);
   if (params?.config_type) searchParams.append('config_type', params.config_type);
   if (params?.description) searchParams.append('description', params.description);

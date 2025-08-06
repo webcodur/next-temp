@@ -1,15 +1,16 @@
-/* 메뉴 설명: 시스템 설정 관리 */
+/* 공통 설정 관리 컴포넌트 */
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
+import { Plus } from 'lucide-react';
 
 // UI 컴포넌트
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import Tabs, { Tab, SubTab } from '@/components/ui/ui-layout/tabs/Tabs';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // Field 컴포넌트들
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
@@ -24,30 +25,43 @@ import { currentPageLabelAtom } from '@/store/ui';
 import { Option } from '@/components/ui/ui-input/field/core/types';
 
 // #region 타입 정의
-interface GroupedConfigs {
-  [group: string]: {
-    [category: string]: SystemConfig[];
-  };
-}
-
 interface SearchFilters {
   key: string;
   type: string;
   description: string;
 }
+
+interface ConfigManagementProps {
+  /** 설정 카테고리 */
+  category: string;
+  /** 페이지 제목 */
+  title: string;
+  /** 페이지 설명 */
+  subtitle: string;
+  /** 편집 페이지 경로 베이스 (예: '/parking/violation/violation-config') */
+  editBaseRoute: string;
+  /** 생성 페이지 경로 (옵셔널) */
+  createRoute?: string;
+}
 // #endregion
 
-export default function SystemConfigManagementPage() {
+export default function ConfigManagement({
+  category,
+  title,
+  subtitle,
+  editBaseRoute,
+  createRoute,
+}: ConfigManagementProps) {
   const router = useRouter();
   const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
   // #region 페이지 라벨 설정
   useEffect(() => {
     setCurrentPageLabel({
-      label: '시스템 설정 관리',
+      label: title,
       href: window.location.pathname,
     });
-  }, [setCurrentPageLabel]);
+  }, [title, setCurrentPageLabel]);
   // #endregion
 
   // #region 상태 관리
@@ -60,157 +74,37 @@ export default function SystemConfigManagementPage() {
     type: '',
     description: '',
   });
-  
-  // 탭 상태
-  const [activeGroupId, setActiveGroupId] = useState('');
-  const [activeCategoryId, setActiveCategoryId] = useState('');
   // #endregion
-
-
 
   // #region 데이터 로드
   const loadConfigData = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await getAllConfigs();
+      // API에서 해당 category로 필터링하여 가져오기
+      const result = await getAllConfigs({ category });
       
       if (result.success && result.data) {
         setAllConfigs(result.data);
-        
-        // "전체" 탭과 첫 번째 카테고리를 기본 선택
-        const grouped = result.data.reduce((acc, config) => {
-          const group = config.group || '기타';
-          const category = config.category || '미분류';
-          
-          if (!acc[group]) {
-            acc[group] = {};
-          }
-          if (!acc[group][category]) {
-            acc[group][category] = [];
-          }
-          
-          acc[group][category].push(config);
-          return acc;
-        }, {} as GroupedConfigs);
-        
-        // 전체 탭을 기본 선택
-        setActiveGroupId('all');
-        
-        // 첫 번째 카테고리 선택 (모든 그룹에서 첫 번째 카테고리)
-        const allCategories = new Set<string>();
-        Object.values(grouped).forEach(categories => {
-          Object.keys(categories).forEach(categoryName => {
-            allCategories.add(categoryName);
-          });
-        });
-        
-        const firstCategory = Array.from(allCategories)[0];
-        if (firstCategory) {
-          setActiveCategoryId(firstCategory);
-        }
       } else {
-        console.error('시스템 설정 로드 실패:', result.errorMsg);
+        console.error(`${category} 설정 로드 실패:`, result.errorMsg);
         setAllConfigs([]);
       }
     } catch (error) {
-      console.error('시스템 설정 로드 중 오류:', error);
+      console.error(`${category} 설정 로드 중 오류:`, error);
       setAllConfigs([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [category]);
 
   useEffect(() => {
     loadConfigData();
   }, [loadConfigData]);
   // #endregion
 
-  // #region 데이터 그룹화
-  const groupConfigsByGroupAndCategory = useCallback((configs: SystemConfig[]): GroupedConfigs => {
-    return configs.reduce((acc, config) => {
-      const group = config.group || '기타';
-      const category = config.category || '미분류';
-      
-      if (!acc[group]) {
-        acc[group] = {};
-      }
-      if (!acc[group][category]) {
-        acc[group][category] = [];
-      }
-      
-      acc[group][category].push(config);
-      return acc;
-    }, {} as GroupedConfigs);
-  }, []);
-
-  const groupedConfigs = useMemo(() => {
-    return groupConfigsByGroupAndCategory(allConfigs);
-  }, [allConfigs, groupConfigsByGroupAndCategory]);
-  // #endregion
-
-  // #region 탭 데이터 생성
-  const tabs: Tab[] = useMemo(() => {
-    const groupTabs = Object.entries(groupedConfigs).map(([groupName, categories]) => {
-      const subTabs: SubTab[] = Object.entries(categories).map(([categoryName, configs]) => ({
-        id: categoryName,
-        label: categoryName,
-        count: configs.length,
-      }));
-
-      // 해당 그룹의 전체 설정 개수 계산
-      const totalCount = subTabs.reduce((sum, subTab) => sum + (subTab.count || 0), 0);
-
-      return {
-        id: groupName,
-        label: groupName,
-        count: totalCount,
-        subTabs,
-      };
-    });
-
-    // "전체" 탭 생성 (모든 그룹의 모든 카테고리 포함)
-    const allSubTabs: SubTab[] = [];
-    let totalAllCount = 0;
-    
-    Object.entries(groupedConfigs).forEach(([, categories]) => {
-      Object.entries(categories).forEach(([categoryName, configs]) => {
-        allSubTabs.push({
-          id: categoryName,
-          label: categoryName,
-          count: configs.length,
-        });
-        totalAllCount += configs.length;
-      });
-    });
-
-    const allTab: Tab = {
-      id: 'all',
-      label: '전체',
-      count: totalAllCount,
-      subTabs: allSubTabs,
-    };
-
-    return [allTab, ...groupTabs];
-  }, [groupedConfigs]);
-  // #endregion
-
   // #region 현재 표시할 설정들
   const currentConfigs = useMemo(() => {
-    if (!activeGroupId || !activeCategoryId) return [];
-    
-    let configs: SystemConfig[] = [];
-    
-    if (activeGroupId === 'all') {
-      // "전체" 탭인 경우: 모든 그룹에서 해당 카테고리 찾기
-      Object.entries(groupedConfigs).forEach(([, categories]) => {
-        if (categories[activeCategoryId]) {
-          configs.push(...categories[activeCategoryId]);
-        }
-      });
-    } else {
-      // 특정 그룹인 경우: 해당 그룹의 카테고리에서 가져오기
-      configs = groupedConfigs[activeGroupId]?.[activeCategoryId] || [];
-    }
+    let configs = [...allConfigs];
     
     // 검색 필터링
     if (searchFilters.key.trim()) {
@@ -232,26 +126,19 @@ export default function SystemConfigManagementPage() {
     }
     
     return configs;
-  }, [groupedConfigs, activeGroupId, activeCategoryId, searchFilters]);
+  }, [allConfigs, searchFilters]);
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleTabChange = useCallback((groupId: string) => {
-    setActiveGroupId(groupId);
-    // 새 그룹의 첫 번째 카테고리 선택
-    const firstCategory = Object.keys(groupedConfigs[groupId] || {})[0];
-    if (firstCategory) {
-      setActiveCategoryId(firstCategory);
-    }
-  }, [groupedConfigs]);
-
-  const handleSubTabChange = useCallback((categoryId: string) => {
-    setActiveCategoryId(categoryId);
-  }, []);
-
   const handleRowClick = useCallback((config: SystemConfig) => {
-    router.push(`/system/config/settings/edit?key=${encodeURIComponent(config.key)}`);
-  }, [router]);
+    router.push(`${editBaseRoute}/edit?key=${encodeURIComponent(config.key)}`);
+  }, [router, editBaseRoute]);
+
+  const handleCreateNew = useCallback(() => {
+    if (createRoute) {
+      router.push(createRoute);
+    }
+  }, [router, createRoute]);
 
   // 검색 관련 핸들러
   const handleReset = useCallback(() => {
@@ -274,13 +161,13 @@ export default function SystemConfigManagementPage() {
   // #region 테이블 컬럼 정의
   const columns: BaseTableColumn<SystemConfig>[] = [
     {
-      key: 'id',
-      header: 'ID',
+      key: 'index',
+      header: '순번',
       align: 'center',
-      width: '6%',
-      cell: (item: SystemConfig) => (
-        <span className="text-xs text-muted-foreground font-mono">
-          #{item.id}
+      width: '5%',
+      cell: (item: SystemConfig, index: number) => (
+        <span className="text-xs text-foreground">
+          {index + 1}
         </span>
       ),
     },
@@ -290,7 +177,7 @@ export default function SystemConfigManagementPage() {
       align: 'start',
       width: '25%',
       cell: (item: SystemConfig) => (
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-foreground">
           {item.description || '-'}
         </span>
       ),
@@ -301,14 +188,14 @@ export default function SystemConfigManagementPage() {
       align: 'center',
       width: '8%',
       cell: (item: SystemConfig) => (
-        <span className="px-2 py-1 text-xs rounded bg-muted text-muted-foreground">
+        <span className="px-2 py-1 text-xs rounded bg-muted text-foreground">
           {item.type}
         </span>
       ),
     },
     {
       key: 'value',
-      header: '현재 값',
+      header: '값',
       align: 'start',
       width: '18%',
       cell: (item: SystemConfig) => {
@@ -344,7 +231,7 @@ export default function SystemConfigManagementPage() {
       key: 'updatedAt',
       header: '수정일시',
       align: 'center',
-      width: '12%',
+      width: '10%',
       cell: (item: SystemConfig) => {
         if (!item.updatedAt) return <span className="text-muted-foreground">-</span>;
         
@@ -367,15 +254,15 @@ export default function SystemConfigManagementPage() {
         );
       },
     },
-    {
-      key: 'key',
-      header: '설정 키',
-      align: 'start',
-      width: '23%',
-      cell: (item: SystemConfig) => (
-        <span className="font-mono text-sm">{item.key}</span>
-      ),
-    },
+    // {
+    //   key: 'key',
+    //   header: '설정 키',
+    //   align: 'start',
+    //   width: '26%',
+    //   cell: (item: SystemConfig) => (
+    //     <span className="font-mono text-sm">{item.key}</span>
+    //   ),
+    // },
   ];
   // #endregion
 
@@ -443,9 +330,8 @@ export default function SystemConfigManagementPage() {
     <AdvancedSearch
       fields={searchFields}
       onReset={handleReset}
-      defaultOpen={true}
+      defaultOpen={false}
       searchMode="client"
-      alwaysOpen={true}
     />
   ), [searchFields, handleReset]);
   // #endregion
@@ -453,18 +339,7 @@ export default function SystemConfigManagementPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-muted-foreground">설정 데이터를 불러오는 중...</div>
-      </div>
-    );
-  }
-
-  if (tabs.length === 0) {
-    return (
-      <div className="flex flex-col gap-6">
-        <PageHeader 
-          title="시스템 설정 관리" 
-          subtitle="시스템 설정이 없습니다"
-        />
+        <div className="text-muted-foreground">{title} 설정을 불러오는 중...</div>
       </div>
     );
   }
@@ -472,19 +347,20 @@ export default function SystemConfigManagementPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="시스템 설정 관리" 
-        subtitle="시스템 전역 설정을 그룹별, 카테고리별로 관리합니다"
-      />
-
-      {/* 탭 + 서브탭 */}
-      <Tabs
-        tabs={tabs}
-        activeId={activeGroupId}
-        onTabChange={handleTabChange}
-        activeSubTabId={activeCategoryId}
-        onSubTabChange={handleSubTabChange}
-        showSubTabs={true}
-        subTabWidth="220px"
+        title={title}
+        subtitle={subtitle}
+        rightActions={
+          createRoute ? (
+            <Button
+              variant="primary"
+              size="default"
+              onClick={handleCreateNew}
+              title="새 설정 추가"
+            >
+              <Plus size={16} />
+            </Button>
+          ) : undefined
+        }
       />
 
       {/* 고급 검색 */}

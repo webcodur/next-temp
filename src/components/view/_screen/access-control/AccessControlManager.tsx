@@ -5,7 +5,7 @@
 */
 
 import React, { useState } from 'react';
-import { Send, RotateCcw, Lock, Unlock } from 'lucide-react';
+import { Send, RotateCcw } from 'lucide-react';
 import { useAccessControl } from './hooks/useAccessControl';
 import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierControlGrid from './barrierManager/barrierControl/BarrierControlGrid';
@@ -13,6 +13,7 @@ import BarrierPolicyGrid from './barrierManager/barrierPolicy/BarrierPolicyGrid'
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import { toast } from '@/components/ui/ui-effects/toast/Toast';
 
 // #region 타입 정의
@@ -62,9 +63,7 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 		setHasChanges(false);
 	};
 
-	const handleBarrierLockToggle = () => {
-		setIsBarrierLocked(!isBarrierLocked);
-	};
+
 	// #endregion
 
 	// #region 렌더링
@@ -86,15 +85,17 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 						headerHeight="h-[70px]"
 						titleAlign="center"
 						headerActions={
-							<Button
-								onClick={handleBarrierLockToggle}
-								variant={!isBarrierLocked ? "primary" : "outline"}
-								size="sm"
-								icon={!isBarrierLocked ? Unlock : Lock}
-								className="min-w-24"
-							>
-								{!isBarrierLocked ? '편집상태' : '잠금상태'}
-							</Button>
+							<div className="flex items-center gap-3 w-auto">
+								<span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+									{isBarrierLocked ? '잠금상태' : '편집상태'}
+								</span>
+								<SimpleToggleSwitch
+									checked={!isBarrierLocked}
+									onChange={(checked) => setIsBarrierLocked(!checked)}
+									size="lg"
+									className="w-auto"
+								/>
+							</div>
 						}
 					>
 						<BarrierControlGrid

@@ -1,14 +1,14 @@
 /*
   파일명: OrganizationChart.tsx
   기능: 조직도 및 통합 다이어그램을 표시하는 플로우차트 컴포넌트
-  책임: 건물→호실→조직→개인/차량의 계층 구조를 시각적으로 표현한다.
+  책임: 건물→호실→개인/차량의 계층 구조를 시각적으로 표현한다.
 */
 
 // #region 타입
 interface ChartNode {
   id: string;
   label: string;
-  type: 'building' | 'room' | 'organization' | 'person' | 'vehicle';
+  type: 'building' | 'room' | 'person' | 'vehicle';
   x: number;
   y: number;
   description: string;
@@ -42,23 +42,13 @@ const NODES: ChartNode[] = [
     description: '각 세대별 주거 공간 단위'
   },
   
-  // 조직 (3단계)
-  {
-    id: 'organization',
-    label: '조직',
-    type: 'organization',
-    x: 200,
-    y: 250,
-    description: '입주세대를 관리하는 조직 단위'
-  },
-  
-  // 개인과 차량 (4단계)
+  // 개인과 차량 (3단계)
   {
     id: 'person',
     label: '개인',
     type: 'person',
     x: 150,
-    y: 350,
+    y: 250,
     description: '실제 거주하는 입주민'
   },
   
@@ -67,7 +57,7 @@ const NODES: ChartNode[] = [
     label: '차량',
     type: 'vehicle',
     x: 250,
-    y: 350,
+    y: 250,
     description: '입주민이 소유한 차량'
   }
 ];
@@ -76,9 +66,8 @@ const NODES: ChartNode[] = [
 const CONNECTIONS = [
   // 실선 연결 (상하 계층)
   { from: 'building', to: 'room', type: 'solid' },
-  { from: 'room', to: 'organization', type: 'solid' },
-  { from: 'organization', to: 'person', type: 'solid' },
-  { from: 'organization', to: 'vehicle', type: 'solid' },
+  { from: 'room', to: 'person', type: 'solid' },
+  { from: 'room', to: 'vehicle', type: 'solid' },
   
   // 점선 연결 (수평 관계)
   { from: 'person', to: 'vehicle', type: 'dashed' }
@@ -90,7 +79,6 @@ const getNodeColor = (type: ChartNode['type']) => {
   const baseColors = {
     building: "hsl(var(--serial-4))",
     room: "hsl(var(--serial-5))",
-    organization: "hsl(var(--serial-5))",
     person: "hsl(var(--serial-6))",
     vehicle: "hsl(var(--serial-6))",
   };
@@ -110,7 +98,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
       <h3 className="mb-4 text-lg font-semibold">조직도 및 통합 다이어그램</h3>
       
       <div className="flex justify-center">
-        <svg width="400" height="450" className="rounded-lg border shadow-sm border-border bg-background">
+        <svg width="400" height="350" className="rounded-lg border shadow-sm border-border bg-background">
           {/* 배경 그리드 */}
           <defs>
             <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">

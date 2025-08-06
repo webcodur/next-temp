@@ -52,7 +52,6 @@ const Tabs = React.forwardRef<
 			colorVariant = 'primary',
 			endContent,
 			showSubTabs = false,
-			subTabWidth = '200px',
 			className,
 			...props
 		},
@@ -133,52 +132,45 @@ const Tabs = React.forwardRef<
 				{/* 하단 연결 라인 */}
 				<div className="border-b-2 border-border"></div>
 
-				{/* 서브탭이 있는 경우 */}
+				{/* 서브탭이 있는 경우 - chip 형태 가로배치 */}
 				{hasSubTabs && (
-					<div className="flex border-s-2 border-e-2 border-border bg-background">
-						{/* 서브탭 컬럼 */}
-						<div 
-							className="border-e-2 border-border bg-muted/30"
-							style={{ width: subTabWidth }}
-						>
-							<div className="p-4 space-y-1">
-								{activeTab?.subTabs?.map((subTab) => {
-									const isSubActive = activeSubTabId === subTab.id;
-									return (
-										<Button
-											key={subTab.id}
-											variant="ghost"
-											onClick={() => onSubTabChange?.(subTab.id)}
-											className={cn(
-												'w-full justify-start text-left p-3 h-auto',
-												isSubActive 
-													? 'bg-background text-foreground border border-border shadow-sm' 
-													: 'text-muted-foreground hover:text-foreground hover:bg-background/50'
-											)}
-										>
-											<span className="truncate">
-												{subTab.label}
-												{typeof subTab.count === 'number' && (
-													<span className="ml-1 text-xs opacity-70">
-														({subTab.count})
-													</span>
-												)}
+					<div className="flex flex-col border-s-2 border-e-2 border-border bg-background">
+						{/* 서브탭 영역 */}
+						<div className="flex flex-wrap gap-2 p-4 border-b border-border bg-muted/20">
+							{activeTab?.subTabs?.map((subTab) => {
+								const isSubActive = activeSubTabId === subTab.id;
+								return (
+									<Button
+										key={subTab.id}
+										variant={isSubActive ? "primary" : "outline"}
+										size="sm"
+										onClick={() => onSubTabChange?.(subTab.id)}
+										className={cn(
+											'px-3 py-1.5 text-sm transition-all duration-200',
+											isSubActive 
+												? 'bg-primary text-primary-foreground border-primary' 
+												: 'text-muted-foreground hover:text-foreground hover:border-foreground/20'
+										)}
+									>
+										{subTab.label}
+										{typeof subTab.count === 'number' && (
+											<span className="ml-1 text-xs opacity-70">
+												({subTab.count})
 											</span>
-										</Button>
-									);
-								})}
-							</div>
+										)}
+									</Button>
+								);
+							})}
 						</div>
 
-						{/* 메인 콘텐츠 영역 - AdvancedSearch 전용 */}
-						<div className="flex-1 flex items-center px-4 py-3">
-							{/* 전체 영역 - 사용자 정의 컨텐츠 */}
-							{endContent && (
+						{/* 메인 콘텐츠 영역 */}
+						{endContent && (
+							<div className="flex items-center px-4 py-3">
 								<div className="flex-1">
 									{endContent}
 								</div>
-							)}
-						</div>
+							</div>
+						)}
 					</div>
 				)}
 
