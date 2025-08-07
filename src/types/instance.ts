@@ -1,22 +1,54 @@
-import { Household } from './household';
+// 인스턴스 관리 타입 정의
+export type InstanceType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
 
-// #region 기본 타입
+// 기본 인스턴스 정보
 export interface Instance {
   id: number;
-  householdId: number;
-  instanceName?: string;
+  parkinglotId: number;
+  address1Depth: string;
+  address2Depth: string;
+  address3Depth?: string | null;
+  instanceType: InstanceType;
   password: string;
-  startDate?: string;
-  endDate?: string;
-  memo?: string;
+  memo?: string | null;
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string;
-  household?: Household;
-  instances?: Instance[];
 }
 
-export interface ServiceConfig {
+// 인스턴스 생성 요청
+export interface CreateInstanceRequest {
+  address1Depth: string;
+  address2Depth: string;
+  address3Depth?: string;
+  instanceType: InstanceType;
+  password: string;
+  memo?: string;
+}
+
+// 인스턴스 수정 요청
+export interface UpdateInstanceRequest {
+  address1Depth?: string;
+  address2Depth?: string;
+  address3Depth?: string;
+  instanceType?: InstanceType;
+  password?: string;
+  memo?: string;
+}
+
+// 인스턴스 검색 파라미터
+export interface SearchInstanceParams {
+  page?: number;
+  limit?: number;
+  instanceType?: InstanceType;
+  address1Depth?: string;
+  address2Depth?: string;
+  address3Depth?: string;
+  instanceId?: number;
+  instanceName?: string;
+}
+
+// 인스턴스 서비스 설정
+export interface InstanceServiceConfig {
   id: number;
   instanceId: number;
   canAddNewResident: boolean;
@@ -27,7 +59,16 @@ export interface ServiceConfig {
   updatedAt: string;
 }
 
-export interface VisitConfig {
+// 인스턴스 서비스 설정 수정
+export interface UpdateInstanceServiceConfigRequest {
+  canAddNewResident?: boolean;
+  isCommonEntranceSubscribed?: boolean;
+  isTemporaryAccess?: boolean;
+  tempCarLimit?: number;
+}
+
+// 인스턴스 방문 설정
+export interface InstanceVisitConfig {
   id: number;
   instanceId: number;
   availableVisitTime: number;
@@ -36,65 +77,26 @@ export interface VisitConfig {
   createdAt: string;
   updatedAt: string;
 }
-// #endregion
 
-// #region 요청 타입
-export interface SearchInstanceRequest {
-  page?: number;
-  limit?: number;
-  householdId?: number;
-  instanceName?: string;
-}
-
-export interface CreateInstanceRequest {
-  householdId: number;
-  instanceName?: string;
-  password: string;
-  startDate?: string;
-  endDate?: string;
-  memo?: string;
-}
-
-export interface UpdateInstanceRequest {
-  instanceName?: string;
-  password?: string;
-  startDate?: string;
-  endDate?: string;
-  memo?: string;
-}
-
-export interface UpdateServiceConfigRequest {
-  instanceId: number;
-  canAddNewResident?: boolean;
-  isCommonEntranceSubscribed?: boolean;
-  isTemporaryAccess?: boolean;
-  tempCarLimit?: number;
-}
-
-export interface UpdateVisitConfigRequest {
+// 인스턴스 방문 설정 수정
+export interface UpdateInstanceVisitConfigRequest {
   availableVisitTime?: number;
   purchasedVisitTime?: number;
   visitRequestLimit?: number;
 }
-// #endregion
 
-// #region 응답 타입
-export interface PaginatedResponse<T> {
-  data: T[];
+// 인스턴스 상세 정보 (모든 관련 정보 포함)
+export interface InstanceDetail extends Instance {
+  residentInstance: any[];
+  instanceServiceConfig?: InstanceServiceConfig | null;
+  instanceVisitConfig?: InstanceVisitConfig | null;
+}
+
+// 페이지네이션 응답
+export interface PaginatedInstanceResponse {
+  data: Instance[];
   total: number;
   page: number;
   limit: number;
   totalPages: number;
 }
-// #endregion
-
-// #region 하위 호환성을 위한 Alias (점진적 마이그레이션)
-export type HouseholdInstance = Instance;
-export type SearchHouseholdInstanceRequest = SearchInstanceRequest;
-export type CreateHouseholdInstanceRequest = CreateInstanceRequest;
-export type UpdateHouseholdInstanceRequest = UpdateInstanceRequest;
-export type HouseholdServiceConfig = ServiceConfig;
-export type HouseholdVisitConfig = VisitConfig;
-export type UpdateHouseholdServiceConfigRequest = UpdateServiceConfigRequest;
-export type UpdateHouseholdVisitConfigRequest = UpdateVisitConfigRequest;
-// #endregion

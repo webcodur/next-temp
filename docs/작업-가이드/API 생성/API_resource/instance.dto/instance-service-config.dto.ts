@@ -1,0 +1,82 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsOptional, IsNumber, Min } from 'class-validator';
+import { BaseIdEntityDto } from '../../common/dto/base.dto';
+
+/**
+ * InstanceServiceConfigDto
+ * 인스턴스 서비스 설정 정보 DTO
+ */
+export class InstanceServiceConfigDto extends BaseIdEntityDto {
+  @ApiProperty({
+    description: '인스턴스 ID',
+    example: 1,
+  })
+  instance_id: number;
+
+  @ApiProperty({
+    description: '새 거주자 추가 가능 여부',
+    example: true,
+  })
+  can_add_new_resident: boolean;
+
+  @ApiProperty({
+    description: '공동현관 구독 여부',
+    example: true,
+  })
+  is_common_entrance_subscribed: boolean;
+
+  @ApiProperty({
+    description: '임시 접근 허용 여부',
+    example: false,
+  })
+  is_temporary_access: boolean;
+
+  @ApiProperty({
+    description: '임시 차량 허용 대수',
+    example: 1,
+  })
+  temp_car_limit: number;
+}
+
+/**
+ * UpdateInstanceServiceConfigDto
+ * 인스턴스 서비스 설정 수정을 위한 DTO
+ */
+export class UpdateInstanceServiceConfigDto {
+  @ApiProperty({
+    description: '새 거주자 추가 가능 여부',
+    example: true,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  can_add_new_resident?: boolean;
+
+  @ApiProperty({
+    description: '공동현관 구독 여부',
+    example: true,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  is_common_entrance_subscribed?: boolean;
+
+  @ApiProperty({
+    description: '임시 접근 허용 여부',
+    example: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  is_temporary_access?: boolean;
+
+  @ApiProperty({
+    description: '임시 차량 허용 대수',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  temp_car_limit?: number;
+}

@@ -1,0 +1,10 @@
+// 거주자 관리 API 서비스 내보내기
+export { searchResidents } from './residents$_GET';
+export { getResidentDetail } from './residents@id_GET';
+export { updateResident } from './residents@id_PATCH';
+export { deleteResident } from './residents@id_DELETE';
+export { moveResident } from './residents_move_POST';
+export { createResidentInstance } from './residents_instances_POST';
+export { updateResidentInstance } from './residents_instances@id_PATCH';
+export { deleteResidentInstance } from './residents_instances@id_DELETE';
+export { getResidentHistory } from './residents@id_history_GET';

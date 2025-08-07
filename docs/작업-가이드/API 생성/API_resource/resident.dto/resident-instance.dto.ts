@@ -1,0 +1,105 @@
+import { IsString, IsOptional, IsInt } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseIdEntityDto } from '../../common/dto/base.dto';
+
+/**
+ * ResidentInstanceDto
+ *
+ * 거주자-인스턴스 관계 정보를 나타내는 DTO입니다.
+ */
+export class ResidentInstanceDto extends BaseIdEntityDto {
+  @ApiProperty({
+    description: '거주자 ID',
+    example: 1,
+  })
+  resident_id: number;
+
+  @ApiProperty({
+    description: '인스턴스 ID',
+    example: 1,
+  })
+  instance_id: number;
+
+  @ApiProperty({
+    description: '메모',
+    example: '특이사항',
+    required: false,
+  })
+  memo?: string | null;
+}
+
+/**
+ * CreateResidentInstanceDto
+ *
+ * 거주자-인스턴스 관계 생성을 위한 DTO입니다.
+ */
+export class CreateResidentInstanceDto {
+  @ApiProperty({
+    description: '거주자 ID',
+    example: 1,
+  })
+  @IsInt({ message: 'resident_id는 정수여야 합니다.' })
+  resident_id: number;
+
+  @ApiProperty({
+    description: '인스턴스 ID',
+    example: 1,
+  })
+  @IsInt({ message: 'instance_id는 정수여야 합니다.' })
+  instance_id: number;
+
+  @ApiProperty({
+    description: '메모',
+    example: '특이사항',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  memo?: string;
+}
+
+/**
+ * UpdateResidentInstanceDto
+ *
+ * 거주자-인스턴스 관계 수정을 위한 DTO입니다.
+ */
+export class UpdateResidentInstanceDto {
+  @ApiProperty({
+    description: '메모',
+    example: '특이사항',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  memo?: string;
+}
+
+/**
+ * MoveResidentDto
+ *
+ * 거주자 인스턴스 이동을 위한 DTO입니다.
+ */
+export class MoveResidentDto {
+  @ApiProperty({
+    description: '이동할 거주자 ID',
+    example: 123,
+  })
+  @IsInt({ message: 'resident_id는 정수여야 합니다.' })
+  resident_id: number;
+
+  @ApiProperty({
+    description: '목적지 인스턴스 ID',
+    example: 456,
+  })
+  @IsInt({ message: 'instance_id는 정수여야 합니다.' })
+  instance_id: number;
+
+  @ApiProperty({
+    description: '메모 (선택사항)',
+    example: '',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  memo?: string;
+}

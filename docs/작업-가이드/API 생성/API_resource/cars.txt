@@ -1,0 +1,848 @@
+ "/cars": {
+      "post": {
+        "description": "차량이 존재하면 반환하고, 없으면 새로 생성합니다. (deleted_at된 차량이 있어도 되살리지 않으며 새로 생성됩니다.)",
+        "operationId": "create차량존재확인후생성",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "차량 존재 확인 후 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 존재 확인 후 생성",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "get": {
+        "description": "차량 목록을 조회합니다.",
+        "operationId": "search차량목록조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "car_number",
+            "required": false,
+            "in": "query",
+            "description": "car_number로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "required": false,
+            "in": "query",
+            "description": "brand로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "required": false,
+            "in": "query",
+            "description": "model로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "type로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fuel",
+            "required": false,
+            "in": "query",
+            "description": "fuel로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year_from",
+            "required": false,
+            "in": "query",
+            "description": "year_from로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year_to",
+            "required": false,
+            "in": "query",
+            "description": "year_to로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instance_id",
+            "required": false,
+            "in": "query",
+            "description": "인스턴스 ID로 검색",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "resident_id",
+            "required": false,
+            "in": "query",
+            "description": "resident_id로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "status로 검색",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CarWithInstanceDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 목록 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "description": "특정 인스턴스에 등록된 차량의 상세 정보를 조회합니다.",
+        "operationId": "get인스턴스차량상세조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "인스턴스 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CarDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "인스턴스 차량 상세 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "patch": {
+        "description": "차량 정보를 수정합니다.",
+        "operationId": "update차량정보수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차량 정보 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 정보 수정",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "delete": {
+        "description": "차량을 삭제합니다. (소프트 삭제)\n\n차량 삭제 시 차량과 연결된 모든 연결 관계도 함께 삭제됩니다.",
+        "operationId": "delete차량삭제",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차량 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 삭제",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/instances": {
+      "post": {
+        "description": "차량을 인스턴스 인스턴스에 연결합니다.\n\ncar_share_onoff는 선택값이며 기본값은 false입니다.",
+        "operationId": "create차량인스턴스연결",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCarInstanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-인스턴스 연결",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "get": {
+        "description": "차량과 인스턴스 간의 연결 관계를 조회합니다.",
+        "operationId": "search차량인스턴스연결조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량-인스턴스 연결 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CarInstanceResidentDetailDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-인스턴스 연결 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/instances/{id}": {
+      "patch": {
+        "description": "차량과 인스턴스 간의 연결 관계를 수정합니다.",
+        "operationId": "update차량인스턴스연결수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-인스턴스 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCarInstanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차량-인스턴스 연결 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInstanceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-인스턴스 연결 수정",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "delete": {
+        "description": "차량과 인스턴스 간의 연결을 삭제합니다. 연결된 모든 거주자 관계도 함께 삭제됩니다. (소프트 삭제)",
+        "operationId": "delete차량인스턴스연결삭제",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-인스턴스 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차량-인스턴스 연결 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-인스턴스 연결 삭제",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/residents": {
+      "post": {
+        "description": "차량과 거주자 간의 연결 관계를 생성합니다.",
+        "operationId": "create차량거주자연결생성",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCarInstanceResidentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 생성",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/residents/{id}": {
+      "get": {
+        "description": "특정 차량-거주자 연결의 상세 정보를 조회합니다.",
+        "operationId": "get차량거주자연결상세조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차량-거주자 연결 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInstanceResidentDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 상세 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "patch": {
+        "description": "차량과 거주자 간의 연결 관계를 수정합니다.",
+        "operationId": "update차량거주자연결수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCarInstanceResidentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차량-거주자 연결 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInstanceResidentDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 수정",
+        "tags": [
+          "차량 관리"
+        ]
+      },
+      "delete": {
+        "description": "차량과 거주자 간의 연결 관계를 제거합니다. (소프트 삭제)",
+        "operationId": "delete차량거주자연결제거",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차량-거주자 연결 제거 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량-거주자 연결 제거",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },
+    "/cars/instances/{carInstanceId}": {
+      "get": {
+        "description": "인스턴스의 특정 차량의 등록된 사용자 목록 및 설정을 조회합니다.",
+        "operationId": "get인스턴스차량상세조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "carInstanceId",
+            "required": true,
+            "in": "path",
+            "description": "차량-인스턴스 연결 ID",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "인스턴스 차량 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInstanceResidentDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "인스턴스 차량 상세 조회",
+        "tags": [
+          "차량 관리"
+        ]
+      }
+    },

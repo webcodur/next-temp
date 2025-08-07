@@ -1,0 +1,848 @@
+  "/devices": {
+      "get": {
+        "description": "주차장의 차단기 목록을 페이지네이션으로 조회합니다.",
+        "operationId": "search차단기목록조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차단기 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ParkingDeviceDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 목록 조회",
+        "tags": [
+          "차단기 관리"
+        ]
+      },
+      "post": {
+        "description": "새로운 차단기를 생성합니다.",
+        "operationId": "create차단기생성",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateParkingDeviceWithPolicyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "차단기 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 생성",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}": {
+      "get": {
+        "description": "특정 차단기의 상세 정보를 조회합니다.",
+        "operationId": "get차단기상세조회",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차단기 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 상세 조회",
+        "tags": [
+          "차단기 관리"
+        ]
+      },
+      "put": {
+        "description": "차단기 정보를 수정합니다.\n\n이 API보다는 개별 수정 API를 사용하세요.",
+        "operationId": "update차단기수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDeviceWithPolicyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 수정",
+        "tags": [
+          "차단기 관리"
+        ]
+      },
+      "delete": {
+        "description": "차단기를 삭제합니다.",
+        "operationId": "delete차단기삭제",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "차단기 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 삭제",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/status": {
+      "put": {
+        "description": "차단기의 상태를 변경합니다 (1: 자동운행, 2: 항시열림, 3: 바이패스).",
+        "operationId": "update차단기상태변경",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDeviceStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 상태 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 상태 변경",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/basic-info": {
+      "put": {
+        "description": "차단기의 기본 정보를 수정합니다 (이름, CCTV URL, 연락처 등).",
+        "operationId": "update차단기기본정보수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDeviceBasicInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 기본 정보 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 기본 정보 수정",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/network": {
+      "put": {
+        "description": "차단기의 네트워크 설정을 수정합니다 (IP, Port 등).",
+        "operationId": "update차단기네트워크설정수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDeviceNetworkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 네트워크 설정 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 네트워크 설정 수정",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/permissions": {
+      "put": {
+        "description": "차단기의 차량 유형별 출입 권한을 설정합니다.",
+        "operationId": "update차단기출입권한설정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDevicePermissionsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 출입 권한 설정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 출입 권한 설정",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/operation": {
+      "put": {
+        "description": "차단기의 운영 설정을 수정합니다 (타입, 발권/정산 기능 등).",
+        "operationId": "update차단기운영설정수정",
+        "parameters": [
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParkingDeviceOperationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "차단기 운영 설정 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParkingDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 운영 설정 수정",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/check-permission/{vehicleType}": {
+      "get": {
+        "description": "특정 차량 유형의 출입 허가 여부를 확인합니다.",
+        "operationId": "get차량유형별출입허가확인",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": true,
+            "in": "path",
+            "description": "차량 유형",
+            "schema": {
+              "enum": [
+                "resident",
+                "regular",
+                "visitor",
+                "temp",
+                "business",
+                "commercial",
+                "taxi",
+                "ticket_machine",
+                "unregistered"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차량 유형별 출입 허가 확인",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/command-logs": {
+      "get": {
+        "description": "차단기 제어 명령 실행 이력을 조회합니다.",
+        "operationId": "search차단기명령로그조회",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차단기 명령 로그 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ParkingDeviceCommandLogDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 명령 로그 조회",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    },
+    "/devices/{id}/history": {
+      "get": {
+        "description": "차단기의 생성, 수정, 삭제 이력을 조회합니다.",
+        "operationId": "search차단기변경이력조회",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "차단기 ID",
+            "schema": {
+
+            }
+          },
+          {
+            "name": "x-parkinglot-id",
+            "in": "header",
+            "description": "주차장 ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 10)",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "action_type",
+            "required": false,
+            "in": "query",
+            "description": "action_type로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "changed_fields",
+            "required": false,
+            "in": "query",
+            "description": "changed_fields로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_date",
+            "required": false,
+            "in": "query",
+            "description": "start_date로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_date",
+            "required": false,
+            "in": "query",
+            "description": "end_date로 검색",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "차단기 변경 이력 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PageDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ParkingDeviceHistoryDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "차단기 변경 이력 조회",
+        "tags": [
+          "차단기 관리"
+        ]
+      }
+    }
+  },
