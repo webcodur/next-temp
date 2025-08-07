@@ -146,8 +146,8 @@ export interface ParkingDeviceCommandLog {
   adminId?: number | null;
   command: string;
   status: number; // 0: 대기, 1: 성공, 2: 실패
-  requestData?: any;
-  responseData?: any;
+  requestData?: Record<string, unknown>;
+  responseData?: Record<string, unknown>;
   errorMessage?: string | null;
   createdAt: Date;
 }
@@ -156,8 +156,8 @@ export interface ParkingDeviceHistory {
   id: number;
   parkingDeviceId: number;
   actionType: 'CREATED' | 'UPDATED' | 'DELETED';
-  beforeData?: any;
-  afterData?: any;
+  beforeData?: Record<string, unknown>;
+  afterData?: Record<string, unknown>;
   changedFields?: string;
   adminId?: number;
   changedByType: 'ADMIN' | 'SYSTEM' | 'API';

@@ -109,7 +109,7 @@ export interface SystemConfig {
   key: string;
   value: string | number | boolean | object;
   description?: string | null;
-  type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  type: string;
   isActive: boolean;
   category?: string | null;
   group?: string | null;

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { List, ChevronDown, ChevronUp, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
+import { Portal } from '../field/shared/Portal';
 
 interface DropdownOption {
 	value: string;
@@ -27,20 +28,41 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	value,
 	onChange,
 	options,
-	placeholder = '선택하세요',
+	placeholder = '전체',
 	disabled = false,
 	colorVariant = 'primary',
 	className = '',
 	validationRule,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const triggerRef = useRef<HTMLDivElement>(null);
 	const selectedOption = options.find(option => option.value === value);
+
+	// 드롭다운 위치 계산
+	const calculatePosition = useCallback(() => {
+		if (!triggerRef.current) return;
+		
+		const rect = triggerRef.current.getBoundingClientRect();
+		const viewportHeight = window.innerHeight;
+		const dropdownHeight = Math.min(options.length * 40 + 16, 244); // max-h-60 = 240px + padding
+		
+		// 화면 하단에 공간이 부족하면 위쪽에 표시
+		const shouldShowAbove = rect.bottom + dropdownHeight > viewportHeight && rect.top > dropdownHeight;
+		
+		setDropdownPosition({
+			top: shouldShowAbove ? rect.top - dropdownHeight : rect.bottom,
+			left: rect.left,
+			width: rect.width,
+		});
+	}, [options.length]);
 
 	// 외부 클릭 시 드롭다운 닫기
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+				triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
 				setIsOpen(false);
 			}
 		};
@@ -50,6 +72,23 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
+
+	// 드롭다운 열릴 때 위치 계산
+	useEffect(() => {
+		if (isOpen) {
+			calculatePosition();
+			
+			// 스크롤이나 리사이즈 시 위치 재계산
+			const handleReposition = () => calculatePosition();
+			window.addEventListener('scroll', handleReposition, true);
+			window.addEventListener('resize', handleReposition);
+			
+			return () => {
+				window.removeEventListener('scroll', handleReposition, true);
+				window.removeEventListener('resize', handleReposition);
+			};
+		}
+	}, [isOpen, calculatePosition]);
 
 	const handleToggle = () => {
 		if (disabled) return;
@@ -151,6 +190,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 			{/* 드롭다운 입력 영역 */}
 			<div className="relative">
 				<div
+					ref={triggerRef}
 					className={`
 						w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg 
 						flex items-center cursor-pointer
@@ -197,40 +237,50 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				</div>
 			</div>
 
-			{/* 드롭다운 메뉴 - 완전 불투명 처리 */}
+			{/* 드롭다운 메뉴 - Portal로 렌더링 */}
 			{isOpen && (
-				<div className="absolute left-0 right-0 top-full z-[10000] mt-1">
-					<div className="rounded-lg border shadow-xl border-border bg-background">
-						<ul role="listbox" className="overflow-auto py-1 max-h-60">
-							{options.map((option) => (
-								<li
-									key={option.value}
-									className={`
-										px-3 py-2 text-sm transition-colors duration-150
-										${option.disabled
-											? 'opacity-50 cursor-not-allowed'
-											: 'cursor-pointer hover:bg-muted'
-										} 
-										${option.value === value
-											? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
-											: 'text-foreground'
-										}
-									`}
-									onClick={() => {
-										if (!option.disabled) {
-											handleSelect(option.value);
-										}
-									}}
-									role="option"
-									aria-selected={option.value === value}
-									aria-disabled={option.disabled}
-								>
-									{option.label}
-								</li>
-							))}
-						</ul>
+				<Portal containerId="dropdown-portal">
+					<div 
+						ref={dropdownRef}
+						className="fixed z-[50000]"
+						style={{
+							top: dropdownPosition.top,
+							left: dropdownPosition.left,
+							width: dropdownPosition.width,
+						}}
+					>
+						<div className="rounded-lg border shadow-xl border-border bg-background">
+							<ul role="listbox" className="overflow-auto py-1 max-h-60">
+								{options.map((option) => (
+									<li
+										key={option.value}
+										className={`
+											px-3 py-2 text-sm transition-colors duration-150
+											${option.disabled
+												? 'opacity-50 cursor-not-allowed'
+												: 'cursor-pointer hover:bg-muted'
+											} 
+											${option.value === value
+												? `${colorStyles.bgSelected} ${colorStyles.textSelected} font-medium`
+												: 'text-foreground'
+											}
+										`}
+										onClick={() => {
+											if (!option.disabled) {
+												handleSelect(option.value);
+											}
+										}}
+										role="option"
+										aria-selected={option.value === value}
+										aria-disabled={option.disabled}
+									>
+										{option.label}
+									</li>
+								))}
+							</ul>
+						</div>
 					</div>
-				</div>
+				</Portal>
 			)}
 		</div>
 	);

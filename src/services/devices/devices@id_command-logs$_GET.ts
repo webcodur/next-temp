@@ -9,8 +9,8 @@ interface ParkingDeviceCommandLogServerResponse {
   admin_id?: number | null;
   command: string;
   status: number;
-  request_data?: any;
-  response_data?: any;
+  request_data?: Record<string, unknown>;
+  response_data?: Record<string, unknown>;
   error_message?: string | null;
   created_at: string;
 }

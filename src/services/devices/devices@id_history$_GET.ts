@@ -7,8 +7,8 @@ interface ParkingDeviceHistoryServerResponse {
   id: number;
   parking_device_id: number;
   action_type: 'CREATED' | 'UPDATED' | 'DELETED';
-  before_data?: any;
-  after_data?: any;
+  before_data?: Record<string, unknown>;
+  after_data?: Record<string, unknown>;
   changed_fields?: string;
   admin_id?: number;
   changed_by_type: 'ADMIN' | 'SYSTEM' | 'API';

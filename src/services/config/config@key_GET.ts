@@ -8,7 +8,7 @@ interface SystemConfigServerResponse {
   config_key: string;
   config_value: string;
   description?: string | null;
-  config_type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  config_type: string;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;

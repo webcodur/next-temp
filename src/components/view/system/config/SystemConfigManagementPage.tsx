@@ -16,7 +16,7 @@ import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 
 // API 호출
-import { getAllConfigs } from '@/services/config/config$_GET';
+import { searchConfigs } from '@/services/config/config$_GET';
 
 // 타입 정의
 import { SystemConfig } from '@/types/api';
@@ -72,7 +72,7 @@ export default function SystemConfigManagementPage() {
   const loadConfigData = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await getAllConfigs();
+      const result = await searchConfigs();
       
       if (result.success && result.data) {
         setAllConfigs(result.data);
@@ -286,7 +286,7 @@ export default function SystemConfigManagementPage() {
       align: 'center',
       width: '6%',
       cell: (item: SystemConfig) => (
-        <span className="text-xs text-muted-foreground font-mono">
+        <span className="font-mono text-xs text-muted-foreground">
           #{item.id}
         </span>
       ),
@@ -495,7 +495,7 @@ export default function SystemConfigManagementPage() {
       />
 
       {/* 고급 검색 */}
-      <div className="bg-background border border-border rounded-lg">
+      <div className="rounded-lg border bg-background border-border">
         {advancedSearchContent}
       </div>
 

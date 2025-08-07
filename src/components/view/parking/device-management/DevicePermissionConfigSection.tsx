@@ -1,0 +1,277 @@
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import { Save, RotateCcw } from 'lucide-react';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { updateParkingDevicePermissions } from '@/services/devices/devices@id_permissions_PUT';
+import { ParkingDevice } from '@/types/device';
+
+interface PermissionConfigData {
+  residentPermission: boolean;
+  regularPermission: boolean;
+  visitorPermission: boolean;
+  tempPermission: boolean;
+  businessPermission: boolean;
+  commercialPermission: boolean;
+  taxiPermission: boolean;
+  ticketMachinePermission: boolean;
+  unregisteredPermission: boolean;
+}
+
+interface DevicePermissionConfigSectionProps {
+  device: ParkingDevice;
+  onDataChange: () => void;
+}
+
+const PERMISSION_LABELS = {
+  residentPermission: '주민 출입',
+  regularPermission: '정기 출입',
+  visitorPermission: '방문 출입',
+  tempPermission: '임시 출입',
+  businessPermission: '업무 출입',
+  commercialPermission: '상업 출입',
+  taxiPermission: '택시 출입',
+  ticketMachinePermission: '발권기 출입',
+  unregisteredPermission: '미등록 출입',
+};
+
+export default function DevicePermissionConfigSection({ 
+  device, 
+  onDataChange 
+}: DevicePermissionConfigSectionProps) {
+  // #region 상태 관리
+  const [formData, setFormData] = useState<PermissionConfigData>({
+    residentPermission: device.residentPermission === 1,
+    regularPermission: device.regularPermission === 1,
+    visitorPermission: device.visitorPermission === 1,
+    tempPermission: device.tempPermission === 1,
+    businessPermission: device.businessPermission === 1,
+    commercialPermission: device.commercialPermission === 1,
+    taxiPermission: device.taxiPermission === 1,
+    ticketMachinePermission: device.ticketMachinePermission === 1,
+    unregisteredPermission: device.unregisteredPermission === 1,
+  });
+  const [originalData] = useState<PermissionConfigData>({
+    residentPermission: device.residentPermission === 1,
+    regularPermission: device.regularPermission === 1,
+    visitorPermission: device.visitorPermission === 1,
+    tempPermission: device.tempPermission === 1,
+    businessPermission: device.businessPermission === 1,
+    commercialPermission: device.commercialPermission === 1,
+    taxiPermission: device.taxiPermission === 1,
+    ticketMachinePermission: device.ticketMachinePermission === 1,
+    unregisteredPermission: device.unregisteredPermission === 1,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 모달 상태
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  // #endregion
+
+  // #region 변경 감지
+  const hasChanges = useMemo(() => {
+    return Object.keys(formData).some((key) => {
+      const k = key as keyof PermissionConfigData;
+      return formData[k] !== originalData[k];
+    });
+  }, [formData, originalData]);
+
+  const isValid = useMemo(() => {
+    return hasChanges;
+  }, [hasChanges]);
+  // #endregion
+
+  // #region 핸들러
+  const handleTogglePermission = (field: keyof PermissionConfigData) => {
+    if (isSubmitting) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (!isValid || isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const updateData = {
+        residentPermission: formData.residentPermission ? 1 : 0,
+        regularPermission: formData.regularPermission ? 1 : 0,
+        visitorPermission: formData.visitorPermission ? 1 : 0,
+        tempPermission: formData.tempPermission ? 1 : 0,
+        businessPermission: formData.businessPermission ? 1 : 0,
+        commercialPermission: formData.commercialPermission ? 1 : 0,
+        taxiPermission: formData.taxiPermission ? 1 : 0,
+        ticketMachinePermission: formData.ticketMachinePermission ? 1 : 0,
+        unregisteredPermission: formData.unregisteredPermission ? 1 : 0,
+      };
+
+      const result = await updateParkingDevicePermissions(device.id, updateData);
+
+      if (result.success) {
+        setModalMessage('출입 권한 설정이 성공적으로 저장되었습니다.');
+        setSuccessModalOpen(true);
+        // 상위 컴포넌트에 데이터 변경 알림
+        onDataChange();
+      } else {
+        console.error('출입 권한 설정 저장 실패:', result.errorMsg);
+        setModalMessage(`출입 권한 설정 저장에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
+      }
+    } catch (error) {
+      console.error('출입 권한 설정 저장 중 오류:', error);
+      setModalMessage('출입 권한 설정 저장 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (!hasChanges) return;
+    
+    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
+    if (!confirm(confirmMessage)) return;
+    
+    setFormData(originalData);
+  };
+
+  const handleBulkPermission = (permission: boolean) => {
+    const confirmMessage = `모든 차량 유형을 ${permission ? '허용' : '거부'}으로 설정하시겠습니까?`;
+    if (!confirm(confirmMessage)) return;
+
+    setFormData(prev => Object.keys(prev).reduce((acc, key) => {
+      acc[key as keyof PermissionConfigData] = permission;
+      return acc;
+    }, {} as PermissionConfigData));
+  };
+  // #endregion
+
+  return (
+    <div className="space-y-6">
+      {/* 출입 권한 설정 섹션 */}
+      <div className="p-6 rounded-lg border bg-card border-border">
+        {/* 일괄 설정 버튼 */}
+        <div className="flex gap-3 p-4 mb-6 rounded-lg bg-muted/30">
+          <span className="text-sm font-medium text-muted-foreground">일괄 설정:</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleBulkPermission(true)}
+            disabled={isSubmitting}
+          >
+            전체 허용
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleBulkPermission(false)}
+            disabled={isSubmitting}
+          >
+            전체 거부
+          </Button>
+        </div>
+
+        {/* 권한 목록 */}
+        <div className="grid grid-cols-2 gap-3">
+          {Object.entries(PERMISSION_LABELS).map(([key, label]) => {
+            const isAllowed = formData[key as keyof PermissionConfigData];
+            
+            return (
+              <label
+                key={key}
+                className={`flex items-center gap-3 p-3 rounded-md transition-all cursor-pointer hover:neu-inset ${
+                  isAllowed
+                    ? 'neu-inset text-primary bg-primary/10'
+                    : 'neu-flat'
+                } ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isAllowed}
+                  onChange={() => handleTogglePermission(key as keyof PermissionConfigData)}
+                  disabled={isSubmitting}
+                  className="w-4 h-4 rounded border border-border"
+                />
+                <span className="font-medium font-multilang">
+                  {label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+
+        {/* 액션 버튼 */}
+        <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-border">
+          <Button 
+            variant="secondary" 
+            onClick={handleReset}
+            disabled={!hasChanges || isSubmitting}
+            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+          >
+            <RotateCcw size={16} />
+            복구
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSubmit} 
+            disabled={!isValid || isSubmitting}
+            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없습니다' : '설정 저장'}
+          >
+            <Save size={16} />
+            {isSubmitting ? '저장 중...' : '저장'}
+          </Button>
+        </div>
+      </div>
+
+      {/* 성공 모달 */}
+      <Modal
+        isOpen={successModalOpen}
+        onClose={() => setSuccessModalOpen(false)}
+        title="작업 완료"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setSuccessModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onClose={() => setErrorModalOpen(false)}
+        title="오류 발생"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
+            <p className="text-muted-foreground">{modalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+}

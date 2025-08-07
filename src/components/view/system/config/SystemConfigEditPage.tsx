@@ -98,7 +98,7 @@ export default function SystemConfigEditPage() {
         const configFormData: ConfigFormData = {
           key: config.key,
           value: valueStr,
-          type: config.type,
+          type: config.type as 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON',
           description: config.description || '',
           category: config.category || '',
           group: config.group || '',
@@ -119,7 +119,7 @@ export default function SystemConfigEditPage() {
     } finally {
       setLoading(false);
     }
-  }, [configKey, rawConfigKey, router]);
+  }, [configKey, rawConfigKey]);
 
   useEffect(() => {
     loadConfigData();
@@ -316,7 +316,7 @@ export default function SystemConfigEditPage() {
       {/* 헤더 */}
       <PageHeader 
         title="시스템 설정 편집"
-        subtitle={`${configData.key} 설정을 수정합니다`}
+        subtitle={`시스템 설정값을 수정합니다`}
         leftActions={
           <Button
             variant="secondary"

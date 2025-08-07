@@ -1,0 +1,169 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
+import { PaginationQueryDto } from './pagination-query.dto';
+
+/**
+ * ConfigDto
+ *
+ * 설정 정보를 클라이언트에 반환하기 위한 DTO(Data Transfer Object) 클래스입니다.
+ * 설정 조회 결과를 일관된 형식으로 제공하기 위해 사용됩니다.
+ *
+ * 주요 기능:
+ * - 설정 정보 필드를 정의하여 클라이언트 응답의 명확성을 보장.
+ * - Swagger 문서화를 통해 API 응답 구조를 명시적으로 제공.
+ *
+ * @implements Partial<hubConfig> - Prisma 모델의 hubConfig 인터페이스를 기반으로 일부 필드를 구현.
+ *
+ * @author Tes
+ * @version 1.0
+ * @date 2025-07-11
+ *
+ * @changelog
+ * - 2025-06-11: Tes - ConfigDto 초기 버전 작성.
+ */
+export class ConfigDto {
+  @ApiProperty({ description: '설정 ID', example: 1 })
+  @IsOptional()
+  id: number;
+
+  @ApiProperty({ description: '설정 키', example: 'config_key' })
+  @IsOptional()
+  config_key: string;
+
+  @ApiProperty({ description: '설정 값', example: 600 })
+  @IsOptional()
+  config_value: string;
+
+  @ApiProperty({
+    description: '설정 설명',
+    example: '설정 설명',
+  })
+  @IsOptional()
+  description?: string | null;
+
+  @ApiProperty({ description: '설정 타입', example: 'BOOLEAN' })
+  @IsOptional()
+  config_type: string;
+
+  @ApiProperty({ description: '설정 활성화 여부', example: true })
+  @IsOptional()
+  is_active: boolean;
+
+  @ApiProperty({
+    description: '설정 생성일시',
+    example: '2025-01-01T00:00:00.000Z',
+  })
+  @IsOptional()
+  created_at?: Date | string;
+
+  @ApiProperty({
+    description: '설정 수정일시',
+    example: '2025-01-01T00:00:00.000Z',
+  })
+  @IsOptional()
+  updated_at?: Date | string;
+
+  @ApiProperty({
+    description: '카테고리',
+    example: 'security',
+  })
+  @IsOptional()
+  category?: string | null;
+}
+
+export class ConfigSearchDto extends PaginationQueryDto {
+  @ApiProperty({ description: '설정 키', example: 'config_key' })
+  @IsOptional()
+  config_key?: string;
+
+  @ApiProperty({ description: '설정 타입', example: 'BOOLEAN' })
+  @IsOptional()
+  config_type?: string;
+
+  @ApiProperty({ description: '설정 활성화 여부', example: true })
+  @IsOptional()
+  is_active?: boolean;
+
+  @ApiProperty({ description: '설정 설명', example: '설정 설명' })
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({ description: '카테고리', example: 'security' })
+  @IsOptional()
+  category?: string;
+}
+
+/**
+ * UpdateConfigDto
+ *
+ * 설정 정보를 업데이트하기 위한 DTO(Data Transfer Object) 클래스입니다.
+ * 설정 정보를 수정할 때 사용됩니다.
+ *
+ * 주요 기능:
+ * - 수정 가능한 필드(`config_value`, `description`, `config_type`)만 포함.
+ * - 유효성 검사 및 Swagger API 문서화 지원.
+ *
+ * @implements Partial<hubConfig> - Prisma 모델의 hubConfig 인터페이스를 기반으로 일부 필드를 구현.
+ *
+ * @author Tes
+ * @version 1.0
+ * @date 2025-07-11
+ *
+ * @changelog
+ * - 2025-06-11: Tes - UpdateConfigDto 초기 버전 작성.
+ */
+export class UpdateConfigDto {
+  /**
+   * 허용된 수정 가능한 필드 목록
+   * - 이 필드 배열을 사용하여 업데이트 요청에서 허용된 필드만 처리 가능.
+   */
+  static allowedFields = ['config_value'];
+
+  @ApiProperty({ description: '설정값', example: '1234567890' })
+  @IsString()
+  config_value: string;
+}
+
+export class ConfigResponseDto {
+  @ApiProperty({ description: '설정 ID', example: 1 })
+  @IsOptional()
+  id: number;
+
+  @ApiProperty({ description: '설정 키', example: 'config_key' })
+  @IsOptional()
+  config_key?: string;
+
+  @ApiProperty({ description: '설정 값', example: '1234567890' })
+  @IsOptional()
+  config_value?: string;
+
+  @ApiProperty({ description: '설정 설명', example: '설정 설명' })
+  @IsOptional()
+  description?: string | null;
+
+  @ApiProperty({ description: '설정 타입', example: 'BOOLEAN' })
+  @IsOptional()
+  config_type?: string;
+
+  @ApiProperty({ description: '설정 활성화 여부', example: true })
+  @IsOptional()
+  is_active?: boolean;
+
+  @ApiProperty({
+    description: '설정 생성일시',
+    example: '2025-01-01T00:00:00.000Z',
+  })
+  @IsOptional()
+  created_at?: Date;
+
+  @ApiProperty({
+    description: '설정 수정일시',
+    example: '2025-01-01T00:00:00.000Z',
+  })
+  @IsOptional()
+  updated_at?: Date;
+
+  @ApiProperty({ description: '카테고리', example: 'security' })
+  @IsOptional()
+  category?: string | null;
+}

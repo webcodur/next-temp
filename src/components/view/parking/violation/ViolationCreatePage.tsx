@@ -139,7 +139,7 @@ export default function ViolationCreatePage() {
       const createRequest: CreateCarViolationRequest = {
         carNumber: formData.carNumber.trim(),
         violationType: formData.violationType,
-        violationCode: formData.violationType,
+        violationCode: formData.violationCode,
         violationLocation: formData.violationLocation.trim() || undefined,
         violationTime: formData.violationTime.toISOString(),
         description: formData.description.trim() || undefined,

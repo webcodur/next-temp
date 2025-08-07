@@ -17,7 +17,7 @@ import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 
 // API 호출
-import { getAllConfigs } from '@/services/config/config$_GET';
+import { searchConfigs } from '@/services/config/config$_GET';
 
 // 타입 정의
 import { SystemConfig } from '@/types/api';
@@ -81,7 +81,7 @@ export default function ConfigManagement({
     setLoading(true);
     try {
       // API에서 해당 category로 필터링하여 가져오기
-      const result = await getAllConfigs({ category });
+      const result = await searchConfigs({ category });
       
       if (result.success && result.data) {
         setAllConfigs(result.data);
@@ -364,7 +364,7 @@ export default function ConfigManagement({
       />
 
       {/* 고급 검색 */}
-      <div className="bg-background border border-border rounded-lg">
+      <div className="rounded-lg border bg-background border-border">
         {advancedSearchContent}
       </div>
 

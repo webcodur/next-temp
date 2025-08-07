@@ -24,7 +24,6 @@ export type ViolationReporterType =
 
 export type ViolationStatus = 
   | 'ACTIVE'
-  | 'PROCESSED'
   | 'DISMISSED'
   | 'APPEALED'
   | 'CANCELLED';
@@ -75,7 +74,7 @@ export interface SearchCarViolationRequest {
 // #region Response Types
 export interface CarViolation {
   id: number;
-  parkinglotId: number;
+  parkinglotId?: number;
   carId?: number;
   carNumber: string;
   violationType: CarViolationType;
@@ -95,7 +94,24 @@ export interface CarViolation {
   status: ViolationStatus;
   createdAt: string;
   updatedAt: string;
-  isAutoBlacklisted: boolean;
+  isAutoBlacklisted?: boolean;
+  // 관계 정보
+  car?: {
+    id: number;
+    carNumber: string;
+    brand?: string;
+    model?: string;
+  };
+  registeredAdmin?: {
+    id: number;
+    name?: string;
+    account: string;
+  };
+  processorAdmin?: {
+    id: number;
+    name?: string;
+    account: string;
+  };
 }
 
 export interface CarViolationSummary {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAtom } from 'jotai';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
-import { ColorSetDropdown } from '@/components/ui/ui-input/color-set-picker/ColorSetDropdown';
+import { ColorSetSelector } from '@/components/ui/ui-input/color-set-picker/ColorSetSelector';
 import { Settings as SettingsIcon } from 'lucide-react';
 import clsx from 'clsx';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -65,7 +65,7 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">색상 조합</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentColorSetName}</span>
-            <ColorSetDropdown compact className="w-12 h-12" />
+            <ColorSetSelector compact className="w-12 h-12" />
           </div>
 
           {/* 테마 토글 */}

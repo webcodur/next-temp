@@ -49,7 +49,7 @@ export function PrimaryBar() {
 	// #endregion
 
 	// #region 렌더링
-	const topKeys = Object.keys(menuData);
+	const topKeys = Object.keys(menuData).filter(key => key !== '연구소');
 
 	return (
 		<div

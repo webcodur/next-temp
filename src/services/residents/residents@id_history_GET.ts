@@ -26,6 +26,12 @@ interface ResidentHistoryServerResponse {
 
 // #region 변환 함수 (내부 사용)
 function serverToClient(server: ResidentHistoryServerResponse[]) {
+  // 배열이 아닌 경우 빈 배열 반환
+  if (!Array.isArray(server)) {
+    console.warn('거주자 이력 응답이 배열이 아닙니다:', server);
+    return [];
+  }
+  
   return server.map(history => ({
     id: history.id,
     residentId: history.resident_id,
@@ -62,7 +68,8 @@ export async function getResidentHistory(id: number) {
     return { success: false, errorMsg };
   }
   
-  const serverResponse = result as ResidentHistoryServerResponse[];
+  // 응답 데이터가 없거나 null인 경우 빈 배열로 처리
+  const serverResponse = result || [];
   return {
     success: true,
     data: serverToClient(serverResponse),

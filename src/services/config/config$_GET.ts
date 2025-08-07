@@ -8,7 +8,7 @@ interface SystemConfigServerResponse {
   config_key: string;
   config_value: string;
   description?: string | null;
-  config_type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  config_type: string;
   is_active: boolean;
   category?: string | null;
   group?: string | null;
@@ -76,7 +76,7 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
  * @param parkinglotId 주차장 ID (선택사항)
  * @returns 설정값 목록 (SystemConfig[])
  */
-export async function getAllConfigs(params?: SystemConfigSearchRequest, parkinglotId?: string) {
+export async function searchConfigs(params?: SystemConfigSearchRequest, parkinglotId?: string) {
   // 쿼리 파라미터 구성
   const searchParams = new URLSearchParams();
   

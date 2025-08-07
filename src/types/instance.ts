@@ -1,4 +1,6 @@
 // 인스턴스 관리 타입 정의
+import { ResidentInstance } from './resident';
+
 export type InstanceType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
 
 // 기본 인스턴스 정보
@@ -87,7 +89,7 @@ export interface UpdateInstanceVisitConfigRequest {
 
 // 인스턴스 상세 정보 (모든 관련 정보 포함)
 export interface InstanceDetail extends Instance {
-  residentInstance: any[];
+  residentInstance: ResidentInstance[];
   instanceServiceConfig?: InstanceServiceConfig | null;
   instanceVisitConfig?: InstanceVisitConfig | null;
 }

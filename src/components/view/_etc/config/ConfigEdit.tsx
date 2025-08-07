@@ -59,7 +59,9 @@ export default function ConfigEdit({
 }: ConfigEditProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const configKey = searchParams.get('key');
+  const rawConfigKey = searchParams.get('key');
+  // URL 파라미터 디코딩
+  const configKey = rawConfigKey ? decodeURIComponent(rawConfigKey) : null;
   const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
   // #region 페이지 라벨 설정
@@ -88,8 +90,10 @@ export default function ConfigEdit({
 
   // #region 데이터 로드
   const loadConfigData = useCallback(async () => {
-    if (!configKey) {
-      router.push(backRoute);
+    if (!configKey || configKey.trim() === '') {
+      console.error('설정 키가 없습니다:', { rawConfigKey, configKey });
+      setDialogMessage('설정 키가 제공되지 않았습니다.');
+      setErrorDialogOpen(true);
       return;
     }
 
@@ -100,8 +104,9 @@ export default function ConfigEdit({
       if (result.success && result.data) {
         const config = result.data;
         
-        // category 확인
-        if (config.category !== category) {
+        // category 확인 (대소문자 무시)
+        
+        if (config.category?.toUpperCase() !== category?.toUpperCase()) {
           setDialogMessage(categoryErrorMessage);
           setErrorDialogOpen(true);
           return;
@@ -118,7 +123,7 @@ export default function ConfigEdit({
         const configFormData: ConfigFormData = {
           key: config.key,
           value: valueStr,
-          type: config.type,
+          type: config.type as 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON',
           description: config.description || '',
           category: config.category || '',
           group: config.group || '',
@@ -139,7 +144,7 @@ export default function ConfigEdit({
     } finally {
       setLoading(false);
     }
-  }, [configKey, router, backRoute, category, categoryErrorMessage]);
+  }, [configKey, rawConfigKey, category, categoryErrorMessage]);
 
   useEffect(() => {
     loadConfigData();
@@ -336,7 +341,7 @@ export default function ConfigEdit({
       {/* 헤더 */}
       <PageHeader 
         title={title}
-        subtitle={`${configData.key} 설정을 수정합니다`}
+        subtitle={`해당 설정값을 수정합니다`}
         leftActions={
           <Button
             variant="secondary"

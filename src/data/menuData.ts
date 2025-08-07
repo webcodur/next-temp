@@ -1,8 +1,8 @@
 import {
-	FlaskConical,
 	Crown,
 	Globe,
 	SquareParking,
+  FlaskConical,
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
@@ -65,7 +65,7 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	주차: {
+	"건물 및 주차관제": {
 		icon: SquareParking,
 		key: '주차',
 		midItems: {
@@ -84,6 +84,10 @@ export const menuData: MenuData = {
 						key: '주차장 출입관리',
 						href: '/parking/lot-management/entry',
 					},
+          {
+            key: '차단기 관리',
+            href: '/parking/lot-management/device-management',
+          },
 				],
 			},
 			"규정 위반": {
@@ -107,26 +111,67 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			'__입주 관리': {
-				key: '__입주 관리',
+			'입주 관리': {
+				key: '입주 관리',
 				botItems: [
 					{
-						key: '__호실 관리',
-						href: '/parking/household-management/room',
+						key: '호실 관리',
+						href: '/parking/occupancy/instance',
 					},
 					{
-						key: '__입주민 관리',
-						href: '/parking/household-management/resident',
+						key: '입주자 관리',
+						href: '/parking/occupancy/resident',
 					},
           {
-						key: '__차량 관리',
-						href: '/parking/household-management/car',
+						key: '차량 관리',
+						href: '/parking/occupancy/car',
 					},
 				],
 			}
 		},
 	},
-	연구소: {
+	"시스템 관리": {
+		icon: Crown,
+		key: '시스템 관리',
+		midItems: {
+			'IP 차단 관리': {
+				key: 'IP 차단 관리',
+				botItems: [
+					{
+						key: 'IP 차단 실시간 내역',
+						href: '/system/ip-block-management/realtime',
+					},
+					{
+						key: 'IP 차단 전체 히스토리',
+						href: '/system/ip-block-management/history',
+					},
+				],
+			},
+			캐시관리: {
+				key: '캐시관리',
+				botItems: [
+					{
+						key: '캐시통계',
+						href: '/system/cache/stats',
+					},
+					{
+						key: '캐시관리',
+						href: '/system/cache/manage',
+					},
+				],
+			},
+      '시스템 설정': {
+        key: '시스템 설정',
+        botItems: [
+          {
+            key: '시스템 설정',
+            href: '/system/config/settings',
+          },
+        ],
+      },
+		},
+	},
+  연구소: {
 		icon: FlaskConical,
 		key: '연구소',
 		midItems: {
@@ -275,47 +320,6 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-		},
-	},
-	시스템관리: {
-		icon: Crown,
-		key: '시스템관리',
-		midItems: {
-			'IP 차단 관리': {
-				key: 'IP 차단 관리',
-				botItems: [
-					{
-						key: 'IP 차단 실시간 내역',
-						href: '/system/ip-block-management/realtime',
-					},
-					{
-						key: 'IP 차단 전체 히스토리',
-						href: '/system/ip-block-management/history',
-					},
-				],
-			},
-			캐시관리: {
-				key: '캐시관리',
-				botItems: [
-					{
-						key: '캐시통계',
-						href: '/system/cache/stats',
-					},
-					{
-						key: '캐시관리',
-						href: '/system/cache/manage',
-					},
-				],
-			},
-      '시스템 설정': {
-        key: '시스템 설정',
-        botItems: [
-          {
-            key: '시스템 설정',
-            href: '/system/config/settings',
-          },
-        ],
-      },
 		},
 	},
 };

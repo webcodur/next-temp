@@ -10,7 +10,7 @@ interface ProcessCarViolationServerRequest {
 
 interface CarViolationServerResponse {
   id: number;
-  parkinglot_id: number;
+  parkinglot_id?: number;
   car_id?: number;
   car_number: string;
   violation_type: string;
@@ -30,7 +30,23 @@ interface CarViolationServerResponse {
   status: string;
   created_at: string;
   updated_at: string;
-  is_blacklisted: boolean;
+  is_blacklisted?: boolean;
+  car?: {
+    id: number;
+    car_number: string;
+    brand?: string;
+    model?: string;
+  };
+  registered_admin?: {
+    id: number;
+    name?: string;
+    account: string;
+  };
+  processor_admin?: {
+    id: number;
+    name?: string;
+    account: string;
+  };
 }
 // #endregion
 
@@ -66,6 +82,22 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     isAutoBlacklisted: server.is_blacklisted,
+    car: server.car ? {
+      id: server.car.id,
+      carNumber: server.car.car_number,
+      brand: server.car.brand,
+      model: server.car.model,
+    } : undefined,
+    registeredAdmin: server.registered_admin ? {
+      id: server.registered_admin.id,
+      name: server.registered_admin.name,
+      account: server.registered_admin.account,
+    } : undefined,
+    processorAdmin: server.processor_admin ? {
+      id: server.processor_admin.id,
+      name: server.processor_admin.name,
+      account: server.processor_admin.account,
+    } : undefined,
   };
 }
 // #endregion

@@ -62,7 +62,6 @@ const VIOLATION_TYPE_OPTIONS = [
 
 const STATUS_OPTIONS = [
   { value: 'ACTIVE', label: '활성' },
-  { value: 'PROCESSED', label: '처리됨' },
   { value: 'DISMISSED', label: '기각됨' },
   { value: 'APPEALED', label: '이의제기' },
   { value: 'CANCELLED', label: '취소됨' },

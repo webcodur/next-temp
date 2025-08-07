@@ -19,8 +19,6 @@ export interface VehicleFormData {
   year: number | '';
   externalSticker: string;
   fuel: string;
-  inOutStatus: 'IN' | 'OUT' | '';
-  lastParkingDeviceId: number | '';
   frontImageUrl: string;
   rearImageUrl: string;
   sideImageUrl: string;
@@ -57,8 +55,6 @@ export default function VehicleForm({
     year: '',
     externalSticker: '',
     fuel: '',
-    inOutStatus: '',
-    lastParkingDeviceId: '',
     frontImageUrl: '',
     rearImageUrl: '',
     sideImageUrl: '',
@@ -80,8 +76,6 @@ export default function VehicleForm({
         year: data.year || '',
         externalSticker: data.externalSticker || '',
         fuel: data.fuel || '',
-        inOutStatus: data.inOutStatus || '',
-        lastParkingDeviceId: data.lastParkingDeviceId || '',
         frontImageUrl: data.frontImageUrl || '',
         rearImageUrl: data.rearImageUrl || '',
         sideImageUrl: data.sideImageUrl || '',
@@ -139,8 +133,6 @@ export default function VehicleForm({
         year: formData.year ? Number(formData.year) : undefined,
         externalSticker: formData.externalSticker.trim() || undefined,
         fuel: formData.fuel.trim() || undefined,
-        inOutStatus: formData.inOutStatus as 'IN' | 'OUT' | undefined,
-        lastParkingDeviceId: formData.lastParkingDeviceId ? Number(formData.lastParkingDeviceId) : undefined,
         frontImageUrl: formData.frontImageUrl.trim() || undefined,
         rearImageUrl: formData.rearImageUrl.trim() || undefined,
         sideImageUrl: formData.sideImageUrl.trim() || undefined,
@@ -149,7 +141,6 @@ export default function VehicleForm({
       onSubmit(submitData);
     } else {
       const submitData: UpdateCarRequest = {
-        carNumber: formData.carNumber.trim(),
         brand: formData.brand.trim() || undefined,
         model: formData.model.trim() || undefined,
         type: formData.type.trim() || undefined,
@@ -157,8 +148,6 @@ export default function VehicleForm({
         year: formData.year ? Number(formData.year) : undefined,
         externalSticker: formData.externalSticker.trim() || undefined,
         fuel: formData.fuel.trim() || undefined,
-        inOutStatus: formData.inOutStatus as 'IN' | 'OUT' | undefined,
-        lastParkingDeviceId: formData.lastParkingDeviceId ? Number(formData.lastParkingDeviceId) : undefined,
         frontImageUrl: formData.frontImageUrl.trim() || undefined,
         rearImageUrl: formData.rearImageUrl.trim() || undefined,
         sideImageUrl: formData.sideImageUrl.trim() || undefined,
@@ -208,11 +197,7 @@ export default function VehicleForm({
     { value: '기타', label: '기타' }
   ], []);
 
-  const statusOptions = useMemo(() => [
-    { value: '', label: '선택하세요' },
-    { value: 'IN', label: '입차' },
-    { value: 'OUT', label: '출차' }
-  ], []);
+
   // #endregion
 
   // #region 읽기 전용 여부
@@ -315,18 +300,7 @@ export default function VehicleForm({
         />
       )
     },
-    ...(mode === 'view' ? [{
-      label: '입출차 상태',
-      content: (
-        <SimpleDropdown
-          options={statusOptions}
-          value={formData.inOutStatus}
-          onChange={(value) => handleInputChange('inOutStatus', value)}
-          disabled={true}
-          placeholder="상태"
-        />
-      )
-    }] : []),
+
     {
       label: '정면 이미지 URL',
       content: (
@@ -373,15 +347,6 @@ export default function VehicleForm({
     },
     ...(mode === 'view' && data ? [
       {
-        label: '총 이용 횟수',
-        content: (
-          <SimpleTextInput
-            value={data.totalUseNumber?.toString() || '0'}
-            disabled={true}
-          />
-        )
-      },
-      {
         label: '등록일',
         content: (
           <SimpleTextInput
@@ -400,7 +365,7 @@ export default function VehicleForm({
         )
       }
     ] : [])
-  ], [formData, isReadOnly, mode, data, brandOptions, vehicleTypeOptions, fuelOptions, statusOptions, handleInputChange]);
+  ], [formData, isReadOnly, mode, data, brandOptions, vehicleTypeOptions, fuelOptions, handleInputChange]);
   // #endregion
 
   return (

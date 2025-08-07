@@ -134,8 +134,11 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface CarListResponse extends PaginatedResponse<CarWithInstance> {}
-export interface CarInstanceListResponse extends PaginatedResponse<CarInstanceResidentDetail> {}
+// ... existing code ...
+export type CarListResponse = PaginatedResponse<CarWithInstance>;
+export type CarInstanceListResponse = PaginatedResponse<CarInstanceResidentDetail>;
+// ... existing code ...
+
 // #endregion
 
 // #region 보조 타입 정의 (다른 도메인 타입)
