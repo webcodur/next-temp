@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RotateCcw, Send, Trash2 } from 'lucide-react';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { ParkingDevice } from '@/types/device';
+import { validateIP, validatePort } from '@/utils/ipValidation';
 
 export interface DeviceFormData {
   name: string;
@@ -73,6 +74,34 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       [field]: value,
     });
   };
+
+  // 유효성 검사 메시지
+  const validationMessages = useMemo(() => {
+    const messages: Record<string, string> = {};
+    
+    if (data.ip.trim()) {
+      const ipValidation = validateIP(data.ip);
+      if (!ipValidation.isValid) {
+        messages.ip = ipValidation.message || '올바른 IP 주소를 입력해주세요.';
+      }
+    }
+
+    if (data.port.trim()) {
+      const portValidation = validatePort(data.port);
+      if (!portValidation.isValid) {
+        messages.port = portValidation.message || '올바른 포트 번호를 입력해주세요.';
+      }
+    }
+
+    if (data.serverPort.trim()) {
+      const serverPortValidation = validatePort(data.serverPort);
+      if (!serverPortValidation.isValid) {
+        messages.serverPort = serverPortValidation.message || '올바른 서버 포트 번호를 입력해주세요.';
+      }
+    }
+
+    return messages;
+  }, [data.ip, data.port, data.serverPort]);
 
   // 액션 버튼들 정의
   const topRightActions = showActions && onDelete ? (
@@ -152,6 +181,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               type: 'free',
               mode: mode
             }}
+            errorMessage={validationMessages.ip}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -170,6 +200,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               type: 'free',
               mode: mode
             }}
+            errorMessage={validationMessages.port}
           />
         </GridForm.Content>
       </GridForm.Row>
@@ -188,6 +219,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               type: 'free',
               mode: mode
             }}
+            errorMessage={validationMessages.serverPort}
           />
         </GridForm.Content>
       </GridForm.Row>

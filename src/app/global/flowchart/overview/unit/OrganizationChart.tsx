@@ -8,7 +8,7 @@
 interface ChartNode {
   id: string;
   label: string;
-  type: 'building' | 'room' | 'person' | 'vehicle';
+  type: 'building' | 'parking' | 'room' | 'person' | 'vehicle' | 'facility';
   x: number;
   y: number;
   description: string;
@@ -27,27 +27,45 @@ const NODES: ChartNode[] = [
     id: 'building',
     label: '건물',
     type: 'building',
-    x: 200,
+    x: 220,
     y: 50,
     description: '아파트 건물 전체를 관리하는 최상위 단위'
   },
   
-  // 호실 (2단계)
+  // 2단계: 주차장, 호실, 공용시설 (같은 위계)
+  {
+    id: 'parking',
+    label: '주차장',
+    type: 'parking',
+    x: 120,
+    y: 150,
+    description: '건물 내 주차 공간 관리 단위'
+  },
+  
   {
     id: 'room',
     label: '호실',
     type: 'room',
-    x: 200,
+    x: 220,
     y: 150,
     description: '각 세대별 주거 공간 단위'
   },
   
-  // 개인과 차량 (3단계)
+  {
+    id: 'facility',
+    label: '공용시설',
+    type: 'facility',
+    x: 320,
+    y: 150,
+    description: '커뮤니티 시설 및 공용 공간 관리 단위'
+  },
+  
+  // 3단계: 개인과 차량 (호실 하위)
   {
     id: 'person',
     label: '개인',
     type: 'person',
-    x: 150,
+    x: 170,
     y: 250,
     description: '실제 거주하는 입주민'
   },
@@ -56,7 +74,7 @@ const NODES: ChartNode[] = [
     id: 'vehicle',
     label: '차량',
     type: 'vehicle',
-    x: 250,
+    x: 270,
     y: 250,
     description: '입주민이 소유한 차량'
   }
@@ -64,8 +82,12 @@ const NODES: ChartNode[] = [
 
 // 연결선 정의
 const CONNECTIONS = [
-  // 실선 연결 (상하 계층)
+  // 건물에서 2단계 요소들로 (같은 위계)
+  { from: 'building', to: 'parking', type: 'solid' },
   { from: 'building', to: 'room', type: 'solid' },
+  { from: 'building', to: 'facility', type: 'solid' },
+  
+  // 호실에서만 개인과 차량으로 연결
   { from: 'room', to: 'person', type: 'solid' },
   { from: 'room', to: 'vehicle', type: 'solid' },
   
@@ -78,9 +100,11 @@ const CONNECTIONS = [
 const getNodeColor = (type: ChartNode['type']) => {
   const baseColors = {
     building: "hsl(var(--serial-4))",
+    parking: "hsl(var(--serial-1))",
+    facility: "hsl(var(--serial-2))",
     room: "hsl(var(--serial-5))",
     person: "hsl(var(--serial-6))",
-    vehicle: "hsl(var(--serial-6))",
+    vehicle: "hsl(var(--serial-3))",
   };
   
   return baseColors[type];
@@ -98,7 +122,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
       <h3 className="mb-4 text-lg font-semibold">조직도 및 통합 다이어그램</h3>
       
       <div className="flex justify-center">
-        <svg width="400" height="350" className="rounded-lg border shadow-sm border-border bg-background">
+        <svg width="450" height="380" className="rounded-lg border shadow-sm border-border bg-background">
           {/* 배경 그리드 */}
           <defs>
             <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">

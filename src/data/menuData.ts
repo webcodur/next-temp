@@ -1,17 +1,17 @@
 import {
 	Crown,
-	Globe,
-	SquareParking,
+	Presentation,
   FlaskConical,
+  SquareParking
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
-	'__종합 정보': {
-		icon: Globe,
-		key: '__종합 정보',
+	'종합 정보': {
+		icon: Presentation,
+		key: '종합 정보',
 		midItems: {
 			'__허브 정보': {
 				key: '__허브 정보',
@@ -63,6 +63,15 @@ export const menuData: MenuData = {
 					},
 				],
 			},
+      '운영 정보': {
+				key: '운영 정보',
+				botItems: [
+					{
+						key: '근무자 관리',
+						href: '/global/operation/admin',
+					},
+				],
+			},
 		},
 	},
 	"건물 및 주차관제": {
@@ -75,10 +84,6 @@ export const menuData: MenuData = {
 					{
 						key: '주차장 정보',
 						href: '/parking/lot-management/info',
-					},
-					{
-						key: '근무자 관리',
-						href: '/parking/lot-management/admin',
 					},
 					{
 						key: '주차장 출입관리',

@@ -15,7 +15,7 @@ import { DetailPanel } from './unit/DetailPanel';
 interface ChartNode {
   id: string;
   label: string;
-  type: 'building' | 'room' | 'person' | 'vehicle';
+  type: 'building' | 'parking' | 'room' | 'person' | 'vehicle' | 'facility';
   x: number;
   y: number;
   description: string;

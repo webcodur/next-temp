@@ -9,6 +9,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateParkingDeviceNetwork } from '@/services/devices/devices@id_network_PUT';
 import { ParkingDevice } from '@/types/device';
+import { validateIP, validatePort } from '@/utils/ipValidation';
 
 interface NetworkConfigData {
   ip: string;
@@ -54,7 +55,34 @@ export default function DeviceNetworkConfigSection({
   }, [formData, originalData]);
 
   const isValid = useMemo(() => {
-    return hasChanges && formData.ip.trim() && formData.port.trim();
+    if (!hasChanges) return false;
+    
+    // 기본 필수 필드 체크
+    if (!formData.ip.trim() || !formData.port.trim()) {
+      return false;
+    }
+
+    // IP 주소 유효성 검사
+    const ipValidation = validateIP(formData.ip);
+    if (!ipValidation.isValid) {
+      return false;
+    }
+
+    // 포트 번호 유효성 검사
+    const portValidation = validatePort(formData.port);
+    if (!portValidation.isValid) {
+      return false;
+    }
+
+    // 서버 포트가 있는 경우 유효성 검사
+    if (formData.serverPort.trim()) {
+      const serverPortValidation = validatePort(formData.serverPort);
+      if (!serverPortValidation.isValid) {
+        return false;
+      }
+    }
+
+    return true;
   }, [formData, hasChanges]);
   // #endregion
 
@@ -65,6 +93,34 @@ export default function DeviceNetworkConfigSection({
       [field]: value,
     }));
   };
+
+  // 유효성 검사 메시지
+  const validationMessages = useMemo(() => {
+    const messages: Record<string, string> = {};
+    
+    if (formData.ip.trim()) {
+      const ipValidation = validateIP(formData.ip);
+      if (!ipValidation.isValid) {
+        messages.ip = ipValidation.message || '올바른 IP 주소를 입력해주세요.';
+      }
+    }
+
+    if (formData.port.trim()) {
+      const portValidation = validatePort(formData.port);
+      if (!portValidation.isValid) {
+        messages.port = portValidation.message || '올바른 포트 번호를 입력해주세요.';
+      }
+    }
+
+    if (formData.serverPort.trim()) {
+      const serverPortValidation = validatePort(formData.serverPort);
+      if (!serverPortValidation.isValid) {
+        messages.serverPort = serverPortValidation.message || '올바른 서버 포트 번호를 입력해주세요.';
+      }
+    }
+
+    return messages;
+  }, [formData.ip, formData.port, formData.serverPort]);
 
   const handleSubmit = async () => {
     if (!isValid || isSubmitting) return;
@@ -128,6 +184,7 @@ export default function DeviceNetworkConfigSection({
                   type: 'free',
                   mode: 'edit'
                 }}
+                errorMessage={validationMessages.ip}
               />
             </GridForm.Content>
           </GridForm.Row>
@@ -146,6 +203,7 @@ export default function DeviceNetworkConfigSection({
                   type: 'free',
                   mode: 'edit'
                 }}
+                errorMessage={validationMessages.port}
               />
             </GridForm.Content>
           </GridForm.Row>
@@ -164,6 +222,7 @@ export default function DeviceNetworkConfigSection({
                   type: 'free',
                   mode: 'edit'
                 }}
+                errorMessage={validationMessages.serverPort}
               />
             </GridForm.Content>
           </GridForm.Row>

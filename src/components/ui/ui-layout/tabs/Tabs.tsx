@@ -176,9 +176,9 @@ const Tabs = React.forwardRef<
 
 				{/* 서브탭이 없는 경우 - 기존 레이아웃 */}
 				{!hasSubTabs && (activeTab?.title || activeTab?.subtitle || endContent) && (
-					<div className="flex justify-between items-center px-4 py-3 border-s-2 border-e-2 border-border bg-background">
+					<div className="flex justify-between items-center px-4 pt-6 border-s-2 border-e-2 border-border bg-background">
 						{/* Start 영역 - 제목 & 부제목 */}
-						<div className="flex gap-4 items-center p-4">
+						<div className="flex gap-4 items-center px-4">
 							{activeTab?.title && (
 								<h3 className="text-lg font-semibold text-foreground">
 									{activeTab.title}

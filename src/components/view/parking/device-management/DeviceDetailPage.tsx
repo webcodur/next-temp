@@ -19,6 +19,7 @@ import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
 import { ParkingDevice } from '@/types/device';
+import { validateIP, validatePort } from '@/utils/ipValidation';
 
 export default function DeviceDetailPage() {  
   const router = useRouter();
@@ -179,14 +180,37 @@ export default function DeviceDetailPage() {
   const isValid = useMemo(() => {
     if (!hasChanges) return false;
     
-    return Boolean(
-      formData.name.trim() && 
-      formData.ip.trim() && 
-      formData.port.trim() && 
-      formData.cctvUrl.trim() &&
-      formData.status &&
-      formData.deviceType
-    );
+    // 기본 필수 필드 체크
+    if (!formData.name.trim() || 
+        !formData.ip.trim() || 
+        !formData.port.trim() || 
+        !formData.cctvUrl.trim() ||
+        !formData.status ||
+        !formData.deviceType) {
+      return false;
+    }
+
+    // IP 주소 유효성 검사
+    const ipValidation = validateIP(formData.ip);
+    if (!ipValidation.isValid) {
+      return false;
+    }
+
+    // 포트 번호 유효성 검사
+    const portValidation = validatePort(formData.port);
+    if (!portValidation.isValid) {
+      return false;
+    }
+
+    // 서버 포트가 있는 경우 유효성 검사
+    if (formData.serverPort.trim()) {
+      const serverPortValidation = validatePort(formData.serverPort);
+      if (!serverPortValidation.isValid) {
+        return false;
+      }
+    }
+
+    return true;
   }, [formData, hasChanges]);
   // #endregion
 

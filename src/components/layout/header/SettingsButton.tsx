@@ -55,7 +55,9 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">표시 언어</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentLanguageName}</span>
-            <LanguageSwitcher variant="inline" hideChevron noBorder className="w-12 h-12 neu-flat text-primary" />
+            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+              <LanguageSwitcher variant="inline" hideChevron noBorder className="text-primary" />
+            </div>
           </div>
 
           {/* 색상 테마 */}
@@ -65,7 +67,9 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">색상 조합</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentColorSetName}</span>
-            <ColorSetSelector compact className="w-12 h-12" />
+            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+              <ColorSetSelector compact />
+            </div>
           </div>
 
           {/* 테마 토글 */}
@@ -75,7 +79,9 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
               <span className="text-xs text-muted-foreground font-multilang">화면 모드</span>
             </div>
             <span className="text-sm text-center text-foreground font-multilang">{currentThemeName}</span>
-            <ThemeToggle className="flex justify-center items-center w-12 h-12 neu-flat" />
+            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </Modal>

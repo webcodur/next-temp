@@ -5,9 +5,11 @@ import { cn } from '@/lib/utils';
 
 // #region Context 정의
 interface GridFormContextValue {
+	sequenceWidth: string;
 	labelWidth: string;
 	gap: string;
 	colorVariant: 'primary' | 'secondary';
+	totalCount: number;
 }
 
 const GridFormContext = createContext<GridFormContextValue | null>(null);
@@ -16,6 +18,7 @@ const GridFormContext = createContext<GridFormContextValue | null>(null);
 
 // #region 타입 정의
 export interface GridFormProps {
+	sequenceWidth?: string;
 	labelWidth?: string;  // 옵션 프롭 (필수 아님)
 	gap?: string;
 	colorVariant?: 'primary' | 'secondary';
@@ -29,6 +32,12 @@ export interface GridFormRowProps {
 	align?: 'start' | 'center' | 'end';
 	className?: string;
 	children: React.ReactNode;
+}
+
+export interface GridFormSequenceProps {
+	sequence: number;
+	total: number;
+	className?: string;
 }
 
 export interface GridFormLabelProps {
@@ -57,6 +66,7 @@ const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
+	sequenceWidth = '60px',
 	labelWidth = '300px',  // 기본값 설정
 	gap = '20px',
 	colorVariant = 'primary',
@@ -64,10 +74,37 @@ const GridForm = React.forwardRef<
 	children,
 	topRightActions,
 	bottomRightActions,
+
 	...props
 }, ref) => {
+	// GridFormRow 타입의 자식만 필터링해서 개수 계산
+	const gridRows = React.Children.toArray(children).filter(
+		(child) => React.isValidElement(child) && child.type === GridFormRow
+	);
+	const totalCount = gridRows.length;
+	
+	// 순번을 자동으로 매핑
+	let rowCounter = 0;
+	const childrenWithSequence = React.Children.map(children, (child) => {
+		if (React.isValidElement(child) && child.type === GridFormRow) {
+			rowCounter++;
+			return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
+				'data-sequence': rowCounter
+			});
+		}
+		return child;
+	});
+	
+	const gridTemplateColumns = `${sequenceWidth} ${labelWidth} 1fr`;
+
 	return (
-		<GridFormContext.Provider value={{ labelWidth, gap, colorVariant }}>
+		<GridFormContext.Provider value={{ 
+			sequenceWidth, 
+			labelWidth, 
+			gap, 
+			colorVariant, 
+			totalCount 
+		}}>
 			<div className="w-full">
 				{/* 우상단 액션 버튼 - GridForm 위에 순차적 배치 */}
 				{topRightActions && (
@@ -85,12 +122,12 @@ const GridForm = React.forwardRef<
 						className
 					)}
 					style={{
-						gridTemplateColumns: `${labelWidth} 1fr`,
+						gridTemplateColumns,
 						gap: 0, // gap을 0으로 설정하여 테두리가 겹치도록 함
 					} as React.CSSProperties}
 					{...props}
 				>
-					{children}
+					{childrenWithSequence}
 				</div>
 
 				{/* 우하단 액션 버튼 - GridForm 아래에 순차적 배치 */}
@@ -108,10 +145,17 @@ GridForm.displayName = 'GridForm';
 // #endregion
 
 // #region GridForm.Row 컴포넌트
-const GridFormRow: React.FC<GridFormRowProps> = ({
+const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivElement>> = ({
 	align = 'center',
 	children,
+	...props
 }) => {
+	const context = React.useContext(GridFormContext);
+	const totalCount = context?.totalCount || 0;
+	
+	// data-sequence 속성에서 순번을 가져옴
+	const sequence = (props as Record<string, unknown>)['data-sequence'] as number;
+	
 	const alignClasses = {
 		start: 'self-start',
 		center: 'self-center',
@@ -156,6 +200,17 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 
 	return (
 		<>
+			{sequence && (
+				<GridFormSequence
+					sequence={sequence}
+					total={totalCount}
+					className={cn(
+						'border-r border-b bg-muted/20 border-border/40',
+						'last:border-b-0',
+						alignClasses[align]
+					)}
+				/>
+			)}
 			{labelElement}
 			{contentElement}
 		</>
@@ -163,6 +218,36 @@ const GridFormRow: React.FC<GridFormRowProps> = ({
 };
 
 GridFormRow.displayName = 'GridFormRow';
+// #endregion
+
+// #region GridForm.Sequence 컴포넌트
+const GridFormSequence = React.forwardRef<
+	HTMLDivElement,
+	GridFormSequenceProps & React.HTMLAttributes<HTMLDivElement>
+>(({
+	sequence,
+	total,
+	className,
+	...props
+}, ref) => {
+	return (
+		<div
+			ref={ref}
+			className={cn(
+				'flex justify-center items-center px-2 py-2',
+				'border-r bg-muted/20 border-border/40',
+				'text-sm font-medium text-muted-foreground',
+				'min-h-full',
+				className
+			)}
+			{...props}
+		>
+			{sequence}/{total}
+		</div>
+	);
+});
+
+GridFormSequence.displayName = 'GridFormSequence';
 // #endregion
 
 // #region GridForm.Label 컴포넌트
@@ -281,6 +366,7 @@ GridFormFeedback.displayName = 'GridFormFeedback';
 // #region Compound Components 구성
 const CompoundGridForm = Object.assign(GridForm, {
 	Row: GridFormRow,
+	Sequence: GridFormSequence,
 	Label: GridFormLabel,
 	Content: GridFormContent,
 	Feedback: GridFormFeedback,

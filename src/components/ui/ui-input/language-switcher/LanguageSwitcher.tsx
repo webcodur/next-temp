@@ -85,7 +85,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 			<button
 				onClick={() => setIsOpen(!isOpen)}
 				className={`
-					flex items-center justify-center neu-flat hover:neu-raised
 					${styles.trigger}
 				`}
 			>
@@ -95,7 +94,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 						alt={currentMeta.name}
 						width={24}
 						height={24}
-						className="w-full h-full rounded-full object-cover"
+						className="object-cover w-full h-full rounded-full"
 					/>
 				</div>
 				{!hideChevron && (
@@ -125,7 +124,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 									className={`w-full p-2 ${styles.itemHover} transition-colors flex items-center justify-center`}
 								>
 									<div className="relative w-8 h-8">
-										<Image src={meta.flag} alt={meta.name} width={32} height={32} className="w-full h-full rounded-full object-cover" />
+										<Image src={meta.flag} alt={meta.name} width={32} height={32} className="object-cover w-full h-full rounded-full" />
 									</div>
 								</button>
 							);

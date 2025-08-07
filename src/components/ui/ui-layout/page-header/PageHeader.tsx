@@ -41,7 +41,7 @@ export default function PageHeader({
 	// #region 렌더링
 	return (
 		<div
-			className={cn('flex relative items-start mt-10 mb-5', className)}
+			className={cn('flex relative items-start', className)}
 			{...props}
 		>
 			{/* 좌측 영역 - 서브타이틀 라인에 정렬 */}

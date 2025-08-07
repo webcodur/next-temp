@@ -49,6 +49,79 @@ const DETAIL_CONTENTS: Record<string, DetailContent> = {
     ]
   },
   
+  parking: {
+    title: '주차장 관리',
+    description: '건물 내 주차 공간과 차량 출입을 관리하는 단위입니다.',
+    functions: [
+      {
+        name: '주차 공간 관리',
+        description: '주차 구역과 주차 공간을 관리합니다.',
+        pages: [
+          {
+            type: 'list',
+            name: '주차구역 목록 페이지',
+            features: ['주차구역 조회', '공간 할당 현황', '이용률 통계']
+          },
+          {
+            type: 'detail',
+            name: '주차구역 상세 페이지',
+            features: ['구역별 상세 정보', '실시간 주차 현황', '구역 설정 변경']
+          }
+        ]
+      },
+      {
+        name: '차량 출입 관리',
+        description: '차량의 주차장 출입을 관리하고 모니터링합니다.',
+        pages: [
+          {
+            type: 'list',
+            name: '출입 이력 페이지',
+            features: ['차량 출입 기록', '위반 차량 감지', '출입 통계']
+          }
+        ]
+      }
+    ]
+  },
+  
+  facility: {
+    title: '공용시설 관리',
+    description: '커뮤니티 시설 및 공용 공간의 예약과 이용을 관리하는 단위입니다.',
+    functions: [
+      {
+        name: '시설 정보 관리',
+        description: '공용시설의 기본 정보와 이용 규칙을 관리합니다.',
+        pages: [
+          {
+            type: 'list',
+            name: '시설 목록 페이지',
+            features: ['시설 목록 조회', '시설 검색', '이용 현황']
+          },
+          {
+            type: 'detail',
+            name: '시설 상세 페이지',
+            features: ['시설 상세 정보', '시설 정보 수정', '이용 규칙 설정']
+          }
+        ]
+      },
+      {
+        name: '예약 관리',
+        description: '공용시설의 예약과 이용 일정을 관리합니다.',
+        pages: [
+          {
+            type: 'list',
+            name: '예약 현황 페이지',
+            features: ['예약 목록 조회', '예약 승인/거부', '예약 통계']
+          },
+          {
+            type: 'create',
+            name: '예약 등록 페이지',
+            features: ['새 예약 등록', '예약 정보 입력', '이용 약관 동의']
+          }
+        ]
+      }
+    ]
+  },
+  
   room: {
     title: '호실 관리',
     description: '각 세대별 주거 공간의 정보와 상태를 관리하는 단위입니다.',
