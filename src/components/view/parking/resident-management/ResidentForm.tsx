@@ -150,10 +150,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         </GridForm.Label>
         <GridForm.Content>
           <SimpleTextInput
-            type="date"
+            type="text"
             value={data.birthDate}
             onChange={(value) => handleFieldChange('birthDate', value)}
-            placeholder="생년월일을 입력해주세요"
+            placeholder="YYYY-MM-DD 형식으로 입력해주세요"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',

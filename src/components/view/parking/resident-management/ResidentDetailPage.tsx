@@ -10,8 +10,8 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import ResidentForm, { ResidentFormData } from './ResidentForm';
-import ResidentInstanceSection from './ResidentInstanceSection';
-import ResidentHistorySection from './ResidentHistorySection';
+import ResidentInstanceSection from '@/components/view/parking/resident-management/ResidentInstanceSection';
+import ResidentHistorySection from '@/components/view/parking/resident-management/ResidentHistorySection';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
 import { updateResident } from '@/services/residents/residents@id_PATCH';
 import { ResidentDetail } from '@/types/resident';
@@ -88,12 +88,12 @@ export default function ResidentDetailPage() {
       if (result.success && result.data) {
         setResident(result.data);
         
-        const initialData = {
+        const initialData: ResidentFormData = {
           name: result.data.name,
           phone: result.data.phone || '',
           email: result.data.email || '',
           birthDate: result.data.birthDate || '',
-          gender: result.data.gender || '',
+          gender: (result.data.gender as 'M' | 'F') || '',
           emergencyContact: result.data.emergencyContact || '',
           memo: result.data.memo || '',
         };

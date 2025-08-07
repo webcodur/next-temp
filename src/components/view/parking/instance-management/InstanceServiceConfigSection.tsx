@@ -121,9 +121,6 @@ export default function InstanceServiceConfigSection({
       <div className="p-6 rounded-lg border bg-card border-border">
         <div className="flex gap-2 items-center mb-4">
           <Settings size={20} />
-          <h2 className="text-lg font-semibold text-foreground">
-            서비스 설정
-          </h2>
         </div>
 
         <GridForm labelWidth="180px" gap="20px">

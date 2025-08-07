@@ -18,7 +18,7 @@ export default function DeviceCommandLogSection({
   // #region 상태 관리
   const [commandLogs, setCommandLogs] = useState<ParkingDeviceCommandLog[]>([]);
   const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
+  // const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   // #endregion
@@ -34,17 +34,17 @@ export default function DeviceCommandLogSection({
       
       if (result.success && result.data) {
         setCommandLogs(Array.isArray(result.data.data) ? result.data.data : []);
-        setTotalCount(result.data.total || 0);
+        // setTotalCount(result.data.total || 0);
         setCurrentPage(result.data.page || 1);
       } else {
         console.error('명령 로그 조회 실패:', result.errorMsg);
         setCommandLogs([]);
-        setTotalCount(0);
+        // setTotalCount(0);
       }
     } catch (error) {
       console.error('명령 로그 조회 중 오류:', error);
       setCommandLogs([]);
-      setTotalCount(0);
+      // setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -203,17 +203,15 @@ export default function DeviceCommandLogSection({
 
         {/* 테이블 */}
         <PaginatedTable
-          data={commandLogs}
-          columns={columns}
+          data={commandLogs as unknown as Record<string, unknown>[]}
+          columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
           pageSize={pageSize}
           pageSizeOptions={[5, 10, 20, 50]}
           itemName="로그"
-          loading={loading}
-          totalCount={totalCount}
+          isFetching={loading}
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          showRowNumbers={false}
         />
       </div>
     </div>

@@ -118,9 +118,6 @@ export default function InstanceVisitConfigSection({
       <div className="p-6 rounded-lg border bg-card border-border">
         <div className="flex gap-2 items-center mb-4">
           <Users size={20} />
-          <h2 className="text-lg font-semibold text-foreground">
-            방문 설정
-          </h2>
         </div>
 
         <GridForm labelWidth="180px" gap="20px">
@@ -183,8 +180,8 @@ export default function InstanceVisitConfigSection({
         </GridForm>
 
         {/* 방문 시간 통계 정보 */}
-        <div className="mt-6 p-4 bg-muted rounded-lg">
-          <h4 className="text-sm font-medium text-foreground mb-2">방문 시간 현황</h4>
+        <div className="p-4 mt-6 rounded-lg bg-muted">
+          <h4 className="mb-2 text-sm font-medium text-foreground">방문 시간 현황</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-muted-foreground">총 방문 시간:</span>
@@ -236,7 +233,7 @@ export default function InstanceVisitConfigSection({
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -257,7 +254,7 @@ export default function InstanceVisitConfigSection({
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           

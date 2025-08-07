@@ -274,7 +274,7 @@ export default function CarInstanceSection({
     <div className="space-y-6">
       {/* 호실 연결 현황 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        <div className="flex gap-2 items-center justify-between mb-4">
+        <div className="flex gap-2 justify-between items-center mb-4">
           <div className="flex gap-2 items-center">
             <Home size={20} />
             <h2 className="text-lg font-semibold text-foreground">
@@ -299,7 +299,7 @@ export default function CarInstanceSection({
           pageSize={5}
           pageSizeOptions={[5, 10, 20]}
           itemName="호실 연결"
-          loading={loading}
+          isFetching={loading}
         />
       </div>
 
@@ -480,7 +480,7 @@ export default function CarInstanceSection({
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -501,7 +501,7 @@ export default function CarInstanceSection({
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           

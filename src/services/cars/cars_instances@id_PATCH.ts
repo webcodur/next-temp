@@ -1,6 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateCarInstanceRequest, CarInstance } from '@/types/car';
+import { UpdateCarInstanceRequest, CarInstance, Car } from '@/types/car';
 
 // Instance 타입 정의
 interface Instance {
@@ -34,7 +34,7 @@ function serverToClient(server: CarInstanceServerResponse): CarInstance {
     carShareOnoff: server.car_share_onoff,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
-    car: server.car as Record<string, unknown>,
+    car: server.car as Car | undefined,
     instance: server.instance as Instance | undefined,
   };
 }

@@ -370,7 +370,6 @@ export default function DevicesListPage() {
         <div className="flex gap-1 justify-center">
           <Button
             variant="destructive"
-            size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.id);

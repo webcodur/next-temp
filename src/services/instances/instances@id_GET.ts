@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { InstanceDetail, InstanceServiceConfig, InstanceVisitConfig, InstanceType } from '@/types/instance';
+import { ResidentInstance } from '@/types/resident';
 
 // #region 서버 타입 정의 (내부 사용)
 interface InstanceServiceConfigServerResponse {
@@ -79,7 +80,7 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
     memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
-    residentInstance: server.resident_instance,
+    residentInstance: server.resident_instance as ResidentInstance[],
     instanceServiceConfig: server.instance_service_config 
       ? serviceConfigServerToClient(server.instance_service_config)
       : null,
