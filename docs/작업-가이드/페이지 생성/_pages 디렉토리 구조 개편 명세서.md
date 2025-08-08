@@ -3,7 +3,7 @@
 ## 개편 배경
 
 ### 현재 문제점
-- **3단 메뉴 구조를 파일 시스템에서도 그대로 재현**: `parking/lot-management/info` 같은 깊은 중첩
+- **3단 메뉴 구조를 파일 시스템에서도 그대로 재현**: `parking/lot/info` 같은 깊은 중첩
 - **URL 변경 시 연쇄 수정**: 메뉴 URL이 바뀌면 파일 경로도 함께 변경해야 함
 - **관리 복잡성**: 비슷한 기능의 페이지들이 여러 곳에 흩어져 있음
 - **검색의 어려움**: 깊은 디렉토리 구조로 인한 파일 찾기 어려움
@@ -89,20 +89,20 @@ const migrationMapping = {
   'global/operation/admin/*' → '_pages/operation/',
 
   // 주차 (parking)
-  'parking/lot-management/*' → '_pages/parking/',
-  'parking/device-management/*' → '_pages/parking/',
+  'parking/lot/*' → '_pages/parking/',
+  'parking/device/*' → '_pages/parking/',
 
   // 규정 위반 (violation)
   'parking/violation/*' → '_pages/violation/',
 
   // 입주 (occupancy)
   'parking/occupancy/*' → '_pages/occupancy/',
-  'parking/car-management/*' → '_pages/occupancy/',
-  'parking/instance-management/*' → '_pages/occupancy/',
-  'parking/resident-management/*' → '_pages/occupancy/',
+  'parking/car/*' → '_pages/occupancy/',
+  'parking/instance/*' → '_pages/occupancy/',
+  'parking/resident/*' → '_pages/occupancy/',
 
   // IP 차단 (ip-block)
-  'system/ip-block-management/*' → '_pages/ip-block/',
+  'system/ip-block/*' → '_pages/ip-block/',
   'system/ip/*' → '_pages/ip-block/',
 
   // 캐시 (cache)

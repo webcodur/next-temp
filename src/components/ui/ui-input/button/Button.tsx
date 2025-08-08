@@ -65,7 +65,7 @@ const buttonVariants = cva(
 				destructive: 'neu-raised bg-destructive text-destructive-foreground hover:scale-[1.02] hover:bg-destructive/90 active:neu-inset active:scale-100',
 				
 				// 아웃라인: 테두리만, 호버 시 배경 추가
-				outline: 'neu-flat border border-border bg-background text-foreground hover:bg-muted/50 hover:border-muted-foreground/20 active:bg-muted/80 active:scale-[0.98]',
+				outline: 'neu-raised border border-border bg-background text-foreground hover:bg-muted/50 hover:border-muted-foreground/20 active:bg-muted/80 active:scale-[0.98]',
 				
 				// 고스트: 최소 스타일, 호버 시에만 배경 표시
 				ghost: 'neu-flat text-foreground hover:bg-muted/60 hover:neu-hover active:bg-muted/80 active:scale-[0.98]',

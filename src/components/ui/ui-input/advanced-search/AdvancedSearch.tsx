@@ -4,7 +4,7 @@
   책임: 필드 제어와 반응형 레이아웃을 통한 동적 검색 조건 관리
 */ // ------------------------------
 
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, ReactNode, useEffect, useRef } from 'react';
 
 import { RotateCcw, Database, Globe } from 'lucide-react';
 
@@ -31,6 +31,7 @@ interface AdvancedSearchProps {
 	colorVariant?: 'primary' | 'secondary';
 	searchMode?: 'client' | 'server';
 	alwaysOpen?: boolean; // 아코디언 없이 항상 펼쳐진 상태로 고정
+  footerLeft?: ReactNode; // 푸터 좌측 액션 영역
 }
 // #endregion
 
@@ -45,6 +46,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	colorVariant,
 	searchMode = 'server', // 기본값은 서버 사이드
 	alwaysOpen = false, // 기본값은 false (아코디언 사용)
+  footerLeft,
 }) => {
 	const { isRTL } = useLocale();
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -132,23 +134,28 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 				</div>
 			)}
 
-			{/* 서버 모드: 검색/리셋 버튼 */}
-			{searchMode === 'server' && currentConfig.showButtons && (
-				<div className={`flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
-					<button
-						onClick={onReset}
-						className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].resetButton}`}>
-						<RotateCcw className="w-4 h-4" />
-						리셋
-					</button>
-					<button
-						onClick={onSearch}
-						className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].searchButton}`}>
-						<Database className="w-4 h-4" />
-						검색
-					</button>
-				</div>
-			)}
+      {/* 서버 모드: 좌측 커스텀 액션 + 우측 리셋/검색 버튼 */}
+      {searchMode === 'server' && currentConfig.showButtons && (
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2 items-center">
+            {footerLeft}
+          </div>
+          <div className={`flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
+            <button
+              onClick={onReset}
+              className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].resetButton}`}>
+              <RotateCcw className="w-4 h-4" />
+              리셋
+            </button>
+            <button
+              onClick={onSearch}
+              className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].searchButton}`}>
+              <Database className="w-4 h-4" />
+              검색
+            </button>
+          </div>
+        </div>
+      )}
 		</div>
 	);
 

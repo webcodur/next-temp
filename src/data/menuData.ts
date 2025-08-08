@@ -83,15 +83,15 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '주차장 정보',
-						href: '/parking/lot-management/info',
+						href: '/parking/lot/info',
 					},
 					{
 						key: '주차장 출입관리',
-						href: '/parking/lot-management/entry',
+						href: '/parking/lot/entry',
 					},
           {
             key: '차단기 관리',
-            href: '/parking/lot-management/device-management',
+            href: '/parking/lot/device',
           },
 				],
 			},
@@ -144,11 +144,11 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: 'IP 차단 실시간 내역',
-						href: '/system/ip-block-management/realtime',
+						href: '/system/ip/realtime',
 					},
 					{
 						key: 'IP 차단 전체 히스토리',
-						href: '/system/ip-block-management/history',
+						href: '/system/ip/history',
 					},
 				],
 			},

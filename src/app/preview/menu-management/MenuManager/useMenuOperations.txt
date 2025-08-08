@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/temp/menu-management/MenuManager/useMenuOperations.ts
+  파일명: /app/temp/menu/MenuManager/useMenuOperations.ts
   기능: 메뉴 관리 관련 비즈니스 로직을 담당하는 커스텀 훅
   책임: 메뉴 데이터 로딩, 할당/해제, 저장 등의 작업 처리
 */ // ------------------------------

@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/components/view/community/communication/suggestions/SuggestionBoxPage'; 
+export { default } from '@/components/view/_etc/community/communication/suggestions/SuggestionBoxPage'; 

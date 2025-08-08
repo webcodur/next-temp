@@ -1,0 +1,222 @@
+'use client';
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { RefreshCw } from 'lucide-react';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
+import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
+import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
+import { searchParkingDeviceCommandLogs } from '@/services/devices/devices@id_command-logs$_GET';
+import { ParkingDevice, ParkingDeviceCommandLog } from '@/types/device';
+
+interface DeviceCommandLogSectionProps {
+  device: ParkingDevice;
+}
+
+export default function DeviceCommandLogSection({ 
+  device 
+}: DeviceCommandLogSectionProps) {
+  // #region 상태 관리
+  const [commandLogs, setCommandLogs] = useState<ParkingDeviceCommandLog[]>([]);
+  const [loading, setLoading] = useState(false);
+  // const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  // #endregion
+
+  // #region 데이터 로드
+  const loadCommandLogs = useCallback(async (page: number = 1, limit: number = 10) => {
+    setLoading(true);
+    try {
+      const result = await searchParkingDeviceCommandLogs(device.id, {
+        page,
+        limit,
+      });
+      
+      if (result.success && result.data) {
+        setCommandLogs(Array.isArray(result.data.data) ? result.data.data : []);
+        // setTotalCount(result.data.total || 0);
+        setCurrentPage(result.data.page || 1);
+      } else {
+        console.error('명령 로그 조회 실패:', result.errorMsg);
+        setCommandLogs([]);
+        // setTotalCount(0);
+      }
+    } catch (error) {
+      console.error('명령 로그 조회 중 오류:', error);
+      setCommandLogs([]);
+      // setTotalCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [device.id]);
+
+  useEffect(() => {
+    loadCommandLogs(currentPage, pageSize);
+  }, [loadCommandLogs, currentPage, pageSize]);
+  // #endregion
+
+  // #region 핸들러
+  const handleRefresh = () => {
+    loadCommandLogs(currentPage, pageSize);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1); // 페이지 크기 변경 시 첫 페이지로
+  };
+  // #endregion
+
+  // #region 유틸리티 함수
+  const getStatusBadge = (status: number) => {
+    const statusMap = {
+      0: { label: '대기', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+      1: { label: '성공', className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+      2: { label: '실패', className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+    };
+    
+    const statusInfo = statusMap[status as keyof typeof statusMap] || { 
+      label: '알 수 없음', 
+      className: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' 
+    };
+    
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.className}`}>
+        {statusInfo.label}
+      </span>
+    );
+  };
+
+  const formatDateTime = (date: Date | string) => {
+    if (!date) return '-';
+    
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    
+    if (isNaN(dateObj.getTime())) return '-';
+    
+    return dateObj.toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  };
+  // #endregion
+
+  // #region 컬럼 정의
+  const columns: BaseTableColumn<ParkingDeviceCommandLog>[] = useMemo(() => [
+    {
+      key: 'id',
+      header: 'ID',
+      width: '8%',
+      align: 'center',
+    },
+    {
+      key: 'command',
+      header: '명령',
+      align: 'start',
+      width: '15%',
+      cell: (item: ParkingDeviceCommandLog) => (
+        <code className="px-2 py-1 text-sm rounded bg-muted">
+          {item.command}
+        </code>
+      ),
+    },
+    {
+      key: 'status',
+      header: '상태',
+      align: 'center',
+      width: '10%',
+      cell: (item: ParkingDeviceCommandLog) => getStatusBadge(item.status),
+    },
+    {
+      key: 'adminId',
+      header: '실행자',
+      align: 'center',
+      width: '10%',
+      cell: (item: ParkingDeviceCommandLog) => item.adminId || 'SYSTEM',
+    },
+    {
+      key: 'requestData',
+      header: '요청 데이터',
+      align: 'start',
+      width: '20%',
+      cell: (item: ParkingDeviceCommandLog) => (
+        <div className="truncate max-w-40">
+          {item.requestData ? JSON.stringify(item.requestData) : '-'}
+        </div>
+      ),
+    },
+    {
+      key: 'responseData',
+      header: '응답 데이터',
+      align: 'start',
+      width: '20%',
+      cell: (item: ParkingDeviceCommandLog) => (
+        <div className="truncate max-w-40">
+          {item.responseData ? JSON.stringify(item.responseData) : '-'}
+        </div>
+      ),
+    },
+    {
+      key: 'errorMessage',
+      header: '오류 메시지',
+      align: 'start',
+      width: '15%',
+      cell: (item: ParkingDeviceCommandLog) => (
+        <div className="text-red-600 truncate max-w-32">
+          {item.errorMessage || '-'}
+        </div>
+      ),
+    },
+    {
+      key: 'createdAt',
+      header: '실행 시간',
+      align: 'center',
+      width: '12%',
+      cell: (item: ParkingDeviceCommandLog) => formatDateTime(item.createdAt),
+    },
+  ], []);
+  // #endregion
+
+  return (
+    <div className="space-y-6">
+      {/* 명령 로그 섹션 */}
+      <TitleRow 
+        title="명령 실행 로그" 
+        subtitle="차단기 명령 실행 이력을 조회합니다."
+        endContent={(
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading}
+            title="새로고침"
+          >
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            새로고침
+          </Button>
+        )}
+      />
+
+        {/* 테이블 */}
+        <PaginatedTable
+          data={commandLogs as unknown as Record<string, unknown>[]}
+          columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
+          pageSize={pageSize}
+          pageSizeOptions={[5, 10, 20, 50]}
+          itemName="로그"
+          isFetching={loading}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
+    </div>
+  );
+}

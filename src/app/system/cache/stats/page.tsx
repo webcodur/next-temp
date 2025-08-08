@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import CacheStatsPage from '@/components/view/system/cache/CacheStatsPage';
+import CacheStatsPage from '@/components/view/_pages/cache/CacheStatsPage';
 
 export default function Page() {
   return <CacheStatsPage />;

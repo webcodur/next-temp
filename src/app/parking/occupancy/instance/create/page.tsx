@@ -1,4 +1,4 @@
-import InstanceCreatePage from '@/components/view/parking/instance-management/InstanceCreatePage';
+import InstanceCreatePage from '@/components/view/_pages/instance/InstanceCreatePage';
 
 export default function Page() {
   return <InstanceCreatePage />;

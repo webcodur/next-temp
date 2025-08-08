@@ -15,8 +15,6 @@ export interface Tab {
 	id: string;
 	label: string;
 	icon?: React.ReactNode;
-	title?: string;
-	subtitle?: string;
 	count?: number;
 	subTabs?: SubTab[];
 }
@@ -30,10 +28,8 @@ export interface TabsProps {
 	onSubTabChange?: (subTabId: string) => void;
 	// 스타일링
 	colorVariant?: 'primary' | 'secondary';
-	endContent?: React.ReactNode;
 	// 레이아웃
 	showSubTabs?: boolean;
-	subTabWidth?: string;
 }
 // #endregion
 
@@ -49,8 +45,7 @@ const Tabs = React.forwardRef<
 			onTabChange,
 			activeSubTabId,
 			onSubTabChange,
-			colorVariant = 'primary',
-			endContent,
+            colorVariant = 'primary',
 			showSubTabs = false,
 			className,
 			...props
@@ -66,7 +61,7 @@ const Tabs = React.forwardRef<
 
 		// 현재 활성 탭 정보
 		const activeTab = tabs.find(tab => tab.id === activeId);
-		const hasSubTabs = showSubTabs && activeTab?.subTabs && activeTab.subTabs.length > 0;
+        const hasSubTabs = showSubTabs && activeTab?.subTabs && activeTab.subTabs.length > 0;
 		return (
 			<div
 				ref={ref}
@@ -88,7 +83,7 @@ const Tabs = React.forwardRef<
 									variant="ghost"
 									onClick={() => onTabChange(tab.id)}
 									className={cn(
-										'relative px-4 py-2 font-medium transition-all duration-200 flex items-center justify-center text-sm cursor-pointer',
+									'relative px-4 py-2 font-medium transition-colors duration-0 flex items-center justify-center text-sm cursor-pointer',
 										// 모든 탭에 기본 border 적용
 										'border-t-2 border-s-2',
 										// 마지막 탭은 우측 border도 적용
@@ -102,7 +97,7 @@ const Tabs = React.forwardRef<
 										// 활성 탭 스타일
 										isActive && `${colorStyles.active} bg-background z-20`,
 										// 비활성 탭 스타일
-										!isActive && `bg-muted/50 z-10 ${colorStyles.inactive} border-border`,
+									!isActive && `bg-muted/80 hover:bg-muted z-10 ${colorStyles.inactive} border-border`,
 									)}
 								>
 									{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
@@ -146,7 +141,7 @@ const Tabs = React.forwardRef<
 										size="sm"
 										onClick={() => onSubTabChange?.(subTab.id)}
 										className={cn(
-											'px-3 py-1.5 text-sm transition-all duration-200',
+											'px-3 py-1.5 text-sm transition-colors duration-0',
 											isSubActive 
 												? 'bg-primary text-primary-foreground border-primary' 
 												: 'text-muted-foreground hover:text-foreground hover:border-foreground/20'
@@ -162,43 +157,10 @@ const Tabs = React.forwardRef<
 								);
 							})}
 						</div>
-
-						{/* 메인 콘텐츠 영역 */}
-						{endContent && (
-							<div className="flex items-center px-4 py-3">
-								<div className="flex-1">
-									{endContent}
-								</div>
-							</div>
-						)}
 					</div>
 				)}
 
-				{/* 서브탭이 없는 경우 - 기존 레이아웃 */}
-				{!hasSubTabs && (activeTab?.title || activeTab?.subtitle || endContent) && (
-					<div className="flex justify-between items-center px-4 pt-6 border-s-2 border-e-2 border-border bg-background">
-						{/* Start 영역 - 제목 & 부제목 */}
-						<div className="flex gap-4 items-center px-4">
-							{activeTab?.title && (
-								<h3 className="text-lg font-semibold text-foreground">
-									{activeTab.title}
-								</h3>
-							)}
-							{activeTab?.subtitle && (
-								<p className="text-md text-muted-foreground">
-									{activeTab.subtitle}
-								</p>
-							)}
-						</div>
-
-						{/* End 영역 - 사용자 정의 컨텐츠 */}
-						{endContent && (
-							<div className="flex-shrink-0">
-								{endContent}
-							</div>
-						)}
-					</div>
-				)}
+                {/* 서브탭 없는 경우: 타이틀/액션 영역 제거됨 (독립 모듈 사용) */}
 			</div>
 		);
 	},

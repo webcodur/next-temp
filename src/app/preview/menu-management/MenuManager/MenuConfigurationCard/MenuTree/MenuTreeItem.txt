@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/menu-management/MenuManager/MenuConfigurationCard/MenuTree/MenuTreeItem.tsx
+  파일명: /app/preview/menu/MenuManager/MenuConfigurationCard/MenuTree/MenuTreeItem.tsx
   기능: 메뉴 트리의 개별 아이템을 렌더링하는 컴포넌트
   책임: 메뉴 계층 구조 표시, 확장/축소, 체크박스 처리
 */ // ------------------------------

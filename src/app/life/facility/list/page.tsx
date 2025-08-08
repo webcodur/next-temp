@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/components/view/community/facilities/registration/FacilityRegistrationPage'; 
+export { default } from '@/components/view/_etc/community/facilities/registration/FacilityRegistrationPage'; 

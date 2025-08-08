@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/menu-management/page.tsx
+  파일명: /app/preview/menu/page.tsx
   기능: 주차장별 메뉴 권한 관리 페이지
   책임: 페이지 타이틀 관리 및 하위 컴포넌트 조율
   메뉴 설명: 주차장별 메뉴 권한을 설정

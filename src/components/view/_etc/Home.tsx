@@ -12,33 +12,27 @@ import { Car, Shield, ChartBar } from 'lucide-react';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import VehicleManagementTab from '@/components/view/_screen/vehicle-management/VehicleManagementTab';
+import VehicleManagementTab from '@/components/view/_screen/vehicle/VehicleManagementTab';
 import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
 import StatisticsTab from '@/components/view/_screen/statistics/StatisticsTab';
 
 export default function Home() {
 	// #region 상수
-	const tabs = [
+  const tabs = [
 		{
 			id: 'vehicles',
 			label: '입출차 관리(T)',
 			icon: <Car size={16} />,
-			title: '차량 입출차 내역 탭',
-			subtitle: '실시간 차량 입출차 현황을 조회하고 관리할 수 있습니다.',
 		},
 		{
 			id: 'access-control',
 			label: '주차장 출입 관리(T)',
 			icon: <Shield size={16} />,
-			title: '주차장 출입 관리 탭',
-			subtitle: '차단기 제어 및 주차장 보안 시설을 통합 관리할 수 있습니다.',
 		},
     {
       id: 'statistics',
       label: '주차장 통계 정보',
       icon: <ChartBar size={16} />,
-			title: '이번 달 주차장 운영 내역 탭',
-			subtitle: '주차장 이용률과 수익 현황을 분석하고 리포트를 확인할 수 있습니다.',
     },
 	];
 	// #endregion

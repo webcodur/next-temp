@@ -1,2 +1,2 @@
 'use client';
-export { default } from '@/components/view/parking/security/patrol-log/PatrolLogPage'; 
+export { default } from '@/components/view/_pages/security/patrol-log/PatrolLogPage'; 

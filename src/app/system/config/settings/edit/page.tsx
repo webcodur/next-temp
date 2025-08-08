@@ -1,3 +1,3 @@
-import SystemConfigEditPage from '@/components/view/system/config/SystemConfigEditPage';
+import SystemConfigEditPage from '@/components/view/_pages/config/SystemConfigEditPage';
 
 export default SystemConfigEditPage;

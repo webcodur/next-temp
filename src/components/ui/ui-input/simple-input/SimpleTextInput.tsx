@@ -14,6 +14,8 @@ interface SimpleTextInputProps {
 	type?: 'text' | 'email' | 'password' | 'number' | 'datetime-local';
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	// 외부에서 주입하는 에러 메시지 (validationRule과 별개로 표시)
+	errorMessage?: string;
 }
 
 export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
@@ -26,6 +28,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 	type = 'text',
 	validationRule,
 	colorVariant = 'primary',
+		errorMessage,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -65,19 +68,29 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 	};
 
 	// validation 결과 계산
-	const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
-	
-	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
-	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-	
-	// 피드백 타입 결정
-	const getFeedbackType = () => {
-		if (!validationRule || !validationResult) return 'info';
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
-			return validationResult.isValid ? 'success' : 'error';
-		}
-		return 'info';
-	};
+  const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
+
+  // 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
+  const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
+
+  // 실제 표시할 메시지 및 상태 계산 (외부 errorMessage를 상단 가이드 영역에 통합)
+  const getFeedbackType = () => {
+    if (!validationRule || !validationResult) return 'info';
+    if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+      if (errorMessage) return 'error';
+      return validationResult.isValid ? 'success' : 'error';
+    }
+    return 'info';
+  };
+
+  const getDisplayMessage = () => {
+    if (!validationRule) return undefined;
+    // 값이 있고 편집 모드일 때 외부 에러가 있으면 에러 메시지를 우선 표시
+    if (shouldShowIcon && errorMessage) {
+      return errorMessage;
+    }
+    return validationResult?.message;
+  };
 
 	return (
 		<div className={`relative ${className}`}>
@@ -90,10 +103,10 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			</div>
 
 			{/* Validation Rule 표시 */}
-			{validationRule && (
+      {validationRule && (
 				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
 					<div className="flex items-center">
-						<span>{validationResult?.message}</span>
+            <span>{getDisplayMessage()}</span>
 						{shouldShowIcon && (
 							validationResult.isValid ? (
 								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
@@ -145,6 +158,13 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					</button>
 				)}
 			</div>
+
+      {/* 외부 에러 메시지 표시: validationRule이 없을 때만 하단 표시 */}
+      {!validationRule && errorMessage && (
+        <div className="mt-2 text-xs text-red-600">
+          {errorMessage}
+        </div>
+      )}
 		</div>
 	);
 }; 

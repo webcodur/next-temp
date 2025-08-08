@@ -1,5 +1,5 @@
 /* 
-  파일명: /app/preview/menu-management/MenuManager/MenuManager.tsx
+  파일명: /app/preview/menu/MenuManager/MenuManager.tsx
   기능: 메뉴 관리 메인 컴포넌트
   책임: 메뉴 데이터 관리, 주차장별 메뉴 설정 조율
 */ // ------------------------------

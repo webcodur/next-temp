@@ -75,15 +75,15 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '주차장 정보',
-						href: '/parking/lot-management/info',
+						href: '/parking/lot/info',
 					},
 					{
 						key: '근무자 관리',
-						href: '/parking/lot-management/admin',
+						href: '/parking/lot/admin',
 					},
 					{
 						key: '주차장 출입관리',
-						href: '/parking/lot-management/entry',
+						href: '/parking/lot/entry',
 					},
 				],
 			},
@@ -113,15 +113,15 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: '__호실 관리',
-						href: '/parking/household-management/room',
+						href: '/parking/household/room',
 					},
 					{
 						key: '__입주민 관리',
-						href: '/parking/household-management/resident',
+						href: '/parking/household/resident',
 					},
           {
 						key: '__차량 관리',
-						href: '/parking/household-management/car',
+						href: '/parking/household/car',
 					},
 				],
 			},
@@ -370,11 +370,11 @@ export const menuData: MenuData = {
 				botItems: [
 					{
 						key: 'IP 차단 실시간 내역',
-						href: '/system/ip-block-management/realtime',
+						href: '/system/ip-block/realtime',
 					},
 					{
 						key: 'IP 차단 전체 히스토리',
-						href: '/system/ip-block-management/history',
+						href: '/system/ip-block/history',
 					},
 				],
 			},

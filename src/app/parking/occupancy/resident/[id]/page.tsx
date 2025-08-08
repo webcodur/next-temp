@@ -1,4 +1,4 @@
-import ResidentDetailPage from '@/components/view/parking/resident-management/ResidentDetailPage';
+import ResidentDetailPage from '@/components/view/_pages/resident/ResidentDetailPage';
 
 export default function Page() {
   return <ResidentDetailPage />;

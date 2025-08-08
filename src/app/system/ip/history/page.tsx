@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import IpBlockHistoryPage from '@/components/view/system/ip/IpBlockHistoryPage';
+import IpBlockHistoryPage from '@/components/view/_pages/ip/IpBlockHistoryPage';
 
 export default function Page() {
   return <IpBlockHistoryPage />;

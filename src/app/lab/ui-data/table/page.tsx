@@ -12,7 +12,7 @@ export default function UnifiedTablePage() {
 	const t = useTranslations();
 	const [activeTab, setActiveTab] = useState('base');
 
-	const tabList: Tab[] = [
+  const tabList: Tab[] = [
 		{ 
 			id: 'base', 
 			label: t('테이블_기본테이블'),

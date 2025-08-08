@@ -10,6 +10,7 @@ interface GridFormContextValue {
 	gap: string;
 	colorVariant: 'primary' | 'secondary';
 	totalCount: number;
+	getNextSequence: () => number;
 }
 
 const GridFormContext = createContext<GridFormContextValue | null>(null);
@@ -25,6 +26,7 @@ export interface GridFormProps {
 	className?: string;
 	children: React.ReactNode;
 	topRightActions?: React.ReactNode;
+	bottomLeftActions?: React.ReactNode;
 	bottomRightActions?: React.ReactNode;
 }
 
@@ -35,9 +37,9 @@ export interface GridFormRowProps {
 }
 
 export interface GridFormSequenceProps {
-	sequence: number;
-	total: number;
-	className?: string;
+    sequence: number;
+    total?: number;
+    className?: string;
 }
 
 export interface GridFormLabelProps {
@@ -73,27 +75,21 @@ const GridForm = React.forwardRef<
 	className,
 	children,
 	topRightActions,
+	bottomLeftActions,
 	bottomRightActions,
 
 	...props
 }, ref) => {
-	// GridFormRow 타입의 자식만 필터링해서 개수 계산
-	const gridRows = React.Children.toArray(children).filter(
-		(child) => React.isValidElement(child) && child.type === GridFormRow
-	);
-	const totalCount = gridRows.length;
+	// 단순화를 위해 총 개수 계산은 생략 (조건부/프래그먼트에도 안전)
+	const totalCount = 0;
 	
-	// 순번을 자동으로 매핑
-	let rowCounter = 0;
-	const childrenWithSequence = React.Children.map(children, (child) => {
-		if (React.isValidElement(child) && child.type === GridFormRow) {
-			rowCounter++;
-			return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
-				'data-sequence': rowCounter
-			});
-		}
-		return child;
-	});
+	// 간단한 시퀀스 카운터: 각 Row에서 컨텍스트의 getNextSequence를 호출해 가져가게 함
+	const sequenceCounterRef = React.useRef(0);
+	sequenceCounterRef.current = 0; // 렌더마다 초기화
+	const getNextSequence = React.useCallback(() => {
+		sequenceCounterRef.current += 1;
+		return sequenceCounterRef.current;
+	}, []);
 	
 	const gridTemplateColumns = `${sequenceWidth} ${labelWidth} 1fr`;
 
@@ -103,8 +99,10 @@ const GridForm = React.forwardRef<
 			labelWidth, 
 			gap, 
 			colorVariant, 
-			totalCount 
+			totalCount,
+			getNextSequence,
 		}}>
+
 			<div className="w-full">
 				{/* 우상단 액션 버튼 - GridForm 위에 순차적 배치 */}
 				{topRightActions && (
@@ -117,7 +115,7 @@ const GridForm = React.forwardRef<
 				<div
 					ref={ref}
 					className={cn(
-						'w-full overflow-hidden rounded-lg border backdrop-blur-sm border-border/40 bg-background/80',
+						'w-full rounded-lg border backdrop-blur-sm border-border/40',
 						'grid auto-rows-min items-stretch', // 전체를 Grid Container로 만들고 items를 stretch
 						className
 					)}
@@ -127,13 +125,18 @@ const GridForm = React.forwardRef<
 					} as React.CSSProperties}
 					{...props}
 				>
-					{childrenWithSequence}
+					{children}
 				</div>
 
-				{/* 우하단 액션 버튼 - GridForm 아래에 순차적 배치 */}
-				{bottomRightActions && (
-					<div className="flex justify-end mt-3">
-						{bottomRightActions}
+				{/* 하단 액션 버튼 - 좌우 분리 배치 */}
+				{(bottomLeftActions || bottomRightActions) && (
+					<div className="flex justify-between mt-3 w-full">
+						<div className="flex gap-3 items-center">
+							{bottomLeftActions}
+						</div>
+						<div className="flex gap-3 items-center">
+							{bottomRightActions}
+						</div>
 					</div>
 				)}
 			</div>
@@ -148,13 +151,10 @@ GridForm.displayName = 'GridForm';
 const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivElement>> = ({
 	align = 'center',
 	children,
-	...props
 }) => {
 	const context = React.useContext(GridFormContext);
 	const totalCount = context?.totalCount || 0;
-	
-	// data-sequence 속성에서 순번을 가져옴
-	const sequence = (props as Record<string, unknown>)['data-sequence'] as number;
+	const sequence = context?.getNextSequence ? context.getNextSequence() : undefined;
 	
 	const alignClasses = {
 		start: 'self-start',
@@ -225,8 +225,8 @@ const GridFormSequence = React.forwardRef<
 	HTMLDivElement,
 	GridFormSequenceProps & React.HTMLAttributes<HTMLDivElement>
 >(({
-	sequence,
-	total,
+    sequence,
+    total,
 	className,
 	...props
 }, ref) => {
@@ -241,8 +241,8 @@ const GridFormSequence = React.forwardRef<
 				className
 			)}
 			{...props}
-		>
-			{sequence}/{total}
+        >
+            {typeof total === 'number' && total > 0 ? `${sequence}/${total}` : sequence}
 		</div>
 	);
 });

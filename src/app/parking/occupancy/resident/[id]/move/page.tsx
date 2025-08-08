@@ -1,4 +1,4 @@
-import ResidentMoveInstancePage from '@/components/view/parking/resident-management/ResidentMoveInstancePage';
+import ResidentMoveInstancePage from '@/components/view/_pages/resident/ResidentMoveInstancePage';
 
 export default function Page() {
   return <ResidentMoveInstancePage />;

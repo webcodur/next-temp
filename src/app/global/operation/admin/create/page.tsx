@@ -1,1 +1,1 @@
-export { default } from '@/components/view/global/operation/admin/AdminCreatePage'; 
+export { default } from '@/components/view/_pages/operation/admin/AdminCreatePage'; 
