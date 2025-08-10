@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { type Locale } from '@/lib/i18n';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';

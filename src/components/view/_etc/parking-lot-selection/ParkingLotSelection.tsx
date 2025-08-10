@@ -8,8 +8,8 @@
 
 import { useState } from 'react';
 import { useAtom } from 'jotai';
-import { useAuth } from '@/hooks/useAuth';
-import { useLocale } from '@/hooks/useI18n';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { parkingLotSelectionModalOpenAtom } from '@/store/ui';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
 import { ParkingLot } from '@/store/auth';

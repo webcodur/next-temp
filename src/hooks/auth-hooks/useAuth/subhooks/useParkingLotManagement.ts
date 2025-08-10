@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useParkingLotManagement.ts
+  파일명: /hooks/auth-hooks/useAuth/subhooks/useParkingLotManagement.ts
   기능: 주차장 관리 전용 훅
   책임: 주차장 선택, 정보 조회, 최고관리자 현장 선택 처리
 */ // ------------------------------

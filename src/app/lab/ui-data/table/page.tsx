@@ -5,7 +5,7 @@ import Tabs, { Tab } from '@/components/ui/ui-layout/tabs/Tabs';
 import BaseTableExample from '@/components/ui/ui-data/baseTable/base-table.example';
 import InfiniteTableExample from '@/components/ui/ui-data/infiniteTable/infinite-table.example';
 import PaginatedTableExample from '@/components/ui/ui-data/paginatedTable/paginated-table.example';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { Table, Infinity, ChevronRight } from 'lucide-react';
 
 export default function UnifiedTablePage() {

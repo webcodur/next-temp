@@ -2,8 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { FacilityLayout, CellType } from '@/types/facility-editor';
-import { useFacilityEditor } from '@/hooks/useFacilityEditor';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useFacilityEditor } from '@/hooks/domain/useFacilityEditor';
 import { EditorGrid } from './EditorGrid';
 import { EditorToolbar } from './EditorToolbar';
 import { NameEditModal } from './NameEditModal';

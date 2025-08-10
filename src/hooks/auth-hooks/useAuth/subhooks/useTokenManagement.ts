@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useTokenManagement.ts
+  파일명: /hooks/auth-hooks/useAuth/subhooks/useTokenManagement.ts
   기능: 토큰 관리 전용 훅
   책임: 토큰 갱신, 자동 갱신 처리, 상태 동기화
 */ // ------------------------------

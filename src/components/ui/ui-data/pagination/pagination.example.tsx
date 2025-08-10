@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { PaginatedTable, BaseTableColumn } from '../paginatedTable/PaginatedTable';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입 정의
 interface User extends Record<string, unknown> {

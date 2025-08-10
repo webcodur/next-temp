@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FlipText } from './FlipText';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Variants } from 'framer-motion';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function FlipTextExample() {
 	const t = useTranslations();

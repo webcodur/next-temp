@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useFacilityEditor.ts
+  파일명: /hooks/domain/useFacilityEditor/useFacilityEditor.ts
   기능: 시설 레이아웃 편집기 관리 훅
   책임: 그리드 편집, 셀 타입 변경, 히스토리 관리, 키보드/마우스 이벤트 처리
   

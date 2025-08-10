@@ -9,7 +9,7 @@ import React, { ReactElement, ReactNode, useEffect, useRef } from 'react';
 import { RotateCcw, Database, Globe } from 'lucide-react';
 
 import { Accordion } from '@/components/ui/ui-layout/accordion/Accordion';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입 및 인터페이스
 interface FieldConfig {

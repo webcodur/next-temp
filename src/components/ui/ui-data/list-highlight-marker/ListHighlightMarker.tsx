@@ -3,7 +3,7 @@
 import React from 'react';
 import { Check, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 //#region Types
 export interface ListHighlightMarkerProps {

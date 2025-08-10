@@ -2,7 +2,7 @@
 import Tabs, { Tab } from './Tabs';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // 아이콘 컴포넌트 추가
 const DashboardIcon = () => (

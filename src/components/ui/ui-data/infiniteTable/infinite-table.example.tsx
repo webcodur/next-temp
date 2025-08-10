@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { InfiniteTable, BaseTableColumn } from './InfiniteTable';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입 및 초기 데이터 생성 함수
 interface User extends Record<string, unknown> {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { User, Armchair, Square, Building2, Check, X } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { 
   GridObject, 
   FACILITY_COLORS,

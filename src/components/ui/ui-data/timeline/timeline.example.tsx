@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Timeline, { TimelineItem } from './Timeline';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function TimelineExample() {
   const t = useTranslations();

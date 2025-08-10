@@ -4,7 +4,7 @@ import { InfiniteTable, BaseTableColumn } from '@/components/ui/ui-data/infinite
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region Types & Constants
 type TableSize = 'sm' | 'md' | 'lg';

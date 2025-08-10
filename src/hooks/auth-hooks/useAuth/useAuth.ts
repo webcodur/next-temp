@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useAuth.ts
+  파일명: /hooks/auth-hooks/useAuth/useAuth.ts
   기능: 전역 인증 상태 관리 훅 (메인 컨트롤러)
   책임: 로그인/로그아웃, 인증 상태 관리, 토큰 생명주기 관리
 */ // ------------------------------
@@ -11,8 +11,8 @@ import { useEffect, useCallback, useState, useMemo } from 'react';
 import { signInWithCredentials } from '@/services/auth/auth_signin_POST';
 import { logout as logoutAction } from '@/services/auth/auth_logout_GET';
 import { isAuthenticatedAtom, userProfileAtom, parkingLotsAtom, selectedParkingLotIdAtom, manualParkingLotIdAtom } from '@/store/auth';
-import { useTokenManagement } from './useTokenManagement';
-import { useParkingLotManagement } from './useParkingLotManagement';
+import { useTokenManagement } from './subhooks/useTokenManagement';
+import { useParkingLotManagement } from './subhooks/useParkingLotManagement';
 import { 
   getTokenFromCookie, 
   setTokenToCookie, 

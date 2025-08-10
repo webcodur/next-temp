@@ -6,9 +6,9 @@ import { ColorSetSelector } from '@/components/ui/ui-input/color-set-picker/Colo
 import { Settings as SettingsIcon } from 'lucide-react';
 import clsx from 'clsx';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { themeAtom } from '@/store/theme';
-import { useColorSet } from '@/hooks/useColorSet';
+import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 
 // 동적 로딩은 제거 - ColorSetPicker는 클라이언트 컴포넌트로 직접 사용
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입
 export interface TimelineItem {

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Key, Eye, EyeOff, X } from 'lucide-react';
 import { FIELD_STYLES, getColorVariantStyles } from '../core/config';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 interface FieldPasswordProps {
 	id: string;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Clock, Calendar, User, MapPin, Check } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { SeatMap } from '../seat-map/SeatMap';
 import { 
   FacilityLayout, 

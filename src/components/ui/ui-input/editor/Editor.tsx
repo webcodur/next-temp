@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
-import { useLocale, useTranslations } from '@/hooks/useI18n';
+import { useLocale, useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입
 interface EditorProps {

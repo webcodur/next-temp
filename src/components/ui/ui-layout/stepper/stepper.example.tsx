@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Stepper } from './Stepper';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 //#region Step Components
 const Step1 = ({ isCompleted, onComplete, onUnComplete }: {

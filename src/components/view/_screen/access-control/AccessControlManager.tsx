@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react';
 import { Send, RotateCcw } from 'lucide-react';
-import { useAccessControl } from './hooks/useAccessControl';
+import { useAccessControl } from '@/hooks/domain/useAccessControl';
 import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierControlGrid from './barrierManager/barrierControl/BarrierControlGrid';
 import BarrierPolicyGrid from './barrierManager/barrierPolicy/BarrierPolicyGrid';

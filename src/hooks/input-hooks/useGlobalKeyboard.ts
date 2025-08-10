@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useGlobalKeyboard.ts
+  파일명: /hooks/input-hooks/useGlobalKeyboard.ts
   기능: 전역 키보드 단축키 통합 관리 훅
   책임: 애플리케이션 전역에서 사용되는 모든 키보드 단축키 처리
   
@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { toggleThemeAtom } from '@/store/theme';
 import { sidebarCollapsedAtom } from '@/store/ui';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입 정의
 interface GlobalKeyboardConfig {

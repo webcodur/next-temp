@@ -1,5 +1,5 @@
 /* 
-  파일명: /hooks/useI18n.ts
+  파일명: /hooks/ui-hooks/useI18n.ts
   기능: 다국어 지원 훅
   책임: 언어 설정 관리, 메시지 번역, 로컬스토리지 연동
   
@@ -68,7 +68,7 @@ export const useTranslations = () => {
 	useEffect(() => {
 		const loadMessages = async () => {
 			try {
-				const messageModule = await import(`../locales/${currentLocale}.json`);
+				const messageModule = await import(`../../locales/${currentLocale}.json`);
 				setMessages(messageModule.default);
 			} catch (error) {
 				console.error('Failed to load messages:', error);

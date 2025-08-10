@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import {
 	BarrierDiagonalView,
 	BarrierDriverView,

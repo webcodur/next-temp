@@ -5,7 +5,7 @@
 */ // ------------------------------
 'use client';
 
-import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
+import { useGlobalKeyboard } from '@/hooks/input-hooks/useGlobalKeyboard';
 import { PrimaryBar } from './unit/PrimaryBar';
 
 import { defaults } from '@/data/sidebarConfig';

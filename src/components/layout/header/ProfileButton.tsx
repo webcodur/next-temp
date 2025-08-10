@@ -8,10 +8,10 @@
 import { useState, useRef, useEffect, memo } from 'react';
 
 import { useRouter } from 'next/navigation';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User, LogOut, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
 import { ROLE_NAME_MAP } from '@/types/admin';
 
 // #region 타입
@@ -59,11 +59,6 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 		}
 	};
 
-	const handleSettings = () => {
-		console.log('설정 페이지 이동');
-		setIsOpen(false);
-		router.push('/account/security/password-policy');
-	};
 
 	// 역할명 조회 함수
 	const getRoleName = () => {
@@ -132,14 +127,6 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 
 					{/* 메뉴 아이템 */}
 					<div className="p-1">
-						<button
-							onClick={handleSettings}
-							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-primary/10">
-							<Settings className="w-5 h-5 text-muted-foreground" />
-							<span className="text-base text-foreground font-multilang">설정</span>
-						</button>
-
-						<div className="my-1 border-t border-border/50" />
 
 						<button
 							onClick={handleLogout}

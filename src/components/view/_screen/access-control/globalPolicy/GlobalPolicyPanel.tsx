@@ -8,7 +8,7 @@ import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 
-import { EntryPolicyType } from '../hooks/useAccessControl';
+import { EntryPolicyType } from '@/hooks/domain/useAccessControl';
 
 // #region 스타일 상수
 const STYLES = {

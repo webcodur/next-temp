@@ -9,8 +9,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { LoginForm } from '@/components/view/_etc/login/LoginForm';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
-import { useAuth } from '@/hooks/useAuth';
-import { useLocale } from '@/hooks/useI18n';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { loadDevAccounts, type DevAccountSet } from '@/utils/devAccounts';
 
 // #region 타입

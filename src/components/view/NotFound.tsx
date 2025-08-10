@@ -12,7 +12,7 @@ import { Home, ArrowLeft, RefreshCw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
-import { useTranslations, useLocale } from '@/hooks/useI18n';
+import { useTranslations, useLocale } from '@/hooks/ui-hooks/useI18n';
 
 export default function NotFound() {
 	// #region 상수

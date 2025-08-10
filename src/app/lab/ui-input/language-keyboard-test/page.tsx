@@ -7,8 +7,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
-import { useLocale } from '@/hooks/useI18n';
+import { useGlobalKeyboard } from '@/hooks/input-hooks/useGlobalKeyboard';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { localeMetadata } from '@/lib/i18n';
 

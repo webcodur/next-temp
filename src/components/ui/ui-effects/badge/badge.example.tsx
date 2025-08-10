@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Badge } from './Badge';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function BadgeExample() {
 	const t = useTranslations();

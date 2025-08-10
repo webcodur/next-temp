@@ -2,7 +2,7 @@
 
 import { useSetAtom } from 'jotai';
 import { Search } from 'lucide-react';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { parkingLotSelectionModalOpenAtom } from '@/store/ui';
 
 interface SearchButtonProps {

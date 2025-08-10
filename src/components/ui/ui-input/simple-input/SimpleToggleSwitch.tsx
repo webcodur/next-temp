@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 interface SimpleToggleSwitchProps {
 	label?: string;

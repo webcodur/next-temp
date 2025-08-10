@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Accordion, AccordionGroup } from './Accordion';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const AccordionExample = () => {
 	const t = useTranslations();

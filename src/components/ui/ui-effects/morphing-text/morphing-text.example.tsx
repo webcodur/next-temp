@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { MorphingText } from './MorphingText';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function MorphingTextExample() {
   const t = useTranslations();

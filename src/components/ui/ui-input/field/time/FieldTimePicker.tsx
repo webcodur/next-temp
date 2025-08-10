@@ -5,7 +5,7 @@ import { Clock, X } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
 import { FieldBaseProps } from '../core/types';
 import { Portal } from '../shared/Portal';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 interface FieldTimePickerProps extends FieldBaseProps {
 	id?: string;

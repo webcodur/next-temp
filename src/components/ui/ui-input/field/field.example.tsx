@@ -10,7 +10,7 @@ import FieldDatePicker from './datepicker/FieldDatePicker';
 import FieldTimePicker from './time/FieldTimePicker';
 import TimeRangePicker from './time/unit/TimeRangePicker';
 import { Option, SortDirection } from './core/types';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function FieldExample() {
 	const t = useTranslations();

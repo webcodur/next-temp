@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { ToastProvider, toast } from './Toast';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function ToastExample() {
   const t = useTranslations();

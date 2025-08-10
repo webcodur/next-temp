@@ -7,7 +7,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { endPanelWidthAtom, isResizingAtom, isSideResizeControlHoveredAtom } from '@/store/ui';
 import { defaults } from '@/data/sidebarConfig';
 

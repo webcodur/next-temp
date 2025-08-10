@@ -8,7 +8,7 @@ import {
   TooltipTrigger 
 } from './Tooltip';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function TooltipExample() {
   const t = useTranslations();

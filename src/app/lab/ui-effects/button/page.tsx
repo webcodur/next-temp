@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const ButtonPage = () => {
 	const t = useTranslations();

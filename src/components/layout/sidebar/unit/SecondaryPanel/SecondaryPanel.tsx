@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { ChevronsUpDown, Focus, Layers } from 'lucide-react';
 
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { menuData } from '@/data/menuData';
 import { activeTopMenuAtom, endPanelWidthAtom } from '@/store/ui';
 import { defaults } from '@/data/sidebarConfig';

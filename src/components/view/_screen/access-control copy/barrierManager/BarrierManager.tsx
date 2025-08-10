@@ -7,7 +7,7 @@
 import React from 'react';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
 
-import { useBarrierManager } from '../hooks/useBarrierManager';
+import { useBarrierManager } from '@/hooks/domain/useBarrierManager';
 import PolicyPanel from '../policyManager/PolicyPanel';
 
 // #region 타입 정의

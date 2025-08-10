@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { PaginatedTable, BaseTableColumn } from './PaginatedTable';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // 예제용 사용자 데이터 타입
 interface User extends Record<string, unknown> {

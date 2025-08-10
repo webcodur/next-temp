@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import * as THREE from 'three';
 import { CheckCircle, RotateCcw, Zap } from 'lucide-react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import {
 	ParkingBarrier3DProps,
 	COLORS,

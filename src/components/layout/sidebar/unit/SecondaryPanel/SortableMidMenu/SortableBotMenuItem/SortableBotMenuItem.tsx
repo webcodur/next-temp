@@ -9,7 +9,7 @@
 
 import Link from 'next/link';
 
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import type { BotMenu } from '@/components/layout/sidebar/types';
 
 interface SortableBotMenuItemProps {

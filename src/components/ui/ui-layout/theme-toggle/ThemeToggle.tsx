@@ -3,7 +3,7 @@
 import { useAtom } from 'jotai';
 import { Moon, Sun } from 'lucide-react';
 import { themeAtom, toggleThemeAtom } from '@/store/theme';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 interface ThemeToggleProps {
 	className?: string;

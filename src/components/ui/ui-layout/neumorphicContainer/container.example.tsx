@@ -5,7 +5,7 @@ import { RaisedContainer } from './RaisedContainer';
 import { InsetContainer } from './InsetContainer';
 import { FlatContainer } from './FlatContainer';
 import { CircleContainer } from './CircleContainer';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function ContainerExample() {
 	const t = useTranslations();

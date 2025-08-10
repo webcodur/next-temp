@@ -5,7 +5,7 @@ import {
 	ChevronRight,
 	ChevronsRight,
 } from 'lucide-react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 interface PaginationProps {
 	currentPage: number;

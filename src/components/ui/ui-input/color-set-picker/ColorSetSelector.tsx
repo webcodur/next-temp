@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useColorSet } from '@/hooks/useColorSet';
+import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -44,10 +44,10 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 			<button
 				onClick={handleOpenModal}
 				className={cn(
-					'flex items-center neu-flat hover:neu-raised transition-all',
+					'flex items-center transition-all neu-flat hover:neu-raised',
 					compact 
-						? 'justify-center rounded-xl p-2'
-						: 'justify-between p-3 rounded-xl w-full',
+						? 'justify-center p-2 rounded-xl'
+						: 'justify-between p-3 w-full rounded-xl',
 					className
 				)}
 			>
@@ -61,7 +61,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 					/>
 				) : (
 					/* 일반 모드: 전체 정보 */
-					<div className="flex items-center gap-3 w-full">
+					<div className="flex gap-3 items-center w-full">
 						{/* 현재 색상 미리보기 */}
 						<div
 							className="w-6 h-6 rounded-full border border-border/50"
@@ -69,7 +69,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 								background: `linear-gradient(135deg, hsl(${primaryColor}) 0%, hsl(${secondaryColor}) 100%)`
 							}}
 						/>
-						<span className="text-sm font-medium text-foreground flex-1 text-left">
+						<span className="flex-1 text-sm font-medium text-left text-foreground">
 							{currentColorSet.name}
 						</span>
 					</div>

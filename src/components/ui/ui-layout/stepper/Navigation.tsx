@@ -1,7 +1,7 @@
 //#region Imports
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 //#endregion
 
 //#region Types

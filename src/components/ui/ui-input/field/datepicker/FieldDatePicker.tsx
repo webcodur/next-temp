@@ -3,7 +3,7 @@
 import React from 'react';
 import { Calendar, X, Clock } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { FieldDatePickerComponentProps } from '../core/types';
 import {
 	PickDate,

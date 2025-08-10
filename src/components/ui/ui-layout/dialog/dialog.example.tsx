@@ -10,7 +10,7 @@ import {
 } from './Dialog';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const DialogExample = () => {
 	const t = useTranslations();

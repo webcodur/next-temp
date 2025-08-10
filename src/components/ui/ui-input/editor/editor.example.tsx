@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useTranslations } from '@/hooks/useI18n'
+import { useTranslations } from '@/hooks/ui-hooks/useI18n'
 
 // 클라이언트에서만 로드되도록 동적 임포트
 const Editor = dynamic(

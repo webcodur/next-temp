@@ -8,7 +8,7 @@
 import { ChevronRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import type { MidMenu } from '@/components/layout/sidebar/types';
 
 import { BotMenuItem } from './BotMenuItem/BotMenuItem';

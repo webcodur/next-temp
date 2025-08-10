@@ -4,7 +4,7 @@ import React from 'react';
 import NestedTabs from './NestedTabs';
 import type { TopTab } from './NestedTabs';
 import { Settings, BarChart2, User, Server, Activity, Eye } from 'lucide-react';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const NestedTabsExample = () => {
   const t = useTranslations();

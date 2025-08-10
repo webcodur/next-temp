@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Building, Users, Calendar, Settings, ArrowLeft } from 'lucide-react';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { SeatReservation } from '@/components/ui/ui-layout/seat-reservation/SeatReservation';
 import { FacilityEditor } from '@/components/ui/ui-layout/facility-editor/FacilityEditor';
 import { FacilityLayout, ReservationData, createFilledLayout, SeatStatus } from '@/types/facility';

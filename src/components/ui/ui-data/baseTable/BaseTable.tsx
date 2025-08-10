@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { cn } from '@/lib/utils';
 
 import { BaseTableProps } from './types';

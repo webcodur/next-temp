@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Mail, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { FIELD_STYLES } from '../core/config';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 
 interface FieldEmailProps {
 	id: string;

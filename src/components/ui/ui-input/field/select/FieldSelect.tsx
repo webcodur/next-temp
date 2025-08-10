@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import { List, ChevronDown } from 'lucide-react';
 import { FIELD_STYLES, getColorVariantStyles, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
-import { useLocale } from '@/hooks/useI18n';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { useSelectLogic } from '../shared/useSelectLogic';
 
 // #region 타입

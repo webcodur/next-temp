@@ -9,7 +9,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
 
 // #region 렌더링
 export const Logo = memo(() => {

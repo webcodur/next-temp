@@ -7,10 +7,10 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 // hooks
-import { useLocale } from '@/hooks/useI18n';
-import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
-import { useAuth } from '@/hooks/useAuth';
-import { useColorSet } from '@/hooks/useColorSet';
+import { useLocale } from '@/hooks/ui-hooks/useI18n';
+import { useGlobalKeyboard } from '@/hooks/input-hooks/useGlobalKeyboard';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
+import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 // store
 // import { initPrimaryColorAtom } from '@/store/primary';
 import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/ui';
