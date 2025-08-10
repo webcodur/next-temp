@@ -7,13 +7,6 @@ const URL_TEST = process.env.NEXT_PUBLIC_API_TEST_URL;
 const deployMode = process.env.NEXT_PUBLIC_NODE_ENV;
 const baseUrl = deployMode === 'production' ? URL_PROD : URL_TEST;
 
-console.log('🌐 API 설정:', {
-  deployMode,
-  URL_PROD,
-  URL_TEST,
-  baseUrl
-});
-
 /**
  * 쿠키에서 토큰 가져오기
  */

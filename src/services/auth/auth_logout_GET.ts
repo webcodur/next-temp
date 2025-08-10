@@ -11,9 +11,7 @@ interface ApiMessageServerResponse {
 
 //#region 변환 함수 (파일 내부 사용)
 function serverToClient(server: ApiMessageServerResponse): ApiMessageResponse {
-  return {
-    message: server.message,
-  };
+  return { message: server.message };
 }
 //#endregion
 

@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { LoginForm } from '@/components/view/_etc/login/LoginForm';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
 import { useAuth } from '@/hooks/useAuth';
@@ -30,8 +30,10 @@ export default function LoginPage() {
 	const isDev = process.env.NODE_ENV === 'development';
 	const showAccountExample = process.env.NEXT_PUBLIC_ACCOUNT_EXAMPLE === 'TRUE';
 	
-	// 환경변수에서 개발자 모드 계정 세트 로드
-	const devAccountSets = (isDev && showAccountExample) ? loadDevAccounts() : [];
+	// 환경변수에서 개발자 모드 계정 세트 로드 (한 번만)
+	const devAccountSets = useMemo(() => {
+		return (isDev && showAccountExample) ? loadDevAccounts() : [];
+	}, [isDev, showAccountExample]);
 	// #endregion
 
 	// #region 상태

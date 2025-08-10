@@ -20,8 +20,6 @@ interface LoginFormData {
 	rememberUsername: boolean;
 }
 
-
-
 interface LoginFormProps {
 	onSubmit: (data: LoginFormData) => void;
 	isLoading?: boolean;

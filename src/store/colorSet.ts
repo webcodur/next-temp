@@ -1,4 +1,4 @@
-import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 
 // 6개 색상 세트 정의 (라이트/다크 모드별 최적화)
 export const COLOR_SETS = {
@@ -36,5 +36,5 @@ export const COLOR_SETS = {
 
 export type ColorSetKey = keyof typeof COLOR_SETS;
 
-// 단순한 atom (기본값만)
-export const colorSetAtom = atom<ColorSetKey>('pink-purple'); 
+// localStorage와 자동 동기화되는 atom
+export const colorSetAtom = atomWithStorage<ColorSetKey>('color-set', 'pink-purple'); 

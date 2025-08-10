@@ -10,9 +10,9 @@ import { useAtom } from 'jotai';
 import { useLocale } from '@/hooks/useI18n';
 import { useGlobalKeyboard } from '@/hooks/useGlobalKeyboard';
 import { useAuth } from '@/hooks/useAuth';
+import { useColorSet } from '@/hooks/useColorSet';
 // store
-import { initPrimaryColorAtom } from '@/store/primary';
-import { initTheme } from '@/store/theme';
+// import { initPrimaryColorAtom } from '@/store/primary';
 import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/ui';
 // components
 import Login from '@/components/view/_etc/login/Login';
@@ -33,7 +33,6 @@ interface MainLayoutProps {
 // 사용자 정보 새로고침 상태 (전역)
 let userInfoRefreshed = false;
 
-// 상세 구조 및 동작 방식은 main-layout.md 참고
 export default function MainLayout({ children }: MainLayoutProps) {
 	// #region 훅
 	const { isLoggedIn, selectedParkingLotId, refreshUserInfo } = useAuth();
@@ -44,20 +43,22 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	const [shouldShow, setShouldShow] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
+	// 색상 설정 관리 (Header 언마운트와 관계없이 지속)
+	useColorSet();
+
 	// 전역 키보드 단축키 (테마 토글만)
 	useGlobalKeyboard({ enableSidebarToggle: false });
-	const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
-	useEffect(() => {
-		initTheme();
-		initPrimaryColor();
-	}, [initPrimaryColor]);
+	// const [, initPrimaryColor] = useAtom(initPrimaryColorAtom);
+  // useEffect(() => {
+	//	initTheme(); // atomWithStorage가 자동으로 처리하므로 제거
+	//	// initPrimaryColor();
+	// }, []);
 
 	// 화면 크기 감지 (1024px 기준)
 	useEffect(() => {
 		const checkScreenSize = () => {
 			setIsDesktop(window.innerWidth >= 1024);
 		};
-
 		checkScreenSize();
 		window.addEventListener('resize', checkScreenSize);
 		return () => window.removeEventListener('resize', checkScreenSize);
@@ -97,10 +98,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	// #endregion
 
 	// #region 렌더링 조건 분기
-	// 1. 로그인하지 않은 경우 → 로그인 페이지
-	if (!isLoggedIn) {
-		return <Login />;
-	}
+	if (!isLoggedIn) return <Login />;
 	
 	// 2. 로그인했지만 selectedParkingLotId가 null인 경우 → 토큰 로딩 중
 	if (selectedParkingLotId === null) {
@@ -150,8 +148,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
 						{/* 페이지 */}   
 						<main className="overflow-y-auto flex-1 transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
-              {/* 페이지 컨테이너 기존 값: */}
-              {/* <div className="p-10 mx-auto mt-10 max-w-7xl rounded-lg"> */}
               {/* 콘텐츠 */}
               <div className="px-[92px] mx-auto mt-12 max-w-[1656px] rounded-lg">
                 {children}

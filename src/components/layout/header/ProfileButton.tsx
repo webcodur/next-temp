@@ -52,7 +52,7 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 			logout();
 			setIsOpen(false);
 			console.log('로그아웃 성공');
-			router.push('/login');
+			// router.push('/login') 제거 - MainLayout의 조건부 렌더링이 자동으로 Login 컴포넌트 표시
 		} catch (error) {
 			console.error('로그아웃 처리 중 오류:', error);
 			alert('로그아웃 처리 중 오류가 발생했습니다.');
@@ -98,7 +98,7 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 				<div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border shadow-lg neu-flat bg-background border-border/50">
 					{/* 사용자 정보 헤더 */}
 					<div className="px-4 py-3 border-b border-border/50">
-						<div className="flex items-center gap-3 mb-2">
+						<div className="flex gap-3 items-center mb-2">
 							<User className="w-8 h-8 text-muted-foreground" />
 							<div className="flex-1">
 								<div className="font-medium text-foreground font-multilang">
@@ -125,7 +125,7 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 						)}
 						
 						{/* 계정 정보 */}
-						<div className="text-xs text-muted-foreground mt-1 font-multilang">
+						<div className="mt-1 text-xs text-muted-foreground font-multilang">
 							계정: {userProfile?.account}
 						</div>
 					</div>

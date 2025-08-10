@@ -59,51 +59,37 @@ const updateColorScale = (colorSetKey: ColorSetKey) => {
 export function useColorSet() {
 	const [colorSet, setColorSetState] = useAtom(colorSetAtom);
 
-	// 초기화 (한번만 실행)
+	// 초기화 (한번만 실행) - atomWithStorage가 자동으로 localStorage 처리
 	useEffect(() => {
-		// localStorage에서 불러오기
-		const stored = localStorage.getItem('color-set');
-		if (stored && stored in COLOR_SETS && stored !== colorSet) {
-			console.log(`📦 localStorage에서 복원: ${stored}`);
-			setColorSetState(stored as ColorSetKey);
-			updateColorScale(stored as ColorSetKey);
-		} else {
-			updateColorScale(colorSet);
-		}
+		updateColorScale(colorSet);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []); // 빈 배열 - 한번만 실행
 
 	// 다크모드 감지 (한번만 설정)
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
-
 		const observer = new MutationObserver(() => {
 			console.log('🌓 테마 변경 감지 - 색상 업데이트');
 			updateColorScale(colorSet);
 		});
-
 		observer.observe(document.documentElement, {
 			attributes: true,
 			attributeFilter: ['class'],
 		});
-
 		return () => {
 			observer.disconnect();
 		};
 	}, [colorSet]); // colorSet 변경시에도 재설정
 
-	// 색상 변경 함수
+	// 색상 변경 함수 - atomWithStorage가 자동으로 localStorage 처리
 	const setColorSet = useCallback(
 		(newColorSet: ColorSetKey) => {
 			console.log(`🎨 색상 변경: ${colorSet} → ${newColorSet}`);
 
-			// 1. 상태 업데이트
+			// 1. 상태 업데이트 (localStorage 자동 저장됨)
 			setColorSetState(newColorSet);
 
-			// 2. localStorage 저장
-			localStorage.setItem('color-set', newColorSet);
-
-			// 3. 색상 적용
+			// 2. 색상 적용
 			updateColorScale(newColorSet);
 
 			console.log(`✅ 색상 변경 완료: ${newColorSet}`);

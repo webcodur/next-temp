@@ -192,7 +192,7 @@
 	--card: var(--gray-2); /* 12% - 카드 배경 (상대적 밝음 유지) */
 	--muted: 0 0% 14%; /* 14% - 음소거 영역 */
 	--input: var(--gray-4); /* 25% - 입력 필드 */
-	--border: var(--gray-4); /* 25% - 경계선 */
+	--border: var(--gray-5); /* 40% - 경계선 (다크모드 가시성 향상) */
 	--popover: var(--gray-2); /* 12% - 팝오버 */
 
 	/* ✏️ 텍스트/UI 요소 - 역순 매핑 (gray-8→gray-8, gray-9→gray-9) */
