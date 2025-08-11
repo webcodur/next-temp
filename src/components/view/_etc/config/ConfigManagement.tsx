@@ -4,13 +4,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { Plus } from 'lucide-react';
 
 // UI 컴포넌트
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
-import { Button } from '@/components/ui/ui-input/button/Button';
 
 // Field 컴포넌트들
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
@@ -50,7 +48,6 @@ export default function ConfigManagement({
   title,
   subtitle,
   editBaseRoute,
-  createRoute,
 }: ConfigManagementProps) {
   const router = useRouter();
   const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
@@ -133,12 +130,6 @@ export default function ConfigManagement({
   const handleRowClick = useCallback((config: SystemConfig) => {
     router.push(`${editBaseRoute}/edit?key=${encodeURIComponent(config.key)}`);
   }, [router, editBaseRoute]);
-
-  const handleCreateNew = useCallback(() => {
-    if (createRoute) {
-      router.push(createRoute);
-    }
-  }, [router, createRoute]);
 
   // 검색 관련 핸들러
   const handleReset = useCallback(() => {
@@ -349,18 +340,6 @@ export default function ConfigManagement({
       <PageHeader 
         title={title}
         subtitle={subtitle}
-        rightActions={
-          createRoute ? (
-            <Button
-              variant="primary"
-              size="default"
-              onClick={handleCreateNew}
-              title="새 설정 추가"
-            >
-              <Plus size={16} />
-            </Button>
-          ) : undefined
-        }
       />
 
       {/* 고급 검색 */}

@@ -1,11 +1,11 @@
 /* 메뉴 설명: 차단기 장비 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { SortableTable, SortableTableColumn } from '@/components/ui/ui-data/sortableTable/SortableTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -403,16 +403,15 @@ export default function DevicesListPage() {
       width: '7%',
       cell: (item: ParkingDevice) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="destructive"
+          <CrudButton
+            action="delete"
+            iconOnly
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
             title="차단기 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },
@@ -426,15 +425,14 @@ export default function DevicesListPage() {
         title="차단기 장비 관리" 
         subtitle="차단기 등록, 설정, 삭제 및 상태 관리"
         rightActions={
-          <Button
-            variant="primary"
+          <CrudButton
+            action="create"
             size="default"
             onClick={handleCreateClick}
             title="차단기 추가"
           >
-            <Plus size={16} />
             차단기 추가
-          </Button>
+          </CrudButton>
         }
       />
 

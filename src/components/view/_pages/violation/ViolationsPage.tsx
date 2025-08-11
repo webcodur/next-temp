@@ -4,12 +4,13 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
 import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import { Plus } from 'lucide-react';
+// Plus 아이콘은 CrudButton에서 처리
 import { searchViolations } from '@/services/violations';
 
 import type { 
@@ -227,14 +228,13 @@ export default function ViolationsPage() {
         title="규정 위반 내역" 
         subtitle="주차장 내 차량 위반 기록을 조회하고 관리합니다."
         rightActions={
-          <Button
-            variant="primary"
+          <CrudButton
+            action="create"
+            iconOnly
             size="sm"
             onClick={handleCreateClick}
             title="위반 기록 추가"
-          >
-            <Plus size={16} />
-          </Button>
+          />
         }
       />
 

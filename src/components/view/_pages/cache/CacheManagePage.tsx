@@ -1,10 +1,11 @@
 /* 메뉴 설명: 네임스페이스별 캐시 관리 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Trash2, Database, RefreshCw, Search } from 'lucide-react';
+import { Database, RefreshCw, Search } from 'lucide-react'; // Trash2 아이콘은 CrudButton에서 처리
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -260,17 +261,16 @@ export default function CacheManagePage() {
           >
             <Search size={16} />
           </Button>
-          <Button
-            variant="destructive"
+          <CrudButton
+            action="delete"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.namespace);
             }}
             title="캐시 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },

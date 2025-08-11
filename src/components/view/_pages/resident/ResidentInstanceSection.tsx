@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Home, Plus, Trash2, Edit, MapPin, Save } from 'lucide-react';
+import { Home, Plus, Edit, MapPin } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
@@ -238,14 +239,13 @@ export default function ResidentInstanceSection({
       width: '10%',
       cell: (item: ResidentInstanceWithInstance) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="destructive"
+          <CrudButton
+            action="delete"
+            iconOnly
             size="sm"
             onClick={() => handleDeleteInstanceRelation(item.id)}
             title="관계 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },
@@ -358,15 +358,14 @@ export default function ResidentInstanceSection({
                 >
                   닫기
                 </Button>
-                <Button
-                  variant="primary"
+                <CrudButton
+                  action="save"
                   onClick={handleExecuteMove}
                   disabled={!isMoveValid || isMoving || isSearching}
                   title={isMoving ? '이동 중...' : !isMoveValid ? '호실을 선택해주세요' : '호실 이동 실행'}
-                  icon={Save}
                 >
                   {isMoving ? '이동 중...' : '이동 실행'}
-                </Button>
+                </CrudButton>
               </div>
             )}
           >
@@ -432,15 +431,14 @@ export default function ResidentInstanceSection({
               호실 관계 목록
             </h2>
           </div>
-          <Button 
-            variant="outline" 
+          <CrudButton 
+            action="create"
             size="sm"
             onClick={handleCreateInstanceRelation}
             title="새 호실 관계 추가"
           >
-            <Plus size={16} />
             관계 추가
-          </Button>
+          </CrudButton>
         </div>
 
         {resident.residentInstance && resident.residentInstance.length > 0 ? (

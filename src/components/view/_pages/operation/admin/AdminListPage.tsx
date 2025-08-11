@@ -1,11 +1,12 @@
 /* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Plus, Trash2, Copy } from 'lucide-react';
+// Plus, Trash2, Copy 아이콘은 CrudButton에서 처리
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -319,28 +320,26 @@ export default function AdminListPage() {
       width: '12%',
       cell: (item: Admin) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="outline"
+          <CrudButton
+            action="copy"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleCopyClick(item.id);
             }}
             title="관리자 정보 복사"
-          >
-            <Copy size={16} />
-          </Button>
-          <Button
-            variant="destructive"
+          />
+          <CrudButton
+            action="delete"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
             title="관리자 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },
@@ -354,14 +353,12 @@ export default function AdminListPage() {
         title="관리자 계정 관리" 
         subtitle="시스템 관리자 계정 등록, 수정, 삭제 및 권한 관리"
         rightActions={
-          <Button
-            variant="primary"
+          <CrudButton
+            action="create"
             size="default"
             onClick={handleCreateClick}
             title="관리자 추가"
-          >
-            <Plus size={16} />
-          </Button>
+          />
         }
       />
 

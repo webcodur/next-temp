@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Eraser, RotateCcw, Save, Trash2 } from 'lucide-react';
+import { Eraser, RotateCcw } from 'lucide-react';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { Car } from '@/types/car';
 
 export interface CarFormData {
@@ -134,42 +135,33 @@ const CarForm: React.FC<CarFormProps> = ({
     ? (
       mode === 'create'
         ? (
-          <Button
-            variant="primary"
+          <CrudButton
+            action="save"
             size="default"
             onClick={onSubmit}
             disabled={!isValid || disabled}
             title={disabled ? '저장 중...' : !isValid ? '필수 항목을 입력해주세요' : '저장'}
-            icon={Save}
-          >
-            저장
-          </Button>
+          />
         )
         : mode === 'edit'
           ? (
             <div className="flex gap-3">
               {onDelete && (
-                <Button
-                  variant="destructive"
+                <CrudButton
+                  action="delete"
                   size="default"
                   onClick={onDelete}
                   disabled={disabled}
                   title="상세 항목을 삭제합니다"
-                  icon={Trash2}
-                >
-                  삭제
-                </Button>
+                />
               )}
-              <Button
-                variant="primary"
+              <CrudButton
+                action="save"
                 size="default"
                 onClick={onSubmit}
                 disabled={!isValid || disabled}
                 title={disabled ? '저장 중...' : !isValid ? '필수 항목을 입력해주세요' : '저장'}
-                icon={Save}
-              >
-                저장
-              </Button>
+              />
             </div>
           )
           : null

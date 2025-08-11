@@ -2,11 +2,12 @@
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Unlock } from 'lucide-react';
+import { Unlock } from 'lucide-react'; // Plus 아이콘은 CrudButton에서 처리
 
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -459,14 +460,12 @@ export default function BlacklistListPage() {
         subtitle="블랙리스트에 등록된 차량 목록 조회, 등록, 해제 관리"
         rightActions={
           <div className="flex gap-3">
-            <Button
-              variant="primary"
+            <CrudButton
+              action="create"
               size="default"
               onClick={handleCreateClick}
               title="수동 블랙리스트 등록"
-            >
-              <Plus size={16} />
-            </Button>
+            />
           </div>
         }
       />
@@ -663,14 +662,13 @@ export default function BlacklistListPage() {
             >
               취소
             </Button>
-            <Button 
-              variant="primary" 
+            <CrudButton 
+              action="save"
               onClick={handleCreateSubmit}
               disabled={!isCreateFormValid || isCreating}
             >
-              <Plus size={16} />
               {isCreating ? '등록 중...' : '등록'}
-            </Button>
+            </CrudButton>
           </div>
         </div>
       </Modal>

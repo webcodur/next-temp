@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Users, Plus, Trash2, Settings, Crown } from 'lucide-react';
+import { Users, Plus, Crown } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
@@ -273,28 +274,26 @@ export default function CarResidentSection({
       width: '15%',
       cell: (item: CarInstanceResidentDetail) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="secondary"
+          <CrudButton
+            action="edit"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleEditClick(item);
             }}
             title="설정 수정"
-          >
-            <Settings size={16} />
-          </Button>
-          <Button
-            variant="destructive"
+          />
+          <CrudButton
+            action="delete"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
             title="연결 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },
@@ -308,15 +307,14 @@ export default function CarResidentSection({
         title="거주자 연결 관리" 
         subtitle="차량을 이용하는 거주자를 관리합니다."
         endContent={residentList.length > 0 ? (
-          <Button
-            variant="primary"
+          <CrudButton
+            action="create"
             size="sm"
             onClick={() => setCreateModalOpen(true)}
             title="새 거주자 연결"
           >
-            <Plus size={16} />
             연결 추가
-          </Button>
+          </CrudButton>
         ) : null}
       />
 
@@ -331,14 +329,13 @@ export default function CarResidentSection({
               현재 이 차량에 연결된 거주자가 없습니다.<br />
               새 거주자 연결을 추가해보세요.
             </p>
-            <Button
-              variant="primary"
+            <CrudButton
+              action="create"
               onClick={() => setCreateModalOpen(true)}
               title="새 거주자 연결"
             >
-              <Plus size={16} />
               거주자 연결 추가
-            </Button>
+            </CrudButton>
           </div>
         ) : (
           <PaginatedTable

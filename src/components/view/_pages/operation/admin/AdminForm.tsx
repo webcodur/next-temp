@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw, Send, Trash2 } from 'lucide-react';
+import { RotateCcw, Send } from 'lucide-react'; // Trash2 아이콘은 CrudButton에서 처리
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { Admin } from '@/types/admin';
 
 export interface AdminFormData {
@@ -84,16 +85,13 @@ const AdminForm: React.FC<AdminFormProps> = ({
   const bottomRightActions = showActions ? (
     <div className="flex gap-3">
       {onDelete && (
-        <Button 
-          variant="destructive" 
+        <CrudButton 
+          action="delete"
           size="default"
           onClick={onDelete}
           disabled={disabled}
           title="관리자 삭제"
-        >
-          <Trash2 size={16} />
-          삭제
-        </Button>
+        />
       )}
       <Button 
         variant="primary" 

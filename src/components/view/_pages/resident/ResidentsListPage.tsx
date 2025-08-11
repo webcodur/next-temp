@@ -1,11 +1,12 @@
 /* 메뉴 설명: 거주자 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Plus, Trash2, Users } from 'lucide-react';
+import { Users } from 'lucide-react'; // Plus, Trash2 아이콘은 CrudButton에서 처리
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -379,17 +380,16 @@ export default function ResidentsListPage() {
       width: '10%',
       cell: (item: ResidentDetail) => (
         <div className="flex gap-1 justify-center">
-          <Button
-            variant="destructive"
+          <CrudButton
+            action="delete"
+            iconOnly
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
             title="거주자 삭제"
-          >
-            <Trash2 size={16} />
-          </Button>
+          />
         </div>
       ),
     },
@@ -409,15 +409,14 @@ export default function ResidentsListPage() {
           </div>
         }
         rightActions={
-          <Button
-            variant="primary"
+          <CrudButton
+            action="create"
             size="default"
             onClick={handleCreateClick}
             title="거주자 추가"
           >
-            <Plus size={16} />
             추가
-          </Button>
+          </CrudButton>
         }
       />
 
