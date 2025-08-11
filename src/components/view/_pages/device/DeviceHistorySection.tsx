@@ -170,21 +170,7 @@ export default function DeviceHistorySection({
     );
   };
 
-  const formatDateTime = (date: Date | string) => {
-    if (!date) return '-';
-    
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    
-    if (isNaN(dateObj.getTime())) return '-';
-    
-    return dateObj.toLocaleString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+
 
   // 빠른 기간 설정 핸들러
   const setLast7Days = useCallback(() => {
@@ -259,29 +245,67 @@ export default function DeviceHistorySection({
       header: '변경 전',
       align: 'start',
       width: '15%',
-      cell: (item: ParkingDeviceHistory) => (
-        <div className="px-2 py-1 text-xs truncate bg-red-50 rounded max-w-32">
-          {item.beforeData ? JSON.stringify(item.beforeData).substring(0, 50) + '...' : '-'}
-        </div>
-      ),
+      cell: (item: ParkingDeviceHistory) => {
+        if (!item.beforeData) return '-';
+        
+        // 핵심 필드만 추출해서 미리보기
+        const data = item.beforeData;
+        const keyFields = ['name', 'ip', 'status'];
+        const preview = keyFields
+          .filter(key => data[key] !== undefined)
+          .slice(0, 2) // 최대 2개 필드만
+          .map(key => `${key}: ${data[key]}`)
+          .join(', ');
+        
+        return (
+          <div className="px-2 py-1 text-xs bg-red-50 rounded max-w-32">
+            <div className="truncate">
+              {preview || 'JSON 데이터'}
+            </div>
+          </div>
+        );
+      },
+      // BaseTable 모달용 원본 데이터 제공
+      render: (value: unknown) => {
+        return value ? JSON.stringify(value, null, 2) : '';
+      }
     },
     {
       key: 'afterData',
       header: '변경 후',
       align: 'start',
       width: '15%',
-      cell: (item: ParkingDeviceHistory) => (
-        <div className="px-2 py-1 text-xs truncate bg-green-50 rounded max-w-32">
-          {item.afterData ? JSON.stringify(item.afterData).substring(0, 50) + '...' : '-'}
-        </div>
-      ),
+      cell: (item: ParkingDeviceHistory) => {
+        if (!item.afterData) return '-';
+        
+        // 핵심 필드만 추출해서 미리보기
+        const data = item.afterData;
+        const keyFields = ['name', 'ip', 'status'];
+        const preview = keyFields
+          .filter(key => data[key] !== undefined)
+          .slice(0, 2) // 최대 2개 필드만
+          .map(key => `${key}: ${data[key]}`)
+          .join(', ');
+        
+        return (
+          <div className="px-2 py-1 text-xs bg-green-50 rounded max-w-32">
+            <div className="truncate">
+              {preview || 'JSON 데이터'}
+            </div>
+          </div>
+        );
+      },
+      // BaseTable 모달용 원본 데이터 제공
+      render: (value: unknown) => {
+        return value ? JSON.stringify(value, null, 2) : '';
+      }
     },
     {
       key: 'createdAt',
       header: '변경 시간',
       align: 'center',
       width: '12%',
-      cell: (item: ParkingDeviceHistory) => formatDateTime(item.createdAt),
+      type: 'datetime',
     },
   ], []);
   // #endregion

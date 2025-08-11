@@ -31,21 +31,6 @@ const SIZE_CLASSES = {
 // #endregion
 
 // #region Utilities
-const formatDateTime = (dateStr: string) => {
-	const dateObj = new Date(dateStr);
-	
-	// 유효하지 않은 날짜는 현재 시간으로 대체
-	const validDate = isNaN(dateObj.getTime()) ? new Date() : dateObj;
-	
-	const yy = String(validDate.getFullYear()).slice(2);
-	const mm = String(validDate.getMonth() + 1).padStart(2, '0');
-	const dd = String(validDate.getDate()).padStart(2, '0');
-	const HH = String(validDate.getHours()).padStart(2, '0');
-	const ii = String(validDate.getMinutes()).padStart(2, '0');
-	const ss = String(validDate.getSeconds()).padStart(2, '0');
-	
-	return { date: `${yy}-${mm}-${dd}`, time: `${HH}:${ii}:${ss}` };
-};
 
 const filterVehicles = (vehicles: VehicleEntry[], filters: SearchFilters): VehicleEntry[] => {
 	return vehicles.filter((vehicle) => {
@@ -149,15 +134,7 @@ const createColumns = (
 			header: t('주차_테이블_헤더_이용시간'),
 			width: '7rem',
 			align: 'center',
-			cell: (vehicle) => {
-				const formatted = formatDateTime(vehicle.use_time);
-				return (
-					<div className="font-mono text-base whitespace-normal">
-						<div className="block mb-1">{formatted.date}</div>
-						<div className="block text-sm">{formatted.time}</div>
-					</div>
-				);
-			},
+			type: 'datetime',
 		},
 	];
 };

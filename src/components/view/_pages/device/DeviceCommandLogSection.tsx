@@ -91,22 +91,7 @@ export default function DeviceCommandLogSection({
     );
   };
 
-  const formatDateTime = (date: Date | string) => {
-    if (!date) return '-';
-    
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    
-    if (isNaN(dateObj.getTime())) return '-';
-    
-    return dateObj.toLocaleString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  };
+
   // #endregion
 
   // #region 컬럼 정의
@@ -180,7 +165,7 @@ export default function DeviceCommandLogSection({
       header: '실행 시간',
       align: 'center',
       width: '12%',
-      cell: (item: ParkingDeviceCommandLog) => formatDateTime(item.createdAt),
+      type: 'datetime',
     },
   ], []);
   // #endregion

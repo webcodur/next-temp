@@ -265,33 +265,14 @@ export default function IpBlockRealtimeHistoryPage() {
       header: '차단 시간',
       align: 'center',
       width: '15%',
-      cell: (item: IpBlock) => {
-        const date = new Date(item.blockedAt);
-        return date.toLocaleString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-      },
+      type: 'datetime',
     },
     {
       key: 'unblockedAt',
       header: '해제 시간',
       align: 'center',
       width: '15%',
-      cell: (item: IpBlock) => {
-        if (!item.unblockedAt) return '-';
-        const date = new Date(item.unblockedAt);
-        return date.toLocaleString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-      },
+      type: 'datetime',
     },
     {
       key: 'isActive',

@@ -1,7 +1,7 @@
 /* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Copy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
@@ -156,6 +156,10 @@ export default function AdminListPage() {
     setDeleteConfirmOpen(true);
   }, []);
 
+  const handleCopyClick = useCallback((adminId: number) => {
+    router.push(`/parking/lot/admin/create?copyFrom=${adminId}`);
+  }, [router]);
+
   const handleDeleteConfirm = useCallback(async () => {
     if (!deleteTargetId) return;
 
@@ -292,7 +296,7 @@ export default function AdminListPage() {
       key: 'parkinglotId',
       header: '주차장 ID',
       align: 'center',
-      width: '13%',
+      width: '10%',
       cell: (item: Admin) => item.parkinglotId || '-',
     },
     {
@@ -312,9 +316,20 @@ export default function AdminListPage() {
     {
       header: '관리',
       align: 'center',
-      width: '9%',
+      width: '12%',
       cell: (item: Admin) => (
         <div className="flex gap-1 justify-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCopyClick(item.id);
+            }}
+            title="관리자 정보 복사"
+          >
+            <Copy size={16} />
+          </Button>
           <Button
             variant="destructive"
             size="sm"
@@ -377,7 +392,7 @@ export default function AdminListPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2">정말로 삭제하시겠습니까?</h3>
+            <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">
               이 작업은 되돌릴 수 없습니다. 관리자 정보가 영구적으로 삭제됩니다.
             </p>
@@ -409,7 +424,7 @@ export default function AdminListPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{dialogMessage}</p>
           </div>
           
@@ -430,7 +445,7 @@ export default function AdminListPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{dialogMessage}</p>
           </div>
           

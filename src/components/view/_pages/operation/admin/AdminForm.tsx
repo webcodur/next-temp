@@ -63,32 +63,38 @@ const AdminForm: React.FC<AdminFormProps> = ({
     });
   };
 
-  // 액션 버튼들 정의
-  const topRightActions = showActions && onDelete ? (
+  // 액션 버튼들 정의 - 가이드에 따라 유틸(start) / 액션(end) 분리
+  const topRightActions = null; // 상단에는 버튼 배치하지 않음
+
+  // 유틸 버튼 (start 사이드) - 복구
+  const bottomLeftActions = showActions ? (
     <Button 
-      variant="destructive" 
+      variant="secondary" 
       size="default"
-      onClick={onDelete}
-      disabled={disabled}
-      title="관리자 삭제"
+      onClick={onReset} 
+      disabled={!hasChanges || disabled}
+      title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
     >
-      <Trash2 size={16} />
-      삭제
+      <RotateCcw size={16} />
+      복구
     </Button>
   ) : null;
 
+  // 액션 버튼 (end 사이드) - 삭제, 저장
   const bottomRightActions = showActions ? (
     <div className="flex gap-3">
-      <Button 
-        variant="secondary" 
-        size="default"
-        onClick={onReset} 
-        disabled={!hasChanges || disabled}
-        title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-      >
-        <RotateCcw size={16} />
-        복구
-      </Button>
+      {onDelete && (
+        <Button 
+          variant="destructive" 
+          size="default"
+          onClick={onDelete}
+          disabled={disabled}
+          title="관리자 삭제"
+        >
+          <Trash2 size={16} />
+          삭제
+        </Button>
+      )}
       <Button 
         variant="primary" 
         size="default"
@@ -107,6 +113,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       labelWidth="120px" 
       gap="16px"
       topRightActions={topRightActions}
+      bottomLeftActions={bottomLeftActions}
       bottomRightActions={bottomRightActions}
     >
       <GridForm.Row>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, CheckCircle, AlertCircle, X, Binary } from 'lucide-react';
+import { Type, CheckCircle, AlertCircle, X, Binary, Eye, EyeOff } from 'lucide-react';
 import { ValidationRule, getValidationResult } from './types';
 
 interface SimpleTextInputProps {
@@ -31,6 +31,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		errorMessage,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const handleFocus = () => {
@@ -59,6 +60,13 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		e.stopPropagation();
 		if (disabled) return;
 		onChange?.('');
+		inputRef.current?.focus();
+	};
+
+	const togglePasswordVisibility = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (disabled) return;
+		setShowPassword(!showPassword);
 		inputRef.current?.focus();
 	};
 
@@ -136,7 +144,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				{/* 중앙 입력 필드 */}
 				<input
 					ref={inputRef}
-					type={type}
+					type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
 					value={value}
 					onChange={handleChange}
 					onFocus={handleFocus}
@@ -146,6 +154,21 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					disabled={disabled}
 					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
 				/>
+
+				{/* 비밀번호 보기/숨기기 버튼 */}
+				{type === 'password' && !disabled && (
+					<button
+						type="button"
+						onClick={togglePasswordVisibility}
+						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}>
+						{showPassword ? (
+							<EyeOff className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+						) : (
+							<Eye className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+						)}
+					</button>
+				)}
 
 				{/* 우측 X 아이콘 */}
 				{value && !disabled && (

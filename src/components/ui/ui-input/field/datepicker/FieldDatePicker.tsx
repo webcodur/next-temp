@@ -11,8 +11,12 @@ import {
 	PickTime,
 	PickMonth
 } from '@/components/ui/ui-input/datepicker/Datepicker';
+import timezone from '@/utils/timezone';
 
-const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> = ({
+const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { 
+	id: string;
+	utcMode?: boolean;
+}> = ({
 	id,
 	label,
 	placeholder = '날짜 선택',
@@ -28,8 +32,50 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 	dateFormat = 'yyyy-MM-dd',
 	className = '',
 	disabled = false,
+	utcMode = true,
 }) => {
 	const { isRTL } = useLocale();
+
+	// UTC 변환 헬퍼 함수들
+	const convertToDisplayValue = (utcValue: Date | string | null): Date | null => {
+		if (!utcValue || !utcMode) return utcValue as Date | null;
+		
+		if (typeof utcValue === 'string') {
+			try {
+				return timezone.utcToLocal(utcValue);
+			} catch (error) {
+				console.warn('UTC 변환 실패:', error);
+				return null;
+			}
+		}
+		return utcValue;
+	};
+
+	const convertToUtcValue = (localDate: Date | null): string | Date | null => {
+		if (!localDate) return null;
+		return utcMode ? timezone.localToUtc(localDate) : localDate;
+	};
+
+	// 변환된 핸들러들
+	const handleUtcChange = (date: Date | null) => {
+		const utcValue = convertToUtcValue(date);
+		onChange?.(utcValue as any);
+	};
+
+	const handleUtcStartDateChange = (date: Date | null) => {
+		const utcValue = convertToUtcValue(date);
+		onStartDateChange?.(utcValue as any);
+	};
+
+	const handleUtcEndDateChange = (date: Date | null) => {
+		const utcValue = convertToUtcValue(date);
+		onEndDateChange?.(utcValue as any);
+	};
+
+	// 표시용 값들 변환
+	const displayValue = convertToDisplayValue(value ?? null);
+	const displayStartDate = convertToDisplayValue(startDate ?? null);
+	const displayEndDate = convertToDisplayValue(endDate ?? null);
 
 	// 아이콘 선택
 	const getIcon = () => {
@@ -48,10 +94,10 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 		}
 	};
 
-	// 값이 있는지 확인
+	// 값이 있는지 확인 (변환된 값 기준)
 	const hasValue = datePickerType === 'range' ? 
-		(startDate || endDate) : 
-		value;
+		(displayStartDate || displayEndDate) : 
+		displayValue;
 
 	// 공통 스타일 클래스
 	const getDatePickerClassName = () => {
@@ -79,14 +125,16 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				<div className="relative">
 					{getIcon()}
 					<PickDateRange
-						startDate={startDate ?? null}
-						endDate={endDate ?? null}
+						startDate={displayStartDate}
+						endDate={displayEndDate}
 						onChange={(dates) => {
 							const [start, end] = dates;
-							onStartDateChange?.(start);
-							onEndDateChange?.(end);
+							handleUtcStartDateChange(start);
+							handleUtcEndDateChange(end);
 							if (onChange) {
-								(onChange as unknown as (value: (Date | null)[]) => void)([start, end]);
+								const utcStart = convertToUtcValue(start);
+								const utcEnd = convertToUtcValue(end);
+								(onChange as unknown as (value: (typeof utcStart | typeof utcEnd)[]) => void)([utcStart, utcEnd]);
 							}
 						}}
 						dateFormat={dateFormat}
@@ -110,8 +158,8 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				<div className="relative">
 					{getIcon()}
 					<PickTime
-						selected={value as Date | null}
-						onChange={(time) => onChange?.(time)}
+						selected={displayValue}
+						onChange={handleUtcChange}
 						placeholderText={placeholder}
 						className={getDatePickerClassName()}
 					/>
@@ -132,8 +180,8 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				<div className="relative">
 					{getIcon()}
 					<PickMonth
-						selected={value as Date | null}
-						onChange={(date) => onChange?.(date)}
+						selected={displayValue}
+						onChange={handleUtcChange}
 						dateFormat="yyyy-MM"
 						placeholderText={placeholder}
 						minDate={minDate ?? null}
@@ -158,8 +206,8 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & { id: string }> 
 				<div className="relative">
 					{getIcon()}
 					<PickDate
-						selected={value as Date | null}
-						onChange={(date) => onChange?.(date)}
+						selected={displayValue}
+						onChange={handleUtcChange}
 						dateFormat={datePickerType === 'datetime' ? 'yyyy-MM-dd HH:mm' : dateFormat}
 						placeholderText={placeholder}
 						showTimeSelect={datePickerType === 'datetime'}

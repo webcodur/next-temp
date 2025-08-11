@@ -352,27 +352,7 @@ export default function SystemConfigManagementPage() {
       header: '수정일시',
       align: 'center',
       width: '12%',
-      cell: (item: SystemConfig) => {
-        if (!item.updatedAt) return <span className="text-muted-foreground">-</span>;
-        
-        const date = new Date(item.updatedAt);
-        const formattedDate = date.toLocaleDateString('ko-KR', {
-          year: '2-digit',
-          month: '2-digit',
-          day: '2-digit',
-        });
-        const formattedTime = date.toLocaleTimeString('ko-KR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-        
-        return (
-          <div className="text-xs text-muted-foreground">
-            <div>{formattedDate}</div>
-            <div>{formattedTime}</div>
-          </div>
-        );
-      },
+      type: 'datetime',
     },
     {
       key: 'key',

@@ -1,9 +1,9 @@
 /* 메뉴 설명: 페이지 기능 설명 */
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { ArrowLeft, Save, Info } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -11,6 +11,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
+import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { ROLE_ID_MAP } from '@/types/admin';
 import { currentPageLabelAtom } from '@/store/ui';
 
@@ -26,6 +27,8 @@ export interface AdminInput {
 
 export default function AdminCreatePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const copyFromId = searchParams.get('copyFrom');
   const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
   
   // #region 페이지 라벨 설정
@@ -35,6 +38,49 @@ export default function AdminCreatePage() {
       href: window.location.pathname,
     });
   }, [setCurrentPageLabel]);
+  // #endregion
+
+  // #region 복사 기능
+  const loadAdminForCopy = useCallback(async (adminId: number) => {
+    setCopyLoading(true);
+    try {
+      const result = await getAdminDetail({ id: adminId });
+      
+      if (result.success && result.data) {
+        const admin = result.data;
+        setFormData({
+          account: '', // 빈값 - 유니크해야 함
+          name: admin.name || '',
+          email: '', // 빈값 - 개인정보
+          phone: '', // 빈값 - 개인정보
+          role: admin.role?.name || '',
+          password: '',
+          confirm: '',
+        });
+        
+        setCopyInfoMessage(`${admin.name || admin.account} 정보를 복사하여 신규 데이터를 등록합니다.`);
+      } else {
+        console.error('관리자 조회 실패:', result.errorMsg);
+        setErrorMessage(`복사할 관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
+      }
+    } catch (error) {
+      console.error('관리자 조회 중 오류:', error);
+      setErrorMessage('복사할 관리자 정보를 불러오는 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
+    } finally {
+      setCopyLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (copyFromId) {
+      const adminId = Number(copyFromId);
+      if (!isNaN(adminId)) {
+        loadAdminForCopy(adminId);
+      }
+    }
+  }, [copyFromId, loadAdminForCopy]);
   // #endregion
 
   // #region 폼 상태
@@ -48,10 +94,12 @@ export default function AdminCreatePage() {
     confirm: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copyLoading, setCopyLoading] = useState(false);
   
   // 모달 상태
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [copyInfoMessage, setCopyInfoMessage] = useState('');
   // #endregion
 
   // #region 검증
@@ -131,28 +179,44 @@ export default function AdminCreatePage() {
         }
       />
 
+      {/* 복사 정보 안내 */}
+      {copyInfoMessage && (
+        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex gap-2 items-center text-blue-700">
+            <Info size={20} />
+            <span className="font-medium">{copyInfoMessage}</span>
+          </div>
+        </div>
+      )}
+
       {/* 폼 섹션 */}
-      <div className="bg-card rounded-lg border border-border p-6">
-        <AdminForm
-          mode="create"
-          data={formData}
-          onChange={handleFormChange}
-          disabled={isSubmitting}
-        />
+      <div className="p-6 rounded-lg border bg-card border-border">
+        {copyLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-muted-foreground">복사할 정보를 불러오는 중...</div>
+          </div>
+        ) : (
+          <AdminForm
+            mode="create"
+            data={formData}
+            onChange={handleFormChange}
+            disabled={isSubmitting}
+          />
+        )}
       </div>
 
       {/* 저장 버튼 - 우하단 고정 */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed right-6 bottom-6 z-50">
         <Button 
           variant="primary"
           size="lg"
           onClick={handleSubmit} 
-          disabled={!isValid || isSubmitting}
-          title={isSubmitting ? '생성 중...' : '생성'}
+          disabled={!isValid || isSubmitting || copyLoading}
+          title={isSubmitting ? '생성 중...' : copyLoading ? '로딩 중...' : '생성'}
           className="shadow-lg"
         >
           <Save size={20} />
-          {isSubmitting ? '생성 중...' : '생성'}
+          {isSubmitting ? '생성 중...' : copyLoading ? '로딩 중...' : '생성'}
         </Button>
       </div>
 
@@ -165,7 +229,7 @@ export default function AdminCreatePage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{errorMessage}</p>
           </div>
           

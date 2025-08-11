@@ -9,6 +9,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { cn } from '@/lib/utils';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
+import timezone from '@/utils/timezone';
+import { formatToShortDate, formatToShortDateTime } from '@/utils/dateFormat';
 
 import { BaseTableProps } from './types';
 import { 
@@ -32,6 +35,15 @@ const BaseTable = <T extends Record<string, unknown>>({
 }: BaseTableProps<T>) => {
 	// #region 훅 및 상태
 	const { isRTL } = useLocale();
+	const [modalData, setModalData] = useState<{
+		isOpen: boolean;
+		content: string;
+		title: string;
+	}>({
+		isOpen: false,
+		content: '',
+		title: ''
+	});
 
 	// 계산된 값
 	const isInitialLoading = data === null;
@@ -91,13 +103,47 @@ const BaseTable = <T extends Record<string, unknown>>({
 				? String(item[column.key as keyof T])
 				: null;
 
+		// 렌더링된 내용 계산
+		const renderedContent = (() => {
+			// 타입별 자동 처리
+			if (column.type === 'date' && rawValue) {
+				try {
+					const localDate = timezone.utcToLocal(rawValue);
+					return formatToShortDate(localDate);
+				} catch (error) {
+					console.warn('날짜 변환 실패:', error);
+					return '-';
+				}
+			}
+			
+			if (column.type === 'datetime' && rawValue) {
+				try {
+					const localDate = timezone.utcToLocal(rawValue);
+					return formatToShortDateTime(localDate);
+				} catch (error) {
+					console.warn('날짜시간 변환 실패:', error);
+					return '-';
+				}
+			}
+			
+			// 기존 로직 유지
+			if (column.cell) return column.cell(item, index);
+			if (column.render && column.key && column.key in item)
+				return column.render(item[column.key as keyof T], item, index);
+			if (rawValue !== null) return rawValue;
+			return '';
+		})();
+
+		// 표시할 텍스트 값 (모달에서 사용)
+		const displayText = typeof renderedContent === 'string' ? renderedContent : rawValue || '';
+
 		// 오버플로우 검사
 		useEffect(() => {
-			if (contentRef.current && rawValue) {
+			if (contentRef.current) {
 				const element = contentRef.current;
 				setIsOverflowing(element.scrollWidth > element.clientWidth);
 			}
-		}, [rawValue]);
+		}, [renderedContent, rawValue]);
 
 		// RTL 지원을 위한 정렬 클래스
 		const getAlignmentClass = (align?: 'start' | 'center' | 'end') => {
@@ -110,31 +156,45 @@ const BaseTable = <T extends Record<string, unknown>>({
 			return 'text-center';
 		};
 
+		// 셀 클릭 핸들러
+		const handleCellClick = (e: React.MouseEvent) => {
+			e.stopPropagation(); // 행 클릭 이벤트 전파 방지
+			
+			if (displayText && isOverflowing) {
+				setModalData({
+					isOpen: true,
+					content: displayText,
+					title: column.header || '셀 내용'
+				});
+			}
+		};
+
 		// 셀 내용 렌더링
 		const renderCellContent = () => {
-			const content = (() => {
-				if (column.cell) return column.cell(item, index);
-				if (column.render && column.key && column.key in item)
-					return column.render(item[column.key as keyof T], item, index);
-				if (rawValue !== null) return rawValue;
-				return '';
-			})();
-
-			// 텍스트가 있고 오버플로우가 발생한 경우 tooltip으로 감싸기
-			if (rawValue && isOverflowing) {
+			// 오버플로우가 발생한 경우 특별한 스타일링과 클릭 기능 적용
+			if (isOverflowing) {
 				return (
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<div 
 								ref={contentRef}
-								className="truncate cursor-help"
+								onClick={handleCellClick}
+								className="
+									truncate cursor-pointer
+									hover:bg-primary-3/20 hover:scale-[1.02]
+									rounded px-1 py-0.5 transition-all duration-200
+									border border-transparent hover:border-primary-4/40
+								"
 							>
-								{content}
+								{renderedContent}
 							</div>
 						</TooltipTrigger>
 						<TooltipContent variant="default" className="max-w-md">
 							<div className="whitespace-pre-wrap break-words">
-								{rawValue}
+								{displayText}
+								<div className="mt-1 text-xs text-muted-foreground">
+									클릭하면 전체 내용을 볼 수 있습니다
+								</div>
 							</div>
 						</TooltipContent>
 					</Tooltip>
@@ -146,7 +206,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 					ref={contentRef}
 					className="truncate"
 				>
-					{content}
+					{renderedContent}
 				</div>
 			);
 		};
@@ -262,6 +322,20 @@ const BaseTable = <T extends Record<string, unknown>>({
 					{renderBody()}
 				</table>
 			</div>
+
+			{/* 셀 내용 전체보기 모달 */}
+			<Modal
+				isOpen={modalData.isOpen}
+				onClose={() => setModalData({ ...modalData, isOpen: false })}
+				title={modalData.title}
+				size="lg"
+			>
+				<div className="overflow-auto max-h-96">
+					<div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+						{modalData.content}
+					</div>
+				</div>
+			</Modal>
 		</TooltipProvider>
 	);
 	// #endregion

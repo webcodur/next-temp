@@ -7,11 +7,12 @@ import { ko } from 'date-fns/locale';
 import { Calendar } from 'lucide-react';
 import { getYear, getMonth } from 'date-fns';
 import { ValidationRule, getValidationResult } from './types';
+import timezone from '@/utils/timezone';
 
 interface SimpleDatePickerProps {
 	label?: string;
-	value?: Date | null;
-	onChange?: (date: Date | null) => void;
+	value?: Date | string | null;
+	onChange?: (utcValue: string | null) => void;
 	placeholder?: string;
 	disabled?: boolean;
 	className?: string;
@@ -21,6 +22,7 @@ interface SimpleDatePickerProps {
 	maxDate?: Date | null;
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	utcMode?: boolean;
 }
 
 // #region 커스텀 헤더 구성 함수
@@ -139,9 +141,44 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 	maxDate,
 	validationRule,
 	colorVariant = 'primary',
+	utcMode = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	// UTC 변환 헬퍼 함수들
+	const getDisplayValue = (): Date | null => {
+		if (!value) return null;
+		
+		if (utcMode) {
+			// UTC 모드: UTC 문자열을 로컬 Date로 변환하여 표시
+			if (typeof value === 'string') {
+				try {
+					return timezone.utcToLocal(value);
+				} catch (error) {
+					console.warn('UTC 변환 실패:', error);
+					return null;
+				}
+			}
+			return value;
+		}
+		
+		// 일반 모드: 기존 동작
+		return value instanceof Date ? value : null;
+	};
+
+	const handleDateChange = (date: Date | null) => {
+		if (!onChange) return;
+		
+		if (utcMode) {
+			// UTC 모드: 로컬 Date를 UTC 문자열로 변환하여 전달
+			const utcString = date ? timezone.localToUtc(date) : null;
+			onChange(utcString);
+		} else {
+			// 일반 모드: 기존 동작 (타입 호환성을 위해 조정)
+			onChange(date?.toISOString() || null);
+		}
+	};
 
 	const handleFocus = () => {
 		if (disabled) return;
@@ -173,7 +210,8 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 	};
 
 	// validation 결과 계산 (날짜를 문자열로 변환하여 검증)
-	const stringValue = value ? value.toISOString().split('T')[0] : '';
+	const displayValue = getDisplayValue();
+	const stringValue = displayValue ? displayValue.toISOString().split('T')[0] : '';
 	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
@@ -228,14 +266,14 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				{/* 중앙 DatePicker */}
 				<div className="flex-1">
 					<DatePicker
-						selected={value}
-						onChange={onChange}
+						selected={displayValue}
+						onChange={handleDateChange}
 						dateFormat={dateFormat}
 						placeholderText={placeholder}
 						locale={ko}
 						showTimeSelect={showTimeSelect}
-										minDate={minDate ?? undefined}
-				maxDate={maxDate ?? undefined}
+						minDate={minDate ?? undefined}
+						maxDate={maxDate ?? undefined}
 						disabled={disabled}
 						renderCustomHeader={renderCustomHeader}
 						onFocus={handleFocus}
@@ -247,7 +285,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				</div>
 
 				{/* 우측 X 아이콘 */}
-				{value && !disabled && (
+				{displayValue && !disabled && (
 					<button
 						type="button"
 						onClick={handleClear}

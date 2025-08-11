@@ -6,6 +6,7 @@ export interface BaseTableColumn<T> {
 	header: string;
 	width?: string;
 	align?: 'start' | 'center' | 'end';
+	type?: 'text' | 'date' | 'datetime';
 	render?: (value: T[keyof T], item: T, index: number) => ReactNode;
 	cell?: (item: T, index: number) => ReactNode;
 	headerClassName?: string;
