@@ -12,6 +12,8 @@ import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import InstanceForm, { InstanceFormData } from './InstanceForm';
 import InstanceServiceConfigSection from './InstanceServiceConfigSection';
 import InstanceVisitConfigSection from './InstanceVisitConfigSection';
+import InstanceResidentList from './InstanceResidentList';
+import InstanceCarList from './InstanceCarList';
 import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
@@ -29,6 +31,9 @@ export default function InstanceDetailPage() {
   const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<InstanceFormData>({
+    name: '',
+    ownerName: '',
+    phone: '',
     address1Depth: '',
     address2Depth: '',
     address3Depth: '',
@@ -37,6 +42,9 @@ export default function InstanceDetailPage() {
     memo: '',
   });
   const [originalData, setOriginalData] = useState<InstanceFormData>({
+    name: '',
+    ownerName: '',
+    phone: '',
     address1Depth: '',
     address2Depth: '',
     address3Depth: '',
@@ -83,6 +91,9 @@ export default function InstanceDetailPage() {
         setInstance(result.data);
         
         const initialData = {
+          name: result.data.name,
+          ownerName: result.data.ownerName || '',
+          phone: result.data.phone,
           address1Depth: result.data.address1Depth,
           address2Depth: result.data.address2Depth,
           address3Depth: result.data.address3Depth || '',
@@ -120,6 +131,9 @@ export default function InstanceDetailPage() {
   // #region 변경 감지
   const hasChanges = useMemo(() => {
     return (
+      formData.name !== originalData.name ||
+      formData.ownerName !== originalData.ownerName ||
+      formData.phone !== originalData.phone ||
       formData.address1Depth !== originalData.address1Depth ||
       formData.address2Depth !== originalData.address2Depth ||
       formData.address3Depth !== originalData.address3Depth ||
@@ -133,6 +147,8 @@ export default function InstanceDetailPage() {
     if (!hasChanges) return false;
     
     return Boolean(
+      formData.name.trim() &&
+      formData.phone.trim() &&
       formData.address1Depth.trim() && 
       formData.address2Depth.trim() && 
       formData.instanceType && 
@@ -170,6 +186,9 @@ export default function InstanceDetailPage() {
     
     try {
       const updateData: {
+        name?: string;
+        ownerName?: string;
+        phone?: string;
         address1Depth?: string;
         address2Depth?: string;
         address3Depth?: string;
@@ -179,6 +198,9 @@ export default function InstanceDetailPage() {
       } = {};
       
       // 변경된 필드만 포함
+      if (formData.name !== originalData.name) updateData.name = formData.name;
+      if (formData.ownerName !== originalData.ownerName) updateData.ownerName = formData.ownerName;
+      if (formData.phone !== originalData.phone) updateData.phone = formData.phone;
       if (formData.address1Depth !== originalData.address1Depth) updateData.address1Depth = formData.address1Depth;
       if (formData.address2Depth !== originalData.address2Depth) updateData.address2Depth = formData.address2Depth;
       if (formData.address3Depth !== originalData.address3Depth) updateData.address3Depth = formData.address3Depth;
@@ -287,19 +309,34 @@ export default function InstanceDetailPage() {
         {/* 콘텐츠 영역 */}
         <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
           {activeTab === 'basic' && (
-            <InstanceForm
-              mode="edit"
-              instance={instance}
-              data={formData}
-              onChange={handleFormChange}
-              disabled={isSubmitting}
-              showActions={true}
-              onReset={handleReset}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-              hasChanges={hasChanges}
-              isValid={isValid}
-            />
+            <div className="space-y-6">
+              {/* 호실 기본 정보 */}
+              <InstanceForm
+                mode="edit"
+                instance={instance}
+                data={formData}
+                onChange={handleFormChange}
+                disabled={isSubmitting}
+                showActions={true}
+                onReset={handleReset}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
+                hasChanges={hasChanges}
+                isValid={isValid}
+              />
+              
+              {/* 거주민 목록 | 차량 목록 */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <InstanceResidentList 
+                  residentInstances={instance.residentInstance}
+                  loading={loading}
+                />
+                <InstanceCarList 
+                  carInstances={instance.carInstance}
+                  loading={loading}
+                />
+              </div>
+            </div>
           )}
           
           {activeTab === 'service' && (

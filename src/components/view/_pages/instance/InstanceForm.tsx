@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { InstanceDetail, InstanceType } from '@/types/instance';
 
 export interface InstanceFormData {
+  name: string;
+  ownerName: string;
+  phone: string;
   address1Depth: string;
   address2Depth: string;
   address3Depth: string;
@@ -63,6 +66,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
   // 유틸/액션 버튼 구성
   const handleClearAllFields = () => {
     onChange({
+      name: '',
+      ownerName: '',
+      phone: '',
       address1Depth: '',
       address2Depth: '',
       address3Depth: '',
@@ -159,6 +165,60 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
       >
+      <GridForm.Row>
+        <GridForm.Label required>
+          호실 이름
+        </GridForm.Label>
+        <GridForm.Content>
+          <SimpleTextInput
+            value={data.name}
+            onChange={(value) => handleFieldChange('name', value)}
+            placeholder="호실 이름을 입력해주세요"
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
+          />
+        </GridForm.Content>
+      </GridForm.Row>
+
+      <GridForm.Row>
+        <GridForm.Label>
+          소유자 이름
+        </GridForm.Label>
+        <GridForm.Content>
+          <SimpleTextInput
+            value={data.ownerName}
+            onChange={(value) => handleFieldChange('ownerName', value)}
+            placeholder="소유자 이름을 입력해주세요"
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
+          />
+        </GridForm.Content>
+      </GridForm.Row>
+
+      <GridForm.Row>
+        <GridForm.Label>
+          전화번호
+        </GridForm.Label>
+        <GridForm.Content>
+          <SimpleTextInput
+            value={data.phone}
+            onChange={(value) => handleFieldChange('phone', value)}
+            placeholder="전화번호를 입력해주세요"
+            disabled={isReadOnly}
+            validationRule={{
+              type: 'free',
+              mode: mode
+            }}
+          />
+        </GridForm.Content>
+      </GridForm.Row>
+
       <GridForm.Row>
         <GridForm.Label required>
           주소 1단계
