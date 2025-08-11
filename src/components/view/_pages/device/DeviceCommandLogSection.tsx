@@ -216,6 +216,7 @@ export default function DeviceCommandLogSection({
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
+          minWidth="1000px"
         />
     </div>
   );

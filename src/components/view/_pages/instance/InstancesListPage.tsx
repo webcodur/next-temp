@@ -363,6 +363,7 @@ export default function InstancesListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="호실"
+        minWidth="1000px"
       />
 
       {/* 삭제 확인 다이얼로그 */}

@@ -344,34 +344,7 @@ export default function DeviceHistorySection({
       ),
       visible: true,
     },
-    {
-      key: 'quickRange',
-      label: '빠른 기간',
-      element: (
-        <div className="flex gap-2 pt-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={setLast7Days}
-            disabled={loading}
-          >
-            <Calendar size={14} className="mr-1" />
-            최근 7일
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={setTodayRange}
-            disabled={loading}
-          >
-            <Calendar size={14} className="mr-1" />
-            오늘
-          </Button>
-        </div>
-      ),
-      visible: true,
-    },
-  ], [filters.actionType, filters.changedFields, filters.startDate, filters.endDate, loading, updateFilter, setLast7Days, setTodayRange]);
+  ], [filters.actionType, filters.changedFields, filters.startDate, filters.endDate, updateFilter]);
   // #endregion
 
   return (
@@ -436,6 +409,7 @@ export default function DeviceHistorySection({
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
+          minWidth="1200px"
         />
     </div>
   );

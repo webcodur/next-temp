@@ -139,16 +139,10 @@ export default function DevicePermissionConfigSection({
   const handleReset = () => {
     if (!hasChanges) return;
     
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
-    
     setFormData(originalData);
   };
 
   const handleBulkPermission = (permission: boolean) => {
-    const confirmMessage = `모든 차량 유형을 ${permission ? '허용' : '거부'}으로 설정하시겠습니까?`;
-    if (!confirm(confirmMessage)) return;
-
     setFormData(prev => Object.keys(prev).reduce((acc, key) => {
       acc[key as keyof PermissionConfigData] = permission;
       return acc;

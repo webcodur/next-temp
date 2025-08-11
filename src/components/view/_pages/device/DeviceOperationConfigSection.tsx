@@ -113,9 +113,6 @@ export default function DeviceOperationConfigSection({
   const handleReset = () => {
     if (!hasChanges) return;
     
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
-    
     setFormData(originalData);
   };
   // #endregion

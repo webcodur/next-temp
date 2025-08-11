@@ -487,6 +487,7 @@ export default function BlacklistListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="블랙리스트"
+        minWidth="1100px"
       />
 
       {/* 해제 확인 다이얼로그 */}

@@ -30,8 +30,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			'__통합 정보': {
-				key: '__통합 정보',
+			'정보 안내소': {
+				key: '정보 안내소',
 				botItems: [
 					{
 						key: '__1. 전체',
@@ -63,8 +63,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-      '운영 정보': {
-				key: '운영 정보',
+      '운영 관리': {
+				key: '운영 관리',
 				botItems: [
 					{
 						key: '근무자 관리',

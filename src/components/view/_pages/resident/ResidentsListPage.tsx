@@ -438,6 +438,7 @@ export default function ResidentsListPage() {
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="거주자"
         isFetching={isLoading}
+        minWidth="1100px"
       />
 
       {/* 삭제 확인 다이얼로그 */}

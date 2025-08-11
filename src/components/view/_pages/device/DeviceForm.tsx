@@ -193,6 +193,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
   return (
     <>
       <TitleRow title="차단기 기본 정보" subtitle="차단기의 기본 설정을 관리합니다." />
+      <div className="h-6" />
       <GridForm 
         labelWidth="120px" 
         gap="16px"
@@ -385,26 +386,6 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           />
         </GridForm.Content>
       </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          설치 순서
-        </GridForm.Label>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="number"
-            value={data.sequence}
-            onChange={(value) => handleFieldChange('sequence', value)}
-            placeholder="1"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
       {/* view/edit 모드에서만 표시되는 추가 정보 */}
       {mode !== 'create' && device && (
         <>

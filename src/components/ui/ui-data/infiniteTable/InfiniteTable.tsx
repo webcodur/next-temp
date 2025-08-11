@@ -28,6 +28,7 @@ const InfiniteTable = <T extends Record<string, unknown>>({
 	pageSize = 10,
 	loadingRows = 5,
 	onRowClick,
+	minWidth,
 }: InfiniteTableProps<T>) => {
 	// #region 무한스크롤 기능
 	const { sentinelRef } = useInfiniteScroll({
@@ -52,6 +53,7 @@ const InfiniteTable = <T extends Record<string, unknown>>({
 				pageSize={pageSize}
 				loadingRows={loadingRows}
 				onRowClick={onRowClick}
+				minWidth={minWidth}
 			/>
 
 			{/* 무한 스크롤 센티넬 */}

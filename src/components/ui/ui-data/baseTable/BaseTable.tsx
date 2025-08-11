@@ -28,6 +28,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 	pageSize = 10,
 	loadingRows = 5,
 	onRowClick,
+	minWidth,
 }: BaseTableProps<T>) => {
 	// #region 훅 및 상태
 	const { isRTL } = useLocale();
@@ -250,7 +251,12 @@ const BaseTable = <T extends Record<string, unknown>>({
 			>
 				<table
 					className="w-full rounded-lg bg-background"
-					style={{ tableLayout: 'fixed', borderSpacing: 0, borderCollapse: 'separate' }}
+					style={{ 
+						tableLayout: 'fixed', 
+						borderSpacing: 0, 
+						borderCollapse: 'separate',
+						minWidth: minWidth 
+					}}
 				>
 					{renderHeader()}
 					{renderBody()}

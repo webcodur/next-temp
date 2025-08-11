@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
+import { SortableTable, SortableTableColumn } from '@/components/ui/ui-data/sortableTable/SortableTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
@@ -18,6 +18,10 @@ import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 // API 호출
 import { searchParkingDevices } from '@/services/devices/devices$_GET';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
+import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
+
+// 유틸리티
+import { formatToShortDate } from '@/utils/dateFormat';
 
 // 타입 정의
 import { ParkingDevice } from '@/types/device';
@@ -69,7 +73,6 @@ export default function DevicesListPage() {
   // 다이얼로그 관련 상태
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
-  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   // #endregion
@@ -170,8 +173,7 @@ export default function DevicesListPage() {
       
       if (result.success) {
         setDeviceList((prev) => prev.filter((device) => device.id !== deleteTargetId));
-        setDialogMessage('차단기가 성공적으로 삭제되었습니다.');
-        setSuccessDialogOpen(true);
+        // 성공 시 별도 모달 없이 조용히 처리
       } else {
         setDialogMessage(`차단기 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorDialogOpen(true);
@@ -185,6 +187,46 @@ export default function DevicesListPage() {
       setDeleteTargetId(null);
     }
   }, [deleteTargetId]);
+
+  const handleOrderChange = useCallback((newOrder: ParkingDevice[]) => {
+    // 즉시 로컬 상태 업데이트 (UX 개선)
+    const updatedDevices = newOrder.map((device, index) => ({
+      ...device,
+      sequence: index + 1,
+    }));
+    setDeviceList(updatedDevices);
+
+    // 백그라운드에서 API 호출
+    const updateSequences = async () => {
+      try {
+        const updatePromises = newOrder.map((device, index) => {
+          const newSequence = index + 1;
+          if (device.sequence !== newSequence) {
+            return updateParkingDevice(device.id, { sequence: newSequence });
+          }
+          return Promise.resolve({ success: true });
+        });
+
+        const results = await Promise.all(updatePromises);
+        const failures = results.filter(result => !result.success);
+
+        if (failures.length > 0) {
+          // 실패 시 에러 메시지 표시하고 원래 데이터 다시 로드
+          setDialogMessage('일부 차단기 순서 변경에 실패했습니다. 원래 순서로 복원됩니다.');
+          setErrorDialogOpen(true);
+          loadDeviceData();
+        }
+        // 성공 시에는 이미 로컬 상태가 업데이트되어 있으므로 아무것도 하지 않음
+      } catch (error) {
+        console.error('순서 변경 중 오류:', error);
+        setDialogMessage('순서 변경 중 오류가 발생했습니다. 원래 순서로 복원됩니다.');
+        setErrorDialogOpen(true);
+        loadDeviceData();
+      }
+    };
+
+    updateSequences();
+  }, [loadDeviceData]);
   // #endregion
 
   // #region 유틸리티 함수
@@ -295,18 +337,25 @@ export default function DevicesListPage() {
   // #endregion
 
   // #region 컬럼 정의
-  const columns: BaseTableColumn<ParkingDevice>[] = [
+  const columns: SortableTableColumn<ParkingDevice>[] = [
     {
-      key: 'id',
-      header: 'ID',
-      width: '6%',
+      key: 'dragHandle',
+      header: '이동',
       align: 'center',
+      width: '5%',
+    },
+    {
+      key: 'sequence',
+      header: '순서',
+      align: 'center',
+      width: '5%',
+      cell: (item: ParkingDevice) => item.sequence || '-',
     },
     {
       key: 'name',
       header: '차단기명',
       align: 'start',
-      width: '12%',
+      width: '11%',
     },
     {
       key: 'ip',
@@ -335,12 +384,6 @@ export default function DevicesListPage() {
       cell: (item: ParkingDevice) => getStatusBadge(item.status),
     },
     {
-      key: 'sequence',
-      header: '순서',
-      align: 'center',
-      width: '6%',
-    },
-    {
       key: 'representativePhone',
       header: '대표전화',
       align: 'center',
@@ -352,20 +395,12 @@ export default function DevicesListPage() {
       header: '등록일자',
       align: 'center',
       width: '10%',
-      cell: (item: ParkingDevice) => {
-        if (!item.createdAt) return '-';
-        const date = new Date(item.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      cell: (item: ParkingDevice) => formatToShortDate(item.createdAt),
     },
     {
       header: '관리',
       align: 'center',
-      width: '8%',
+      width: '7%',
       cell: (item: ParkingDevice) => (
         <div className="flex gap-1 justify-center">
           <Button
@@ -412,13 +447,14 @@ export default function DevicesListPage() {
       />
       
       {/* 테이블 */}
-      <PaginatedTable
-        data={deviceList as unknown as Record<string, unknown>[]}
-        columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
-        onRowClick={(item) => handleRowClick(item as unknown as ParkingDevice)}
-        pageSize={10}
-        pageSizeOptions={[5, 10, 20, 50]}
+      <SortableTable<ParkingDevice>
+        data={deviceList}
+        columns={columns}
+        onRowClick={handleRowClick}
+        onOrderChange={handleOrderChange}
+        dragHandleColumn="dragHandle"
         itemName="차단기"
+        minWidth="1100px"
       />
 
       {/* 삭제 확인 다이얼로그 */}
@@ -448,27 +484,6 @@ export default function DevicesListPage() {
               onClick={handleDeleteConfirm}
             >
               삭제
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 성공 다이얼로그 */}
-      <Modal
-        isOpen={successDialogOpen}
-        onClose={() => setSuccessDialogOpen(false)}
-        title="작업 완료"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
-            <p className="text-muted-foreground">{dialogMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setSuccessDialogOpen(false)}>
-              확인
             </Button>
           </div>
         </div>

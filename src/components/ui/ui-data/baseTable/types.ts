@@ -22,5 +22,6 @@ export interface BaseTableProps<T> {
 	pageSize?: number;
 	loadingRows?: number;
 	onRowClick?: (item: T, index: number) => void;
+	minWidth?: string | number;
 }
 // #endregion 

@@ -458,6 +458,7 @@ export default function CarsListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="차량"
+        minWidth="1200px"
       />
 
       {/* 삭제 확인 다이얼로그 */}

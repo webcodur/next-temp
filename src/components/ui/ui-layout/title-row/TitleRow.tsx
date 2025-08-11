@@ -28,12 +28,12 @@ const TitleRow: React.FC<TitleRowProps> = ({
         className,
       )}
     >
-      <div className="flex gap-2 items-baseline min-w-0">
+      <div className="flex flex-1 gap-2 items-baseline min-w-0">
         <span className="text-lg font-semibold whitespace-nowrap text-foreground">
           {title}
         </span>
         {subtitle && (
-          <span className="text-sm truncate text-muted-foreground">
+          <span className="min-w-0 text-sm truncate text-muted-foreground">
             {subtitle}
           </span>
         )}
