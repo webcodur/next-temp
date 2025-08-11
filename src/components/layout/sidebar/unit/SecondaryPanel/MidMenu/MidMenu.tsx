@@ -9,6 +9,7 @@ import { ChevronRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
+import { isPathActive } from '@/utils/pathUtils';
 import type { MidMenu } from '@/components/layout/sidebar/types';
 
 import { BotMenuItem } from './BotMenuItem/BotMenuItem';
@@ -52,7 +53,7 @@ export function MidMenu({
       >
         <ul className="flex flex-col">
           {midItem.botItems.map((botItem) => {
-            const isActive = pathname === botItem.href;
+            const isActive = isPathActive(pathname, botItem.href);
             
             return (
               <BotMenuItem
