@@ -14,6 +14,7 @@ interface SimpleTextInputProps {
 	type?: 'text' | 'email' | 'password' | 'number' | 'datetime-local';
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	autocomplete?: string;
 	// 외부에서 주입하는 에러 메시지 (validationRule과 별개로 표시)
 	errorMessage?: string;
 }
@@ -28,7 +29,8 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 	type = 'text',
 	validationRule,
 	colorVariant = 'primary',
-		errorMessage,
+	autocomplete,
+	errorMessage,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
@@ -152,6 +154,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					onKeyDown={handleKeyDown}
 					placeholder={placeholder}
 					disabled={disabled}
+					autoComplete={autocomplete}
 					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
 				/>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -23,8 +23,14 @@ interface PermissionConfigData {
 }
 
 interface DevicePermissionConfigSectionProps {
-  device: ParkingDevice;
-  onDataChange: () => void;
+  mode?: 'create' | 'edit';
+  device?: ParkingDevice;
+  onDataChange?: () => void;
+  onPermissionChange?: (permissions: PermissionConfigData) => void;
+}
+
+export interface DevicePermissionConfigSectionRef {
+  resetToDefaults: () => void;
 }
 
 const PERMISSION_LABELS = {
@@ -39,33 +45,41 @@ const PERMISSION_LABELS = {
   unregisteredPermission: '미등록 출입',
 };
 
-export default function DevicePermissionConfigSection({ 
+const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRef, DevicePermissionConfigSectionProps>(({ 
+  mode = 'edit',
   device, 
-  onDataChange 
-}: DevicePermissionConfigSectionProps) {
+  onDataChange,
+  onPermissionChange 
+}, ref) => {
   // #region 상태 관리
-  const [formData, setFormData] = useState<PermissionConfigData>({
-    residentPermission: device.residentPermission === 1,
-    regularPermission: device.regularPermission === 1,
-    visitorPermission: device.visitorPermission === 1,
-    tempPermission: device.tempPermission === 1,
-    businessPermission: device.businessPermission === 1,
-    commercialPermission: device.commercialPermission === 1,
-    taxiPermission: device.taxiPermission === 1,
-    ticketMachinePermission: device.ticketMachinePermission === 1,
-    unregisteredPermission: device.unregisteredPermission === 1,
-  });
-  const [originalData] = useState<PermissionConfigData>({
-    residentPermission: device.residentPermission === 1,
-    regularPermission: device.regularPermission === 1,
-    visitorPermission: device.visitorPermission === 1,
-    tempPermission: device.tempPermission === 1,
-    businessPermission: device.businessPermission === 1,
-    commercialPermission: device.commercialPermission === 1,
-    taxiPermission: device.taxiPermission === 1,
-    ticketMachinePermission: device.ticketMachinePermission === 1,
-    unregisteredPermission: device.unregisteredPermission === 1,
-  });
+  const defaultPermissions: PermissionConfigData = {
+    residentPermission: true,
+    regularPermission: true,
+    visitorPermission: false,
+    tempPermission: false,
+    businessPermission: false,
+    commercialPermission: false,
+    taxiPermission: false,
+    ticketMachinePermission: false,
+    unregisteredPermission: false,
+  };
+
+  const initialData = mode === 'create' 
+    ? defaultPermissions
+    : {
+        residentPermission: device?.residentPermission === 1,
+        regularPermission: device?.regularPermission === 1,
+        visitorPermission: device?.visitorPermission === 1,
+        tempPermission: device?.tempPermission === 1,
+        businessPermission: device?.businessPermission === 1,
+        commercialPermission: device?.commercialPermission === 1,
+        taxiPermission: device?.taxiPermission === 1,
+        ticketMachinePermission: device?.ticketMachinePermission === 1,
+        unregisteredPermission: device?.unregisteredPermission === 1,
+      };
+
+  const [formData, setFormData] = useState<PermissionConfigData>(initialData);
+  const [originalData] = useState<PermissionConfigData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // 모달 상태
@@ -87,18 +101,43 @@ export default function DevicePermissionConfigSection({
   }, [hasChanges]);
   // #endregion
 
+  // #region 초기 데이터 전달 (create 모드)
+  useEffect(() => {
+    if (mode === 'create' && onPermissionChange) {
+      onPermissionChange(formData);
+    }
+  }, [mode, onPermissionChange, formData]);
+
+  // ref 메소드 노출
+  useImperativeHandle(ref, () => ({
+    resetToDefaults: () => {
+      setFormData(defaultPermissions);
+      if (mode === 'create' && onPermissionChange) {
+        onPermissionChange(defaultPermissions);
+      }
+    }
+  }), [mode, onPermissionChange, defaultPermissions]);
+  // #endregion
+
   // #region 핸들러
   const handleTogglePermission = (field: keyof PermissionConfigData) => {
     if (isSubmitting) return;
     
-    setFormData(prev => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
+    const newData = {
+      ...formData,
+      [field]: !formData[field],
+    };
+    
+    setFormData(newData);
+    
+    // create 모드일 때 상위 컴포넌트에 데이터 전달
+    if (mode === 'create' && onPermissionChange) {
+      onPermissionChange(newData);
+    }
   };
 
   const handleSubmit = async () => {
-    if (!isValid || isSubmitting) return;
+    if (!isValid || isSubmitting || mode === 'create') return;
 
     setIsSubmitting(true);
 
@@ -115,13 +154,13 @@ export default function DevicePermissionConfigSection({
         unregisteredPermission: formData.unregisteredPermission ? 1 : 0,
       };
 
-      const result = await updateParkingDevicePermissions(device.id, updateData);
+      const result = await updateParkingDevicePermissions(device!.id, updateData);
 
       if (result.success) {
         setModalMessage('출입 권한 설정이 성공적으로 저장되었습니다.');
         setSuccessModalOpen(true);
         // 상위 컴포넌트에 데이터 변경 알림
-        onDataChange();
+        onDataChange?.();
       } else {
         console.error('출입 권한 설정 저장 실패:', result.errorMsg);
         setModalMessage(`출입 권한 설정 저장에 실패했습니다: ${result.errorMsg}`);
@@ -140,13 +179,25 @@ export default function DevicePermissionConfigSection({
     if (!hasChanges) return;
     
     setFormData(originalData);
+    
+    // create 모드일 때 상위 컴포넌트에 초기값 전달
+    if (mode === 'create' && onPermissionChange) {
+      onPermissionChange(originalData);
+    }
   };
 
   const handleBulkPermission = (permission: boolean) => {
-    setFormData(prev => Object.keys(prev).reduce((acc, key) => {
+    const newData = Object.keys(formData).reduce((acc, key) => {
       acc[key as keyof PermissionConfigData] = permission;
       return acc;
-    }, {} as PermissionConfigData));
+    }, {} as PermissionConfigData);
+    
+    setFormData(newData);
+    
+    // create 모드일 때 상위 컴포넌트에 데이터 전달
+    if (mode === 'create' && onPermissionChange) {
+      onPermissionChange(newData);
+    }
   };
   // #endregion
 
@@ -201,78 +252,89 @@ export default function DevicePermissionConfigSection({
         })}
       </div>
 
-      {/* 액션 버튼 - GridForm 바닥 배치 */}
-      <GridForm
-        labelWidth="0px"
-        gap="0px"
-        bottomLeftActions={(
-          <Button 
-            variant="secondary" 
-            onClick={handleReset}
-            disabled={!hasChanges || isSubmitting}
-            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-          >
-            <RotateCcw size={16} />
-            복구
-          </Button>
-        )}
-        bottomRightActions={(
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없습니다' : '설정 저장'}
-          >
-            <Save size={16} />
-            {isSubmitting ? '저장 중...' : '저장'}
-          </Button>
-        )}
-      >
-        {/* 빈 콘텐츠 - 단순 액션바 레이아웃 용도 */}
-        <div className="hidden" />
-      </GridForm>
-
-      {/* 성공 모달 */}
-      <Modal
-        isOpen={successModalOpen}
-        onClose={() => setSuccessModalOpen(false)}
-        title="작업 완료"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setSuccessModalOpen(false)}>
-              확인
+      {/* 액션 버튼 - edit 모드에서만 표시 */}
+      {mode === 'edit' && (
+        <GridForm
+          labelWidth="0px"
+          gap="0px"
+          bottomLeftActions={(
+            <Button 
+              variant="secondary" 
+              onClick={handleReset}
+              disabled={!hasChanges || isSubmitting}
+              title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+            >
+              <RotateCcw size={16} />
+              복구
             </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
+          )}
+          bottomRightActions={(
+            <Button 
+              variant="primary" 
+              onClick={handleSubmit} 
+              disabled={!isValid || isSubmitting}
+              title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없습니다' : '설정 저장'}
+            >
+              <Save size={16} />
+              {isSubmitting ? '저장 중...' : '저장'}
             </Button>
-          </div>
-        </div>
-      </Modal>
+          )}
+        >
+          {/* 빈 콘텐츠 - 단순 액션바 레이아웃 용도 */}
+          <div className="hidden" />
+        </GridForm>
+      )}
+
+      {/* 모달 - edit 모드에서만 표시 */}
+      {mode === 'edit' && (
+        <>
+          {/* 성공 모달 */}
+          <Modal
+            isOpen={successModalOpen}
+            onClose={() => setSuccessModalOpen(false)}
+            title="작업 완료"
+            size="sm"
+          >
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
+                <p className="text-muted-foreground">{modalMessage}</p>
+              </div>
+              
+              <div className="flex justify-center pt-4">
+                <Button onClick={() => setSuccessModalOpen(false)}>
+                  확인
+                </Button>
+              </div>
+            </div>
+          </Modal>
+
+          {/* 오류 모달 */}
+          <Modal
+            isOpen={errorModalOpen}
+            onClose={() => setErrorModalOpen(false)}
+            title="오류 발생"
+            size="sm"
+          >
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
+                <p className="text-muted-foreground">{modalMessage}</p>
+              </div>
+              
+              <div className="flex justify-center pt-4">
+                <Button onClick={() => setErrorModalOpen(false)}>
+                  확인
+                </Button>
+              </div>
+            </div>
+          </Modal>
+        </>
+      )}
     </div>
   );
-}
+});
+
+DevicePermissionConfigSection.displayName = 'DevicePermissionConfigSection';
+
+export default DevicePermissionConfigSection;

@@ -30,8 +30,8 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			'정보 안내소': {
-				key: '정보 안내소',
+			'안내소': {
+				key: '안내소',
 				botItems: [
 					{
 						key: '__1. 전체',

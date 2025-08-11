@@ -10,9 +10,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import DeviceForm, { DeviceFormData } from './DeviceForm';
-import DeviceNetworkConfigSection from './DeviceNetworkConfigSection';
 import DevicePermissionConfigSection from './DevicePermissionConfigSection';
-import DeviceOperationConfigSection from './DeviceOperationConfigSection';
 import DeviceCommandLogSection from './DeviceCommandLogSection';
 import DeviceHistorySection from './DeviceHistorySection';
 import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
@@ -73,16 +71,8 @@ export default function DeviceDetailPage() {
       label: '기본 정보',
     },
     {
-      id: 'network',
-      label: '네트워크',
-    },
-    {
       id: 'permissions',
       label: '출입 권한',
-    },
-    {
-      id: 'operation',
-      label: '운영 설정',
     },
     {
       id: 'logs',
@@ -372,22 +362,8 @@ export default function DeviceDetailPage() {
             />
           )}
           
-          {activeTab === 'network' && (
-            <DeviceNetworkConfigSection 
-              device={device}
-              onDataChange={loadDeviceData}
-            />
-          )}
-          
           {activeTab === 'permissions' && (
             <DevicePermissionConfigSection 
-              device={device}
-              onDataChange={loadDeviceData}
-            />
-          )}
-          
-          {activeTab === 'operation' && (
-            <DeviceOperationConfigSection 
               device={device}
               onDataChange={loadDeviceData}
             />

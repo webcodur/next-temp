@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { SortableTable, SortableTableColumn } from '@/components/ui/ui-data/sortableTable/SortableTable';
+import { usePaginationState } from '@/components/ui/ui-data/shared/usePaginationState';
+import { usePaginationData } from '@/components/ui/ui-data/shared/usePaginationData';
+import Pagination from '@/components/ui/ui-data/pagination/unit/Pagination';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
@@ -49,17 +52,13 @@ const DEVICE_STATUS_OPTIONS: Option[] = [
   { value: '3', label: '바이패스' },
 ];
 
-const PERMISSION_OPTIONS: Option[] = [
-  { value: '1', label: '허용' },
-  { value: '0', label: '거부' },
-];
 // #endregion
 
 export default function DevicesListPage() {
   const router = useRouter();
   
   // #region 상태 관리
-  const [deviceList, setDeviceList] = useState<ParkingDevice[]>([]);
+  const [allDevices, setAllDevices] = useState<ParkingDevice[]>([]); // 전체 데이터
   
   // 검색 필터 상태
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
@@ -77,32 +76,60 @@ export default function DevicesListPage() {
   const [dialogMessage, setDialogMessage] = useState('');
   // #endregion
 
+  // #region 클라이언트 사이드 필터링
+  const deviceList = useMemo(() => {
+    return allDevices.filter(device => {
+      // 차단기명 필터링 (대소문자 무시)
+      if (searchFilters.name && !device.name.toLowerCase().includes(searchFilters.name.toLowerCase())) {
+        return false;
+      }
+      
+      // IP 주소 필터링
+      if (searchFilters.ip && !device.ip.includes(searchFilters.ip)) {
+        return false;
+      }
+      
+      // 디바이스 타입 필터링
+      if (searchFilters.deviceType && device.deviceType.toString() !== searchFilters.deviceType) {
+        return false;
+      }
+      
+      // 운영 상태 필터링
+      if (searchFilters.status && device.status.toString() !== searchFilters.status) {
+        return false;
+      }
+      
+      // 택시 출입 권한 필터링
+      if (searchFilters.taxiPermission && device.taxiPermission?.toString() !== searchFilters.taxiPermission) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [allDevices, searchFilters]);
+  // #endregion
+
   // #region 데이터 로드
-  const loadDeviceData = useCallback(async (filters?: Partial<SearchFilters>) => {
+  const loadDeviceData = useCallback(async () => {
     try {
       const searchParams = {
         page: 1,
-        limit: 100, // 임시로 큰 수치 설정
-        ...(filters?.name && { name: filters.name }),
-        ...(filters?.ip && { ip: filters.ip }),
-        ...(filters?.deviceType && { deviceType: parseInt(filters.deviceType) }),
-        ...(filters?.status && { status: parseInt(filters.status) }),
-        ...(filters?.taxiPermission && { taxiPermission: parseInt(filters.taxiPermission) }),
+        limit: 1000, // 전체 데이터 로드를 위해 큰 값 설정
       };
 
       const result = await searchParkingDevices(searchParams);
       
       if (result.success) {
-        setDeviceList(result.data?.data || []);
+        setAllDevices(result.data?.data || []);
       } else {
         console.error('차단기 목록 로드 실패:', result.errorMsg);
-        setDeviceList([]);
+        setAllDevices([]);
         setDialogMessage(`차단기 목록을 불러올 수 없습니다: ${result.errorMsg}`);
         setErrorDialogOpen(true);
       }
     } catch (error) {
       console.error('차단기 목록 로드 중 오류:', error);
-      setDeviceList([]);
+      setAllDevices([]);
       setDialogMessage('차단기 목록을 불러오는 중 오류가 발생했습니다.');
       setErrorDialogOpen(true);
     }
@@ -115,15 +142,8 @@ export default function DevicesListPage() {
 
   // #region 검색 관련 핸들러
   const handleSearch = useCallback(() => {
-    const activeFilters = Object.entries(searchFilters).reduce((acc, [key, value]) => {
-      if (value.trim()) {
-        acc[key as keyof SearchFilters] = value.trim();
-      }
-      return acc;
-    }, {} as Partial<SearchFilters>);
-
-    loadDeviceData(activeFilters);
-  }, [searchFilters, loadDeviceData]);
+    // 클라이언트 사이드 필터링에서는 별도 작업 불필요 (useMemo가 자동 처리)
+  }, []);
 
   const handleReset = useCallback(() => {
     const resetFilters = {
@@ -134,8 +154,7 @@ export default function DevicesListPage() {
       taxiPermission: '',
     };
     setSearchFilters(resetFilters);
-    loadDeviceData({}); // 빈 필터로 전체 데이터 로드
-  }, [loadDeviceData]);
+  }, []);
 
   const updateFilter = useCallback((field: keyof SearchFilters, value: string) => {
     setSearchFilters(prev => ({
@@ -145,10 +164,31 @@ export default function DevicesListPage() {
   }, []);
   // #endregion
 
+  // #region 페이지네이션 설정
+  const paginationState = usePaginationState({
+    defaultPageSize: 10,
+  });
+
+  const paginationData = usePaginationData({
+    data: deviceList,
+    currentPage: paginationState.currentPage,
+    pageSize: paginationState.pageSize,
+  });
+  // #endregion
+
   // #region 이벤트 핸들러
   const handleCreateClick = useCallback(() => {
-    router.push('/parking/lot/device/create');
-  }, [router]);
+    // 현재 목록에서 최대 sequence 값 계산
+    const maxSequence = allDevices.reduce((max, device) => {
+      const sequence = device.sequence || 0;
+      return sequence > max ? sequence : max;
+    }, 0);
+    
+    // 다음 순번으로 설정
+    const nextSequence = maxSequence + 1;
+    
+    router.push(`/parking/lot/device/create?sequence=${nextSequence}`);
+  }, [router, allDevices]);
 
   const handleRowClick = useCallback((device: ParkingDevice) => {
     router.push(`/parking/lot/device/${device.id}`);
@@ -172,7 +212,7 @@ export default function DevicesListPage() {
       const result = await deleteParkingDevice(deleteTargetId);
       
       if (result.success) {
-        setDeviceList((prev) => prev.filter((device) => device.id !== deleteTargetId));
+        setAllDevices((prev) => prev.filter((device) => device.id !== deleteTargetId));
         // 성공 시 별도 모달 없이 조용히 처리
       } else {
         setDialogMessage(`차단기 삭제에 실패했습니다: ${result.errorMsg}`);
@@ -189,18 +229,29 @@ export default function DevicesListPage() {
   }, [deleteTargetId]);
 
   const handleOrderChange = useCallback((newOrder: ParkingDevice[]) => {
+    // 현재 페이지의 시작 인덱스 계산
+    const startIndex = (paginationState.currentPage - 1) * paginationState.pageSize;
+    
+    // 전체 데이터에서 현재 페이지 부분만 업데이트
+    const updatedAllDevices = [...allDevices];
+    newOrder.forEach((device, index) => {
+      const globalIndex = startIndex + index;
+      if (globalIndex < updatedAllDevices.length) {
+        updatedAllDevices[globalIndex] = {
+          ...device,
+          sequence: globalIndex + 1,
+        };
+      }
+    });
+    
     // 즉시 로컬 상태 업데이트 (UX 개선)
-    const updatedDevices = newOrder.map((device, index) => ({
-      ...device,
-      sequence: index + 1,
-    }));
-    setDeviceList(updatedDevices);
+    setAllDevices(updatedAllDevices);
 
     // 백그라운드에서 API 호출
     const updateSequences = async () => {
       try {
         const updatePromises = newOrder.map((device, index) => {
-          const newSequence = index + 1;
+          const newSequence = startIndex + index + 1;
           if (device.sequence !== newSequence) {
             return updateParkingDevice(device.id, { sequence: newSequence });
           }
@@ -226,7 +277,7 @@ export default function DevicesListPage() {
     };
 
     updateSequences();
-  }, [loadDeviceData]);
+  }, [allDevices, paginationState.currentPage, paginationState.pageSize, loadDeviceData]);
   // #endregion
 
   // #region 유틸리티 함수
@@ -314,21 +365,6 @@ export default function DevicesListPage() {
           options={DEVICE_STATUS_OPTIONS}
           value={searchFilters.status}
           onChange={(value) => updateFilter('status', value)}
-        />
-      ),
-      visible: true,
-    },
-    {
-      key: 'taxiPermission',
-      label: '택시 출입 권한',
-      element: (
-        <FieldSelect
-          id="search-taxi-permission"
-          label="택시 출입 권한"
-          placeholder="택시 출입 권한을 선택하세요"
-          options={PERMISSION_OPTIONS}
-          value={searchFilters.taxiPermission}
-          onChange={(value) => updateFilter('taxiPermission', value)}
         />
       ),
       visible: true,
@@ -442,18 +478,34 @@ export default function DevicesListPage() {
         onSearch={handleSearch}
         onReset={handleReset}
         defaultOpen={false}
+        searchMode="client"
       />
       
       {/* 테이블 */}
-      <SortableTable<ParkingDevice>
-        data={deviceList}
-        columns={columns}
-        onRowClick={handleRowClick}
-        onOrderChange={handleOrderChange}
-        dragHandleColumn="dragHandle"
-        itemName="차단기"
-        minWidth="1100px"
-      />
+      <div className="space-y-6">
+        <SortableTable<ParkingDevice>
+          data={paginationData.paginatedData}
+          columns={columns}
+          onRowClick={handleRowClick}
+          onOrderChange={handleOrderChange}
+          dragHandleColumn="dragHandle"
+          itemName="차단기"
+          minWidth="1100px"
+        />
+        
+        {/* 페이지네이션 */}
+        <Pagination
+          currentPage={paginationState.currentPage}
+          totalPages={paginationData.totalPages}
+          onPageChange={paginationState.onPageChange}
+          pageSize={paginationState.pageSize}
+          onPageSizeChange={paginationState.onPageSizeChange}
+          pageSizeOptions={[5, 10, 20, 50]}
+          groupSize={5}
+          totalItems={paginationData.totalItems}
+          itemName="차단기"
+        />
+      </div>
 
       {/* 삭제 확인 다이얼로그 */}
       <Modal

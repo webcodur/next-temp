@@ -7,7 +7,7 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { Admin } from '@/types/admin';
+import { Admin, ROLE_ID_MAP } from '@/types/admin';
 
 export interface AdminFormData {
   account: string;
@@ -33,12 +33,11 @@ interface AdminFormProps {
   isValid?: boolean;
 }
 
-const ROLE_OPTIONS = [
-  { value: '현장 관리자', label: '현장 관리자' },
-  { value: '운영자', label: '운영자' },
-  { value: '근무자', label: '근무자' },
-  { value: '상업자', label: '상업자' },
-];
+// ROLE_ID_MAP을 기반으로 동적 생성하여 일관성 보장
+const ROLE_OPTIONS = Object.keys(ROLE_ID_MAP).map(roleName => ({
+  value: roleName,
+  label: roleName
+}));
 
 const AdminForm: React.FC<AdminFormProps> = ({
   mode,
@@ -124,6 +123,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('account', value)}
             placeholder="계정명을 입력해주세요"
             disabled={disabled || mode !== 'create'}
+            autocomplete="off"
             validationRule={{
               type: 'free',
               mode: mode
@@ -142,6 +142,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('name', value)}
             placeholder="이름을 입력해주세요"
             disabled={isReadOnly}
+            autocomplete="off"
             validationRule={{
               type: 'free',
               mode: mode
@@ -161,6 +162,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('email', value)}
             placeholder="이메일을 입력해주세요"
             disabled={isReadOnly}
+            autocomplete="off"
             validationRule={{
               type: 'email',
               mode: mode
@@ -179,6 +181,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
             onChange={(value) => handleFieldChange('phone', value)}
             placeholder="010-0000-0000"
             disabled={isReadOnly}
+            autocomplete="off"
             validationRule={{
               type: 'phone',
               mode: mode
@@ -220,6 +223,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 onChange={(value) => handleFieldChange('password', value)}
                 placeholder="비밀번호를 입력해주세요"
                 disabled={disabled}
+                autocomplete="new-password"
                 validationRule={{
                   type: 'password',
                   mode: mode
@@ -239,6 +243,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 onChange={(value) => handleFieldChange('confirm', value)}
                 placeholder="비밀번호를 다시 입력해주세요"
                 disabled={disabled}
+                autocomplete="new-password"
                 validationRule={{
                   type: 'password-confirm',
                   originalPassword: data.password,

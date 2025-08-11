@@ -158,8 +158,16 @@ export default function AdminListPage() {
   }, []);
 
   const handleCopyClick = useCallback((adminId: number) => {
+    // 선택한 관리자가 목록에 있는지 확인
+    const targetAdmin = adminList.find(admin => admin.id === adminId);
+    if (!targetAdmin) {
+      setDialogMessage('복사할 관리자 정보를 찾을 수 없습니다.');
+      setErrorDialogOpen(true);
+      return;
+    }
+    
     router.push(`/parking/lot/admin/create?copyFrom=${adminId}`);
-  }, [router]);
+  }, [router, adminList]);
 
   const handleDeleteConfirm = useCallback(async () => {
     if (!deleteTargetId) return;

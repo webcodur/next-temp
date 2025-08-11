@@ -1,18 +1,22 @@
 /* 메뉴 설명: 차단기 생성 페이지 */
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import DeviceForm, { DeviceFormData } from './DeviceForm';
+import DevicePermissionConfigSection, { DevicePermissionConfigSectionRef } from './DevicePermissionConfigSection';
 import { createParkingDevice } from '@/services/devices/devices_POST';
 
 export default function DeviceCreatePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const permissionRef = useRef<DevicePermissionConfigSectionRef>(null);
   
   // #region 폼 상태
   const [formData, setFormData] = useState<DeviceFormData>({
@@ -28,6 +32,31 @@ export default function DeviceCreatePage() {
     representativePhone: '',
     sequence: '1',
   });
+
+  // URL에서 sequence 값을 받아서 formData에 설정
+  useEffect(() => {
+    const sequenceParam = searchParams.get('sequence');
+    if (sequenceParam) {
+      setFormData(prev => ({
+        ...prev,
+        sequence: sequenceParam,
+      }));
+    }
+  }, [searchParams]);
+  
+  // 권한 설정 상태
+  const [permissionData, setPermissionData] = useState({
+    residentPermission: true,
+    regularPermission: true,
+    visitorPermission: false,
+    tempPermission: false,
+    businessPermission: false,
+    commercialPermission: false,
+    taxiPermission: false,
+    ticketMachinePermission: false,
+    unregisteredPermission: false,
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // 모달 상태
@@ -67,6 +96,16 @@ export default function DeviceCreatePage() {
         isReceipting: formData.isReceipting || undefined,
         representativePhone: formData.representativePhone || undefined,
         sequence: parseInt(formData.sequence) || undefined,
+        // 권한 데이터 추가
+        residentPermission: permissionData.residentPermission ? 1 : 0,
+        regularPermission: permissionData.regularPermission ? 1 : 0,
+        visitorPermission: permissionData.visitorPermission ? 1 : 0,
+        tempPermission: permissionData.tempPermission ? 1 : 0,
+        businessPermission: permissionData.businessPermission ? 1 : 0,
+        commercialPermission: permissionData.commercialPermission ? 1 : 0,
+        taxiPermission: permissionData.taxiPermission ? 1 : 0,
+        ticketMachinePermission: permissionData.ticketMachinePermission ? 1 : 0,
+        unregisteredPermission: permissionData.unregisteredPermission ? 1 : 0,
       };
 
       const result = await createParkingDevice(createData);
@@ -96,6 +135,30 @@ export default function DeviceCreatePage() {
   const handleFormChange = (data: DeviceFormData) => {
     setFormData(data);
   };
+
+  const handlePermissionChange = (permissions: typeof permissionData) => {
+    setPermissionData(permissions);
+  };
+
+  const handleReset = () => {
+    // 기본 정보 초기화
+    setFormData({
+      name: '',
+      ip: '',
+      port: '',
+      serverPort: '',
+      cctvUrl: '',
+      status: '1',
+      deviceType: '1',
+      isTicketing: 'N',
+      isReceipting: 'N',
+      representativePhone: '',
+      sequence: '1',
+    });
+
+    // 권한 초기화 (ref를 통해 호출)
+    permissionRef.current?.resetToDefaults();
+  };
   // #endregion
 
   return (
@@ -117,29 +180,59 @@ export default function DeviceCreatePage() {
         }
       />
 
-      {/* 폼 섹션 */}
-      <div className="bg-card rounded-lg border border-border p-6">
-        <DeviceForm
-          mode="create"
-          data={formData}
-          onChange={handleFormChange}
-          disabled={isSubmitting}
-        />
-      </div>
+      {/* 통합 폼 컨테이너 */}
+      <div className="overflow-hidden rounded-lg border bg-card border-border">
+        {/* 기본 정보 폼 섹션 */}
+        <div className="p-6 border-b border-border">
+          <DeviceForm
+            mode="create"
+            data={formData}
+            onChange={handleFormChange}
+            disabled={isSubmitting}
+          />
+        </div>
 
-      {/* 저장 버튼 - 우하단 고정 */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button 
-          variant="primary"
-          size="lg"
-          onClick={handleSubmit} 
-          disabled={!isValid || isSubmitting}
-          title={isSubmitting ? '생성 중...' : '생성'}
-          className="shadow-lg"
-        >
-          <Save size={20} />
-          {isSubmitting ? '생성 중...' : '생성'}
-        </Button>
+        {/* 권한 설정 섹션 */}
+        <div className="p-6">
+          <DevicePermissionConfigSection
+            ref={permissionRef}
+            mode="create"
+            onPermissionChange={handlePermissionChange}
+          />
+        </div>
+
+        {/* 폼 하단 버튼 영역 */}
+        <div className="p-6 pt-0">
+          <GridForm
+            labelWidth="0px"
+            gap="0px"
+            bottomLeftActions={(
+              <Button 
+                variant="secondary" 
+                onClick={handleReset}
+                disabled={isSubmitting}
+                title="모든 필드 초기화"
+              >
+                <RotateCcw size={16} />
+                초기화
+              </Button>
+            )}
+            bottomRightActions={(
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit} 
+                disabled={!isValid || isSubmitting}
+                title={isSubmitting ? '생성 중...' : '차단기 생성'}
+              >
+                <Save size={16} />
+                {isSubmitting ? '생성 중...' : '생성'}
+              </Button>
+            )}
+          >
+            {/* 빈 콘텐츠 - 단순 액션바 레이아웃 용도 */}
+            <div className="hidden" />
+          </GridForm>
+        </div>
       </div>
 
       {/* 오류 모달 */}
@@ -151,7 +244,7 @@ export default function DeviceCreatePage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{errorMessage}</p>
           </div>
           

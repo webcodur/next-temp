@@ -12,7 +12,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
-import { ROLE_ID_MAP } from '@/types/admin';
+import { ROLE_ID_MAP, ROLE_NAME_MAP } from '@/types/admin';
 import { currentPageLabelAtom } from '@/store/ui';
 
 // Admin 타입: 생성 시 필요한 필드만 명시
@@ -48,17 +48,36 @@ export default function AdminCreatePage() {
       
       if (result.success && result.data) {
         const admin = result.data;
+        
+        // role 매핑을 안전하게 처리
+        let roleName = '';
+        if (admin.role) {
+          // 서버에서 받아온 role.name이 ROLE_ID_MAP에 있는지 확인
+          if (admin.role.name && ROLE_ID_MAP[admin.role.name]) {
+            roleName = admin.role.name;
+          } 
+          // 없다면 role ID를 통해 ROLE_NAME_MAP에서 찾기
+          else if (admin.role.id && ROLE_NAME_MAP[admin.role.id]) {
+            roleName = ROLE_NAME_MAP[admin.role.id];
+          }
+          // 그래도 없다면 기본값
+          else {
+            console.warn('매핑되지 않은 role:', admin.role);
+            roleName = '운영자'; // 기본값
+          }
+        }
+        
         setFormData({
           account: '', // 빈값 - 유니크해야 함
           name: admin.name || '',
-          email: '', // 빈값 - 개인정보
-          phone: '', // 빈값 - 개인정보
-          role: admin.role?.name || '',
+          email: admin.email || '', // 수정 폼과 동일하게 복사
+          phone: admin.phone || '', // 수정 폼과 동일하게 복사
+          role: roleName,
           password: '',
           confirm: '',
         });
         
-        setCopyInfoMessage(`${admin.name || admin.account} 정보를 복사하여 신규 데이터를 등록합니다.`);
+        setCopyInfoMessage(`${admin.name || admin.account}(${roleName}) 정보를 복사하여 신규 데이터를 등록합니다. 계정명과 비밀번호는 새로 입력해주세요.`);
       } else {
         console.error('관리자 조회 실패:', result.errorMsg);
         setErrorMessage(`복사할 관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
