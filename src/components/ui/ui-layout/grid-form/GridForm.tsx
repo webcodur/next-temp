@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface GridFormContextValue {
 	sequenceWidth: string;
 	labelWidth: string;
+	rulesWidth: string;  // 새로 추가된 입력 규칙 열 너비
 	gap: string;
 	colorVariant: 'primary' | 'secondary';
 	totalCount: number;
@@ -21,6 +22,7 @@ const GridFormContext = createContext<GridFormContextValue | null>(null);
 export interface GridFormProps {
 	sequenceWidth?: string;
 	labelWidth?: string;  // 옵션 프롭 (필수 아님)
+	rulesWidth?: string;  // 새로 추가된 입력 규칙 열 너비
 	gap?: string;
 	colorVariant?: 'primary' | 'secondary';
 	className?: string;
@@ -61,6 +63,11 @@ export interface GridFormFeedbackProps {
 	className?: string;
 	children: React.ReactNode;
 }
+
+export interface GridFormRulesProps {
+	className?: string;
+	children: React.ReactNode;
+}
 // #endregion
 
 // #region GridForm 메인 컴포넌트
@@ -70,6 +77,7 @@ const GridForm = React.forwardRef<
 >(({
 	sequenceWidth = '60px',
 	labelWidth = '300px',  // 기본값 설정
+	rulesWidth = '200px',  // 새로 추가된 입력 규칙 열 기본값
 	gap = '20px',
 	colorVariant = 'primary',
 	className,
@@ -91,12 +99,13 @@ const GridForm = React.forwardRef<
 		return sequenceCounterRef.current;
 	}, []);
 	
-	const gridTemplateColumns = `${sequenceWidth} ${labelWidth} 1fr`;
+	const gridTemplateColumns = `${sequenceWidth} ${labelWidth} ${rulesWidth} 1fr`;
 
 	return (
 		<GridFormContext.Provider value={{ 
 			sequenceWidth, 
 			labelWidth, 
+			rulesWidth,
 			gap, 
 			colorVariant, 
 			totalCount,
@@ -162,8 +171,9 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 		end: 'self-end',
 	};
 
-	// Label과 Content를 찾아서 직접 렌더링
+	// Label, Rules, Content를 찾아서 직접 렌더링
 	let labelElement: React.ReactElement | null = null;
+	let rulesElement: React.ReactElement | null = null;
 	let contentElement: React.ReactElement | null = null;
 
 	React.Children.forEach(children, (child) => {
@@ -181,6 +191,22 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 						'last:border-b-0',
 						alignClasses[align],
 						(child.props as GridFormLabelProps)?.className
+					),
+				});
+			}
+			if (child.type === GridFormRules) {
+				rulesElement = React.cloneElement(child as React.ReactElement<GridFormRulesProps>, {
+					className: cn(
+						// 입력 규칙 열 스타일링
+						'flex items-center justify-start px-4 py-2',
+						'bg-muted/10 border-r border-b border-border/40',
+						'text-sm text-muted-foreground text-start',
+						// 높이 맞춤
+						'min-h-full',
+						// 마지막 요소의 하단 테두리 제거 (규칙)
+						'last:border-b-0',
+						alignClasses[align],
+						(child.props as GridFormRulesProps)?.className
 					),
 				});
 			}
@@ -212,6 +238,7 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 				/>
 			)}
 			{labelElement}
+			{rulesElement}
 			{contentElement}
 		</>
 	);
@@ -363,11 +390,40 @@ const GridFormFeedback = React.forwardRef<
 GridFormFeedback.displayName = 'GridFormFeedback';
 // #endregion
 
+// #region GridForm.Rules 컴포넌트
+const GridFormRules = React.forwardRef<
+	HTMLDivElement,
+	GridFormRulesProps & React.HTMLAttributes<HTMLDivElement>
+>(({
+	className,
+	children,
+	...props
+}, ref) => {
+	return (
+		<div
+			ref={ref}
+			className={cn(
+				'flex items-center justify-start px-4 py-2',
+				'text-sm text-muted-foreground font-multilang',
+				'min-h-full',
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</div>
+	);
+});
+
+GridFormRules.displayName = 'GridFormRules';
+// #endregion
+
 // #region Compound Components 구성
 const CompoundGridForm = Object.assign(GridForm, {
 	Row: GridFormRow,
 	Sequence: GridFormSequence,
 	Label: GridFormLabel,
+	Rules: GridFormRules,
 	Content: GridFormContent,
 	Feedback: GridFormFeedback,
 });

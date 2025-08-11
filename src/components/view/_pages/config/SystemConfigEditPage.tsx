@@ -362,6 +362,7 @@ export default function SystemConfigEditPage() {
         >
           <GridForm.Row>
             <GridForm.Label>설정 키</GridForm.Label>
+            <GridForm.Rules>시스템 자동 생성</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={formData.key}
@@ -373,6 +374,7 @@ export default function SystemConfigEditPage() {
 
           <GridForm.Row>
             <GridForm.Label>그룹</GridForm.Label>
+            <GridForm.Rules>설정 그룹 분류</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={formData.group}
@@ -383,6 +385,7 @@ export default function SystemConfigEditPage() {
 
           <GridForm.Row>
             <GridForm.Label>카테고리</GridForm.Label>
+            <GridForm.Rules>설정 카테고리 분류</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={formData.category}
@@ -393,6 +396,7 @@ export default function SystemConfigEditPage() {
 
           <GridForm.Row>
             <GridForm.Label>타입</GridForm.Label>
+            <GridForm.Rules>BOOLEAN/INTEGER/STRING/JSON</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={formData.type}
@@ -403,6 +407,7 @@ export default function SystemConfigEditPage() {
 
           <GridForm.Row>
             <GridForm.Label>설명</GridForm.Label>
+            <GridForm.Rules>설정 항목 설명</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={formData.description}
@@ -413,6 +418,7 @@ export default function SystemConfigEditPage() {
 
           <GridForm.Row>
             <GridForm.Label required>현재 값</GridForm.Label>
+            <GridForm.Rules>타입에 따른 유효값</GridForm.Rules>
             <GridForm.Content>
               {renderValueInput()}
               {formData.type === 'JSON' && (

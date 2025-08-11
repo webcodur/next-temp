@@ -184,6 +184,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label required>
           차량번호
         </GridForm.Label>
+        <GridForm.Rules>
+          번호판 형식 (예: 12가1234)
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.carNumber}
@@ -202,6 +205,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           브랜드
         </GridForm.Label>
+        <GridForm.Rules>
+          자동차 제조사명
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.brand}
@@ -220,6 +226,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           모델
         </GridForm.Label>
+        <GridForm.Rules>
+          차량 모델명
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.model}
@@ -238,6 +247,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           차종
         </GridForm.Label>
+        <GridForm.Rules>
+          차량 유형 선택
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.type}
@@ -257,6 +269,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           연식
         </GridForm.Label>
+        <GridForm.Rules>
+          4자리 연도 (예: 2023)
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             type="number"
@@ -276,6 +291,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           연료
         </GridForm.Label>
+        <GridForm.Rules>
+          연료 타입 선택
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.fuel}
@@ -295,6 +313,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           외부 텍스트
         </GridForm.Label>
+        <GridForm.Rules>
+          차량 외부 표시 텍스트
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.outerText}
@@ -313,6 +334,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           외부 스티커
         </GridForm.Label>
+        <GridForm.Rules>
+          차량 외부 스티커 정보
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.externalSticker}
@@ -331,6 +355,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           전면 이미지 URL
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 URL 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.frontImageUrl}
@@ -349,6 +376,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           후면 이미지 URL
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 URL 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.rearImageUrl}
@@ -367,6 +397,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           측면 이미지 URL
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 URL 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.sideImageUrl}
@@ -385,6 +418,9 @@ const CarForm: React.FC<CarFormProps> = ({
         <GridForm.Label>
           상단 이미지 URL
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 URL 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.topImageUrl}
@@ -406,6 +442,9 @@ const CarForm: React.FC<CarFormProps> = ({
             <GridForm.Label>
               등록일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(car.createdAt).toLocaleDateString('ko-KR', {
@@ -427,6 +466,9 @@ const CarForm: React.FC<CarFormProps> = ({
             <GridForm.Label>
               수정일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(car.updatedAt).toLocaleDateString('ko-KR', {

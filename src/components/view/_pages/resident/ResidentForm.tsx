@@ -156,6 +156,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label required>
           이름
         </GridForm.Label>
+        <GridForm.Rules>
+          한글, 영문 2-50자
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.name}
@@ -174,6 +177,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           전화번호
         </GridForm.Label>
+        <GridForm.Rules>
+          010-0000-0000 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.phone}
@@ -192,6 +198,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           이메일
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 이메일 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             type="email"
@@ -211,6 +220,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           생년월일
         </GridForm.Label>
+        <GridForm.Rules>
+          YYYY-MM-DD 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             type="text"
@@ -230,6 +242,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           성별
         </GridForm.Label>
+        <GridForm.Rules>
+          남성/여성 선택
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.gender}
@@ -249,6 +264,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           비상연락처
         </GridForm.Label>
+        <GridForm.Rules>
+          010-0000-0000 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.emergencyContact}
@@ -267,6 +285,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           메모
         </GridForm.Label>
+        <GridForm.Rules>
+          자유 형식 텍스트
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.memo}
@@ -288,6 +309,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             <GridForm.Label>
               거주자 ID
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 생성
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={resident.id?.toString() || '-'}
@@ -305,6 +329,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             <GridForm.Label>
               등록일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(resident.createdAt).toLocaleDateString('ko-KR', {
@@ -326,6 +353,9 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             <GridForm.Label>
               수정일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(resident.updatedAt).toLocaleDateString('ko-KR', {

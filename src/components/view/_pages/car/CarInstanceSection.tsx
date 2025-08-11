@@ -306,6 +306,9 @@ export default function CarInstanceSection({
               <GridForm.Label required>
                 호실 ID
               </GridForm.Label>
+              <GridForm.Rules>
+                연결할 호실 선택
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   type="number"
@@ -325,6 +328,9 @@ export default function CarInstanceSection({
               <GridForm.Label>
                 공유 설정
               </GridForm.Label>
+              <GridForm.Rules>
+                공유/비공유 선택
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleToggleSwitch
                   checked={createFormData.carShareOnoff}
@@ -369,6 +375,9 @@ export default function CarInstanceSection({
                 <GridForm.Label>
                   호실 ID
                 </GridForm.Label>
+                <GridForm.Rules>
+                  시스템 자동 연결
+                </GridForm.Rules>
                 <GridForm.Content>
                   <SimpleTextInput
                     value={editTarget.carInstance?.instanceId?.toString() || ''}
@@ -386,6 +395,9 @@ export default function CarInstanceSection({
                 <GridForm.Label>
                   공유 설정
                 </GridForm.Label>
+                <GridForm.Rules>
+                  공유/비공유 상태
+                </GridForm.Rules>
                 <GridForm.Content>
                   <SimpleToggleSwitch
                     checked={editTarget.carInstance?.carShareOnoff || false}

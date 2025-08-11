@@ -161,6 +161,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label required>
           호실 이름
         </GridForm.Label>
+        <GridForm.Rules>
+          호실 식별명 (예: A101)
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.name}
@@ -179,6 +182,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label>
           소유자 이름
         </GridForm.Label>
+        <GridForm.Rules>
+          한글, 영문 2-50자
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.ownerName}
@@ -197,6 +203,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label>
           전화번호
         </GridForm.Label>
+        <GridForm.Rules>
+          010-0000-0000 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.phone}
@@ -215,6 +224,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label required>
           주소 1단계
         </GridForm.Label>
+        <GridForm.Rules>
+          시/도 (예: 서울특별시)
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.address1Depth}
@@ -233,6 +245,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label required>
           주소 2단계
         </GridForm.Label>
+        <GridForm.Rules>
+          시/군/구 (예: 강남구)
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.address2Depth}
@@ -251,6 +266,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label>
           주소 3단계
         </GridForm.Label>
+        <GridForm.Rules>
+          상세 주소
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.address3Depth}
@@ -269,6 +287,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label required>
           호실 타입
         </GridForm.Label>
+        <GridForm.Rules>
+          일반/임시/상업 선택
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.instanceType}
@@ -288,6 +309,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label required>
           비밀번호
         </GridForm.Label>
+        <GridForm.Rules>
+          4자리 이상 숫자/문자
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             type="password"
@@ -307,6 +331,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
         <GridForm.Label>
           메모
         </GridForm.Label>
+        <GridForm.Rules>
+          자유 형식 텍스트
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.memo}
@@ -328,6 +355,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
             <GridForm.Label>
               주차장 ID
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 연결
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={instance.parkinglotId?.toString() || '-'}
@@ -345,6 +375,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
             <GridForm.Label>
               등록일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(instance.createdAt).toLocaleDateString('ko-KR', {
@@ -366,6 +399,9 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
             <GridForm.Label>
               수정일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(instance.updatedAt).toLocaleDateString('ko-KR', {

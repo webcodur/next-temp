@@ -118,6 +118,9 @@ export default function HubNoticeCreatePage() {
             <GridForm.Label required htmlFor="title">
               제목
             </GridForm.Label>
+            <GridForm.Rules>
+              공지사항 제목 (2-200자)
+            </GridForm.Rules>
             <GridForm.Content>
               <input
                 id="title"
@@ -136,6 +139,9 @@ export default function HubNoticeCreatePage() {
             <GridForm.Label htmlFor="category">
               카테고리
             </GridForm.Label>
+            <GridForm.Rules>
+              일반/업데이트/점검/이벤트/긴급 선택
+            </GridForm.Rules>
             <GridForm.Content>
               <select
                 id="category"
@@ -157,6 +163,9 @@ export default function HubNoticeCreatePage() {
             <GridForm.Label required>
               내용
             </GridForm.Label>
+            <GridForm.Rules>
+              공지사항 내용 (템스트/마크다운)
+            </GridForm.Rules>
             <GridForm.Content>
               {/* TODO: 에디터 TinyMCE 이슈 해결 후 다시 활성화 */}
               {/* <Editor
@@ -180,6 +189,9 @@ export default function HubNoticeCreatePage() {
             <GridForm.Label htmlFor="tags">
               태그
             </GridForm.Label>
+            <GridForm.Rules>
+              콤마(,)로 구분하여 입력
+            </GridForm.Rules>
             <GridForm.Content>
               <input
                 id="tags"
@@ -195,6 +207,9 @@ export default function HubNoticeCreatePage() {
           {/* 게시 기간 */}
           <GridForm.Row>
             <GridForm.Label>게시 기간</GridForm.Label>
+            <GridForm.Rules>
+              시작일/종료일 설정
+            </GridForm.Rules>
             <GridForm.Content direction="row" gap="16px">
               <div className="flex-1">
                 <label className="block text-sm font-medium mb-1">시작일</label>
@@ -220,6 +235,9 @@ export default function HubNoticeCreatePage() {
           {/* 옵션 */}
           <GridForm.Row>
             <GridForm.Label>옵션</GridForm.Label>
+            <GridForm.Rules>
+              중요/고정 공지 옵션
+            </GridForm.Rules>
             <GridForm.Content direction="column" gap="12px">
               <label className="flex gap-2 items-center">
                 <input

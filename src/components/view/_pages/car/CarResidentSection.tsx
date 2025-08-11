@@ -354,6 +354,9 @@ export default function CarResidentSection({
               <GridForm.Label required>
                 차량 호실
               </GridForm.Label>
+              <GridForm.Rules>
+                차량이 소속된 호실
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleDropdown
                   value={createFormData.carInstanceId}
@@ -373,6 +376,9 @@ export default function CarResidentSection({
               <GridForm.Label required>
                 거주자 ID
               </GridForm.Label>
+              <GridForm.Rules>
+                연결할 거주자 선택
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   type="number"
@@ -392,6 +398,9 @@ export default function CarResidentSection({
               <GridForm.Label>
                 주차량 설정
               </GridForm.Label>
+              <GridForm.Rules>
+                주/보조 차량 설정
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleToggleSwitch
                   checked={createFormData.isPrimary}
@@ -406,6 +415,9 @@ export default function CarResidentSection({
               <GridForm.Label>
                 알람 설정
               </GridForm.Label>
+              <GridForm.Rules>
+                알람 수신 여부
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleToggleSwitch
                   checked={createFormData.carAlarm}

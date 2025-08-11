@@ -55,15 +55,18 @@ const GridFormExample = () => {
 		<div className="p-8">
 			<h1 className="mb-6 text-2xl font-bold font-multilang">GridForm 컴포넌트 예제</h1>
 			
-			{/* 기본 2단 구조 예제 */}
-			<div className="mb-12">
-				<h2 className="mb-4 text-xl font-semibold font-multilang">1. 기본 투표 생성 폼 (2단 구조)</h2>
+			            {/* 기본 4열 구조 예제 */}
+            <div className="mb-12">
+                <h2 className="mb-4 text-xl font-semibold font-multilang">1. 기본 투표 생성 폼 (4열 구조)</h2>
 				<div className="p-6 bg-white rounded-lg border">
 					<GridForm>
 						<GridForm.Row>
 							<GridForm.Label required htmlFor="vote-title">
 								투표 제목
 							</GridForm.Label>
+							<GridForm.Rules>
+								한글, 영문 2-100자
+							</GridForm.Rules>
 							<GridForm.Content>
 								<input
 									id="vote-title"
@@ -78,6 +81,9 @@ const GridFormExample = () => {
 
 						<GridForm.Row align="start">
 							<GridForm.Label>투표 유형</GridForm.Label>
+							<GridForm.Rules>
+								단일/복수 선택 옵션
+							</GridForm.Rules>
 							<GridForm.Content direction="column" gap="8px">
 								<div className="flex gap-4">
 									<label className="flex gap-2 items-center">

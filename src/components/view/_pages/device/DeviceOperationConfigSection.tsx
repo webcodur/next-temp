@@ -151,6 +151,9 @@ export default function DeviceOperationConfigSection({
           <GridForm.Label required>
             디바이스 타입
           </GridForm.Label>
+          <GridForm.Rules>
+            라즈베리/통합보드 선택
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleDropdown
               value={formData.deviceType}
@@ -170,6 +173,9 @@ export default function DeviceOperationConfigSection({
           <GridForm.Label>
             발권 기능
           </GridForm.Label>
+          <GridForm.Rules>
+            Y/N 선택
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleDropdown
               value={formData.isTicketing}
@@ -189,6 +195,9 @@ export default function DeviceOperationConfigSection({
           <GridForm.Label>
             영수증 기능
           </GridForm.Label>
+          <GridForm.Rules>
+            Y/N 선택
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleDropdown
               value={formData.isReceipting}

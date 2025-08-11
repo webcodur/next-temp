@@ -193,6 +193,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               차단기명
             </GridForm.Label>
+            <GridForm.Rules>
+              식별 가능한 고유명
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.name}
@@ -211,6 +214,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               CCTV URL
             </GridForm.Label>
+            <GridForm.Rules>
+              유횤한 URL 형식
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.cctvUrl}
@@ -229,6 +235,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label>
               대표전화
             </GridForm.Label>
+            <GridForm.Rules>
+              02-0000-0000 형식
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.representativePhone}
@@ -247,6 +256,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label>
               순번
             </GridForm.Label>
+            <GridForm.Rules>
+              좋자 (1 이상)
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.sequence}
@@ -272,6 +284,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               IP 주소
             </GridForm.Label>
+            <GridForm.Rules>
+              IPv4 형식 (192.168.0.1)
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.ip}
@@ -291,6 +306,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               포트
             </GridForm.Label>
+            <GridForm.Rules>
+              1-65535 범위 숫자
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.port}
@@ -310,6 +328,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label>
               서버 포트
             </GridForm.Label>
+            <GridForm.Rules>
+              1-65535 범위 숫자
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={data.serverPort}
@@ -336,6 +357,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               운영 상태
             </GridForm.Label>
+            <GridForm.Rules>
+              자동/열림/바이패스 선택
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={data.status}
@@ -355,6 +379,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label required={mode === 'create'}>
               디바이스 타입
             </GridForm.Label>
+            <GridForm.Rules>
+              라즈베리/통합보드 선택
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={data.deviceType}
@@ -374,6 +401,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label>
               발권 기능
             </GridForm.Label>
+            <GridForm.Rules>
+              Y/N 선택
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={data.isTicketing}
@@ -393,6 +423,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             <GridForm.Label>
               영수증 기능
             </GridForm.Label>
+            <GridForm.Rules>
+              Y/N 선택
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={data.isReceipting}
@@ -425,6 +458,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               <GridForm.Label>
                 주차장 ID
               </GridForm.Label>
+              <GridForm.Rules>
+                시스템 자동 연결
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   value={device.parkinglotId?.toString() || '-'}
@@ -442,6 +478,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               <GridForm.Label>
                 등록일자
               </GridForm.Label>
+              <GridForm.Rules>
+                시스템 자동 기록
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   value={device.createdAt ? new Date(device.createdAt).toLocaleDateString('ko-KR', {
@@ -463,6 +502,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               <GridForm.Label>
                 수정일자
               </GridForm.Label>
+              <GridForm.Rules>
+                시스템 자동 기록
+              </GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   value={device.updatedAt ? new Date(device.updatedAt).toLocaleDateString('ko-KR', {

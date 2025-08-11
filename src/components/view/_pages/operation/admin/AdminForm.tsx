@@ -117,6 +117,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
         <GridForm.Label required={mode === 'create'}>
           아이디
         </GridForm.Label>
+        <GridForm.Rules>
+          영문, 숫자 4-20자
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.account}
@@ -136,6 +139,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
         <GridForm.Label required>
           이름
         </GridForm.Label>
+        <GridForm.Rules>
+          한글, 영문 2-50자
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.name}
@@ -155,6 +161,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
         <GridForm.Label>
           이메일
         </GridForm.Label>
+        <GridForm.Rules>
+          유효한 이메일 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             type="email"
@@ -175,6 +184,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
         <GridForm.Label>
           연락처
         </GridForm.Label>
+        <GridForm.Rules>
+          010-0000-0000 형식
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.phone}
@@ -194,6 +206,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
         <GridForm.Label required>
           권한
         </GridForm.Label>
+        <GridForm.Rules>
+          역할 및 권한 설정
+        </GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.role}
@@ -216,6 +231,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
             <GridForm.Label required={passwordRequired}>
               비밀번호
             </GridForm.Label>
+            <GridForm.Rules>
+              8자 이상 영문/숫자/특수문자
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 type="password"
@@ -236,6 +254,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
             <GridForm.Label required={passwordRequired}>
               비밀번호 확인
             </GridForm.Label>
+            <GridForm.Rules>
+              위와 동일한 비밀번호
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 type="password"
@@ -262,6 +283,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
             <GridForm.Label>
               주차장
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 연결
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={admin?.parkinglot?.name || '-'}
@@ -279,6 +303,9 @@ const AdminForm: React.FC<AdminFormProps> = ({
             <GridForm.Label>
               등록일자
             </GridForm.Label>
+            <GridForm.Rules>
+              시스템 자동 기록
+            </GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={admin ? new Date(admin.createdAt).toLocaleDateString('ko-KR', {

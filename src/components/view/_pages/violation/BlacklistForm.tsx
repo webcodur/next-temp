@@ -76,6 +76,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
         <>
           <GridForm.Row>
             <GridForm.Label>차량번호</GridForm.Label>
+            <GridForm.Rules>시스템 자동 입력</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={blacklist.carNumber}
@@ -88,6 +89,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
           <GridForm.Row>
             <GridForm.Label>등록 유형</GridForm.Label>
+            <GridForm.Rules>자동/수동 구분</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={blacklist.blacklistType === 'AUTO' ? '자동' : '수동'}
@@ -100,6 +102,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
           <GridForm.Row>
             <GridForm.Label>상태</GridForm.Label>
+            <GridForm.Rules>활성/비활성 상태</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={blacklist.isActive ? '활성' : '비활성'}
@@ -112,6 +115,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
           <GridForm.Row>
             <GridForm.Label>차단일시</GridForm.Label>
+            <GridForm.Rules>시스템 자동 기록</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={blacklist.blockedAt ? new Date(blacklist.blockedAt).toLocaleString() : '-'}
@@ -125,6 +129,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
       )}
       <GridForm.Row>
         <GridForm.Label required>등록 사유</GridForm.Label>
+        <GridForm.Rules>위반 유형 선택</GridForm.Rules>
         <GridForm.Content>
           <SimpleDropdown
             value={data.registrationReason}
@@ -138,6 +143,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
       <GridForm.Row>
         <GridForm.Label required>차단 종료 시각</GridForm.Label>
+        <GridForm.Rules>날짜 및 시간 선택</GridForm.Rules>
         <GridForm.Content>
           <SimpleDatePicker
             value={data.blockedUntil}
@@ -152,6 +158,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
       <GridForm.Row>
         <GridForm.Label>차단 사유</GridForm.Label>
+        <GridForm.Rules>자유 형식 텍스트</GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.blockReason}
@@ -164,6 +171,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
 
       <GridForm.Row>
         <GridForm.Label>해제 사유</GridForm.Label>
+        <GridForm.Rules>자유 형식 텍스트</GridForm.Rules>
         <GridForm.Content>
           <SimpleTextInput
             value={data.unblockReason}

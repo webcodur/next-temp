@@ -197,6 +197,9 @@ export default function DeviceNetworkConfigSection({
           <GridForm.Label required>
             IP 주소
           </GridForm.Label>
+          <GridForm.Rules>
+            IPv4 형식 (192.168.0.1)
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               value={formData.ip}
@@ -217,6 +220,9 @@ export default function DeviceNetworkConfigSection({
           <GridForm.Label required>
             포트
           </GridForm.Label>
+          <GridForm.Rules>
+            1-65535 범위 숫자
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               value={formData.port}
@@ -236,6 +242,9 @@ export default function DeviceNetworkConfigSection({
           <GridForm.Label>
             서버 포트
           </GridForm.Label>
+          <GridForm.Rules>
+            1-65535 범위 숫자
+          </GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               value={formData.serverPort}
