@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
@@ -226,7 +225,7 @@ export default function CarInstanceSection({
       header: '등록일자',
       align: 'center',
       width: '15%',
-      type: 'date',
+      type: 'datetime',
       cell: (item: CarInstanceResidentDetail) => {
         if (!item.carInstance?.createdAt) return '-';
         return ''; // type: 'date'가 자동으로 포맷팅

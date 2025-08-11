@@ -224,7 +224,7 @@ export default function ResidentInstanceSection({
       header: '관계 생성일',
       width: '13%',
       align: 'center',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

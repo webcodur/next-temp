@@ -97,10 +97,10 @@ const AdminForm: React.FC<AdminFormProps> = ({
         size="default"
         onClick={onSubmit} 
         disabled={!isValid || disabled}
-        title={disabled ? '전송 중...' : !isValid ? '필수 항목을 입력해주세요' : '변경사항 저장'}
+        title={disabled ? '저장 중...' : !isValid ? '필수 항목을 입력해주세요' : '변경사항 저장'}
       >
         <Send size={16} />
-        전송
+        저장
       </Button>
     </div>
   ) : null;

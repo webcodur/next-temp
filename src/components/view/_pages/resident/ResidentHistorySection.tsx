@@ -123,14 +123,14 @@ export default function ResidentHistorySection({
       header: '입주일',
       width: '12%',
       align: 'center',
-      type: 'date',
+      type: 'datetime',
     },
     {
       key: 'deletedAt',
       header: '퇴거일',
       width: '12%',
       align: 'center',
-      type: 'date',
+      type: 'datetime',
       cell: (item: ResidentHistoryItem) => {
         if (!item.deletedAt) {
           return '현재 거주';

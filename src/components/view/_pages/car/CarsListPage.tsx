@@ -392,7 +392,7 @@ export default function CarsListPage() {
       header: '등록일자',
       align: 'center',
       width: '12%',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

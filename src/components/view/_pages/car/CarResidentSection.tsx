@@ -259,7 +259,7 @@ export default function CarResidentSection({
       header: '등록일자',
       align: 'center',
       width: '15%',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

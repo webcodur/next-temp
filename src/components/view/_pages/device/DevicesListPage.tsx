@@ -431,7 +431,7 @@ export default function DevicesListPage() {
       header: '등록일자',
       align: 'center',
       width: '10%',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

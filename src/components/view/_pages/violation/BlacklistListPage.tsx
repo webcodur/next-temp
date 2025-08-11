@@ -359,7 +359,7 @@ export default function BlacklistListPage() {
       header: '차단 만료일',
       align: 'center',
       width: '10%',
-      type: 'date',
+      type: 'datetime',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         if (!blacklist.blockedUntil) return '무기한';

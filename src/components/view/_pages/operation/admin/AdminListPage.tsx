@@ -313,7 +313,7 @@ export default function AdminListPage() {
       header: '등록일자',
       align: 'center',
       width: '14%',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

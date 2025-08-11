@@ -1,6 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { InstanceDetail, InstanceServiceConfig, InstanceVisitConfig, InstanceType } from '@/types/instance';
+import { InstanceDetail, InstanceServiceConfig, InstanceVisitConfig, InstanceType, CarInstanceWithCar } from '@/types/instance';
 import { ResidentInstance } from '@/types/resident';
 
 // #region 서버 타입 정의 (내부 사용)
@@ -28,6 +28,9 @@ interface InstanceVisitConfigServerResponse {
 interface InstanceDetailServerResponse {
   id: number;
   parkinglot_id: number;
+  name: string;
+  owner_name?: string | null;
+  phone: string;
   address_1depth: string;
   address_2depth: string;
   address_3depth?: string | null;
@@ -36,7 +39,9 @@ interface InstanceDetailServerResponse {
   memo?: string | null;
   created_at: string;
   updated_at: string;
+  deleted_at?: string | null;
   resident_instance: unknown[];
+  car_instance?: unknown[];
   instance_service_config?: InstanceServiceConfigServerResponse | null;
   instance_visit_config?: InstanceVisitConfigServerResponse | null;
 }
@@ -72,6 +77,9 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
   return {
     id: server.id,
     parkinglotId: server.parkinglot_id,
+    name: server.name,
+    ownerName: server.owner_name,
+    phone: server.phone,
     address1Depth: server.address_1depth,
     address2Depth: server.address_2depth,
     address3Depth: server.address_3depth,
@@ -80,7 +88,9 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
     memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
     residentInstance: server.resident_instance as ResidentInstance[],
+    carInstance: server.car_instance as CarInstanceWithCar[],
     instanceServiceConfig: server.instance_service_config 
       ? serviceConfigServerToClient(server.instance_service_config)
       : null,

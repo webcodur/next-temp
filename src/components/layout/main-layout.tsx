@@ -12,7 +12,6 @@ import { useGlobalKeyboard } from '@/hooks/input-hooks/useGlobalKeyboard';
 import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 // store
-// import { initPrimaryColorAtom } from '@/store/primary';
 import { sidebarCollapsedAtom, endPanelWidthAtom } from '@/store/ui';
 // components
 import Login from '@/components/view/_etc/login/Login';

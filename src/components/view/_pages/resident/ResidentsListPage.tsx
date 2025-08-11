@@ -365,7 +365,7 @@ export default function ResidentsListPage() {
       header: '등록일자',
       align: 'center',
       width: '10%',
-      type: 'date',
+      type: 'datetime',
     },
     {
       header: '관리',

@@ -114,10 +114,12 @@ interface InstanceServerResponse {
 
 interface PaginatedInstanceServerResponse {
   data: InstanceServerResponse[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
+  meta: {
+    total_items: number;
+    current_page: number;
+    items_per_page: number;
+    total_pages: number;
+  };
 }
 // #endregion
 
@@ -239,10 +241,10 @@ function serverToClient(server: InstanceServerResponse): Instance {
 function paginatedServerToClient(server: PaginatedInstanceServerResponse): PaginatedInstanceResponse {
   return {
     data: server.data.map(serverToClient),
-    total: server.total,
-    page: server.page,
-    limit: server.limit,
-    totalPages: server.total_pages,
+    total: server.meta.total_items,
+    page: server.meta.current_page,
+    limit: server.meta.items_per_page,
+    totalPages: server.meta.total_pages,
   };
 }
 // #endregion

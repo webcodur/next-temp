@@ -1,4 +1,4 @@
-    "/instances": {
+ "/instances": {
       "post": {
         "description": "새로운 인스턴스를 생성합니다.",
         "operationId": "create인스턴스생성",
@@ -53,6 +53,19 @@
         "operationId": "search인스턴스목록조회",
         "parameters": [
           {
+            "name": "instance_type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "GENERAL",
+                "TEMP",
+                "COMMERCIAL"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "x-parkinglot-id",
             "in": "header",
             "description": "주차장 ID",
@@ -79,6 +92,51 @@
             "schema": {
               "example": 10,
               "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "이름으로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "전화번호로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address_1depth",
+            "required": false,
+            "in": "query",
+            "description": "address_1depth로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address_2depth",
+            "required": false,
+            "in": "query",
+            "description": "address_2depth로 검색",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address_3depth",
+            "required": false,
+            "in": "query",
+            "description": "address_3depth로 검색",
+            "schema": {
+              "type": "string"
             }
           }
         ],

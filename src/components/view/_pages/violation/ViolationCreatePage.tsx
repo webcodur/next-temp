@@ -192,7 +192,7 @@ export default function ViolationCreatePage() {
           title="위반 기록 추가"
           subtitle="새로운 차량 위반 기록을 등록합니다"
           leftActions={
-            <Button variant="ghost" onClick={handleCancel}>
+            <Button onClick={handleCancel}>
               <ArrowLeft className="mr-2 w-4 h-4" />
               뒤로가기
             </Button>
@@ -317,7 +317,6 @@ export default function ViolationCreatePage() {
         {/* 액션 버튼 */}
         <div className="flex gap-2 justify-end">
           <Button
-            variant="ghost"
             onClick={handleCancel}
             disabled={creating}
           >

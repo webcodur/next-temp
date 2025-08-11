@@ -20,15 +20,15 @@ export const Logo = memo(() => {
 			<Image 
 				src="/icons/testLogo/lg_plus.png" 
 				alt="System Logo" 
-				width={35} 
-				height={35}
-				style={{ width: 'auto', height: '35px' }}
+				width={30} 
+				height={30}
+				style={{ width: 'auto', height: '30px' }}
 			/>
-			<div className="flex gap-2 items-baseline">
+			<div className="flex flex-col gap-[2px] items-baseline ml-4">
 				{selectedParkingLot &&(
 					<>
 						<h1 className="text-xl font-bold text-foreground">{selectedParkingLot.name}</h1>
-						<p className="text-sm text-muted-foreground">({selectedParkingLot.description})</p>
+						<p className="text-sm text-muted-foreground">{selectedParkingLot.description}</p>
 					</>
 				)}
 			</div>

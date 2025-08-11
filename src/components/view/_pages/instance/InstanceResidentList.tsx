@@ -17,17 +17,17 @@ export default function InstanceResidentList({
   const router = useRouter();
 
   const handleResidentClick = (residentId: number) => {
-    router.push(`/system/residents/${residentId}`);
+    router.push(`/parking/occupancy/resident/${residentId}`);
   };
 
   if (loading) {
     return (
-      <div className="border rounded-lg p-6">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="p-6 rounded-lg border">
+        <div className="flex gap-2 items-center mb-4">
           <Users size={20} className="text-primary" />
           <h3 className="text-lg font-medium">거주민 목록</h3>
         </div>
-        <div className="flex items-center justify-center py-8">
+        <div className="flex justify-center items-center py-8">
           <div className="text-muted-foreground">로딩 중...</div>
         </div>
       </div>
@@ -35,15 +35,15 @@ export default function InstanceResidentList({
   }
 
   return (
-    <div className="border rounded-lg p-6">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="p-6 rounded-lg border">
+      <div className="flex gap-2 items-center mb-4">
         <Users size={20} className="text-primary" />
         <h3 className="text-lg font-medium">거주민 목록</h3>
         <span className="text-sm text-muted-foreground">({residentInstances.length}명)</span>
       </div>
 
       {residentInstances.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-8 text-center">
+        <div className="flex flex-col justify-center items-center py-8 text-center">
           <User size={32} className="mb-3 text-muted-foreground" />
           <h4 className="mb-1 text-sm font-medium text-foreground">
             등록된 거주민이 없습니다
@@ -58,22 +58,22 @@ export default function InstanceResidentList({
             <div
               key={residentInstance.id}
               onClick={() => handleResidentClick(residentInstance.resident.id)}
-              className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary hover:bg-accent/50 cursor-pointer transition-all"
+              className="flex justify-between items-center p-3 rounded-lg border transition-all cursor-pointer border-border hover:border-primary hover:bg-accent/50"
             >
               <div className="flex-1">
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <div className="flex gap-3 items-center">
+                  <div className="flex flex-shrink-0 justify-center items-center w-8 h-8 rounded-full bg-primary/10">
                     <User size={16} className="text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-foreground truncate">
+                    <h4 className="text-sm font-medium truncate text-foreground">
                       {residentInstance.resident.name}
                     </h4>
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs truncate text-muted-foreground">
                       {residentInstance.resident.phone || '전화번호 없음'}
                     </p>
                     {residentInstance.resident.email && (
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs truncate text-muted-foreground">
                         {residentInstance.resident.email}
                       </p>
                     )}
@@ -98,7 +98,7 @@ export default function InstanceResidentList({
                   </div>
                 )}
               </div>
-              <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
+              <ChevronRight size={16} className="flex-shrink-0 text-muted-foreground" />
             </div>
           ))}
         </div>
