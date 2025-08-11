@@ -11,7 +11,6 @@ import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import timezone from '@/utils/timezone';
-import { formatToShortDate, formatToShortDateTime } from '@/utils/dateFormat';
 
 import { BaseTableProps } from './types';
 import { 
@@ -105,11 +104,10 @@ const BaseTable = <T extends Record<string, unknown>>({
 
 		// 렌더링된 내용 계산
 		const renderedContent = (() => {
-			// 타입별 자동 처리
+			// 타입별 자동 처리 (UTC → Local 변환 포함)
 			if (column.type === 'date' && rawValue) {
 				try {
-					const localDate = timezone.utcToLocal(rawValue);
-					return formatToShortDate(localDate);
+					return timezone.formatDate(rawValue);
 				} catch (error) {
 					console.warn('날짜 변환 실패:', error);
 					return '-';
@@ -118,8 +116,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 			
 			if (column.type === 'datetime' && rawValue) {
 				try {
-					const localDate = timezone.utcToLocal(rawValue);
-					return formatToShortDateTime(localDate);
+					return timezone.formatShortDateTimeDot(rawValue);
 				} catch (error) {
 					console.warn('날짜시간 변환 실패:', error);
 					return '-';
@@ -180,7 +177,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 								ref={contentRef}
 								onClick={handleCellClick}
 								className="
-									truncate cursor-pointer
+									truncate cursor-pointer whitespace-pre-line
 									hover:bg-primary-3/20 hover:scale-[1.02]
 									rounded px-1 py-0.5 transition-all duration-200
 									border border-transparent hover:border-primary-4/40
@@ -204,7 +201,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 			return (
 				<div 
 					ref={contentRef}
-					className="truncate"
+					className="truncate whitespace-pre-line"
 				>
 					{renderedContent}
 				</div>

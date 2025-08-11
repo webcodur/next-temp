@@ -259,14 +259,7 @@ export default function CarResidentSection({
       header: '등록일자',
       align: 'center',
       width: '15%',
-      cell: (item: CarInstanceResidentDetail) => {
-        const date = new Date(item.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      type: 'date',
     },
     {
       header: '관리',

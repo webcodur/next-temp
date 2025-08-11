@@ -359,15 +359,11 @@ export default function BlacklistListPage() {
       header: '차단 만료일',
       align: 'center',
       width: '10%',
+      type: 'date',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         if (!blacklist.blockedUntil) return '무기한';
-        const date = new Date(blacklist.blockedUntil);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+        return ''; // type: 'date'가 자동으로 포맷팅
       },
     },
     {
@@ -402,16 +398,7 @@ export default function BlacklistListPage() {
       header: '차단일시',
       align: 'center',
       width: '12%',
-      cell: (item: Record<string, unknown>) => {
-        const blacklist = item as unknown as BlacklistResponse;
-        if (!blacklist.blockedAt) return '-';
-        const date = new Date(blacklist.blockedAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      type: 'datetime',
     },
     {
       key: 'totalViolations',

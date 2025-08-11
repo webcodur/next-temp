@@ -224,14 +224,7 @@ export default function ResidentInstanceSection({
       header: '관계 생성일',
       width: '13%',
       align: 'center',
-      cell: (item: ResidentInstanceWithInstance) => {
-        const date = new Date(item.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      type: 'date',
     },
     {
       header: '관리',

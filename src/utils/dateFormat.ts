@@ -120,6 +120,36 @@ export const formatToShortDateTime = (dateInput: DateInput): string => {
     return '-';
   }
 };
+
+/**
+ * 날짜와 시간을 yy.mm.dd hh.mm.ss 형태로 포맷팅한다 (모든 구분자가 점)
+ * 연월일과 시분초를 개행으로 구분한다
+ * @param dateInput - 날짜 문자열, Date 객체, null, undefined
+ * @returns yy.mm.dd\nhh.mm.ss 형태의 문자열 또는 '-'
+ */
+export const formatToShortDateTimeDot = (dateInput: DateInput): string => {
+  if (!dateInput) return '-';
+  
+  try {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    
+    if (isNaN(date.getTime())) {
+      return '-';
+    }
+    
+    const year = date.getFullYear().toString().slice(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    
+    return `${year}.${month}.${day}\n${hours}.${minutes}.${seconds}`;
+  } catch (error) {
+    console.warn('날짜시간 포맷팅 실패:', error);
+    return '-';
+  }
+};
 // #endregion
 
 // #region 유틸리티 함수들
@@ -161,6 +191,7 @@ const dateFormat = {
   full: formatToFullDate,          // yyyy.mm.dd
   monthDay: formatToMonthDay,      // mm/dd
   shortDateTime: formatToShortDateTime, // yy.mm.dd hh:mm:ss
+  shortDateTimeDot: formatToShortDateTimeDot, // yy.mm.dd hh.mm.ss
   
   // 유틸리티
   isToday,

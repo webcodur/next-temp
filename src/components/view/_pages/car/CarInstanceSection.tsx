@@ -226,14 +226,10 @@ export default function CarInstanceSection({
       header: '등록일자',
       align: 'center',
       width: '15%',
+      type: 'date',
       cell: (item: CarInstanceResidentDetail) => {
         if (!item.carInstance?.createdAt) return '-';
-        const date = new Date(item.carInstance.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+        return ''; // type: 'date'가 자동으로 포맷팅
       },
     },
     {

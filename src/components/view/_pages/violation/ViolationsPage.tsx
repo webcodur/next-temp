@@ -3,11 +3,10 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { Field } from '@/components/ui/ui-input/field/core/Field';
-import { PaginatedTable } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
+import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 // Plus 아이콘은 CrudButton에서 처리
@@ -176,7 +175,7 @@ export default function ViolationsPage() {
   // #endregion
 
   // #region 테이블 설정
-  const columns = useMemo(() => [
+  const columns = useMemo((): BaseTableColumn<TableCarViolation>[] => [
     {
       key: 'carNumber' as keyof TableCarViolation,
       header: '차량번호',
@@ -191,10 +190,7 @@ export default function ViolationsPage() {
       key: 'violationTime' as keyof TableCarViolation,
       header: '위반 시각',
       width: '160px',
-      render: (value: unknown) => {
-        const dateValue = value as string;
-        return new Date(dateValue).toLocaleString('ko-KR');
-      },
+      type: 'datetime',
     },
     {
       key: 'statusText' as keyof TableCarViolation,

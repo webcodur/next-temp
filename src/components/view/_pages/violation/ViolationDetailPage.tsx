@@ -10,6 +10,7 @@ import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleText
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { ImagePreview, ImageData } from '@/components/ui/ui-effects/image-preview/ImagePreview';
 import { ArrowLeft, RotateCcw, Eye, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -346,14 +347,12 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
       />
 
       {/* 퀵 메뉴 - 위반 기록 처리 */}
-      <div className="overflow-visible p-4 rounded-lg border" style={{
+      <div className="overflow-visible rounded-lg border" style={{
         backgroundColor: 'hsl(var(--card))',
         borderColor: 'hsl(var(--warning) / 0.3)'
       }}>
-        <div className="flex gap-2 items-center mb-4">
-          <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'hsl(var(--warning))'}}></div>
-          <h3 className="text-lg font-semibold" style={{color: 'hsl(var(--warning))'}}>빠른 위반 기록 처리</h3>
-        </div>
+        <TitleRow title="빠른 위반 기록" subtitle="빠른 위반 기록 처리를 위한 빠른 입력 폼입니다." />
+        <div className="p-4 pt-0">
         
         <GridForm labelWidth="120px" className="overflow-visible">
           <GridForm.Row>
@@ -381,26 +380,25 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           </GridForm.Row>
         </GridForm>
         
-        <div className="flex gap-2 justify-end mt-4">
-          <Button
-            variant="primary"
-            onClick={handleProcess}
-            disabled={!canProcess}
-          >
-            {processing ? '처리 중...' : '처리 완료'}
-          </Button>
+          <div className="flex gap-2 justify-end mt-4">
+            <Button
+              variant="primary"
+              onClick={handleProcess}
+              disabled={!canProcess}
+            >
+              {processing ? '처리 중...' : '처리 완료'}
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* 메인 상세 정보 */}
-      <div className="p-6 rounded-lg border" style={{
+      <div className="rounded-lg border" style={{
         backgroundColor: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <div className="flex gap-2 items-center mb-6">
-          <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'hsl(var(--primary))'}}></div>
-          <h3 className="text-lg font-semibold" style={{color: 'hsl(var(--primary))'}}>상세 정보</h3>
-        </div>
+        <TitleRow title="상세 정보" subtitle="상세 정보" />
+        <div className="p-6 pt-0">
         
         <GridForm labelWidth="150px">
           {/* 시스템 생성 필드 (읽기 전용) */}
@@ -683,23 +681,24 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           </GridForm.Row>
         </GridForm>
 
-        {/* 상세 정보 액션 버튼 */}
-        <div className="flex gap-2 justify-end mt-6">
-          <Button
-            variant="ghost"
-            onClick={handleEditReset}
-            disabled={!hasEditChanges || saving || processing}
-          >
-            <RotateCcw className="mr-2 w-4 h-4" />
-            초기화
-          </Button>
-          
-          <Button
-            onClick={handleSave}
-            disabled={!canSave}
-          >
-            {saving ? '저장 중...' : '저장'}
-          </Button>
+          {/* 상세 정보 액션 버튼 */}
+          <div className="flex gap-2 justify-end mt-6">
+            <Button
+              variant="ghost"
+              onClick={handleEditReset}
+              disabled={!hasEditChanges || saving || processing}
+            >
+              <RotateCcw className="mr-2 w-4 h-4" />
+              초기화
+            </Button>
+            
+            <Button
+              onClick={handleSave}
+              disabled={!canSave}
+            >
+              {saving ? '저장 중...' : '저장'}
+            </Button>
+          </div>
         </div>
       </div>
 

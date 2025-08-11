@@ -392,14 +392,7 @@ export default function CarsListPage() {
       header: '등록일자',
       align: 'center',
       width: '12%',
-      cell: (item: CarWithInstance) => {
-        const date = new Date(item.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      type: 'date',
     },
     {
       header: '관리',

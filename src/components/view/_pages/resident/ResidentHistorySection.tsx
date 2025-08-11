@@ -123,30 +123,19 @@ export default function ResidentHistorySection({
       header: '입주일',
       width: '12%',
       align: 'center',
-      cell: (item: ResidentHistoryItem) => {
-        const date = new Date(item.createdAt);
-        return date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
+      type: 'date',
     },
     {
       key: 'deletedAt',
       header: '퇴거일',
       width: '12%',
       align: 'center',
+      type: 'date',
       cell: (item: ResidentHistoryItem) => {
-        if (item.deletedAt) {
-          const date = new Date(item.deletedAt);
-          return date.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          });
+        if (!item.deletedAt) {
+          return '현재 거주';
         }
-        return '현재 거주';
+        return ''; // type: 'date'가 자동으로 포맷팅
       },
     },
     {

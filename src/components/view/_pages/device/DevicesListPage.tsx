@@ -24,7 +24,7 @@ import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 
 // 유틸리티
-import { formatToShortDate } from '@/utils/dateFormat';
+import dateFormat from '@/utils/dateFormat';
 
 // 타입 정의
 import { ParkingDevice } from '@/types/device';
@@ -431,7 +431,7 @@ export default function DevicesListPage() {
       header: '등록일자',
       align: 'center',
       width: '10%',
-      cell: (item: ParkingDevice) => formatToShortDate(item.createdAt),
+      type: 'date',
     },
     {
       header: '관리',

@@ -3,6 +3,8 @@
  * DB에 저장된 UTC 시간을 클라이언트의 시간대에 맞게 표시
  */
 
+import dateFormat from './dateFormat';
+
 // #region 타입 정의
 export interface TimezoneInfo {
   timezone: string;
@@ -159,11 +161,12 @@ export const formatRelativeTime = (date: Date): string => {
 };
 
 /**
- * 간단한 날짜 포맷 (YYYY-MM-DD)
+ * 간단한 날짜 포맷 (yy.mm.dd)
+ * dateFormat 유틸리티를 활용한다
  */
 export const formatDate = (utcString: string): string => {
   const localDate = utcToLocal(utcString);
-  return localDate.toISOString().split('T')[0];
+  return dateFormat.short(localDate);
 };
 
 /**
@@ -176,6 +179,33 @@ export const formatTime = (utcString: string): string => {
     minute: '2-digit',
     hour12: false
   });
+};
+
+/**
+ * 짧은 날짜시간 포맷 (yy.mm.dd hh:mm:ss)
+ * dateFormat 유틸리티를 활용한다
+ */
+export const formatShortDateTime = (utcString: string): string => {
+  const localDate = utcToLocal(utcString);
+  return dateFormat.shortDateTime(localDate);
+};
+
+/**
+ * 짧은 날짜시간 포맷 with 점 구분자 (yy.mm.dd hh.mm.ss)
+ * 연월일과 시분초를 개행으로 구분한다
+ * dateFormat 유틸리티를 활용한다
+ */
+export const formatShortDateTimeDot = (utcString: string): string => {
+  const localDate = utcToLocal(utcString);
+  const dateStr = dateFormat.short(localDate); // yy.mm.dd
+  const timeStr = localDate.toLocaleTimeString('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(/:/g, '.'); // hh.mm.ss
+  
+  return `${dateStr}\n${timeStr}`;
 };
 // #endregion
 
@@ -221,12 +251,11 @@ export const isInTimeRange = (
 
 /**
  * UTC 시간이 오늘인지 확인
+ * dateFormat 유틸리티를 활용한다
  */
 export const isToday = (utcString: string): boolean => {
-  const date = utcToLocal(utcString);
-  const today = new Date();
-  
-  return date.toDateString() === today.toDateString();
+  const localDate = utcToLocal(utcString);
+  return dateFormat.isToday(localDate);
 };
 
 /**
@@ -255,6 +284,8 @@ const timezone = {
   formatDateTime,
   formatDate,
   formatTime,
+  formatShortDateTime,
+  formatShortDateTimeDot,
   formatRelativeTime,
   
   // 유틸리티
