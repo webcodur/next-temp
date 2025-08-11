@@ -100,7 +100,7 @@ export const getValidationResult = (
   
   return {
     isValid,
-    message: `입력 규칙: ${message}`,
+    message,
     hasValue
   };
 }; 

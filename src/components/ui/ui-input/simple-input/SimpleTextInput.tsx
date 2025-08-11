@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, CheckCircle, AlertCircle, X, Binary, Eye, EyeOff } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { Type, X, Binary, Eye, EyeOff } from 'lucide-react';
+import { ValidationRule } from './types';
 
 interface SimpleTextInputProps {
 	label?: string;
@@ -77,30 +77,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		inputRef.current?.focus();
 	};
 
-	// validation 결과 계산
-  const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
 
-  // 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
-  const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-
-  // 실제 표시할 메시지 및 상태 계산 (외부 errorMessage를 상단 가이드 영역에 통합)
-  const getFeedbackType = () => {
-    if (!validationRule || !validationResult) return 'info';
-    if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
-      if (errorMessage) return 'error';
-      return validationResult.isValid ? 'success' : 'error';
-    }
-    return 'info';
-  };
-
-  const getDisplayMessage = () => {
-    if (!validationRule) return undefined;
-    // 값이 있고 편집 모드일 때 외부 에러가 있으면 에러 메시지를 우선 표시
-    if (shouldShowIcon && errorMessage) {
-      return errorMessage;
-    }
-    return validationResult?.message;
-  };
 
 	return (
 		<div className={`relative ${className}`}>
@@ -112,21 +89,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				)}
 			</div>
 
-			{/* Validation Rule 표시 */}
-      {validationRule && (
-				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
-					<div className="flex items-center">
-            <span>{getDisplayMessage()}</span>
-						{shouldShowIcon && (
-							validationResult.isValid ? (
-								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
-							) : (
-								<AlertCircle className="ml-2 w-4 h-4 text-red-500" />
-							)
-						)}
-					</div>
-				</div>
-			)}
+
 
 			<div
 				onClick={handleContainerClick}

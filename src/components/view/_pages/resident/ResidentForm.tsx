@@ -156,7 +156,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label required>
           이름
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.name.length >= 2 && data.name.length <= 50 ? "success" : data.name.length > 0 ? "error" : undefined}
+          validationMessage={data.name.length >= 2 && data.name.length <= 50 ? "올바른 형식입니다" : data.name.length > 0 ? "2-50자 사이로 입력해주세요" : undefined}
+        >
           한글, 영문 2-50자
         </GridForm.Rules>
         <GridForm.Content>
@@ -177,7 +180,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           전화번호
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.phone ? (/^010-\d{4}-\d{4}$/.test(data.phone) ? "success" : "error") : undefined}
+          validationMessage={data.phone ? (/^010-\d{4}-\d{4}$/.test(data.phone) ? "올바른 형식입니다" : "010-0000-0000 형식으로 입력해주세요") : undefined}
+        >
           010-0000-0000 형식
         </GridForm.Rules>
         <GridForm.Content>
@@ -198,7 +204,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           이메일
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.email ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) ? "success" : "error") : "info"}
+          validationMessage={data.email ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) ? "올바른 이메일 형식입니다" : "유효하지 않은 이메일 형식입니다") : "선택사항입니다"}
+        >
           유효한 이메일 형식
         </GridForm.Rules>
         <GridForm.Content>
@@ -220,7 +229,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           생년월일
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.birthDate ? (/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate) ? "success" : "warning") : "info"}
+          validationMessage={data.birthDate ? (/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate) ? "올바른 날짜 형식입니다" : "YYYY-MM-DD 형식으로 입력해주세요") : "선택사항입니다"}
+        >
           YYYY-MM-DD 형식
         </GridForm.Rules>
         <GridForm.Content>
@@ -242,7 +254,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           성별
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.gender ? "success" : "info"}
+          validationMessage={data.gender ? "선택 완료" : "선택사항입니다"}
+        >
           남성/여성 선택
         </GridForm.Rules>
         <GridForm.Content>
@@ -264,7 +279,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           비상연락처
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.emergencyContact ? (/^010-\d{4}-\d{4}$/.test(data.emergencyContact) ? "success" : "warning") : "info"}
+          validationMessage={data.emergencyContact ? (/^010-\d{4}-\d{4}$/.test(data.emergencyContact) ? "올바른 형식입니다" : "010-0000-0000 형식을 권장합니다") : "선택사항입니다"}
+        >
           010-0000-0000 형식
         </GridForm.Rules>
         <GridForm.Content>
@@ -285,7 +303,10 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         <GridForm.Label>
           메모
         </GridForm.Label>
-        <GridForm.Rules>
+        <GridForm.Rules 
+          validationStatus={data.memo ? (data.memo.length <= 200 ? "success" : "warning") : "info"}
+          validationMessage={data.memo ? (data.memo.length <= 200 ? `${data.memo.length}/200자` : "200자 이내로 작성을 권장합니다") : "선택사항입니다"}
+        >
           자유 형식 텍스트
         </GridForm.Rules>
         <GridForm.Content>

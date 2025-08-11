@@ -2,6 +2,32 @@
 
 import React, { createContext } from 'react';
 import { cn } from '@/lib/utils';
+import { Check, X, AlertTriangle, Info } from 'lucide-react';
+
+/**
+ * GridForm Rules 검증 상태 아이콘 사용 예시:
+ * 
+ * <GridForm.Rules 
+ *   validationStatus="success" 
+ *   validationMessage="올바른 형식입니다"
+ * >
+ *   영문 + 숫자 조합
+ * </GridForm.Rules>
+ * 
+ * <GridForm.Rules 
+ *   validationStatus="error" 
+ *   validationMessage="특수문자는 사용할 수 없습니다"
+ * >
+ *   영문 + 숫자 조합
+ * </GridForm.Rules>
+ * 
+ * <GridForm.Rules 
+ *   validationStatus="warning" 
+ *   validationMessage="8자 이상 권장합니다"
+ * >
+ *   최소 4자 이상
+ * </GridForm.Rules>
+ */
 
 // #region Context 정의
 interface GridFormContextValue {
@@ -58,15 +84,14 @@ export interface GridFormContentProps {
 	children: React.ReactNode;
 }
 
-export interface GridFormFeedbackProps {
-	type?: 'info' | 'success' | 'warning' | 'error';
-	className?: string;
-	children: React.ReactNode;
-}
+
 
 export interface GridFormRulesProps {
 	className?: string;
 	children: React.ReactNode;
+	validationStatus?: 'success' | 'error' | 'warning' | 'info' | null;
+	validationMessage?: string;
+	showIcon?: boolean;
 }
 // #endregion
 
@@ -181,10 +206,10 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 			if (child.type === GridFormLabel) {
 				labelElement = React.cloneElement(child as React.ReactElement<GridFormLabelProps>, {
 					className: cn(
-						// 박스 스타일링 - 시작 정렬 (세로는 중앙, 가로는 시작)
-						'flex items-center justify-start px-4 py-2',
+						// 박스 스타일링 - 가운데 정렬 (세로는 중앙, 가로는 가운데)
+						'flex items-center justify-center px-4 py-2',
 						'bg-muted/30 border-r border-b border-border/40',
-						'font-medium text-base text-foreground text-start',
+						'font-medium text-base text-foreground text-center',
 						// 높이 맞춤
 						'min-h-full',
 						// 마지막 요소의 하단 테두리 제거 (라벨)
@@ -350,45 +375,7 @@ const GridFormContent = React.forwardRef<
 GridFormContent.displayName = 'GridFormContent';
 // #endregion
 
-// #region GridForm.Feedback 컴포넌트
-const GridFormFeedback = React.forwardRef<
-	HTMLDivElement,
-	GridFormFeedbackProps & React.HTMLAttributes<HTMLDivElement>
->(({
-	type = 'info',
-	className,
-	children,
-	...props
-}, ref) => {
-	const context = React.useContext(GridFormContext);
-	const colorVariant = context?.colorVariant || 'primary';
-	
-	const successColor = colorVariant === 'primary' ? '[&_svg]:text-primary' : '[&_svg]:text-secondary';
-	
-	const iconColorClasses = {
-		info: '[&_svg]:text-muted-foreground',
-		success: successColor,
-		warning: '[&_svg]:text-warning',
-		error: '[&_svg]:text-destructive',
-	};
 
-	return (
-		<div
-			ref={ref}
-			className={cn(
-				'mt-2 text-sm font-multilang text-gray-900', // 텍스트는 진한 블랙, 위쪽 마진 추가
-				iconColorClasses[type], // 아이콘만 색상 적용
-				className
-			)}
-			{...props}
-		>
-			{children}
-		</div>
-	);
-});
-
-GridFormFeedback.displayName = 'GridFormFeedback';
-// #endregion
 
 // #region GridForm.Rules 컴포넌트
 const GridFormRules = React.forwardRef<
@@ -397,20 +384,102 @@ const GridFormRules = React.forwardRef<
 >(({
 	className,
 	children,
+	validationStatus = null,
+	validationMessage,
+	showIcon = true,
 	...props
 }, ref) => {
+	// 상태별 아이콘 및 색상 정의
+	const getStatusIcon = () => {
+		if (!showIcon || !validationStatus) return null;
+		
+		switch (validationStatus) {
+			case 'success':
+				return (
+					<div className="relative group">
+						<Check 
+							className="flex-shrink-0 ml-2 w-4 h-4 text-green-500 cursor-help" 
+							strokeWidth={2}
+						/>
+						{validationMessage && (
+							<div className="hidden absolute right-0 top-6 z-50 group-hover:block">
+								<div className="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded shadow-lg">
+									{validationMessage}
+									<div className="absolute -top-1 right-2 w-2 h-2 bg-gray-900 rotate-45"></div>
+								</div>
+							</div>
+						)}
+					</div>
+				);
+			case 'error':
+				return (
+					<div className="relative group">
+						<X 
+							className="flex-shrink-0 ml-2 w-4 h-4 text-red-500 cursor-help" 
+							strokeWidth={2}
+						/>
+						{validationMessage && (
+							<div className="hidden absolute right-0 top-6 z-50 group-hover:block">
+								<div className="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded shadow-lg">
+									{validationMessage}
+									<div className="absolute -top-1 right-2 w-2 h-2 bg-gray-900 rotate-45"></div>
+								</div>
+							</div>
+						)}
+					</div>
+				);
+			case 'warning':
+				return (
+					<div className="relative group">
+						<AlertTriangle 
+							className="flex-shrink-0 ml-2 w-4 h-4 text-yellow-500 cursor-help" 
+							strokeWidth={2}
+						/>
+						{validationMessage && (
+							<div className="hidden absolute right-0 top-6 z-50 group-hover:block">
+								<div className="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded shadow-lg">
+									{validationMessage}
+									<div className="absolute -top-1 right-2 w-2 h-2 bg-gray-900 rotate-45"></div>
+								</div>
+							</div>
+						)}
+					</div>
+				);
+			case 'info':
+				return (
+					<div className="relative group">
+						<Info 
+							className="flex-shrink-0 ml-2 w-4 h-4 text-blue-500 cursor-help" 
+							strokeWidth={2}
+						/>
+						{validationMessage && (
+							<div className="hidden absolute right-0 top-6 z-50 group-hover:block">
+								<div className="px-2 py-1 text-xs text-white whitespace-nowrap bg-gray-900 rounded shadow-lg">
+									{validationMessage}
+									<div className="absolute -top-1 right-2 w-2 h-2 bg-gray-900 rotate-45"></div>
+								</div>
+							</div>
+						)}
+					</div>
+				);
+			default:
+				return null;
+		}
+	};
+
 	return (
 		<div
 			ref={ref}
 			className={cn(
-				'flex items-center justify-start px-4 py-2',
+				'flex justify-between items-center px-4 py-2',
 				'text-sm text-muted-foreground font-multilang',
-				'min-h-full',
+				'min-h-full group',
 				className
 			)}
 			{...props}
 		>
-			{children}
+			<span className="truncate">{children}</span>
+			{getStatusIcon()}
 		</div>
 	);
 });
@@ -425,7 +494,6 @@ const CompoundGridForm = Object.assign(GridForm, {
 	Label: GridFormLabel,
 	Rules: GridFormRules,
 	Content: GridFormContent,
-	Feedback: GridFormFeedback,
 });
 
 export default CompoundGridForm;

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { List, ChevronDown, ChevronUp, CheckCircle, AlertCircle, X } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { List, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { ValidationRule } from './types';
 import { Portal } from '../field/shared/Portal';
 
 interface DropdownOption {
@@ -138,26 +138,11 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 		}
 	};
 
-	// validation 결과 계산
-	const validationResult = validationRule ? getValidationResult(value || '', validationRule) : null;
-	
 	// 색상 variant에 따른 스타일
 	const colorStyles = {
 		borderFocus: colorVariant === 'primary' ? 'border-primary/30' : 'border-secondary/30',
 		bgSelected: colorVariant === 'primary' ? 'bg-primary/10' : 'bg-secondary/10',
 		textSelected: colorVariant === 'primary' ? 'text-primary' : 'text-secondary',
-	};
-	
-	// 검증 아이콘 렌더링
-	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-	
-	// 피드백 타입 결정
-	const getFeedbackType = () => {
-		if (!validationRule || !validationResult) return 'info';
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
-			return validationResult.isValid ? 'success' : 'error';
-		}
-		return 'info';
 	};
 
 	return (
@@ -171,21 +156,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				</div>
 			)}
 
-			{/* Validation Rule 표시 */}
-			{validationRule && (
-				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
-					<div className="flex items-center">
-						<span>{validationResult?.message}</span>
-						{shouldShowIcon && (
-							validationResult.isValid ? (
-								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
-							) : (
-								<AlertCircle className="ml-2 w-4 h-4 text-red-500" />
-							)
-						)}
-					</div>
-				</div>
-			)}
+
 
 			{/* 드롭다운 입력 영역 */}
 			<div className="relative">

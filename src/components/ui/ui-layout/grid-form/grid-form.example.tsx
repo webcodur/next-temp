@@ -64,7 +64,10 @@ const GridFormExample = () => {
 							<GridForm.Label required htmlFor="vote-title">
 								투표 제목
 							</GridForm.Label>
-							<GridForm.Rules>
+							<GridForm.Rules
+								validationStatus={formData.title.length >= 2 && formData.title.length <= 100 ? "success" : formData.title.length > 0 ? "error" : undefined}
+								validationMessage={formData.title.length >= 2 && formData.title.length <= 100 ? "올바른 길이입니다" : formData.title.length > 0 ? "2-100자 사이로 입력해주세요" : undefined}
+							>
 								한글, 영문 2-100자
 							</GridForm.Rules>
 							<GridForm.Content>
@@ -81,7 +84,10 @@ const GridFormExample = () => {
 
 						<GridForm.Row align="start">
 							<GridForm.Label>투표 유형</GridForm.Label>
-							<GridForm.Rules>
+							<GridForm.Rules
+								validationStatus={formData.type ? "success" : "info"}
+								validationMessage={formData.type ? "선택 완료" : "유형을 선택해주세요"}
+							>
 								단일/복수 선택 옵션
 							</GridForm.Rules>
 							<GridForm.Content direction="column" gap="8px">
@@ -138,19 +144,7 @@ const GridFormExample = () => {
 										errors.email ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
 									}`}
 								/>
-								<GridForm.Feedback type={errors.email ? 'error' : 'info'}>
-									{errors.email ? (
-										<div className="flex gap-2 items-center">
-											<AlertCircle className="w-4 h-4" />
-											{errors.email}
-										</div>
-									) : (
-										<div className="flex gap-2 items-center">
-											<Info className="w-4 h-4" />
-											로그인 시 사용할 이메일 주소
-										</div>
-									)}
-								</GridForm.Feedback>
+
 							</GridForm.Content>
 						</GridForm.Row>
 
@@ -167,12 +161,7 @@ const GridFormExample = () => {
 									placeholder="비밀번호를 입력하세요"
 									className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
 								/>
-								<GridForm.Feedback type="info">
-									<div className="flex gap-2 items-center">
-										<Info className="w-4 h-4" />
-										8자 이상, 영문/숫자/특수문자 포함
-									</div>
-								</GridForm.Feedback>
+
 							</GridForm.Content>
 						</GridForm.Row>
 
@@ -191,24 +180,7 @@ const GridFormExample = () => {
 										errors.confirmPassword ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
 									}`}
 								/>
-								<GridForm.Feedback type={errors.confirmPassword ? 'error' : (formData.confirmPassword && !errors.confirmPassword ? 'success' : 'info')}>
-									{errors.confirmPassword ? (
-										<div className="flex gap-2 items-center">
-											<AlertCircle className="w-4 h-4" />
-											{errors.confirmPassword}
-										</div>
-									) : formData.confirmPassword && !errors.confirmPassword ? (
-										<div className="flex gap-2 items-center">
-											<CheckCircle className="w-4 h-4" />
-											비밀번호가 일치합니다
-										</div>
-									) : (
-										<div className="flex gap-2 items-center">
-											<Info className="w-4 h-4" />
-											위와 동일한 비밀번호 입력
-										</div>
-									)}
-								</GridForm.Feedback>
+
 							</GridForm.Content>
 						</GridForm.Row>
 					</GridForm>
