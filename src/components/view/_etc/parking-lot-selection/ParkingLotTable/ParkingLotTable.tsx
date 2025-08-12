@@ -7,6 +7,7 @@
 'use client';
 
 import { useMemo, useCallback } from 'react';
+import { Building2, Check } from 'lucide-react';
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import { ParkingLot } from '@/store/auth';
 
@@ -48,9 +49,7 @@ export function ParkingLotTable({
             : 'border-border bg-card hover:border-primary hover:border-opacity-60'
         }`}>
           {selectedId === item.id && (
-            <svg className="w-3 h-3 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
+            <Check className="w-3 h-3 text-primary-foreground" />
           )}
         </div>
       )
@@ -70,16 +69,26 @@ export function ParkingLotTable({
   // #region 렌더링
   if (parkingLots.length === 0) {
     return (
-      <div className="py-8 text-center">
-        <p className="text-muted-foreground">
-          사용 가능한 현장이 없습니다.
+      <div className="flex flex-col flex-1 justify-center items-center p-8 text-center bg-counter-0">
+        <div className="flex justify-center items-center mb-4 w-16 h-16 rounded-full bg-counter-2">
+          <Building2 className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h3 className="mb-2 text-lg font-semibold text-foreground">
+          사용 가능한 현장이 없습니다
+        </h3>
+        <p className="mb-4 text-muted-foreground">
+          현재 계정에 할당된 현장이 없습니다
+        </p>
+        <p className="text-sm text-muted-foreground">
+          • 관리자에게 현장 권한을 요청해주세요<br/>
+          • 계정 설정을 확인해주세요
         </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-y-auto mb-8 max-h-96">
+    <div className="overflow-y-auto flex-1">
       <BaseTable
         data={parkingLots}
         columns={columns}

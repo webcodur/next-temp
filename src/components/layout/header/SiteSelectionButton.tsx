@@ -1,15 +1,15 @@
 'use client';
 
 import { useSetAtom } from 'jotai';
-import { Search } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { parkingLotSelectionModalOpenAtom } from '@/store/ui';
 
-interface SearchButtonProps {
+interface SiteSelectionButtonProps {
 	className?: string;
 }
 
-export function SearchButton({ className }: SearchButtonProps) {
+export function SiteSelectionButton({ className }: SiteSelectionButtonProps) {
 	const t = useTranslations();
 	const setIsOpen = useSetAtom(parkingLotSelectionModalOpenAtom);
 
@@ -18,9 +18,9 @@ export function SearchButton({ className }: SearchButtonProps) {
 			type="button"
 			className={className}
 			onClick={() => setIsOpen(true)}
-			aria-label={t('헤더_메뉴검색')}
+			aria-label={t('헤더_현장선택')}
 		>
-			<Search size={23} />
+			<Building2 size={23} />
 		</button>
 	);
 } 

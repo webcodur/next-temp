@@ -130,7 +130,7 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 							onClick={handleLogout}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-destructive/10 text-destructive">
 							<LogOut className="w-5 h-5" />
-							<span className="text-base font-multilang">로그아웃</span>
+							<span className="text-base cursor-pointer font-multilang">로그아웃</span>
 						</button>
 					</div>
 				</div>

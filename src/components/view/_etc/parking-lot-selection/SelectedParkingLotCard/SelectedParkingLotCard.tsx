@@ -6,6 +6,7 @@
 
 'use client';
 
+import { Building2, Check } from 'lucide-react';
 import { ParkingLot } from '@/store/auth';
 
 // #region 타입
@@ -30,26 +31,43 @@ export function SelectedParkingLotCard({ selectedId, parkingLots }: SelectedPark
           ? 'border-primary bg-primary-0' 
           : 'border-border bg-counter-2'
       }`}>
-        <div className="flex items-center gap-4">
+        <div className="flex gap-4 items-center">
           <div className="flex-1">
             {selectedId ? (
-              <div className="flex items-center gap-4">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {selectedParkingLot?.name}
-                </h3>
+              <div className="space-y-2">
+                {/* 선택된 현장명 */}
+                <div className="flex gap-2 items-center">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {selectedParkingLot?.name}
+                  </h3>
+                </div>
+                
+                {/* 설명 정보 */}
                 {selectedParkingLot?.description && (
-                  <span className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     {selectedParkingLot.description}
-                  </span>
+                  </div>
                 )}
+                
+                {/* 현장 ID 정보 */}
+                <div className="text-xs text-muted-foreground">
+                  현장 ID: {selectedParkingLot?.id}
+                </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold text-foreground">현장을 선택해주세요</span>
-                <span className="text-sm text-muted-foreground">관리할 현장을 선택해주세요</span>
+              <div className="flex gap-2 items-center">
+                <Building2 className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <span className="text-lg font-semibold text-foreground">현장을 선택해주세요</span>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    관리할 현장을 선택하여 시작해보세요
+                  </p>
+                </div>
               </div>
             )}
           </div>
+          
+          {/* 상태 아이콘 */}
           <div className="relative">
             <div className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
               selectedId 
@@ -57,13 +75,9 @@ export function SelectedParkingLotCard({ selectedId, parkingLots }: SelectedPark
                 : 'bg-counter-3 text-muted-foreground'
             }`}>
               {selectedId ? (
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-6 h-6" />
               ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <Building2 className="w-6 h-6" />
               )}
             </div>
           </div>

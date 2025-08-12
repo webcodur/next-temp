@@ -23,9 +23,9 @@ export const metadata: Metadata = {
 	title: '허브',
 	description: '건물 주차장 관리 SAAS 시스템',
 	icons: {
-		icon: '/favicon.svg',
-		shortcut: '/favicon.svg',
-		apple: '/favicon.svg',
+		icon: '/icons/logo.svg',
+		shortcut: '/icons/logo.svg',
+		apple: '/icons/logo.svg',
 	},
 };
 // #endregion
