@@ -43,16 +43,16 @@ export default function OrganizationOverviewPage() {
       />
 
       {/* 메인 콘텐츠 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* 왼쪽: 플로우차트 패널 */}
-        <div className="lg:order-1">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* 왼쪽: 플로우차트 패널 (1/3) */}
+        <div className="lg:order-1 lg:col-span-1">
           <OrganizationChart 
             onNodeClick={handleNodeClick}
             selectedNodeId={selectedNodeId}
           />
         </div>
-        {/* 오른쪽: 상세설명 패널 */}
-        <div className="lg:order-2">
+        {/* 오른쪽: 상세설명 패널 (2/3) */}
+        <div className="lg:order-2 lg:col-span-2">
           <DetailPanel selectedNodeId={selectedNodeId} />
         </div>
       </div>

@@ -5,11 +5,9 @@
 
 'use client';
 
-import { useRouter } from 'next/navigation';
 import MenuSearch from '@/components/view/_etc/menu-search/MenuSearch';
 
 export default function MenuSearchFullscreenDemo() {
-  const router = useRouter();
 
   const handleSelectionComplete = () => {
     // 전체화면 모드에서는 선택 완료 시 이전 페이지로 돌아갈 수 있음

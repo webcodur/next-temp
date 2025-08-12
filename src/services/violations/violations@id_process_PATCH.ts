@@ -69,7 +69,9 @@ function serverToClient(server: CarViolationServerResponse): CarViolation {
     violationLocation: server.violation_location,
     violationTime: server.violation_time,
     description: server.description,
-    evidenceImageUrls: server.evidence_image_urls,
+    evidenceImageUrls: Array.isArray(server.evidence_image_urls) 
+      ? server.evidence_image_urls 
+      : undefined,
     reporterType: server.reporter_type as ViolationReporterType,
     reporterId: server.reporter_id,
     severityLevel: server.severity_level,

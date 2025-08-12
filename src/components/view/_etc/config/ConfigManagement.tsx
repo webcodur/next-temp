@@ -10,7 +10,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
 
 // Field 컴포넌트들
@@ -502,17 +502,6 @@ export default function ConfigManagement({
         );
       },
     },
-    {
-      key: 'key',
-      header: '설정 키',
-      align: 'start',
-      width: '18%',
-      cell: (item: SystemConfig) => (
-        <span className="font-mono text-xs text-muted-foreground">
-          {item.key}
-        </span>
-      ),
-    },
   ];
   // #endregion
 
@@ -622,102 +611,113 @@ export default function ConfigManagement({
       >
         {formData && (
           <div className="p-6">
-            <GridForm 
-              gap="20px"
-              bottomRightActions={
-                <div className="flex gap-3">
-                  <Button 
-                    variant="secondary" 
-                    size="default"
-                    onClick={handleFormReset} 
-                    disabled={!hasChanges || isSubmitting}
-                    title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-                  >
-                    <RotateCcw size={16} />
-                    복구
-                  </Button>
-                  <Button 
-                    variant="primary" 
-                    size="default"
-                    onClick={handleSubmit} 
-                    disabled={!isValid || isSubmitting}
-                    title={isSubmitting ? '저장 중...' : !isValid ? '올바른 값을 입력해주세요' : '변경사항 저장'}
-                  >
-                    <Save size={16} />
-                    {isSubmitting ? '저장 중...' : '저장'}
-                  </Button>
-                </div>
-              }
-            >
-              <GridForm.Row>
-                <GridForm.Label>설정 키</GridForm.Label>
-                <GridForm.Rules>시스템 자동 생성</GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={formData.key}
-                    disabled={true}
-                    className="font-mono"
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
+            {(() => {
+                const fields: GridFormFieldSchema[] = [
+                  {
+                    id: 'key',
+                    label: '설정 키',
+                    rules: '시스템 자동 생성',
+                    component: (
+                      <SimpleTextInput
+                        value={formData.key}
+                        disabled={true}
+                        className="font-mono"
+                      />
+                    )
+                  },
+                  {
+                    id: 'group',
+                    label: '그룹',
+                    rules: '설정 그룹 분류',
+                    component: (
+                      <SimpleTextInput
+                        value={formData.group}
+                        disabled={true}
+                      />
+                    )
+                  },
+                  {
+                    id: 'category',
+                    label: '카테고리',
+                    rules: '설정 카테고리 분류',
+                    component: (
+                      <SimpleTextInput
+                        value={formData.category}
+                        disabled={true}
+                      />
+                    )
+                  },
+                  {
+                    id: 'type',
+                    label: '타입',
+                    rules: 'BOOLEAN/INTEGER/STRING/JSON',
+                    component: (
+                      <SimpleTextInput
+                        value={formData.type}
+                        disabled={true}
+                      />
+                    )
+                  },
+                  {
+                    id: 'description',
+                    label: '설명',
+                    rules: '설정 항목 설명',
+                    component: (
+                      <SimpleTextInput
+                        value={formData.description}
+                        disabled={true}
+                      />
+                    )
+                  },
+                  {
+                    id: 'currentValue',
+                    label: '현재 값',
+                    required: true,
+                    rules: '타입에 따른 유효값',
+                    component: (
+                      <div>
+                        {renderValueInput()}
+                        {formData.type === 'JSON' && (
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            유효한 JSON 형식으로 입력해주세요.
+                          </p>
+                        )}
+                      </div>
+                    )
+                  }
+                ];
 
-              <GridForm.Row>
-                <GridForm.Label>그룹</GridForm.Label>
-                <GridForm.Rules>설정 그룹 분류</GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={formData.group}
-                    disabled={true}
+                return (
+                  <GridFormAuto 
+                    fields={fields}
+                    gap="20px"
+                    bottomRightActions={
+                      <div className="flex gap-3">
+                        <Button 
+                          variant="secondary" 
+                          size="default"
+                          onClick={handleFormReset} 
+                          disabled={!hasChanges || isSubmitting}
+                          title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+                        >
+                          <RotateCcw size={16} />
+                          복구
+                        </Button>
+                        <Button 
+                          variant="primary" 
+                          size="default"
+                          onClick={handleSubmit} 
+                          disabled={!isValid || isSubmitting}
+                          title={isSubmitting ? '저장 중...' : !isValid ? '올바른 값을 입력해주세요' : '변경사항 저장'}
+                        >
+                          <Save size={16} />
+                          {isSubmitting ? '저장 중...' : '저장'}
+                        </Button>
+                      </div>
+                    }
                   />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label>카테고리</GridForm.Label>
-                <GridForm.Rules>설정 카테고리 분류</GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={formData.category}
-                    disabled={true}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label>타입</GridForm.Label>
-                <GridForm.Rules>BOOLEAN/INTEGER/STRING/JSON</GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={formData.type}
-                    disabled={true}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label>설명</GridForm.Label>
-                <GridForm.Rules>설정 항목 설명</GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={formData.description}
-                    disabled={true}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label required>현재 값</GridForm.Label>
-                <GridForm.Rules>타입에 따른 유효값</GridForm.Rules>
-                <GridForm.Content>
-                  {renderValueInput()}
-                  {formData.type === 'JSON' && (
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      유효한 JSON 형식으로 입력해주세요.
-                    </p>
-                  )}
-                </GridForm.Content>
-              </GridForm.Row>
-            </GridForm>
+                );
+              })()}
           </div>
         )}
       </Modal>

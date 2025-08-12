@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
@@ -301,46 +301,44 @@ export default function CarInstanceSection({
         size="md"
       >
         <div className="space-y-4">
-          <GridForm rulesWidth="120px" gap="16px">
-            <GridForm.Row>
-              <GridForm.Label required>
-                호실 ID
-              </GridForm.Label>
-              <GridForm.Rules>
-                연결할 호실 선택
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleTextInput
-                  type="number"
-                  value={createFormData.instanceId}
-                  onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value }))}
-                  placeholder="호실 ID"
-                  disabled={isSubmitting}
-                  validationRule={{
-                    type: 'free',
-                    mode: 'create'
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
+          {(() => {
+            const fields: GridFormFieldSchema[] = [
+              {
+                id: 'instanceId',
+                label: '호실 ID',
+                required: true,
+                rules: '연결할 호실 선택',
+                component: (
+                  <SimpleTextInput
+                    type="number"
+                    value={createFormData.instanceId}
+                    onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value }))}
+                    placeholder="호실 ID"
+                    disabled={isSubmitting}
+                    validationRule={{
+                      type: 'free',
+                      mode: 'create'
+                    }}
+                  />
+                )
+              },
+              {
+                id: 'carShareOnoff',
+                label: '공유 설정',
+                rules: '공유/비공유 선택',
+                component: (
+                  <SimpleToggleSwitch
+                    checked={createFormData.carShareOnoff}
+                    onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
+                    disabled={isSubmitting}
+                    size="md"
+                  />
+                )
+              }
+            ];
 
-            <GridForm.Row>
-              <GridForm.Label>
-                공유 설정
-              </GridForm.Label>
-              <GridForm.Rules>
-                공유/비공유 선택
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleToggleSwitch
-                  checked={createFormData.carShareOnoff}
-                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
-                  disabled={isSubmitting}
-                  size="md"
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-          </GridForm>
+            return <GridFormAuto fields={fields} rulesWidth="120px" gap="16px" />;
+          })()}
           
           <div className="flex gap-3 justify-end pt-4">
             <Button 
@@ -370,54 +368,51 @@ export default function CarInstanceSection({
       >
         {editTarget && (
           <div className="space-y-4">
-            <GridForm rulesWidth="120px" gap="16px">
-              <GridForm.Row>
-                <GridForm.Label>
-                  호실 ID
-                </GridForm.Label>
-                <GridForm.Rules>
-                  시스템 자동 연결
-                </GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={editTarget.carInstance?.instanceId?.toString() || ''}
-                    onChange={() => {}}
-                    disabled={true}
-                    validationRule={{
-                      type: 'free',
-                      mode: 'edit'
-                    }}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
+            {(() => {
+              const fields: GridFormFieldSchema[] = [
+                {
+                  id: 'instanceId',
+                  label: '호실 ID',
+                  rules: '시스템 자동 연결',
+                  component: (
+                    <SimpleTextInput
+                      value={editTarget.carInstance?.instanceId?.toString() || ''}
+                      onChange={() => {}}
+                      disabled={true}
+                      validationRule={{
+                        type: 'free',
+                        mode: 'edit'
+                      }}
+                    />
+                  )
+                },
+                {
+                  id: 'carShareOnoff',
+                  label: '공유 설정',
+                  rules: '공유/비공유 상태',
+                  component: (
+                    <SimpleToggleSwitch
+                      checked={editTarget.carInstance?.carShareOnoff || false}
+                      onChange={(checked) => {
+                        if (editTarget.carInstance) {
+                          setEditTarget({
+                            ...editTarget,
+                            carInstance: {
+                              ...editTarget.carInstance,
+                              carShareOnoff: checked,
+                            }
+                          });
+                        }
+                      }}
+                      disabled={isSubmitting}
+                      size="md"
+                    />
+                  )
+                }
+              ];
 
-              <GridForm.Row>
-                <GridForm.Label>
-                  공유 설정
-                </GridForm.Label>
-                <GridForm.Rules>
-                  공유/비공유 상태
-                </GridForm.Rules>
-                <GridForm.Content>
-                  <SimpleToggleSwitch
-                    checked={editTarget.carInstance?.carShareOnoff || false}
-                    onChange={(checked) => {
-                      if (editTarget.carInstance) {
-                        setEditTarget({
-                          ...editTarget,
-                          carInstance: {
-                            ...editTarget.carInstance,
-                            carShareOnoff: checked,
-                          }
-                        });
-                      }
-                    }}
-                    disabled={isSubmitting}
-                    size="md"
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-            </GridForm>
+              return <GridFormAuto fields={fields} rulesWidth="120px" gap="16px" />;
+            })()}
             
             <div className="flex gap-3 justify-end pt-4">
               <Button 

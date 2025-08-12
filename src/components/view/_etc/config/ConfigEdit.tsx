@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
 
 // Input 컴포넌트들
@@ -17,7 +17,6 @@ import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleText
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 
 // API 호출
-import { searchConfigs } from '@/services/config/config$_GET';
 import { getConfigById } from '@/services/config/config@id_GET';
 import { updateConfigById } from '@/services/config/config@id_PUT';
 
@@ -305,9 +304,9 @@ export default function ConfigEdit({
   // #region 렌더링
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
+      <div className="flex justify-center items-center min-h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 animate-spin border-primary"></div>
           <p className="text-muted-foreground">설정을 불러오는 중...</p>
         </div>
       </div>
@@ -316,7 +315,7 @@ export default function ConfigEdit({
 
   if (!formData) {
     return (
-      <div className="flex items-center justify-center min-h-96">
+      <div className="flex justify-center items-center min-h-96">
         <div className="text-center">
           <p className="text-muted-foreground">설정을 찾을 수 없습니다.</p>
         </div>
@@ -330,14 +329,14 @@ export default function ConfigEdit({
       <PageHeader
         title={title}
         subtitle={`${formData.title || formData.key} 설정을 편집합니다`}
-        leftContent={
+        leftActions={
           <Button
             variant="ghost"
             size="sm"
             onClick={() => router.push(backRoute)}
-            className="flex items-center gap-2"
+            className="flex gap-2 items-center"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="w-4 h-4" />
             목록으로
           </Button>
         }
@@ -345,14 +344,9 @@ export default function ConfigEdit({
 
       {/* 편집 폼 */}
       <div className="max-w-2xl">
-        <GridForm
-          title="설정 편집"
-          description="설정값을 변경하고 저장하세요"
-          columns={1}
-          className="space-y-6"
-        >
+        <div className="space-y-6">
           {/* 설정 정보 (읽기 전용) */}
-          <div className="space-y-4 p-4 rounded-lg bg-muted/30">
+          <div className="p-4 space-y-4 rounded-lg bg-muted/30">
             <h3 className="text-sm font-medium text-foreground">설정 정보</h3>
             
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -362,7 +356,7 @@ export default function ConfigEdit({
               </div>
               <div>
                 <span className="text-muted-foreground">타입:</span>
-                <span className="ml-2 px-2 py-1 rounded bg-primary/10 text-primary">
+                <span className="px-2 py-1 ml-2 rounded bg-primary/10 text-primary">
                   {formData.type}
                 </span>
               </div>
@@ -377,7 +371,7 @@ export default function ConfigEdit({
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
               설정값
-              {hasChanges && <span className="text-amber-500 ml-1">*</span>}
+              {hasChanges && <span className="ml-1 text-amber-500">*</span>}
             </label>
             {renderValueInput()}
             {formData.type === 'JSON' && (
@@ -388,32 +382,32 @@ export default function ConfigEdit({
           </div>
 
           {/* 버튼 그룹 */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex gap-3 justify-end pt-4">
             <Button
               variant="outline"
               size="sm"
               onClick={handleReset}
               disabled={!hasChanges || isSubmitting}
-              className="flex items-center gap-2"
+              className="flex gap-2 items-center"
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="w-4 h-4" />
               초기화
             </Button>
             
             <Button
               onClick={handleSubmit}
               disabled={!isValid || isSubmitting}
-              className="flex items-center gap-2"
+              className="flex gap-2 items-center"
             >
-              <Save className="h-4 w-4" />
+              <Save className="w-4 h-4" />
               {isSubmitting ? '저장 중...' : '저장'}
             </Button>
           </div>
-        </GridForm>
+        </div>
       </div>
 
       {/* 성공 다이얼로그 */}
-      <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+      <Dialog isOpen={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
         <DialogHeader>
           <DialogTitle>저장 완료</DialogTitle>
           <DialogDescription>{dialogMessage}</DialogDescription>
@@ -429,7 +423,7 @@ export default function ConfigEdit({
       </Dialog>
 
       {/* 오류 다이얼로그 */}
-      <Dialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+      <Dialog isOpen={errorDialogOpen} onClose={() => setErrorDialogOpen(false)}>
         <DialogHeader>
           <DialogTitle>오류</DialogTitle>
           <DialogDescription>{dialogMessage}</DialogDescription>

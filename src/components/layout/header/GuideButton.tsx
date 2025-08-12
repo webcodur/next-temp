@@ -55,14 +55,6 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
               </li>
             </ul>
           </section>
-
-          {/* 언어 전환 섹션 */}
-          <section>
-            <h3 className="mb-2 text-base font-semibold text-foreground font-multilang">언어 전환</h3>
-            <ul className="space-y-1 text-sm list-disc ps-4 font-multilang">
-
-            </ul>
-          </section>
         </div>
 
         <DialogFooter>

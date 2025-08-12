@@ -11,7 +11,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
@@ -112,154 +112,139 @@ export default function HubNoticeCreatePage() {
 
       {/* 폼 */}
       <div className="bg-card rounded-lg border border-border p-6">
-        <GridForm >
-          {/* 제목 */}
-          <GridForm.Row>
-            <GridForm.Label required htmlFor="title">
-              제목
-            </GridForm.Label>
-            <GridForm.Rules>
-              공지사항 제목 (2-200자)
-            </GridForm.Rules>
-            <GridForm.Content>
-              <input
-                id="title"
-                type="text"
-                value={formData.title}
-                onChange={(e) => handleFieldChange('title', e.target.value)}
-                placeholder="공지사항 제목을 입력하세요"
-                className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                required
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          {/* 카테고리 */}
-          <GridForm.Row>
-            <GridForm.Label htmlFor="category">
-              카테고리
-            </GridForm.Label>
-            <GridForm.Rules>
-              일반/업데이트/점검/이벤트/긴급 선택
-            </GridForm.Rules>
-            <GridForm.Content>
-              <select
-                id="category"
-                value={formData.category}
-                onChange={(e) => handleFieldChange('category', e.target.value as NoticeCategory)}
-                className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                {categoryOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </GridForm.Content>
-          </GridForm.Row>
-
-          {/* 내용 */}
-          <GridForm.Row align="start">
-            <GridForm.Label required>
-              내용
-            </GridForm.Label>
-            <GridForm.Rules>
-              공지사항 내용 (템스트/마크다운)
-            </GridForm.Rules>
-            <GridForm.Content>
-              {/* TODO: 에디터 TinyMCE 이슈 해결 후 다시 활성화 */}
-              {/* <Editor
-                value={formData.content}
-                onChange={(content) => handleFieldChange('content', content)}
-                placeholder="공지사항 내용을 입력하세요"
-                height={300}
-              /> */}
-              <SimpleTextArea
-                value={formData.content}
-                onChange={(value) => handleFieldChange('content', value)}
-                placeholder="공지사항 내용을 입력하세요"
-                rows={12}
-                className="min-h-[300px]"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          {/* 태그 */}
-          <GridForm.Row>
-            <GridForm.Label htmlFor="tags">
-              태그
-            </GridForm.Label>
-            <GridForm.Rules>
-              콤마(,)로 구분하여 입력
-            </GridForm.Rules>
-            <GridForm.Content>
-              <input
-                id="tags"
-                type="text"
-                value={formData.tags?.join(', ') || ''}
-                onChange={(e) => handleTagsChange(e.target.value)}
-                placeholder="쉼표로 구분하여 입력 (예: 공지, 중요, 시스템)"
-                className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          {/* 게시 기간 */}
-          <GridForm.Row>
-            <GridForm.Label>게시 기간</GridForm.Label>
-            <GridForm.Rules>
-              시작일/종료일 설정
-            </GridForm.Rules>
-            <GridForm.Content direction="row" gap="16px">
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1">시작일</label>
+        {(() => {
+          const fields: GridFormFieldSchema[] = [
+            {
+              id: 'title',
+              label: '제목',
+              required: true,
+              rules: '공지사항 제목 (2-200자)',
+              htmlFor: 'title',
+              component: (
                 <input
-                  type="date"
-                  value={formData.startDate || ''}
-                  onChange={(e) => handleFieldChange('startDate', e.target.value)}
+                  id="title"
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => handleFieldChange('title', e.target.value)}
+                  placeholder="공지사항 제목을 입력하세요"
+                  className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+              )
+            },
+            {
+              id: 'category',
+              label: '카테고리',
+              rules: '일반/업데이트/점검/이벤트/긴급 선택',
+              htmlFor: 'category',
+              component: (
+                <select
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) => handleFieldChange('category', e.target.value as NoticeCategory)}
+                  className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  {categoryOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              )
+            },
+            {
+              id: 'content',
+              label: '내용',
+              required: true,
+              rules: '공지사항 내용 (템스트/마크다운)',
+              align: 'start',
+              component: (
+                <div>
+                  {/* TODO: 에디터 TinyMCE 이슈 해결 후 다시 활성화 */}
+                  <SimpleTextArea
+                    value={formData.content}
+                    onChange={(value) => handleFieldChange('content', value)}
+                    placeholder="공지사항 내용을 입력하세요"
+                    rows={12}
+                    className="min-h-[300px]"
+                  />
+                </div>
+              )
+            },
+            {
+              id: 'tags',
+              label: '태그',
+              rules: '콤마(,)로 구분하여 입력',
+              htmlFor: 'tags',
+              component: (
+                <input
+                  id="tags"
+                  type="text"
+                  value={formData.tags?.join(', ') || ''}
+                  onChange={(e) => handleTagsChange(e.target.value)}
+                  placeholder="쉼표로 구분하여 입력 (예: 공지, 중요, 시스템)"
                   className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1">종료일</label>
-                <input
-                  type="date"
-                  value={formData.endDate || ''}
-                  onChange={(e) => handleFieldChange('endDate', e.target.value)}
-                  className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </GridForm.Content>
-          </GridForm.Row>
+              )
+            },
+            {
+              id: 'period',
+              label: '게시 기간',
+              rules: '시작일/종료일 설정',
+              component: (
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium mb-1">시작일</label>
+                    <input
+                      type="date"
+                      value={formData.startDate || ''}
+                      onChange={(e) => handleFieldChange('startDate', e.target.value)}
+                      className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium mb-1">종료일</label>
+                    <input
+                      type="date"
+                      value={formData.endDate || ''}
+                      onChange={(e) => handleFieldChange('endDate', e.target.value)}
+                      className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 'options',
+              label: '옵션',
+              rules: '중요/고정 공지 옵션',
+              component: (
+                <div className="space-y-3">
+                  <label className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.isImportant || false}
+                      onChange={(e) => handleFieldChange('isImportant', e.target.checked)}
+                      className="rounded border-border text-primary focus:ring-primary"
+                    />
+                    <span>중요 공지</span>
+                  </label>
+                  <label className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.isPinned || false}
+                      onChange={(e) => handleFieldChange('isPinned', e.target.checked)}
+                      className="rounded border-border text-primary focus:ring-primary"
+                    />
+                    <span>상단 고정</span>
+                  </label>
+                </div>
+              )
+            }
+          ];
 
-          {/* 옵션 */}
-          <GridForm.Row>
-            <GridForm.Label>옵션</GridForm.Label>
-            <GridForm.Rules>
-              중요/고정 공지 옵션
-            </GridForm.Rules>
-            <GridForm.Content direction="column" gap="12px">
-              <label className="flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.isImportant || false}
-                  onChange={(e) => handleFieldChange('isImportant', e.target.checked)}
-                  className="rounded border-border text-primary focus:ring-primary"
-                />
-                <span>중요 공지</span>
-              </label>
-              <label className="flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.isPinned || false}
-                  onChange={(e) => handleFieldChange('isPinned', e.target.checked)}
-                  className="rounded border-border text-primary focus:ring-primary"
-                />
-                <span>상단 고정</span>
-              </label>
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+          return <GridFormAuto fields={fields} />;
+        })()}
 
         {/* 버튼 */}
         <div className="flex justify-end gap-2 mt-4">

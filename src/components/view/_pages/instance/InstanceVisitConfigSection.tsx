@@ -5,7 +5,7 @@ import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateInstanceVisitConfig } from '@/services/instances/instances@id_visit-config_PUT';
@@ -117,92 +117,93 @@ export default function InstanceVisitConfigSection({
     <div className="space-y-6">
       {/* 방문 설정 섹션 */}
       <TitleRow title="방문 설정" subtitle="호실의 방문 관련 설정을 관리합니다." />
-      <GridForm 
-        
-        gap="20px"
-        bottomLeftActions={(
-          <Button 
-            variant="secondary" 
-            onClick={handleReset}
-            disabled={!hasChanges || isSubmitting}
-            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-          >
-            <RotateCcw size={16} />
-            복구
-          </Button>
-        )}
-        bottomRightActions={(
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-          >
-            <Save size={16} />
-            {isSubmitting ? '저장 중...' : '저장'}
-          </Button>
-        )}
-      >
-        <GridForm.Row>
-          <GridForm.Label>
-            방문 가능 시간 (분)
-          </GridForm.Label>
-          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              type="number"
-              value={formData.availableVisitTime.toString()}
-              onChange={(value) => handleFieldChange('availableVisitTime', parseInt(value) || 0)}
-              placeholder="방문 가능 시간"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
+      {(() => {
+        const fields: GridFormFieldSchema[] = [
+          {
+            id: 'availableVisitTime',
+            label: '방문 가능 시간 (분)',
+            rules: '0 이상 숫자',
+            component: (
+              <SimpleTextInput
+                type="number"
+                value={formData.availableVisitTime.toString()}
+                onChange={(value) => handleFieldChange('availableVisitTime', parseInt(value) || 0)}
+                placeholder="방문 가능 시간"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          },
+          {
+            id: 'purchasedVisitTime',
+            label: '구매한 방문 시간 (분)',
+            rules: '0 이상 숫자',
+            component: (
+              <SimpleTextInput
+                type="number"
+                value={formData.purchasedVisitTime.toString()}
+                onChange={(value) => handleFieldChange('purchasedVisitTime', parseInt(value) || 0)}
+                placeholder="구매 방문 시간"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          },
+          {
+            id: 'visitRequestLimit',
+            label: '방문 요청 한도',
+            rules: '1 이상 숫자',
+            component: (
+              <SimpleTextInput
+                type="number"
+                value={formData.visitRequestLimit.toString()}
+                onChange={(value) => handleFieldChange('visitRequestLimit', parseInt(value) || 1)}
+                placeholder="방문 요청 한도"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          }
+        ];
 
-        <GridForm.Row>
-          <GridForm.Label>
-            구매한 방문 시간 (분)
-          </GridForm.Label>
-          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              type="number"
-              value={formData.purchasedVisitTime.toString()}
-              onChange={(value) => handleFieldChange('purchasedVisitTime', parseInt(value) || 0)}
-              placeholder="구매 방문 시간"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-
-        <GridForm.Row>
-          <GridForm.Label>
-            방문 요청 한도
-          </GridForm.Label>
-          <GridForm.Rules>1 이상 숫자</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              type="number"
-              value={formData.visitRequestLimit.toString()}
-              onChange={(value) => handleFieldChange('visitRequestLimit', parseInt(value) || 1)}
-              placeholder="방문 요청 한도"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-      </GridForm>
+        return (
+          <GridFormAuto 
+            fields={fields}
+            gap="20px"
+            bottomLeftActions={(
+              <Button 
+                variant="secondary" 
+                onClick={handleReset}
+                disabled={!hasChanges || isSubmitting}
+                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+              >
+                <RotateCcw size={16} />
+                복구
+              </Button>
+            )}
+            bottomRightActions={(
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit} 
+                disabled={!isValid || isSubmitting}
+                title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
+              >
+                <Save size={16} />
+                {isSubmitting ? '저장 중...' : '저장'}
+              </Button>
+            )}
+          />
+        );
+      })()}
 
       {/* 방문 시간 통계 정보 */}
       <div className="p-4 mt-6 rounded-lg bg-muted">

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Eraser, RotateCcw } from 'lucide-react';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -168,326 +168,234 @@ const CarForm: React.FC<CarFormProps> = ({
     )
     : null;
 
+  // 폼 필드 정의
+  const baseFields: GridFormFieldSchema[] = [
+    {
+      id: 'carNumber',
+      label: '차량번호',
+      required: true,
+      rules: '번호판 형식 (예: 12가1234)',
+      component: (
+        <SimpleTextInput
+          value={data.carNumber}
+          onChange={(value) => handleFieldChange('carNumber', value)}
+          placeholder="차량번호"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'brand',
+      label: '브랜드',
+      rules: '자동차 제조사명',
+      component: (
+        <SimpleTextInput
+          value={data.brand}
+          onChange={(value) => handleFieldChange('brand', value)}
+          placeholder="브랜드"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'model',
+      label: '모델',
+      rules: '차량 모델명',
+      component: (
+        <SimpleTextInput
+          value={data.model}
+          onChange={(value) => handleFieldChange('model', value)}
+          placeholder="모델"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'type',
+      label: '차종',
+      rules: '차량 유형 선택',
+      component: (
+        <SimpleDropdown
+          value={data.type}
+          onChange={(value) => handleFieldChange('type', value)}
+          options={CAR_TYPE_OPTIONS}
+          placeholder="차종을 선택하세요"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'year',
+      label: '연식',
+      rules: '4자리 연도 (예: 2023)',
+      component: (
+        <SimpleTextInput
+          type="number"
+          value={data.year}
+          onChange={(value) => handleFieldChange('year', value)}
+          placeholder="연식"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'fuel',
+      label: '연료',
+      rules: '연료 타입 선택',
+      component: (
+        <SimpleDropdown
+          value={data.fuel}
+          onChange={(value) => handleFieldChange('fuel', value)}
+          options={FUEL_OPTIONS}
+          placeholder="연료를 선택하세요"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'outerText',
+      label: '외부 텍스트',
+      rules: '차량 외부 표시 텍스트',
+      component: (
+        <SimpleTextInput
+          value={data.outerText}
+          onChange={(value) => handleFieldChange('outerText', value)}
+          placeholder="외부 텍스트"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'externalSticker',
+      label: '외부 스티커',
+      rules: '차량 외부 스티커 정보',
+      component: (
+        <SimpleTextInput
+          value={data.externalSticker}
+          onChange={(value) => handleFieldChange('externalSticker', value)}
+          placeholder="외부 스티커"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'frontImageUrl',
+      label: '전면 이미지 URL',
+      rules: '유효한 URL 형식',
+      component: (
+        <SimpleTextInput
+          value={data.frontImageUrl}
+          onChange={(value) => handleFieldChange('frontImageUrl', value)}
+          placeholder="전면 이미지 URL"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'rearImageUrl',
+      label: '후면 이미지 URL',
+      rules: '유효한 URL 형식',
+      component: (
+        <SimpleTextInput
+          value={data.rearImageUrl}
+          onChange={(value) => handleFieldChange('rearImageUrl', value)}
+          placeholder="후면 이미지 URL"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'sideImageUrl',
+      label: '측면 이미지 URL',
+      rules: '유효한 URL 형식',
+      component: (
+        <SimpleTextInput
+          value={data.sideImageUrl}
+          onChange={(value) => handleFieldChange('sideImageUrl', value)}
+          placeholder="측면 이미지 URL"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'topImageUrl',
+      label: '상단 이미지 URL',
+      rules: '유효한 URL 형식',
+      component: (
+        <SimpleTextInput
+          value={data.topImageUrl}
+          onChange={(value) => handleFieldChange('topImageUrl', value)}
+          placeholder="상단 이미지 URL"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ];
+
+  // edit 모드 전용 필드
+  const editFields: GridFormFieldSchema[] = mode === 'edit' && car ? [
+    {
+      id: 'createdAt',
+      label: '등록일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(car.createdAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'updatedAt',
+      label: '수정일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(car.updatedAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ] : [];
+
+  const fields = [...baseFields, ...editFields];
+
   return (
     <>
       <TitleRow 
         title="차량 기본 정보" 
         subtitle="차량의 기본 정보를 관리합니다." 
       />
-      <GridForm 
-        
+      <GridFormAuto 
+        fields={fields}
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
-      >
-      <GridForm.Row>
-        <GridForm.Label required>
-          차량번호
-        </GridForm.Label>
-        <GridForm.Rules>
-          번호판 형식 (예: 12가1234)
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.carNumber}
-            onChange={(value) => handleFieldChange('carNumber', value)}
-            placeholder="차량번호"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          브랜드
-        </GridForm.Label>
-        <GridForm.Rules>
-          자동차 제조사명
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.brand}
-            onChange={(value) => handleFieldChange('brand', value)}
-            placeholder="브랜드"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          모델
-        </GridForm.Label>
-        <GridForm.Rules>
-          차량 모델명
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.model}
-            onChange={(value) => handleFieldChange('model', value)}
-            placeholder="모델"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          차종
-        </GridForm.Label>
-        <GridForm.Rules>
-          차량 유형 선택
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleDropdown
-            value={data.type}
-            onChange={(value) => handleFieldChange('type', value)}
-            options={CAR_TYPE_OPTIONS}
-            placeholder="차종을 선택하세요"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          연식
-        </GridForm.Label>
-        <GridForm.Rules>
-          4자리 연도 (예: 2023)
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="number"
-            value={data.year}
-            onChange={(value) => handleFieldChange('year', value)}
-            placeholder="연식"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          연료
-        </GridForm.Label>
-        <GridForm.Rules>
-          연료 타입 선택
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleDropdown
-            value={data.fuel}
-            onChange={(value) => handleFieldChange('fuel', value)}
-            options={FUEL_OPTIONS}
-            placeholder="연료를 선택하세요"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          외부 텍스트
-        </GridForm.Label>
-        <GridForm.Rules>
-          차량 외부 표시 텍스트
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.outerText}
-            onChange={(value) => handleFieldChange('outerText', value)}
-            placeholder="외부 텍스트"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          외부 스티커
-        </GridForm.Label>
-        <GridForm.Rules>
-          차량 외부 스티커 정보
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.externalSticker}
-            onChange={(value) => handleFieldChange('externalSticker', value)}
-            placeholder="외부 스티커"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          전면 이미지 URL
-        </GridForm.Label>
-        <GridForm.Rules>
-          유효한 URL 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.frontImageUrl}
-            onChange={(value) => handleFieldChange('frontImageUrl', value)}
-            placeholder="전면 이미지 URL"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          후면 이미지 URL
-        </GridForm.Label>
-        <GridForm.Rules>
-          유효한 URL 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.rearImageUrl}
-            onChange={(value) => handleFieldChange('rearImageUrl', value)}
-            placeholder="후면 이미지 URL"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          측면 이미지 URL
-        </GridForm.Label>
-        <GridForm.Rules>
-          유효한 URL 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.sideImageUrl}
-            onChange={(value) => handleFieldChange('sideImageUrl', value)}
-            placeholder="측면 이미지 URL"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          상단 이미지 URL
-        </GridForm.Label>
-        <GridForm.Rules>
-          유효한 URL 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.topImageUrl}
-            onChange={(value) => handleFieldChange('topImageUrl', value)}
-            placeholder="상단 이미지 URL"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      {/* edit 모드에서만 표시되는 추가 정보 */}
-      {mode === 'edit' && car && (
-        <>
-          <GridForm.Row>
-            <GridForm.Label>
-              등록일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(car.createdAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              수정일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(car.updatedAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </>
-      )}
-      </GridForm>
+      />
     </>
   );
 };

@@ -5,7 +5,7 @@ import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { updateParkingDeviceOperation } from '@/services/devices/devices@id_operation_PUT';
@@ -121,98 +121,94 @@ export default function DeviceOperationConfigSection({
     <div className="space-y-6">
       {/* 운영 설정 섹션 */}
       <TitleRow title="운영 설정" subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다." />
-      <GridForm 
-        
-        gap="20px"
-        bottomLeftActions={(
-          <Button 
-            variant="secondary" 
-            onClick={handleReset}
-            disabled={!hasChanges || isSubmitting}
-            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-          >
-            <RotateCcw size={16} />
-            복구
-          </Button>
-        )}
-        bottomRightActions={(
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-          >
-            <Save size={16} />
-            {isSubmitting ? '저장 중...' : '저장'}
-          </Button>
-        )}
-      >
-        <GridForm.Row>
-          <GridForm.Label required>
-            디바이스 타입
-          </GridForm.Label>
-          <GridForm.Rules>
-            라즈베리/통합보드 선택
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleDropdown
-              value={formData.deviceType}
-              onChange={(value) => handleFieldChange('deviceType', value)}
-              options={DEVICE_TYPE_OPTIONS}
-              placeholder="디바이스 타입을 선택하세요"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
+      {(() => {
+        const fields: GridFormFieldSchema[] = [
+          {
+            id: 'deviceType',
+            label: '디바이스 타입',
+            required: true,
+            rules: '라즈베리/통합보드 선택',
+            component: (
+              <SimpleDropdown
+                value={formData.deviceType}
+                onChange={(value) => handleFieldChange('deviceType', value)}
+                options={DEVICE_TYPE_OPTIONS}
+                placeholder="디바이스 타입을 선택하세요"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          },
+          {
+            id: 'isTicketing',
+            label: '발권 기능',
+            rules: 'Y/N 선택',
+            component: (
+              <SimpleDropdown
+                value={formData.isTicketing}
+                onChange={(value) => handleFieldChange('isTicketing', value)}
+                options={YES_NO_OPTIONS}
+                placeholder="발권 기능 사용 여부"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          },
+          {
+            id: 'isReceipting',
+            label: '영수증 기능',
+            rules: 'Y/N 선택',
+            component: (
+              <SimpleDropdown
+                value={formData.isReceipting}
+                onChange={(value) => handleFieldChange('isReceipting', value)}
+                options={YES_NO_OPTIONS}
+                placeholder="영수증 기능 사용 여부"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          }
+        ];
 
-        <GridForm.Row>
-          <GridForm.Label>
-            발권 기능
-          </GridForm.Label>
-          <GridForm.Rules>
-            Y/N 선택
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleDropdown
-              value={formData.isTicketing}
-              onChange={(value) => handleFieldChange('isTicketing', value)}
-              options={YES_NO_OPTIONS}
-              placeholder="발권 기능 사용 여부"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-
-        <GridForm.Row>
-          <GridForm.Label>
-            영수증 기능
-          </GridForm.Label>
-          <GridForm.Rules>
-            Y/N 선택
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleDropdown
-              value={formData.isReceipting}
-              onChange={(value) => handleFieldChange('isReceipting', value)}
-              options={YES_NO_OPTIONS}
-              placeholder="영수증 기능 사용 여부"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-      </GridForm>
+        return (
+          <GridFormAuto 
+            fields={fields}
+            gap="20px"
+            bottomLeftActions={(
+              <Button 
+                variant="secondary" 
+                onClick={handleReset}
+                disabled={!hasChanges || isSubmitting}
+                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+              >
+                <RotateCcw size={16} />
+                복구
+              </Button>
+            )}
+            bottomRightActions={(
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit} 
+                disabled={!isValid || isSubmitting}
+                title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
+              >
+                <Save size={16} />
+                {isSubmitting ? '저장 중...' : '저장'}
+              </Button>
+            )}
+          />
+        );
+      })()}
 
       {/* 운영 설정 설명 */}
       <div className="p-4 mt-6 rounded-lg bg-muted/30">

@@ -12,19 +12,19 @@ export const menuData: MenuData = {
 		icon: Presentation,
 		key: '종합 정보',
 		midItems: {
-			'__허브 정보': {
-				key: '__허브 정보',
+			'허브 정보': {
+				key: '허브 정보',
 				botItems: [
 					{
-						key: '__허브 이용 안내',
+						key: '허브 이용 안내',
 						href: '/global/info/guide',
 					},
 					{
-						key: '__허브 공지사항',
+						key: '허브 공지사항',
 						href: '/global/info/notice',
 					},
 					{
-						key: '__허브 업데이트 내역',
+						key: '허브 업데이트 내역',
 						href: '/global/info/update',
 					},
 				],

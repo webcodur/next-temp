@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Eraser, RotateCcw } from 'lucide-react';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -188,259 +188,234 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       <div>
         <TitleRow title="차단기 기본 정보" subtitle="차단기의 기본 설정을 관리합니다." />
         <div className="h-4" />
-        <GridForm gap="16px">
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              차단기명
-            </GridForm.Label>
-            <GridForm.Rules>
-              식별 가능한 고유명
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.name}
-                onChange={(value) => handleFieldChange('name', value)}
-                placeholder="차단기명"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+        {(() => {
+          const basicFields: GridFormFieldSchema[] = [
+            {
+              id: 'name',
+              label: '차단기명',
+              required: mode === 'create',
+              rules: '식별 가능한 고유명',
+              component: (
+                <SimpleTextInput
+                  value={data.name}
+                  onChange={(value) => handleFieldChange('name', value)}
+                  placeholder="차단기명"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'cctvUrl',
+              label: 'CCTV URL',
+              required: mode === 'create',
+              rules: '유횤한 URL 형식',
+              component: (
+                <SimpleTextInput
+                  value={data.cctvUrl}
+                  onChange={(value) => handleFieldChange('cctvUrl', value)}
+                  placeholder="http://192.168.1.100:8080/stream"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'representativePhone',
+              label: '대표전화',
+              rules: '02-0000-0000 형식',
+              component: (
+                <SimpleTextInput
+                  value={data.representativePhone}
+                  onChange={(value) => handleFieldChange('representativePhone', value)}
+                  placeholder="02-1234-5678"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'phone',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'sequence',
+              label: '순번',
+              rules: '좋자 (1 이상)',
+              component: (
+                <SimpleTextInput
+                  value={data.sequence}
+                  onChange={(value) => handleFieldChange('sequence', value)}
+                  placeholder="1"
+                  disabled={true}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            }
+          ];
 
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              CCTV URL
-            </GridForm.Label>
-            <GridForm.Rules>
-              유횤한 URL 형식
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.cctvUrl}
-                onChange={(value) => handleFieldChange('cctvUrl', value)}
-                placeholder="http://192.168.1.100:8080/stream"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              대표전화
-            </GridForm.Label>
-            <GridForm.Rules>
-              02-0000-0000 형식
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.representativePhone}
-                onChange={(value) => handleFieldChange('representativePhone', value)}
-                placeholder="02-1234-5678"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'phone',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              순번
-            </GridForm.Label>
-            <GridForm.Rules>
-              좋자 (1 이상)
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.sequence}
-                onChange={(value) => handleFieldChange('sequence', value)}
-                placeholder="1"
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+          return <GridFormAuto fields={basicFields} gap="16px" />;
+        })()}
       </div>
 
       {/* 네트워크 설정 섹션 */}
       <div>
         <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다." />
         <div className="h-4" />
-        <GridForm gap="16px">
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              IP 주소
-            </GridForm.Label>
-            <GridForm.Rules>
-              IPv4 형식 (192.168.0.1)
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.ip}
-                onChange={(value) => handleFieldChange('ip', value)}
-                placeholder="192.168.1.100"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-                errorMessage={validationMessages.ip}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              포트
-            </GridForm.Label>
-            <GridForm.Rules>
-              1-65535 범위 숫자
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.port}
-                onChange={(value) => handleFieldChange('port', value)}
-                placeholder="8080"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-                errorMessage={validationMessages.port}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              서버 포트
-            </GridForm.Label>
-            <GridForm.Rules>
-              1-65535 범위 숫자
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={data.serverPort}
-                onChange={(value) => handleFieldChange('serverPort', value)}
-                placeholder="9090"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-                errorMessage={validationMessages.serverPort}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+        <GridFormAuto 
+          fields={[
+            {
+              id: 'ip',
+              label: 'IP 주소',
+              required: mode === 'create',
+              rules: 'IPv4 형식 (192.168.0.1)',
+              component: (
+                <SimpleTextInput
+                  value={data.ip}
+                  onChange={(value) => handleFieldChange('ip', value)}
+                  placeholder="192.168.1.100"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                  errorMessage={validationMessages.ip}
+                />
+              )
+            },
+            {
+              id: 'port',
+              label: '포트',
+              required: mode === 'create',
+              rules: '1-65535 범위 숫자',
+              component: (
+                <SimpleTextInput
+                  value={data.port}
+                  onChange={(value) => handleFieldChange('port', value)}
+                  placeholder="8080"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                  errorMessage={validationMessages.port}
+                />
+              )
+            },
+            {
+              id: 'serverPort',
+              label: '서버 포트',
+              rules: '1-65535 범위 숫자',
+              component: (
+                <SimpleTextInput
+                  value={data.serverPort}
+                  onChange={(value) => handleFieldChange('serverPort', value)}
+                  placeholder="9090"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                  errorMessage={validationMessages.serverPort}
+                />
+              )
+            }
+          ]}
+          gap="16px"
+        />
       </div>
 
       {/* 운영 설정 섹션 */}
       <div>
         <TitleRow title="운영 설정" subtitle="차단기 운영 상태 및 기능을 설정합니다." />
         <div className="h-4" />
-        <GridForm gap="16px">
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              운영 상태
-            </GridForm.Label>
-            <GridForm.Rules>
-              자동/열림/바이패스 선택
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={data.status}
-                onChange={(value) => handleFieldChange('status', value)}
-                options={STATUS_OPTIONS}
-                placeholder="운영 상태를 선택하세요"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label required={mode === 'create'}>
-              디바이스 타입
-            </GridForm.Label>
-            <GridForm.Rules>
-              라즈베리/통합보드 선택
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={data.deviceType}
-                onChange={(value) => handleFieldChange('deviceType', value)}
-                options={DEVICE_TYPE_OPTIONS}
-                placeholder="디바이스 타입을 선택하세요"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              발권 기능
-            </GridForm.Label>
-            <GridForm.Rules>
-              Y/N 선택
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={data.isTicketing}
-                onChange={(value) => handleFieldChange('isTicketing', value)}
-                options={YES_NO_OPTIONS}
-                placeholder="발권 기능 사용 여부"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              영수증 기능
-            </GridForm.Label>
-            <GridForm.Rules>
-              Y/N 선택
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={data.isReceipting}
-                onChange={(value) => handleFieldChange('isReceipting', value)}
-                options={YES_NO_OPTIONS}
-                placeholder="영수증 기능 사용 여부"
-                disabled={isReadOnly}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+        <GridFormAuto 
+          fields={[
+            {
+              id: 'status',
+              label: '운영 상태',
+              required: mode === 'create',
+              rules: '자동/열림/바이패스 선택',
+              component: (
+                <SimpleDropdown
+                  value={data.status}
+                  onChange={(value) => handleFieldChange('status', value)}
+                  options={STATUS_OPTIONS}
+                  placeholder="운영 상태를 선택하세요"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'deviceType',
+              label: '디바이스 타입',
+              required: mode === 'create',
+              rules: '라즈베리/통합보드 선택',
+              component: (
+                <SimpleDropdown
+                  value={data.deviceType}
+                  onChange={(value) => handleFieldChange('deviceType', value)}
+                  options={DEVICE_TYPE_OPTIONS}
+                  placeholder="디바이스 타입을 선택하세요"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'isTicketing',
+              label: '발권 기능',
+              rules: 'Y/N 선택',
+              component: (
+                <SimpleDropdown
+                  value={data.isTicketing}
+                  onChange={(value) => handleFieldChange('isTicketing', value)}
+                  options={YES_NO_OPTIONS}
+                  placeholder="발권 기능 사용 여부"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            },
+            {
+              id: 'isReceipting',
+              label: '영수증 기능',
+              rules: 'Y/N 선택',
+              component: (
+                <SimpleDropdown
+                  value={data.isReceipting}
+                  onChange={(value) => handleFieldChange('isReceipting', value)}
+                  options={YES_NO_OPTIONS}
+                  placeholder="영수증 기능 사용 여부"
+                  disabled={isReadOnly}
+                  validationRule={{
+                    type: 'free',
+                    mode: mode
+                  }}
+                />
+              )
+            }
+          ]}
+          gap="16px"
+        />
       </div>
 
       {/* view/edit 모드에서만 표시되는 추가 정보 */}
@@ -448,80 +423,69 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
         <div>
           <TitleRow title="추가 정보" subtitle="차단기의 시스템 관련 정보입니다." />
           <div className="h-4" />
-          <GridForm 
-            
+          <GridFormAuto 
+            fields={[
+              {
+                id: 'parkinglotId',
+                label: '주차장 ID',
+                rules: '시스템 자동 연결',
+                component: (
+                  <SimpleTextInput
+                    value={device.parkinglotId?.toString() || '-'}
+                    onChange={() => {}}
+                    disabled={true}
+                    validationRule={{
+                      type: 'free',
+                      mode: mode
+                    }}
+                  />
+                )
+              },
+              {
+                id: 'createdAt',
+                label: '등록일자',
+                rules: '시스템 자동 기록',
+                component: (
+                  <SimpleTextInput
+                    value={device.createdAt ? new Date(device.createdAt).toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    }) : '-'}
+                    onChange={() => {}}
+                    disabled={true}
+                    validationRule={{
+                      type: 'free',
+                      mode: mode
+                    }}
+                  />
+                )
+              },
+              {
+                id: 'updatedAt',
+                label: '수정일자',
+                rules: '시스템 자동 기록',
+                component: (
+                  <SimpleTextInput
+                    value={device.updatedAt ? new Date(device.updatedAt).toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    }) : '-'}
+                    onChange={() => {}}
+                    disabled={true}
+                    validationRule={{
+                      type: 'free',
+                      mode: mode
+                    }}
+                  />
+                )
+              }
+            ]}
             gap="16px"
             bottomLeftActions={bottomLeftActions}
             bottomRightActions={bottomRightActions}
-          >
-            <GridForm.Row>
-              <GridForm.Label>
-                주차장 ID
-              </GridForm.Label>
-              <GridForm.Rules>
-                시스템 자동 연결
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleTextInput
-                  value={device.parkinglotId?.toString() || '-'}
-                  onChange={() => {}}
-                  disabled={true}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            <GridForm.Row>
-              <GridForm.Label>
-                등록일자
-              </GridForm.Label>
-              <GridForm.Rules>
-                시스템 자동 기록
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleTextInput
-                  value={device.createdAt ? new Date(device.createdAt).toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  }) : '-'}
-                  onChange={() => {}}
-                  disabled={true}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            <GridForm.Row>
-              <GridForm.Label>
-                수정일자
-              </GridForm.Label>
-              <GridForm.Rules>
-                시스템 자동 기록
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleTextInput
-                  value={device.updatedAt ? new Date(device.updatedAt).toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  }) : '-'}
-                  onChange={() => {}}
-                  disabled={true}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-          </GridForm>
+          />
         </div>
       )}
 

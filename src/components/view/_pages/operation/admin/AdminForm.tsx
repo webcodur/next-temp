@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { RotateCcw, Save } from 'lucide-react'; // Trash2 아이콘은 CrudButton에서 처리
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -105,227 +105,175 @@ const AdminForm: React.FC<AdminFormProps> = ({
     </div>
   ) : null;
 
+  // 기본 필드 정의
+  const baseFields: GridFormFieldSchema[] = [
+    {
+      id: 'account',
+      label: '아이디',
+      required: mode === 'create',
+      rules: '영문, 숫자 4-20자',
+      component: (
+        <SimpleTextInput
+          value={data.account}
+          onChange={(value) => handleFieldChange('account', value)}
+          placeholder="계정명"
+          disabled={disabled || mode !== 'create'}
+          autocomplete="off"
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'name',
+      label: '이름',
+      required: true,
+      rules: '한글, 영문 2-50자',
+      component: (
+        <SimpleTextInput
+          value={data.name}
+          onChange={(value) => handleFieldChange('name', value)}
+          placeholder="이름"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'email',
+      label: '이메일',
+      rules: '유효한 이메일 형식',
+      component: (
+        <SimpleTextInput
+          type="email"
+          value={data.email}
+          onChange={(value) => handleFieldChange('email', value)}
+          placeholder="이메일"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={{ type: 'email', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'phone',
+      label: '연락처',
+      rules: '010-0000-0000 형식',
+      component: (
+        <SimpleTextInput
+          value={data.phone}
+          onChange={(value) => handleFieldChange('phone', value)}
+          placeholder="010-0000-0000"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={{ type: 'phone', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'role',
+      label: '권한',
+      required: true,
+      rules: '역할 및 권한 설정',
+      component: (
+        <SimpleDropdown
+          value={data.role}
+          onChange={(value) => handleFieldChange('role', value)}
+          options={ROLE_OPTIONS}
+          placeholder="권한을 선택하세요"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ];
+
+  // 비밀번호 필드 (create 모드에서만)
+  const passwordFields: GridFormFieldSchema[] = showPassword ? [
+    {
+      id: 'password',
+      label: '비밀번호',
+      required: passwordRequired,
+      rules: '8자 이상 영문/숫자/특수문자',
+      component: (
+        <SimpleTextInput
+          type="password"
+          value={data.password}
+          onChange={(value) => handleFieldChange('password', value)}
+          placeholder="비밀번호"
+          disabled={disabled}
+          autocomplete="new-password"
+          validationRule={{ type: 'password', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'confirm',
+      label: '비밀번호 확인',
+      required: passwordRequired,
+      rules: '위와 동일한 비밀번호',
+      component: (
+        <SimpleTextInput
+          type="password"
+          value={data.confirm}
+          onChange={(value) => handleFieldChange('confirm', value)}
+          placeholder="비밀번호 확인"
+          disabled={disabled}
+          autocomplete="new-password"
+          validationRule={{ 
+            type: 'password-confirm', 
+            originalPassword: data.password, 
+            mode: mode 
+          }}
+        />
+      )
+    }
+  ] : [];
+
+  // 추가 정보 필드 (view/edit 모드에서만)
+  const additionalFields: GridFormFieldSchema[] = mode !== 'create' ? [
+    {
+      id: 'parkinglot',
+      label: '주차장',
+      rules: '시스템 자동 연결',
+      component: (
+        <SimpleTextInput
+          value={admin?.parkinglot?.name || '-'}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'createdAt',
+      label: '등록일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={admin ? new Date(admin.createdAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }) : '-'}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ] : [];
+
+  const fields = [...baseFields, ...passwordFields, ...additionalFields];
+
   return (
-    <GridForm 
-      
+    <GridFormAuto 
+      fields={fields}
       gap="16px"
       topRightActions={topRightActions}
       bottomLeftActions={bottomLeftActions}
       bottomRightActions={bottomRightActions}
-    >
-      <GridForm.Row>
-        <GridForm.Label required={mode === 'create'}>
-          아이디
-        </GridForm.Label>
-        <GridForm.Rules>
-          영문, 숫자 4-20자
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.account}
-            onChange={(value) => handleFieldChange('account', value)}
-            placeholder="계정명"
-            disabled={disabled || mode !== 'create'}
-            autocomplete="off"
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          이름
-        </GridForm.Label>
-        <GridForm.Rules>
-          한글, 영문 2-50자
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.name}
-            onChange={(value) => handleFieldChange('name', value)}
-            placeholder="이름"
-            disabled={isReadOnly}
-            autocomplete="off"
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          이메일
-        </GridForm.Label>
-        <GridForm.Rules>
-          유효한 이메일 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="email"
-            value={data.email}
-            onChange={(value) => handleFieldChange('email', value)}
-            placeholder="이메일"
-            disabled={isReadOnly}
-            autocomplete="off"
-            validationRule={{
-              type: 'email',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          연락처
-        </GridForm.Label>
-        <GridForm.Rules>
-          010-0000-0000 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.phone}
-            onChange={(value) => handleFieldChange('phone', value)}
-            placeholder="010-0000-0000"
-            disabled={isReadOnly}
-            autocomplete="off"
-            validationRule={{
-              type: 'phone',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          권한
-        </GridForm.Label>
-        <GridForm.Rules>
-          역할 및 권한 설정
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleDropdown
-            value={data.role}
-            onChange={(value) => handleFieldChange('role', value)}
-            options={ROLE_OPTIONS}
-            placeholder="권한을 선택하세요"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      {/* create 모드에서만 비밀번호 필드 표시 */}
-      {showPassword && (
-        <>
-          <GridForm.Row>
-            <GridForm.Label required={passwordRequired}>
-              비밀번호
-            </GridForm.Label>
-            <GridForm.Rules>
-              8자 이상 영문/숫자/특수문자
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="password"
-                value={data.password}
-                onChange={(value) => handleFieldChange('password', value)}
-                placeholder="비밀번호"
-                disabled={disabled}
-                autocomplete="new-password"
-                validationRule={{
-                  type: 'password',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label required={passwordRequired}>
-              비밀번호 확인
-            </GridForm.Label>
-            <GridForm.Rules>
-              위와 동일한 비밀번호
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="password"
-                value={data.confirm}
-                onChange={(value) => handleFieldChange('confirm', value)}
-                placeholder="비밀번호 확인"
-                disabled={disabled}
-                autocomplete="new-password"
-                validationRule={{
-                  type: 'password-confirm',
-                  originalPassword: data.password,
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </>
-      )}
-
-      {/* view/edit 모드에서 항상 표시되는 추가 정보 */}
-      {mode !== 'create' && (
-        <>
-          <GridForm.Row>
-            <GridForm.Label>
-              주차장
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 연결
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={admin?.parkinglot?.name || '-'}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              등록일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={admin ? new Date(admin.createdAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                }) : '-'}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </>
-      )}
-
-    </GridForm>
+    />
   );
 };
 

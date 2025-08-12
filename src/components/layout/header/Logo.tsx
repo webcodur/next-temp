@@ -18,7 +18,7 @@ export const Logo = memo(() => {
 	return (
 		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
 			<Image 
-				src="/icons/testLogo/logo.svg" 
+				src="/icons/logo.svg" 
 				alt="System Logo" 
 				width={40} 
 				height={40}

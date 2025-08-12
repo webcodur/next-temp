@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
@@ -349,85 +349,76 @@ export default function CarResidentSection({
         size="md"
       >
         <div className="space-y-4">
-          <GridForm gap="16px">
-            <GridForm.Row>
-              <GridForm.Label required>
-                차량 호실
-              </GridForm.Label>
-              <GridForm.Rules>
-                차량이 소속된 호실
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleDropdown
-                  value={createFormData.carInstanceId}
-                  onChange={(value) => setCreateFormData(prev => ({ ...prev, carInstanceId: value }))}
-                  options={carInstanceOptions}
-                  placeholder="차량 호실를 선택해주세요"
-                  disabled={isSubmitting}
-                  validationRule={{
-                    type: 'free',
-                    mode: 'create'
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
+          {(() => {
+            const fields: GridFormFieldSchema[] = [
+              {
+                id: 'carInstanceId',
+                label: '차량 호실',
+                required: true,
+                rules: '차량이 소속된 호실',
+                component: (
+                  <SimpleDropdown
+                    value={createFormData.carInstanceId}
+                    onChange={(value) => setCreateFormData(prev => ({ ...prev, carInstanceId: value }))}
+                    options={carInstanceOptions}
+                    placeholder="차량 호실를 선택해주세요"
+                    disabled={isSubmitting}
+                    validationRule={{
+                      type: 'free',
+                      mode: 'create'
+                    }}
+                  />
+                )
+              },
+              {
+                id: 'residentId',
+                label: '거주자 ID',
+                required: true,
+                rules: '연결할 거주자 선택',
+                component: (
+                  <SimpleTextInput
+                    type="number"
+                    value={createFormData.residentId}
+                    onChange={(value) => setCreateFormData(prev => ({ ...prev, residentId: value }))}
+                    placeholder="거주자 ID"
+                    disabled={isSubmitting}
+                    validationRule={{
+                      type: 'free',
+                      mode: 'create'
+                    }}
+                  />
+                )
+              },
+              {
+                id: 'isPrimary',
+                label: '주차량 설정',
+                rules: '주/보조 차량 설정',
+                component: (
+                  <SimpleToggleSwitch
+                    checked={createFormData.isPrimary}
+                    onChange={(checked) => setCreateFormData(prev => ({ ...prev, isPrimary: checked }))}
+                    disabled={isSubmitting}
+                    size="md"
+                  />
+                )
+              },
+              {
+                id: 'carAlarm',
+                label: '알람 설정',
+                rules: '알람 수신 여부',
+                component: (
+                  <SimpleToggleSwitch
+                    checked={createFormData.carAlarm}
+                    onChange={(checked) => setCreateFormData(prev => ({ ...prev, carAlarm: checked }))}
+                    disabled={isSubmitting}
+                    size="md"
+                  />
+                )
+              }
+            ];
 
-            <GridForm.Row>
-              <GridForm.Label required>
-                거주자 ID
-              </GridForm.Label>
-              <GridForm.Rules>
-                연결할 거주자 선택
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleTextInput
-                  type="number"
-                  value={createFormData.residentId}
-                  onChange={(value) => setCreateFormData(prev => ({ ...prev, residentId: value }))}
-                  placeholder="거주자 ID"
-                  disabled={isSubmitting}
-                  validationRule={{
-                    type: 'free',
-                    mode: 'create'
-                  }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            <GridForm.Row>
-              <GridForm.Label>
-                주차량 설정
-              </GridForm.Label>
-              <GridForm.Rules>
-                주/보조 차량 설정
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleToggleSwitch
-                  checked={createFormData.isPrimary}
-                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, isPrimary: checked }))}
-                  disabled={isSubmitting}
-                  size="md"
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            <GridForm.Row>
-              <GridForm.Label>
-                알람 설정
-              </GridForm.Label>
-              <GridForm.Rules>
-                알람 수신 여부
-              </GridForm.Rules>
-              <GridForm.Content>
-                <SimpleToggleSwitch
-                  checked={createFormData.carAlarm}
-                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, carAlarm: checked }))}
-                  disabled={isSubmitting}
-                  size="md"
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-          </GridForm>
+            return <GridFormAuto fields={fields} gap="16px" />;
+          })()}
           
           <div className="flex gap-3 justify-end pt-4">
             <Button 
@@ -457,69 +448,66 @@ export default function CarResidentSection({
       >
         {editTarget && (
           <div className="space-y-4">
-            <GridForm gap="16px">
-              <GridForm.Row>
-                <GridForm.Label>
-                  차량 호실 ID
-                </GridForm.Label>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={editTarget.carInstanceId?.toString() || ''}
-                    onChange={() => {}}
-                    disabled={true}
-                    validationRule={{
-                      type: 'free',
-                      mode: 'edit'
-                    }}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
+            {(() => {
+              const fields: GridFormFieldSchema[] = [
+                {
+                  id: 'carInstanceId',
+                  label: '차량 호실 ID',
+                  component: (
+                    <SimpleTextInput
+                      value={editTarget.carInstanceId?.toString() || ''}
+                      onChange={() => {}}
+                      disabled={true}
+                      validationRule={{
+                        type: 'free',
+                        mode: 'edit'
+                      }}
+                    />
+                  )
+                },
+                {
+                  id: 'residentId',
+                  label: '거주자 ID',
+                  component: (
+                    <SimpleTextInput
+                      value={editTarget.residentId?.toString() || ''}
+                      onChange={() => {}}
+                      disabled={true}
+                      validationRule={{
+                        type: 'free',
+                        mode: 'edit'
+                      }}
+                    />
+                  )
+                },
+                {
+                  id: 'isPrimary',
+                  label: '주차량 설정',
+                  component: (
+                    <SimpleToggleSwitch
+                      checked={editTarget.isPrimary}
+                      onChange={(checked) => setEditTarget({ ...editTarget, isPrimary: checked })}
+                      disabled={isSubmitting}
+                      size="md"
+                    />
+                  )
+                },
+                {
+                  id: 'carAlarm',
+                  label: '알람 설정',
+                  component: (
+                    <SimpleToggleSwitch
+                      checked={editTarget.carAlarm}
+                      onChange={(checked) => setEditTarget({ ...editTarget, carAlarm: checked })}
+                      disabled={isSubmitting}
+                      size="md"
+                    />
+                  )
+                }
+              ];
 
-              <GridForm.Row>
-                <GridForm.Label>
-                  거주자 ID
-                </GridForm.Label>
-                <GridForm.Content>
-                  <SimpleTextInput
-                    value={editTarget.residentId?.toString() || ''}
-                    onChange={() => {}}
-                    disabled={true}
-                    validationRule={{
-                      type: 'free',
-                      mode: 'edit'
-                    }}
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label>
-                  주차량 설정
-                </GridForm.Label>
-                <GridForm.Content>
-                  <SimpleToggleSwitch
-                    checked={editTarget.isPrimary}
-                    onChange={(checked) => setEditTarget({ ...editTarget, isPrimary: checked })}
-                    disabled={isSubmitting}
-                    size="md"
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-
-              <GridForm.Row>
-                <GridForm.Label>
-                  알람 설정
-                </GridForm.Label>
-                <GridForm.Content>
-                  <SimpleToggleSwitch
-                    checked={editTarget.carAlarm}
-                    onChange={(checked) => setEditTarget({ ...editTarget, carAlarm: checked })}
-                    disabled={isSubmitting}
-                    size="md"
-                  />
-                </GridForm.Content>
-              </GridForm.Row>
-            </GridForm>
+              return <GridFormAuto fields={fields} gap="16px" />;
+            })()}
             
             <div className="flex gap-3 justify-end pt-4">
               <Button 

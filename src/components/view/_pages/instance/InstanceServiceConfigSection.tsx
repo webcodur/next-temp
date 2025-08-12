@@ -5,7 +5,7 @@ import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -120,97 +120,96 @@ export default function InstanceServiceConfigSection({
     <div className="space-y-6">
       {/* 서비스 설정 섹션 */}
       <TitleRow title="서비스 설정" subtitle="호실의 서비스 관련 설정을 관리합니다." />
-      <GridForm 
-        
-        gap="20px"
-        bottomLeftActions={(
-          <Button 
-            variant="secondary" 
-            onClick={handleReset}
-            disabled={!hasChanges || isSubmitting}
-            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-          >
-            <RotateCcw size={16} />
-            복구
-          </Button>
-        )}
-        bottomRightActions={(
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-          >
-            <Save size={16} />
-            {isSubmitting ? '저장 중...' : '저장'}
-          </Button>
-        )}
-      >
-        <GridForm.Row>
-          <GridForm.Label>
-            신규 입주민 등록 허용
-          </GridForm.Label>
-          <GridForm.Rules>등록 권한</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleToggleSwitch
-              checked={formData.canAddNewResident}
-              onChange={(checked) => handleFieldChange('canAddNewResident', checked)}
-              disabled={isSubmitting}
-              size="md"
-            />
-          </GridForm.Content>
-        </GridForm.Row>
+      {(() => {
+        const fields: GridFormFieldSchema[] = [
+          {
+            id: 'canAddNewResident',
+            label: '신규 입주민 등록 허용',
+            rules: '등록 권한',
+            component: (
+              <SimpleToggleSwitch
+                checked={formData.canAddNewResident}
+                onChange={(checked) => handleFieldChange('canAddNewResident', checked)}
+                disabled={isSubmitting}
+                size="md"
+              />
+            )
+          },
+          {
+            id: 'isCommonEntranceSubscribed',
+            label: '공동현관 구독',
+            rules: '현관 서비스',
+            component: (
+              <SimpleToggleSwitch
+                checked={formData.isCommonEntranceSubscribed}
+                onChange={(checked) => handleFieldChange('isCommonEntranceSubscribed', checked)}
+                disabled={isSubmitting}
+                size="md"
+              />
+            )
+          },
+          {
+            id: 'isTemporaryAccess',
+            label: '임시 출입 허용',
+            rules: '출입 권한',
+            component: (
+              <SimpleToggleSwitch
+                checked={formData.isTemporaryAccess}
+                onChange={(checked) => handleFieldChange('isTemporaryAccess', checked)}
+                disabled={isSubmitting}
+                size="md"
+              />
+            )
+          },
+          {
+            id: 'tempCarLimit',
+            label: '임시 차량 한도',
+            rules: '0 이상 숫자',
+            component: (
+              <SimpleTextInput
+                type="number"
+                value={formData.tempCarLimit.toString()}
+                onChange={(value) => handleFieldChange('tempCarLimit', parseInt(value) || 0)}
+                placeholder="임시 차량 한도"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'free',
+                  mode: 'edit'
+                }}
+              />
+            )
+          }
+        ];
 
-        <GridForm.Row>
-          <GridForm.Label>
-            공동현관 구독
-          </GridForm.Label>
-          <GridForm.Rules>현관 서비스</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleToggleSwitch
-              checked={formData.isCommonEntranceSubscribed}
-              onChange={(checked) => handleFieldChange('isCommonEntranceSubscribed', checked)}
-              disabled={isSubmitting}
-              size="md"
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-
-        <GridForm.Row>
-          <GridForm.Label>
-            임시 출입 허용
-          </GridForm.Label>
-          <GridForm.Rules>출입 권한</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleToggleSwitch
-              checked={formData.isTemporaryAccess}
-              onChange={(checked) => handleFieldChange('isTemporaryAccess', checked)}
-              disabled={isSubmitting}
-              size="md"
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-
-        <GridForm.Row>
-          <GridForm.Label>
-            임시 차량 한도
-          </GridForm.Label>
-          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              type="number"
-              value={formData.tempCarLimit.toString()}
-              onChange={(value) => handleFieldChange('tempCarLimit', parseInt(value) || 0)}
-              placeholder="임시 차량 한도"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'free',
-                mode: 'edit'
-              }}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-      </GridForm>
+        return (
+          <GridFormAuto 
+            fields={fields}
+            gap="20px"
+            bottomLeftActions={(
+              <Button 
+                variant="secondary" 
+                onClick={handleReset}
+                disabled={!hasChanges || isSubmitting}
+                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+              >
+                <RotateCcw size={16} />
+                복구
+              </Button>
+            )}
+            bottomRightActions={(
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit} 
+                disabled={!isValid || isSubmitting}
+                title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
+              >
+                <Save size={16} />
+                {isSubmitting ? '저장 중...' : '저장'}
+              </Button>
+            )}
+          />
+        );
+      })()}
 
       {/* 성공 모달 */}
       <Modal

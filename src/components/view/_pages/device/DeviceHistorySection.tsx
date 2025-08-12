@@ -370,6 +370,7 @@ export default function DeviceHistorySection({
       element: (
         <FieldText
           id="history-changed-fields"
+          label="변경 필드"
           placeholder="변경된 필드명"
           value={filters.changedFields}
           onChange={(value) => updateFilter('changedFields', value)}

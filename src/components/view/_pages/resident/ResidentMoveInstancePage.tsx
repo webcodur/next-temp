@@ -8,7 +8,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
@@ -241,44 +241,46 @@ export default function ResidentMoveInstancePage() {
           </h2>
         </div>
 
-        <GridForm gap="20px">
-          <GridForm.Row>
-            <GridForm.Label required>
-              새 거주지
-            </GridForm.Label>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={selectedInstanceId?.toString() || ''}
-                onChange={handleInstanceChange}
-                options={instanceOptions}
-                placeholder="이동할 호실을 선택하세요"
-                disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'create'
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+        {(() => {
+          const fields: GridFormFieldSchema[] = [
+            {
+              id: 'newInstance',
+              label: '새 거주지',
+              required: true,
+              component: (
+                <SimpleDropdown
+                  value={selectedInstanceId?.toString() || ''}
+                  onChange={handleInstanceChange}
+                  options={instanceOptions}
+                  placeholder="이동할 호실을 선택하세요"
+                  disabled={isSubmitting}
+                  validationRule={{
+                    type: 'free',
+                    mode: 'create'
+                  }}
+                />
+              )
+            },
+            {
+              id: 'memo',
+              label: '이동 사유',
+              component: (
+                <SimpleTextInput
+                  value={memo}
+                  onChange={setMemo}
+                  placeholder="이동 사유나 메모를 입력하세요"
+                  disabled={isSubmitting}
+                  validationRule={{
+                    type: 'free',
+                    mode: 'create'
+                  }}
+                />
+              )
+            }
+          ];
 
-          <GridForm.Row>
-            <GridForm.Label>
-              이동 사유
-            </GridForm.Label>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={memo}
-                onChange={setMemo}
-                placeholder="이동 사유나 메모를 입력하세요"
-                disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'create'
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+          return <GridFormAuto fields={fields} gap="20px" />;
+        })()}
 
         {/* 선택된 호실 미리보기 */}
         {selectedInstance && (

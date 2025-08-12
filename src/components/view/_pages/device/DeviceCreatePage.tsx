@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridForm } from '@/components/ui/ui-layout/grid-form';
 import DeviceForm, { DeviceFormData } from './DeviceForm';
 import DevicePermissionConfigSection, { DevicePermissionConfigSectionRef } from './DevicePermissionConfigSection';
 import { createParkingDevice } from '@/services/devices/devices_POST';

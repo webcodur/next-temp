@@ -6,18 +6,21 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
-import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { parkingLotSelectionModalOpenAtom } from '@/store/ui';
-import { Portal } from '@/components/ui/ui-layout/portal/Portal';
 import { ParkingLot } from '@/store/auth';
-import { X, Building2, ChevronDown, Check } from 'lucide-react';
+import { Building2, Check } from 'lucide-react';
 
-// 하위 컴포넌트들
-import { ParkingLotTable } from './ParkingLotTable/ParkingLotTable';
-import { ActionButtons } from './ActionButtons/ActionButtons';
+// 공통 모듈 import
+import { 
+  SelectionDialog,
+  type HeaderConfig,
+  type ActionButtonConfig,
+  type EmptyStateConfig,
+} from '@/components/ui/ui-layout/selection-dialog';
+import { BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 
 // #region 타입
 interface ParkingLotSelectionProps {
@@ -33,24 +36,16 @@ export default function ParkingLotSelection({
   // #region 상태
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useAtom(parkingLotSelectionModalOpenAtom);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   // #endregion
 
   // #region 훅
   const { parkingLots, selectParkingLot } = useAuth();
-  const { isRTL } = useLocale();
   // #endregion
 
   // #region 핸들러
   const handleParkingLotSelect = (parkingLot: ParkingLot) => {
     setSelectedId(parkingLot.id);
-  };
-
-  const handleDropdownSelect = (parkingLot: ParkingLot) => {
-    setSelectedId(parkingLot.id);
-    setIsDropdownOpen(false);
   };
 
   const handleConfirm = async () => {
@@ -98,168 +93,93 @@ export default function ParkingLotSelection({
     : null;
   // #endregion
 
-  // #region 이펙트
-  // 드롭다운 외부 클릭 시 닫기
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
 
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isDropdownOpen]);
-  // #endregion
 
-  // 모달 모드에서 닫혀있으면 렌더링하지 않음
-  if (isModal && !isModalOpen) return null;
+  // #region 설정 객체들
+  const headerConfig: HeaderConfig = useMemo(() => ({
+    title: '현장 선택',
+    description: '관리할 현장을 선택해주세요'
+  }), []);
 
-  // #region 공통 콘텐츠
-  const content = (
-    <div className="flex flex-col h-full rounded-lg border shadow-lg bg-card border-border">
-      {/* 헤더 */}
-      <div className="flex-shrink-0 p-4 rounded-t-lg border-b-2 shadow-sm border-border bg-serial-4">
-        <div className="flex gap-6 justify-between items-center">
-          {/* 좌측: 타이틀 */}
-          <div className="flex-shrink-0">
-            <h1 className="text-xl font-bold text-foreground">
-              현장 선택
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              관리할 현장을 선택해주세요
-            </p>
-          </div>
-          
-          {/* 우측: 현장 선택 드롭다운 */}
-          <div className="flex-1 max-w-md">
-            <div ref={dropdownRef} className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-between w-full px-4 py-2.5 text-left rounded-lg border transition-all border-border bg-background text-foreground hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm"
-              >
-                <div className="flex gap-2 items-center">
-                  <Building2 className="w-4 h-4 text-muted-foreground" />
-                  <span className={selectedParkingLot ? "text-foreground" : "text-muted-foreground"}>
-                    {selectedParkingLot ? selectedParkingLot.name : "현장을 선택해주세요..."}
-                  </span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {/* 드롭다운 메뉴 */}
-              {isDropdownOpen && (
-                <div className="overflow-y-auto absolute right-0 left-0 top-full z-10 mt-1 max-h-60 rounded-lg border shadow-lg bg-background border-border">
-                  {parkingLots.length > 0 ? (
-                    parkingLots.map((lot) => (
-                      <button
-                        key={lot.id}
-                        onClick={() => handleDropdownSelect(lot)}
-                        className="flex gap-3 items-center px-4 py-3 w-full text-left border-b transition-colors hover:bg-counter-1 border-border last:border-b-0"
-                      >
-                        <div className="flex-1">
-                          <div className="font-medium text-foreground">{lot.name}</div>
-                          {lot.description && (
-                            <div className="text-sm text-muted-foreground">{lot.description}</div>
-                          )}
-                        </div>
-                        {selectedId === lot.id && (
-                          <Check className="w-4 h-4 text-primary" />
-                        )}
-                      </button>
-                    ))
-                  ) : (
-                    <div className="px-4 py-3 text-sm text-muted-foreground">
-                      사용 가능한 현장이 없습니다
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+  const actionButtonConfig: ActionButtonConfig = useMemo(() => ({
+    label: '확인',
+    loadingLabel: '처리 중...',
+    icon: Check
+  }), []);
 
-          {/* 모달 닫기 버튼 */}
-          {isModal && (
-            <button
-              onClick={handleClose}
-              className="p-2 rounded-md cursor-pointer text-muted-foreground hover:text-foreground hover:bg-counter-2"
-              aria-label="닫기"
-            >
-              <X size={20} />
-            </button>
+  const emptyStateConfig: EmptyStateConfig = useMemo(() => ({
+    icon: Building2,
+    title: '사용 가능한 현장이 없습니다',
+    description: '현재 계정에 할당된 현장이 없습니다',
+    tips: [
+      '관리자에게 현장 권한을 요청해주세요',
+      '계정 설정을 확인해주세요'
+    ]
+  }), []);
+
+  // 테이블 컬럼 정의
+  const columns: BaseTableColumn<ParkingLot>[] = useMemo(() => [
+    {
+      key: 'name',
+      header: '현장명',
+      align: 'start',
+    },
+    {
+      key: 'description',
+      header: '설명',
+      align: 'start',
+      render: (value) => (value as string) || '-',
+    },
+    {
+      header: '선택',
+      align: 'center',
+      width: '80px',
+      cell: (item) => (
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
+          selectedId === item.id
+            ? 'border-primary bg-primary'
+            : 'border-border bg-card hover:border-primary hover:border-opacity-60'
+        }`}>
+          {selectedId === item.id && (
+            <Check className="w-3 h-3 text-primary-foreground" />
           )}
         </div>
-      </div>
+      )
+    },
+  ], [selectedId]);
+  // #endregion
 
-      {/* 콘텐츠 영역 */}
-      <div className="flex overflow-hidden flex-col flex-1 p-2 bg-serial-1">
-
-
-
-        {/* 주차장 목록 테이블 */}
-        <div className="flex flex-col flex-1 p-4 min-h-0">
-          <div className="flex flex-col flex-1 min-h-0 rounded-lg border shadow-sm bg-background border-border">
-            <ParkingLotTable
-              parkingLots={parkingLots}
-              selectedId={selectedId}
-              onParkingLotSelect={handleParkingLotSelect}
-            />
-          </div>
-        </div>
-
-        {/* 액션 버튼 */}
-        <div className="flex-shrink-0 p-3 mt-2 rounded-lg border-t-2 shadow-sm border-border bg-serial-2">
-          <ActionButtons
-            selectedId={selectedId}
-            isLoading={isLoading}
-            onConfirm={handleConfirm}
-          />
-        </div>
+  // #region 검색 컨트롤 (선택된 현장 정보 표시)
+  const searchControl = (
+    <div className="flex gap-3 items-center p-3 h-12 rounded-lg border bg-primary-0 border-primary-2">
+      <Building2 className="w-5 h-5 text-primary" />
+      <div className="flex-1 font-medium text-foreground">
+        {selectedParkingLot ? selectedParkingLot.name : '아래 테이블에서 현장을 선택해주세요'}
       </div>
     </div>
   );
   // #endregion
 
+  // 모달 모드에서 닫혀있으면 렌더링하지 않음
+  if (isModal && !isModalOpen) return null;
+
   // #region 렌더링
-  if (isModal) {
-    // 모달 모드
-    return (
-      <div 
-        className="flex fixed inset-0 z-50 justify-center items-center font-multilang"
-        style={{ 
-          backgroundColor: `hsla(var(--modal-overlay))`,
-          fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
-        }}
-        dir={isRTL ? 'rtl' : 'ltr'}
-        onClick={handleClose}
-      >
-                  <div 
-            className="mx-4 w-full max-w-3xl h-[70vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-          {content}
-        </div>
-      </div>
-    );
-  } else {
-    // 페이지 모드
-    return (
-      <Portal containerId="parking-lot-selection-portal">
-        <div 
-          className={`flex fixed inset-0 z-50 justify-center items-center bg-background font-multilang`}
-          dir={isRTL ? 'rtl' : 'ltr'}
-          style={{ 
-            fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
-          }}
-        >
-          <div className="mx-4 w-full max-w-3xl h-[70vh] flex flex-col">
-            {content}
-          </div>
-        </div>
-      </Portal>
-    );
-  }
+  return (
+    <SelectionDialog
+      isModal={isModal}
+      items={parkingLots}
+      selectedItem={selectedParkingLot || null}
+      isLoading={isLoading}
+      header={headerConfig}
+      actionButton={actionButtonConfig}
+      emptyState={emptyStateConfig}
+      columns={columns}
+      searchControl={searchControl}
+      onItemSelect={handleParkingLotSelect}
+      onConfirm={handleConfirm}
+      onClose={handleClose}
+      onSelectionComplete={onSelectionComplete}
+    />
+  );
   // #endregion
 } 

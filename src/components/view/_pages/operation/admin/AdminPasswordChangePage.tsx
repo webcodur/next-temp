@@ -8,7 +8,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
@@ -190,57 +190,61 @@ export default function AdminPasswordChangePage() {
 
       {/* 폼 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        <GridForm gap="20px">
-          <GridForm.Row>
-            <GridForm.Label required>
-              현재 비밀번호
-            </GridForm.Label>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="password"
-                value={formData.currentPassword}
-                onChange={(value) => handleFieldChange('currentPassword', value)}
-                placeholder="현재 비밀번호"
-                disabled={isSubmitting}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+        {(() => {
+          const fields: GridFormFieldSchema[] = [
+            {
+              id: 'currentPassword',
+              label: '현재 비밀번호',
+              required: true,
+              component: (
+                <SimpleTextInput
+                  type="password"
+                  value={formData.currentPassword}
+                  onChange={(value) => handleFieldChange('currentPassword', value)}
+                  placeholder="현재 비밀번호"
+                  disabled={isSubmitting}
+                />
+              )
+            },
+            {
+              id: 'newPassword',
+              label: '새 비밀번호',
+              required: true,
+              component: (
+                <SimpleTextInput
+                  type="password"
+                  value={formData.newPassword}
+                  onChange={(value) => handleFieldChange('newPassword', value)}
+                  placeholder="새 비밀번호 (최소 6자)"
+                  disabled={isSubmitting}
+                />
+              )
+            },
+            {
+              id: 'confirmPassword',
+              label: '비밀번호 확인',
+              required: true,
+              component: (
+                <div>
+                  <SimpleTextInput
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(value) => handleFieldChange('confirmPassword', value)}
+                    placeholder="비밀번호 확인"
+                    disabled={isSubmitting}
+                  />
+                  {showPasswordError && (
+                    <p className="mt-1 text-sm text-destructive">
+                      비밀번호가 일치하지 않습니다.
+                    </p>
+                  )}
+                </div>
+              )
+            }
+          ];
 
-          <GridForm.Row>
-            <GridForm.Label required>
-              새 비밀번호
-            </GridForm.Label>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="password"
-                value={formData.newPassword}
-                onChange={(value) => handleFieldChange('newPassword', value)}
-                placeholder="새 비밀번호 (최소 6자)"
-                disabled={isSubmitting}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label required>
-              비밀번호 확인
-            </GridForm.Label>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="password"
-                value={formData.confirmPassword}
-                onChange={(value) => handleFieldChange('confirmPassword', value)}
-                placeholder="비밀번호 확인"
-                disabled={isSubmitting}
-              />
-              {showPasswordError && (
-                <p className="mt-1 text-sm text-destructive">
-                  비밀번호가 일치하지 않습니다.
-                </p>
-              )}
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+          return <GridFormAuto fields={fields} gap="20px" />;
+        })()}
       </div>
 
       {/* 저장 버튼 - 우하단 고정 */}

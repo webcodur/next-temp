@@ -4,6 +4,8 @@
   책임: 건물→호실→개인/차량의 계층 구조를 시각적으로 표현한다.
 */
 
+import { Workflow } from 'lucide-react';
+
 // #region 타입
 interface ChartNode {
   id: string;
@@ -133,10 +135,22 @@ const getNodeStroke = (type: ChartNode['type'], isSelected: boolean, nodeId: str
 // #region 렌더링
 export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationChartProps) {
   return (
-    <div className="p-6 rounded-lg border bg-card border-border">
-      <h3 className="mb-4 text-lg font-semibold">조직도 및 통합 다이어그램</h3>
+    <div className="p-4 h-full rounded-lg border shadow-sm bg-card border-border/50">
+      <div className="space-y-4">
+        {/* 헤더 */}
+        <div className="pb-3 border-b border-primary/20">
+          <div className="flex gap-3 items-center mb-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Workflow className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-foreground">조직도 및 통합 다이어그램</h3>
+              <p className="text-sm text-muted-foreground">시스템 구조와 관계</p>
+            </div>
+          </div>
+        </div>
       
-      <div className="flex justify-center">
+        <div className="flex justify-center">
         <svg width="450" height="380" className="rounded-lg border shadow-sm border-border bg-background">
           {/* 배경 그리드 */}
           <defs>
@@ -242,7 +256,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
                     x={node.x}
                     y={node.y + 20}
                     textAnchor="middle"
-                    className="text-xs opacity-80 pointer-events-none select-none fill-muted-foreground"
+                    className="text-sm opacity-80 pointer-events-none select-none fill-muted-foreground"
                     style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }}
                   >
                     준비중
@@ -255,7 +269,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
       </div>
       
       {/* 범례 */}
-      <div className="flex flex-wrap gap-6 justify-center mt-6 text-xs text-muted-foreground">
+      <div className="flex flex-wrap gap-6 justify-center mt-6 text-sm text-muted-foreground">
         <div className="flex gap-2 items-center">
           <div className="w-6 h-0.5 opacity-80" style={{ backgroundColor: 'hsl(var(--muted-foreground))' }}></div>
           <span>실선: 계층 관계</span>
@@ -284,6 +298,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
           ></div>
           <span>준비중 (클릭 불가)</span>
         </div>
+      </div>
       </div>
     </div>
   );

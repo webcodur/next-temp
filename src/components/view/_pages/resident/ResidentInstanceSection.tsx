@@ -8,7 +8,7 @@ import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { searchInstances } from '@/services/instances/instances$_GET';
@@ -34,7 +34,6 @@ export default function ResidentInstanceSection({
   const [modalMessage, setModalMessage] = useState('');
   
   // 이동 섹션 상태
-  const [showMoveSection, setShowMoveSection] = useState(false);
   const [instances, setInstances] = useState<Instance[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedInstanceId, setSelectedInstanceId] = useState<number | null>(null);
@@ -45,9 +44,6 @@ export default function ResidentInstanceSection({
   // #endregion
 
   // #region 핸들러
-  const handleToggleMoveSection = useCallback(() => {
-    setShowMoveSection((prev) => !prev);
-  }, []);
 
   const handleCreateInstanceRelation = useCallback(() => {
     // TODO: 호실 관계 생성 모달 또는 페이지로 이동
@@ -111,10 +107,8 @@ export default function ResidentInstanceSection({
   }, []);
 
   useEffect(() => {
-    if (showMoveSection) {
-      loadInstances();
-    }
-  }, [showMoveSection, loadInstances]);
+    loadInstances();
+  }, [loadInstances]);
 
   const instanceOptions = useMemo(() => {
     return instances
@@ -124,11 +118,6 @@ export default function ResidentInstanceSection({
         label: `${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`.trim(),
       }));
   }, [instances, currentResidence?.instanceId]);
-
-  const selectedInstance = useMemo(() => {
-    if (!selectedInstanceId) return null;
-    return instances.find(instance => instance.id === selectedInstanceId) || null;
-  }, [selectedInstanceId, instances]);
 
   const isMoveValid = useMemo(() => {
     return selectedInstanceId !== null && selectedInstanceId !== currentResidence?.instanceId;
@@ -258,51 +247,84 @@ export default function ResidentInstanceSection({
         </div>
 
         {currentResidence?.instance ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">주소</label>
-                <div className="flex gap-2 items-center mt-1">
-                  <MapPin size={16} className="text-muted-foreground" />
-                  <span className="text-foreground">
-                    {`${currentResidence.instance.address1Depth} ${currentResidence.instance.address2Depth} ${currentResidence.instance.address3Depth || ''}`.trim()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">호실 타입</label>
-                <div className="mt-1 text-foreground">
-                  {(() => {
-                    const typeMap = {
-                      GENERAL: '일반',
-                      TEMP: '임시',
-                      COMMERCIAL: '상업',
-                    };
-                    return typeMap[currentResidence.instance.instanceType as keyof typeof typeMap] || currentResidence.instance.instanceType;
-                  })()}
-                </div>
-              </div>
-            </div>
-            
-            {currentResidence.memo && (
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">메모</label>
-                <div className="mt-1 text-foreground">{currentResidence.memo}</div>
-              </div>
-            )}
+          (() => {
+            const currentResidenceFields: GridFormFieldSchema[] = [
+              {
+                id: 'instanceId',
+                label: '호실 ID',
+                component: (
+                  <div className="flex items-center px-3 py-2 bg-blue-50 rounded-md border border-blue-200">
+                    <span className="font-medium text-blue-700">
+                      #{currentResidence.instance.id}
+                    </span>
+                  </div>
+                ),
+                rules: 'API에서 관리하는 호실 고유 식별자'
+              },
+              {
+                id: 'address',
+                label: '주소 정보',
+                component: (
+                  <div className="flex gap-2 items-center px-3 py-2 bg-green-50 rounded-md border border-green-200">
+                    <MapPin size={16} className="text-green-600" />
+                    <span className="text-foreground">
+                      {`${currentResidence.instance.address1Depth} ${currentResidence.instance.address2Depth} ${currentResidence.instance.address3Depth || ''}`.trim()}
+                    </span>
+                  </div>
+                ),
+                rules: '1차/2차/3차 주소 정보'
+              },
+              {
+                id: 'instanceType',
+                label: '호실 타입',
+                component: (
+                  <div className="flex items-center px-3 py-2 bg-purple-50 rounded-md border border-purple-200">
+                    <span className="text-purple-700 font-medium">
+                      {(() => {
+                        const typeMap = {
+                          GENERAL: '일반',
+                          TEMP: '임시',
+                          COMMERCIAL: '상업',
+                        };
+                        return typeMap[currentResidence.instance.instanceType as keyof typeof typeMap] || currentResidence.instance.instanceType;
+                      })()}
+                    </span>
+                  </div>
+                ),
+                rules: 'GENERAL/TEMP/COMMERCIAL 타입'
+              },
+              {
+                id: 'relationInfo',
+                label: '관계 정보',
+                component: (
+                  <div className="px-3 py-2 bg-amber-50 rounded-md border border-amber-200">
+                    <div className="text-amber-800">
+                      <div className="font-medium">관계 ID: #{currentResidence.id}</div>
+                      {currentResidence.memo && (
+                        <div className="text-sm mt-1">메모: {currentResidence.memo}</div>
+                      )}
+                      {currentResidence.createdAt && (
+                        <div className="text-xs mt-1 text-amber-600">
+                          생성일: {new Date(currentResidence.createdAt).toLocaleString('ko-KR')}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ),
+                rules: '거주자-호실 관계 상세 정보'
+              }
+            ];
 
-            <div className="flex gap-3 pt-4 border-t border-border">
-              <Button 
-                variant="primary" 
-                size="default"
-                onClick={handleToggleMoveSection}
-                title={showMoveSection ? '이동 섹션 닫기' : '다른 호실로 이동'}
-              >
-                <Edit size={16} />
-                {showMoveSection ? '이동 섹션 닫기' : '호실 이동'}
-              </Button>
-            </div>
-          </div>
+            return (
+              <div className="space-y-4">
+                <GridFormAuto 
+                  fields={currentResidenceFields}
+                  gap="16px"
+                  bottomRightActions={null}
+                />
+              </div>
+            );
+          })()
         ) : (
           <div className="py-8 text-center">
             <p className="mb-4 text-muted-foreground">현재 연결된 거주지가 없습니다.</p>
@@ -320,8 +342,7 @@ export default function ResidentInstanceSection({
       </div>
 
       {/* 호실 이동 섹션 (인라인) */}
-      {showMoveSection && (
-        <div className="p-6 rounded-lg border bg-card border-border">
+      <div className="p-6 rounded-lg border bg-card border-border">
           <div className="flex gap-2 items-center mb-4">
             <Save size={20} />
             <h2 className="text-lg font-semibold text-foreground">호실 이동</h2>
@@ -339,81 +360,74 @@ export default function ResidentInstanceSection({
             </div>
           )}
 
-          <GridForm 
-            
-            gap="20px"
-            bottomRightActions={(
-              <div className="flex gap-3">
-                <Button
-                  variant="secondary"
-                  onClick={handleToggleMoveSection}
-                  disabled={isMoving}
-                >
-                  닫기
-                </Button>
-                <CrudButton
-                  action="save"
-                  onClick={handleExecuteMove}
-                  disabled={!isMoveValid || isMoving || isSearching}
-                  title={isMoving ? '이동 중...' : !isMoveValid ? '호실을 선택해주세요' : '호실 이동 실행'}
-                >
-                  {isMoving ? '이동 중...' : '이동 실행'}
-                </CrudButton>
-              </div>
-            )}
-          >
-            <GridForm.Row>
-              <GridForm.Label required>
-                새 거주지
-              </GridForm.Label>
-              <GridForm.Content>
-                <SimpleDropdown
-                  value={selectedInstanceId?.toString() || ''}
-                  onChange={handleInstanceChange}
-                  options={instanceOptions}
-                  placeholder={isSearching ? '호실 목록을 불러오는 중...' : '이동할 호실을 선택하세요'}
-                  disabled={isSearching || isMoving}
-                  validationRule={{ type: 'free', mode: 'create' }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            <GridForm.Row>
-              <GridForm.Label>
-                이동 사유
-              </GridForm.Label>
-              <GridForm.Content>
-                <SimpleTextInput
-                  value={moveMemo}
-                  onChange={setMoveMemo}
-                  placeholder="이동 사유나 메모를 입력하세요"
-                  disabled={isMoving}
-                  validationRule={{ type: 'free', mode: 'create' }}
-                />
-              </GridForm.Content>
-            </GridForm.Row>
-
-            {/* 선택된 호실 미리보기 */}
-            {selectedInstance && (
-              <GridForm.Row>
-                <GridForm.Label>
-                  선택된 호실
-                </GridForm.Label>
-                <GridForm.Content>
-                  <div className="flex gap-2 items-center text-foreground">
-                    <MapPin size={16} className="text-muted-foreground" />
+          {(() => {
+            const fields: GridFormFieldSchema[] = [
+              {
+                id: 'currentResidence',
+                label: '현재 거주지',
+                component: (
+                  <div className="flex gap-2 items-center px-3 py-2 rounded-md text-foreground bg-muted/30">
+                    <Home size={16} className="text-muted-foreground" />
                     <span>
-                      {`${selectedInstance.address1Depth} ${selectedInstance.address2Depth} ${selectedInstance.address3Depth || ''}`.trim()} (ID: {selectedInstance.id})
+                      {currentResidence?.instance 
+                        ? `${currentResidence.instance.address1Depth} ${currentResidence.instance.address2Depth} ${currentResidence.instance.address3Depth || ''}`.trim()
+                        : '연결된 거주지 없음'
+                      }
                     </span>
                   </div>
-                </GridForm.Content>
-              </GridForm.Row>
-            )}
+                ),
+                rules: '현재 거주 중인 호실 정보'
+              },
+              {
+                id: 'newInstance',
+                label: '새 거주지',
+                required: true,
+                component: (
+                  <SimpleDropdown
+                    value={selectedInstanceId?.toString() || ''}
+                    onChange={handleInstanceChange}
+                    options={instanceOptions}
+                    placeholder={isSearching ? '호실 목록을 불러오는 중...' : '이동할 호실을 선택하세요'}
+                    disabled={isSearching || isMoving}
+                    validationRule={{ type: 'free', mode: 'create' }}
+                  />
+                ),
+                rules: '이동할 새로운 호실을 선택하세요'
+              },
+              {
+                id: 'moveMemo',
+                label: '이동 사유',
+                component: (
+                  <SimpleTextInput
+                    value={moveMemo}
+                    onChange={setMoveMemo}
+                    placeholder="이동 사유나 메모를 입력하세요"
+                    disabled={isMoving}
+                    validationRule={{ type: 'free', mode: 'create' }}
+                  />
+                ),
+                rules: '이동 사유를 기록합니다 (선택사항)'
+              }
+            ];
 
-            
-          </GridForm>
+            return (
+              <GridFormAuto 
+                fields={fields}
+                gap="20px"
+                bottomRightActions={
+                  <CrudButton
+                    action="save"
+                    onClick={handleExecuteMove}
+                    disabled={!isMoveValid || isMoving || isSearching}
+                    title={isMoving ? '이동 중...' : !isMoveValid ? '호실을 선택해주세요' : '호실 이동 실행'}
+                  >
+                    {isMoving ? '이동 중...' : '이동 실행'}
+                  </CrudButton>
+                }
+              />
+            );
+          })()}
         </div>
-      )}
 
       {/* 전체 호실 관계 목록 */}
       <div className="p-6 rounded-lg border bg-card border-border">

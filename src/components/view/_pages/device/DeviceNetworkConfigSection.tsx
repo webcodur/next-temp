@@ -5,7 +5,7 @@ import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateParkingDeviceNetwork } from '@/services/devices/devices@id_network_PUT';
@@ -167,99 +167,96 @@ export default function DeviceNetworkConfigSection({
     <div className="space-y-6">
       {/* 네트워크 설정 섹션 */}
       <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 설정을 관리합니다." />
-      <GridForm 
-        
-        gap="20px"
-        bottomLeftActions={(
-          <Button 
-            variant="secondary" 
-            onClick={handleReset}
-            disabled={!hasChanges || isSubmitting}
-            title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-          >
-            <RotateCcw size={16} />
-            복구
-          </Button>
-        )}
-        bottomRightActions={(
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit} 
-            disabled={!isValid || isSubmitting}
-            title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-          >
-            <Save size={16} />
-            {isSubmitting ? '저장 중...' : '저장'}
-          </Button>
-        )}
-      >
-        <GridForm.Row>
-          <GridForm.Label required>
-            IP 주소
-          </GridForm.Label>
-          <GridForm.Rules>
-            IPv4 형식 (192.168.0.1)
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              value={formData.ip}
-              onChange={(value) => handleFieldChange('ip', value)}
-              placeholder="192.168.1.100"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'ip',
-                mode: 'edit',
-                message: 'IPv4/IPv6 허용, 예: 192.168.1.100'
-              }}
-              errorMessage={validationMessages.ip}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
+      {(() => {
+        const fields: GridFormFieldSchema[] = [
+          {
+            id: 'ip',
+            label: 'IP 주소',
+            required: true,
+            rules: 'IPv4 형식 (192.168.0.1)',
+            component: (
+              <SimpleTextInput
+                value={formData.ip}
+                onChange={(value) => handleFieldChange('ip', value)}
+                placeholder="192.168.1.100"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'ip',
+                  mode: 'edit',
+                  message: 'IPv4/IPv6 허용, 예: 192.168.1.100'
+                }}
+                errorMessage={validationMessages.ip}
+              />
+            )
+          },
+          {
+            id: 'port',
+            label: '포트',
+            required: true,
+            rules: '1-65535 범위 숫자',
+            component: (
+              <SimpleTextInput
+                value={formData.port}
+                onChange={(value) => handleFieldChange('port', value)}
+                placeholder="8080"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'port',
+                  mode: 'edit'
+                }}
+                errorMessage={validationMessages.port}
+              />
+            )
+          },
+          {
+            id: 'serverPort',
+            label: '서버 포트',
+            rules: '1-65535 범위 숫자',
+            component: (
+              <SimpleTextInput
+                value={formData.serverPort}
+                onChange={(value) => handleFieldChange('serverPort', value)}
+                placeholder="9090"
+                disabled={isSubmitting}
+                validationRule={{
+                  type: 'port',
+                  mode: 'edit'
+                }}
+                errorMessage={validationMessages.serverPort}
+              />
+            )
+          }
+        ];
 
-        <GridForm.Row>
-          <GridForm.Label required>
-            포트
-          </GridForm.Label>
-          <GridForm.Rules>
-            1-65535 범위 숫자
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              value={formData.port}
-              onChange={(value) => handleFieldChange('port', value)}
-              placeholder="8080"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'port',
-                mode: 'edit'
-              }}
-              errorMessage={validationMessages.port}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-
-        <GridForm.Row>
-          <GridForm.Label>
-            서버 포트
-          </GridForm.Label>
-          <GridForm.Rules>
-            1-65535 범위 숫자
-          </GridForm.Rules>
-          <GridForm.Content>
-            <SimpleTextInput
-              value={formData.serverPort}
-              onChange={(value) => handleFieldChange('serverPort', value)}
-              placeholder="9090"
-              disabled={isSubmitting}
-              validationRule={{
-                type: 'port',
-                mode: 'edit'
-              }}
-              errorMessage={validationMessages.serverPort}
-            />
-          </GridForm.Content>
-        </GridForm.Row>
-      </GridForm>
+        return (
+          <GridFormAuto 
+            fields={fields}
+            gap="20px"
+            bottomLeftActions={(
+              <Button 
+                variant="secondary" 
+                onClick={handleReset}
+                disabled={!hasChanges || isSubmitting}
+                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+              >
+                <RotateCcw size={16} />
+                복구
+              </Button>
+            )}
+            bottomRightActions={(
+              <Button 
+                variant="primary" 
+                onClick={handleSubmit} 
+                disabled={!isValid || isSubmitting}
+                title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
+              >
+                <Save size={16} />
+                {isSubmitting ? '저장 중...' : '저장'}
+              </Button>
+            )}
+          />
+        );
+      })()}
 
       {/* 성공 모달 */}
       <Modal

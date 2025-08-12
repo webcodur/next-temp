@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Eraser, RotateCcw } from 'lucide-react';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -148,279 +148,205 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
     )
     : null;
 
+  // 폼 필드 정의
+  const baseFields: GridFormFieldSchema[] = [
+    {
+      id: 'name',
+      label: '호실 이름',
+      required: true,
+      rules: '호실 식별명 (예: A101)',
+      component: (
+        <SimpleTextInput
+          value={data.name}
+          onChange={(value) => handleFieldChange('name', value)}
+          placeholder="호실 이름"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'ownerName',
+      label: '소유자 이름',
+      rules: '한글, 영문 2-50자',
+      component: (
+        <SimpleTextInput
+          value={data.ownerName}
+          onChange={(value) => handleFieldChange('ownerName', value)}
+          placeholder="소유자 이름"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'phone',
+      label: '전화번호',
+      rules: '010-0000-0000 형식',
+      component: (
+        <SimpleTextInput
+          value={data.phone}
+          onChange={(value) => handleFieldChange('phone', value)}
+          placeholder="전화번호"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'address1Depth',
+      label: '주소 1단계',
+      required: true,
+      rules: '시/도 (예: 서울특별시)',
+      component: (
+        <SimpleTextInput
+          value={data.address1Depth}
+          onChange={(value) => handleFieldChange('address1Depth', value)}
+          placeholder="시/도"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'address2Depth',
+      label: '주소 2단계',
+      required: true,
+      rules: '시/군/구 (예: 강남구)',
+      component: (
+        <SimpleTextInput
+          value={data.address2Depth}
+          onChange={(value) => handleFieldChange('address2Depth', value)}
+          placeholder="시/군/구"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'address3Depth',
+      label: '주소 3단계',
+      rules: '상세 주소',
+      component: (
+        <SimpleTextInput
+          value={data.address3Depth}
+          onChange={(value) => handleFieldChange('address3Depth', value)}
+          placeholder="상세 주소"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'instanceType',
+      label: '호실 타입',
+      required: true,
+      rules: '일반/임시/상업 선택',
+      component: (
+        <SimpleDropdown
+          value={data.instanceType}
+          onChange={(value) => handleFieldChange('instanceType', value)}
+          options={INSTANCE_TYPE_OPTIONS}
+          placeholder="타입을 선택하세요"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'password',
+      label: '비밀번호',
+      required: true,
+      rules: '4자리 이상 숫자/문자',
+      component: (
+        <SimpleTextInput
+          type="password"
+          value={data.password}
+          onChange={(value) => handleFieldChange('password', value)}
+          placeholder="호실 비밀번호"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'memo',
+      label: '메모',
+      rules: '자유 형식 텍스트',
+      component: (
+        <SimpleTextInput
+          value={data.memo}
+          onChange={(value) => handleFieldChange('memo', value)}
+          placeholder="메모"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ];
+
+  // edit 모드 전용 필드
+  const editFields: GridFormFieldSchema[] = mode === 'edit' && instance ? [
+    {
+      id: 'parkinglotId',
+      label: '주차장 ID',
+      rules: '시스템 자동 연결',
+      component: (
+        <SimpleTextInput
+          value={instance.parkinglotId?.toString() || '-'}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'createdAt',
+      label: '등록일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(instance.createdAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'updatedAt',
+      label: '수정일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(instance.updatedAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ] : [];
+
+  const fields = [...baseFields, ...editFields];
+
   return (
     <>
       <TitleRow title="호실 기본 정보" subtitle="호실의 기본 설정을 관리합니다." />
-      <GridForm 
-        
+      <GridFormAuto 
+        fields={fields}
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
-      >
-      <GridForm.Row>
-        <GridForm.Label required>
-          호실 이름
-        </GridForm.Label>
-        <GridForm.Rules>
-          호실 식별명 (예: A101)
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.name}
-            onChange={(value) => handleFieldChange('name', value)}
-            placeholder="호실 이름"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          소유자 이름
-        </GridForm.Label>
-        <GridForm.Rules>
-          한글, 영문 2-50자
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.ownerName}
-            onChange={(value) => handleFieldChange('ownerName', value)}
-            placeholder="소유자 이름"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          전화번호
-        </GridForm.Label>
-        <GridForm.Rules>
-          010-0000-0000 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.phone}
-            onChange={(value) => handleFieldChange('phone', value)}
-            placeholder="전화번호"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          주소 1단계
-        </GridForm.Label>
-        <GridForm.Rules>
-          시/도 (예: 서울특별시)
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.address1Depth}
-            onChange={(value) => handleFieldChange('address1Depth', value)}
-            placeholder="시/도"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          주소 2단계
-        </GridForm.Label>
-        <GridForm.Rules>
-          시/군/구 (예: 강남구)
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.address2Depth}
-            onChange={(value) => handleFieldChange('address2Depth', value)}
-            placeholder="시/군/구"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          주소 3단계
-        </GridForm.Label>
-        <GridForm.Rules>
-          상세 주소
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.address3Depth}
-            onChange={(value) => handleFieldChange('address3Depth', value)}
-            placeholder="상세 주소"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          호실 타입
-        </GridForm.Label>
-        <GridForm.Rules>
-          일반/임시/상업 선택
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleDropdown
-            value={data.instanceType}
-            onChange={(value) => handleFieldChange('instanceType', value)}
-            options={INSTANCE_TYPE_OPTIONS}
-            placeholder="타입을 선택하세요"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label required>
-          비밀번호
-        </GridForm.Label>
-        <GridForm.Rules>
-          4자리 이상 숫자/문자
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="password"
-            value={data.password}
-            onChange={(value) => handleFieldChange('password', value)}
-            placeholder="호실 비밀번호"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          메모
-        </GridForm.Label>
-        <GridForm.Rules>
-          자유 형식 텍스트
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.memo}
-            onChange={(value) => handleFieldChange('memo', value)}
-            placeholder="메모"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      {/* edit 모드에서만 표시되는 추가 정보 */}
-      {mode === 'edit' && instance && (
-        <>
-          <GridForm.Row>
-            <GridForm.Label>
-              주차장 ID
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 연결
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={instance.parkinglotId?.toString() || '-'}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              등록일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(instance.createdAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              수정일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(instance.updatedAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </>
-      )}
-      </GridForm>
+      />
     </>
   );
 };

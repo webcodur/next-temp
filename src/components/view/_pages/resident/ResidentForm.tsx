@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Eraser, RotateCcw } from 'lucide-react';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -143,259 +143,174 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
     )
     : null;
 
+  // 폼 필드 정의
+  const baseFields: GridFormFieldSchema[] = [
+    {
+      id: 'name',
+      label: '이름',
+      required: true,
+      rules: '한글, 영문 2-50자',
+      component: (
+        <SimpleTextInput
+          value={data.name}
+          onChange={(value) => handleFieldChange('name', value)}
+          placeholder="이름"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'phone',
+      label: '전화번호',
+      rules: '010-0000-0000 형식',
+      component: (
+        <SimpleTextInput
+          value={data.phone}
+          onChange={(value) => handleFieldChange('phone', value)}
+          placeholder="전화번호"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'email',
+      label: '이메일',
+      rules: '유효한 이메일 형식',
+      component: (
+        <SimpleTextInput
+          type="email"
+          value={data.email}
+          onChange={(value) => handleFieldChange('email', value)}
+          placeholder="이메일"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'birthDate',
+      label: '생년월일',
+      rules: 'YYYY-MM-DD 형식',
+      component: (
+        <SimpleTextInput
+          type="text"
+          value={data.birthDate}
+          onChange={(value) => handleFieldChange('birthDate', value)}
+          placeholder="YYYY-MM-DD"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'gender',
+      label: '성별',
+      rules: '남성/여성 선택',
+      component: (
+        <SimpleDropdown
+          value={data.gender}
+          onChange={(value) => handleFieldChange('gender', value)}
+          options={GENDER_OPTIONS}
+          placeholder="성별을 선택하세요"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'emergencyContact',
+      label: '비상연락처',
+      rules: '010-0000-0000 형식',
+      component: (
+        <SimpleTextInput
+          value={data.emergencyContact}
+          onChange={(value) => handleFieldChange('emergencyContact', value)}
+          placeholder="비상연락처"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'memo',
+      label: '메모',
+      rules: '자유 형식 텍스트',
+      component: (
+        <SimpleTextInput
+          value={data.memo}
+          onChange={(value) => handleFieldChange('memo', value)}
+          placeholder="메모"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ];
+
+  // edit 모드 전용 필드
+  const editFields: GridFormFieldSchema[] = mode === 'edit' && resident ? [
+    {
+      id: 'residentId',
+      label: '거주자 ID',
+      rules: '시스템 자동 생성',
+      component: (
+        <SimpleTextInput
+          value={resident.id?.toString() || '-'}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'createdAt',
+      label: '등록일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(resident.createdAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'updatedAt',
+      label: '수정일자',
+      rules: '시스템 자동 기록',
+      component: (
+        <SimpleTextInput
+          value={new Date(resident.updatedAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })}
+          onChange={() => {}}
+          disabled={true}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    }
+  ] : [];
+
+  const fields = [...baseFields, ...editFields];
+
   return (
     <>
       <TitleRow title="거주자 기본 정보" subtitle="거주자의 개인 정보를 관리합니다." />
-      <GridForm 
-        
+      <GridFormAuto 
+        fields={fields}
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
-      >
-      <GridForm.Row>
-        <GridForm.Label required>
-          이름
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.name.length >= 2 && data.name.length <= 50 ? "success" : data.name.length > 0 ? "error" : undefined}
-          validationMessage={data.name.length >= 2 && data.name.length <= 50 ? "올바른 형식입니다" : data.name.length > 0 ? "2-50자 사이로 입력해주세요" : undefined}
-        >
-          한글, 영문 2-50자
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.name}
-            onChange={(value) => handleFieldChange('name', value)}
-            placeholder="이름"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          전화번호
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.phone ? (/^010-\d{4}-\d{4}$/.test(data.phone) ? "success" : "error") : undefined}
-          validationMessage={data.phone ? (/^010-\d{4}-\d{4}$/.test(data.phone) ? "올바른 형식입니다" : "010-0000-0000 형식으로 입력해주세요") : undefined}
-        >
-          010-0000-0000 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.phone}
-            onChange={(value) => handleFieldChange('phone', value)}
-            placeholder="전화번호"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          이메일
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.email ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) ? "success" : "error") : "info"}
-          validationMessage={data.email ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) ? "올바른 이메일 형식입니다" : "유효하지 않은 이메일 형식입니다") : "선택사항입니다"}
-        >
-          유효한 이메일 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="email"
-            value={data.email}
-            onChange={(value) => handleFieldChange('email', value)}
-            placeholder="이메일"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          생년월일
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.birthDate ? (/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate) ? "success" : "warning") : "info"}
-          validationMessage={data.birthDate ? (/^\d{4}-\d{2}-\d{2}$/.test(data.birthDate) ? "올바른 날짜 형식입니다" : "YYYY-MM-DD 형식으로 입력해주세요") : "선택사항입니다"}
-        >
-          YYYY-MM-DD 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            type="text"
-            value={data.birthDate}
-            onChange={(value) => handleFieldChange('birthDate', value)}
-            placeholder="YYYY-MM-DD"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          성별
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.gender ? "success" : "info"}
-          validationMessage={data.gender ? "선택 완료" : "선택사항입니다"}
-        >
-          남성/여성 선택
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleDropdown
-            value={data.gender}
-            onChange={(value) => handleFieldChange('gender', value)}
-            options={GENDER_OPTIONS}
-            placeholder="성별을 선택하세요"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          비상연락처
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.emergencyContact ? (/^010-\d{4}-\d{4}$/.test(data.emergencyContact) ? "success" : "warning") : "info"}
-          validationMessage={data.emergencyContact ? (/^010-\d{4}-\d{4}$/.test(data.emergencyContact) ? "올바른 형식입니다" : "010-0000-0000 형식을 권장합니다") : "선택사항입니다"}
-        >
-          010-0000-0000 형식
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.emergencyContact}
-            onChange={(value) => handleFieldChange('emergencyContact', value)}
-            placeholder="비상연락처"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      <GridForm.Row>
-        <GridForm.Label>
-          메모
-        </GridForm.Label>
-        <GridForm.Rules 
-          validationStatus={data.memo ? (data.memo.length <= 200 ? "success" : "warning") : "info"}
-          validationMessage={data.memo ? (data.memo.length <= 200 ? `${data.memo.length}/200자` : "200자 이내로 작성을 권장합니다") : "선택사항입니다"}
-        >
-          자유 형식 텍스트
-        </GridForm.Rules>
-        <GridForm.Content>
-          <SimpleTextInput
-            value={data.memo}
-            onChange={(value) => handleFieldChange('memo', value)}
-            placeholder="메모"
-            disabled={isReadOnly}
-            validationRule={{
-              type: 'free',
-              mode: mode
-            }}
-          />
-        </GridForm.Content>
-      </GridForm.Row>
-
-      {/* edit 모드에서만 표시되는 추가 정보 */}
-      {mode === 'edit' && resident && (
-        <>
-          <GridForm.Row>
-            <GridForm.Label>
-              거주자 ID
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 생성
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={resident.id?.toString() || '-'}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              등록일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(resident.createdAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>
-              수정일자
-            </GridForm.Label>
-            <GridForm.Rules>
-              시스템 자동 기록
-            </GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(resident.updatedAt).toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-                onChange={() => {}}
-                disabled={true}
-                validationRule={{
-                  type: 'free',
-                  mode: mode
-                }}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </>
-      )}
-      </GridForm>
+      />
     </>
   );
 };

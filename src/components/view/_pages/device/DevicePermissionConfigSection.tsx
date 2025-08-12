@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, forwardRef, useImperativeHandle } 
 import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto } from '@/components/ui/ui-layout/grid-form';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { updateParkingDevicePermissions } from '@/services/devices/devices@id_permissions_PUT';
@@ -254,8 +254,8 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
 
       {/* 액션 버튼 - edit 모드에서만 표시 */}
       {mode === 'edit' && (
-        <GridForm
-          
+        <GridFormAuto
+          fields={[]} // 빈 필드 배열
           gap="0px"
           bottomLeftActions={(
             <Button 
@@ -279,10 +279,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
               {isSubmitting ? '저장 중...' : '저장'}
             </Button>
           )}
-        >
-          {/* 빈 콘텐츠 - 단순 액션바 레이아웃 용도 */}
-          <div className="hidden" />
-        </GridForm>
+        />
       )}
 
       {/* 모달 - edit 모드에서만 표시 */}

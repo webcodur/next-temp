@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -95,7 +95,9 @@ function violationToProcessForm(violation: CarViolation): ProcessFormData {
 function violationToEditForm(violation: CarViolation): EditFormData {
   return {
     description: violation.description || '',
-    evidenceImageUrls: violation.evidenceImageUrls?.join('\n') || '',
+    evidenceImageUrls: Array.isArray(violation.evidenceImageUrls) 
+      ? violation.evidenceImageUrls.join('\n') 
+      : '',
     severityLevel: violation.severityLevel,
     penaltyPoints: violation.penaltyPoints,
     status: violation.status,
@@ -354,33 +356,38 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         <TitleRow title="빠른 위반 기록" subtitle="빠른 위반 기록 처리를 위한 빠른 입력 폼입니다." />
         <div className="p-4 pt-0">
         
-        <GridForm className="overflow-visible">
-          <GridForm.Row>
-            <GridForm.Label>처리 상태</GridForm.Label>
-            <GridForm.Rules>상태 선택</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={processForm.status}
-                options={STATUS_OPTIONS}
-                onChange={(value) => handleProcessInputChange('status', value as ViolationStatus)}
-                placeholder="상태를 선택하세요"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>처리 메모</GridForm.Label>
-            <GridForm.Rules>처리 내용 입력</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextArea
-                value={processForm.processingNote}
-                onChange={(value) => handleProcessInputChange('processingNote', value)}
-                placeholder="처리 관련 메모를 입력하세요"
-                rows={2}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+        {(() => {
+          const fields: GridFormFieldSchema[] = [
+            {
+              id: 'status',
+              label: '처리 상태',
+              rules: '상태 선택',
+              component: (
+                <SimpleDropdown
+                  value={processForm.status}
+                  options={STATUS_OPTIONS}
+                  onChange={(value) => handleProcessInputChange('status', value as ViolationStatus)}
+                  placeholder="상태를 선택하세요"
+                />
+              )
+            },
+            {
+              id: 'processingNote',
+              label: '처리 메모',
+              rules: '처리 내용 입력',
+              component: (
+                <SimpleTextArea
+                  value={processForm.processingNote}
+                  onChange={(value) => handleProcessInputChange('processingNote', value)}
+                  placeholder="처리 관련 메모를 입력하세요"
+                  rows={2}
+                />
+              )
+            }
+          ];
+
+          return <GridFormAuto fields={fields} className="overflow-visible" />;
+        })()}
         
           <div className="flex gap-2 justify-end mt-4">
             <Button
@@ -402,175 +409,197 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         <TitleRow title="상세 정보" subtitle="상세 정보" />
         <div className="p-6 pt-0">
         
-        <GridForm >
-          {/* 시스템 생성 필드 (읽기 전용) */}
-          <GridForm.Row>
-            <GridForm.Label>위반 ID</GridForm.Label>
-            <GridForm.Rules>자동 생성</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={violation.id.toString()}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>차량번호</GridForm.Label>
-            <GridForm.Rules>시스템 입력</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={violation.carNumber}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>위반 유형</GridForm.Label>
-            <GridForm.Rules>위반 분류</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={getViolationTypeText(violation.violationType)}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>위반 코드</GridForm.Label>
-            <GridForm.Rules>시스템 코드</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={violation.violationCode}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>위반 장소</GridForm.Label>
-            <GridForm.Rules>위반 위치</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={violation.violationLocation || ''}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>위반 시각</GridForm.Label>
-            <GridForm.Rules>발생 일시</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(violation.violationTime).toLocaleString('ko-KR')}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>신고자 유형</GridForm.Label>
-            <GridForm.Rules>신고 주체</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={getReporterTypeText(violation.reporterType)}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>처리 완료</GridForm.Label>
-            <GridForm.Rules>처리 상태</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleCheckbox
-                checked={violation.isProcessed}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          {violation.processedAt && (
-            <GridForm.Row>
-              <GridForm.Label>처리 시각</GridForm.Label>
-              <GridForm.Rules>완료 일시</GridForm.Rules>
-              <GridForm.Content>
+        {/* 위반 정보 필드 정의 */}
+        {(() => {
+          const violationIdFields: GridFormFieldSchema[] = [
+            {
+              id: 'violationId',
+              label: '위반 ID',
+              rules: '자동 생성',
+              component: (
                 <SimpleTextInput
-                  value={violation.processedAt ? new Date(violation.processedAt).toLocaleString('ko-KR') : ''}
+                  value={violation.id.toString()}
                   disabled
                 />
-              </GridForm.Content>
-            </GridForm.Row>
-          )}
+              )
+            }
+          ];
+
+          return <GridFormAuto fields={violationIdFields} />;
+        })()}
           
-          <GridForm.Row>
-            <GridForm.Label>생성일</GridForm.Label>
-            <GridForm.Rules>등록 일시</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(violation.createdAt).toLocaleString('ko-KR')}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+        {(() => {
+          const readOnlyFields: GridFormFieldSchema[] = [
+              {
+                id: 'carNumber',
+                label: '차량번호',
+                rules: '시스템 입력',
+                component: (
+                  <SimpleTextInput
+                    value={violation.carNumber}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'violationType',
+                label: '위반 유형',
+                rules: '위반 분류',
+                component: (
+                  <SimpleTextInput
+                    value={getViolationTypeText(violation.violationType)}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'violationCode',
+                label: '위반 코드',
+                rules: '시스템 코드',
+                component: (
+                  <SimpleTextInput
+                    value={violation.violationCode}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'violationLocation',
+                label: '위반 장소',
+                rules: '위반 위치',
+                component: (
+                  <SimpleTextInput
+                    value={violation.violationLocation || ''}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'violationTime',
+                label: '위반 시각',
+                rules: '발생 일시',
+                component: (
+                  <SimpleTextInput
+                    value={new Date(violation.violationTime).toLocaleString('ko-KR')}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'reporterType',
+                label: '신고자 유형',
+                rules: '신고 주체',
+                component: (
+                  <SimpleTextInput
+                    value={getReporterTypeText(violation.reporterType)}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'isProcessed',
+                label: '처리 완료',
+                rules: '처리 상태',
+                component: (
+                  <SimpleCheckbox
+                    checked={violation.isProcessed}
+                    disabled
+                  />
+                )
+              }
+            ];
+
+            // 처리 시각이 있는 경우 추가
+            if (violation.processedAt) {
+              readOnlyFields.push({
+                id: 'processedAt',
+                label: '처리 시각',
+                rules: '완료 일시',
+                component: (
+                  <SimpleTextInput
+                    value={violation.processedAt ? new Date(violation.processedAt).toLocaleString('ko-KR') : ''}
+                    disabled
+                  />
+                )
+              });
+            }
+
+            // 생성일, 수정일 추가
+            readOnlyFields.push(
+              {
+                id: 'createdAt',
+                label: '생성일',
+                rules: '등록 일시',
+                component: (
+                  <SimpleTextInput
+                    value={new Date(violation.createdAt).toLocaleString('ko-KR')}
+                    disabled
+                  />
+                )
+              },
+              {
+                id: 'updatedAt',
+                label: '수정일',
+                rules: '최종 변경',
+                component: (
+                  <SimpleTextInput
+                    value={new Date(violation.updatedAt).toLocaleString('ko-KR')}
+                    disabled
+                  />
+                )
+              }
+            );
+
+            return <GridFormAuto fields={readOnlyFields} />;
+        })()}
           
-          <GridForm.Row>
-            <GridForm.Label>수정일</GridForm.Label>
-            <GridForm.Rules>최종 변경</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={new Date(violation.updatedAt).toLocaleString('ko-KR')}
-                disabled
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          {/* 편집 가능한 필드 */}
-          <GridForm.Row>
-            <GridForm.Label>처리 상태</GridForm.Label>
-            <GridForm.Rules>상태 변경</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleDropdown
-                value={editForm.status}
-                options={STATUS_OPTIONS}
-                onChange={(value) => handleEditInputChange('status', value as ViolationStatus)}
-                placeholder="상태를 선택하세요"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>처리 메모</GridForm.Label>
-            <GridForm.Rules>처리 내용</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextArea
-                value={editForm.processingNote}
-                onChange={(value) => handleEditInputChange('processingNote', value)}
-                placeholder="처리 관련 메모를 입력하세요"
-                rows={2}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>설명</GridForm.Label>
-            <GridForm.Rules>상황 설명</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextArea
-                value={editForm.description}
-                onChange={(value) => handleEditInputChange('description', value)}
-                placeholder="위반 상황에 대한 설명을 입력하세요"
-                rows={3}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>증거 이미지 URL</GridForm.Label>
-            <GridForm.Rules>이미지 주소</GridForm.Rules>
-            <GridForm.Content>
+        {/* 편집 가능한 필드 */}
+        {(() => {
+            const editableFields: GridFormFieldSchema[] = [
+              {
+                id: 'editStatus',
+                label: '처리 상태',
+                rules: '상태 변경',
+                component: (
+                  <SimpleDropdown
+                    value={editForm.status}
+                    options={STATUS_OPTIONS}
+                    onChange={(value) => handleEditInputChange('status', value as ViolationStatus)}
+                    placeholder="상태를 선택하세요"
+                  />
+                )
+              },
+              {
+                id: 'editProcessingNote',
+                label: '처리 메모',
+                rules: '처리 내용',
+                component: (
+                  <SimpleTextArea
+                    value={editForm.processingNote}
+                    onChange={(value) => handleEditInputChange('processingNote', value)}
+                    placeholder="처리 관련 메모를 입력하세요"
+                    rows={2}
+                  />
+                )
+              },
+              {
+                id: 'editDescription',
+                label: '설명',
+                rules: '상황 설명',
+                component: (
+                  <SimpleTextArea
+                    value={editForm.description}
+                    onChange={(value) => handleEditInputChange('description', value)}
+                    placeholder="위반 상황에 대한 설명을 입력하세요"
+                    rows={3}
+                  />
+                )
+              },
+              {
+                id: 'editEvidenceImageUrls',
+                label: '증거 이미지 URL',
+                rules: '이미지 주소',
+                component: (
               <div className="space-y-3">
                 <SimpleTextArea
                   value={editForm.evidenceImageUrls}
@@ -669,36 +698,39 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     </div>
                   </div>
                 )}
-              </div>
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>심각도</GridForm.Label>
-            <GridForm.Rules>1-10 범위</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="number"
-                value={editForm.severityLevel.toString()}
-                onChange={(value) => handleEditInputChange('severityLevel', parseInt(value) || 1)}
-                placeholder="1-10 사이의 값"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-          
-          <GridForm.Row>
-            <GridForm.Label>벌점</GridForm.Label>
-            <GridForm.Rules>0-100 범위</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                type="number"
-                value={editForm.penaltyPoints.toString()}
-                onChange={(value) => handleEditInputChange('penaltyPoints', parseInt(value) || 0)}
-                placeholder="0-100 사이의 값"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-        </GridForm>
+                  </div>
+                )
+              },
+              {
+                id: 'editSeverityLevel',
+                label: '심각도',
+                rules: '1-10 범위',
+                component: (
+                  <SimpleTextInput
+                    type="number"
+                    value={editForm.severityLevel.toString()}
+                    onChange={(value) => handleEditInputChange('severityLevel', parseInt(value) || 1)}
+                    placeholder="1-10 사이의 값"
+                  />
+                )
+              },
+              {
+                id: 'editPenaltyPoints',
+                label: '벌점',
+                rules: '0-100 범위',
+                component: (
+                  <SimpleTextInput
+                    type="number"
+                    value={editForm.penaltyPoints.toString()}
+                    onChange={(value) => handleEditInputChange('penaltyPoints', parseInt(value) || 0)}
+                    placeholder="0-100 사이의 값"
+                  />
+                )
+              }
+            ];
+
+            return <GridFormAuto fields={editableFields} />;
+        })()}
 
           {/* 상세 정보 액션 버튼 */}
           <div className="flex gap-2 justify-end mt-6">

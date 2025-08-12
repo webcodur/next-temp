@@ -305,17 +305,6 @@ export default function SystemConfigManagementPage() {
       ),
     },
     {
-      key: 'key',
-      header: '설정 키',
-      align: 'start',
-      width: '18%',
-      cell: (item: SystemConfig) => (
-        <span className="font-mono text-xs text-muted-foreground">
-          {item.key}
-        </span>
-      ),
-    },
-    {
       key: 'type',
       header: '타입',
       align: 'center',

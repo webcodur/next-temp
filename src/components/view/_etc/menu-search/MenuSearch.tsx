@@ -6,17 +6,20 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { useMenuSearch } from '@/hooks/ui-hooks/useMenuSearch';
-import { Portal } from '@/components/ui/ui-layout/portal/Portal';
-import { X, Search } from 'lucide-react';
+import { X, Search, ExternalLink, ArrowRight, Check } from 'lucide-react';
 import type { MenuSearchProps, MenuSearchResult } from './menu-search.type';
 
-// 하위 컴포넌트들
-import { MenuSearchTable } from './MenuSearchTable';
-import { ActionButtons } from './ActionButtons';
+// 공통 모듈 import
+import { 
+  SelectionDialog,
+  type HeaderConfig,
+  type ActionButtonConfig,
+  type EmptyStateConfig
+} from '@/components/ui/ui-layout/selection-dialog';
+import { BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 
 export default function MenuSearch({ 
   isModal = false, 
@@ -30,7 +33,6 @@ export default function MenuSearch({
 
   // #region 훅
   const router = useRouter();
-  const { isRTL } = useLocale();
   const {
     results,
     selectedResult,
@@ -101,113 +103,130 @@ export default function MenuSearch({
   }, [isModal, handleClose]);
   // #endregion
 
-  // #region 공통 콘텐츠
-  const content = (
-    <div className="flex flex-col h-full rounded-lg border shadow-lg bg-card border-border">
-      {/* 헤더 - 타이틀과 검색대 통합 */}
-      <div className="flex-shrink-0 p-4 border-b-2 border-border bg-serial-4 shadow-sm rounded-t-lg">
-        <div className="flex items-center justify-between gap-6">
-          {/* 좌측: 타이틀 */}
-          <div className="flex-shrink-0">
-            <h1 className="text-xl font-bold text-foreground">
-              메뉴 검색
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              원하는 페이지를 빠르게 찾아보세요
-            </p>
+  // #region 설정 객체들
+  const headerConfig: HeaderConfig = useMemo(() => ({
+    title: '메뉴 검색',
+    description: '원하는 페이지를 빠르게 찾아보세요'
+  }), []);
+
+  const actionButtonConfig: ActionButtonConfig = useMemo(() => ({
+    label: '이동',
+    loadingLabel: '이동 중...',
+    icon: ExternalLink
+  }), []);
+
+  const emptyStateConfig: EmptyStateConfig = useMemo(() => ({
+    icon: Search,
+    title: '검색 결과가 없습니다',
+    description: '입력하신 키워드와 일치하는 메뉴를 찾을 수 없습니다',
+    tips: [
+      '다른 키워드로 검색해보세요',
+      '메뉴명의 일부분만 입력해보세요',
+      '띄어쓰기 없이 검색해보세요'
+    ]
+  }), []);
+
+  // 테이블 컬럼 정의
+  const columns: BaseTableColumn<MenuSearchResult>[] = useMemo(() => [
+    {
+      key: 'fullPath',
+      header: '메뉴 경로',
+      align: 'start',
+      cell: (item) => (
+        <div className="flex gap-2 items-center">
+          {/* 메뉴 경로 */}
+          <div className="flex gap-1 items-center text-sm">
+            <span className="text-foreground">
+              {item.topLabel}
+            </span>
+            <ArrowRight size={12} className="text-muted-foreground" />
+            <span className="text-foreground">
+              {item.midLabel}
+            </span>
+            <ArrowRight size={12} className="text-muted-foreground" />
+            <span className="text-foreground">
+              {item.botLabel}
+            </span>
           </div>
-          
-          {/* 우측: 검색 입력 필드 */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
-              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                <Search className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <input
-                id="menu-search"
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder={selectedResult ? `선택됨: ${selectedResult.fullPath}` : "메뉴명을 입력해주세요..."}
-                className="block py-2.5 pr-10 pl-9 w-full rounded-lg border transition-all border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm"
-              />
-              {searchQuery && (
-                <button
-                  onClick={handleClearSearch}
-                  className="flex absolute inset-y-0 right-0 items-center pr-3 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          </div>
         </div>
+      )
+    },
+    {
+      key: 'href',
+      header: '경로',
+      align: 'start',
+      width: '200px',
+      render: (value) => (
+        <div className="flex gap-2 items-center">
+          <code className="px-2 py-1 text-xs rounded bg-counter-1 text-muted-foreground">
+            {value as string}
+          </code>
+          <ExternalLink size={12} className="text-muted-foreground" />
+        </div>
+      )
+    },
+    {
+      header: '선택',
+      align: 'center',
+      width: '80px',
+      cell: (item) => (
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
+          selectedResult?.id === item.id
+            ? 'border-primary bg-primary'
+            : 'border-border bg-card hover:border-primary hover:border-opacity-60'
+        }`}>
+          {selectedResult?.id === item.id && (
+            <Check className="w-3 h-3 text-primary-foreground" />
+          )}
+        </div>
+      )
+    },
+  ], [selectedResult]);
+  // #endregion
+
+  // #region 검색 컨트롤 (검색 입력)
+  const searchControl = (
+    <div className="relative h-12">
+      <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+        <Search className="w-5 h-5 text-primary" />
       </div>
-
-      {/* 콘텐츠 영역 */}
-      <div className="flex overflow-hidden flex-col flex-1 p-2 bg-serial-1">
-
-        {/* 메뉴 목록 테이블 (전체 목록 또는 검색 결과) */}
-        <div className="flex flex-col flex-1 min-h-0 rounded-lg bg-background border border-border shadow-sm">
-          <MenuSearchTable
-            results={results}
-            selectedResult={selectedResult}
-            onResultSelect={handleResultSelect}
-            isLoading={isLoading}
-          />
-        </div>
-
-        {/* 액션 버튼 - 항상 표시하되 활성화/비활성화만 조절 */}
-        <div className="flex-shrink-0 p-3 mt-2 border-t-2 border-border bg-serial-2 rounded-lg shadow-sm">
-          <ActionButtons
-            selectedResult={selectedResult}
-            isLoading={isLoading}
-            onNavigate={handleNavigate}
-          />
-        </div>
-      </div>
+      <input
+        id="menu-search"
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder={selectedResult ? `선택됨: ${selectedResult.botLabel}` : "메뉴명을 입력해주세요..."}
+        className="block h-full py-3 pr-10 pl-11 w-full rounded-lg border transition-all border-primary-2 bg-primary-0 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+      />
+      {searchQuery && (
+        <button
+          onClick={handleClearSearch}
+          className="flex absolute inset-y-0 right-0 items-center pr-3 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
   // #endregion
 
   // #region 렌더링
-  if (isModal) {
-    // 모달 모드
-    return (
-      <div 
-        className="flex fixed inset-0 z-50 justify-center items-center font-multilang"
-        style={{ 
-          backgroundColor: `hsla(var(--modal-overlay))`,
-          fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
-        }}
-        dir={isRTL ? 'rtl' : 'ltr'}
-        onClick={handleClose}
-      >
-        <div 
-          className="mx-4 w-full max-w-3xl h-[70vh] flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {content}
-        </div>
-      </div>
-    );
-  } else {
-    // 페이지 모드
-    return (
-      <Portal containerId="menu-search-portal">
-        <div 
-          className={`flex fixed inset-0 z-50 justify-center items-center bg-background font-multilang`}
-          dir={isRTL ? 'rtl' : 'ltr'}
-          style={{ 
-            fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
-          }}
-        >
-          <div className="mx-4 w-full max-w-3xl">
-            {content}
-          </div>
-        </div>
-      </Portal>
-    );
-  }
+  return (
+    <SelectionDialog
+      isModal={isModal}
+      items={results}
+      selectedItem={selectedResult}
+      isLoading={isLoading}
+      header={headerConfig}
+      actionButton={actionButtonConfig}
+      emptyState={emptyStateConfig}
+      columns={columns}
+      searchControl={searchControl}
+      onItemSelect={handleResultSelect}
+      onConfirm={handleNavigate}
+      onClose={handleClose}
+      onSelectionComplete={onSelectionComplete}
+    />
+  );
   // #endregion
 }

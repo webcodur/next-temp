@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { Building2, Users, Smartphone, Settings, FileText } from 'lucide-react';
-import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
+import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 export default function FacilityInfoPage() {
@@ -88,18 +88,17 @@ export default function FacilityInfoPage() {
             <Building2 className="w-5 h-5 neu-icon-active" />
             기본 정보
           </h2>
-          <GridForm >
-            {basicInfo.map(({ label, value }) => (
-              <GridForm.Row key={label}>
-                <GridForm.Label>
-                  {label}
-                </GridForm.Label>
-                <GridForm.Content>
-                  <span className="text-base font-medium">{value}</span>
-                </GridForm.Content>
-              </GridForm.Row>
-            ))}
-          </GridForm>
+          {(() => {
+            const fields: GridFormFieldSchema[] = basicInfo.map(({ label, value }) => ({
+              id: label.replace(/\s+/g, ''),
+              label: label,
+              component: (
+                <span className="text-base font-medium">{value}</span>
+              )
+            }));
+
+            return <GridFormAuto fields={fields} />;
+          })()}
         </section>
 
 
@@ -109,18 +108,17 @@ export default function FacilityInfoPage() {
             <Users className="w-5 h-5 neu-icon-active" />
             시설 규모
           </h2>
-          <GridForm >
-            {facilityScale.map(({ label, value }) => (
-              <GridForm.Row key={label}>
-                <GridForm.Label>
-                  {label}
-                </GridForm.Label>
-                <GridForm.Content>
-                  <span className="text-base font-medium">{value}</span>
-                </GridForm.Content>
-              </GridForm.Row>
-            ))}
-          </GridForm>
+          {(() => {
+            const fields: GridFormFieldSchema[] = facilityScale.map(({ label, value }) => ({
+              id: label.replace(/\s+/g, ''),
+              label: label,
+              component: (
+                <span className="text-base font-medium">{value}</span>
+              )
+            }));
+
+            return <GridFormAuto fields={fields} />;
+          })()}
         </section>
 
 
@@ -130,18 +128,17 @@ export default function FacilityInfoPage() {
             <Smartphone className="w-5 h-5 neu-icon-active" />
             디지털 서비스 현황
           </h2>
-          <GridForm >
-            {digitalStatus.map(({ label, value }) => (
-              <GridForm.Row key={label}>
-                <GridForm.Label>
-                  {label}
-                </GridForm.Label>
-                <GridForm.Content>
-                  <span className="text-base font-medium">{value}</span>
-                </GridForm.Content>
-              </GridForm.Row>
-            ))}
-          </GridForm>
+          {(() => {
+            const fields: GridFormFieldSchema[] = digitalStatus.map(({ label, value }) => ({
+              id: label.replace(/\s+/g, ''),
+              label: label,
+              component: (
+                <span className="text-base font-medium">{value}</span>
+              )
+            }));
+
+            return <GridFormAuto fields={fields} />;
+          })()}
         </section>
 
 
@@ -151,18 +148,17 @@ export default function FacilityInfoPage() {
             <Settings className="w-5 h-5 neu-icon-active" />
             운영 현황
           </h2>
-          <GridForm >
-            {operationStatus.map(({ label, value }) => (
-              <GridForm.Row key={label}>
-                <GridForm.Label>
-                  {label}
-                </GridForm.Label>
-                <GridForm.Content>
-                  <span className="text-base font-medium">{value}</span>
-                </GridForm.Content>
-              </GridForm.Row>
-            ))}
-          </GridForm>
+          {(() => {
+            const fields: GridFormFieldSchema[] = operationStatus.map(({ label, value }) => ({
+              id: label.replace(/\s+/g, ''),
+              label: label,
+              component: (
+                <span className="text-base font-medium">{value}</span>
+              )
+            }));
+
+            return <GridFormAuto fields={fields} />;
+          })()}
         </section>
 
 
@@ -172,18 +168,17 @@ export default function FacilityInfoPage() {
             <FileText className="w-5 h-5 neu-icon-active" />
             계약 및 관리
           </h2>
-          <GridForm >
-            {contractManagement.map(({ label, value }) => (
-              <GridForm.Row key={label}>
-                <GridForm.Label>
-                  {label}
-                </GridForm.Label>
-                <GridForm.Content>
-                  <span className="text-base font-medium">{value}</span>
-                </GridForm.Content>
-              </GridForm.Row>
-            ))}
-          </GridForm>
+          {(() => {
+            const fields: GridFormFieldSchema[] = contractManagement.map(({ label, value }) => ({
+              id: label.replace(/\s+/g, ''),
+              label: label,
+              component: (
+                <span className="text-base font-medium">{value}</span>
+              )
+            }));
+
+            return <GridFormAuto fields={fields} />;
+          })()}
         </section>
       </div>
     </div>
