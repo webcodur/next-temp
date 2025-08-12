@@ -412,7 +412,7 @@ export default function ConfigManagement({
       key: 'title',
       header: '제목',
       align: 'start',
-      width: '20%',
+      width: '16%',
       cell: (item: SystemConfig) => (
         <span className="text-sm font-medium text-foreground">
           {item.title || item.key}
@@ -420,13 +420,13 @@ export default function ConfigManagement({
       ),
     },
     {
-      key: 'key',
-      header: '설정 키',
+      key: 'description',
+      header: '설명',
       align: 'start',
-      width: '18%',
+      width: '28%',
       cell: (item: SystemConfig) => (
-        <span className="font-mono text-xs text-muted-foreground">
-          {item.key}
+        <span className="text-sm text-muted-foreground">
+          {item.description || '-'}
         </span>
       ),
     },
@@ -434,7 +434,7 @@ export default function ConfigManagement({
       key: 'type',
       header: '타입',
       align: 'center',
-      width: '8%',
+      width: '12%',
       cell: (item: SystemConfig) => (
         <span className="px-2 py-1 text-xs rounded bg-muted text-foreground">
           {item.type}
@@ -445,7 +445,7 @@ export default function ConfigManagement({
       key: 'value',
       header: '값',
       align: 'start',
-      width: '18%',
+      width: '10%',
       cell: (item: SystemConfig) => {
         const displayValue = typeof item.value === 'object' 
           ? JSON.stringify(item.value) 
@@ -503,13 +503,13 @@ export default function ConfigManagement({
       },
     },
     {
-      key: 'description',
-      header: '설명',
+      key: 'key',
+      header: '설정 키',
       align: 'start',
-      width: '20%',
+      width: '18%',
       cell: (item: SystemConfig) => (
-        <span className="text-sm text-muted-foreground">
-          {item.description || '-'}
+        <span className="font-mono text-xs text-muted-foreground">
+          {item.key}
         </span>
       ),
     },

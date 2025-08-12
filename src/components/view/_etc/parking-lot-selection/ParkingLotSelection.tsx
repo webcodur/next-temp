@@ -97,7 +97,7 @@ export default function ParkingLotSelection({
         {isModal && (
           <button
             onClick={handleClose}
-            className="p-2 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-counter-2"
+            className="p-2 rounded-md cursor-pointer text-muted-foreground hover:text-foreground hover:bg-counter-2"
             aria-label="닫기"
           >
             <X size={20} />

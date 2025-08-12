@@ -1,7 +1,6 @@
 /* 메뉴 설명: 거주자 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Users } from 'lucide-react'; // Plus, Trash2 아이콘은 CrudButton에서 처리
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
@@ -395,12 +394,6 @@ export default function ResidentsListPage() {
       <PageHeader 
         title="거주자 관리" 
         subtitle="거주자 등록, 수정, 삭제 및 호실 관계 관리"
-        leftActions={
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Users size={20} />
-            <span className="text-sm">총 {residentList.length}명</span>
-          </div>
-        }
         rightActions={
           <CrudButton
             action="create"
