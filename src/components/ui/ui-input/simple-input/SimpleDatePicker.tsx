@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { Calendar } from 'lucide-react';
 import { getYear, getMonth } from 'date-fns';
-import { ValidationRule, getValidationResult } from './types';
+import { ValidationRule, validateField } from '@/utils/validation';
 import timezone from '@/utils/timezone';
 
 interface SimpleDatePickerProps {
@@ -212,7 +212,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 	// validation 결과 계산 (날짜를 문자열로 변환하여 검증)
 	const displayValue = getDisplayValue();
 	const stringValue = displayValue ? displayValue.toISOString().split('T')[0] : '';
-	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
+	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useColorSet } from '@/hooks/useColorSet';
+import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import { createPortal } from 'react-dom';
@@ -57,10 +57,10 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 			<button
 				onClick={() => setIsOpen(!isOpen)}
 				className={cn(
-					'flex items-center neu-flat hover:neu-raised transition-all',
+					'flex items-center transition-all neu-flat hover:neu-raised',
 					compact 
-						? 'justify-center rounded-xl p-2'
-						: 'justify-between p-3 rounded-xl w-full'
+						? 'justify-center p-2 rounded-xl'
+						: 'justify-between p-3 w-full rounded-xl'
 				)}
 			>
 				{compact ? (
@@ -74,7 +74,7 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 				) : (
 					/* 일반 모드: 전체 정보 */
 					<>
-						<div className="flex items-center gap-3">
+						<div className="flex gap-3 items-center">
 							{/* 현재 색상 미리보기 */}
 							<div
 								className="w-6 h-6 rounded-full"

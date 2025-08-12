@@ -118,7 +118,7 @@ export default function InstanceVisitConfigSection({
       {/* 방문 설정 섹션 */}
       <TitleRow title="방문 설정" subtitle="호실의 방문 관련 설정을 관리합니다." />
       <GridForm 
-        labelWidth="180px" 
+        
         gap="20px"
         bottomLeftActions={(
           <Button 
@@ -147,12 +147,13 @@ export default function InstanceVisitConfigSection({
           <GridForm.Label>
             방문 가능 시간 (분)
           </GridForm.Label>
+          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               type="number"
               value={formData.availableVisitTime.toString()}
               onChange={(value) => handleFieldChange('availableVisitTime', parseInt(value) || 0)}
-              placeholder="방문 가능 시간을 입력해주세요"
+              placeholder="방문 가능 시간"
               disabled={isSubmitting}
               validationRule={{
                 type: 'free',
@@ -166,12 +167,13 @@ export default function InstanceVisitConfigSection({
           <GridForm.Label>
             구매한 방문 시간 (분)
           </GridForm.Label>
+          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               type="number"
               value={formData.purchasedVisitTime.toString()}
               onChange={(value) => handleFieldChange('purchasedVisitTime', parseInt(value) || 0)}
-              placeholder="구매한 방문 시간을 입력해주세요"
+              placeholder="구매 방문 시간"
               disabled={isSubmitting}
               validationRule={{
                 type: 'free',
@@ -185,12 +187,13 @@ export default function InstanceVisitConfigSection({
           <GridForm.Label>
             방문 요청 한도
           </GridForm.Label>
+          <GridForm.Rules>1 이상 숫자</GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               type="number"
               value={formData.visitRequestLimit.toString()}
               onChange={(value) => handleFieldChange('visitRequestLimit', parseInt(value) || 1)}
-              placeholder="방문 요청 한도를 입력해주세요"
+              placeholder="방문 요청 한도"
               disabled={isSubmitting}
               validationRule={{
                 type: 'free',

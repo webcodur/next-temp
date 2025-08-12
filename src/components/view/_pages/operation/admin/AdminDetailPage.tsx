@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -14,7 +13,7 @@ import AdminPasswordSection from './AdminPasswordSection';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, ROLE_ID_MAP } from '@/types/admin';
-import { currentPageLabelAtom } from '@/store/atom';
+
 
 export default function AdminDetailPage() {  
   const router = useRouter();
@@ -22,18 +21,11 @@ export default function AdminDetailPage() {
   const adminId = Number(params.id);
   const routerRef = useRef(router);
   routerRef.current = router;
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
+
   
   console.log('AdminDetailPage 렌더링, params:', params, 'adminId:', adminId);
   
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    setCurrentPageLabel({
-      label: '관리자 상세',
-      href: window.location.pathname,
-    });
-  }, [setCurrentPageLabel]);
-  // #endregion
+
   
   
 

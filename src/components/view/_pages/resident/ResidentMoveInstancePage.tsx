@@ -241,7 +241,7 @@ export default function ResidentMoveInstancePage() {
           </h2>
         </div>
 
-        <GridForm labelWidth="120px" gap="20px">
+        <GridForm gap="20px">
           <GridForm.Row>
             <GridForm.Label required>
               새 거주지

@@ -47,7 +47,6 @@ const GridFormContext = createContext<GridFormContextValue | null>(null);
 // #region 타입 정의
 export interface GridFormProps {
 	sequenceWidth?: string;
-	labelWidth?: string;  // 옵션 프롭 (필수 아님)
 	rulesWidth?: string;  // 새로 추가된 입력 규칙 열 너비
 	gap?: string;
 	colorVariant?: 'primary' | 'secondary';
@@ -95,13 +94,80 @@ export interface GridFormRulesProps {
 }
 // #endregion
 
+// #region 헬퍼 함수들
+// React.ReactNode에서 텍스트 추출
+const extractTextFromNode = (node: React.ReactNode): string => {
+	if (typeof node === 'string') {
+		return node;
+	}
+	if (typeof node === 'number') {
+		return node.toString();
+	}
+	if (Array.isArray(node)) {
+		return node.map(extractTextFromNode).join('');
+	}
+	if (React.isValidElement(node)) {
+		return extractTextFromNode((node.props as { children?: React.ReactNode }).children);
+	}
+	return '';
+};
+
+// 텍스트 길이 기반 너비 계산 (한글/영문/숫자 고려)
+const calculateTextWidth = (text: string): number => {
+	let width = 0;
+	for (const char of text) {
+		if (/[가-힣]/.test(char)) {
+			width += 16; // 한글 (14px 폰트 기준)
+		} else if (/[A-Za-z0-9]/.test(char)) {
+			width += 8; // 영문/숫자
+		} else {
+			width += 10; // 특수문자
+		}
+	}
+	return width;
+};
+
+// children에서 모든 Label 텍스트 추출하여 최적 라벨 너비 계산
+const calculateOptimalLabelWidth = (children: React.ReactNode): string => {
+	let maxWidth = 0;
+	
+	const extractLabelTexts = (node: React.ReactNode): void => {
+		React.Children.forEach(node, (child) => {
+			if (React.isValidElement(child)) {
+				if (child.type === GridFormRow) {
+					// Row의 children에서 Label 찾기
+					React.Children.forEach((child.props as { children?: React.ReactNode }).children, (rowChild) => {
+						if (React.isValidElement(rowChild) && rowChild.type === GridFormLabel) {
+							const labelText = extractTextFromNode((rowChild.props as GridFormLabelProps).children);
+							const textWidth = calculateTextWidth(labelText);
+							// required 표시 고려 (+20px)
+							const totalWidth = textWidth + ((rowChild.props as GridFormLabelProps).required ? 20 : 0);
+							maxWidth = Math.max(maxWidth, totalWidth);
+						}
+					});
+				}
+			}
+		});
+	};
+	
+	extractLabelTexts(children);
+	
+	// 패딩(32px) + 여유분(40px) 추가
+	const totalWidth = maxWidth + 72;
+	
+	// 최소 120px, 최대 400px 제한
+	const clampedWidth = Math.max(120, Math.min(400, totalWidth));
+	
+	return `${clampedWidth}px`;
+};
+// #endregion
+
 // #region GridForm 메인 컴포넌트
 const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
 	sequenceWidth = '60px',
-	labelWidth = '300px',  // 기본값 설정
 	rulesWidth = '200px',  // 새로 추가된 입력 규칙 열 기본값
 	gap = '20px',
 	colorVariant = 'primary',
@@ -113,6 +179,9 @@ const GridForm = React.forwardRef<
 
 	...props
 }, ref) => {
+	// 동적으로 라벨 너비 계산
+	const labelWidth = React.useMemo(() => calculateOptimalLabelWidth(children), [children]);
+	
 	// 단순화를 위해 총 개수 계산은 생략 (조건부/프래그먼트에도 안전)
 	const totalCount = 0;
 	

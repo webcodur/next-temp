@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { Calendar, CheckCircle, AlertCircle, X } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { ValidationRule, validateField } from '@/utils/validation';
 
 interface SimpleDateRangePickerProps {
 	label?: string;
@@ -175,7 +175,7 @@ export const SimpleDateRangePicker: React.FC<SimpleDateRangePickerProps> = ({
 	const stringValue = startDate && endDate 
 		? `${startDate.toISOString().split('T')[0]} ~ ${endDate.toISOString().split('T')[0]}`
 		: '';
-	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
+	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;

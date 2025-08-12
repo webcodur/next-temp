@@ -47,7 +47,7 @@ graph TD
 
 | Props       | 타입     | 기본값   | 설명                           |
 |-------------|----------|----------|--------------------------------|
-| labelWidth  | string   | '300px'  | 라벨 컬럼의 너비               |
+
 | gap         | string   | '20px'   | 그리드 셀 간의 간격            |
 | className   | string   | -        | 추가 CSS 클래스                |
 
@@ -105,7 +105,7 @@ graph TD
 ### 피드백 포함 폼 예시
 
 ```tsx
-<GridForm labelWidth="120px" gap="16px">
+<GridForm gap="16px">
   <GridForm.Row>
     <GridForm.Label required htmlFor="email">
       이메일
@@ -152,7 +152,7 @@ graph TD
 ### 복잡한 폼 예시
 
 ```tsx
-<GridForm labelWidth="120px" gap="16px">
+<GridForm gap="16px">
   <GridForm.Row>
     <GridForm.Label required htmlFor="vote-title">
       투표제목

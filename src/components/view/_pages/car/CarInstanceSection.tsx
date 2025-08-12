@@ -301,7 +301,7 @@ export default function CarInstanceSection({
         size="md"
       >
         <div className="space-y-4">
-          <GridForm labelWidth="120px" gap="16px">
+          <GridForm rulesWidth="120px" gap="16px">
             <GridForm.Row>
               <GridForm.Label required>
                 호실 ID
@@ -314,7 +314,7 @@ export default function CarInstanceSection({
                   type="number"
                   value={createFormData.instanceId}
                   onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value }))}
-                  placeholder="호실 ID를 입력해주세요"
+                  placeholder="호실 ID"
                   disabled={isSubmitting}
                   validationRule={{
                     type: 'free',
@@ -370,7 +370,7 @@ export default function CarInstanceSection({
       >
         {editTarget && (
           <div className="space-y-4">
-            <GridForm labelWidth="120px" gap="16px">
+            <GridForm rulesWidth="120px" gap="16px">
               <GridForm.Row>
                 <GridForm.Label>
                   호실 ID

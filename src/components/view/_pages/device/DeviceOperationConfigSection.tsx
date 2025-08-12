@@ -122,7 +122,7 @@ export default function DeviceOperationConfigSection({
       {/* 운영 설정 섹션 */}
       <TitleRow title="운영 설정" subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다." />
       <GridForm 
-        labelWidth="120px" 
+        
         gap="20px"
         bottomLeftActions={(
           <Button 

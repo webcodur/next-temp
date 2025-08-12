@@ -354,9 +354,10 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         <TitleRow title="빠른 위반 기록" subtitle="빠른 위반 기록 처리를 위한 빠른 입력 폼입니다." />
         <div className="p-4 pt-0">
         
-        <GridForm labelWidth="120px" className="overflow-visible">
+        <GridForm className="overflow-visible">
           <GridForm.Row>
             <GridForm.Label>처리 상태</GridForm.Label>
+            <GridForm.Rules>상태 선택</GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={processForm.status}
@@ -369,6 +370,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>처리 메모</GridForm.Label>
+            <GridForm.Rules>처리 내용 입력</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextArea
                 value={processForm.processingNote}
@@ -400,10 +402,11 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         <TitleRow title="상세 정보" subtitle="상세 정보" />
         <div className="p-6 pt-0">
         
-        <GridForm labelWidth="150px">
+        <GridForm >
           {/* 시스템 생성 필드 (읽기 전용) */}
           <GridForm.Row>
             <GridForm.Label>위반 ID</GridForm.Label>
+            <GridForm.Rules>자동 생성</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={violation.id.toString()}
@@ -414,6 +417,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>차량번호</GridForm.Label>
+            <GridForm.Rules>시스템 입력</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={violation.carNumber}
@@ -424,6 +428,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>위반 유형</GridForm.Label>
+            <GridForm.Rules>위반 분류</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={getViolationTypeText(violation.violationType)}
@@ -434,6 +439,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>위반 코드</GridForm.Label>
+            <GridForm.Rules>시스템 코드</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={violation.violationCode}
@@ -444,6 +450,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>위반 장소</GridForm.Label>
+            <GridForm.Rules>위반 위치</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={violation.violationLocation || ''}
@@ -454,6 +461,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>위반 시각</GridForm.Label>
+            <GridForm.Rules>발생 일시</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(violation.violationTime).toLocaleString('ko-KR')}
@@ -464,6 +472,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>신고자 유형</GridForm.Label>
+            <GridForm.Rules>신고 주체</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={getReporterTypeText(violation.reporterType)}
@@ -474,6 +483,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>처리 완료</GridForm.Label>
+            <GridForm.Rules>처리 상태</GridForm.Rules>
             <GridForm.Content>
               <SimpleCheckbox
                 checked={violation.isProcessed}
@@ -485,6 +495,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           {violation.processedAt && (
             <GridForm.Row>
               <GridForm.Label>처리 시각</GridForm.Label>
+              <GridForm.Rules>완료 일시</GridForm.Rules>
               <GridForm.Content>
                 <SimpleTextInput
                   value={violation.processedAt ? new Date(violation.processedAt).toLocaleString('ko-KR') : ''}
@@ -496,6 +507,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>생성일</GridForm.Label>
+            <GridForm.Rules>등록 일시</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(violation.createdAt).toLocaleString('ko-KR')}
@@ -506,6 +518,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>수정일</GridForm.Label>
+            <GridForm.Rules>최종 변경</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 value={new Date(violation.updatedAt).toLocaleString('ko-KR')}
@@ -517,6 +530,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           {/* 편집 가능한 필드 */}
           <GridForm.Row>
             <GridForm.Label>처리 상태</GridForm.Label>
+            <GridForm.Rules>상태 변경</GridForm.Rules>
             <GridForm.Content>
               <SimpleDropdown
                 value={editForm.status}
@@ -529,6 +543,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>처리 메모</GridForm.Label>
+            <GridForm.Rules>처리 내용</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextArea
                 value={editForm.processingNote}
@@ -541,6 +556,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>설명</GridForm.Label>
+            <GridForm.Rules>상황 설명</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextArea
                 value={editForm.description}
@@ -553,6 +569,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>증거 이미지 URL</GridForm.Label>
+            <GridForm.Rules>이미지 주소</GridForm.Rules>
             <GridForm.Content>
               <div className="space-y-3">
                 <SimpleTextArea
@@ -658,6 +675,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>심각도</GridForm.Label>
+            <GridForm.Rules>1-10 범위</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 type="number"
@@ -670,6 +688,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           
           <GridForm.Row>
             <GridForm.Label>벌점</GridForm.Label>
+            <GridForm.Rules>0-100 범위</GridForm.Rules>
             <GridForm.Content>
               <SimpleTextInput
                 type="number"

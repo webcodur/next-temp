@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Users, Plus, Crown } from 'lucide-react';
+import { Users, Crown } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
@@ -349,7 +349,7 @@ export default function CarResidentSection({
         size="md"
       >
         <div className="space-y-4">
-          <GridForm labelWidth="120px" gap="16px">
+          <GridForm gap="16px">
             <GridForm.Row>
               <GridForm.Label required>
                 차량 호실
@@ -384,7 +384,7 @@ export default function CarResidentSection({
                   type="number"
                   value={createFormData.residentId}
                   onChange={(value) => setCreateFormData(prev => ({ ...prev, residentId: value }))}
-                  placeholder="거주자 ID를 입력해주세요"
+                  placeholder="거주자 ID"
                   disabled={isSubmitting}
                   validationRule={{
                     type: 'free',
@@ -457,7 +457,7 @@ export default function CarResidentSection({
       >
         {editTarget && (
           <div className="space-y-4">
-            <GridForm labelWidth="120px" gap="16px">
+            <GridForm gap="16px">
               <GridForm.Row>
                 <GridForm.Label>
                   차량 호실 ID

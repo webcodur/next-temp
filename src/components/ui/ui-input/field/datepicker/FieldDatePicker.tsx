@@ -51,25 +51,30 @@ const FieldDatePicker: React.FC<FieldDatePickerComponentProps & {
 		return utcValue;
 	};
 
-	const convertToUtcValue = (localDate: Date | null): string | Date | null => {
+	const convertToUtcValue = (localDate: Date | null): Date | null => {
 		if (!localDate) return null;
-		return utcMode ? timezone.localToUtc(localDate) : localDate;
+		if (utcMode) {
+			// UTC 문자열로 변환한 후 다시 Date 객체로 변환하여 타입 호환성 유지
+			const utcString = timezone.localToUtc(localDate);
+			return new Date(utcString);
+		}
+		return localDate;
 	};
 
 	// 변환된 핸들러들
 	const handleUtcChange = (date: Date | null) => {
 		const utcValue = convertToUtcValue(date);
-		onChange?.(utcValue as any);
+		onChange?.(utcValue);
 	};
 
 	const handleUtcStartDateChange = (date: Date | null) => {
 		const utcValue = convertToUtcValue(date);
-		onStartDateChange?.(utcValue as any);
+		onStartDateChange?.(utcValue);
 	};
 
 	const handleUtcEndDateChange = (date: Date | null) => {
 		const utcValue = convertToUtcValue(date);
-		onEndDateChange?.(utcValue as any);
+		onEndDateChange?.(utcValue);
 	};
 
 	// 표시용 값들 변환

@@ -27,12 +27,7 @@ export const parkingLotSelectionModalOpenAtom = atom<boolean>(false);
 // #endregion
 
 // #region 페이지 상태
-// 페이지 라벨
-export interface PageLabelState {
-  label: string;
-  href: string;
-}
-export const currentPageLabelAtom = atom<PageLabelState | null>(null);
+
 
 // 메뉴 상태
 export const currentTopMenuAtom = atom<string>('');

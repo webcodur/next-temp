@@ -3,10 +3,9 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 // UI 컴포넌트
-import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
+import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs, { Tab, SubTab } from '@/components/ui/ui-layout/tabs/Tabs';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
@@ -20,7 +19,7 @@ import { searchConfigs } from '@/services/config/config$_GET';
 
 // 타입 정의
 import { SystemConfig } from '@/types/api';
-import { currentPageLabelAtom } from '@/store/ui';
+
 import { Option } from '@/components/ui/ui-input/field/core/types';
 
 // #region 타입 정의
@@ -39,16 +38,9 @@ interface SearchFilters {
 
 export default function SystemConfigManagementPage() {
   const router = useRouter();
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    setCurrentPageLabel({
-      label: '시스템 설정 관리',
-      href: window.location.pathname,
-    });
-  }, [setCurrentPageLabel]);
-  // #endregion
+
+
 
   // #region 상태 관리
   const [allConfigs, setAllConfigs] = useState<SystemConfig[]>([]);
@@ -250,11 +242,10 @@ export default function SystemConfigManagementPage() {
   }, []);
 
   const handleRowClick = useCallback((config: SystemConfig) => {
-    const encodedKey = encodeURIComponent(config.key);
-    const url = `/system/config/settings/edit?key=${encodedKey}`;
+    const url = `/system/config/settings/edit?id=${config.id}`;
     console.log('설정 편집 네비게이션:', { 
-      originalKey: config.key, 
-      encodedKey, 
+      configId: config.id,
+      configKey: config.key,
       url 
     });
     router.push(url);
@@ -292,13 +283,35 @@ export default function SystemConfigManagementPage() {
       ),
     },
     {
+      key: 'title',
+      header: '제목',
+      align: 'start',
+      width: '20%',
+      cell: (item: SystemConfig) => (
+        <span className="text-sm font-medium">
+          {item.title || item.key}
+        </span>
+      ),
+    },
+    {
       key: 'description',
       header: '설명',
       align: 'start',
-      width: '25%',
+      width: '20%',
       cell: (item: SystemConfig) => (
         <span className="text-sm text-muted-foreground">
           {item.description || '-'}
+        </span>
+      ),
+    },
+    {
+      key: 'key',
+      header: '설정 키',
+      align: 'start',
+      width: '18%',
+      cell: (item: SystemConfig) => (
+        <span className="font-mono text-xs text-muted-foreground">
+          {item.key}
         </span>
       ),
     },
@@ -353,15 +366,6 @@ export default function SystemConfigManagementPage() {
       align: 'center',
       width: '12%',
       type: 'datetime',
-    },
-    {
-      key: 'key',
-      header: '설정 키',
-      align: 'start',
-      width: '23%',
-      cell: (item: SystemConfig) => (
-        <span className="font-mono text-sm">{item.key}</span>
-      ),
     },
   ];
   // #endregion
@@ -480,13 +484,10 @@ export default function SystemConfigManagementPage() {
       </div>
 
       {/* 설정 목록 테이블 */}
-      <PaginatedTable
+      <BaseTable
         data={currentConfigs as unknown as Record<string, unknown>[]}
         columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
         onRowClick={(item) => handleRowClick(item as unknown as SystemConfig)}
-        pageSize={15}
-        pageSizeOptions={[10, 15, 25, 50]}
-        itemName="설정"
       />
     </div>
   );

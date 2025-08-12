@@ -82,21 +82,22 @@ export default function ParkingLotSelection({
 
   // #region 공통 콘텐츠
   const content = (
-    <div className="p-8 rounded-xl neu-elevated bg-background">
+    <div className="rounded-lg border shadow-lg bg-card border-border">
       {/* 헤더 */}
-      <div className={`${isModal ? 'flex justify-between items-center' : 'text-center'} mb-8`}>
+      <div className={`${isModal ? 'flex justify-between items-center' : 'text-center'} p-6 border-b border-border bg-serial-4`}>
         <div>
-          <h1 className="mb-2 text-2xl font-bold text-foreground">
-            현장 선택
-          </h1>
-          <p className="text-muted-foreground">
-            관리할 현장을 선택해주세요
-          </p>
+
+        <h1 className="text-2xl font-bold text-foreground">
+          현장 선택
+        </h1>
+        <p className="text-muted-foreground">
+          관리할 현장을 선택해주세요
+        </p>
         </div>
         {isModal && (
           <button
             onClick={handleClose}
-            className="p-2 rounded-lg transition-all text-muted-foreground hover:text-foreground neu-flat hover:neu-pressed"
+            className="p-2 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-counter-2"
             aria-label="닫기"
           >
             <X size={20} />
@@ -104,25 +105,29 @@ export default function ParkingLotSelection({
         )}
       </div>
 
-      {/* 선택된 현장 카드 */}
-      <SelectedParkingLotCard 
-        selectedId={selectedId}
-        parkingLots={parkingLots}
-      />
+      {/* 콘텐츠 영역 */}
+      <div className="p-6 space-y-6 bg-serial-1">
 
-      {/* 주차장 목록 테이블 */}
-      <ParkingLotTable
-        parkingLots={parkingLots}
-        selectedId={selectedId}
-        onParkingLotSelect={handleParkingLotSelect}
-      />
+        {/* 선택된 현장 카드 */}
+        <SelectedParkingLotCard 
+          selectedId={selectedId}
+          parkingLots={parkingLots}
+        />
 
-      {/* 액션 버튼 */}
-      <ActionButtons
-        selectedId={selectedId}
-        isLoading={isLoading}
-        onConfirm={handleConfirm}
-      />
+        {/* 주차장 목록 테이블 */}
+        <ParkingLotTable
+          parkingLots={parkingLots}
+          selectedId={selectedId}
+          onParkingLotSelect={handleParkingLotSelect}
+        />
+
+        {/* 액션 버튼 */}
+        <ActionButtons
+          selectedId={selectedId}
+          isLoading={isLoading}
+          onConfirm={handleConfirm}
+        />
+      </div>
     </div>
   );
   // #endregion
@@ -133,11 +138,11 @@ export default function ParkingLotSelection({
     return (
       <div 
         className="flex fixed inset-0 z-50 justify-center items-center font-multilang"
-        dir={isRTL ? 'rtl' : 'ltr'}
         style={{ 
-          fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif",
-          backgroundColor: 'hsl(var(--modal-overlay))'
+          backgroundColor: `hsla(var(--modal-overlay))`,
+          fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
         }}
+        dir={isRTL ? 'rtl' : 'ltr'}
         onClick={handleClose}
       >
         <div 

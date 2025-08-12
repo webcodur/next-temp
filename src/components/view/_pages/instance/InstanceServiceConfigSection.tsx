@@ -121,7 +121,7 @@ export default function InstanceServiceConfigSection({
       {/* 서비스 설정 섹션 */}
       <TitleRow title="서비스 설정" subtitle="호실의 서비스 관련 설정을 관리합니다." />
       <GridForm 
-        labelWidth="180px" 
+        
         gap="20px"
         bottomLeftActions={(
           <Button 
@@ -150,6 +150,7 @@ export default function InstanceServiceConfigSection({
           <GridForm.Label>
             신규 입주민 등록 허용
           </GridForm.Label>
+          <GridForm.Rules>등록 권한</GridForm.Rules>
           <GridForm.Content>
             <SimpleToggleSwitch
               checked={formData.canAddNewResident}
@@ -164,6 +165,7 @@ export default function InstanceServiceConfigSection({
           <GridForm.Label>
             공동현관 구독
           </GridForm.Label>
+          <GridForm.Rules>현관 서비스</GridForm.Rules>
           <GridForm.Content>
             <SimpleToggleSwitch
               checked={formData.isCommonEntranceSubscribed}
@@ -178,6 +180,7 @@ export default function InstanceServiceConfigSection({
           <GridForm.Label>
             임시 출입 허용
           </GridForm.Label>
+          <GridForm.Rules>출입 권한</GridForm.Rules>
           <GridForm.Content>
             <SimpleToggleSwitch
               checked={formData.isTemporaryAccess}
@@ -192,12 +195,13 @@ export default function InstanceServiceConfigSection({
           <GridForm.Label>
             임시 차량 한도
           </GridForm.Label>
+          <GridForm.Rules>0 이상 숫자</GridForm.Rules>
           <GridForm.Content>
             <SimpleTextInput
               type="number"
               value={formData.tempCarLimit.toString()}
               onChange={(value) => handleFieldChange('tempCarLimit', parseInt(value) || 0)}
-              placeholder="임시 차량 한도를 입력해주세요"
+              placeholder="임시 차량 한도"
               disabled={isSubmitting}
               validationRule={{
                 type: 'free',

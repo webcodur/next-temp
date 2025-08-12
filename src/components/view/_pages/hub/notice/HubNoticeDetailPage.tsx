@@ -238,7 +238,7 @@ export default function HubNoticeDetailPage() {
 
       {/* 폼 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        <GridForm labelWidth="120px">
+        <GridForm >
           {/* 시스템 정보 */}
           <GridForm.Row>
             <GridForm.Label htmlFor="notice-id">

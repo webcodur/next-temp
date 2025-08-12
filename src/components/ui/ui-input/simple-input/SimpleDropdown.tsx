@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { List, ChevronDown, ChevronUp, X } from 'lucide-react';
-import { ValidationRule } from './types';
+import { ValidationRule } from '@/utils/validation';
 import { Portal } from '../field/shared/Portal';
 
 interface DropdownOption {
@@ -32,7 +32,6 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	disabled = false,
 	colorVariant = 'primary',
 	className = '',
-	validationRule,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });

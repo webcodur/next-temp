@@ -1,16 +1,13 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateSystemConfigRequest, SystemConfig } from '@/types/api';
+import { SystemConfig } from '@/types/api';
 
 //#region 서버 타입 정의 (파일 내부 사용)
-interface UpdateSystemConfigServerRequest {
-  config_value: string;
-}
-
 interface SystemConfigServerResponse {
   id: number;
   config_key: string;
   config_value: string;
+  title?: string | null;
   description?: string | null;
   config_type: string;
   is_active: boolean;
@@ -22,21 +19,6 @@ interface SystemConfigServerResponse {
 //#endregion
 
 //#region 변환 함수 (파일 내부 사용)
-function clientToServer(client: UpdateSystemConfigRequest): UpdateSystemConfigServerRequest {
-  // 클라이언트 값을 문자열로 변환하여 서버에 전송
-  let stringValue: string;
-  
-  if (typeof client.value === 'object') {
-    stringValue = JSON.stringify(client.value);
-  } else {
-    stringValue = String(client.value);
-  }
-  
-  return {
-    config_value: stringValue,
-  };
-}
-
 function serverToClient(server: SystemConfigServerResponse): SystemConfig {
   // config_value (문자열)을 config_type에 따라 적절한 타입으로 변환
   let parsedValue: string | number | boolean | object = server.config_value;
@@ -65,6 +47,7 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
     id: server.id,
     key: server.config_key,
     value: parsedValue,
+    title: server.title,
     description: server.description,
     type: server.config_type,
     isActive: server.is_active,
@@ -77,31 +60,27 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
 //#endregion
 
 /**
- * 설정값을 업데이트한다
- * @param key 설정값 키
- * @param data 업데이트할 설정 데이터
+ * 지정된 ID의 설정값을 조회한다
+ * @param id 조회할 설정 ID
  * @param parkinglotId 주차장 ID (선택사항)
- * @returns 업데이트된 설정값 정보 (SystemConfig)
+ * @returns 설정값 정보 (SystemConfig)
  */
-export async function updateConfig(key: string, data: UpdateSystemConfigRequest, parkinglotId?: string) {
-  const serverRequest = clientToServer(data);
-
+export async function getConfigById(id: number, parkinglotId?: string) {
   // 헤더 구성
   const headers: Record<string, string> = {};
   if (parkinglotId) {
     headers['x-parkinglot-id'] = parkinglotId;
   }
 
-  const response = await fetchDefault(`/configs/${key}`, {
-    method: 'PUT',
-    body: JSON.stringify(serverRequest),
+  const response = await fetchDefault(`/configs/${id}`, {
+    method: 'GET',
     headers: Object.keys(headers).length > 0 ? headers : undefined,
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `설정값 업데이트 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `특정 설정값 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return {
       success: false,

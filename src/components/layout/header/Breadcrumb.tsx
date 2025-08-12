@@ -16,8 +16,7 @@ import { ChevronRight, Home } from 'lucide-react';
 import { 
 	currentTopMenuAtom, 
 	currentMidMenuAtom, 
-	currentBotMenuAtom,
-	currentPageLabelAtom 
+	currentBotMenuAtom
 } from '@/store/ui';
 import { menuData } from '@/data/menuData';
 
@@ -26,7 +25,7 @@ export default function Breadcrumb() {
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [currentMidMenu, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [currentBotMenu, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
-	const [currentPageLabel] = useAtom(currentPageLabelAtom);
+
 
 	// #region 효과
 	React.useEffect(() => {
@@ -109,14 +108,7 @@ export default function Breadcrumb() {
 			}
 		}
 
-		// atom으로 설정된 페이지 라벨이 있으면 추가
-		if (currentPageLabel && items.length > 0 && pathname !== items[items.length - 1]?.href) {
-			items.push({
-				label: currentPageLabel.label,
-				href: currentPageLabel.href,
-				isClickable: false, // 현재 페이지는 클릭 불가
-			});
-		}
+
 
 		return items;
 	};

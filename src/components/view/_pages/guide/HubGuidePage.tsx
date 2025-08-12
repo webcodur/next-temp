@@ -13,10 +13,6 @@ import {
   Settings, 
   BarChart3, 
   Clock, 
-  Phone, 
-  Mail, 
-  MapPin,
-  AlertCircle,
   CheckCircle,
   Info,
   Lightbulb,
@@ -164,19 +160,6 @@ const guideInfo = {
       }
     ]
   },
-  contact: {
-    title: '연락처 및 지원',
-    support: {
-      phone: '1588-1234',
-      email: 'support@parking-hub.com',
-      address: '서울시 강남구 테헤란로 123, 허브빌딩 10층',
-      hours: '평일 09:00 - 18:00 (점심시간 12:00-13:00 제외)'
-    },
-    emergency: {
-      phone: '1588-5678',
-      description: '긴급상황 및 시스템 장애 신고'
-    }
-  }
 };
 // #endregion
 
@@ -293,71 +276,6 @@ export default function HubGuidePage() {
         </div>
       </Card>
 
-      {/* 연락처 및 지원 */}
-      <Card className="p-6">
-        <div className="flex gap-3 items-center mb-4">
-          <Phone className="w-6 h-6 text-green-500" />
-          <h2 className="text-xl font-semibold">{guideInfo.contact.title}</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* 일반 지원 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">일반 지원</h3>
-            <div className="space-y-3">
-              <div className="flex gap-3 items-center">
-                <Phone className="w-5 h-5 text-gray-500" />
-                <div>
-                  <p className="font-medium">{guideInfo.contact.support.phone}</p>
-                  <p className="text-sm text-gray-500">전화 문의</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-3 items-center">
-                <Mail className="w-5 h-5 text-gray-500" />
-                <div>
-                  <p className="font-medium">{guideInfo.contact.support.email}</p>
-                  <p className="text-sm text-gray-500">이메일 문의</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-3 items-center">
-                <MapPin className="w-5 h-5 text-gray-500" />
-                <div>
-                  <p className="font-medium">{guideInfo.contact.support.address}</p>
-                  <p className="text-sm text-gray-500">본사 주소</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-3 items-center">
-                <Clock className="w-5 h-5 text-gray-500" />
-                <div>
-                  <p className="font-medium">{guideInfo.contact.support.hours}</p>
-                  <p className="text-sm text-gray-500">운영 시간</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 긴급 지원 */}
-          <div className="space-y-4">
-            <h3 className="flex gap-2 items-center text-lg font-semibold">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              긴급 지원
-            </h3>
-            <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-              <div className="flex gap-3 items-center mb-2">
-                <Phone className="w-5 h-5 text-red-500" />
-                <p className="font-semibold text-red-700">{guideInfo.contact.emergency.phone}</p>
-              </div>
-              <p className="text-sm text-red-600">{guideInfo.contact.emergency.description}</p>
-              <div className="mt-3 text-xs text-red-500">
-                * 24시간 운영 (시스템 장애 및 보안 관련 긴급상황만)
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
 
       {/* 추가 안내사항 */}
       <Card className="p-6 bg-blue-50 border-blue-200">

@@ -4,7 +4,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -18,15 +17,16 @@ import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleText
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 
 // API 호출
-import { getConfigByKey } from '@/services/config/config@key_GET';
-import { updateConfig } from '@/services/config/config@key_PUT';
+import { getConfigById } from '@/services/config/config@id_GET';
+import { updateConfigById } from '@/services/config/config@id_PUT';
 
 // 타입 정의
 import { UpdateSystemConfigRequest } from '@/types/api';
-import { currentPageLabelAtom } from '@/store/ui';
+
 
 // #region 폼 데이터 인터페이스
 interface ConfigFormData {
+  id: number;
   key: string;
   value: string;
   type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
@@ -40,21 +40,11 @@ interface ConfigFormData {
 export default function SystemConfigEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawConfigKey = searchParams.get('key');
-  // URL 파라미터 디코딩
-  const configKey = rawConfigKey ? decodeURIComponent(rawConfigKey) : null;
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
+  const rawConfigId = searchParams.get('id');
+  const configId = rawConfigId ? parseInt(rawConfigId, 10) : null;
 
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    if (configKey) {
-      setCurrentPageLabel({
-        label: `설정 편집: ${configKey}`,
-        href: window.location.pathname,
-      });
-    }
-  }, [configKey, setCurrentPageLabel]);
-  // #endregion
+
+
 
   // #region 상태 관리
   const [configData, setConfigData] = useState<ConfigFormData | null>(null);
@@ -71,17 +61,18 @@ export default function SystemConfigEditPage() {
 
   // #region 데이터 로드
   const loadConfigData = useCallback(async () => {
-    if (!configKey || configKey.trim() === '') {
-      console.error('설정 키가 없습니다:', { rawConfigKey, configKey });
-      setDialogMessage('설정 키가 제공되지 않았습니다.');
+    if (!configId || isNaN(configId)) {
+      console.error('설정 ID가 없거나 유효하지 않습니다:', { rawConfigId, configId });
+      setDialogMessage('설정 ID가 제공되지 않았거나 유효하지 않습니다.');
       setErrorDialogOpen(true);
       return;
     }
 
     setLoading(true);
     try {
-      console.log('설정 로드 시도:', configKey);
-      const result = await getConfigByKey(configKey);
+      console.log('설정 로드 시도:', configId);
+      
+      const result = await getConfigById(configId);
       console.log('설정 로드 결과:', result);
       
       if (result.success && result.data) {
@@ -96,6 +87,7 @@ export default function SystemConfigEditPage() {
         }
         
         const configFormData: ConfigFormData = {
+          id: config.id,
           key: config.key,
           value: valueStr,
           type: config.type as 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON',
@@ -119,7 +111,7 @@ export default function SystemConfigEditPage() {
     } finally {
       setLoading(false);
     }
-  }, [configKey, rawConfigKey]);
+  }, [configId, rawConfigId]);
 
   useEffect(() => {
     loadConfigData();
@@ -178,7 +170,7 @@ export default function SystemConfigEditPage() {
   }, [hasChanges, originalData]);
 
   const handleSubmit = useCallback(async () => {
-    if (!formData || !isValid || isSubmitting || !configKey) return;
+    if (!formData || !isValid || isSubmitting || !configId) return;
     
     setIsSubmitting(true);
     
@@ -213,7 +205,7 @@ export default function SystemConfigEditPage() {
         value: parsedValue,
       };
 
-      const result = await updateConfig(configKey, updateData);
+      const result = await updateConfigById(configData!.id, updateData);
 
       if (result.success) {
         setDialogMessage('설정이 성공적으로 수정되었습니다.');
@@ -236,7 +228,7 @@ export default function SystemConfigEditPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, isValid, isSubmitting, configKey, loadConfigData]);
+  }, [formData, isValid, isSubmitting, configId, loadConfigData]);
   // #endregion
 
   // #region 값 입력 컴포넌트 렌더링
@@ -333,7 +325,7 @@ export default function SystemConfigEditPage() {
       {/* 설정 편집 폼 */}
       <div className="p-6 rounded-lg border bg-card border-border">
         <GridForm 
-          labelWidth="140px" 
+          
           gap="20px"
           bottomRightActions={
             <div className="flex gap-3">

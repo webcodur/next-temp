@@ -1,7 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { InstanceDetail, InstanceServiceConfig, InstanceVisitConfig, InstanceType, CarInstanceWithCar } from '@/types/instance';
-import { ResidentInstance } from '@/types/resident';
+import { InstanceDetail, InstanceServiceConfig, InstanceVisitConfig, InstanceType, CarInstanceWithCar, ResidentInstanceWithResident } from '@/types/instance';
+
 
 // #region 서버 타입 정의 (내부 사용)
 interface InstanceServiceConfigServerResponse {
@@ -89,7 +89,7 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
-    residentInstance: server.resident_instance as ResidentInstance[],
+    residentInstance: server.resident_instance as ResidentInstanceWithResident[],
     carInstance: server.car_instance as CarInstanceWithCar[],
     instanceServiceConfig: server.instance_service_config 
       ? serviceConfigServerToClient(server.instance_service_config)

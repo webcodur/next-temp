@@ -1,7 +1,6 @@
 import {
 	Crown,
 	Presentation,
-  FlaskConical,
   SquareParking
 } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
@@ -30,36 +29,12 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-			'안내소': {
-				key: '안내소',
+			'서비스 안내도': {
+				key: '서비스 안내도',
 				botItems: [
 					{
-						key: '__1. 전체',
+						key: '전체',
 						href: '/global/flowchart/overview',
-					},
-					{
-						key: '__2. 건물',
-						href: '/global/flowchart/building',
-					},
-					{
-						key: '__3. 공용 시설',
-						href: '/global/flowchart/facility',
-					},
-					{
-						key: '__4. 호실',
-						href: '/global/flowchart/household',
-					},
-					{
-						key: '__5. 입주세대',
-						href: '/global/flowchart/household-instance',
-					},
-					{
-						key: '__6. 입주민',
-						href: '/global/flowchart/resident',
-					},
-					{
-						key: '__7. 차량',
-						href: '/global/flowchart/vehicle',
 					},
 				],
 			},
@@ -74,21 +49,13 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	"건물 및 주차관제": {
+	"주차 관제": {
 		icon: SquareParking,
-		key: '주차',
+		key: '주차 관제',
 		midItems: {
 			"주차장 관리": {
 				key: '주차장 관리',
 				botItems: [
-					{
-						key: '주차장 정보',
-						href: '/parking/lot/info',
-					},
-					{
-						key: '주차장 출입관리',
-						href: '/parking/lot/entry',
-					},
           {
             key: '차단기 관리',
             href: '/parking/lot/device',
@@ -174,157 +141,6 @@ export const menuData: MenuData = {
           },
         ],
       },
-		},
-	},
-  연구소: {
-		icon: FlaskConical,
-		key: '연구소',
-		midItems: {
-			UI레이아웃: {
-				key: 'UI레이아웃',
-				botItems: [
-					{
-						key: '컨테이너',
-						href: '/lab/ui-layout/container',
-					},
-					{
-						key: '다이얼로그',
-						href: '/lab/ui-layout/dialog',
-					},
-					{
-						key: '모달',
-						href: '/lab/ui-layout/modal',
-					},
-					{
-						key: '탭',
-						href: '/lab/ui-layout/tabs',
-					},
-					{
-						key: '스테퍼',
-						href: '/lab/ui-layout/stepper',
-					},
-					{
-						key: '아코디언',
-						href: '/lab/ui-layout/accordion',
-					},
-					{
-						key: '중첩탭',
-						href: '/lab/ui-layout/nested-tabs',
-					},
-					{
-						key: '시설예약',
-						href: '/lab/ui-layout/facility-reservation',
-					},
-					{
-						key: '그리드폼',
-						href: '/lab/ui-layout/grid-form',
-					},
-					{
-						key: '섹션패널',
-						href: '/lab/ui-layout/section-panel',
-					},
-				],
-			},
-			UI효과: {
-				key: 'UI효과',
-				botItems: [
-					{
-						key: '로딩',
-						href: '/lab/ui-effects/loading',
-					},
-					{
-						key: '아바타',
-						href: '/lab/ui-effects/avatar',
-					},
-					{
-						key: '뱃지',
-						href: '/lab/ui-effects/badge',
-					},
-					{
-						key: '버튼',
-						href: '/lab/ui-effects/button',
-					},
-					{
-						key: '툴팁',
-						href: '/lab/ui-effects/tooltip',
-					},
-					{
-						key: '토스트',
-						href: '/lab/ui-effects/toast',
-					},
-					{
-						key: '플립텍스트',
-						href: '/lab/ui-effects/flip-text',
-					},
-					{
-						key: '모핑텍스트',
-						href: '/lab/ui-effects/morphing-text',
-					},
-					{
-						key: '드래그드롭',
-						href: '/lab/ui-effects/drag-and-drop',
-					},
-					{
-						key: '애니메이션',
-						href: '/lab/ui-effects/animation',
-					},
-				],
-			},
-			UI입력: {
-				key: 'UI입력',
-				botItems: [
-					{
-						key: '필드',
-						href: '/lab/ui-input/field',
-					},
-					{
-						key: '고급검색',
-						href: '/lab/ui-input/advanced-search',
-					},
-					{
-						key: '날짜선택',
-						href: '/lab/ui-input/datepicker',
-					},
-					{
-						key: '에디터',
-						href: '/lab/ui-input/editor',
-					},
-					{
-						key: '간단입력',
-						href: '/lab/ui-input/simple-input',
-					},
-				],
-			},
-			UI데이터: {
-				key: 'UI데이터',
-				botItems: [
-					{
-						key: '테이블',
-						href: '/lab/ui-data/table',
-					},
-					{
-						key: '타임라인',
-						href: '/lab/ui-data/timeline',
-					},
-					{
-						key: '무한스크롤',
-						href: '/lab/ui-data/infinite-scroll',
-					},
-					{
-						key: '리스트하이라이트마커',
-						href: '/lab/ui-data/list-highlight-marker',
-					},
-				],
-			},
-			UI_3D: {
-				key: 'UI_3D',
-				botItems: [
-					{
-						key: '차단기3D',
-						href: '/lab/ui-3d/barrier-3d',
-					},
-				],
-			},
 		},
 	},
 };

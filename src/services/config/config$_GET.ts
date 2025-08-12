@@ -7,6 +7,7 @@ interface SystemConfigServerResponse {
   id: number;
   config_key: string;
   config_value: string;
+  title?: string | null;
   description?: string | null;
   config_type: string;
   is_active: boolean;
@@ -16,15 +17,8 @@ interface SystemConfigServerResponse {
   updated_at?: string;
 }
 
-interface GetAllConfigsServerResponse {
-  data: SystemConfigServerResponse[];
-  meta: {
-    total_items: number;
-    current_page: number;
-    items_per_page: number;
-    total_pages: number;
-  };
-}
+// API 스펙에 따르면 배열을 직접 반환
+type GetAllConfigsServerResponse = SystemConfigServerResponse[];
 
 
 //#endregion
@@ -59,6 +53,7 @@ function serverToClient(server: SystemConfigServerResponse): SystemConfig {
     id: server.id,
     key: server.config_key,
     value: parsedValue,
+    title: server.title,
     description: server.description,
     type: server.config_type,
     isActive: server.is_active,
@@ -86,6 +81,7 @@ export async function searchConfigs(params?: SystemConfigSearchRequest, parkingl
   else searchParams.append('limit', '1000');
   if (params?.config_key) searchParams.append('config_key', params.config_key);
   if (params?.config_type) searchParams.append('config_type', params.config_type);
+  if (params?.title) searchParams.append('title', params.title);
   if (params?.description) searchParams.append('description', params.description);
   if (params?.category) searchParams.append('category', params.category);
 
@@ -105,6 +101,12 @@ export async function searchConfigs(params?: SystemConfigSearchRequest, parkingl
 
   const result = await response.json();
   
+  console.log('Config API 응답:', { 
+    status: response.status, 
+    ok: response.ok, 
+    result 
+  });
+  
   if (!response.ok) {
     const errorMsg = result.message || `설정값 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
@@ -114,17 +116,26 @@ export async function searchConfigs(params?: SystemConfigSearchRequest, parkingl
     };
   }
 
+  // 응답 구조 검증 - API 스펙에 따르면 배열을 직접 반환
+  if (!Array.isArray(result)) {
+    console.error('응답이 배열이 아님:', result);
+    return {
+      success: false,
+      errorMsg: '서버에서 예상된 배열 형식을 반환하지 않았습니다.',
+    };
+  }
+
   const serverResponse = result as GetAllConfigsServerResponse;
-  const clientData = serverResponse.data.map(serverToClient);
+  const clientData = serverResponse.map(serverToClient);
   
   return {
     success: true,
     data: clientData,
     meta: {
-      totalItems: serverResponse.meta.total_items,
-      currentPage: serverResponse.meta.current_page,
-      itemsPerPage: serverResponse.meta.items_per_page,
-      totalPages: serverResponse.meta.total_pages,
+      totalItems: clientData.length,
+      currentPage: 1,
+      itemsPerPage: clientData.length,
+      totalPages: 1,
     },
   };
 } 

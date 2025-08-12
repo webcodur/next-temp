@@ -35,11 +35,11 @@ GridForm 컴포넌트는 props를 기반으로 동적 CSS Grid 스타일을 생�
 ```mermaid
 flowchart TD
     Start[GridForm 렌더링] --> A{props 수집}
-    A --> B[labelWidth: '150px']
+    A --> B[자동 계산된 라벨 너비]
     A --> C[gap: '20px']
     A --> D[maxWidth: '800px']
     
-    B --> E[gridTemplateColumns: 'labelWidth 1fr']
+    B --> E[gridTemplateColumns: '자동너비 1fr']
     C --> F[gap: 'gap']
     D --> G[maxWidth: 'maxWidth']
     
@@ -137,7 +137,7 @@ sequenceDiagram
     
     User->>GridForm: Props 전달
     activate GridForm
-    GridForm->>GridForm: 기본값 적용<br/>(labelWidth: '150px', gap: '20px', maxWidth: '800px')
+    GridForm->>GridForm: 기본값 적용<br/>(자동 라벨 너비, gap: '20px', maxWidth: '800px')
     GridForm->>GridForm: CSS Grid 스타일 생성
     GridForm-->>Row: children 전달
     deactivate GridForm
@@ -167,7 +167,7 @@ TypeScript 인터페이스를 통해 각 컴포넌트의 props 타입을 엄격�
 ```typescript
 // 계층적 인터페이스 구조
 interface GridFormProps {
-  labelWidth?: string;    // CSS 값
+
   gap?: string;          // CSS 값  
   maxWidth?: string;     // CSS 값
   className?: string;    // CSS 클래스

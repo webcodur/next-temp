@@ -55,6 +55,8 @@ module.exports = {
 					8: 'hsl(var(--primary-8))',
 					9: 'hsl(var(--primary-9))',
 					foreground: 'hsl(var(--primary-foreground))',
+					hover: 'hsl(var(--primary-hover))',
+					active: 'hsl(var(--primary-active))',
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',

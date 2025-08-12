@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Home, Plus, Edit, MapPin } from 'lucide-react';
+import { Home, Plus, Edit, MapPin, Save } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
@@ -329,18 +329,18 @@ export default function ResidentInstanceSection({
           </div>
 
           {moveError && (
-            <div className="mb-4 p-3 rounded-md border border-red-200 bg-red-50 text-sm text-red-700">
+            <div className="p-3 mb-4 text-sm text-red-700 bg-red-50 rounded-md border border-red-200">
               {moveError}
             </div>
           )}
           {moveSuccess && (
-            <div className="mb-4 p-3 rounded-md border border-green-200 bg-green-50 text-sm text-green-700">
+            <div className="p-3 mb-4 text-sm text-green-700 bg-green-50 rounded-md border border-green-200">
               {moveSuccess}
             </div>
           )}
 
           <GridForm 
-            labelWidth="120px" 
+            
             gap="20px"
             bottomRightActions={(
               <div className="flex gap-3">
@@ -400,7 +400,7 @@ export default function ResidentInstanceSection({
                   선택된 호실
                 </GridForm.Label>
                 <GridForm.Content>
-                  <div className="flex items-center gap-2 text-foreground">
+                  <div className="flex gap-2 items-center text-foreground">
                     <MapPin size={16} className="text-muted-foreground" />
                     <span>
                       {`${selectedInstance.address1Depth} ${selectedInstance.address2Depth} ${selectedInstance.address3Depth || ''}`.trim()} (ID: {selectedInstance.id})

@@ -185,7 +185,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
             </h2>
           </div>
 
-          <GridForm labelWidth="140px" gap="20px">
+          <GridForm gap="20px">
             <GridForm.Row>
               <GridForm.Label required>
                 현재 비밀번호
@@ -195,7 +195,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                   type="password"
                   value={formData.currentPassword}
                   onChange={(value) => handleFieldChange('currentPassword', value)}
-                  placeholder="현재 비밀번호를 입력해주세요"
+                  placeholder="현재 비밀번호"
                   disabled={isSubmitting || isResetting}
                 />
               </GridForm.Content>
@@ -210,7 +210,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                   type="password"
                   value={formData.newPassword}
                   onChange={(value) => handleFieldChange('newPassword', value)}
-                  placeholder="새 비밀번호를 입력해주세요 (최소 6자리)"
+                  placeholder="새 비밀번호 (최소 6자)"
                   disabled={isSubmitting || isResetting}
                 />
               </GridForm.Content>
@@ -225,7 +225,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                   type="password"
                   value={formData.confirmPassword}
                   onChange={(value) => handleFieldChange('confirmPassword', value)}
-                  placeholder="새 비밀번호를 다시 입력해주세요"
+                  placeholder="비밀번호 확인"
                   disabled={isSubmitting || isResetting}
                 />
                 {showPasswordError && (

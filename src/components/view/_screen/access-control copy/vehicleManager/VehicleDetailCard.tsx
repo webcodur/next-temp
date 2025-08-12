@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Car, Check } from 'lucide-react';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { parseCarAllowType } from '@/data/mockParkingData';
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import type { VehicleEntry } from '@/types/parking';
 
 // #region 타입

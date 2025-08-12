@@ -17,6 +17,9 @@ export default function InstanceCreatePage() {
   
   // #region 폼 상태
   const [formData, setFormData] = useState<InstanceFormData>({
+    name: '',
+    ownerName: '',
+    phone: '',
     address1Depth: '',
     address2Depth: '',
     address3Depth: '',
@@ -34,6 +37,7 @@ export default function InstanceCreatePage() {
   // #region 검증
   const isValid = useMemo(() => {
     return (
+      formData.name.trim() &&
       formData.address1Depth.trim() &&
       formData.address2Depth.trim() &&
       formData.instanceType &&
@@ -50,6 +54,9 @@ export default function InstanceCreatePage() {
     
     try {
       const createData = {
+        name: formData.name,
+        ownerName: formData.ownerName || undefined,
+        phone: formData.phone || undefined,
         address1Depth: formData.address1Depth,
         address2Depth: formData.address2Depth,
         address3Depth: formData.address3Depth || undefined,

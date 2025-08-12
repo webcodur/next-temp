@@ -497,7 +497,7 @@ export default function BlacklistListPage() {
               type="text"
               value={unblockReason}
               onChange={(e) => setUnblockReason(e.target.value)}
-              placeholder="해제 사유를 입력해주세요"
+              placeholder="해제 사유"
               className="px-3 py-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
@@ -587,7 +587,7 @@ export default function BlacklistListPage() {
                   type="text"
                   value={createFormData.carNumber}
                   onChange={(e) => handleCreateFormChange('carNumber', e.target.value)}
-                  placeholder="차량번호를 입력해주세요"
+                  placeholder="차량번호"
                   className="px-3 py-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}
                 />
@@ -616,7 +616,7 @@ export default function BlacklistListPage() {
                   type="number"
                   value={createFormData.blockDays}
                   onChange={(e) => handleCreateFormChange('blockDays', e.target.value)}
-                  placeholder="차단 기간을 입력해주세요 (기본: 30일)"
+                  placeholder="차단 기간 (기본: 30일)"
                   className="px-3 py-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}
                   min="1"
@@ -631,7 +631,7 @@ export default function BlacklistListPage() {
                 <textarea
                   value={createFormData.blockReason}
                   onChange={(e) => handleCreateFormChange('blockReason', e.target.value)}
-                  placeholder="차단 사유를 상세히 입력해주세요"
+                  placeholder="차단 사유"
                   rows={3}
                   className="px-3 py-2 w-full rounded-md border resize-none border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}

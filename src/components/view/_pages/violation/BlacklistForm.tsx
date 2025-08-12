@@ -6,7 +6,7 @@ import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDrop
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/SimpleDatePicker';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { RotateCcw, Send } from 'lucide-react';
+import { RotateCcw, Save } from 'lucide-react';
 import { BlacklistResponse } from '@/types/blacklist';
 
 export interface BlacklistFormData {
@@ -63,14 +63,14 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
         취소
       </Button>
       <Button variant="primary" size="default" onClick={onSubmit} disabled={!isValid || isSubmitting}>
-        <Send size={16} />
+        <Save size={16} />
         저장
       </Button>
     </div>
   );
 
   return (
-    <GridForm labelWidth="140px" gap="16px" bottomRightActions={bottomRightActions}>
+    <GridForm gap="16px" bottomRightActions={bottomRightActions}>
       {/* 읽기 전용 정보 섹션 */}
       {blacklist && (
         <>

@@ -147,7 +147,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
     <>
       <TitleRow title="거주자 기본 정보" subtitle="거주자의 개인 정보를 관리합니다." />
       <GridForm 
-        labelWidth="120px" 
+        
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
@@ -166,7 +166,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <SimpleTextInput
             value={data.name}
             onChange={(value) => handleFieldChange('name', value)}
-            placeholder="이름을 입력해주세요"
+            placeholder="이름"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -190,7 +190,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <SimpleTextInput
             value={data.phone}
             onChange={(value) => handleFieldChange('phone', value)}
-            placeholder="전화번호를 입력해주세요"
+            placeholder="전화번호"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -215,7 +215,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             type="email"
             value={data.email}
             onChange={(value) => handleFieldChange('email', value)}
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -240,7 +240,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
             type="text"
             value={data.birthDate}
             onChange={(value) => handleFieldChange('birthDate', value)}
-            placeholder="YYYY-MM-DD 형식으로 입력해주세요"
+            placeholder="YYYY-MM-DD"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -289,7 +289,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <SimpleTextInput
             value={data.emergencyContact}
             onChange={(value) => handleFieldChange('emergencyContact', value)}
-            placeholder="비상연락처를 입력해주세요"
+            placeholder="비상연락처"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -313,7 +313,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           <SimpleTextInput
             value={data.memo}
             onChange={(value) => handleFieldChange('memo', value)}
-            placeholder="메모를 입력해주세요"
+            placeholder="메모"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',

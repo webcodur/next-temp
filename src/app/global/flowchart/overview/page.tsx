@@ -1,7 +1,7 @@
 /*
   파일명: src/app/global/flowchart/overview/page.tsx
-  기능: 조직도 및 통합 다이어그램 페이지
-  책임: 시스템의 계층 구조를 시각적으로 표현하고 각 요소의 상세 정보를 제공한다.
+  기능: 시스템 사이트맵 페이지
+  책임: 관리 시스템의 실제 메뉴와 기능을 시각적으로 표현하고 관련 페이지 정보를 제공한다.
 */
 
 'use client';
@@ -38,8 +38,8 @@ export default function OrganizationOverviewPage() {
     <div className="container p-6 mx-auto space-y-6">
       {/* 페이지 헤더 */}
       <PageHeader
-        title="조직도 및 통합 다이어그램"
-        subtitle="시스템의 계층 구조와 각 요소 간의 관계를 시각적으로 확인할 수 있습니다."
+        title="시스템 사이트맵"
+        subtitle="주차장 관리 시스템의 관리 영역별 실제 페이지와 기능을 한눈에 확인할 수 있습니다."
       />
 
       {/* 메인 콘텐츠 */}

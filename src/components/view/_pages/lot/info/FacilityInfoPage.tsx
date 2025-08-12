@@ -88,7 +88,7 @@ export default function FacilityInfoPage() {
             <Building2 className="w-5 h-5 neu-icon-active" />
             기본 정보
           </h2>
-          <GridForm labelWidth="200px">
+          <GridForm >
             {basicInfo.map(({ label, value }) => (
               <GridForm.Row key={label}>
                 <GridForm.Label>
@@ -109,7 +109,7 @@ export default function FacilityInfoPage() {
             <Users className="w-5 h-5 neu-icon-active" />
             시설 규모
           </h2>
-          <GridForm labelWidth="200px">
+          <GridForm >
             {facilityScale.map(({ label, value }) => (
               <GridForm.Row key={label}>
                 <GridForm.Label>
@@ -130,7 +130,7 @@ export default function FacilityInfoPage() {
             <Smartphone className="w-5 h-5 neu-icon-active" />
             디지털 서비스 현황
           </h2>
-          <GridForm labelWidth="200px">
+          <GridForm >
             {digitalStatus.map(({ label, value }) => (
               <GridForm.Row key={label}>
                 <GridForm.Label>
@@ -151,7 +151,7 @@ export default function FacilityInfoPage() {
             <Settings className="w-5 h-5 neu-icon-active" />
             운영 현황
           </h2>
-          <GridForm labelWidth="200px">
+          <GridForm >
             {operationStatus.map(({ label, value }) => (
               <GridForm.Row key={label}>
                 <GridForm.Label>
@@ -172,7 +172,7 @@ export default function FacilityInfoPage() {
             <FileText className="w-5 h-5 neu-icon-active" />
             계약 및 관리
           </h2>
-          <GridForm labelWidth="200px">
+          <GridForm >
             {contractManagement.map(({ label, value }) => (
               <GridForm.Row key={label}>
                 <GridForm.Label>

@@ -23,8 +23,8 @@ export function ActionButtons({ selectedId, isLoading, onConfirm }: ActionButton
         disabled={!selectedId || isLoading}
         className={`px-8 py-3 rounded-lg font-medium transition-all min-w-32 ${
           (!selectedId || isLoading) 
-            ? 'neu-flat opacity-50 cursor-not-allowed text-foreground' 
-            : 'neu-raised bg-primary text-white hover:scale-[1.02]'
+            ? 'neu-flat opacity-50 cursor-not-allowed text-muted-foreground bg-counter-2' 
+            : 'neu-raised bg-primary text-primary-foreground hover:scale-[1.02]'
         }`}
       >
         {isLoading ? '처리 중...' : '확인'}

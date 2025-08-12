@@ -108,6 +108,7 @@ export interface SystemConfig {
   id: number;
   key: string;
   value: string | number | boolean | object;
+  title?: string | null;
   description?: string | null;
   type: string;
   isActive: boolean;
@@ -126,6 +127,7 @@ export interface SystemConfigSearchRequest {
   limit?: number;
   config_key?: string;
   config_type?: string;
+  title?: string;
   description?: string;
   category?: string;
 }

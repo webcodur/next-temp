@@ -175,7 +175,7 @@ const CarForm: React.FC<CarFormProps> = ({
         subtitle="차량의 기본 정보를 관리합니다." 
       />
       <GridForm 
-        labelWidth="120px" 
+        
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
@@ -191,7 +191,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.carNumber}
             onChange={(value) => handleFieldChange('carNumber', value)}
-            placeholder="차량번호를 입력해주세요"
+            placeholder="차량번호"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -212,7 +212,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.brand}
             onChange={(value) => handleFieldChange('brand', value)}
-            placeholder="브랜드를 입력해주세요"
+            placeholder="브랜드"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -233,7 +233,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.model}
             onChange={(value) => handleFieldChange('model', value)}
-            placeholder="모델을 입력해주세요"
+            placeholder="모델"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -277,7 +277,7 @@ const CarForm: React.FC<CarFormProps> = ({
             type="number"
             value={data.year}
             onChange={(value) => handleFieldChange('year', value)}
-            placeholder="연식을 입력해주세요"
+            placeholder="연식"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -320,7 +320,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.outerText}
             onChange={(value) => handleFieldChange('outerText', value)}
-            placeholder="외부 텍스트를 입력해주세요"
+            placeholder="외부 텍스트"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -341,7 +341,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.externalSticker}
             onChange={(value) => handleFieldChange('externalSticker', value)}
-            placeholder="외부 스티커를 입력해주세요"
+            placeholder="외부 스티커"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -362,7 +362,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.frontImageUrl}
             onChange={(value) => handleFieldChange('frontImageUrl', value)}
-            placeholder="전면 이미지 URL을 입력해주세요"
+            placeholder="전면 이미지 URL"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -383,7 +383,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.rearImageUrl}
             onChange={(value) => handleFieldChange('rearImageUrl', value)}
-            placeholder="후면 이미지 URL을 입력해주세요"
+            placeholder="후면 이미지 URL"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -404,7 +404,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.sideImageUrl}
             onChange={(value) => handleFieldChange('sideImageUrl', value)}
-            placeholder="측면 이미지 URL을 입력해주세요"
+            placeholder="측면 이미지 URL"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -425,7 +425,7 @@ const CarForm: React.FC<CarFormProps> = ({
           <SimpleTextInput
             value={data.topImageUrl}
             onChange={(value) => handleFieldChange('topImageUrl', value)}
-            placeholder="상단 이미지 URL을 입력해주세요"
+            placeholder="상단 이미지 URL"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',

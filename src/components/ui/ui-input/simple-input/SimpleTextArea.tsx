@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { AlignLeft } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { ValidationRule } from '@/utils/validation';
 
 interface SimpleTextAreaProps {
 	label?: string;
@@ -29,7 +29,6 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 	rows = 4,
 	maxLength,
 	resize = 'vertical',
-	validationRule,
 	colorVariant = 'primary',
 	showCharCount = false,
 }) => {
@@ -70,18 +69,6 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 		textareaRef.current?.focus();
 	};
 
-	// validation 결과 계산
-	const validationResult = validationRule ? getValidationResult(value, validationRule) : null;
-	
-	// 피드백 타입 결정
-	const getFeedbackType = () => {
-		if (!validationRule || !validationResult) return 'info';
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
-			return validationResult.isValid ? 'success' : 'error';
-		}
-		return 'info';
-	};
-
 	// resize 클래스 매핑
 	const resizeClass = {
 		none: 'resize-none',
@@ -109,12 +96,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 				)}
 			</div>
 
-			{/* Validation Rule 표시 */}
-			{validationRule && (
-				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
-					<span>{validationResult?.message}</span>
-				</div>
-			)}
+			{/* Validation 피드백은 GridForm.Rules에서 처리됨 - 별도 표시 제거 */}
 
 			<div
 				onClick={handleContainerClick}

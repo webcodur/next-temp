@@ -24,17 +24,16 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { cn } from '@/lib/utils';
 import { SortableTableRow } from './SortableTableRow';
 import { SortableTableProps } from './types';
 
-const SortableTable = <T extends Record<string, any>>({
+const SortableTable = <T extends { id?: string | number }>({
   data,
   columns,
   className = '',
   headerClassName = '',
-  rowClassName = '',
+  getRowClassName = '',
   cellClassName = '',
   dragHandleColumn,
   onOrderChange,
@@ -44,7 +43,6 @@ const SortableTable = <T extends Record<string, any>>({
   itemName = '항목',
 }: SortableTableProps<T>) => {
   // #region 훅 및 상태
-  const { isRTL } = useLocale();
   const [activeId, setActiveId] = useState<string | null>(null);
 
   // DND 센서 설정
@@ -161,7 +159,7 @@ const SortableTable = <T extends Record<string, any>>({
             index={index}
             columns={columns}
             dragHandleColumn={dragHandleColumn}
-            rowClassName={rowClassName}
+            getRowClassName={getRowClassName}
             cellClassName={cellClassName}
             onRowClick={onRowClick}
           />
@@ -181,7 +179,7 @@ const SortableTable = <T extends Record<string, any>>({
 
     // 드래그 오버레이에서는 행만 표시 (테이블 헤더 제외)
     return (
-      <div className="bg-background shadow-lg rounded-lg border border-primary-4/30 opacity-90">
+      <div className="rounded-lg border shadow-lg opacity-90 bg-background border-primary-4/30">
         <table className="w-full">
           <tbody>
             <SortableTableRow
@@ -189,7 +187,7 @@ const SortableTable = <T extends Record<string, any>>({
               index={activeIndex}
               columns={columns}
               dragHandleColumn={dragHandleColumn}
-              rowClassName={rowClassName}
+              getRowClassName={getRowClassName}
               cellClassName={cellClassName}
               onRowClick={() => {}} // 드래그 오버레이에서는 클릭 비활성화
             />

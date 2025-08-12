@@ -36,7 +36,7 @@ export const FacilityEditor = ({
     handleDragStart,
     handleDragMove,
     handleDragEnd,
-    handleNavigate,
+    // handleNavigate,
   } = useFacilityEditor(initialLayout);
 
   const [modalState, setModalState] = useState({
@@ -99,34 +99,34 @@ export const FacilityEditor = ({
   }, []);
 
   // 선택된 셀들 삭제 처리
-  const handleDeleteSelected = useCallback(() => {
-    if (editorState.selectedCells.length > 0) {
-      actions.clearCells(editorState.selectedCells);
-    }
-  }, [editorState.selectedCells, actions]);
+  // const handleDeleteSelected = useCallback(() => {
+  //   if (editorState.selectedCells.length > 0) {
+  //     actions.clearCells(editorState.selectedCells);
+  //   }
+  // }, [editorState.selectedCells, actions]);
 
   // 선택된 셀들 타입 변경 처리
-  const handleSetSelectedCellsType = useCallback((type: CellType) => {
-    if (editorState.selectedCells.length > 0) {
-      actions.setCellsType(editorState.selectedCells, type);
-    }
-  }, [editorState.selectedCells, actions]);
+  // const handleSetSelectedCellsType = useCallback((type: CellType) => {
+  //   if (editorState.selectedCells.length > 0) {
+  //     actions.setCellsType(editorState.selectedCells, type);
+  //   }
+  // }, [editorState.selectedCells, actions]);
 
-  // 키보드 단축키 핸들러
-  const keyboardHandlers = {
-    onUndo: actions.undo,
-    onRedo: actions.redo,
-    onDelete: handleDeleteSelected,
-    onSetSelectedCellsType: handleSetSelectedCellsType,
-    onNavigate: handleNavigate,
-  };
+  // // 키보드 단축키 핸들러
+  // const keyboardHandlers = {
+  //   onUndo: actions.undo,
+  //   onRedo: actions.redo,
+  //   onDelete: handleDeleteSelected,
+  //   onSetSelectedCellsType: handleSetSelectedCellsType,
+  //   onNavigate: handleNavigate,
+  // };
 
   // 키보드 단축키 훅 사용
-  useKeyboardShortcuts({
-    isModalOpen: modalState.isOpen,
-    selectedCells: editorState.selectedCells,
-    handlers: keyboardHandlers,
-  });
+  // useKeyboardShortcuts({
+  //   isModalOpen: modalState.isOpen,
+  //   selectedCells: editorState.selectedCells,
+  //   handlers: keyboardHandlers,
+  // });
 
   // 저장 버튼 처리
   const handleSave = useCallback(() => {
@@ -152,11 +152,11 @@ export const FacilityEditor = ({
       />
 
       {/* 사용법 안내 */}
-      <div className="p-3 rounded-lg neu-flat bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-blue-700 dark:text-blue-300">
+      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 neu-flat dark:bg-blue-900/20 dark:border-blue-800">
+        <div className="grid grid-cols-1 gap-4 text-sm text-blue-700 md:grid-cols-2 lg:grid-cols-4 dark:text-blue-300">
           <div>
-            <h4 className="font-medium mb-1">선택</h4>
-            <ul className="text-xs space-y-1">
+            <h4 className="mb-1 font-medium">선택</h4>
+            <ul className="space-y-1 text-xs">
               <li>• 클릭: 단일 선택</li>
               <li>• Ctrl+클릭: 다중 선택</li>
               <li>• Shift+클릭: 범위 선택</li>
@@ -164,8 +164,8 @@ export const FacilityEditor = ({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium mb-1">편집</h4>
-            <ul className="text-xs space-y-1">
+            <h4 className="mb-1 font-medium">편집</h4>
+            <ul className="space-y-1 text-xs">
               <li>• 우클릭: 빈 공간 만들기</li>
               <li>• 더블클릭: 이름 편집</li>
               <li>• 1:좌석, 2:사물, 3:빈공간</li>
@@ -173,8 +173,8 @@ export const FacilityEditor = ({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium mb-1">네비게이션</h4>
-            <ul className="text-xs space-y-1">
+            <h4 className="mb-1 font-medium">네비게이션</h4>
+            <ul className="space-y-1 text-xs">
               <li>• 방향키: 이동</li>
               <li>• Shift+방향키: 범위 확장</li>
               <li>• Ctrl+Z: 실행취소</li>
@@ -182,8 +182,8 @@ export const FacilityEditor = ({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium mb-1">크기 조절</h4>
-            <ul className="text-xs space-y-1">
+            <h4 className="mb-1 font-medium">크기 조절</h4>
+            <ul className="space-y-1 text-xs">
               <li>• 슬라이더: 셀 크기 조절</li>
               <li>• 숫자 입력: 그리드 크기 조절</li>
               <li>• 크기 변경 시 자동 저장</li>
@@ -210,8 +210,8 @@ export const FacilityEditor = ({
       />
 
       {/* 하단 상태 표시 */}
-      			<div className="flex items-center justify-between p-3 rounded-lg neu-flat bg-serial-1 text-sm text-foreground">
-        <div className="flex items-center gap-4">
+      			<div className="flex justify-between items-center p-3 text-sm rounded-lg neu-flat bg-serial-1 text-foreground">
+        <div className="flex gap-4 items-center">
           <span>
             총 객체: <strong>{layout.cells.length}개</strong>
           </span>
@@ -229,7 +229,7 @@ export const FacilityEditor = ({
         {onSave && (
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded-lg neu-raised hover:neu-inset bg-primary text-primary-foreground font-medium transition-all duration-150"
+            className="px-4 py-2 font-medium rounded-lg transition-all duration-150 neu-raised hover:neu-inset bg-primary text-primary-foreground"
           >
             저장
           </button>

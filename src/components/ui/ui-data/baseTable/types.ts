@@ -18,7 +18,7 @@ export interface BaseTableProps<T> {
 	columns: BaseTableColumn<T>[];
 	className?: string;
 	headerClassName?: string;
-	rowClassName?: string | ((item: T, index: number) => string);
+	getRowClassName?: string | ((item: T, index: number) => string);
 	cellClassName?: string;
 	pageSize?: number;
 	loadingRows?: number;

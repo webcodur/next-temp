@@ -20,12 +20,12 @@ import {
 } from '@/components/ui/ui-effects/tooltip/Tooltip';
 import { SortableRowProps } from './types';
 
-const SortableTableRow = <T extends Record<string, any>>({
+const SortableTableRow = <T extends { id?: string | number }>({
   item,
   index,
   columns,
   dragHandleColumn,
-  rowClassName,
+  getRowClassName,
   cellClassName,
   onRowClick,
 }: SortableRowProps<T>) => {
@@ -89,11 +89,11 @@ const SortableTableRow = <T extends Record<string, any>>({
       if (column.key !== dragHandleColumn) return null;
       
       return (
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center items-center">
           <div
             {...attributes}
             {...listeners}
-            className="p-2 rounded hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors"
+            className="p-2 rounded transition-colors hover:bg-primary/10 cursor-grab active:cursor-grabbing"
             title="드래그하여 순서 변경"
           >
             <GripVertical size={18} className="text-muted-foreground hover:text-primary" />
@@ -165,11 +165,11 @@ const SortableTableRow = <T extends Record<string, any>>({
   // #endregion
 
   // #region 행 클래스 이름 계산
-  const getRowClassName = () => {
-    if (typeof rowClassName === 'function') {
-      return rowClassName(item, index);
+  const computeRowClassName = () => {
+    if (typeof getRowClassName === 'function') {
+      return (getRowClassName as (item: T, index: number) => string)(item, index);
     }
-    return rowClassName || '';
+    return getRowClassName || '';
   };
 
   const hoverClass = onRowClick ? 'hover:bg-primary-2/[0.6] cursor-pointer' : '';
@@ -187,7 +187,7 @@ const SortableTableRow = <T extends Record<string, any>>({
           index % 2 === 0 ? 'bg-serial-0' : 'bg-serial-1',
           hoverClass,
           dragClass,
-          getRowClassName()
+          computeRowClassName()
         )}
       >
         {columns.map((column, colIndex) => (

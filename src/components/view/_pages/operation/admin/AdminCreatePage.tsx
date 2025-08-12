@@ -4,7 +4,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ArrowLeft, Save, Info } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -13,7 +12,7 @@ import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { ROLE_ID_MAP, ROLE_NAME_MAP } from '@/types/admin';
-import { currentPageLabelAtom } from '@/store/ui';
+
 
 // Admin 타입: 생성 시 필요한 필드만 명시
 export interface AdminInput {
@@ -29,16 +28,9 @@ export default function AdminCreatePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const copyFromId = searchParams.get('copyFrom');
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
+
   
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    setCurrentPageLabel({
-      label: '관리자 추가',
-      href: window.location.pathname,
-    });
-  }, [setCurrentPageLabel]);
-  // #endregion
+
 
   // #region 복사 기능
   const loadAdminForCopy = useCallback(async (adminId: number) => {

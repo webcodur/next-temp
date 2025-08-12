@@ -25,30 +25,36 @@ export function SelectedParkingLotCard({ selectedId, parkingLots }: SelectedPark
   // #region 렌더링
   return (
     <div className="mb-6">
-      <div className={`p-5 rounded-lg transition-all ${selectedId ? 'neu-inset' : 'neu-flat opacity-50'}`}>
+      <div className={`p-5 border rounded-lg transition-all ${
+        selectedId 
+          ? 'border-primary bg-primary-0' 
+          : 'border-border bg-counter-2'
+      }`}>
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
-                selectedId 
-                  ? 'neu-inset-shadow text-primary' 
-                  : 'neu-flat text-muted-foreground'
-              }`}>
-                {selectedId ? '선택됨' : '미선택'}
-              </span>
-            </div>
-            <h3 className="mb-1 text-lg font-bold text-foreground">
-              {selectedParkingLot?.name || '현장을 선택해주세요'}
-            </h3>
-            <p className="font-mono text-sm text-muted-foreground min-h-[1.25rem]">
-              {selectedId && selectedParkingLot?.code ? `#${selectedParkingLot.code}` : ''}
-            </p>
+            {selectedId ? (
+              <div className="flex items-center gap-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {selectedParkingLot?.name}
+                </h3>
+                {selectedParkingLot?.description && (
+                  <span className="text-sm text-muted-foreground">
+                    {selectedParkingLot.description}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-semibold text-foreground">현장을 선택해주세요</span>
+                <span className="text-sm text-muted-foreground">관리할 현장을 선택해주세요</span>
+              </div>
+            )}
           </div>
           <div className="relative">
             <div className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
               selectedId 
-                ? 'neu-raised text-primary' 
-                : 'neu-flat text-muted-foreground opacity-50'
+                ? 'bg-primary-1 text-primary' 
+                : 'bg-counter-3 text-muted-foreground'
             }`}>
               {selectedId ? (
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">

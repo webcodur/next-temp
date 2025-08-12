@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import GridForm from './GridForm';
-import { FileText, Calendar, Users, Settings, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { FileText, Calendar, Users, Settings } from 'lucide-react';
 
 const GridFormExample = () => {
 	const [formData, setFormData] = useState({
@@ -191,7 +191,7 @@ const GridFormExample = () => {
 			<div className="mb-12">
 				<h2 className="mb-4 text-xl font-semibold font-multilang">3. 커스텀 레이아웃 (좁은 라벨)</h2>
 				<div className="p-6 bg-white rounded-lg border">
-					<GridForm labelWidth="100px" gap="16px">
+					<GridForm gap="16px">
 						<GridForm.Row>
 							<GridForm.Label htmlFor="start-date">
 								<Calendar className="inline mr-1 w-4 h-4" />
@@ -250,7 +250,7 @@ const GridFormExample = () => {
 			<div className="mb-12">
 				<h2 className="mb-4 text-xl font-semibold font-multilang">4. 복잡한 컨텐츠 배치</h2>
 				<div className="p-6 bg-white rounded-lg border">
-					<GridForm labelWidth="120px">
+					<GridForm >
 						<GridForm.Row align="start">
 							<GridForm.Label>
 								<Settings className="inline mr-1 w-4 h-4" />

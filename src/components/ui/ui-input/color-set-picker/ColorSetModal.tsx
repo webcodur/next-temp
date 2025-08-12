@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useColorSet } from '@/hooks/useColorSet';
+import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';

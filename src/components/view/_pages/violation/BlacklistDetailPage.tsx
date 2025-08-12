@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Unlock } from 'lucide-react';
-import { useAtom } from 'jotai';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -21,7 +20,7 @@ import { unblockBlacklist } from '@/services/blacklist/blacklists@id_unblock_PAT
 
 // 타입 정의
 import { BlacklistResponse, BlacklistRegistrationReason } from '@/types/blacklist';
-import { currentPageLabelAtom } from '@/store/atom';
+
 
 // (상수 불필요 — 폼 컴포넌트 내부로 이동)
 
@@ -30,7 +29,7 @@ export default function BlacklistDetailPage() {
   const params = useParams();
   const routerRef = useRef(router);
   routerRef.current = router;
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
+
   const id = Number(params.id);
   
   // #region 상태 관리
@@ -52,14 +51,7 @@ export default function BlacklistDetailPage() {
   const [unblockReason, setUnblockReason] = useState('');
   // #endregion
 
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    setCurrentPageLabel({
-      label: '블랙리스트 상세',
-      href: typeof window !== 'undefined' ? window.location.pathname : '/parking/violation/blacklist',
-    });
-  }, [setCurrentPageLabel]);
-  // #endregion
+
 
   // #region 데이터 로드
   const loadBlacklistData = useCallback(async () => {
@@ -289,7 +281,7 @@ export default function BlacklistDetailPage() {
       <Modal isOpen={unblockConfirmOpen} onClose={() => setUnblockConfirmOpen(false)} title="블랙리스트 해제" size="sm">
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold mb-2">해제 확인</h3>
+            <h3 className="mb-2 text-lg font-semibold">해제 확인</h3>
             <p className="text-muted-foreground">
               차량번호 <strong>{blacklistData.carNumber}</strong>를 블랙리스트에서 해제하시겠습니까?
             </p>
@@ -301,7 +293,7 @@ export default function BlacklistDetailPage() {
             onChange={setUnblockReason}
             placeholder="해제 사유를 입력하세요"
           />
-          <div className="flex justify-center gap-3 pt-2">
+          <div className="flex gap-3 justify-center pt-2">
             <Button variant="outline" onClick={() => setUnblockConfirmOpen(false)}>
               취소
             </Button>
@@ -316,7 +308,7 @@ export default function BlacklistDetailPage() {
       <Modal isOpen={successDialogOpen} onClose={() => setSuccessDialogOpen(false)} title="작업 완료" size="sm">
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{dialogMessage}</p>
           </div>
           <div className="flex justify-center pt-4">
@@ -329,7 +321,7 @@ export default function BlacklistDetailPage() {
       <Modal isOpen={errorDialogOpen} onClose={() => setErrorDialogOpen(false)} title="오류 발생" size="sm">
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{dialogMessage}</p>
           </div>
           <div className="flex justify-center pt-4">

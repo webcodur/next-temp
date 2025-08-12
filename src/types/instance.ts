@@ -1,6 +1,4 @@
 // 인스턴스 관리 타입 정의
-import { ResidentInstance } from './resident';
-
 export type InstanceType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
 
 // 기본 인스턴스 정보
@@ -152,9 +150,7 @@ export interface CarInstanceWithCar {
 }
 
 // 인스턴스 상세 정보 (모든 관련 정보 포함)
-export interface InstanceDetail extends Instance {
-  // Instance에서 이미 관련 데이터들이 포함되어 있음
-}
+export type InstanceDetail = Instance;
 
 // 페이지네이션 응답
 export interface PaginatedInstanceResponse {

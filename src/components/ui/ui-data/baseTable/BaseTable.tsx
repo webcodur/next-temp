@@ -25,7 +25,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 	columns,
 	className = '',
 	headerClassName = '',
-	rowClassName = '',
+	getRowClassName = '',
 	cellClassName = '',
 	pageSize = 10,
 	loadingRows = 5,
@@ -260,11 +260,11 @@ const BaseTable = <T extends Record<string, unknown>>({
 				// 데이터 렌더링
 				displayData.map((item, index) => {
 					// 행 클래스 이름 계산
-					const getRowClassName = () => {
-						if (typeof rowClassName === 'function') {
-							return rowClassName(item, index);
+					const computeRowClassName = () => {
+						if (typeof getRowClassName === 'function') {
+							return getRowClassName(item, index);
 						}
-						return rowClassName;
+						return getRowClassName;
 					};
 
 					const hoverClass = 'hover:bg-primary-2/[0.6]';
@@ -277,7 +277,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 								${index % 2 === 0 ? 'bg-serial-0' : 'bg-serial-1'}
 								${hoverClass}
 								${onRowClick ? 'cursor-pointer' : ''}
-								${getRowClassName()}
+								${computeRowClassName()}
 							`}
 						>
 							{columns.map((column, colIndex) => (

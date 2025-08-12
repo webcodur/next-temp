@@ -112,7 +112,7 @@ export default function HubNoticeCreatePage() {
 
       {/* 폼 */}
       <div className="bg-card rounded-lg border border-border p-6">
-        <GridForm labelWidth="120px">
+        <GridForm >
           {/* 제목 */}
           <GridForm.Row>
             <GridForm.Label required htmlFor="title">

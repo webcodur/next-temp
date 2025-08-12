@@ -4,7 +4,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -15,7 +14,7 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
 
-import { currentPageLabelAtom } from '@/store/ui';
+
 
 // Admin 타입 정의
 interface Admin {
@@ -34,16 +33,9 @@ export default function AdminPasswordChangePage() {
   const router = useRouter();
   const params = useParams();
   const adminId = Number(params.id);
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
 
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    setCurrentPageLabel({
-      label: '비밀번호 변경',
-      href: window.location.pathname,
-    });
-  }, [setCurrentPageLabel]);
-  // #endregion
+
+
 
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);
@@ -198,7 +190,7 @@ export default function AdminPasswordChangePage() {
 
       {/* 폼 섹션 */}
       <div className="p-6 rounded-lg border bg-card border-border">
-        <GridForm labelWidth="140px" gap="20px">
+        <GridForm gap="20px">
           <GridForm.Row>
             <GridForm.Label required>
               현재 비밀번호
@@ -208,7 +200,7 @@ export default function AdminPasswordChangePage() {
                 type="password"
                 value={formData.currentPassword}
                 onChange={(value) => handleFieldChange('currentPassword', value)}
-                placeholder="현재 비밀번호를 입력해주세요"
+                placeholder="현재 비밀번호"
                 disabled={isSubmitting}
               />
             </GridForm.Content>
@@ -223,7 +215,7 @@ export default function AdminPasswordChangePage() {
                 type="password"
                 value={formData.newPassword}
                 onChange={(value) => handleFieldChange('newPassword', value)}
-                placeholder="새 비밀번호를 입력해주세요 (최소 6자리)"
+                placeholder="새 비밀번호 (최소 6자)"
                 disabled={isSubmitting}
               />
             </GridForm.Content>
@@ -238,7 +230,7 @@ export default function AdminPasswordChangePage() {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(value) => handleFieldChange('confirmPassword', value)}
-                placeholder="새 비밀번호를 다시 입력해주세요"
+                placeholder="비밀번호 확인"
                 disabled={isSubmitting}
               />
               {showPasswordError && (
@@ -275,7 +267,7 @@ export default function AdminPasswordChangePage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -296,7 +288,7 @@ export default function AdminPasswordChangePage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           

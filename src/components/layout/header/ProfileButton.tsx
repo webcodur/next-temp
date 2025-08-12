@@ -7,7 +7,6 @@
 
 import { useState, useRef, useEffect, memo } from 'react';
 
-import { useRouter } from 'next/navigation';
 import { User, LogOut, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -27,7 +26,6 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 	// #endregion
 
 	// #region 훅
-	const router = useRouter();
 	const { 
 		logout, 
 		userProfile, 

@@ -10,7 +10,8 @@ export default function BlacklistConfigManagementPage() {
       category="Blacklist"
       title="블랙리스트 설정"
       subtitle="블랙리스트 관리와 관련된 시스템 설정을 관리합니다"
-      editBaseRoute="/parking/violation/blacklist-config"
+      successMessage="블랙리스트 설정이 성공적으로 수정되었습니다."
+      categoryErrorMessage="블랙리스트 카테고리에 속하지 않는 설정입니다."
     />
   );
 }

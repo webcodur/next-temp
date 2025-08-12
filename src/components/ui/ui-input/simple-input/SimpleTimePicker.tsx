@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { Clock, CheckCircle, AlertCircle, X } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { ValidationRule, validateField } from '@/utils/validation';
 
 interface SimpleTimePickerProps {
 	label?: string;
@@ -68,7 +68,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 
 	// validation 결과 계산 (시간을 문자열로 변환하여 검증)
 	const stringValue = value ? value.toTimeString().split(' ')[0] : '';
-	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
+	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
 	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;

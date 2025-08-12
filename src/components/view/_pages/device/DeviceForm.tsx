@@ -188,7 +188,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       <div>
         <TitleRow title="차단기 기본 정보" subtitle="차단기의 기본 설정을 관리합니다." />
         <div className="h-4" />
-        <GridForm labelWidth="120px" gap="16px">
+        <GridForm gap="16px">
           <GridForm.Row>
             <GridForm.Label required={mode === 'create'}>
               차단기명
@@ -200,7 +200,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               <SimpleTextInput
                 value={data.name}
                 onChange={(value) => handleFieldChange('name', value)}
-                placeholder="차단기명을 입력해주세요"
+                placeholder="차단기명"
                 disabled={isReadOnly}
                 validationRule={{
                   type: 'free',
@@ -279,7 +279,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       <div>
         <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다." />
         <div className="h-4" />
-        <GridForm labelWidth="120px" gap="16px">
+        <GridForm gap="16px">
           <GridForm.Row>
             <GridForm.Label required={mode === 'create'}>
               IP 주소
@@ -352,7 +352,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       <div>
         <TitleRow title="운영 설정" subtitle="차단기 운영 상태 및 기능을 설정합니다." />
         <div className="h-4" />
-        <GridForm labelWidth="120px" gap="16px">
+        <GridForm gap="16px">
           <GridForm.Row>
             <GridForm.Label required={mode === 'create'}>
               운영 상태
@@ -449,7 +449,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           <TitleRow title="추가 정보" subtitle="차단기의 시스템 관련 정보입니다." />
           <div className="h-4" />
           <GridForm 
-            labelWidth="120px" 
+            
             gap="16px"
             bottomLeftActions={bottomLeftActions}
             bottomRightActions={bottomRightActions}

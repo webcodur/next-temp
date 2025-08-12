@@ -30,7 +30,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	columns,
 	className = '',
 	headerClassName = '',
-	rowClassName = '',
+	getRowClassName = '',
 	cellClassName = '',
 	pageSize: basePageSize = 10,
 	loadingRows = 5,
@@ -63,7 +63,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 				columns={columns}
 				className={className}
 				headerClassName={headerClassName}
-				rowClassName={rowClassName}
+				getRowClassName={getRowClassName}
 				cellClassName={cellClassName}
 				pageSize={paginationState.pageSize}
 				loadingRows={loadingRows}

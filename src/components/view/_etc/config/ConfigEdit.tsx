@@ -4,7 +4,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAtom } from 'jotai';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -18,18 +17,20 @@ import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleText
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 
 // API 호출
-import { getConfigByKey } from '@/services/config/config@key_GET';
-import { updateConfig } from '@/services/config/config@key_PUT';
+import { searchConfigs } from '@/services/config/config$_GET';
+import { getConfigById } from '@/services/config/config@id_GET';
+import { updateConfigById } from '@/services/config/config@id_PUT';
 
 // 타입 정의
 import { UpdateSystemConfigRequest } from '@/types/api';
-import { currentPageLabelAtom } from '@/store/ui';
 
 // #region 폼 데이터 인터페이스
 interface ConfigFormData {
+  id: number;
   key: string;
   value: string;
   type: 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON';
+  title: string;
   description: string;
   category: string;
   group: string;
@@ -41,7 +42,7 @@ interface ConfigEditProps {
   category: string;
   /** 페이지 제목 */
   title: string;
-  /** 목록 페이지로 돌아갈 경로 */
+  /** 뒤로가기 경로 */
   backRoute: string;
   /** 성공 메시지 */
   successMessage: string;
@@ -59,21 +60,8 @@ export default function ConfigEdit({
 }: ConfigEditProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawConfigKey = searchParams.get('key');
-  // URL 파라미터 디코딩
-  const configKey = rawConfigKey ? decodeURIComponent(rawConfigKey) : null;
-  const [, setCurrentPageLabel] = useAtom(currentPageLabelAtom);
-
-  // #region 페이지 라벨 설정
-  useEffect(() => {
-    if (configKey) {
-      setCurrentPageLabel({
-        label: `${title}: ${configKey}`,
-        href: window.location.pathname,
-      });
-    }
-  }, [configKey, title, setCurrentPageLabel]);
-  // #endregion
+  const rawConfigId = searchParams.get('id');
+  const configId = rawConfigId ? parseInt(rawConfigId, 10) : null;
 
   // #region 상태 관리
   const [configData, setConfigData] = useState<ConfigFormData | null>(null);
@@ -90,22 +78,24 @@ export default function ConfigEdit({
 
   // #region 데이터 로드
   const loadConfigData = useCallback(async () => {
-    if (!configKey || configKey.trim() === '') {
-      console.error('설정 키가 없습니다:', { rawConfigKey, configKey });
-      setDialogMessage('설정 키가 제공되지 않았습니다.');
+    if (!configId || isNaN(configId)) {
+      console.error('설정 ID가 없거나 유효하지 않습니다:', { rawConfigId, configId });
+      setDialogMessage('설정 ID가 제공되지 않았거나 유효하지 않습니다.');
       setErrorDialogOpen(true);
       return;
     }
 
     setLoading(true);
     try {
-      const result = await getConfigByKey(configKey);
+      console.log('설정 로드 시도:', configId);
+      
+      const result = await getConfigById(configId);
+      console.log('설정 로드 결과:', result);
       
       if (result.success && result.data) {
         const config = result.data;
         
         // category 확인 (대소문자 무시)
-        
         if (config.category?.toUpperCase() !== category?.toUpperCase()) {
           setDialogMessage(categoryErrorMessage);
           setErrorDialogOpen(true);
@@ -121,9 +111,11 @@ export default function ConfigEdit({
         }
         
         const configFormData: ConfigFormData = {
+          id: config.id,
           key: config.key,
           value: valueStr,
           type: config.type as 'BOOLEAN' | 'INTEGER' | 'STRING' | 'JSON',
+          title: config.title || config.key,
           description: config.description || '',
           category: config.category || '',
           group: config.group || '',
@@ -144,7 +136,7 @@ export default function ConfigEdit({
     } finally {
       setLoading(false);
     }
-  }, [configKey, rawConfigKey, category, categoryErrorMessage]);
+  }, [configId, rawConfigId, category, categoryErrorMessage]);
 
   useEffect(() => {
     loadConfigData();
@@ -171,16 +163,7 @@ export default function ConfigEdit({
     
     return formData.value.trim() !== '';
   }, [formData, hasChanges]);
-  // #endregion
 
-  // #region 네비게이션 핸들러
-  const handleBack = useCallback(() => {
-    if (hasChanges) {
-      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    router.push(backRoute);
-  }, [router, backRoute, hasChanges]);
   // #endregion
 
   // #region 폼 핸들러
@@ -189,21 +172,21 @@ export default function ConfigEdit({
     
     setFormData(prev => prev ? {
       ...prev,
-      [field]: value,
+      [field]: value
     } : null);
   }, [formData]);
 
   const handleReset = useCallback(() => {
     if (!hasChanges || !originalData) return;
     
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
+    const confirmMessage = '변경사항이 모두 초기화됩니다. 계속하시겠습니까?';
     if (!confirm(confirmMessage)) return;
     
     setFormData(originalData);
   }, [hasChanges, originalData]);
 
   const handleSubmit = useCallback(async () => {
-    if (!formData || !isValid || isSubmitting || !configKey) return;
+    if (!formData || !isValid || isSubmitting || !configId) return;
     
     setIsSubmitting(true);
     
@@ -217,15 +200,14 @@ export default function ConfigEdit({
           break;
         case 'INTEGER':
           parsedValue = parseInt(formData.value, 10);
-          if (isNaN(parsedValue as number)) {
-            throw new Error('유효하지 않은 숫자입니다.');
-          }
           break;
         case 'JSON':
           try {
             parsedValue = JSON.parse(formData.value);
           } catch {
-            throw new Error('유효하지 않은 JSON 형식입니다.');
+            setDialogMessage('JSON 형식이 올바르지 않습니다.');
+            setErrorDialogOpen(true);
+            return;
           }
           break;
         case 'STRING':
@@ -238,7 +220,7 @@ export default function ConfigEdit({
         value: parsedValue,
       };
 
-      const result = await updateConfig(configKey, updateData);
+      const result = await updateConfigById(configData!.id, updateData);
 
       if (result.success) {
         setDialogMessage(successMessage);
@@ -261,7 +243,7 @@ export default function ConfigEdit({
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, isValid, isSubmitting, configKey, loadConfigData, successMessage]);
+  }, [formData, isValid, isSubmitting, configId, loadConfigData, successMessage, configData]);
   // #endregion
 
   // #region 값 입력 컴포넌트 렌더링
@@ -320,177 +302,138 @@ export default function ConfigEdit({
   }, [formData, isSubmitting, handleFieldChange]);
   // #endregion
 
+  // #region 렌더링
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">로딩 중...</div>
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">설정을 불러오는 중...</p>
+        </div>
       </div>
     );
   }
 
-  if (!configData || !formData) {
+  if (!formData) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">설정 정보를 찾을 수 없습니다.</div>
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <p className="text-muted-foreground">설정을 찾을 수 없습니다.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 헤더 */}
-      <PageHeader 
+    <div className="flex flex-col gap-6 p-6">
+      {/* 페이지 헤더 */}
+      <PageHeader
         title={title}
-        subtitle={`해당 설정값을 수정합니다`}
-        leftActions={
+        subtitle={`${formData.title || formData.key} 설정을 편집합니다`}
+        leftContent={
           <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="목록으로"
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push(backRoute)}
+            className="flex items-center gap-2"
           >
-            <ArrowLeft size={16} />
-            목록
+            <ArrowLeft className="h-4 w-4" />
+            목록으로
           </Button>
         }
       />
 
-      {/* 설정 편집 폼 */}
-      <div className="p-6 rounded-lg border bg-card border-border">
-        <GridForm 
-          labelWidth="140px" 
-          gap="20px"
-          bottomRightActions={
-            <div className="flex gap-3">
-              <Button 
-                variant="secondary" 
-                size="default"
-                onClick={handleReset} 
-                disabled={!hasChanges || isSubmitting}
-                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-              >
-                <RotateCcw size={16} />
-                복구
-              </Button>
-              <Button 
-                variant="primary" 
-                size="default"
-                onClick={handleSubmit} 
-                disabled={!isValid || isSubmitting}
-                title={isSubmitting ? '저장 중...' : !isValid ? '올바른 값을 입력해주세요' : '변경사항 저장'}
-              >
-                <Save size={16} />
-                {isSubmitting ? '저장 중...' : '저장'}
-              </Button>
-            </div>
-          }
+      {/* 편집 폼 */}
+      <div className="max-w-2xl">
+        <GridForm
+          title="설정 편집"
+          description="설정값을 변경하고 저장하세요"
+          columns={1}
+          className="space-y-6"
         >
-          <GridForm.Row>
-            <GridForm.Label>설정 키</GridForm.Label>
-            <GridForm.Rules>시스템 자동 생성</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={formData.key}
-                disabled={true}
-                className="font-mono"
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+          {/* 설정 정보 (읽기 전용) */}
+          <div className="space-y-4 p-4 rounded-lg bg-muted/30">
+            <h3 className="text-sm font-medium text-foreground">설정 정보</h3>
+            
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">설정 키:</span>
+                <span className="ml-2 font-mono">{formData.key}</span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">타입:</span>
+                <span className="ml-2 px-2 py-1 rounded bg-primary/10 text-primary">
+                  {formData.type}
+                </span>
+              </div>
+              <div className="col-span-2">
+                <span className="text-muted-foreground">설명:</span>
+                <span className="ml-2">{formData.description || '-'}</span>
+              </div>
+            </div>
+          </div>
 
-          <GridForm.Row>
-            <GridForm.Label>그룹</GridForm.Label>
-            <GridForm.Rules>설정 그룹 분류</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={formData.group}
-                disabled={true}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
+          {/* 값 편집 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">
+              설정값
+              {hasChanges && <span className="text-amber-500 ml-1">*</span>}
+            </label>
+            {renderValueInput()}
+            {formData.type === 'JSON' && (
+              <p className="text-xs text-muted-foreground">
+                올바른 JSON 형식으로 입력해주세요.
+              </p>
+            )}
+          </div>
 
-          <GridForm.Row>
-            <GridForm.Label>카테고리</GridForm.Label>
-            <GridForm.Rules>설정 카테고리 분류</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={formData.category}
-                disabled={true}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>타입</GridForm.Label>
-            <GridForm.Rules>BOOLEAN/INTEGER/STRING/JSON</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={formData.type}
-                disabled={true}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label>설명</GridForm.Label>
-            <GridForm.Rules>설정 항목 설명</GridForm.Rules>
-            <GridForm.Content>
-              <SimpleTextInput
-                value={formData.description}
-                disabled={true}
-              />
-            </GridForm.Content>
-          </GridForm.Row>
-
-          <GridForm.Row>
-            <GridForm.Label required>현재 값</GridForm.Label>
-            <GridForm.Rules>타입에 따른 유효값</GridForm.Rules>
-            <GridForm.Content>
-              {renderValueInput()}
-              {formData.type === 'JSON' && (
-                <p className="mt-1 text-sm text-muted-foreground">
-                  유효한 JSON 형식으로 입력해주세요.
-                </p>
-              )}
-            </GridForm.Content>
-          </GridForm.Row>
+          {/* 버튼 그룹 */}
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              disabled={!hasChanges || isSubmitting}
+              className="flex items-center gap-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+              초기화
+            </Button>
+            
+            <Button
+              onClick={handleSubmit}
+              disabled={!isValid || isSubmitting}
+              className="flex items-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              {isSubmitting ? '저장 중...' : '저장'}
+            </Button>
+          </div>
         </GridForm>
       </div>
 
       {/* 성공 다이얼로그 */}
-      <Dialog
-        isOpen={successDialogOpen}
-        onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
-        title="작업 완료"
-      >
+      <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
         <DialogHeader>
-          <DialogTitle>성공</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
+          <DialogTitle>저장 완료</DialogTitle>
+          <DialogDescription>{dialogMessage}</DialogDescription>
         </DialogHeader>
-        
         <DialogFooter>
-          <Button onClick={() => setSuccessDialogOpen(false)}>
+          <Button onClick={() => {
+            setSuccessDialogOpen(false);
+            router.push(backRoute);
+          }}>
             확인
           </Button>
         </DialogFooter>
       </Dialog>
 
       {/* 오류 다이얼로그 */}
-      <Dialog
-        isOpen={errorDialogOpen}
-        onClose={() => setErrorDialogOpen(false)}
-        variant="error"
-        title="오류 발생"
-      >
+      <Dialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
         <DialogHeader>
           <DialogTitle>오류</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
+          <DialogDescription>{dialogMessage}</DialogDescription>
         </DialogHeader>
-        
         <DialogFooter>
           <Button onClick={() => setErrorDialogOpen(false)}>
             확인
@@ -499,4 +442,5 @@ export default function ConfigEdit({
       </Dialog>
     </div>
   );
+  // #endregion
 }

@@ -21,6 +21,9 @@ interface OrganizationChartProps {
 // #endregion
 
 // #region 상수
+// 비활성화된 노드 목록 (미개발 기능)
+const DISABLED_NODES = ['building', 'facility'];
+
 const NODES: ChartNode[] = [
   // 건물 (최상위)
   {
@@ -63,7 +66,7 @@ const NODES: ChartNode[] = [
   // 3단계: 개인과 차량 (호실 하위)
   {
     id: 'person',
-    label: '개인',
+    label: '입주민',
     type: 'person',
     x: 170,
     y: 250,
@@ -97,7 +100,11 @@ const CONNECTIONS = [
 // #endregion
 
 // #region 헬퍼 함수
-const getNodeColor = (type: ChartNode['type']) => {
+const isNodeDisabled = (nodeId: string) => {
+  return DISABLED_NODES.includes(nodeId);
+};
+
+const getNodeColor = (type: ChartNode['type'], nodeId: string) => {
   const baseColors = {
     building: "hsl(var(--serial-4))",
     parking: "hsl(var(--serial-1))",
@@ -107,10 +114,18 @@ const getNodeColor = (type: ChartNode['type']) => {
     vehicle: "hsl(var(--serial-3))",
   };
   
+  // 비활성화된 노드는 회색으로 표시
+  if (isNodeDisabled(nodeId)) {
+    return "hsl(var(--muted))";
+  }
+  
   return baseColors[type];
 };
 
-const getNodeStroke = (type: ChartNode['type'], isSelected: boolean) => {
+const getNodeStroke = (type: ChartNode['type'], isSelected: boolean, nodeId: string) => {
+  if (isNodeDisabled(nodeId)) {
+    return 'hsl(var(--muted-foreground) / 0.3)';
+  }
   return isSelected ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))';
 };
 // #endregion
@@ -139,7 +154,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
             if (!fromNode || !toNode) return null;
             
             // 연결선이 노드에서 여유 있게 떨어지도록 조정
-            const gap = 15; // 노드와 연결선 사이의 간격
+            const gap = 15;
             
             return (
               <line
@@ -168,13 +183,14 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
           {/* 노드 그리기 */}
           {NODES.map((node) => {
             const isSelected = node.id === selectedNodeId;
-            const color = getNodeColor(node.type);
-            const strokeColor = getNodeStroke(node.type, isSelected);
+            const isDisabled = isNodeDisabled(node.id);
+            const color = getNodeColor(node.type, node.id);
+            const strokeColor = getNodeStroke(node.type, isSelected, node.id);
             
             return (
               <g key={node.id}>
-                {/* 선택된 노드 배경 효과 */}
-                {isSelected && (
+                {/* 선택된 노드 배경 효과 (비활성화된 노드는 선택 불가) */}
+                {isSelected && !isDisabled && (
                   <rect
                     x={node.x - 44}
                     y={node.y - 29}
@@ -199,8 +215,12 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
                   stroke={strokeColor}
                   strokeWidth="1.5"
                   rx="6"
-                  className="drop-shadow-sm transition-all duration-200 cursor-pointer hover:brightness-110"
-                  onClick={() => onNodeClick(node)}
+                  className={`drop-shadow-sm transition-all duration-200 ${
+                    isDisabled 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'cursor-pointer hover:brightness-110'
+                  }`}
+                  onClick={() => !isDisabled && onNodeClick(node)}
                 />
                 
                 {/* 라벨 */}
@@ -208,11 +228,26 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
                   x={node.x}
                   y={node.y + 5}
                   textAnchor="middle"
-                  className="text-sm font-medium pointer-events-none select-none fill-foreground"
+                  className={`text-sm font-medium pointer-events-none select-none ${
+                    isDisabled ? 'opacity-60 fill-muted-foreground' : 'fill-foreground'
+                  }`}
                   style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}
                 >
                   {node.label}
                 </text>
+                
+                {/* 비활성화 표시 (준비중 텍스트) */}
+                {isDisabled && (
+                  <text
+                    x={node.x}
+                    y={node.y + 20}
+                    textAnchor="middle"
+                    className="text-xs opacity-80 pointer-events-none select-none fill-muted-foreground"
+                    style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }}
+                  >
+                    준비중
+                  </text>
+                )}
               </g>
             );
           })}
@@ -231,13 +266,23 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
         </div>
         <div className="flex gap-2 items-center">
           <div 
-            className="w-3 h-3 rounded-sm border-2 border-dashed opacity-60" 
+            className="w-3 h-3 rounded-sm border-2 border-dashed opacity-80" 
             style={{ 
               backgroundColor: 'hsl(var(--primary))', 
               borderColor: 'hsl(var(--primary))' 
             }}
           ></div>
           <span>선택된 항목</span>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div 
+            className="w-3 h-3 rounded-sm opacity-50" 
+            style={{ 
+              backgroundColor: 'hsl(var(--muted))',
+              border: '1px solid hsl(var(--muted-foreground) / 0.3)'
+            }}
+          ></div>
+          <span>준비중 (클릭 불가)</span>
         </div>
       </div>
     </div>

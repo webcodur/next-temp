@@ -204,7 +204,7 @@ export default function DeviceCreatePage() {
         {/* 폼 하단 버튼 영역 */}
         <div className="p-6 pt-0">
           <GridForm
-            labelWidth="0px"
+            
             gap="0px"
             bottomLeftActions={(
               <Button 

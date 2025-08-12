@@ -171,7 +171,7 @@ const VehicleListTable: React.FC<VehicleListTableProps> = ({
 	const renderTable = () => {
 		const tableProps = {
 			columns,
-			rowClassName: getRowClassName,
+			getRowClassName: getRowClassName,
 			onRowClick: onVehicleSelect,
 			loadMore: onLoadMore,
 			hasMore: hasMore,

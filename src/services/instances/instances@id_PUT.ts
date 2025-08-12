@@ -31,6 +31,9 @@ function serverToClient(server: InstanceServerResponse): Instance {
   return {
     id: server.id,
     parkinglotId: server.parkinglot_id,
+    name: '',
+    ownerName: null,
+    phone: '',
     address1Depth: server.address_1depth,
     address2Depth: server.address_2depth,
     address3Depth: server.address_3depth,
@@ -39,6 +42,7 @@ function serverToClient(server: InstanceServerResponse): Instance {
     memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
+    deletedAt: null,
   };
 }
 

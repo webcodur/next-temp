@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Type, X, Binary, Eye, EyeOff } from 'lucide-react';
-import { ValidationRule } from './types';
+import { ValidationRule } from '@/utils/validation';
 
 interface SimpleTextInputProps {
 	label?: string;
@@ -118,7 +118,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					autoComplete={autocomplete}
-					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
+					className="overflow-hidden flex-1 text-sm font-medium whitespace-nowrap bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-ellipsis"
 				/>
 
 				{/* 비밀번호 보기/숨기기 버튼 */}

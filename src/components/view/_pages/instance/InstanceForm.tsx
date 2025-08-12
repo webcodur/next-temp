@@ -152,7 +152,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
     <>
       <TitleRow title="호실 기본 정보" subtitle="호실의 기본 설정을 관리합니다." />
       <GridForm 
-        labelWidth="120px" 
+        
         gap="16px"
         bottomLeftActions={bottomLeftActions}
         bottomRightActions={bottomRightActions}
@@ -168,7 +168,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.name}
             onChange={(value) => handleFieldChange('name', value)}
-            placeholder="호실 이름을 입력해주세요"
+            placeholder="호실 이름"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -189,7 +189,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.ownerName}
             onChange={(value) => handleFieldChange('ownerName', value)}
-            placeholder="소유자 이름을 입력해주세요"
+            placeholder="소유자 이름"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -210,7 +210,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.phone}
             onChange={(value) => handleFieldChange('phone', value)}
-            placeholder="전화번호를 입력해주세요"
+            placeholder="전화번호"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -231,7 +231,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.address1Depth}
             onChange={(value) => handleFieldChange('address1Depth', value)}
-            placeholder="시/도를 입력해주세요"
+            placeholder="시/도"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -252,7 +252,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.address2Depth}
             onChange={(value) => handleFieldChange('address2Depth', value)}
-            placeholder="시/군/구를 입력해주세요"
+            placeholder="시/군/구"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -273,7 +273,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.address3Depth}
             onChange={(value) => handleFieldChange('address3Depth', value)}
-            placeholder="상세 주소를 입력해주세요"
+            placeholder="상세 주소"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -317,7 +317,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
             type="password"
             value={data.password}
             onChange={(value) => handleFieldChange('password', value)}
-            placeholder="호실 비밀번호를 입력해주세요"
+            placeholder="호실 비밀번호"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',
@@ -338,7 +338,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           <SimpleTextInput
             value={data.memo}
             onChange={(value) => handleFieldChange('memo', value)}
-            placeholder="메모를 입력해주세요"
+            placeholder="메모"
             disabled={isReadOnly}
             validationRule={{
               type: 'free',

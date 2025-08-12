@@ -32,12 +32,6 @@ export function ParkingLotTable({
       align: 'start',
     },
     {
-      key: 'code',
-      header: '코드',
-      align: 'start',
-      render: (value) => (value as string) || '-',
-    },
-    {
       key: 'description',
       header: '설명',
       align: 'start',
@@ -48,13 +42,15 @@ export function ParkingLotTable({
       align: 'center',
       width: '80px',
       cell: (item) => (
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto ${
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
           selectedId === item.id
-            ? 'neu-inset text-primary'
-            : 'neu-flat'
+            ? 'border-primary bg-primary'
+            : 'border-border bg-card hover:border-primary hover:border-opacity-60'
         }`}>
           {selectedId === item.id && (
-            <div className="w-2 h-2 rounded-full bg-primary" />
+            <svg className="w-3 h-3 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
           )}
         </div>
       )
@@ -65,8 +61,8 @@ export function ParkingLotTable({
   const getRowClassName = useCallback((item: ParkingLot) => {
     return `cursor-pointer transition-all ${
       selectedId === item.id
-        ? 'neu-inset-shadow bg-primary/5'
-        : 'hover:neu-inset-shadow hover:bg-muted/30'
+        ? 'bg-primary-0 border-l-4 border-l-primary'
+        : 'hover:bg-counter-1'
     }`;
   }, [selectedId]);
   // #endregion
@@ -88,7 +84,7 @@ export function ParkingLotTable({
         data={parkingLots}
         columns={columns}
         onRowClick={onParkingLotSelect}
-        rowClassName={getRowClassName}
+        getRowClassName={getRowClassName}
       />
     </div>
   );

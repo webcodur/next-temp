@@ -168,7 +168,7 @@ export default function DeviceNetworkConfigSection({
       {/* 네트워크 설정 섹션 */}
       <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 설정을 관리합니다." />
       <GridForm 
-        labelWidth="120px" 
+        
         gap="20px"
         bottomLeftActions={(
           <Button 

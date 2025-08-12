@@ -23,7 +23,7 @@ const InfiniteTable = <T extends Record<string, unknown>>({
 	columns,
 	className = '',
 	headerClassName = '',
-	rowClassName = '',
+	getRowClassName = '',
 	cellClassName = '',
 	pageSize = 10,
 	loadingRows = 5,
@@ -48,7 +48,7 @@ const InfiniteTable = <T extends Record<string, unknown>>({
 				columns={columns}
 				className={className}
 				headerClassName={headerClassName}
-				rowClassName={rowClassName}
+				getRowClassName={getRowClassName}
 				cellClassName={cellClassName}
 				pageSize={pageSize}
 				loadingRows={loadingRows}

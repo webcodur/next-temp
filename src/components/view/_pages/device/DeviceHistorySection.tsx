@@ -10,6 +10,7 @@ import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/Advance
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import FieldDatePicker from '@/components/ui/ui-input/field/datepicker/FieldDatePicker';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { searchParkingDeviceHistory } from '@/services/devices/devices@id_history$_GET';
 import { ParkingDevice, ParkingDeviceHistory } from '@/types/device';
 
@@ -48,6 +49,17 @@ export default function DeviceHistorySection({
     changedFields: '',
     startDate: null,
     endDate: null,
+  });
+
+  // 모달 상태
+  const [modalData, setModalData] = useState<{
+    isOpen: boolean;
+    content: string;
+    title: string;
+  }>({
+    isOpen: false,
+    content: '',
+    title: ''
   });
   // #endregion
 
@@ -129,6 +141,23 @@ export default function DeviceHistorySection({
   const updateFilter = useCallback(<K extends keyof HistoryFilters>(field: K, value: HistoryFilters[K]) => {
     setFilters(prev => ({ ...prev, [field]: value }));
   }, []);
+
+  // 모달 핸들러
+  const handleOpenModal = (title: string, content: unknown) => {
+    setModalData({
+      isOpen: true,
+      title,
+      content: typeof content === 'string' ? content : JSON.stringify(content, null, 2)
+    });
+  };
+
+  const handleCloseModal = () => {
+    setModalData({
+      isOpen: false,
+      title: '',
+      content: ''
+    });
+  };
   // #endregion
 
   // #region 유틸리티 함수
@@ -258,7 +287,11 @@ export default function DeviceHistorySection({
           .join(', ');
         
         return (
-          <div className="px-2 py-1 text-xs bg-red-50 rounded max-w-32">
+          <div 
+            className="px-2 py-1 text-xs bg-red-50 rounded transition-colors cursor-pointer max-w-32 hover:bg-red-100"
+            onClick={() => handleOpenModal('변경 전 데이터', item.beforeData)}
+            title="클릭하여 전체 내용 보기"
+          >
             <div className="truncate">
               {preview || 'JSON 데이터'}
             </div>
@@ -288,7 +321,11 @@ export default function DeviceHistorySection({
           .join(', ');
         
         return (
-          <div className="px-2 py-1 text-xs bg-green-50 rounded max-w-32">
+          <div 
+            className="px-2 py-1 text-xs bg-green-50 rounded transition-colors cursor-pointer max-w-32 hover:bg-green-100"
+            onClick={() => handleOpenModal('변경 후 데이터', item.afterData)}
+            title="클릭하여 전체 내용 보기"
+          >
             <div className="truncate">
               {preview || 'JSON 데이터'}
             </div>
@@ -435,6 +472,25 @@ export default function DeviceHistorySection({
           onPageSizeChange={handlePageSizeChange}
           minWidth="1200px"
         />
+
+        {/* 데이터 상세보기 모달 */}
+        <Modal
+          isOpen={modalData.isOpen}
+          onClose={handleCloseModal}
+          title={modalData.title}
+          size="lg"
+        >
+          <div className="space-y-4">
+            <div className="text-sm text-muted-foreground">
+              JSON 형태로 표시된 상세 데이터입니다.
+            </div>
+            <div className="overflow-auto max-h-96">
+              <pre className="p-4 text-xs leading-relaxed whitespace-pre-wrap break-words rounded-lg border bg-muted/30">
+                {modalData.content}
+              </pre>
+            </div>
+          </div>
+        </Modal>
     </div>
   );
 }

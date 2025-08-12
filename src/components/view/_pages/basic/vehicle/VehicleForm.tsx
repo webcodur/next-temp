@@ -6,6 +6,8 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import type { Car, CreateCarRequest, UpdateCarRequest } from '@/types/car';
+import { useValidation } from '@/hooks/ui-hooks/useValidation';
+import { createRequiredRule } from '@/utils/validation';
 
 // #region 타입 정의
 export type VehicleFormMode = 'create' | 'edit' | 'view';
@@ -61,7 +63,17 @@ export default function VehicleForm({
     topImageUrl: ''
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  // 유효성 검사 규칙 정의
+  const validationRules = useMemo(() => ({
+    carNumber: createRequiredRule('차량번호는 필수입니다')
+  }), []);
+
+  // 새로운 유효성 검사 훅 사용
+  const { 
+    errors, 
+    validateForm: validateFormData,
+    clearFieldError 
+  } = useValidation(validationRules);
   // #endregion
 
   // #region 데이터 초기화
@@ -97,31 +109,22 @@ export default function VehicleForm({
     // 부모 컴포넌트에 변경사항 알림
     onChange?.(updatedData);
     
-    // 에러 메시지 제거
+    // 에러 메시지 제거 (새로운 방식)
     if (errors[field]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
+      clearFieldError(field);
     }
-  }, [formData, onChange, errors]);
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.carNumber.trim()) {
-      newErrors.carNumber = '차량번호는 필수입니다.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  }, [formData, onChange, errors, clearFieldError]);
 
   const handleSubmit = () => {
     if (mode === 'view' || !onSubmit) return;
     
-    if (!validateForm()) return;
+    // 새로운 유효성 검사 방식 사용 - 문자열로 변환
+    const stringFormData = {
+      ...formData,
+      year: formData.year.toString()
+    };
+    const validationResult = validateFormData(stringFormData);
+    if (!validationResult.isValid) return;
 
     if (mode === 'create') {
       const submitData: CreateCarRequest = {

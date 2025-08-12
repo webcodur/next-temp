@@ -30,7 +30,7 @@ alwaysApply: false
 컴포넌트에서 useTranslations 훅을 import하고 t 함수로 키에 접근한다.
 
 ```tsx
-import { useTranslations } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const t = useTranslations();
 return <h1>{t('주차_시스템제목')}</h1>;
@@ -58,7 +58,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 현재 언어 확인과 프로그래밍 방식 언어 변경을 위해 useLocale 훅을 사용한다.
 
 ```tsx
-import { useLocale } from '@/hooks/useI18n';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 const { currentLocale, changeLocale } = useLocale();
 // currentLocale: 'ko' | 'en' | 'ar'

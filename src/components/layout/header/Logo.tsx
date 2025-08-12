@@ -18,11 +18,11 @@ export const Logo = memo(() => {
 	return (
 		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
 			<Image 
-				src="/icons/testLogo/lg_plus.png" 
+				src="/icons/testLogo/logo.svg" 
 				alt="System Logo" 
-				width={30} 
-				height={30}
-				style={{ width: 'auto', height: '30px' }}
+				width={40} 
+				height={40}
+				style={{ width: 'auto', height: '40px', borderRadius: '10px' }}
 			/>
 			<div className="flex flex-col gap-[2px] items-baseline ml-4">
 				{selectedParkingLot &&(

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw, Send } from 'lucide-react'; // Trash2 아이콘은 CrudButton에서 처리
+import { RotateCcw, Save } from 'lucide-react'; // Trash2 아이콘은 CrudButton에서 처리
 import GridForm from '@/components/ui/ui-layout/grid-form/GridForm';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -99,7 +99,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
         disabled={!isValid || disabled}
         title={disabled ? '저장 중...' : !isValid ? '필수 항목을 입력해주세요' : '변경사항 저장'}
       >
-        <Send size={16} />
+        <Save size={16} />
         저장
       </Button>
     </div>
@@ -107,7 +107,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
 
   return (
     <GridForm 
-      labelWidth="120px" 
+      
       gap="16px"
       topRightActions={topRightActions}
       bottomLeftActions={bottomLeftActions}
@@ -124,7 +124,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           <SimpleTextInput
             value={data.account}
             onChange={(value) => handleFieldChange('account', value)}
-            placeholder="계정명을 입력해주세요"
+            placeholder="계정명"
             disabled={disabled || mode !== 'create'}
             autocomplete="off"
             validationRule={{
@@ -146,7 +146,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           <SimpleTextInput
             value={data.name}
             onChange={(value) => handleFieldChange('name', value)}
-            placeholder="이름을 입력해주세요"
+            placeholder="이름"
             disabled={isReadOnly}
             autocomplete="off"
             validationRule={{
@@ -169,7 +169,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
             type="email"
             value={data.email}
             onChange={(value) => handleFieldChange('email', value)}
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일"
             disabled={isReadOnly}
             autocomplete="off"
             validationRule={{
@@ -239,7 +239,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 type="password"
                 value={data.password}
                 onChange={(value) => handleFieldChange('password', value)}
-                placeholder="비밀번호를 입력해주세요"
+                placeholder="비밀번호"
                 disabled={disabled}
                 autocomplete="new-password"
                 validationRule={{
@@ -262,7 +262,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                 type="password"
                 value={data.confirm}
                 onChange={(value) => handleFieldChange('confirm', value)}
-                placeholder="비밀번호를 다시 입력해주세요"
+                placeholder="비밀번호 확인"
                 disabled={disabled}
                 autocomplete="new-password"
                 validationRule={{

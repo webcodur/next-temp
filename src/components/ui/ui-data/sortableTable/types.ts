@@ -7,12 +7,12 @@
 import { BaseTableColumn } from '../baseTable/types';
 
 // #region 기본 타입
-export interface SortableTableColumn<T = Record<string, unknown>> extends BaseTableColumn<T> {
+export interface SortableTableColumn<T = unknown> extends BaseTableColumn<T> {
   // 추가 속성이 필요한 경우 여기에 정의
   sortable?: boolean;
 }
 
-export interface SortableTableProps<T extends Record<string, unknown>> {
+export interface SortableTableProps<T extends { id?: string | number }> {
   // 데이터 관련
   data: T[];
   columns: SortableTableColumn<T>[];
@@ -20,7 +20,7 @@ export interface SortableTableProps<T extends Record<string, unknown>> {
   // 스타일링
   className?: string;
   headerClassName?: string;
-  rowClassName?: string;
+  getRowClassName?: string | ((item: T, index: number) => string);
   cellClassName?: string;
   
   // 드래그 앤 드롭 관련
@@ -36,12 +36,12 @@ export interface SortableTableProps<T extends Record<string, unknown>> {
   itemName?: string; // 아이템 명칭 (스크린 리더용)
 }
 
-export interface SortableRowProps<T extends Record<string, unknown>> {
+export interface SortableRowProps<T extends { id?: string | number }> {
   item: T;
   index: number;
   columns: SortableTableColumn<T>[];
   dragHandleColumn?: string;
-  rowClassName?: string;
+  getRowClassName?: string | ((item: T, index: number) => string);
   cellClassName?: string;
   onRowClick?: (item: T, index: number) => void;
 }

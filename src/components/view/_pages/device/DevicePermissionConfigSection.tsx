@@ -52,7 +52,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
   onPermissionChange 
 }, ref) => {
   // #region 상태 관리
-  const defaultPermissions: PermissionConfigData = {
+  const defaultPermissions: PermissionConfigData = useMemo(() => ({
     residentPermission: true,
     regularPermission: true,
     visitorPermission: false,
@@ -62,7 +62,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
     taxiPermission: false,
     ticketMachinePermission: false,
     unregisteredPermission: false,
-  };
+  }), []);
 
   const initialData = mode === 'create' 
     ? defaultPermissions
@@ -255,7 +255,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
       {/* 액션 버튼 - edit 모드에서만 표시 */}
       {mode === 'edit' && (
         <GridForm
-          labelWidth="0px"
+          
           gap="0px"
           bottomLeftActions={(
             <Button 

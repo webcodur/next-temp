@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Hash, CheckCircle, AlertCircle, X } from 'lucide-react';
-import { ValidationRule, getValidationResult } from './types';
+import { Hash, X } from 'lucide-react';
+import { ValidationRule } from '@/utils/validation';
 
 interface SimpleNumberInputProps {
 	label?: string;
@@ -26,7 +26,6 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 	className = '',
 	min,
 	max,
-	validationRule,
 	colorVariant = 'primary',
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
@@ -91,21 +90,6 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 		inputRef.current?.focus();
 	};
 
-	// validation 결과 계산 (문자열로 변환하여 검증)
-	const stringValue = value === '' ? '' : String(value);
-	const validationResult = validationRule ? getValidationResult(stringValue, validationRule) : null;
-	
-	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
-	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-	
-	// 피드백 타입 결정
-	const getFeedbackType = () => {
-		if (!validationRule || !validationResult) return 'info';
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
-			return validationResult.isValid ? 'success' : 'error';
-		}
-		return 'info';
-	};
 
 	return (
 		<div className={`relative ${className}`}>
@@ -117,21 +101,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 				)}
 			</div>
 
-			{/* Validation Rule 표시 */}
-			{validationRule && (
-				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
-					<div className="flex items-center">
-						<span>{validationResult?.message}</span>
-						{shouldShowIcon && (
-							validationResult.isValid ? (
-								<CheckCircle className="ml-2 w-4 h-4 text-blue-500" />
-							) : (
-								<AlertCircle className="ml-2 w-4 h-4 text-red-500" />
-							)
-						)}
-					</div>
-				</div>
-			)}
+			{/* Validation 피드백은 GridForm.Rules에서 처리됨 - 별도 표시 제거 */}
 
 			<div
 				onClick={handleContainerClick}

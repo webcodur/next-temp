@@ -23,9 +23,6 @@ import { searchParkingDevices } from '@/services/devices/devices$_GET';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 
-// 유틸리티
-import dateFormat from '@/utils/dateFormat';
-
 // 타입 정의
 import { ParkingDevice } from '@/types/device';
 import { Option } from '@/components/ui/ui-input/field/core/types';
