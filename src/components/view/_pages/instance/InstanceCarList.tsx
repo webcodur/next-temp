@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Car, CarFront, ChevronRight } from 'lucide-react';
+import { Car, CarFront, Calendar, Fuel, Tag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CarInstanceWithCar } from '@/types/instance';
+import InfoCard, { InfoCardField, InfoCardBadge } from '@/components/ui/ui-layout/info-card/InfoCard';
 
 interface InstanceCarListProps {
   carInstances?: CarInstanceWithCar[];
@@ -53,56 +54,76 @@ export default function InstanceCarList({
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {carInstances.map((carInstance) => (
-            <div
-              key={carInstance.id}
-              onClick={() => handleCarClick(carInstance.car.id)}
-              className="flex justify-between items-center p-3 rounded-lg border transition-all cursor-pointer border-border hover:border-primary hover:bg-accent/50"
-            >
-              <div className="flex-1">
-                <div className="flex gap-3 items-center">
-                  <div className="flex flex-shrink-0 justify-center items-center w-8 h-8 rounded-full bg-primary/10">
-                    <CarFront size={16} className="text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium truncate text-foreground">
-                      {carInstance.car.carNumber}
-                    </h4>
-                    <p className="text-xs truncate text-muted-foreground">
-                      {carInstance.car.brand && carInstance.car.model 
-                        ? `${carInstance.car.brand} ${carInstance.car.model}`
-                        : carInstance.car.brand || carInstance.car.model || '브랜드/모델 없음'
-                      }
-                    </p>
-                    {carInstance.car.outerText && (
-                      <p className="text-xs truncate text-muted-foreground">
-                        {carInstance.car.outerText}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex gap-2 items-center mt-2 ml-11">
-                  {carInstance.carShareOnoff && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                      공유차량
-                    </span>
-                  )}
-                  {carInstance.car.fuel && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full">
-                      {carInstance.car.fuel}
-                    </span>
-                  )}
-                  {carInstance.car.year && (
-                    <span className="text-xs text-muted-foreground">
-                      {carInstance.car.year}년
-                    </span>
-                  )}
-                </div>
+        <div className="space-y-2">
+          {carInstances.map((carInstance) => {
+            // 배지 정보
+            const badges: InfoCardBadge[] = [];
+            if (carInstance.carShareOnoff) {
+              badges.push({
+                text: '공유차량',
+                variant: 'info'
+              });
+            }
+
+            // 좌측 열 데이터
+            const leftColumn: InfoCardField[] = [
+              {
+                icon: <Fuel />,
+                value: carInstance.car.fuel || '',
+                show: !!carInstance.car.fuel
+              },
+              {
+                icon: <Calendar />,
+                value: carInstance.car.year ? `${carInstance.car.year}년` : '',
+                show: !!carInstance.car.year
+              }
+            ];
+
+            // 우측 열 데이터
+            const rightColumn: InfoCardField[] = [];
+
+            // 외부 스티커가 있으면 우측 열에 추가
+            if (carInstance.car.externalSticker) {
+              rightColumn.push({
+                icon: <Tag />,
+                value: carInstance.car.externalSticker,
+                show: true
+              });
+            }
+
+            // 커스텀 제목 (번호판 + 브랜드/모델/차종)
+            const customTitle = (
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span 
+                  className="text-lg font-bold tracking-wider text-foreground"
+                  style={{ fontFamily: 'HY헤드라인M, monospace' }}
+                >
+                  {carInstance.car.carNumber || '번호판 없음'}
+                </span>
+                {(carInstance.car.brand || carInstance.car.model || carInstance.car.type) && (
+                  <span className="text-sm text-muted-foreground truncate">
+                    {[carInstance.car.brand, carInstance.car.model, carInstance.car.type]
+                      .filter(Boolean)
+                      .join(' ')}
+                  </span>
+                )}
               </div>
-              <ChevronRight size={16} className="flex-shrink-0 text-muted-foreground" />
-            </div>
-          ))}
+            );
+
+            return (
+              <InfoCard
+                key={carInstance.id}
+                headerIcon={<CarFront />}
+                title="" // customTitle을 사용하므로 빈 문자열
+                customTitle={customTitle}
+                badges={badges}
+                leftColumn={leftColumn}
+                rightColumn={rightColumn}
+                memo={carInstance.car.outerText || undefined}
+                onClick={() => handleCarClick(carInstance.car.id)}
+              />
+            );
+          })}
         </div>
       )}
     </div>

@@ -103,7 +103,7 @@ export default function HubNoticeCreatePage() {
           <Button
             variant="ghost"
             onClick={handleCancel}
-            title="취소하고 목록으로"
+            title="취소하고 뒤로가기"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

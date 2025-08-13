@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Unlock } from 'lucide-react';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -103,9 +104,9 @@ export default function BlacklistDetailPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleBack = useCallback(() => {
-    router.push('/parking/violation/blacklist');
-  }, [router]);
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/parking/violation/blacklist'
+  });
 
   const handleFormChange = useCallback((field: string, value: string | Date | null) => {
     console.log(`Field: ${field}, Value:`, value, `Type:`, typeof value);
@@ -242,10 +243,10 @@ export default function BlacklistDetailPage() {
             variant="secondary"
             size="default"
             onClick={handleBack}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
         rightActions={

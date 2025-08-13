@@ -4,39 +4,6 @@ import { atom } from 'jotai';
 import { defaults } from '@/data/sidebarConfig';
 
 // #region localStorage 유틸리티 함수들
-// localStorage에서 저장된 패널 폭을 가져오는 함수
-const getSavedPanelWidth = () => {
-  if (typeof window === 'undefined') return defaults.expandedWidth;
-  try {
-    const saved = localStorage.getItem('sidebarEndPanelWidth');
-    return saved ? parseInt(saved, 10) : defaults.expandedWidth;
-  } catch {
-    return defaults.expandedWidth;
-  }
-};
-
-// localStorage에서 사이드바 접힘 상태 가져오기
-const getSavedCollapsedState = () => {
-  if (typeof window === 'undefined') return false;
-  try {
-    const saved = localStorage.getItem('sidebarCollapsed');
-    return saved ? JSON.parse(saved) : false;
-  } catch {
-    return false;
-  }
-};
-
-// localStorage에서 활성 탑 메뉴 가져오기
-const getSavedActiveTopMenu = () => {
-  if (typeof window === 'undefined') return '주차';
-  try {
-    const saved = localStorage.getItem('sidebarActiveTopMenu');
-    return saved || '주차';
-  } catch {
-    return '주차';
-  }
-};
-
 // localStorage에서 단일 열기 모드 상태 가져오기
 const getSavedSingleOpenMode = () => {
   if (typeof window === 'undefined') return false;
@@ -50,51 +17,17 @@ const getSavedSingleOpenMode = () => {
 // #endregion
 
 // #region 사이드바 상태 atom들
-// 사이드바의 접힘/펼침 상태 (localStorage 연동)
-export const sidebarCollapsedAtom = atom(
-  getSavedCollapsedState(),
-  (get, set, newValue: boolean) => {
-    set(sidebarCollapsedAtom, newValue);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sidebarCollapsed', JSON.stringify(newValue));
-      } catch {
-        // localStorage 저장 실패 시 무시
-      }
-    }
-  }
-);
+// 중복 정의 방지: sidebarCollapsedAtom, endPanelWidthAtom, activeTopMenuAtom은 
+// src/store/ui.ts에서 정의되어 있으므로 이곳에서는 제거
 
-// 사이드바 끝 패널 너비 (localStorage 연동)
-export const endPanelWidthAtom = atom(
-  getSavedPanelWidth(),
-  (get, set, newWidth: number) => {
-    set(endPanelWidthAtom, newWidth);
-    // localStorage에 저장
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sidebarEndPanelWidth', newWidth.toString());
-      } catch {
-        // localStorage 저장 실패 시 무시
-      }
-    }
-  }
-);
+// 사이드바 접힘/펼침 상태는 src/store/ui.ts에서 관리
+// export const sidebarCollapsedAtom = ...
 
-// 현재 활성화된 Top 메뉴를 관리하는 atom (localStorage 연동)
-export const activeTopMenuAtom = atom(
-  getSavedActiveTopMenu(),
-  (get, set, newValue: string) => {
-    set(activeTopMenuAtom, newValue);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sidebarActiveTopMenu', newValue);
-      } catch {
-        // localStorage 저장 실패 시 무시
-      }
-    }
-  }
-);
+// 사이드바 끝 패널 너비는 src/store/ui.ts에서 관리  
+// export const endPanelWidthAtom = ...
+
+// 활성 탑 메뉴는 src/store/ui.ts에서 관리
+// export const activeTopMenuAtom = ...
 
 // 단일 열기 모드 상태 (localStorage 연동)
 export const singleOpenModeAtom = atom(

@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -134,13 +135,10 @@ export default function AdminDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const handleBack = () => {
-    if (hasChanges) {
-      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    router.push('/parking/lot/admin');
-  };
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/parking/lot/admin',
+    hasChanges
+  });
 
   const handleFormChange = useCallback((data: AdminFormData) => {
     setFormData(data);
@@ -148,9 +146,6 @@ export default function AdminDetailPage() {
 
   const handleReset = useCallback(() => {
     if (!hasChanges) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
     
     setFormData(originalData);
   }, [hasChanges, originalData]);
@@ -249,10 +244,10 @@ export default function AdminDetailPage() {
             variant="secondary"
             size="default"
             onClick={handleBack}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
         rightActions={null}

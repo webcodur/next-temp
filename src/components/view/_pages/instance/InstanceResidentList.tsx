@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Users, User, ChevronRight } from 'lucide-react';
+import { Users, User, Phone, Mail, Calendar, UserCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ResidentInstanceWithResident } from '@/types/instance';
+import InfoCard, { InfoCardField, InfoCardBadge } from '@/components/ui/ui-layout/info-card/InfoCard';
 
 interface InstanceResidentListProps {
   residentInstances?: ResidentInstanceWithResident[];
@@ -53,54 +54,61 @@ export default function InstanceResidentList({
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {residentInstances.map((residentInstance) => (
-            <div
-              key={residentInstance.id}
-              onClick={() => handleResidentClick(residentInstance.resident.id)}
-              className="flex justify-between items-center p-3 rounded-lg border transition-all cursor-pointer border-border hover:border-primary hover:bg-accent/50"
-            >
-              <div className="flex-1">
-                <div className="flex gap-3 items-center">
-                  <div className="flex flex-shrink-0 justify-center items-center w-8 h-8 rounded-full bg-primary/10">
-                    <User size={16} className="text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium truncate text-foreground">
-                      {residentInstance.resident.name}
-                    </h4>
-                    <p className="text-xs truncate text-muted-foreground">
-                      {residentInstance.resident.phone || '전화번호 없음'}
-                    </p>
-                    {residentInstance.resident.email && (
-                      <p className="text-xs truncate text-muted-foreground">
-                        {residentInstance.resident.email}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {residentInstance.status && (
-                  <div className="mt-2 ml-11">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      residentInstance.status === 'ACTIVE' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {residentInstance.status === 'ACTIVE' ? '활성' : residentInstance.status}
-                    </span>
-                  </div>
-                )}
-                {residentInstance.memo && (
-                  <div className="mt-1 ml-11">
-                    <p className="text-xs text-muted-foreground">
-                      {residentInstance.memo}
-                    </p>
-                  </div>
-                )}
-              </div>
-              <ChevronRight size={16} className="flex-shrink-0 text-muted-foreground" />
-            </div>
-          ))}
+        <div className="space-y-2">
+          {residentInstances.map((residentInstance) => {
+            // 배지 정보
+            const badges: InfoCardBadge[] = [];
+            if (residentInstance.status) {
+              badges.push({
+                text: residentInstance.status === 'ACTIVE' ? '활성' : residentInstance.status,
+                variant: residentInstance.status === 'ACTIVE' ? 'success' : 'default'
+              });
+            }
+
+            // 좌측 열 데이터
+            const leftColumn: InfoCardField[] = [
+              {
+                icon: <Phone />,
+                value: residentInstance.resident.phone || '전화번호 없음'
+              },
+              {
+                icon: <Mail />,
+                value: residentInstance.resident.email || '',
+                show: !!residentInstance.resident.email
+              }
+            ];
+
+            // 우측 열 데이터
+            const rightColumn: InfoCardField[] = [
+              {
+                icon: <UserCheck />,
+                value: residentInstance.resident.gender === 'M' ? '남성' : 
+                       residentInstance.resident.gender === 'F' ? '여성' : 
+                       residentInstance.resident.gender || '',
+                show: !!residentInstance.resident.gender
+              },
+              {
+                icon: <Calendar />,
+                value: residentInstance.resident.birthDate 
+                  ? new Date(residentInstance.resident.birthDate).toLocaleDateString('ko-KR')
+                  : '',
+                show: !!residentInstance.resident.birthDate
+              }
+            ];
+
+            return (
+              <InfoCard
+                key={residentInstance.id}
+                headerIcon={<User />}
+                title={residentInstance.resident.name}
+                badges={badges}
+                leftColumn={leftColumn}
+                rightColumn={rightColumn}
+                memo={residentInstance.memo || undefined}
+                onClick={() => handleResidentClick(residentInstance.resident.id)}
+              />
+            );
+          })}
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 import { ArrowLeft, Save, RotateCcw, Pin, AlertCircle, Paperclip } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -150,9 +151,7 @@ export default function HubNoticeDetailPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleBack = useCallback(() => {
-    router.back();
-  }, [router]);
+  const { handleBack } = useBackNavigation({});
 
   const handleFieldChange = useCallback((field: keyof Notice, value: string | string[] | boolean) => {
     setFormData(prev => prev ? { ...prev, [field]: value } : null);
@@ -220,7 +219,7 @@ export default function HubNoticeDetailPage() {
           <Button
             variant="ghost"
             onClick={handleBack}
-            title="목록으로 돌아가기"
+            title="뒤로가기"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

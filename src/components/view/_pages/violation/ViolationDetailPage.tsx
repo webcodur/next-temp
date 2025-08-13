@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
@@ -305,9 +306,9 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
     }
   }, [violation, processForm.processingNote, processForm.status]);
 
-  const handleBack = useCallback(() => {
-    router.push('/parking/violation/history');
-  }, [router]);
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/parking/violation/history'
+  });
 
   const handleImagePreview = useCallback((index: number = 0) => {
     if (imageData.length === 0) return;

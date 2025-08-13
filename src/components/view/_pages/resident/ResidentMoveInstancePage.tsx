@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft, ArrowRight, Save, Home, MapPin } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -110,9 +111,9 @@ export default function ResidentMoveInstancePage() {
   // #endregion
 
   // #region 핸들러
-  const handleBack = () => {
-    router.push(`/parking/occupancy/resident/${residentId}`);
-  };
+  const { handleBack } = useBackNavigation({
+    fallbackPath: `/parking/occupancy/resident/${residentId}`
+  });
 
   const handleInstanceChange = (value: string) => {
     setSelectedInstanceId(value ? Number(value) : null);

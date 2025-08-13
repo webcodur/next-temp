@@ -5,7 +5,7 @@ import { atomWithStorage } from 'jotai/utils';
 
 // #region 사이드바 상태
 // 사이드바 접힘/펼침 상태
-export const sidebarCollapsedAtom = atomWithStorage<boolean>('sidebar-collapsed', false);
+export const sidebarCollapsedAtom = atomWithStorage<boolean>('sidebar-collapsed', true);
 
 // 사이드바 끝 패널 너비
 export const endPanelWidthAtom = atomWithStorage<number>('sidebar-width', 320);

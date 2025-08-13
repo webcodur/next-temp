@@ -26,61 +26,62 @@ interface OrganizationChartProps {
 // 비활성화된 노드 목록 (미개발 기능)
 const DISABLED_NODES = ['building', 'facility'];
 
-const NODES: ChartNode[] = [
-  // 건물 (최상위)
+// SVG 설정 (viewBox 기준) - 50% 확대
+const SVG_CONFIG = {
+  viewBox: {
+    width: 675,
+    height: 570
+  },
+  padding: {
+    top: 75,
+    bottom: 75,
+    left: 75,
+    right: 75
+  }
+};
+
+// 노드 기본 정보 (좌표 제외)
+const NODE_DEFINITIONS = [
   {
     id: 'building',
     label: '건물',
-    type: 'building',
-    x: 220,
-    y: 50,
+    type: 'building' as const,
+    level: 1,
     description: '아파트 건물 전체를 관리하는 최상위 단위'
   },
-  
-  // 2단계: 주차장, 호실, 공용시설 (같은 위계)
   {
     id: 'parking',
     label: '주차장',
-    type: 'parking',
-    x: 120,
-    y: 150,
+    type: 'parking' as const,
+    level: 2,
     description: '건물 내 주차 공간 관리 단위'
   },
-  
   {
     id: 'room',
     label: '호실',
-    type: 'room',
-    x: 220,
-    y: 150,
+    type: 'room' as const,
+    level: 2,
     description: '각 세대별 주거 공간 단위'
   },
-  
   {
     id: 'facility',
     label: '공용시설',
-    type: 'facility',
-    x: 320,
-    y: 150,
+    type: 'facility' as const,
+    level: 2,
     description: '커뮤니티 시설 및 공용 공간 관리 단위'
   },
-  
-  // 3단계: 개인과 차량 (호실 하위)
   {
     id: 'person',
     label: '입주민',
-    type: 'person',
-    x: 170,
-    y: 250,
+    type: 'person' as const,
+    level: 3,
     description: '실제 거주하는 입주민'
   },
-  
   {
     id: 'vehicle',
     label: '차량',
-    type: 'vehicle',
-    x: 270,
-    y: 250,
+    type: 'vehicle' as const,
+    level: 3,
     description: '입주민이 소유한 차량'
   }
 ];
@@ -99,6 +100,54 @@ const CONNECTIONS = [
   // 점선 연결 (수평 관계)
   { from: 'person', to: 'vehicle', type: 'dashed' }
 ];
+
+// 노드 위치 동적 계산 함수
+const calculateNodePositions = (): ChartNode[] => {
+  const { viewBox, padding } = SVG_CONFIG;
+  const { width, height } = viewBox;
+  const workingHeight = height - padding.top - padding.bottom;
+  
+  // 레벨별 Y 좌표 계산
+  const levelY = {
+    1: padding.top,
+    2: padding.top + workingHeight * 0.4,
+    3: padding.top + workingHeight * 0.8
+  };
+  
+  return NODE_DEFINITIONS.map(nodeDef => {
+    let x: number;
+    const centerX = width / 2;
+    
+    // 레벨별 X 좌표 계산
+    if (nodeDef.level === 1) {
+      // 레벨 1: 중앙에 배치
+      x = centerX;
+    } else if (nodeDef.level === 2) {
+      // 레벨 2: 호실은 중앙, 주차장과 공용시설은 좌우에 배치
+      if (nodeDef.id === 'room') {
+        x = centerX; // 호실은 정확히 중앙
+      } else if (nodeDef.id === 'parking') {
+        x = centerX - 150; // 주차장은 중앙에서 왼쪽으로 150px (1.5배)
+      } else if (nodeDef.id === 'facility') {
+        x = centerX + 150; // 공용시설은 중앙에서 오른쪽으로 150px (1.5배)
+      } else {
+        x = centerX; // 기본값
+      }
+    } else {
+      // 레벨 3: 호실을 기준으로 좌우 배치 (호실이 중앙이므로 centerX 기준)
+      const level3Nodes = NODE_DEFINITIONS.filter(n => n.level === 3);
+      const nodeIndex = level3Nodes.findIndex(n => n.id === nodeDef.id);
+      const offset = (nodeIndex === 0) ? -75 : 75; // 좌우로 75px 떨어뜨리기 (1.5배)
+      x = centerX + offset;
+    }
+    
+    return {
+      ...nodeDef,
+      x,
+      y: levelY[nodeDef.level as keyof typeof levelY]
+    };
+  });
+};
 // #endregion
 
 // #region 헬퍼 함수
@@ -134,9 +183,12 @@ const getNodeStroke = (type: ChartNode['type'], isSelected: boolean, nodeId: str
 
 // #region 렌더링
 export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationChartProps) {
+  // 노드 위치 동적 계산
+  const NODES = calculateNodePositions();
+  
   return (
     <div className="p-4 h-full rounded-lg border shadow-sm bg-card border-border/50">
-      <div className="space-y-4">
+      <div className="flex flex-col space-y-4 h-full">
         {/* 헤더 */}
         <div className="pb-3 border-b border-primary/20">
           <div className="flex gap-3 items-center mb-2">
@@ -150,12 +202,15 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
           </div>
         </div>
       
-        <div className="flex justify-center">
-        <svg width="450" height="380" className="rounded-lg border shadow-sm border-border bg-background">
+        <div className="flex flex-1 justify-center items-center min-h-0">
+        <svg 
+          viewBox={`0 0 ${SVG_CONFIG.viewBox.width} ${SVG_CONFIG.viewBox.height}`}
+          className="w-full max-w-2xl h-auto max-h-full rounded-lg border shadow-sm border-border bg-background"
+        >
           {/* 배경 그리드 */}
           <defs>
-            <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="hsl(var(--border))" strokeWidth="0.5" opacity="0.3"/>
+            <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="hsl(var(--border))" strokeWidth="0.7" opacity="0.3"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -167,19 +222,19 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
             
             if (!fromNode || !toNode) return null;
             
-            // 연결선이 노드에서 여유 있게 떨어지도록 조정
-            const gap = 15;
+            // 연결선이 노드에서 여유 있게 떨어지도록 조정 (1.5배)
+            const gap = 22;
             
             return (
               <line
                 key={index}
                 x1={fromNode.x}
-                y1={fromNode.y + (connection.type === 'dashed' ? 0 : 25 + gap)} 
+                y1={fromNode.y + (connection.type === 'dashed' ? 0 : 37 + gap)} 
                 x2={toNode.x}
-                y2={toNode.y - (connection.type === 'dashed' ? 0 : 25 + gap)} 
+                y2={toNode.y - (connection.type === 'dashed' ? 0 : 37 + gap)} 
                 stroke="hsl(var(--muted-foreground))"
-                strokeWidth="1.5"
-                strokeDasharray={connection.type === 'dashed' ? '4,4' : '0'}
+                strokeWidth="2.2"
+                strokeDasharray={connection.type === 'dashed' ? '6,6' : '0'}
                 markerEnd="url(#arrowhead)"
                 opacity="0.8"
               />
@@ -188,9 +243,9 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
           
           {/* 화살표 마커 정의 */}
           <defs>
-            <marker id="arrowhead" markerWidth="8" markerHeight="6" 
-                    refX="7" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="hsl(var(--muted-foreground))" opacity="0.8" />
+            <marker id="arrowhead" markerWidth="12" markerHeight="9" 
+                    refX="10" refY="4.5" orient="auto">
+              <polygon points="0 0, 12 4.5, 0 9" fill="hsl(var(--muted-foreground))" opacity="0.8" />
             </marker>
           </defs>
           
@@ -206,29 +261,29 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
                 {/* 선택된 노드 배경 효과 (비활성화된 노드는 선택 불가) */}
                 {isSelected && !isDisabled && (
                   <rect
-                    x={node.x - 44}
-                    y={node.y - 29}
-                    width="88"
-                    height="58"
+                    x={node.x - 66}
+                    y={node.y - 43}
+                    width="132"
+                    height="86"
                     fill="none"
                     stroke="hsl(var(--primary))"
-                    strokeWidth="2"
-                    rx="10"
+                    strokeWidth="3"
+                    rx="15"
                     opacity="0.6"
-                    strokeDasharray="3,3"
+                    strokeDasharray="4,4"
                   />
                 )}
                 
-                {/* 노드 본체 - 모든 노드가 사각형 */}
+                {/* 노드 본체 - 모든 노드가 사각형 (1.5배 확대) */}
                 <rect
-                  x={node.x - 40}
-                  y={node.y - 25}
-                  width="80"
-                  height="50"
+                  x={node.x - 60}
+                  y={node.y - 37}
+                  width="120"
+                  height="75"
                   fill={color}
                   stroke={strokeColor}
-                  strokeWidth="1.5"
-                  rx="6"
+                  strokeWidth="2.2"
+                  rx="9"
                   className={`drop-shadow-sm transition-all duration-200 ${
                     isDisabled 
                       ? 'opacity-50 cursor-not-allowed' 
@@ -237,50 +292,37 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
                   onClick={() => !isDisabled && onNodeClick(node)}
                 />
                 
-                {/* 라벨 */}
+                {/* 라벨 (1.5배 확대) */}
                 <text
                   x={node.x}
-                  y={node.y + 5}
+                  y={node.y + 7}
                   textAnchor="middle"
-                  className={`text-sm font-medium pointer-events-none select-none ${
+                  className={`text-lg font-semibold pointer-events-none select-none ${
                     isDisabled ? 'opacity-60 fill-muted-foreground' : 'fill-foreground'
                   }`}
-                  style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}
+                  style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))' }}
                 >
                   {node.label}
                 </text>
-                
-                {/* 비활성화 표시 (준비중 텍스트) */}
-                {isDisabled && (
-                  <text
-                    x={node.x}
-                    y={node.y + 20}
-                    textAnchor="middle"
-                    className="text-sm opacity-80 pointer-events-none select-none fill-muted-foreground"
-                    style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.2))' }}
-                  >
-                    준비중
-                  </text>
-                )}
               </g>
             );
           })}
         </svg>
       </div>
       
-      {/* 범례 */}
-      <div className="flex flex-wrap gap-6 justify-center mt-6 text-sm text-muted-foreground">
-        <div className="flex gap-2 items-center">
-          <div className="w-6 h-0.5 opacity-80" style={{ backgroundColor: 'hsl(var(--muted-foreground))' }}></div>
+      {/* 범례 (확대) */}
+      <div className="flex flex-wrap gap-8 justify-center text-base text-muted-foreground">
+        <div className="flex gap-3 items-center">
+          <div className="w-8 h-1 opacity-80" style={{ backgroundColor: 'hsl(var(--muted-foreground))' }}></div>
           <span>실선: 계층 관계</span>
         </div>
-        <div className="flex gap-2 items-center">
-          <div className="w-6 h-0.5 border-t-2 border-dashed opacity-80" style={{ borderColor: 'hsl(var(--muted-foreground))' }}></div>
+        <div className="flex gap-3 items-center">
+          <div className="w-8 h-1 border-dashed opacity-80 border-t-3" style={{ borderColor: 'hsl(var(--muted-foreground))' }}></div>
           <span>점선: 연관 관계</span>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <div 
-            className="w-3 h-3 rounded-sm border-2 border-dashed opacity-80" 
+            className="w-5 h-5 rounded-sm border-dashed opacity-80 border-3" 
             style={{ 
               backgroundColor: 'hsl(var(--primary))', 
               borderColor: 'hsl(var(--primary))' 
@@ -288,12 +330,12 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
           ></div>
           <span>선택된 항목</span>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <div 
-            className="w-3 h-3 rounded-sm opacity-50" 
+            className="w-5 h-5 rounded-sm opacity-50" 
             style={{ 
               backgroundColor: 'hsl(var(--muted))',
-              border: '1px solid hsl(var(--muted-foreground) / 0.3)'
+              border: '1.5px solid hsl(var(--muted-foreground) / 0.3)'
             }}
           ></div>
           <span>준비중 (클릭 불가)</span>

@@ -249,10 +249,6 @@ export default function ConfigManagement({
 
   const handleFormReset = useCallback(() => {
     if (!originalData) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
-    
     setFormData(originalData);
   }, [originalData]);
 

@@ -25,6 +25,62 @@ interface InstanceVisitConfigServerResponse {
   updated_at: string;
 }
 
+interface ResidentServerResponse {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  birth_date: string;
+  gender: string;
+  emergency_contact: string;
+  memo?: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+interface ResidentInstanceServerResponse {
+  id: number;
+  resident_id: number;
+  instance_id: number;
+  memo?: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+  resident: ResidentServerResponse;
+}
+
+interface CarServerResponse {
+  id: number;
+  car_number: string;
+  brand: string;
+  model: string;
+  type: string;
+  outer_text: string;
+  year: number;
+  external_sticker?: string | null;
+  fuel: string;
+  front_image_url?: string | null;
+  rear_image_url?: string | null;
+  side_image_url?: string | null;
+  top_image_url?: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+interface CarInstanceServerResponse {
+  id: number;
+  car_id: number;
+  instance_id: number;
+  car_share_onoff: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+  car: CarServerResponse;
+}
+
 interface InstanceDetailServerResponse {
   id: number;
   parkinglot_id: number;
@@ -40,8 +96,8 @@ interface InstanceDetailServerResponse {
   created_at: string;
   updated_at: string;
   deleted_at?: string | null;
-  resident_instance: unknown[];
-  car_instance?: unknown[];
+  resident_instance: ResidentInstanceServerResponse[];
+  car_instance?: CarInstanceServerResponse[];
   instance_service_config?: InstanceServiceConfigServerResponse | null;
   instance_visit_config?: InstanceVisitConfigServerResponse | null;
 }
@@ -73,6 +129,70 @@ function visitConfigServerToClient(server: InstanceVisitConfigServerResponse): I
   };
 }
 
+function residentServerToClient(server: ResidentServerResponse) {
+  return {
+    id: server.id,
+    name: server.name,
+    phone: server.phone,
+    email: server.email,
+    birthDate: server.birth_date,
+    gender: server.gender,
+    emergencyContact: server.emergency_contact,
+    memo: server.memo,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+  };
+}
+
+function residentInstanceServerToClient(server: ResidentInstanceServerResponse): ResidentInstanceWithResident {
+  return {
+    id: server.id,
+    residentId: server.resident_id,
+    instanceId: server.instance_id,
+    memo: server.memo,
+    status: server.status,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+    resident: residentServerToClient(server.resident),
+  };
+}
+
+function carServerToClient(server: CarServerResponse) {
+  return {
+    id: server.id,
+    carNumber: server.car_number,
+    brand: server.brand,
+    model: server.model,
+    type: server.type,
+    outerText: server.outer_text,
+    year: server.year,
+    externalSticker: server.external_sticker,
+    fuel: server.fuel,
+    frontImageUrl: server.front_image_url,
+    rearImageUrl: server.rear_image_url,
+    sideImageUrl: server.side_image_url,
+    topImageUrl: server.top_image_url,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+  };
+}
+
+function carInstanceServerToClient(server: CarInstanceServerResponse): CarInstanceWithCar {
+  return {
+    id: server.id,
+    carId: server.car_id,
+    instanceId: server.instance_id,
+    carShareOnoff: server.car_share_onoff,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+    car: carServerToClient(server.car),
+  };
+}
+
 function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
   return {
     id: server.id,
@@ -89,8 +209,8 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
-    residentInstance: server.resident_instance as ResidentInstanceWithResident[],
-    carInstance: server.car_instance as CarInstanceWithCar[],
+    residentInstance: server.resident_instance?.map(residentInstanceServerToClient) || [],
+    carInstance: server.car_instance?.map(carInstanceServerToClient) || [],
     instanceServiceConfig: server.instance_service_config 
       ? serviceConfigServerToClient(server.instance_service_config)
       : null,

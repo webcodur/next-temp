@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -158,13 +159,10 @@ export default function InstanceDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const handleBack = () => {
-    if (hasChanges) {
-      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    router.push('/parking/occupancy/instance');
-  };
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/parking/occupancy/instance',
+    hasChanges
+  });
 
   const handleFormChange = useCallback((data: InstanceFormData) => {
     setFormData(data);
@@ -172,9 +170,6 @@ export default function InstanceDetailPage() {
 
   const handleReset = useCallback(() => {
     if (!hasChanges) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
     
     setFormData(originalData);
   }, [hasChanges, originalData]);
@@ -290,10 +285,10 @@ export default function InstanceDetailPage() {
             variant="secondary"
             size="default"
             onClick={handleBack}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
       />
@@ -326,7 +321,7 @@ export default function InstanceDetailPage() {
               />
               
               {/* 거주민 목록 | 차량 목록 */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <InstanceResidentList 
                   residentInstances={instance.residentInstance}
                   loading={loading}
@@ -336,6 +331,21 @@ export default function InstanceDetailPage() {
                   loading={loading}
                 />
               </div>
+              
+              {/* 디버깅 정보 - 개발용 */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="p-4 mt-6 bg-gray-100 rounded-lg">
+                  <h4 className="mb-2 font-semibold">디버깅 정보:</h4>
+                  <p>거주민 수: {instance.residentInstance?.length || 0}</p>
+                  <p>차량 수: {instance.carInstance?.length || 0}</p>
+                  <details className="mt-2">
+                    <summary>원본 데이터</summary>
+                    <pre className="overflow-auto p-2 mt-2 max-h-40 text-xs bg-white rounded">
+                      {JSON.stringify(instance, null, 2)}
+                    </pre>
+                  </details>
+                </div>
+              )}
             </div>
           )}
           

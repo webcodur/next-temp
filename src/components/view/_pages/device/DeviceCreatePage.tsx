@@ -172,10 +172,10 @@ export default function DeviceCreatePage() {
             variant="secondary"
             size="default"
             onClick={handleCancel}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
       />

@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -141,13 +142,10 @@ export default function ResidentDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const handleBack = () => {
-    if (hasChanges) {
-      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    router.push('/parking/occupancy/resident');
-  };
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/parking/occupancy/resident',
+    hasChanges
+  });
 
   const handleFormChange = useCallback((data: ResidentFormData) => {
     setFormData(data);
@@ -155,9 +153,6 @@ export default function ResidentDetailPage() {
 
   const handleReset = useCallback(() => {
     if (!hasChanges) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
     
     setFormData(originalData);
   }, [hasChanges, originalData]);
@@ -269,10 +264,10 @@ export default function ResidentDetailPage() {
             variant="secondary"
             size="default"
             onClick={handleBack}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
       />
@@ -327,7 +322,7 @@ export default function ResidentDetailPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -349,7 +344,7 @@ export default function ResidentDetailPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2">정말로 삭제하시겠습니까?</h3>
+            <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">이 작업은 되돌릴 수 없습니다. 거주자 정보가 영구적으로 삭제됩니다.</p>
           </div>
           <div className="flex gap-3 justify-end pt-4">
@@ -366,7 +361,7 @@ export default function ResidentDetailPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           

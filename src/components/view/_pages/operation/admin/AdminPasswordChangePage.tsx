@@ -4,6 +4,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -108,9 +109,9 @@ export default function AdminPasswordChangePage() {
   // #endregion
 
   // #region 핸들러
-  const handleBack = () => {
-    router.push(`/parking/lot/admin/${adminId}`);
-  };
+  const { handleBack } = useBackNavigation({
+    fallbackPath: `/parking/lot/admin/${adminId}`
+  });
 
   const handleFieldChange = (field: keyof PasswordChangeData, value: string) => {
     setFormData(prev => ({

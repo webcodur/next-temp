@@ -44,6 +44,8 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
           <h3 className="text-lg font-bold text-foreground">사이트맵 정보</h3>
           <p className="mt-1 text-sm text-muted-foreground">시스템의 실제 관리 페이지와 기능을 확인할 수 있습니다.</p>
         </div>
+
+        {/* 테스트 */}
         <div className="flex flex-col justify-center items-center py-8 text-center text-muted-foreground">
           <div className="p-4 mb-4 rounded-lg border bg-muted/20 border-border/20">
             <div className="flex justify-center items-center mx-auto mb-3 w-12 h-12 rounded-full bg-muted/40">
@@ -93,12 +95,12 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
                   <div key={pageIndex} className="space-y-2">
                     {/* 메인 페이지 */}
                     <div 
-                      className="group p-3 rounded-lg border bg-background/80 border-border/60 hover:border-primary hover:bg-primary/5 cursor-pointer hover:shadow-md transition-all"
+                      className="p-3 rounded-lg border transition-all cursor-pointer group bg-background/80 border-border/60 hover:border-primary hover:bg-primary/5 hover:shadow-md"
                       onClick={() => window.open(page.href, '_self')}
                     >
                       {/* 페이지 헤더 */}
                       <div className="mb-3">
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex justify-between items-center mb-1">
                           <h5 className="text-sm font-semibold text-foreground group-hover:text-primary">{page.name}</h5>
                           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
                         </div>
@@ -124,7 +126,7 @@ export function DetailPanel({ selectedNodeId }: DetailPanelProps) {
                       
                       {/* 클릭 힌트 */}
                       <div className="flex justify-end mt-2">
-                        <span className="text-sm text-muted-foreground/60 group-hover:text-primary font-medium">
+                        <span className="text-sm font-medium text-muted-foreground/60 group-hover:text-primary">
                           클릭하여 페이지 이동
                         </span>
                       </div>

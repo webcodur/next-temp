@@ -9,7 +9,7 @@
 import { useState } from 'react';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { OrganizationChart } from './unit/OrganizationChart';
-import { DetailPanel } from './unit/DetailPanel';
+import { DetailModal } from './unit/DetailModal';
 
 // #region 타입
 interface ChartNode {
@@ -26,16 +26,22 @@ interface ChartNode {
 export default function OrganizationOverviewPage() {
   // #region 상태
   const [selectedNodeId, setSelectedNodeId] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // #endregion
 
   // #region 핸들러
   const handleNodeClick = (node: ChartNode) => {
     setSelectedNodeId(node.id);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
   // #endregion
 
   return (
-    <div className="container p-6 mx-auto space-y-6">
+    <div className="container p-6 mx-auto space-y-6 max-w-7xl">
       {/* 페이지 헤더 */}
       <PageHeader
         title="시스템 사이트맵"
@@ -43,19 +49,19 @@ export default function OrganizationOverviewPage() {
       />
 
       {/* 메인 콘텐츠 */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* 왼쪽: 플로우차트 패널 (1/3) */}
-        <div className="lg:order-1 lg:col-span-1">
-          <OrganizationChart 
-            onNodeClick={handleNodeClick}
-            selectedNodeId={selectedNodeId}
-          />
-        </div>
-        {/* 오른쪽: 상세설명 패널 (2/3) */}
-        <div className="lg:order-2 lg:col-span-2">
-          <DetailPanel selectedNodeId={selectedNodeId} />
-        </div>
+      <div className="w-full min-h-[600px]">
+        <OrganizationChart 
+          onNodeClick={handleNodeClick}
+          selectedNodeId={selectedNodeId}
+        />
       </div>
+
+      {/* 상세설명 Modal */}
+      <DetailModal 
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        selectedNodeId={selectedNodeId}
+      />
     </div>
   );
 }

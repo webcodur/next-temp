@@ -4,6 +4,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -141,13 +142,10 @@ export default function SystemConfigEditPage() {
   // #endregion
 
   // #region 네비게이션 핸들러
-  const handleBack = useCallback(() => {
-    if (hasChanges) {
-      const confirmMessage = '수정된 내용이 있습니다. 정말로 나가시겠습니까?';
-      if (!confirm(confirmMessage)) return;
-    }
-    router.push('/system/config/settings');
-  }, [router, hasChanges]);
+  const { handleBack } = useBackNavigation({
+    fallbackPath: '/system/config/settings',
+    hasChanges
+  });
   // #endregion
 
   // #region 폼 핸들러
@@ -162,9 +160,6 @@ export default function SystemConfigEditPage() {
 
   const handleReset = useCallback(() => {
     if (!hasChanges || !originalData) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
     
     setFormData(originalData);
   }, [hasChanges, originalData]);
@@ -314,10 +309,10 @@ export default function SystemConfigEditPage() {
             variant="secondary"
             size="default"
             onClick={handleBack}
-            title="목록으로"
+            title="뒤로가기"
           >
             <ArrowLeft size={16} />
-            목록
+            뒤로가기
           </Button>
         }
       />

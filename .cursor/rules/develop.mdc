@@ -1,5 +1,6 @@
 ---
 alwaysApply: true
 ---
-hook: 훅스 생성 시 전역 hooks 디렉토리에 배치
-type: Record<string, unknown> 의 임시방편 방식 사용 금지. any 사용 금지
+- hook: 훅스 생성 시 전역 hooks 디렉토리에 배치
+- type: Record<string, unknown> 의 임시방편 방식 사용 금지. any 사용 금지
+- 이모지 사용 금지 => lucide icons

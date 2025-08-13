@@ -22,9 +22,9 @@ interface InstanceVisitConfigSectionProps {
   onDataChange: () => void;
 }
 
-export default function InstanceVisitConfigSection({ 
-  instance, 
-  onDataChange 
+export default function InstanceVisitConfigSection({
+  instance,
+  onDataChange
 }: InstanceVisitConfigSectionProps) {
   // #region 상태 관리
   const [formData, setFormData] = useState<VisitConfigData>({
@@ -38,7 +38,7 @@ export default function InstanceVisitConfigSection({
     visitRequestLimit: instance.instanceVisitConfig?.visitRequestLimit ?? 10,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -55,10 +55,10 @@ export default function InstanceVisitConfigSection({
   }, [formData, originalData]);
 
   const isValid = useMemo(() => {
-    return hasChanges && 
-           formData.availableVisitTime >= 0 && 
-           formData.purchasedVisitTime >= 0 && 
-           formData.visitRequestLimit > 0;
+    return hasChanges &&
+      formData.availableVisitTime >= 0 &&
+      formData.purchasedVisitTime >= 0 &&
+      formData.visitRequestLimit > 0;
   }, [formData, hasChanges]);
   // #endregion
 
@@ -105,10 +105,7 @@ export default function InstanceVisitConfigSection({
 
   const handleReset = () => {
     if (!hasChanges) return;
-    
-    const confirmMessage = '수정된 내용을 모두 되돌리시겠습니까?';
-    if (!confirm(confirmMessage)) return;
-    
+
     setFormData(originalData);
   };
   // #endregion
@@ -117,6 +114,28 @@ export default function InstanceVisitConfigSection({
     <div className="space-y-6">
       {/* 방문 설정 섹션 */}
       <TitleRow title="방문 설정" subtitle="호실의 방문 관련 설정을 관리합니다." />
+      {/* 방문 시간 통계 정보 */}
+      <div className="p-4 mt-6 rounded-lg bg-muted">
+        <h4 className="mb-2 text-sm font-medium text-foreground">방문 시간 통계</h4>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span className="text-muted-foreground">총 방문 시간:</span>
+            <span className="ml-2 font-medium">
+              {formData.availableVisitTime + formData.purchasedVisitTime}분
+            </span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">평균 요청당 시간:</span>
+            <span className="ml-2 font-medium">
+              {formData.visitRequestLimit > 0
+                ? Math.round((formData.availableVisitTime + formData.purchasedVisitTime) / formData.visitRequestLimit)
+                : 0
+              }분
+            </span>
+          </div>
+        </div>
+      </div>
+
       {(() => {
         const fields: GridFormFieldSchema[] = [
           {
@@ -176,12 +195,12 @@ export default function InstanceVisitConfigSection({
         ];
 
         return (
-          <GridFormAuto 
+          <GridFormAuto
             fields={fields}
             gap="20px"
             bottomLeftActions={(
-              <Button 
-                variant="secondary" 
+              <Button
+                variant="secondary"
                 onClick={handleReset}
                 disabled={!hasChanges || isSubmitting}
                 title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
@@ -191,9 +210,9 @@ export default function InstanceVisitConfigSection({
               </Button>
             )}
             bottomRightActions={(
-              <Button 
-                variant="primary" 
-                onClick={handleSubmit} 
+              <Button
+                variant="primary"
+                onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
                 title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
               >
@@ -205,50 +224,6 @@ export default function InstanceVisitConfigSection({
         );
       })()}
 
-      {/* 방문 시간 통계 정보 */}
-      <div className="p-4 mt-6 rounded-lg bg-muted">
-        <h4 className="mb-2 text-sm font-medium text-foreground">방문 시간 현황</h4>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-muted-foreground">총 방문 시간:</span>
-            <span className="ml-2 font-medium">
-              {formData.availableVisitTime + formData.purchasedVisitTime}분
-            </span>
-          </div>
-          <div>
-            <span className="text-muted-foreground">평균 요청당 시간:</span>
-            <span className="ml-2 font-medium">
-              {formData.visitRequestLimit > 0 
-                ? Math.round((formData.availableVisitTime + formData.purchasedVisitTime) / formData.visitRequestLimit)
-                : 0
-              }분
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 액션 버튼 */}
-      <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-border">
-        <Button 
-          variant="secondary" 
-          onClick={handleReset}
-          disabled={!hasChanges || isSubmitting}
-          title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-        >
-          <RotateCcw size={16} />
-          복구
-        </Button>
-        <Button 
-          variant="primary" 
-          onClick={handleSubmit} 
-          disabled={!isValid || isSubmitting}
-          title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-        >
-          <Save size={16} />
-          {isSubmitting ? '저장 중...' : '저장'}
-        </Button>
-      </div>
-      
       {/* 성공 모달 */}
       <Modal
         isOpen={successModalOpen}
@@ -261,7 +236,7 @@ export default function InstanceVisitConfigSection({
             <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
-          
+
           <div className="flex justify-center pt-4">
             <Button onClick={() => setSuccessModalOpen(false)}>
               확인
@@ -282,7 +257,7 @@ export default function InstanceVisitConfigSection({
             <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
-          
+
           <div className="flex justify-center pt-4">
             <Button onClick={() => setErrorModalOpen(false)}>
               확인

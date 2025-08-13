@@ -337,7 +337,7 @@ export default function ConfigEdit({
             className="flex gap-2 items-center"
           >
             <ArrowLeft className="w-4 h-4" />
-            목록으로
+            뒤로가기
           </Button>
         }
       />
