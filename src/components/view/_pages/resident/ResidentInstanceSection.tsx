@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Home, Plus, Edit, MapPin, Save } from 'lucide-react';
+import { Home, Plus, MapPin, Save } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
@@ -279,7 +279,7 @@ export default function ResidentInstanceSection({
                 label: '호실 타입',
                 component: (
                   <div className="flex items-center px-3 py-2 bg-purple-50 rounded-md border border-purple-200">
-                    <span className="text-purple-700 font-medium">
+                    <span className="font-medium text-purple-700">
                       {(() => {
                         const typeMap = {
                           GENERAL: '일반',
@@ -301,10 +301,10 @@ export default function ResidentInstanceSection({
                     <div className="text-amber-800">
                       <div className="font-medium">관계 ID: #{currentResidence.id}</div>
                       {currentResidence.memo && (
-                        <div className="text-sm mt-1">메모: {currentResidence.memo}</div>
+                        <div className="mt-1 text-sm">메모: {currentResidence.memo}</div>
                       )}
                       {currentResidence.createdAt && (
-                        <div className="text-xs mt-1 text-amber-600">
+                        <div className="mt-1 text-xs text-amber-600">
                           생성일: {new Date(currentResidence.createdAt).toLocaleString('ko-KR')}
                         </div>
                       )}
