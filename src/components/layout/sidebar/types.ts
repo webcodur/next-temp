@@ -22,10 +22,10 @@ export interface BotMenu {
 /**
  * 중간 단계 메뉴 (Mid Menu)
  * - Bot 메뉴들을 그룹화하는 카테고리
+ * - 메뉴 키는 객체의 키로 사용 (언어팩 키로 활용)
  */
 export interface MidMenu {
 	id?: number; // API에서 받은 메뉴 ID (DND 순서 변경용)
-	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	icon?: LucideIcon; // 아이콘 (선택사항)
 	botItems: BotMenu[]; // 하위 Bot 메뉴 목록
 }
@@ -33,10 +33,10 @@ export interface MidMenu {
 /**
  * 최상위 메뉴 아이템 (Top Item)
  * - 사이드바 좌측에 표시되는 메인 카테고리
+ * - 메뉴 키는 객체의 키로 사용 (언어팩 키로 활용)
  */
 export interface TopItem {
 	icon: LucideIcon; // 메뉴 아이콘 (필수)
-	key: string; // 메뉴 키 (고유 식별자, 언어팩 키로 사용)
 	midItems: Record<string, MidMenu>; // 하위 Mid 메뉴 목록 (키-값 쌍)
 }
 

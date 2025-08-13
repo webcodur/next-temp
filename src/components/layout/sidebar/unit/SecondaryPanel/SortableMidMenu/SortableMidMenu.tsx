@@ -20,12 +20,14 @@ import {
 import { SortableBotMenuItem } from './SortableBotMenuItem/SortableBotMenuItem';
 
 interface SortableMidMenuProps {
+  midKey: string;
   midItem: MidMenu;
   isExpanded: boolean;
   onToggle: () => void;
 }
 
 export function SortableMidMenu({ 
+  midKey,
   midItem, 
   isExpanded, 
   onToggle
@@ -36,9 +38,9 @@ export function SortableMidMenu({
   return (
     <div className="group">
       <Collapsible open={isExpanded} onOpenChange={onToggle}>
-        <div className="flex items-center gap-2 p-2 w-full rounded-lg neu-raised">
+        <div className="flex gap-2 items-center p-2 w-full rounded-lg neu-raised">
           <CollapsibleTrigger className="flex flex-1 justify-between items-center">
-            <span className="font-semibold text-foreground">{t(midItem.key)}</span>
+            <span className="font-semibold text-foreground">{t(midKey)}</span>
             <ChevronRight
               className={`w-5 h-5 transition-transform duration-200 ${
                 isExpanded ? 'rotate-90' : ''}`}

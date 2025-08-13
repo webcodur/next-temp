@@ -15,12 +15,14 @@ import type { MidMenu } from '@/components/layout/sidebar/types';
 import { BotMenuItem } from './BotMenuItem/BotMenuItem';
 
 interface MidMenuProps {
+  midKey: string;
   midItem: MidMenu;
   isExpanded: boolean;
   onToggle: () => void;
 }
 
 export function MidMenu({ 
+  midKey,
   midItem, 
   isExpanded, 
   onToggle
@@ -34,7 +36,7 @@ export function MidMenu({
         onClick={onToggle}
         className="flex gap-2 items-center justify-between p-2 w-full rounded-lg hover:bg-serial-4 neu-raised cursor-pointer"
       >
-        <span className="font-semibold text-foreground">{t(midItem.key)}</span>
+        <span className="font-semibold text-foreground">{t(midKey)}</span>
         <ChevronRight
           className={`w-6 h-6 transition-transform duration-200 ${
             isExpanded ? 'rotate-90' : ''}`}

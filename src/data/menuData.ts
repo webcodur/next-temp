@@ -10,10 +10,8 @@ import type { MenuData } from '@/components/layout/sidebar/types';
 export const menuData: MenuData = {
 	'종합 정보': {
 		icon: Presentation,
-		key: '종합 정보',
 		midItems: {
 			'허브 정보': {
-				key: '허브 정보',
 				botItems: [
 					{
 						key: '허브 이용 안내',
@@ -30,7 +28,6 @@ export const menuData: MenuData = {
 				],
 			},
 			'서비스 안내도': {
-				key: '서비스 안내도',
 				botItems: [
 					{
 						key: '전체',
@@ -39,7 +36,6 @@ export const menuData: MenuData = {
 				],
 			},
       '운영 관리': {
-				key: '운영 관리',
 				botItems: [
 					{
 						key: '근무자 관리',
@@ -51,10 +47,8 @@ export const menuData: MenuData = {
 	},
 	"주차 관제": {
 		icon: SquareParking,
-		key: '주차 관제',
 		midItems: {
 			"주차장 관리": {
-				key: '주차장 관리',
 				botItems: [
           {
             key: '차단기 관리',
@@ -63,7 +57,6 @@ export const menuData: MenuData = {
 				],
 			},
 			"규정 위반": {
-				key: '규정 위반',
 				botItems: [
           {
 						key: '규정 위반 설정',
@@ -84,7 +77,6 @@ export const menuData: MenuData = {
 				],
 			},
 			'입주 관리': {
-				key: '입주 관리',
 				botItems: [
 					{
 						key: '호실 관리',
@@ -104,10 +96,8 @@ export const menuData: MenuData = {
 	},
 	"시스템 관리": {
 		icon: Crown,
-		key: '시스템 관리',
 		midItems: {
 			'IP 차단 관리': {
-				key: 'IP 차단 관리',
 				botItems: [
 					{
 						key: 'IP 차단 실시간 내역',
@@ -120,7 +110,6 @@ export const menuData: MenuData = {
 				],
 			},
 			캐시관리: {
-				key: '캐시관리',
 				botItems: [
 					{
 						key: '캐시통계',
@@ -133,7 +122,6 @@ export const menuData: MenuData = {
 				],
 			},
       '시스템 설정': {
-        key: '시스템 설정',
         botItems: [
           {
             key: '시스템 설정',

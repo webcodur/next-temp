@@ -99,7 +99,7 @@ function SecondaryPanel() {
 						</TooltipContent>
 					</Tooltip>
 
-					<h2 className="text-xl font-semibold text-foreground">{t(topData.key)}</h2>
+					<h2 className="text-xl font-semibold text-foreground">{t(activeTopMenu)}</h2>
 
 					{/* Expand/Collapse All */}
 					<Tooltip>
@@ -119,6 +119,7 @@ function SecondaryPanel() {
 					{Object.entries(localMidItems).map(([midKey, midItem]) => (
 						<MidMenuComponent
 							key={midKey}
+							midKey={midKey}
 							midItem={midItem}
 							isExpanded={midExpanded.has(midKey)}
 							onToggle={() => handleMidClick(midKey)}

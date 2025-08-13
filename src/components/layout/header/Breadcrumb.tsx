@@ -81,14 +81,14 @@ export default function Breadcrumb() {
 
 		if (currentTopMenu && menuData[currentTopMenu]) {
 			items.push({
-				label: menuData[currentTopMenu].key,
+				label: currentTopMenu,
 				href: '#',
 				isClickable: false,
 			});
 
 			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
 				items.push({
-					label: menuData[currentTopMenu].midItems[currentMidMenu].key,
+					label: currentMidMenu,
 					href: '#',
 					isClickable: false,
 				});
