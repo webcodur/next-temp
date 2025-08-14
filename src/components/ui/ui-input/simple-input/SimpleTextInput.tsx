@@ -143,7 +143,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 						onClick={handleClear}
 						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
 						aria-label="값 지우기">
-						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+						<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
 					</button>
 				)}
 			</div>

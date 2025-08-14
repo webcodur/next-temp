@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { ArrowLeft, Save, Info } from 'lucide-react';
+import { ArrowLeft, Info } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -59,7 +59,7 @@ export default function AdminCreatePage() {
           }
         }
         
-        setFormData({
+        const copiedData = {
           account: '', // 빈값 - 유니크해야 함
           name: admin.name || '',
           email: admin.email || '', // 수정 폼과 동일하게 복사
@@ -67,7 +67,10 @@ export default function AdminCreatePage() {
           role: roleName,
           password: '',
           confirm: '',
-        });
+        };
+
+        setFormData(copiedData);
+        setBaselineData(copiedData); // 복사 완료 후를 새로운 기준점으로 설정
         
         setCopyInfoMessage(`${admin.name || admin.account}(${roleName}) 정보를 복사하여 신규 데이터를 등록합니다. 계정명과 비밀번호는 새로 입력해주세요.`);
       } else {
@@ -95,7 +98,7 @@ export default function AdminCreatePage() {
   // #endregion
 
   // #region 폼 상태
-  const [formData, setFormData] = useState<AdminFormData>({
+  const initialFormData: AdminFormData = {
     account: '',
     name: '',
     email: '',
@@ -103,7 +106,10 @@ export default function AdminCreatePage() {
     role: '',
     password: '',
     confirm: '',
-  });
+  };
+
+  const [formData, setFormData] = useState<AdminFormData>(initialFormData);
+  const [baselineData, setBaselineData] = useState<AdminFormData>(initialFormData); // 비교 기준점
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copyLoading, setCopyLoading] = useState(false);
   
@@ -124,6 +130,19 @@ export default function AdminCreatePage() {
       formData.password === formData.confirm
     );
   }, [formData]);
+
+  // 변경사항 확인
+  const hasChanges = useMemo(() => {
+    return (
+      formData.account !== baselineData.account ||
+      formData.name !== baselineData.name ||
+      formData.email !== baselineData.email ||
+      formData.phone !== baselineData.phone ||
+      formData.role !== baselineData.role ||
+      formData.password !== baselineData.password ||
+      formData.confirm !== baselineData.confirm
+    );
+  }, [formData, baselineData]);
   // #endregion
 
   // #region 이벤트 핸들러
@@ -169,6 +188,14 @@ export default function AdminCreatePage() {
   const handleFormChange = (data: AdminFormData) => {
     setFormData(data);
   };
+
+  const handleReset = () => {
+    setFormData(baselineData);
+    // 완전 초기화가 아닌 경우 복사 메시지 유지
+    if (JSON.stringify(baselineData) === JSON.stringify(initialFormData)) {
+      setCopyInfoMessage(''); // 완전 초기화인 경우만 메시지 제거
+    }
+  };
   // #endregion
 
   return (
@@ -211,24 +238,14 @@ export default function AdminCreatePage() {
             mode="create"
             data={formData}
             onChange={handleFormChange}
-            disabled={isSubmitting}
+            disabled={isSubmitting || copyLoading}
+            showActions={true}
+            onSubmit={handleSubmit}
+            onReset={handleReset}
+            hasChanges={hasChanges}
+            isValid={Boolean(isValid && !copyLoading)}
           />
         )}
-      </div>
-
-      {/* 저장 버튼 - 우하단 고정 */}
-      <div className="fixed right-6 bottom-6 z-50">
-        <Button 
-          variant="primary"
-          size="lg"
-          onClick={handleSubmit} 
-          disabled={!isValid || isSubmitting || copyLoading}
-          title={isSubmitting ? '생성 중...' : copyLoading ? '로딩 중...' : '생성'}
-          className="shadow-lg"
-        >
-          <Save size={20} />
-          {isSubmitting ? '생성 중...' : copyLoading ? '로딩 중...' : '생성'}
-        </Button>
       </div>
 
       {/* 오류 모달 */}

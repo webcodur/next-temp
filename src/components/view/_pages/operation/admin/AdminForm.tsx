@@ -66,17 +66,22 @@ const AdminForm: React.FC<AdminFormProps> = ({
   // 액션 버튼들 정의 - 가이드에 따라 유틸(start) / 액션(end) 분리
   const topRightActions = null; // 상단에는 버튼 배치하지 않음
 
-  // 유틸 버튼 (start 사이드) - 복구
+  // 유틸 버튼 (start 사이드) - 초기화/복구
+  const resetButtonText = mode === 'create' ? '초기화' : '복구';
+  const resetButtonTitle = mode === 'create' 
+    ? (!hasChanges ? '변경사항이 없습니다' : '입력 내용 초기화') 
+    : (!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기');
+    
   const bottomLeftActions = showActions ? (
     <Button 
       variant="secondary" 
       size="default"
       onClick={onReset} 
       disabled={!hasChanges || disabled}
-      title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+      title={resetButtonTitle}
     >
       <RotateCcw size={16} />
-      복구
+      {resetButtonText}
     </Button>
   ) : null;
 

@@ -8,13 +8,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Car, Shield, ChartBar } from 'lucide-react';
+import { Car, Shield } from 'lucide-react';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import VehicleManagementTab from '@/components/view/_screen/vehicle/VehicleManagementTab';
 import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
-import StatisticsTab from '@/components/view/_screen/statistics/StatisticsTab';
 
 export default function Home() {
 	// #region 상수
@@ -29,11 +28,6 @@ export default function Home() {
 			label: '주차장 출입 관리(T)',
 			icon: <Shield size={16} />,
 		},
-    {
-      id: 'statistics',
-      label: '주차장 통계 정보',
-      icon: <ChartBar size={16} />,
-    },
 	];
 	// #endregion
 
@@ -61,7 +55,6 @@ export default function Home() {
 				<div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
 					{activeTab === 'vehicles' && <VehicleManagementTab />}
 					{activeTab === 'access-control' && <AccessControlManager showPageHeader={false} />}
-					{activeTab === 'statistics' && <StatisticsTab />}
 				</div>
 			</div>
 		</div>

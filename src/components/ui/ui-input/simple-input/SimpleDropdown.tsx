@@ -155,15 +155,13 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 				</div>
 			)}
 
-
-
 			{/* 드롭다운 입력 영역 */}
 			<div className="relative">
 				<div
 					ref={triggerRef}
 					className={`
 						w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg 
-						flex items-center cursor-pointer
+						flex items-center cursor-pointer text-start
 						${isOpen
 							? `shadow-inner neu-inset ${colorStyles.borderFocus}`
 							: 'shadow-md neu-flat border-border hover:shadow-lg'
@@ -193,16 +191,16 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 						<button
 							type="button"
 							onClick={handleClear}
-							className="p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+							className="p-1 rounded-full hover:bg-muted"
 							aria-label="값 지우기"
 						>
-							<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+							<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
 						</button>
 					)}
 					{isOpen ? (
-						<ChevronUp className="w-4 h-4 text-muted-foreground" />
+						<ChevronUp className="w-4 h-4 cursor-pointer text-muted-foreground" />
 					) : (
-						<ChevronDown className="w-4 h-4 text-muted-foreground" />
+						<ChevronDown className="w-4 h-4 cursor-pointer text-muted-foreground" />
 					)}
 				</div>
 			</div>
@@ -225,7 +223,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 									<li
 										key={option.value}
 										className={`
-											px-3 py-2 text-sm transition-colors duration-150
+											px-3 py-2 text-sm 
 											${option.disabled
 												? 'opacity-50 cursor-not-allowed'
 												: 'cursor-pointer hover:bg-muted'
