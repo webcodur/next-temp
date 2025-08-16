@@ -124,7 +124,7 @@ const GridForm = React.forwardRef<
 					style={{
 						gridTemplateColumns: viewMode === 'default' ? undefined : gridTemplateColumns,
 						gap: viewMode === 'default' ? 0 : 0,
-						minHeight: '200px', // 최소 높이 설정으로 레이아웃 흔들림 방지
+						// minHeight: '200px', // 최소 높이 설정으로 레이아웃 흔들림 방지
 					} as React.CSSProperties}
 					{...props}
 				>
