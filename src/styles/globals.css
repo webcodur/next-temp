@@ -33,14 +33,14 @@
 @config '../../tailwind.config.js';
 
 /* RTL 지원을 위한 CSS 변수 */
-[dir="ltr"] {
-  --translate-x-hidden: -100%;
-  --translate-x-visible: 0%;
+[dir='ltr'] {
+	--translate-x-hidden: -100%;
+	--translate-x-visible: 0%;
 }
 
-[dir="rtl"] {
-  --translate-x-hidden: 100%;
-  --translate-x-visible: 0%;
+[dir='rtl'] {
+	--translate-x-hidden: 100%;
+	--translate-x-visible: 0%;
 }
 
 /*
@@ -107,6 +107,12 @@
 .react-datepicker-popper,
 .react-datepicker {
 	z-index: 9999 !important;
+}
+
+.react-datepicker-wrapper {
+	/* 부모 컨테이너의 overflow 제약 해제 */
+	position: relative;
+	z-index: 1;
 }
 
 /* --- primary scrollbar --- */

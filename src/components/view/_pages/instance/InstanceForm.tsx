@@ -6,6 +6,7 @@ import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layou
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { InstanceDetail, InstanceType } from '@/types/instance';
@@ -305,15 +306,13 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       label: '등록일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(instance.createdAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={instance.createdAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     },
@@ -322,15 +321,13 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       label: '수정일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(instance.updatedAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={instance.updatedAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     }

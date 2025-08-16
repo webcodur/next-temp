@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { AlignLeft } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
+import { InputContainer } from './shared/InputContainer';
 
 interface SimpleTextAreaProps {
 	label?: string;
@@ -17,6 +18,8 @@ interface SimpleTextAreaProps {
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 	showCharCount?: boolean;
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
@@ -31,6 +34,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 	resize = 'vertical',
 	colorVariant = 'primary',
 	showCharCount = false,
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -98,16 +102,17 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 
 			{/* Validation 피드백은 GridForm.Rules에서 처리됨 - 별도 표시 제거 */}
 
-			<div
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
 				onClick={handleContainerClick}
-				className={`relative flex border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+				isTextArea={true}>
 				
 				{/* 왼쪽 텍스트 아이콘 */}
-				<AlignLeft className="flex-shrink-0 mt-3 ml-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					<AlignLeft className="absolute left-3 top-3 w-4 h-4 text-muted-foreground pointer-events-none" />
+				)}
 
 				{/* 텍스트 영역 */}
 				<textarea
@@ -121,9 +126,9 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 					disabled={disabled}
 					rows={rows}
 					maxLength={maxLength}
-					className={`flex-1 p-3 mr-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground ${resizeClass[resize]} min-h-[2.5rem]`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground ${resizeClass[resize]} min-h-[2.5rem]`}
 				/>
-			</div>
+			</InputContainer>
 		</div>
 	);
 };

@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { Clock, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
+import { InputContainer } from '../shared/InputContainer';
 
 interface SimpleTimePickerProps {
 	label?: string;
@@ -19,6 +20,8 @@ interface SimpleTimePickerProps {
 	maxTime?: Date;
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
@@ -33,6 +36,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 	maxTime,
 	validationRule,
 	colorVariant = 'primary',
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -108,50 +112,48 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 				</div>
 			)}
 
-			<div
-				onClick={handleContainerClick}
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
+				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 시계 아이콘 */}
-				<Clock className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					<Clock className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+				)}
 
 				{/* 중앙 TimePicker */}
-				<div className="flex-1">
-					<DatePicker
-						selected={value}
-						onChange={onChange}
-						showTimeSelect
-						showTimeSelectOnly
-						timeIntervals={timeIntervals}
-						timeFormat="HH:mm"
-						placeholderText={placeholder}
-						locale={ko}
-						minTime={minTime}
-						maxTime={maxTime}
-						disabled={disabled}
-						onFocus={handleFocus}
-						onBlur={handleBlur}
-						onKeyDown={handleKeyDown}
-						className="w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
-						wrapperClassName="w-full"
-					/>
-				</div>
+				<DatePicker
+					selected={value}
+					onChange={onChange}
+					showTimeSelect
+					showTimeSelectOnly
+					timeIntervals={timeIntervals}
+					timeFormat="HH:mm"
+					placeholderText={placeholder}
+					locale={ko}
+					minTime={minTime}
+					maxTime={maxTime}
+					disabled={disabled}
+					onFocus={handleFocus}
+					onBlur={handleBlur}
+					onKeyDown={handleKeyDown}
+					className={`pr-10 ${showIcon ? 'pl-10' : 'pl-3'} w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					wrapperClassName="w-full"
+				/>
 
 				{/* 우측 X 아이콘 */}
 				{value && !disabled && (
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>
 				)}
-			</div>
+			</InputContainer>
 		</div>
 	);
 }; 

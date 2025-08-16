@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { Calendar, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
+import { InputContainer } from '../shared/InputContainer';
 
 interface SimpleDateRangePickerProps {
 	label?: string;
@@ -20,6 +21,8 @@ interface SimpleDateRangePickerProps {
 	maxDate?: Date;
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 // #region 커스텀 헤더 구성 함수
@@ -138,6 +141,7 @@ export const SimpleDateRangePicker: React.FC<SimpleDateRangePickerProps> = ({
 	maxDate,
 	validationRule,
 	colorVariant = 'primary',
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -217,50 +221,48 @@ export const SimpleDateRangePicker: React.FC<SimpleDateRangePickerProps> = ({
 				</div>
 			)}
 
-			<div
-				onClick={handleContainerClick}
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
+				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 캘린더 아이콘 */}
-				<Calendar className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					<Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+				)}
 
 				{/* 중앙 DateRangePicker */}
-				<div className="flex-1">
-					<DatePicker
-						selectsRange={true}
-						startDate={startDate}
-						endDate={endDate}
-						onChange={onChange}
-						dateFormat={dateFormat}
-						placeholderText={placeholder}
-						locale={ko}
-						minDate={minDate}
-						maxDate={maxDate}
-						disabled={disabled}
-						renderCustomHeader={renderCustomHeader}
-						onFocus={handleFocus}
-						onBlur={handleBlur}
-						onKeyDown={handleKeyDown}
-						className="w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
-						wrapperClassName="w-full"
-					/>
-				</div>
+				<DatePicker
+					selectsRange={true}
+					startDate={startDate}
+					endDate={endDate}
+					onChange={onChange}
+					dateFormat={dateFormat}
+					placeholderText={placeholder}
+					locale={ko}
+					minDate={minDate}
+					maxDate={maxDate}
+					disabled={disabled}
+					renderCustomHeader={renderCustomHeader}
+					onFocus={handleFocus}
+					onBlur={handleBlur}
+					onKeyDown={handleKeyDown}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					wrapperClassName="w-full"
+				/>
 
 				{/* 우측 X 아이콘 */}
 				{(startDate || endDate) && !disabled && (
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>
 				)}
-			</div>
+			</InputContainer>
 		</div>
 	);
 }; 

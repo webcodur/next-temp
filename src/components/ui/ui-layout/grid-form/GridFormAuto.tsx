@@ -14,6 +14,7 @@ const GridFormAuto = React.forwardRef<
   GridFormAutoProps & React.HTMLAttributes<HTMLDivElement>
 >(({
   fields,
+  viewMode: initialViewMode,
   sequenceWidth,
   rulesWidth,
   gap,
@@ -27,6 +28,7 @@ const GridFormAuto = React.forwardRef<
   return (
     <GridForm
       ref={ref}
+      viewMode={initialViewMode}
       sequenceWidth={sequenceWidth}
       rulesWidth={rulesWidth}
       gap={gap}

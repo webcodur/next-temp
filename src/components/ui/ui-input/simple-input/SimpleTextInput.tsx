@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Type, X, Binary, Eye, EyeOff } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
+import { InputContainer } from './shared/InputContainer';
 
 interface SimpleTextInputProps {
 	label?: string;
@@ -17,6 +18,8 @@ interface SimpleTextInputProps {
 	autocomplete?: string;
 	// 외부에서 주입하는 에러 메시지 (validationRule과 별개로 표시)
 	errorMessage?: string;
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
@@ -31,6 +34,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 	colorVariant = 'primary',
 	autocomplete,
 	errorMessage,
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
@@ -91,19 +95,19 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 
 
 
-			<div
-				onClick={handleContainerClick}
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
+				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 아이콘 */}
-				{type === 'number' ? (
-					<Binary className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
-				) : (
-					<Type className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					type === 'number' ? (
+						<Binary className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					) : (
+						<Type className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					)
 				)}
 
 				{/* 중앙 입력 필드 */}
@@ -118,7 +122,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					autoComplete={autocomplete}
-					className="overflow-hidden flex-1 text-sm font-medium whitespace-nowrap bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-ellipsis"
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
 				/>
 
 				{/* 비밀번호 보기/숨기기 버튼 */}
@@ -126,7 +130,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-8 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}>
 						{showPassword ? (
 							<EyeOff className="w-4 h-4 text-muted-foreground hover:text-foreground" />
@@ -141,12 +145,12 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
 					</button>
 				)}
-			</div>
+			</InputContainer>
 
       {/* 외부 에러 메시지 표시: validationRule이 없을 때만 하단 표시 */}
       {!validationRule && errorMessage && (

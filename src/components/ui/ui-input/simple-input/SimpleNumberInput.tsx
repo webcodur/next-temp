@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Hash, X } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
+import { InputContainer } from './shared/InputContainer';
 
 interface SimpleNumberInputProps {
 	label?: string;
@@ -15,6 +16,8 @@ interface SimpleNumberInputProps {
 	max?: number;
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
@@ -27,6 +30,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 	min,
 	max,
 	colorVariant = 'primary',
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -103,16 +107,16 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 
 			{/* Validation 피드백은 GridForm.Rules에서 처리됨 - 별도 표시 제거 */}
 
-			<div
-				onClick={handleContainerClick}
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
+				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 해시 아이콘 */}
-				<Hash className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					<Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+				)}
 
 				{/* 중앙 입력 필드 */}
 				<input
@@ -127,7 +131,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 					disabled={disabled}
 					min={min}
 					max={max}
-					className="flex-1 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 				/>
 
 				{/* 우측 X 아이콘 */}
@@ -135,12 +139,12 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>
 				)}
-			</div>
+			</InputContainer>
 		</div>
 	);
 };

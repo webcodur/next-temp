@@ -3,7 +3,7 @@
 import React from 'react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
-import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/SimpleDatePicker';
+import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { RotateCcw, Save } from 'lucide-react';
@@ -115,11 +115,13 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
       label: '차단일시',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={blacklist.blockedAt ? new Date(blacklist.blockedAt).toLocaleString() : '-'}
+        <SimpleDatePicker
+          value={blacklist.blockedAt || null}
           onChange={() => {}}
-          disabled
-          validationRule={{ type: 'free', mode: 'view' }}
+          disabled={true}
+          dateFormat="yyyy-MM-dd HH:mm:ss"
+          showTimeSelect={true}
+          utcMode={true}
         />
       )
     }

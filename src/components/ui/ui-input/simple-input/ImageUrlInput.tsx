@@ -9,6 +9,8 @@ interface ImageUrlInputProps {
   onChange: (value: string[]) => void;
   placeholder?: string;
   maxImages?: number;
+  // 왼쪽 아이콘 표시 여부
+  showIcon?: boolean;
 }
 
 export function ImageUrlInput({
@@ -16,7 +18,8 @@ export function ImageUrlInput({
   value = [],
   onChange,
   placeholder = '이미지 URL을 입력하세요',
-  maxImages = 5
+  maxImages = 5,
+  showIcon = true
 }: ImageUrlInputProps) {
   const [newUrl, setNewUrl] = useState('');
 
@@ -81,7 +84,7 @@ export function ImageUrlInput({
                 key={index}
                 className="flex gap-2 items-center p-2 bg-gray-50 rounded-md"
               >
-                <ImageIcon size={16} className="text-gray-400" />
+                {showIcon && <ImageIcon size={16} className="text-gray-400" />}
                 <span className="flex-1 text-sm text-gray-700 truncate">
                   {url}
                 </span>

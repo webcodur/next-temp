@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -10,6 +10,7 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
+import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { ImagePreview, ImageData } from '@/components/ui/ui-effects/image-preview/ImagePreview';
@@ -138,7 +139,7 @@ function urlsToImageData(urls: string[]): ImageData[] {
 // #endregion
 
 export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
-  const router = useRouter();
+  // const router = useRouter();
 
   // #region 상태 관리
   const [violation, setViolation] = useState<CarViolation | null>(null);
@@ -480,9 +481,13 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '위반 시각',
                 rules: '발생 일시',
                 component: (
-                  <SimpleTextInput
-                    value={new Date(violation.violationTime).toLocaleString('ko-KR')}
-                    disabled
+                  <SimpleDatePicker
+                    value={violation.violationTime}
+                    onChange={() => {}}
+                    disabled={true}
+                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                    showTimeSelect={true}
+                    utcMode={true}
                   />
                 )
               },
@@ -517,9 +522,13 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '처리 시각',
                 rules: '완료 일시',
                 component: (
-                  <SimpleTextInput
-                    value={violation.processedAt ? new Date(violation.processedAt).toLocaleString('ko-KR') : ''}
-                    disabled
+                  <SimpleDatePicker
+                    value={violation.processedAt || null}
+                    onChange={() => {}}
+                    disabled={true}
+                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                    showTimeSelect={true}
+                    utcMode={true}
                   />
                 )
               });
@@ -532,9 +541,13 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '생성일',
                 rules: '등록 일시',
                 component: (
-                  <SimpleTextInput
-                    value={new Date(violation.createdAt).toLocaleString('ko-KR')}
-                    disabled
+                  <SimpleDatePicker
+                    value={violation.createdAt}
+                    onChange={() => {}}
+                    disabled={true}
+                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                    showTimeSelect={true}
+                    utcMode={true}
                   />
                 )
               },
@@ -543,9 +556,13 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '수정일',
                 rules: '최종 변경',
                 component: (
-                  <SimpleTextInput
-                    value={new Date(violation.updatedAt).toLocaleString('ko-KR')}
-                    disabled
+                  <SimpleDatePicker
+                    value={violation.updatedAt}
+                    onChange={() => {}}
+                    disabled={true}
+                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                    showTimeSelect={true}
+                    utcMode={true}
                   />
                 )
               }

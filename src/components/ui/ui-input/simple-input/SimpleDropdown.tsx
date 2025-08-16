@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { List, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
 import { Portal } from '../field/shared/Portal';
+import { InputContainer } from './shared/InputContainer';
 
 interface DropdownOption {
 	value: string;
@@ -21,6 +22,8 @@ interface SimpleDropdownProps {
 	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 	validationRule?: ValidationRule;
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
@@ -32,6 +35,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	disabled = false,
 	colorVariant = 'primary',
 	className = '',
+	showIcon = true,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
@@ -157,52 +161,51 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 
 			{/* 드롭다운 입력 영역 */}
 			<div className="relative">
-				<div
-					ref={triggerRef}
-					className={`
-						w-full h-11 pl-10 pr-10 text-sm font-medium border rounded-lg 
-						flex items-center cursor-pointer text-start
-						${isOpen
-							? `shadow-inner neu-inset ${colorStyles.borderFocus}`
-							: 'shadow-md neu-flat border-border hover:shadow-lg'
-						} 
-						${disabled ? 'opacity-60 cursor-not-allowed' : ''} 
-						${selectedOption ? 'text-foreground' : 'text-muted-foreground'}
-						bg-serial-3
-					`}
-					onClick={handleToggle}
-					onKeyDown={handleKeyDown}
-					tabIndex={disabled ? -1 : 0}
-					aria-expanded={isOpen}
-					aria-haspopup="listbox"
-				>
+				<InputContainer
+					isFocused={isOpen}
+					disabled={disabled}
+					colorVariant={colorVariant}
+					className="cursor-pointer">
+					{/* 왼쪽 리스트 아이콘 */}
+					{showIcon && (
+						<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					)}
+					
 					{/* 표시 텍스트 */}
-					<span className="flex-1 select-none">
-						{selectedOption ? selectedOption.label : placeholder}
-					</span>
-				</div>
-				
-				{/* 왼쪽 리스트 아이콘 */}
-				<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<div
+						ref={triggerRef}
+						className={`w-full h-full flex items-center ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium cursor-pointer ${
+							selectedOption ? 'text-foreground' : 'text-muted-foreground'
+						}`}
+						onClick={handleToggle}
+						onKeyDown={handleKeyDown}
+						tabIndex={disabled ? -1 : 0}
+						aria-expanded={isOpen}
+						aria-haspopup="listbox">
+						<span className="flex-1 select-none">
+							{selectedOption ? selectedOption.label : placeholder}
+						</span>
+					</div>
 
-				{/* 우측 아이콘들 */}
-				<div className="flex absolute right-3 top-1/2 gap-1 items-center transform -translate-y-1/2">
-					{selectedOption && !disabled && (
-						<button
-							type="button"
-							onClick={handleClear}
-							className="p-1 rounded-full hover:bg-muted"
-							aria-label="값 지우기"
-						>
-							<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
-						</button>
-					)}
-					{isOpen ? (
-						<ChevronUp className="w-4 h-4 cursor-pointer text-muted-foreground" />
-					) : (
-						<ChevronDown className="w-4 h-4 cursor-pointer text-muted-foreground" />
-					)}
-				</div>
+					{/* 우측 아이콘들 */}
+					<div className="flex absolute right-3 top-1/2 gap-1 items-center transform -translate-y-1/2">
+						{selectedOption && !disabled && (
+							<button
+								type="button"
+								onClick={handleClear}
+								className="p-1 rounded-full hover:bg-muted"
+								aria-label="값 지우기"
+							>
+								<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
+							</button>
+						)}
+						{isOpen ? (
+							<ChevronUp className="w-4 h-4 cursor-pointer text-muted-foreground" />
+						) : (
+							<ChevronDown className="w-4 h-4 cursor-pointer text-muted-foreground" />
+						)}
+					</div>
+				</InputContainer>
 			</div>
 
 			{/* 드롭다운 메뉴 - Portal로 렌더링 */}

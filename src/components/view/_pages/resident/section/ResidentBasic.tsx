@@ -6,6 +6,7 @@ import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layou
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { ResidentDetail } from '@/types/resident';
@@ -194,13 +195,13 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '생년월일',
       rules: 'YYYY-MM-DD 형식',
       component: (
-        <SimpleTextInput
-          type="text"
+        <SimpleDatePicker
           value={data.birthDate}
-          onChange={(value) => handleFieldChange('birthDate', value)}
-          placeholder="YYYY-MM-DD"
+          onChange={(value) => handleFieldChange('birthDate', value || '')}
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     },
@@ -269,15 +270,13 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '등록일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(resident.createdAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={resident.createdAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     },
@@ -286,15 +285,13 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '수정일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(resident.updatedAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={resident.updatedAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     }

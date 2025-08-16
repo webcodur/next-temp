@@ -1,7 +1,10 @@
 import React from 'react';
 
 // #region GridForm 타입 정의
+export type GridFormViewMode = 'default' | 'detail';
+
 export interface GridFormProps {
+	viewMode?: GridFormViewMode;
 	sequenceWidth?: string;
 	rulesWidth?: string;
 	gap?: string;
@@ -58,6 +61,7 @@ export interface GridFormFieldSchema {
 
 export interface GridFormAutoProps {
 	fields: GridFormFieldSchema[];
+	viewMode?: GridFormViewMode;
 	sequenceWidth?: string;
 	rulesWidth?: string;
 	gap?: string;

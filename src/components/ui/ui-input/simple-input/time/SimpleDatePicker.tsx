@@ -8,6 +8,7 @@ import { Calendar } from 'lucide-react';
 import { getYear, getMonth } from 'date-fns';
 import { ValidationRule, validateField } from '@/utils/validation';
 import timezone from '@/utils/timezone';
+import { InputContainer } from '@/components/ui/ui-input/simple-input/shared/InputContainer';
 
 interface SimpleDatePickerProps {
 	label?: string;
@@ -23,6 +24,8 @@ interface SimpleDatePickerProps {
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 	utcMode?: boolean;
+	// 왼쪽 아이콘 표시 여부
+	showIcon?: boolean;
 }
 
 // #region 커스텀 헤더 구성 함수
@@ -142,6 +145,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 	validationRule,
 	colorVariant = 'primary',
 	utcMode = true,
+	showIcon = true,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -252,49 +256,48 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				</div>
 			)}
 
-			<div
-				onClick={handleContainerClick}
-				className={`relative flex items-center h-11 px-3 border rounded-lg transition-all duration-200 bg-serial-3 ${
-					isFocused
-						? `shadow-inner neu-inset ${colorVariant === 'secondary' ? 'border-secondary/30' : 'border-primary/30'}`
-						: 'shadow-md neu-flat border-border hover:shadow-lg'
-				} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-text'}`}>
+			<InputContainer
+				isFocused={isFocused}
+				disabled={disabled}
+				colorVariant={colorVariant}
+				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 캘린더 아이콘 */}
-				<Calendar className="flex-shrink-0 mr-3 w-4 h-4 text-muted-foreground" />
+				{showIcon && (
+					<Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+				)}
 
 				{/* 중앙 DatePicker */}
-				<div className="flex-1">
-					<DatePicker
-						selected={displayValue}
-						onChange={handleDateChange}
-						dateFormat={dateFormat}
-						placeholderText={placeholder}
-						locale={ko}
-						showTimeSelect={showTimeSelect}
-						minDate={minDate ?? undefined}
-						maxDate={maxDate ?? undefined}
-						disabled={disabled}
-						renderCustomHeader={renderCustomHeader}
-						onFocus={handleFocus}
-						onBlur={handleBlur}
-						onKeyDown={handleKeyDown}
-						className="w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground"
-						wrapperClassName="w-full"
-					/>
-				</div>
+				<DatePicker
+					selected={displayValue}
+					onChange={handleDateChange}
+					dateFormat={dateFormat}
+					placeholderText={placeholder}
+					locale={ko}
+					showTimeSelect={showTimeSelect}
+					minDate={minDate ?? undefined}
+					maxDate={maxDate ?? undefined}
+					disabled={disabled}
+					renderCustomHeader={renderCustomHeader}
+					onFocus={handleFocus}
+					onBlur={handleBlur}
+					onKeyDown={handleKeyDown}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					wrapperClassName="w-full"
+					popperPlacement="bottom-start"
+				/>
 
 				{/* 우측 X 아이콘 */}
 				{displayValue && !disabled && (
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
 						aria-label="값 지우기">
 						<div className="w-4 h-4 text-muted-foreground hover:text-foreground">✗</div>
 					</button>
 				)}
-			</div>
+			</InputContainer>
 		</div>
 	);
 }; 

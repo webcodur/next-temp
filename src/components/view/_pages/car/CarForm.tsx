@@ -6,6 +6,7 @@ import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layou
 import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { Car } from '@/types/car';
@@ -351,15 +352,13 @@ const CarForm: React.FC<CarFormProps> = ({
       label: '등록일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(car.createdAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={car.createdAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     },
@@ -368,15 +367,13 @@ const CarForm: React.FC<CarFormProps> = ({
       label: '수정일자',
       rules: '시스템 자동 기록',
       component: (
-        <SimpleTextInput
-          value={new Date(car.updatedAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+        <SimpleDatePicker
+          value={car.updatedAt}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          dateFormat="yyyy-MM-dd"
+          showTimeSelect={false}
+          utcMode={true}
         />
       )
     }

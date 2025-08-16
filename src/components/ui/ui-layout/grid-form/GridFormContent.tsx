@@ -24,7 +24,7 @@ const GridFormContent = React.forwardRef<
 		<div
 			ref={ref}
 			className={cn(
-				'flex px-4 py-2 min-h-full',
+				'flex min-h-full',
 				directionClasses[direction],
 				// direction이 column일 때는 justify-center, row일 때는 items-center
 				direction === 'column' ? 'justify-center' : 'items-center',
