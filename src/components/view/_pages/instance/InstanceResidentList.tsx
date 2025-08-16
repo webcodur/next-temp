@@ -23,12 +23,12 @@ export default function InstanceResidentList({
 
   if (loading) {
     return (
-      <div className="p-6 rounded-lg border">
-        <div className="flex gap-2 items-center mb-4">
+      <div className="p-6 border rounded-lg">
+        <div className="flex items-center gap-2 mb-4">
           <Users size={20} className="text-primary" />
           <h3 className="text-lg font-medium">거주민 목록</h3>
         </div>
-        <div className="flex justify-center items-center py-8">
+        <div className="flex items-center justify-center py-8">
           <div className="text-muted-foreground">로딩 중...</div>
         </div>
       </div>
@@ -36,15 +36,15 @@ export default function InstanceResidentList({
   }
 
   return (
-    <div className="p-6 rounded-lg border">
-      <div className="flex gap-2 items-center mb-4">
+    <div className="p-6 border rounded-lg">
+      <div className="flex items-center gap-2 mb-4">
         <Users size={20} className="text-primary" />
         <h3 className="text-lg font-medium">거주민 목록</h3>
         <span className="text-sm text-muted-foreground">({residentInstances.length}명)</span>
       </div>
 
       {residentInstances.length === 0 ? (
-        <div className="flex flex-col justify-center items-center py-8 text-center">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
           <User size={32} className="mb-3 text-muted-foreground" />
           <h4 className="mb-1 text-sm font-medium text-foreground">
             등록된 거주민이 없습니다

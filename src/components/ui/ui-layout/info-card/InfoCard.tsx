@@ -5,7 +5,7 @@ import { ChevronRight, MessageSquare } from 'lucide-react';
 
 // 필드 정보 타입
 export interface InfoCardField {
-  icon: React.ReactElement;
+  icon: React.ReactElement<{ size?: number; className?: string }>;
   value: string;
   show?: boolean;
 }
@@ -19,7 +19,7 @@ export interface InfoCardBadge {
 // InfoCard Props 타입
 export interface InfoCardProps {
   // 헤더
-  headerIcon: React.ReactElement;
+  headerIcon: React.ReactElement<{ size?: number; className?: string }>;
   title: string;
   customTitle?: React.ReactElement; // 커스텀 제목 컴포넌트 (번호판 등)
   badges?: InfoCardBadge[];
@@ -67,20 +67,18 @@ export default function InfoCard({
       onClick={clickable ? onClick : undefined}
       className={`
         relative p-4 rounded-lg border border-border neu-raised transition-all duration-200
-        ${clickable ? 'cursor-pointer group hover:shadow-md' : ''}
-        ${className}
-      `}
+        ${clickable ? 'cursor-pointer group hover:shadow-md' : ''} ${className}`}
     >
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="flex flex-shrink-0 justify-center items-center w-10 h-10 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-1 gap-3 items-center min-w-0">
+          <div className="flex flex-shrink-0 justify-center items-center w-10 h-10 rounded-full transition-colors bg-primary/10 group-hover:bg-primary/20">
             {React.cloneElement(headerIcon, { 
               size: 18, 
               className: 'text-primary' 
             })}
           </div>
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div className="flex flex-1 gap-2 items-center min-w-0">
             {customTitle ? (
               customTitle
             ) : (
@@ -109,7 +107,7 @@ export default function InfoCard({
         <div className="space-y-2">
           {leftColumn.map((field, index) => 
             field.show !== false && (
-              <div key={index} className="flex items-center gap-2 text-muted-foreground">
+              <div key={index} className="flex gap-2 items-center text-muted-foreground">
                 {React.cloneElement(field.icon, { 
                   size: 12, 
                   className: 'flex-shrink-0' 
@@ -124,7 +122,7 @@ export default function InfoCard({
         <div className="space-y-2">
           {rightColumn.map((field, index) => 
             field.show !== false && (
-              <div key={index} className="flex items-center gap-2 text-muted-foreground">
+              <div key={index} className="flex gap-2 items-center text-muted-foreground">
                 {React.cloneElement(field.icon, { 
                   size: 12, 
                   className: 'flex-shrink-0' 
@@ -139,7 +137,7 @@ export default function InfoCard({
       {/* 메모 영역 */}
       {memo && (
         <div className="pt-3 mt-3 border-t border-border/50">
-          <div className="flex items-start gap-2 p-2 text-xs bg-gray-50 rounded text-muted-foreground">
+          <div className="flex gap-2 items-start p-2 text-xs bg-gray-50 rounded text-muted-foreground">
             <MessageSquare size={12} className="flex-shrink-0 mt-0.5" />
             <span>{memo}</span>
           </div>

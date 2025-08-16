@@ -56,7 +56,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 	// 화면 크기 감지 (1024px 기준)
 	useEffect(() => {
 		const checkScreenSize = () => {
-			setIsDesktop(window.innerWidth >= 1024);
+			setIsDesktop(window.innerWidth >= 1200);
 		};
 		checkScreenSize();
 		window.addEventListener('resize', checkScreenSize);
@@ -119,9 +119,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 		<ToastProvider>
 			<div className="flex flex-col h-screen" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 				<Header />
-				<div className="flex overflow-hidden flex-1">
+				<div className="flex flex-1 overflow-hidden">
 					<Sidebar />
-					<div className="flex overflow-hidden relative flex-1">
+					<div className="relative flex flex-1 overflow-hidden">
 						{/* PC 화면: 일반 flex layout으로 본문을 밀어내는 방식 */}
 						<div 
 							className={`flex-shrink-0 h-full shadow-xl transition-all duration-100 ease-in-out bg-serial-1 ${
@@ -136,7 +136,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						{/* 태블릿 이하: 오버레이 방식 */}
 						{!isDesktop && (showSecondaryPanel || isAnimating) && (
 							<div 
-								className="absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out start-0 bg-serial-1"
+								className="absolute top-0 z-50 h-full transition-transform duration-100 ease-in-out shadow-xl start-0 bg-serial-1"
 								style={{ 
 									width: `${endPanelWidth}px`,
 									transform: `translateX(${shouldShow ? 'var(--translate-x-visible)' : 'var(--translate-x-hidden)'})`
@@ -146,7 +146,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						)}
 
 						{/* 페이지 */}   
-						<main className="overflow-y-auto flex-1 transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
+						<main className="flex-1 overflow-y-auto transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
               {/* 콘텐츠 */}
               <div className="px-[92px] mx-auto mt-12 max-w-[1656px] rounded-lg">
                 {children}

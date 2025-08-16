@@ -167,13 +167,13 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
     },
     {
       id: 'ownerName',
-      label: '소유자 이름',
+      label: '소유자',
       rules: '한글, 영문 2-50자',
       component: (
         <SimpleTextInput
           value={data.ownerName}
           onChange={(value) => handleFieldChange('ownerName', value)}
-          placeholder="소유자 이름"
+          placeholder="소유자"
           disabled={isReadOnly}
           validationRule={{ type: 'free', mode: mode }}
         />
@@ -197,7 +197,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       id: 'address1Depth',
       label: '주소 1단계',
       required: true,
-      rules: '시/도 (예: 서울특별시)',
+      rules: '동 정보',
       component: (
         <SimpleTextInput
           value={data.address1Depth}
@@ -212,7 +212,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       id: 'address2Depth',
       label: '주소 2단계',
       required: true,
-      rules: '시/군/구 (예: 강남구)',
+      rules: '호수 정보',
       component: (
         <SimpleTextInput
           value={data.address2Depth}
