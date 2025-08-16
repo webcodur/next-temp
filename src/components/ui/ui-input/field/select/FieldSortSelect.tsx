@@ -5,7 +5,7 @@ import { ArrowUpDown, ChevronDown } from 'lucide-react';
 import { FieldSortSelectComponentProps } from '../core/types';
 import { FIELD_STYLES, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
-import { useSelectLogic } from '../shared/useSelectLogic';
+import { useSelectLogic } from '../../../../../hooks/useSelectLogic';
 
 export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	label,

@@ -20,7 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 import type { MidMenu } from '@/components/layout/sidebar/types';
 
-import { useSecondaryMenu } from '../useSecondaryMenu';
+import { useSecondaryMenu } from '../../../../../hooks/useSecondaryMenu';
 import { MidMenu as MidMenuComponent } from './MidMenu/MidMenu';
 import { ResizeHandle } from '../ResizeHandle/ResizeHandle';
 
@@ -79,7 +79,7 @@ function SecondaryPanel() {
 		<TooltipProvider delayDuration={100}>
 			<div
 				style={{ width: `${endPanelWidth}px` }}
-				className="flex relative flex-col h-full border-e border-border bg-serial-1">
+				className="relative flex flex-col h-full border-e border-border bg-serial-1">
 				
         {/* Menu Controls */}
 				<div className="flex flex-shrink-0 justify-between items-center px-[20px] h-16 border-b border-serial-3">

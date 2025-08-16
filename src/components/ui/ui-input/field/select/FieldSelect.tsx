@@ -5,7 +5,7 @@ import { List, ChevronDown } from 'lucide-react';
 import { FIELD_STYLES, getColorVariantStyles, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/ui-hooks/useI18n';
-import { useSelectLogic } from '../shared/useSelectLogic';
+import { useSelectLogic } from '../../../../../hooks/useSelectLogic';
 
 // #region 타입
 interface FieldSelectProps {

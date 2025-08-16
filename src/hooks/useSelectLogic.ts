@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Option } from '../core/types';
+import { Option } from '../components/ui/ui-input/field/core/types';
 
 export const useSelectLogic = (
 	options: Option[],
