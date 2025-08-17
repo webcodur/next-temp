@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { History, Calendar } from 'lucide-react';
 
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { getResidentHistory } from '@/services/residents/residents@id_history_GET';
 import { ResidentDetail } from '@/types/resident';
 
@@ -77,7 +76,7 @@ export default function ResidentHistorySection({
   const columns: BaseTableColumn<ResidentHistoryItem>[] = [
     {
       key: 'instanceId',
-      header: '호실 ID',
+      header: '세대 ID',
       width: '10%',
       align: 'center',
     },
@@ -96,7 +95,7 @@ export default function ResidentHistorySection({
     },
     {
       key: 'instanceType',
-      header: '호실 타입',
+      header: '세대 타입',
       width: '12%',
       align: 'center',
       cell: (item: ResidentHistoryItem) => {
@@ -163,29 +162,12 @@ export default function ResidentHistorySection({
 
   return (
     <div className="space-y-6">
-      <TitleRow title="호실 이동 이력" subtitle="거주자의 호실 이동 이력을 확인합니다." />
-      {/* 이동 이력 통계 */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 text-center rounded-lg border bg-card border-border">
-          <div className="text-2xl font-bold text-foreground">{stats.total}</div>
-          <div className="text-sm text-muted-foreground">총 거주 이력</div>
-        </div>
-        <div className="p-4 text-center rounded-lg border bg-card border-border">
-          <div className="text-2xl font-bold text-green-600">{stats.current}</div>
-          <div className="text-sm text-muted-foreground">현재 거주</div>
-        </div>
-        <div className="p-4 text-center rounded-lg border bg-card border-border">
-          <div className="text-2xl font-bold text-muted-foreground">{stats.past}</div>
-          <div className="text-sm text-muted-foreground">과거 거주</div>
-        </div>
-      </div>
-
       {/* 이동 이력 목록 */}
       <div className="p-6 rounded-lg border bg-card border-border">
         <div className="flex gap-2 items-center mb-4">
           <History size={20} />
           <h2 className="text-lg font-semibold text-foreground">
-            호실 이동 이력
+            세대 이동 이력
           </h2>
           <div className="flex gap-1 items-center ml-2 text-sm text-muted-foreground">
             <Calendar size={16} />
@@ -219,7 +201,7 @@ export default function ResidentHistorySection({
       <div className="p-4 rounded-lg border bg-muted/50 border-border">
         <h4 className="mb-2 text-sm font-medium text-foreground">이동 이력 안내</h4>
         <ul className="space-y-1 text-sm text-muted-foreground">
-          <li>• 호실 이동 시 이전 거주지는 자동으로 퇴거 처리됩니다.</li>
+          <li>• 세대 이동 시 이전 거주지는 자동으로 퇴거 처리됩니다.</li>
           <li>• 삭제된 관계도 이력에서 확인할 수 있습니다.</li>
           <li>• &ldquo;현재 거주&rdquo; 상태는 퇴거일이 없는 관계를 의미합니다.</li>
         </ul>

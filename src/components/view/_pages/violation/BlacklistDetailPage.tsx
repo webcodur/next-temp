@@ -265,18 +265,16 @@ export default function BlacklistDetailPage() {
       />
 
       {/* 수정 폼 (GridForm 사용) */}
-      <div className="p-6 rounded-lg border bg-card border-border">
-        <BlacklistForm
-          data={formData}
-          onChange={handleFormChangeAll}
-          onFieldChange={handleFormChange}
-          onCancel={handleBack}
-          onSubmit={handleUpdate}
-          isSubmitting={isUpdating}
-          isValid={Boolean(isFormValid)}
-          blacklist={blacklistData}
-        />
-      </div>
+      <BlacklistForm
+        data={formData}
+        onChange={handleFormChangeAll}
+        onFieldChange={handleFormChange}
+        onCancel={handleBack}
+        onSubmit={handleUpdate}
+        isSubmitting={isUpdating}
+        isValid={Boolean(isFormValid)}
+        blacklist={blacklistData}
+      />
 
       {/* 해제 확인 다이얼로그 */}
       <Modal isOpen={unblockConfirmOpen} onClose={() => setUnblockConfirmOpen(false)} title="블랙리스트 해제" size="sm">

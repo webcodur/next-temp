@@ -5,7 +5,6 @@ import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto } from '@/components/ui/ui-layout/grid-form';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { updateParkingDevicePermissions } from '@/services/devices/devices@id_permissions_PUT';
 import { ParkingDevice } from '@/types/device';
@@ -203,8 +202,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
 
   return (
     <div className="space-y-6">
-      <div className='flex gap-3 justify-between items-center'>
-        <TitleRow title="차량 유형별 출입 권한" subtitle="차량 유형별 출입 허가 설정을 관리합니다." />
+      <div className='flex gap-3 justify-end items-center'>
         <div className="flex gap-3">
           <Button
             variant="outline"
@@ -256,6 +254,8 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
       {mode === 'edit' && (
         <GridFormAuto
           fields={[]} // 빈 필드 배열
+          title="차량 유형별 출입 권한"
+          subtitle="차량 유형별 출입 허가 설정을 관리합니다."
           gap="0px"
           bottomLeftActions={(
             <Button 

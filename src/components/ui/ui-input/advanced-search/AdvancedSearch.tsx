@@ -31,7 +31,8 @@ interface AdvancedSearchProps {
 	colorVariant?: 'primary' | 'secondary';
 	searchMode?: 'client' | 'server';
 	alwaysOpen?: boolean; // 아코디언 없이 항상 펼쳐진 상태로 고정
-  footerLeft?: ReactNode; // 푸터 좌측 액션 영역
+	footerLeft?: ReactNode; // 푸터 좌측 액션 영역
+	columns?: 2 | 3; // 필드 열 개수 (기본값: 2)
 }
 // #endregion
 
@@ -46,7 +47,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 	colorVariant,
 	searchMode = 'server', // 기본값은 서버 사이드
 	alwaysOpen = false, // 기본값은 false (아코디언 사용)
-  footerLeft,
+	footerLeft,
+	columns = 2, // 기본값은 2열
 }) => {
 	const { isRTL } = useLocale();
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -113,12 +115,40 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 			resetButton: 'text-muted-foreground bg-background hover:text-secondary',
 		},
 	};
+
+	// 헤더 액션 버튼들 (서버 모드에서 애니메이션과 함께 표시)
+	const headerActions = searchMode === 'server' && currentConfig.showButtons ? (isOpen: boolean) => {
+		return (
+			<div className={`flex gap-1.5 transition-all duration-300 ease-in-out ${
+				isOpen 
+					? 'opacity-100 scale-100 translate-x-0' 
+					: 'opacity-0 scale-95 translate-x-2'
+			} ${isRTL ? 'justify-start' : 'justify-end'}`}>
+				<button
+					onClick={onReset}
+					className={`flex gap-1.5 items-center px-2.5 h-7 text-xs font-medium rounded-md transition-colors neu-raised select-none ${colorStyles[currentConfig.colorVariant].resetButton}`}>
+					<RotateCcw className="w-3 h-3" />
+					리셋
+				</button>
+				<button
+					onClick={onSearch}
+					className={`flex gap-1.5 items-center px-2.5 h-7 text-xs font-medium rounded-md transition-colors neu-raised select-none ${colorStyles[currentConfig.colorVariant].searchButton}`}>
+					<Database className="w-3 h-3" />
+					검색
+				</button>
+			</div>
+		);
+	} : null;
 	// 내용 컴포넌트
 	const content = (
 		<div className="space-y-6" ref={containerRef} tabIndex={-1}>
 			{/* 검색 필드들 */}
 			<div className="space-y-4">
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div className={`grid grid-cols-1 gap-4 ${
+					columns === 3 
+						? 'md:grid-cols-2 lg:grid-cols-3' 
+						: 'md:grid-cols-2'
+				}`}>
 					{fields.map(field => (
 						<div key={field.key}>
 							{field.element}
@@ -134,28 +164,14 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 				</div>
 			)}
 
-      {/* 서버 모드: 좌측 커스텀 액션 + 우측 리셋/검색 버튼 */}
-      {searchMode === 'server' && currentConfig.showButtons && (
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2 items-center">
-            {footerLeft}
-          </div>
-          <div className={`flex gap-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
-            <button
-              onClick={onReset}
-              className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].resetButton}`}>
-              <RotateCcw className="w-4 h-4" />
-              리셋
-            </button>
-            <button
-              onClick={onSearch}
-              className={`flex gap-2 items-center px-4 h-10 text-sm font-medium rounded-xl transition-colors neu-raised ${colorStyles[currentConfig.colorVariant].searchButton}`}>
-              <Database className="w-4 h-4" />
-              검색
-            </button>
-          </div>
-        </div>
-      )}
+			{/* 서버 모드: 좌측 커스텀 액션만 표시 (버튼은 헤더로 이동) */}
+			{searchMode === 'server' && footerLeft && (
+				<div className="flex justify-start items-center">
+					<div className="flex gap-2 items-center">
+						{footerLeft}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 
@@ -170,7 +186,12 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
 	// 기본: 아코디언으로 렌더링
 	return (
-		<Accordion title={currentConfig.title} defaultOpen={currentConfig.defaultOpen} statusText={statusText}>
+		<Accordion 
+			title={currentConfig.title} 
+			defaultOpen={currentConfig.defaultOpen} 
+			statusText={statusText}
+			headerActions={headerActions}
+		>
 			{content}
 		</Accordion>
 	);

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateInstanceServiceConfig } from '@/services/instances/instances@id_service-config_PUT';
@@ -115,10 +115,13 @@ export default function InstanceServiceConfigSection({
 
   return (
     <div className="space-y-6">
-      {/* 서비스 설정 섹션 */}
-      <TitleRow title="서비스 설정" subtitle="호실의 서비스 관련 설정을 관리합니다." />
-      {(() => {
-        const fields: GridFormFieldSchema[] = [
+      <SectionPanel 
+        title="서비스 설정" 
+        subtitle="세대의 서비스 관련 설정을 관리합니다."
+        icon={<Settings size={18} />}
+      >
+        {(() => {
+          const fields: GridFormFieldSchema[] = [
           {
             id: 'canAddNewResident',
             label: '신규 입주민 등록 허용',
@@ -178,35 +181,36 @@ export default function InstanceServiceConfigSection({
           }
         ];
 
-        return (
-          <GridFormAuto 
-            fields={fields}
-            gap="20px"
-            bottomLeftActions={(
-              <Button 
-                variant="secondary" 
-                onClick={handleReset}
-                disabled={!hasChanges || isSubmitting}
-                title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
-              >
-                <RotateCcw size={16} />
-                복구
-              </Button>
-            )}
-            bottomRightActions={(
-              <Button 
-                variant="primary" 
-                onClick={handleSubmit} 
-                disabled={!isValid || isSubmitting}
-                title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
-              >
-                <Save size={16} />
-                {isSubmitting ? '저장 중...' : '저장'}
-              </Button>
-            )}
-          />
-        );
-      })()}
+          return (
+            <GridFormAuto 
+              fields={fields}
+              gap="20px"
+              bottomLeftActions={(
+                <Button 
+                  variant="secondary" 
+                  onClick={handleReset}
+                  disabled={!hasChanges || isSubmitting}
+                  title={!hasChanges ? '변경사항이 없습니다' : '변경사항 되돌리기'}
+                >
+                  <RotateCcw size={16} />
+                  복구
+                </Button>
+              )}
+              bottomRightActions={(
+                <Button 
+                  variant="primary" 
+                  onClick={handleSubmit} 
+                  disabled={!isValid || isSubmitting}
+                  title={isSubmitting ? '저장 중...' : !isValid ? '변경사항이 없거나 유효하지 않습니다' : '설정 저장'}
+                >
+                  <Save size={16} />
+                  {isSubmitting ? '저장 중...' : '저장'}
+                </Button>
+              )}
+            />
+          );
+        })()}
+      </SectionPanel>
 
       {/* 성공 모달 */}
       <Modal

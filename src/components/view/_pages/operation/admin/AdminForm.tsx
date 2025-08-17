@@ -273,6 +273,8 @@ const AdminForm: React.FC<AdminFormProps> = ({
   return (
     <GridFormAuto 
       fields={fields}
+      title="관리자 정보"
+      subtitle="시스템 관리자의 계정 정보를 관리합니다."
       gap="16px"
       topRightActions={topRightActions}
       bottomLeftActions={bottomLeftActions}

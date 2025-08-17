@@ -4,9 +4,9 @@
   책임: 일관된 CRUD 버튼 UI 및 인터랙션 제공
   
   🎯 사용법:
-  - <CrudButton action="create" />           // 플러스 아이콘 + "추가"
-  - <CrudButton action="delete" iconOnly />  // 휴지통 아이콘만
-  - <CrudButton action="save" />             // 저장 아이콘 + "저장"
+  - <CrudButton action="create" />                    // 플러스 아이콘 + "추가"
+  - <CrudButton action="delete" iconOnly />           // 휴지통 아이콘만
+  - <CrudButton action="save">저장하기</CrudButton>   // 저장 아이콘 + "저장하기" (children 우선)
   
   📌 액션별 매핑:
   - create: 플러스 아이콘 + "추가" (primary)
@@ -54,7 +54,7 @@ const ACTION_CONFIG: Record<CrudAction, ActionConfig> = {
 
 // #region 컴포넌트
 const CrudButton = React.forwardRef<HTMLButtonElement, CrudButtonProps>(
-  ({ action, iconOnly = false, size = 'default', ...props }, ref) => {
+  ({ action, iconOnly = false, size = 'default', children, ...props }, ref) => {
     const config = ACTION_CONFIG[action];
     const IconComponent = config.icon;
 
@@ -66,7 +66,7 @@ const CrudButton = React.forwardRef<HTMLButtonElement, CrudButtonProps>(
         icon={IconComponent}
         {...props}
       >
-        {!iconOnly && config.text}
+        {!iconOnly && (children || config.text)}
       </Button>
     );
   }

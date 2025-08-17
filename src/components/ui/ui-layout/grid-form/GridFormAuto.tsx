@@ -6,7 +6,8 @@ import GridFormRow from './GridFormRow';
 import GridFormLabel from './GridFormLabel';
 import GridFormContent from './GridFormContent';
 import GridFormRules from './GridFormRules';
-import type { GridFormAutoProps } from './types';
+import GridFormViewSelector from './GridFormViewSelector';
+import type { GridFormAutoProps, GridFormViewMode } from './types';
 
 // #region GridFormAuto 컴포넌트
 const GridFormAuto = React.forwardRef<
@@ -14,7 +15,7 @@ const GridFormAuto = React.forwardRef<
   GridFormAutoProps & React.HTMLAttributes<HTMLDivElement>
 >(({
   fields,
-  viewMode: initialViewMode,
+  viewMode: initialViewMode = 'default',
   sequenceWidth,
   rulesWidth,
   gap,
@@ -23,43 +24,59 @@ const GridFormAuto = React.forwardRef<
   topRightActions,
   bottomLeftActions,
   bottomRightActions,
+  showViewSelector = false,
   ...props
 }, ref) => {
+  // 뷰 모드 상태 관리를 GridFormAuto에서 담당
+  const [viewMode, setViewMode] = React.useState<GridFormViewMode>(initialViewMode);
+
   return (
-    <GridForm
-      ref={ref}
-      viewMode={initialViewMode}
-      sequenceWidth={sequenceWidth}
-      rulesWidth={rulesWidth}
-      gap={gap}
-      colorVariant={colorVariant}
-      className={className}
-      topRightActions={topRightActions}
-      bottomLeftActions={bottomLeftActions}
-      bottomRightActions={bottomRightActions}
-      {...props}
-    >
-      {fields.map((field) => (
-        <GridFormRow key={field.id} align={field.align}>
-          <GridFormLabel 
-            required={field.required}
-            htmlFor={field.htmlFor || field.id}
-          >
-            {field.label}
-          </GridFormLabel>
-          
-          <GridFormContent>
-            {field.component}
-          </GridFormContent>
-          
-          {field.rules && (
-            <GridFormRules>
-              {field.rules}
-            </GridFormRules>
-          )}
-        </GridFormRow>
-      ))}
-    </GridForm>
+    <>
+      {/* 뷰 선택기 (필요한 경우에만) */}
+      {showViewSelector && (
+        <div className="flex justify-end mb-4">
+          <GridFormViewSelector
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+          />
+        </div>
+      )}
+
+      <GridForm
+        ref={ref}
+        viewMode={viewMode}
+        sequenceWidth={sequenceWidth}
+        rulesWidth={rulesWidth}
+        gap={gap}
+        colorVariant={colorVariant}
+        className={className}
+        topRightActions={topRightActions}
+        bottomLeftActions={bottomLeftActions}
+        bottomRightActions={bottomRightActions}
+        {...props}
+      >
+        {fields.map((field) => (
+          <GridFormRow key={field.id} align={field.align}>
+            <GridFormLabel 
+              required={field.required}
+              htmlFor={field.htmlFor || field.id}
+            >
+              {field.label}
+            </GridFormLabel>
+            
+            <GridFormContent>
+              {field.component}
+            </GridFormContent>
+            
+            {field.rules && (
+              <GridFormRules>
+                {field.rules}
+              </GridFormRules>
+            )}
+          </GridFormRow>
+        ))}
+      </GridForm>
+    </>
   );
 });
 

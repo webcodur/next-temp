@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { Home } from 'lucide-react';
+import {  Unplug } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
@@ -18,42 +17,41 @@ interface ResidentInstanceTableProps {
 
 export default function ResidentInstanceTable({ 
   residentInstances, 
-  onCreateRelation, 
   onDeleteComplete 
 }: ResidentInstanceTableProps) {
   // #region 상태 관리
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [disconnectConfirmOpen, setDisconnectConfirmOpen] = useState(false);
+  const [disconnectTargetId, setDisconnectTargetId] = useState<number | null>(null);
   // #endregion
 
   // #region 핸들러
-  const handleDeleteInstanceRelation = useCallback((relationId: number) => {
-    setDeleteTargetId(relationId);
-    setDeleteConfirmOpen(true);
+  const handleDisconnectInstanceRelation = useCallback((relationId: number) => {
+    setDisconnectTargetId(relationId);
+    setDisconnectConfirmOpen(true);
   }, []);
 
-  const handleDeleteConfirm = useCallback(async () => {
-    if (!deleteTargetId) return;
+  const handleDisconnectConfirm = useCallback(async () => {
+    if (!disconnectTargetId) return;
 
     try {
-      const result = await deleteResidentInstance(deleteTargetId);
+      const result = await deleteResidentInstance(disconnectTargetId);
       
       if (result.success) {
-        const successMessage = '거주자-호실 관계가 성공적으로 삭제되었습니다.';
+        const successMessage = '거주자-세대 관계가 성공적으로 해제되었습니다.';
         onDeleteComplete(true, successMessage);
       } else {
-        const errorMessage = `관계 삭제에 실패했습니다: ${result.errorMsg}`;
+        const errorMessage = `관계 해제에 실패했습니다: ${result.errorMsg}`;
         onDeleteComplete(false, errorMessage);
       }
     } catch (error) {
-      console.error('관계 삭제 중 오류:', error);
-      const errorMessage = '관계 삭제 중 오류가 발생했습니다.';
+      console.error('관계 해제 중 오류:', error);
+      const errorMessage = '관계 해제 중 오류가 발생했습니다.';
       onDeleteComplete(false, errorMessage);
     } finally {
-      setDeleteConfirmOpen(false);
-      setDeleteTargetId(null);
+      setDisconnectConfirmOpen(false);
+      setDisconnectTargetId(null);
     }
-  }, [deleteTargetId, onDeleteComplete]);
+  }, [disconnectTargetId, onDeleteComplete]);
   // #endregion
 
   // #region 컬럼 정의
@@ -66,7 +64,7 @@ export default function ResidentInstanceTable({
     },
     {
       key: 'instanceId',
-      header: '호실 ID',
+      header: '세대 ID',
       width: '10%',
       align: 'center',
     },
@@ -85,7 +83,7 @@ export default function ResidentInstanceTable({
     },
     {
       key: 'instanceType',
-      header: '호실 타입',
+      header: '세대 타입',
       width: '12%',
       align: 'center',
       cell: (item: ResidentInstanceWithInstance) => {
@@ -120,13 +118,15 @@ export default function ResidentInstanceTable({
       width: '10%',
       cell: (item: ResidentInstanceWithInstance) => (
         <div className="flex gap-1 justify-center">
-          <CrudButton
-            action="delete"
-            iconOnly
+          <Button
+            variant="ghost"
             size="sm"
-            onClick={() => handleDeleteInstanceRelation(item.id)}
-            title="관계 삭제"
-          />
+            onClick={() => handleDisconnectInstanceRelation(item.id)}
+            title="관계 해제"
+            className="p-2 w-8 h-8 hover:bg-orange-50 hover:text-orange-600"
+          >
+            <Unplug size={16} />
+          </Button>
         </div>
       ),
     },
@@ -135,24 +135,6 @@ export default function ResidentInstanceTable({
 
   return (
     <>
-      <div className="p-6 rounded-lg border bg-card border-border">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-2 items-center">
-            <Home size={20} />
-            <h2 className="text-lg font-semibold text-foreground">
-              호실 관계 목록
-            </h2>
-          </div>
-          <CrudButton 
-            action="create"
-            size="sm"
-            onClick={onCreateRelation}
-            title="새 호실 관계 추가"
-          >
-            관계 추가
-          </CrudButton>
-        </div>
-
         {residentInstances && residentInstances.length > 0 ? (
           <BaseTable
             data={residentInstances as unknown as Record<string, unknown>[]}
@@ -161,26 +143,25 @@ export default function ResidentInstanceTable({
           />
         ) : (
           <div className="py-8 text-center text-muted-foreground">
-            연결된 호실이 없습니다.
+            연결된 세대이 없습니다.
           </div>
         )}
-      </div>
 
-      {/* 삭제 확인 모달 */}
+      {/* 연결 해제 확인 모달 */}
       <Modal
-        isOpen={deleteConfirmOpen}
-        onClose={() => setDeleteConfirmOpen(false)}
-        title="관계 삭제 확인"
+        isOpen={disconnectConfirmOpen}
+        onClose={() => setDisconnectConfirmOpen(false)}
+        title="관계 해제 확인"
         size="md"
       >
         <div className="space-y-4">
           <div>
-            <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
+            <h3 className="mb-2 text-lg font-semibold">정말로 해제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 거주자-호실 관계가 영구적으로 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 거주자-세대 관계가 영구적으로 해제됩니다.
               <br />
               <span className="font-medium text-orange-600">
-                주의: 이사의 경우 삭제보다는 &ldquo;호실 이동&rdquo; 기능을 사용하시기 바랍니다.
+                주의: 이사의 경우 해제보다는 &ldquo;세대 이동&rdquo; 기능을 사용하시기 바랍니다.
               </span>
             </p>
           </div>
@@ -188,15 +169,15 @@ export default function ResidentInstanceTable({
           <div className="flex gap-3 justify-end pt-4">
             <Button 
               variant="ghost" 
-              onClick={() => setDeleteConfirmOpen(false)}
+              onClick={() => setDisconnectConfirmOpen(false)}
             >
               취소
             </Button>
             <Button 
               variant="destructive" 
-              onClick={handleDeleteConfirm}
+              onClick={handleDisconnectConfirm}
             >
-              삭제
+              해제
             </Button>
           </div>
         </div>

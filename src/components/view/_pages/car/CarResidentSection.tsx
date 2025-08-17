@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Users, Crown } from 'lucide-react';
+import { Users, Crown, UserCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // API가 존재하지 않음
 import { createCarInstanceResident } from '@/services/cars/cars_residents_POST';
 import { deleteCarInstanceResident } from '@/services/cars/cars_residents@id_DELETE';
@@ -58,11 +58,11 @@ export default function CarResidentSection({
   const [isSubmitting, setIsSubmitting] = useState(false);
   // #endregion
 
-  // #region 차량 호실 옵션
+  // #region 차량 세대 옵션
   const carInstanceOptions = useMemo(() => {
     return car.carInstance?.map(instance => ({
       value: instance.id.toString(),
-      label: `호실 ID: ${instance.instanceId} (${instance.carShareOnoff ? '공유' : '전용'})`,
+      label: `세대 ID: ${instance.instanceId} (${instance.carShareOnoff ? '공유' : '전용'})`,
     })) || [];
   }, [car.carInstance]);
   // #endregion
@@ -211,7 +211,7 @@ export default function CarResidentSection({
     },
     {
       key: 'carInstanceId',
-      header: '차량 호실 ID',
+      header: '차량 세대 ID',
       align: 'center',
       width: '15%',
     },
@@ -295,11 +295,11 @@ export default function CarResidentSection({
 
   return (
     <div className="space-y-6">
-      {/* 거주자 연결 현황 섹션 */}
-      <TitleRow 
+      <SectionPanel 
         title="거주자 연결 관리" 
         subtitle="차량을 이용하는 거주자를 관리합니다."
-        endContent={residentList.length > 0 ? (
+        icon={<UserCheck size={18} />}
+        headerActions={residentList.length > 0 ? (
           <CrudButton
             action="create"
             size="sm"
@@ -308,38 +308,42 @@ export default function CarResidentSection({
           >
             연결 추가
           </CrudButton>
-        ) : null}
-      />
-
-        {/* 테이블 또는 안내 메시지 */}
-        {residentList.length === 0 && !loading ? (
-          <div className="flex flex-col justify-center items-center py-12 text-center">
-            <Users size={48} className="mb-4 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-medium text-foreground">
-              거주자 연결 정보 없음
-            </h3>
-            <p className="mb-4 max-w-md text-muted-foreground">
-              현재 이 차량에 연결된 거주자가 없습니다.<br />
-              새 거주자 연결을 추가해보세요.
-            </p>
-            <CrudButton
-              action="create"
-              onClick={() => setCreateModalOpen(true)}
-              title="새 거주자 연결"
-            >
-              거주자 연결 추가
-            </CrudButton>
-          </div>
-        ) : (
-          <PaginatedTable
-            data={residentList as unknown as Record<string, unknown>[]}
-            columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
-            pageSize={5}
-            pageSizeOptions={[5, 10, 20]}
-            itemName="거주자 연결"
-          />
-        )}
-      
+        ) : undefined}
+      >
+        <div className="space-y-4">
+          
+          {/* 테이블 또는 안내 메시지 */}
+          {residentList.length === 0 && !loading ? (
+            <div className="flex flex-col justify-center items-center py-12 text-center">
+              <Users size={48} className="mb-4 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium text-foreground">
+                거주자 연결 정보 없음
+              </h3>
+              <p className="mb-4 max-w-md text-muted-foreground">
+                현재 이 차량에 연결된 거주자가 없습니다.<br />
+                새 거주자 연결을 추가해보세요.
+              </p>
+              <CrudButton
+                action="create"
+                onClick={() => setCreateModalOpen(true)}
+                title="새 거주자 연결"
+              >
+                거주자 연결 추가
+              </CrudButton>
+            </div>
+          ) : (
+            <div className="p-4">
+              <PaginatedTable
+                data={residentList as unknown as Record<string, unknown>[]}
+                columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
+                pageSize={5}
+                pageSizeOptions={[5, 10, 20]}
+                itemName="거주자 연결"
+              />
+            </div>
+          )}
+        </div>
+      </SectionPanel>
 
       {/* 거주자 연결 추가 모달 */}
       <Modal
@@ -353,15 +357,15 @@ export default function CarResidentSection({
             const fields: GridFormFieldSchema[] = [
               {
                 id: 'carInstanceId',
-                label: '차량 호실',
+                label: '차량 세대',
                 required: true,
-                rules: '차량이 소속된 호실',
+                rules: '차량이 소속된 세대',
                 component: (
                   <SimpleDropdown
                     value={createFormData.carInstanceId}
                     onChange={(value) => setCreateFormData(prev => ({ ...prev, carInstanceId: value }))}
                     options={carInstanceOptions}
-                    placeholder="차량 호실를 선택해주세요"
+                    placeholder="차량 세대를 선택해주세요"
                     disabled={isSubmitting}
                     validationRule={{
                       type: 'free',
@@ -452,7 +456,7 @@ export default function CarResidentSection({
               const fields: GridFormFieldSchema[] = [
                 {
                   id: 'carInstanceId',
-                  label: '차량 호실 ID',
+                  label: '차량 세대 ID',
                   component: (
                     <SimpleTextInput
                       value={editTarget.carInstanceId?.toString() || ''}

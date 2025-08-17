@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Eraser, RotateCcw } from 'lucide-react';
+import { Eraser, RotateCcw, Building } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
@@ -153,14 +153,14 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
   const baseFields: GridFormFieldSchema[] = [
     {
       id: 'name',
-      label: '호실 이름',
+      label: '세대 이름',
       required: true,
-      rules: '호실 식별명 (예: A101)',
+      rules: '세대 식별명 (예: A101)',
       component: (
         <SimpleTextInput
           value={data.name}
           onChange={(value) => handleFieldChange('name', value)}
-          placeholder="호실 이름"
+          placeholder="세대 이름"
           disabled={isReadOnly}
           validationRule={{ type: 'free', mode: mode }}
         />
@@ -181,6 +181,50 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       )
     },
     {
+      id: 'address1Depth',
+      label: '동 정보',
+      required: true,
+      rules: '동 정보',
+      component: (
+        <SimpleTextInput
+          value={data.address1Depth}
+          onChange={(value) => handleFieldChange('address1Depth', value)}
+          placeholder="동 정보"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'address2Depth',
+      label: '호수 정보',
+      required: true,
+      rules: '호수 정보',
+      component: (
+        <SimpleTextInput
+          value={data.address2Depth}
+          onChange={(value) => handleFieldChange('address2Depth', value)}
+          placeholder="호수 정보"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
+      id: 'address3Depth',
+      label: '기타 주소 정보',
+      rules: '기타 주소 정보',
+      component: (
+        <SimpleTextInput
+          value={data.address3Depth}
+          onChange={(value) => handleFieldChange('address3Depth', value)}
+          placeholder="기타 주소 정보"
+          disabled={isReadOnly}
+          validationRule={{ type: 'free', mode: mode }}
+        />
+      )
+    },
+    {
       id: 'phone',
       label: '전화번호',
       rules: '010-0000-0000 형식',
@@ -195,52 +239,8 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       )
     },
     {
-      id: 'address1Depth',
-      label: '주소 1단계',
-      required: true,
-      rules: '동 정보',
-      component: (
-        <SimpleTextInput
-          value={data.address1Depth}
-          onChange={(value) => handleFieldChange('address1Depth', value)}
-          placeholder="시/도"
-          disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
-        />
-      )
-    },
-    {
-      id: 'address2Depth',
-      label: '주소 2단계',
-      required: true,
-      rules: '호수 정보',
-      component: (
-        <SimpleTextInput
-          value={data.address2Depth}
-          onChange={(value) => handleFieldChange('address2Depth', value)}
-          placeholder="시/군/구"
-          disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
-        />
-      )
-    },
-    {
-      id: 'address3Depth',
-      label: '주소 3단계',
-      rules: '상세 주소',
-      component: (
-        <SimpleTextInput
-          value={data.address3Depth}
-          onChange={(value) => handleFieldChange('address3Depth', value)}
-          placeholder="상세 주소"
-          disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
-        />
-      )
-    },
-    {
       id: 'instanceType',
-      label: '호실 타입',
+      label: '세대 타입',
       required: true,
       rules: '일반/임시/상업 선택',
       component: (
@@ -264,7 +264,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           type="password"
           value={data.password}
           onChange={(value) => handleFieldChange('password', value)}
-          placeholder="호실 비밀번호"
+          placeholder="세대 비밀번호"
           disabled={isReadOnly}
           validationRule={{ type: 'free', mode: mode }}
         />
@@ -336,15 +336,20 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
   const fields = [...baseFields, ...editFields];
 
   return (
-    <>
-      <TitleRow title="호실 기본 정보" subtitle="호실의 기본 설정을 관리합니다." />
-      <GridFormAuto 
-        fields={fields}
-        gap="16px"
-        bottomLeftActions={bottomLeftActions}
-        bottomRightActions={bottomRightActions}
-      />
-    </>
+    <SectionPanel 
+      title="세대 기본 정보"
+      subtitle="세대의 기본 설정을 관리합니다."
+      icon={<Building size={18} />}
+    >
+      <div className="p-4">
+        <GridFormAuto 
+          fields={fields}
+          gap="16px"
+          bottomLeftActions={bottomLeftActions}
+          bottomRightActions={bottomRightActions}
+        />
+      </div>
+    </SectionPanel>
   );
 };
 

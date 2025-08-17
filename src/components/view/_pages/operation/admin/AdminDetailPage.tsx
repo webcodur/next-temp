@@ -8,6 +8,7 @@ import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import AdminPasswordSection from './AdminPasswordSection';
@@ -254,27 +255,31 @@ export default function AdminDetailPage() {
       />
 
       {/* 관리자 상세 정보 섹션 */}
-      <div className="p-6 rounded-lg border bg-card border-border">
-        <AdminForm
-          mode="edit"
-          admin={admin}
-          data={formData}
-          onChange={handleFormChange}
-          disabled={isSubmitting}
-          showActions={true}
-          onReset={handleReset}
-          onSubmit={handleSubmit}
-          onDelete={handleDelete}
-          hasChanges={hasChanges}
-          isValid={isValid}
-        />
-      </div>
+      <SectionPanel title="관리자 상세 정보">
+        <div className="p-6">
+          <AdminForm
+            mode="edit"
+            admin={admin}
+            data={formData}
+            onChange={handleFormChange}
+            disabled={isSubmitting}
+            showActions={true}
+            onReset={handleReset}
+            onSubmit={handleSubmit}
+            onDelete={handleDelete}
+            hasChanges={hasChanges}
+            isValid={isValid}
+          />
+        </div>
+      </SectionPanel>
 
       {/* 비밀번호 설정 섹션 */}
-      <AdminPasswordSection 
-        admin={admin} 
-        adminId={adminId}
-      />
+      <SectionPanel title="비밀번호 설정">
+        <AdminPasswordSection 
+          admin={admin} 
+          adminId={adminId}
+        />
+      </SectionPanel>
 
       {/* 성공 모달 */}
       <Modal

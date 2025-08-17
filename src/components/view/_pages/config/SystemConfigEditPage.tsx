@@ -398,6 +398,8 @@ export default function SystemConfigEditPage() {
             return (
               <GridFormAuto 
                 fields={fields}
+                title="시스템 설정 편집"
+                subtitle="시스템 전체 설정 값을 수정할 수 있습니다."
                 gap="20px"
                 bottomRightActions={
                   <div className="flex gap-3">

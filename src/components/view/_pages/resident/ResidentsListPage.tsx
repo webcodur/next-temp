@@ -251,12 +251,12 @@ export default function ResidentsListPage() {
     },
     {
       key: 'address1Depth',
-      label: '주소 1단계 검색',
+      label: '동 정보 검색',
       element: (
         <FieldText
           id="search-address1"
-          label="주소 1단계"
-          placeholder="시/도를 입력하세요"
+          label="동 정보"
+          placeholder="동 정보를 입력하세요"
           value={searchFilters.address1Depth}
           onChange={(value) => updateFilter('address1Depth', value)}
           showSearchIcon={true}
@@ -267,12 +267,12 @@ export default function ResidentsListPage() {
     },
     {
       key: 'address2Depth',
-      label: '주소 2단계 검색',
+      label: '호수 정보 검색',
       element: (
         <FieldText
           id="search-address2"
-          label="주소 2단계"
-          placeholder="시/군/구를 입력하세요"
+          label="호수 정보"
+          placeholder="호수 정보를 입력하세요"
           value={searchFilters.address2Depth}
           onChange={(value) => updateFilter('address2Depth', value)}
           showSearchIcon={true}
@@ -283,12 +283,12 @@ export default function ResidentsListPage() {
     },
     {
       key: 'address3Depth',
-      label: '주소 3단계 검색',
+      label: '기타 주소 정보 검색',
       element: (
         <FieldText
           id="search-address3"
-          label="주소 3단계"
-          placeholder="상세 주소를 입력하세요"
+          label="기타 주소 정보"
+          placeholder="기타 주소 정보를 입력하세요"
           value={searchFilters.address3Depth}
           onChange={(value) => updateFilter('address3Depth', value)}
           showSearchIcon={true}
@@ -393,7 +393,7 @@ export default function ResidentsListPage() {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title="거주자 관리" 
-        subtitle="거주자 등록, 수정, 삭제 및 호실 관계 관리"
+        subtitle="거주자 등록, 수정, 삭제 및 세대 관계 관리"
         rightActions={
           <CrudButton
             action="create"

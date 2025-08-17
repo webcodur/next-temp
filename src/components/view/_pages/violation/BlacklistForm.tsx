@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { RotateCcw, Save } from 'lucide-react';
+import { RotateCcw, Save, Shield } from 'lucide-react';
 import { BlacklistResponse } from '@/types/blacklist';
 
 export interface BlacklistFormData {
@@ -191,11 +192,19 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
   const fields = [...readOnlyFields, ...editableFields];
 
   return (
-    <GridFormAuto 
-      fields={fields}
-      gap="16px" 
-      bottomRightActions={bottomRightActions}
-    />
+    <SectionPanel 
+      title="블랙리스트 관리"
+      subtitle="차량 번호를 블랙리스트에 등록하고 관리합니다."
+      icon={<Shield size={18} />}
+    >
+      <div className="p-4">
+        <GridFormAuto 
+          fields={fields}
+          gap="16px" 
+          bottomRightActions={bottomRightActions}
+        />
+      </div>
+    </SectionPanel>
   );
 };
 

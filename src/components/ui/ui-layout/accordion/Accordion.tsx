@@ -7,6 +7,7 @@ interface AccordionProps {
 	children: ReactNode;
 	defaultOpen?: boolean;
 	statusText?: string;
+	headerActions?: ReactNode | ((isOpen: boolean) => ReactNode); // 헤더 우측에 표시할 액션 버튼들
 	onToggle?: (isOpen: boolean) => void;
 	className?: string;
 	headerClassName?: string;
@@ -20,6 +21,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 	children,
 	defaultOpen = false,
 	statusText,
+	headerActions,
 	onToggle,
 	className = '',
 	headerClassName = '',
@@ -46,7 +48,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 			{/* 헤더 */}
 			<div
 				onClick={handleToggle}
-				className={`flex items-center justify-between p-4 cursor-pointer neu-raised rounded-2xl transition-colors ${
+				className={`flex items-center justify-between p-3 min-h-[56px] cursor-pointer neu-raised rounded-2xl transition-colors ${
 					isOpen 
 						? 'bg-primary-1' 
 						: 'bg-serial-1'
@@ -63,6 +65,12 @@ export const Accordion: React.FC<AccordionProps> = ({
 					)}
 				</div>
 				<div className="flex gap-3 items-center">
+					{/* 헤더 액션 버튼들 */}
+					{headerActions && (
+						<div className="flex gap-2 items-center" onClick={(e) => e.stopPropagation()}>
+							{typeof headerActions === 'function' ? headerActions(isOpen) : headerActions}
+						</div>
+					)}
 					{/* 상태 텍스트 */}
 					{statusText && (
 						<span className="text-xs font-medium text-primary-6 font-multilang">

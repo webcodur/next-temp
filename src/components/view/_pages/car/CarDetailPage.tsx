@@ -73,7 +73,7 @@ export default function CarDetailPage() {
     },
     {
       id: 'instances',
-      label: '호실 연결',
+      label: '세대 연결',
     },
     {
       id: 'residents',

@@ -73,12 +73,12 @@ export default function InstanceCreatePage() {
       } else {
         // 에러 처리
         console.error('인스턴스 생성 실패:', result.errorMsg);
-        setErrorMessage(`호실 생성에 실패했습니다: ${result.errorMsg}`);
+        setErrorMessage(`세대 생성에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('인스턴스 생성 중 오류:', error);
-      setErrorMessage('호실 생성 중 오류가 발생했습니다.');
+      setErrorMessage('세대 생성 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -98,8 +98,8 @@ export default function InstanceCreatePage() {
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
       <PageHeader 
-        title="호실 추가"
-        subtitle="새로운 호실을 생성합니다"
+        title="세대 추가"
+        subtitle="새로운 세대을 생성합니다"
         leftActions={
           <Button
             variant="secondary"

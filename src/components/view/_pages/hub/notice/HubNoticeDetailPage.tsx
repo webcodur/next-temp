@@ -8,13 +8,14 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
-import { ArrowLeft, Save, RotateCcw, Pin, AlertCircle, Paperclip } from 'lucide-react';
+import { ArrowLeft, Save, RotateCcw, Pin, AlertCircle, Paperclip, Bell } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { Badge } from '@/components/ui/ui-effects/badge/Badge';
 import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -443,7 +444,17 @@ export default function HubNoticeDetailPage() {
             });
           }
 
-          return <GridFormAuto fields={fields} />;
+          return (
+            <SectionPanel 
+              title="공지사항 상세 정보" 
+              subtitle="공지사항의 세부 내용을 확인하고 수정할 수 있습니다."
+              icon={<Bell size={18} />}
+            >
+              <div className="p-4">
+                <GridFormAuto fields={fields} />
+              </div>
+            </SectionPanel>
+          );
         })()}
 
         {/* 버튼 */}

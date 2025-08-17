@@ -8,6 +8,7 @@ import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import CurrentResidenceInfo from './CurrentResidenceInfo';
 import ResidentMoveSection from './ResidentMoveSection';
 import ResidentInstanceTable from './ResidentInstanceTable';
+import CreateResidentInstanceModal from './CreateResidentInstanceModal';
 import { ResidentDetail } from '@/types/resident';
 
 interface ResidentInstanceSectionProps {
@@ -23,12 +24,12 @@ export default function ResidentInstanceSection({
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [createRelationModalOpen, setCreateRelationModalOpen] = useState(false);
   // #endregion
 
   // #region 핸들러
   const handleCreateInstanceRelation = useCallback(() => {
-    // TODO: 호실 관계 생성 모달 또는 페이지로 이동
-    console.log('호실 관계 생성');
+    setCreateRelationModalOpen(true);
   }, []);
 
   const handleOperationComplete = useCallback((success: boolean, message: string) => {
@@ -48,7 +49,7 @@ export default function ResidentInstanceSection({
 
   return (
     <div className="space-y-6">
-      <TitleRow title="거주 정보 관리" subtitle="거주자의 호실 관계를 관리합니다." />
+      <TitleRow title="거주 정보 관리" subtitle="거주자의 세대 관계를 관리합니다." />
       
       {/* 현재 거주지 정보 */}
       <CurrentResidenceInfo 
@@ -56,14 +57,14 @@ export default function ResidentInstanceSection({
         onCreateRelation={handleCreateInstanceRelation}
       />
 
-      {/* 호실 이동 섹션 */}
+      {/* 세대 이동 섹션 */}
       <ResidentMoveSection 
         resident={resident}
         currentResidence={currentResidence}
         onMoveComplete={handleOperationComplete}
       />
 
-      {/* 호실 관계 목록 */}
+      {/* 세대 관계 목록 */}
       <ResidentInstanceTable 
         residentInstances={resident.residentInstance || []}
         onCreateRelation={handleCreateInstanceRelation}
@@ -111,6 +112,17 @@ export default function ResidentInstanceSection({
           </div>
         </div>
       </Modal>
+
+      {/* 세대 관계 생성 모달 */}
+      <CreateResidentInstanceModal
+        isOpen={createRelationModalOpen}
+        onClose={() => setCreateRelationModalOpen(false)}
+        residentId={resident.id}
+        residentName={resident.name}
+        existingInstanceIds={resident.residentInstance?.map(ri => ri.instanceId) || []}
+        onSuccess={handleOperationComplete.bind(null, true)}
+        onError={handleOperationComplete.bind(null, false)}
+      />
     </div>
   );
 }

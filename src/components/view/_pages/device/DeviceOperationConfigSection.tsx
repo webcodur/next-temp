@@ -4,7 +4,6 @@ import React, { useState, useMemo } from 'react';
 import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
@@ -120,7 +119,6 @@ export default function DeviceOperationConfigSection({
   return (
     <div className="space-y-6">
       {/* 운영 설정 섹션 */}
-      <TitleRow title="운영 설정" subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다." />
       {(() => {
         const fields: GridFormFieldSchema[] = [
           {
@@ -183,6 +181,8 @@ export default function DeviceOperationConfigSection({
         return (
           <GridFormAuto 
             fields={fields}
+            title="운영 설정"
+            subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다."
             gap="20px"
             bottomLeftActions={(
               <Button 

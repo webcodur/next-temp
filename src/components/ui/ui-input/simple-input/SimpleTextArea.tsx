@@ -18,7 +18,6 @@ interface SimpleTextAreaProps {
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 	showCharCount?: boolean;
-	// 왼쪽 아이콘 표시 여부
 	showIcon?: boolean;
 }
 
@@ -111,7 +110,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 				
 				{/* 왼쪽 텍스트 아이콘 */}
 				{showIcon && (
-					<AlignLeft className="absolute left-3 top-3 w-4 h-4 text-muted-foreground pointer-events-none" />
+					<AlignLeft className="absolute top-3 left-3 w-4 h-4 pointer-events-none text-muted-foreground" />
 				)}
 
 				{/* 텍스트 영역 */}

@@ -1,8 +1,4 @@
-import {
-	Crown,
-	Presentation,
-  SquareParking
-} from 'lucide-react';
+import { Crown, Presentation, SquareParking } from 'lucide-react';
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
@@ -35,7 +31,7 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-      '운영 관리': {
+			'운영 관리': {
 				botItems: [
 					{
 						key: '근무자 관리',
@@ -45,20 +41,20 @@ export const menuData: MenuData = {
 			},
 		},
 	},
-	"주차 관제": {
+	'주차 관제': {
 		icon: SquareParking,
 		midItems: {
-			"주차장 관리": {
+			'주차장 관리': {
 				botItems: [
-          {
-            key: '차단기 관리',
-            href: '/parking/lot/device',
-          },
+					{
+						key: '차단기 관리',
+						href: '/parking/lot/device',
+					},
 				],
 			},
-			"규정 위반": {
+			'규정 위반': {
 				botItems: [
-          {
+					{
 						key: '규정 위반 설정',
 						href: '/parking/violation/violation-config',
 					},
@@ -66,7 +62,7 @@ export const menuData: MenuData = {
 						key: '규정 위반 내역',
 						href: '/parking/violation/history',
 					},
-          {
+					{
 						key: '블랙리스트 설정',
 						href: '/parking/violation/blacklist-config',
 					},
@@ -79,22 +75,22 @@ export const menuData: MenuData = {
 			'입주 관리': {
 				botItems: [
 					{
-						key: '호실 관리',
+						key: '세대 관리',
 						href: '/parking/occupancy/instance',
 					},
 					{
 						key: '입주자 관리',
 						href: '/parking/occupancy/resident',
 					},
-          {
+					{
 						key: '차량 관리',
 						href: '/parking/occupancy/car',
 					},
 				],
-			}
+			},
 		},
 	},
-	"시스템 관리": {
+	'시스템 관리': {
 		icon: Crown,
 		midItems: {
 			'IP 차단 관리': {
@@ -121,14 +117,14 @@ export const menuData: MenuData = {
 					},
 				],
 			},
-      '시스템 설정': {
-        botItems: [
-          {
-            key: '시스템 설정',
-            href: '/system/config/settings',
-          },
-        ],
-      },
+			'시스템 설정': {
+				botItems: [
+					{
+						key: '시스템 설정',
+						href: '/system/config/settings',
+					},
+				],
+			},
 		},
 	},
 };

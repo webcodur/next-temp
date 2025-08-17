@@ -153,15 +153,15 @@ export default function InstancesListPage() {
       
       if (result.success) {
         setInstanceList((prev) => prev.filter((instance) => instance.id !== deleteTargetId));
-        setDialogMessage('호실이 성공적으로 삭제되었습니다.');
+        setDialogMessage('세대이 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`호실 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorDialogOpen(true);
       }
     } catch (error) {
       console.error('인스턴스 삭제 중 오류:', error);
-      setDialogMessage('호실 삭제 중 오류가 발생했습니다.');
+      setDialogMessage('세대 삭제 중 오류가 발생했습니다.');
       setErrorDialogOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -174,12 +174,12 @@ export default function InstancesListPage() {
   const searchFields = useMemo(() => [
     {
       key: 'address1Depth',
-      label: '주소 1단계 검색',
+      label: '동 정보 검색',
       element: (
         <FieldText
           id="search-address1"
-          label="주소 1단계"
-          placeholder="시/도를 입력하세요"
+          label="동 정보"
+          placeholder="동 정보를 입력하세요"
           value={searchFilters.address1Depth}
           onChange={(value) => updateFilter('address1Depth', value)}
           showSearchIcon={true}
@@ -190,12 +190,12 @@ export default function InstancesListPage() {
     },
     {
       key: 'address2Depth',
-      label: '주소 2단계 검색',
+      label: '호수 정보 검색',
       element: (
         <FieldText
           id="search-address2"
-          label="주소 2단계"
-          placeholder="시/군/구를 입력하세요"
+          label="호수 정보"
+          placeholder="호수 정보를 입력하세요"
           value={searchFilters.address2Depth}
           onChange={(value) => updateFilter('address2Depth', value)}
           showSearchIcon={true}
@@ -206,11 +206,11 @@ export default function InstancesListPage() {
     },
     {
       key: 'instanceType',
-      label: '호실 타입 검색',
+      label: '세대 타입 검색',
       element: (
         <FieldSelect
           id="search-type"
-          label="호실 타입"
+          label="세대 타입"
           placeholder="타입을 선택하세요"
           options={instanceTypeOptions}
           value={searchFilters.instanceType}
@@ -221,12 +221,12 @@ export default function InstancesListPage() {
     },
     {
       key: 'instanceName',
-      label: '호실명 검색',
+      label: '세대명 검색',
       element: (
         <FieldText
           id="search-name"
-          label="호실명"
-          placeholder="호실명을 입력하세요"
+          label="세대명"
+          placeholder="세대명을 입력하세요"
           value={searchFilters.instanceName}
           onChange={(value) => updateFilter('instanceName', value)}
           showSearchIcon={true}
@@ -247,20 +247,15 @@ export default function InstancesListPage() {
       align: 'center',
     },
     {
-      key: 'address1Depth',
-      header: '주소 1단계',
+      key: 'dongHosu',
+      header: '동호수',
       align: 'start',
-      width: '12%',
-    },
-    {
-      key: 'address2Depth',
-      header: '주소 2단계',
-      align: 'start',
-      width: '12%',
+      width: '15%',
+      cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
     },
     {
       key: 'address3Depth',
-      header: '주소 3단계',
+      header: '기타 주소 정보',
       align: 'start',
       width: '15%',
       cell: (item: Instance) => item.address3Depth || '-',
@@ -313,7 +308,7 @@ export default function InstancesListPage() {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
-            title="호실 삭제"
+            title="세대 삭제"
           />
         </div>
       ),
@@ -325,14 +320,14 @@ export default function InstancesListPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="호실 관리" 
-        subtitle="호실 등록, 수정, 삭제 및 설정 관리"
+        title="세대 관리" 
+        subtitle="세대 등록, 수정, 삭제 및 설정 관리"
         rightActions={
           <CrudButton
             action="create"
             size="default"
             onClick={handleCreateClick}
-            title="호실 추가"
+            title="세대 추가"
           >
             추가
           </CrudButton>
@@ -354,7 +349,7 @@ export default function InstancesListPage() {
         onRowClick={handleRowClick as unknown as (item: Record<string, unknown>, index: number) => void}
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
-        itemName="호실"
+        itemName="세대"
         minWidth="1000px"
       />
 
@@ -362,14 +357,14 @@ export default function InstancesListPage() {
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="호실 삭제 확인"
+        title="세대 삭제 확인"
         size="md"
       >
         <div className="space-y-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 호실 정보가 영구적으로 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 세대 정보가 영구적으로 삭제됩니다.
             </p>
           </div>
           

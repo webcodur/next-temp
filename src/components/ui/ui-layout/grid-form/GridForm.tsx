@@ -7,14 +7,13 @@ import type { GridFormProps } from './types';
 import { calculateOptimalLabelWidth, calculateColumnLabelWidths } from './utils';
 import GridFormRow from './GridFormRow';
 import GridFormLabel from './GridFormLabel';
-import GridFormViewSelector from './GridFormViewSelector';
 
 // #region GridForm 메인 컴포넌트
 const GridForm = React.forwardRef<
 	HTMLDivElement,
 	GridFormProps & React.HTMLAttributes<HTMLDivElement>
 >(({
-	viewMode: initialViewMode = 'default',
+	viewMode = 'default',
 	sequenceWidth = '60px',
 	rulesWidth = '200px',
 	gap = '20px',
@@ -26,8 +25,6 @@ const GridForm = React.forwardRef<
 	bottomRightActions,
 	...props
 }, ref) => {
-	// 뷰 모드 상태 관리
-	const [viewMode, setViewMode] = React.useState(initialViewMode);
 
 	// 동적으로 라벨 너비 계산 (상세뷰용)
 	const labelWidth = React.useMemo(() => calculateOptimalLabelWidth(children, GridFormRow, GridFormLabel), [children]);
@@ -94,22 +91,15 @@ const GridForm = React.forwardRef<
 			getNextSequence,
 			getCurrentColumnIndex,
 		}}>
-					<div className="w-full">
-			{/* 상단 액션 영역 - 뷰 선택기와 우상단 액션 버튼 */}
-			<div className="flex justify-between items-center mb-3">
-				{/* 뷰 선택기 */}
-				<GridFormViewSelector
-					viewMode={viewMode}
-					onViewModeChange={setViewMode}
-				/>
-				
-				{/* 우상단 액션 버튼 */}
+			<div className="w-full">
+				{/* 상단 액션 영역 */}
 				{topRightActions && (
-					<div className="flex gap-3 items-center">
-						{topRightActions}
+					<div className="flex justify-end items-center mb-3">
+						<div className="flex gap-3 items-center">
+							{topRightActions}
+						</div>
 					</div>
 				)}
-			</div>
 
 				{/* GridForm 본체 */}
 				<div

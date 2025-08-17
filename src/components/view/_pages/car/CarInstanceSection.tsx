@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // 더 이상 사용하지 않음
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
@@ -56,11 +57,11 @@ export default function CarInstanceSection({
   const loadInstanceData = useCallback(async () => {
     setLoading(true);
     try {
-      // CarWithInstance 데이터에서 직접 차량 호실 정보 사용
+      // CarWithInstance 데이터에서 직접 차량 세대 정보 사용
       const carInstances = car.carInstance?.map(instance => ({
         id: instance.id, // CarInstanceResident ID는 임시로 CarInstance ID 사용
         carInstanceId: instance.id,
-        residentId: 0, // 호실 연결에서는 사용하지 않음
+        residentId: 0, // 세대 연결에서는 사용하지 않음
         carAlarm: false,
         isPrimary: false,
         createdAt: instance.createdAt,
@@ -71,7 +72,7 @@ export default function CarInstanceSection({
       
       setInstanceList(carInstances);
     } catch (error) {
-      console.error('차량-호실 연결 조회 중 오류:', error);
+      console.error('차량-세대 연결 조회 중 오류:', error);
       setInstanceList([]);
     } finally {
       setLoading(false);
@@ -99,19 +100,19 @@ export default function CarInstanceSection({
       const result = await createCarInstance(createData);
 
       if (result.success) {
-        setModalMessage('호실 연결이 성공적으로 생성되었습니다.');
+        setModalMessage('세대 연결이 성공적으로 생성되었습니다.');
         setSuccessModalOpen(true);
         setCreateModalOpen(false);
         setCreateFormData({ instanceId: '', carShareOnoff: false });
         await loadInstanceData();
         onDataChange();
       } else {
-        setModalMessage(`호실 연결 생성에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 연결 생성에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('호실 연결 생성 중 오류:', error);
-      setModalMessage('호실 연결 생성 중 오류가 발생했습니다.');
+      console.error('세대 연결 생성 중 오류:', error);
+      setModalMessage('세대 연결 생성 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -131,19 +132,19 @@ export default function CarInstanceSection({
       const result = await updateCarInstance(editTarget.carInstance.id, updateData);
 
       if (result.success) {
-        setModalMessage('호실 연결이 성공적으로 수정되었습니다.');
+        setModalMessage('세대 연결이 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
         setEditModalOpen(false);
         setEditTarget(null);
         await loadInstanceData();
         onDataChange();
       } else {
-        setModalMessage(`호실 연결 수정에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 연결 수정에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('호실 연결 수정 중 오류:', error);
-      setModalMessage('호실 연결 수정 중 오류가 발생했습니다.');
+      console.error('세대 연결 수정 중 오류:', error);
+      setModalMessage('세대 연결 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -160,16 +161,16 @@ export default function CarInstanceSection({
       
       if (result.success) {
         setInstanceList(prev => prev.filter(item => item.carInstance?.id !== deleteTargetId));
-        setModalMessage('호실 연결이 성공적으로 삭제되었습니다.');
+        setModalMessage('세대 연결이 성공적으로 삭제되었습니다.');
         setSuccessModalOpen(true);
         onDataChange();
       } else {
-        setModalMessage(`호실 연결 삭제에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 연결 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('호실 연결 삭제 중 오류:', error);
-      setModalMessage('호실 연결 삭제 중 오류가 발생했습니다.');
+      console.error('세대 연결 삭제 중 오류:', error);
+      setModalMessage('세대 연결 삭제 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -200,7 +201,7 @@ export default function CarInstanceSection({
     },
     {
       key: 'instanceId',
-      header: '호실 ID',
+      header: '세대 ID',
       align: 'center',
       width: '12%',
       cell: (item: CarInstanceResidentDetail) => item.carInstance?.instanceId || '-',
@@ -267,37 +268,42 @@ export default function CarInstanceSection({
 
   return (
     <div className="space-y-6">
-      {/* 호실 연결 현황 섹션 */}
-      <TitleRow
-        title="호실 연결 관리"
-        subtitle="차량이 등록된 호실을 관리합니다."
-        endContent={(
+      <SectionPanel 
+        title="세대 연결 관리" 
+        subtitle="차량이 등록된 세대을 관리합니다."
+        icon={<Home size={18} />}
+        headerActions={(
           <CrudButton
             action="create"
             size="sm"
             onClick={() => setCreateModalOpen(true)}
-            title="새 호실 연결"
+            title="새 세대 연결"
           >
             연결 추가
           </CrudButton>
         )}
-      />
+      >
+        <div className="space-y-4">
+          
+          {/* 테이블 */}
+          <div className="p-4">
+            <PaginatedTable
+              data={instanceList as unknown as Record<string, unknown>[]}
+              columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
+              pageSize={5}
+              pageSizeOptions={[5, 10, 20]}
+              itemName="세대 연결"
+              isFetching={loading}
+            />
+          </div>
+        </div>
+      </SectionPanel>
 
-      {/* 테이블 */}
-      <PaginatedTable
-        data={instanceList as unknown as Record<string, unknown>[]}
-        columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
-        pageSize={5}
-        pageSizeOptions={[5, 10, 20]}
-        itemName="호실 연결"
-        isFetching={loading}
-      />
-
-      {/* 호실 연결 추가 모달 */}
+      {/* 세대 연결 추가 모달 */}
       <Modal
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        title="호실 연결 추가"
+        title="세대 연결 추가"
         size="md"
       >
         <div className="space-y-4">
@@ -305,15 +311,15 @@ export default function CarInstanceSection({
             const fields: GridFormFieldSchema[] = [
               {
                 id: 'instanceId',
-                label: '호실 ID',
+                label: '세대 ID',
                 required: true,
-                rules: '연결할 호실 선택',
+                rules: '연결할 세대 선택',
                 component: (
                   <SimpleTextInput
                     type="number"
                     value={createFormData.instanceId}
                     onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value }))}
-                    placeholder="호실 ID"
+                    placeholder="세대 ID"
                     disabled={isSubmitting}
                     validationRule={{
                       type: 'free',
@@ -359,11 +365,11 @@ export default function CarInstanceSection({
         </div>
       </Modal>
 
-      {/* 호실 연결 수정 모달 */}
+      {/* 세대 연결 수정 모달 */}
       <Modal
         isOpen={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title="호실 연결 수정"
+        title="세대 연결 수정"
         size="md"
       >
         {editTarget && (
@@ -372,7 +378,7 @@ export default function CarInstanceSection({
               const fields: GridFormFieldSchema[] = [
                 {
                   id: 'instanceId',
-                  label: '호실 ID',
+                  label: '세대 ID',
                   rules: '시스템 자동 연결',
                   component: (
                     <SimpleTextInput
@@ -438,14 +444,14 @@ export default function CarInstanceSection({
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="호실 연결 삭제 확인"
+        title="세대 연결 삭제 확인"
         size="md"
       >
         <div className="space-y-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 호실 연결이 영구적으로 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 세대 연결이 영구적으로 삭제됩니다.
             </p>
           </div>
           

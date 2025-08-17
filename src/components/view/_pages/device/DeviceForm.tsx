@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Eraser, RotateCcw } from 'lucide-react';
+import { Eraser, RotateCcw, Router, Settings, Info } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
@@ -142,7 +142,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           onClick={onReset}
           disabled={!hasChanges || disabled}
           title={!hasChanges ? '변경사항이 없습니다' : '폼 로딩 시점의 값으로 복구합니다'}
-        icon={RotateCcw}
+          icon={RotateCcw}
         >
           복구
         </Button>
@@ -187,8 +187,6 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
     <div className="space-y-6">
       {/* 기본 정보 섹션 */}
       <div>
-        <TitleRow title="차단기 기본 정보" subtitle="차단기의 기본 설정을 관리합니다." />
-        <div className="h-4" />
         {(() => {
           const basicFields: GridFormFieldSchema[] = [
             {
@@ -263,15 +261,28 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
             }
           ];
 
-          return <GridFormAuto fields={basicFields} gap="16px" />;
+          return (
+            <SectionPanel 
+              title="차단기 기본 정보" 
+              subtitle="차단기의 기본 설정을 관리합니다."
+              icon={<Router size={18} />}
+            >
+              <div className="p-4">
+                <GridFormAuto fields={basicFields} gap="16px" />
+              </div>
+            </SectionPanel>
+          );
         })()}
       </div>
 
       {/* 네트워크 설정 섹션 */}
-      <div>
-        <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다." />
-        <div className="h-4" />
-        <GridFormAuto 
+      <SectionPanel 
+        title="네트워크 설정"
+        subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다."
+        icon={<Settings size={18} />}
+      >
+        <div className="p-4">
+          <GridFormAuto
           fields={[
             {
               id: 'ip',
@@ -333,12 +344,16 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           gap="16px"
         />
       </div>
+      </SectionPanel>
 
       {/* 운영 설정 섹션 */}
-      <div>
-        <TitleRow title="운영 설정" subtitle="차단기 운영 상태 및 기능을 설정합니다." />
-        <div className="h-4" />
-        <GridFormAuto 
+      <SectionPanel 
+        title="운영 설정"
+        subtitle="차단기 운영 상태 및 기능을 설정합니다."
+        icon={<Settings size={18} />}
+      >
+        <div className="p-4">
+          <GridFormAuto
           fields={[
             {
               id: 'status',
@@ -418,13 +433,17 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           gap="16px"
         />
       </div>
+      </SectionPanel>
 
       {/* view/edit 모드에서만 표시되는 추가 정보 */}
       {mode !== 'create' && device && (
-        <div>
-          <TitleRow title="추가 정보" subtitle="차단기의 시스템 관련 정보입니다." />
-          <div className="h-4" />
-          <GridFormAuto 
+        <SectionPanel 
+          title="추가 정보"
+          subtitle="차단기의 시스템 관련 정보입니다."
+          icon={<Info size={18} />}
+        >
+          <div className="p-4">
+            <GridFormAuto
             fields={[
               {
                 id: 'parkinglotId',
@@ -474,10 +493,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               }
             ]}
             gap="16px"
-            bottomLeftActions={bottomLeftActions}
-            bottomRightActions={bottomRightActions}
           />
-        </div>
+          </div>
+        </SectionPanel>
       )}
 
       {/* 생성 모드이거나 추가 정보가 없는 경우 버튼 액션만 표시 */}

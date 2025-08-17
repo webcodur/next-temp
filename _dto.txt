@@ -1228,15 +1228,15 @@ components:
       properties:
         address_1depth:
           type: string
-          description: '주소 1단계 (예: 동)'
+          description: '동 정보'
           example: '101'
         address_2depth:
           type: string
-          description: '주소 2단계 (예: 호수)'
+          description: '호수 정보'
           example: '1104'
         address_3depth:
           type: string
-          description: 주소 3단계 (기타 주소)
+          description: 기타 주소 정보
           example: null
         household_type:
           type: string

@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Eraser, RotateCcw } from 'lucide-react';
+import { Eraser, RotateCcw, Car as CarIcon } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
@@ -382,18 +382,20 @@ const CarForm: React.FC<CarFormProps> = ({
   const fields = [...baseFields, ...editFields];
 
   return (
-    <>
-      <TitleRow 
-        title="차량 기본 정보" 
-        subtitle="차량의 기본 정보를 관리합니다." 
-      />
-      <GridFormAuto 
-        fields={fields}
-        gap="16px"
-        bottomLeftActions={bottomLeftActions}
-        bottomRightActions={bottomRightActions}
-      />
-    </>
+    <SectionPanel 
+      title="차량 기본 정보"
+      subtitle="차량의 기본 정보를 관리합니다."
+      icon={<CarIcon size={18} />}
+    >
+      <div className="p-4">
+        <GridFormAuto 
+          fields={fields}
+          gap="16px"
+          bottomLeftActions={bottomLeftActions}
+          bottomRightActions={bottomRightActions}
+        />
+      </div>
+    </SectionPanel>
   );
 };
 

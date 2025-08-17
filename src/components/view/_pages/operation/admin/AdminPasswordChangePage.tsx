@@ -244,7 +244,7 @@ export default function AdminPasswordChangePage() {
             }
           ];
 
-          return <GridFormAuto fields={fields} gap="20px" />;
+          return <GridFormAuto fields={fields} title="비밀번호 변경" subtitle="현재 비밀번호를 확인하고 새로운 비밀번호로 변경합니다." gap="20px" />;
         })()}
       </div>
 

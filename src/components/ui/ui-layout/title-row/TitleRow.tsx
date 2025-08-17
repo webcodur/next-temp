@@ -7,25 +7,20 @@ export interface TitleRowProps {
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   endContent?: React.ReactNode;
-  className?: string;
-  // 밀집 모드 (여백 축소)
-  dense?: boolean;
+  // className?: string;
 }
 
 const TitleRow: React.FC<TitleRowProps> = ({
   title,
   subtitle,
   endContent,
-  className,
-  dense = false,
+  // className,
 }) => {
-  const rowSizing = dense ? 'h-10 px-2' : 'h-12 px-4';
   return (
     <div
       className={cn(
         'flex gap-4 justify-between items-center',
-        rowSizing,
-        className,
+        // className,
       )}
     >
       <div className="flex flex-1 gap-2 items-baseline min-w-0">

@@ -12,9 +12,9 @@ import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDrop
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { ImagePreview, ImageData } from '@/components/ui/ui-effects/image-preview/ImagePreview';
-import { ArrowLeft, RotateCcw, Eye, ImageIcon } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Eye, ImageIcon, AlertTriangle, Info, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { getViolationDetail, updateViolation, processViolation } from '@/services/violations';
 import type { 
@@ -351,87 +351,72 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
       />
 
       {/* 퀵 메뉴 - 위반 기록 처리 */}
-      <div className="overflow-visible rounded-lg border" style={{
-        backgroundColor: 'hsl(var(--card))',
-        borderColor: 'hsl(var(--warning) / 0.3)'
-      }}>
-        <TitleRow title="빠른 위반 기록" subtitle="빠른 위반 기록 처리를 위한 빠른 입력 폼입니다." />
-        <div className="p-4 pt-0">
-        
-        {(() => {
-          const fields: GridFormFieldSchema[] = [
-            {
-              id: 'status',
-              label: '처리 상태',
-              rules: '상태 선택',
-              component: (
-                <SimpleDropdown
-                  value={processForm.status}
-                  options={STATUS_OPTIONS}
-                  onChange={(value) => handleProcessInputChange('status', value as ViolationStatus)}
-                  placeholder="상태를 선택하세요"
-                />
-              )
-            },
-            {
-              id: 'processingNote',
-              label: '처리 메모',
-              rules: '처리 내용 입력',
-              component: (
-                <SimpleTextArea
-                  value={processForm.processingNote}
-                  onChange={(value) => handleProcessInputChange('processingNote', value)}
-                  placeholder="처리 관련 메모를 입력하세요"
-                  rows={2}
-                />
-              )
-            }
-          ];
-
-          return <GridFormAuto fields={fields} className="overflow-visible" />;
-        })()}
-        
-          <div className="flex gap-2 justify-end mt-4">
-            <Button
-              variant="primary"
-              onClick={handleProcess}
-              disabled={!canProcess}
-            >
-              {processing ? '처리 중...' : '처리 완료'}
-            </Button>
-          </div>
-        </div>
-      </div>
+      {(() => {
+        const fields: GridFormFieldSchema[] = [
+          {
+            id: 'status',
+            label: '처리 상태',
+            rules: '상태 선택',
+            component: (
+              <SimpleDropdown
+                value={processForm.status}
+                options={STATUS_OPTIONS}
+                onChange={(value) => handleProcessInputChange('status', value as ViolationStatus)}
+                placeholder="상태를 선택하세요"
+              />
+            )
+          },
+          {
+            id: 'processingNote',
+            label: '처리 메모',
+            rules: '처리 내용 입력',
+            component: (
+              <SimpleTextArea
+                value={processForm.processingNote}
+                onChange={(value) => handleProcessInputChange('processingNote', value)}
+                placeholder="처리 관련 메모를 입력하세요"
+                rows={2}
+              />
+            )
+          }
+        ];
+        return (
+          <SectionPanel 
+            title="빠른 처리" 
+            subtitle="위반 사항을 빠르게 처리합니다."
+            icon={<AlertTriangle size={18} />}
+          >
+            <div className="p-4">
+              <GridFormAuto fields={fields} className="overflow-visible" />
+              <div className="flex gap-2 justify-end mt-4">
+                <Button
+                  variant="primary"
+                  onClick={handleProcess}
+                  disabled={!canProcess}
+                >
+                  {processing ? '처리 중...' : '처리 완료'}
+                </Button>
+              </div>
+            </div>
+          </SectionPanel>
+        );
+      })()}
 
       {/* 메인 상세 정보 */}
-      <div className="rounded-lg border" style={{
-        backgroundColor: 'hsl(var(--card))',
-        borderColor: 'hsl(var(--border))'
-      }}>
-        <TitleRow title="상세 정보" subtitle="상세 정보" />
-        <div className="p-6 pt-0">
-        
-        {/* 위반 정보 필드 정의 */}
-        {(() => {
-          const violationIdFields: GridFormFieldSchema[] = [
-            {
-              id: 'violationId',
-              label: '위반 ID',
-              rules: '자동 생성',
-              component: (
-                <SimpleTextInput
-                  value={violation.id.toString()}
-                  disabled
-                />
-              )
-            }
-          ];
-
-          return <GridFormAuto fields={violationIdFields} />;
-        })()}
-          
+      {/* 위반 정보 필드 정의 */}
         {(() => {
           const readOnlyFields: GridFormFieldSchema[] = [
+              {
+                id: 'violationId',
+                label: '위반 ID',
+                rules: '자동 생성',
+                component: (
+                  <SimpleTextInput
+                    value={violation.id.toString()}
+                    disabled
+                  />
+                )
+              },
               {
                 id: 'carNumber',
                 label: '차량번호',
@@ -568,7 +553,17 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
               }
             );
 
-            return <GridFormAuto fields={readOnlyFields} />;
+            return (
+              <SectionPanel 
+                title="위반 상세 정보" 
+                subtitle="위반 사항의 상세 내용과 시스템 기록 정보입니다."
+                icon={<Info size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={readOnlyFields} />
+                </div>
+              </SectionPanel>
+            );
         })()}
           
         {/* 편집 가능한 필드 */}
@@ -747,29 +742,36 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
               }
             ];
 
-            return <GridFormAuto fields={editableFields} />;
+            return (
+              <SectionPanel 
+                title="위반 정보 수정" 
+                subtitle="위반 사항의 상태 및 세부 정보를 수정할 수 있습니다."
+                icon={<Edit size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={editableFields} />
+                  {/* 상세 정보 액션 버튼 */}
+                  <div className="flex gap-2 justify-end mt-6">
+                    <Button
+                      variant="ghost"
+                      onClick={handleEditReset}
+                      disabled={!hasEditChanges || saving || processing}
+                    >
+                      <RotateCcw className="mr-2 w-4 h-4" />
+                      초기화
+                    </Button>
+                    
+                    <Button
+                      onClick={handleSave}
+                      disabled={!canSave}
+                    >
+                      {saving ? '저장 중...' : '저장'}
+                    </Button>
+                  </div>
+                </div>
+              </SectionPanel>
+            );
         })()}
-
-          {/* 상세 정보 액션 버튼 */}
-          <div className="flex gap-2 justify-end mt-6">
-            <Button
-              variant="ghost"
-              onClick={handleEditReset}
-              disabled={!hasEditChanges || saving || processing}
-            >
-              <RotateCcw className="mr-2 w-4 h-4" />
-              초기화
-            </Button>
-            
-            <Button
-              onClick={handleSave}
-              disabled={!canSave}
-            >
-              {saving ? '저장 중...' : '저장'}
-            </Button>
-          </div>
-        </div>
-      </div>
 
       {/* 이미지 미리보기 모달 */}
       {imageData.length > 0 && (

@@ -61,6 +61,7 @@ export interface GridFormFieldSchema {
 
 export interface GridFormAutoProps {
 	fields: GridFormFieldSchema[];
+	// GridForm 관련 props
 	viewMode?: GridFormViewMode;
 	sequenceWidth?: string;
 	rulesWidth?: string;
@@ -70,5 +71,7 @@ export interface GridFormAutoProps {
 	topRightActions?: React.ReactNode;
 	bottomLeftActions?: React.ReactNode;
 	bottomRightActions?: React.ReactNode;
+	// ViewSelector 표시 여부 (독립 사용시에만)
+	showViewSelector?: boolean;
 }
 // #endregion

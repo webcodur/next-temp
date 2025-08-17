@@ -11,8 +11,8 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import ResidentForm, { ResidentFormData } from './section/ResidentBasic';
-import ResidentInstanceSection from '@/components/view/_pages/resident/section/resident_instance/ResidentInstanceSection';
-import ResidentHistorySection from '@/components/view/_pages/resident/section/ResidentHistory';
+import ResidentConnection from '@/components/view/_pages/resident/section/ResidentConnection';
+import ResidentMovement from '@/components/view/_pages/resident/section/ResidentMovement';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
 import { updateResident } from '@/services/residents/residents@id_PATCH';
 import { deleteResident } from '@/services/residents/residents@id_DELETE';
@@ -53,6 +53,9 @@ export default function ResidentDetailPage() {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [operationModalOpen, setOperationModalOpen] = useState(false);
+  const [operationModalSuccess, setOperationModalSuccess] = useState(false);
+  const [operationModalMessage, setOperationModalMessage] = useState('');
   // #endregion
 
   // #region 탭 설정
@@ -62,12 +65,12 @@ export default function ResidentDetailPage() {
       label: '기본 정보',
     },
     {
-      id: 'instance',
-      label: '거주 정보',
+      id: 'connection',
+      label: '세대 연결',
     },
     {
-      id: 'history',
-      label: '이동 이력',
+      id: 'movement',
+      label: '세대 이전',
     },
   ];
   // #endregion
@@ -235,6 +238,12 @@ export default function ResidentDetailPage() {
       setDeleteConfirmOpen(false);
     }
   }, [resident, router]);
+
+  const handleOperationComplete = useCallback((success: boolean, message: string) => {
+    setOperationModalMessage(message);
+    setOperationModalSuccess(success);
+    setOperationModalOpen(true);
+  }, []);
   // #endregion
 
   if (loading) {
@@ -298,16 +307,19 @@ export default function ResidentDetailPage() {
             />
           )}
           
-          {activeTab === 'instance' && (
-            <ResidentInstanceSection 
+          {activeTab === 'connection' && (
+            <ResidentConnection 
               resident={resident}
               onDataChange={loadResidentData}
+              onOperationComplete={handleOperationComplete}
             />
           )}
           
-          {activeTab === 'history' && (
-            <ResidentHistorySection 
+          {activeTab === 'movement' && (
+            <ResidentMovement 
               resident={resident}
+              onDataChange={loadResidentData}
+              onOperationComplete={handleOperationComplete}
             />
           )}
         </div>
@@ -367,6 +379,29 @@ export default function ResidentDetailPage() {
           
           <div className="flex justify-center pt-4">
             <Button onClick={() => setErrorModalOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 세대 연결/이전 작업 모달 */}
+      <Modal
+        isOpen={operationModalOpen}
+        onClose={() => setOperationModalOpen(false)}
+        title="작업 완료"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className={`mb-2 text-lg font-semibold ${operationModalSuccess ? 'text-green-600' : 'text-red-600'}`}>
+              {operationModalSuccess ? '성공' : '오류'}
+            </h3>
+            <p className="text-muted-foreground">{operationModalMessage}</p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={() => setOperationModalOpen(false)}>
               확인
             </Button>
           </div>

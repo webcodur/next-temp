@@ -12,7 +12,7 @@ interface SimpleTextInputProps {
 	placeholder?: string;
 	disabled?: boolean;
 	className?: string;
-	type?: 'text' | 'email' | 'password' | 'number' | 'datetime-local';
+	type?: 'text' | 'email' | 'password' | 'number';
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 	autocomplete?: string;

@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 // #region 타입 정의
 interface SectionPanelProps {
 	title?: string | ReactNode;
+	subtitle?: string; // 제목 우측에 표시될 설명
 	children: ReactNode;
 	headerActions?: ReactNode; // 헤더 우측에 추가 요소
 	icon?: ReactNode; // 헤더 좌측 아이콘
@@ -18,6 +19,7 @@ interface SectionPanelContentProps {
 // #region 메인 컴포넌트
 export const SectionPanel: React.FC<SectionPanelProps> = ({
 	title,
+	subtitle,
 	children,
 	headerActions,
 	icon,
@@ -47,27 +49,28 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 					<div className={`relative flex-shrink-0 px-4 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-serial-6 to-serial-3 text-foreground ${headerHeight}`}>
 						{/* 왼쪽 영역: 아이콘 (absolute) */}
 						{icon && (
-							<div className={`absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center`}>
+							<div className={`flex absolute left-4 top-1/2 items-center transform -translate-y-1/2`}>
 								<span className="flex-shrink-0">{icon}</span>
 							</div>
 						)}
 
-						{/* 가운데 영역: 타이틀 (전체 너비 중앙) */}
-						{title && (
-							<div className="w-full h-full flex items-center justify-center">
-								<div className="text-base font-bold text-center text-foreground font-multilang leading-none">
-									{typeof title === 'string' ? (
-										<h2 className="truncate m-0 leading-none">{title}</h2>
-									) : (
-										title
+						{/* 가운데 영역: 타이틀과 부제목 (전체 너비 중앙) */}
+            <div className="flex justify-center items-center w-full h-full">
+								<div className="flex gap-2 items-baseline text-center text-foreground font-multilang">
+									<div className="text-base font-bold leading-none">
+                    <h2 className="m-0 leading-none truncate">{title}</h2>
+									</div>
+									{subtitle && (
+										<span className="text-sm font-normal leading-none text-muted-foreground">
+											{subtitle}
+										</span>
 									)}
 								</div>
 							</div>
-						)}
 
 						{/* 오른쪽 영역: 헤더 액션 (absolute) */}
 						{headerActions && (
-							<div className={`absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center`}>
+							<div className={`flex absolute right-4 top-1/2 items-center transform -translate-y-1/2`}>
 								<div className="flex-shrink-0">
 									{headerActions}
 								</div>
@@ -82,14 +85,21 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 							{icon && <span className="flex-shrink-0">{icon}</span>}
 						</div>
 
-						{/* 가운데 영역: 타이틀 */}
+						{/* 가운데 영역: 타이틀과 부제목 */}
 						<div className={`flex flex-1 items-center px-2 min-w-0 h-full ${justifyClasses[titleAlign]}`}>
 							{title && (
-								<div className={`w-full text-base font-bold ${textClasses[titleAlign]} text-foreground font-multilang leading-none`}>
-									{typeof title === 'string' ? (
-										<h2 className="truncate m-0 leading-none">{title}</h2>
-									) : (
-										title
+								<div className={`flex gap-2 items-baseline ${textClasses[titleAlign]} text-foreground font-multilang`}>
+									<div className="text-base font-bold leading-none">
+										{typeof title === 'string' ? (
+											<h2 className="m-0 leading-none truncate">{title}</h2>
+										) : (
+											title
+										)}
+									</div>
+									{subtitle && (
+										<span className="text-sm font-normal leading-none text-muted-foreground">
+											{subtitle}
+										</span>
 									)}
 								</div>
 							)}

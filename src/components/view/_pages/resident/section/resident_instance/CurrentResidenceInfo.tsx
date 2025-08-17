@@ -18,19 +18,12 @@ export default function CurrentResidenceInfo({
 }: CurrentResidenceInfoProps) {
   return (
     <div className="p-6 rounded-lg border bg-card border-border">
-      <div className="flex gap-2 items-center mb-4">
-        <Home size={20} />
-        <h2 className="text-lg font-semibold text-foreground">
-          현재 거주지 정보
-        </h2>
-      </div>
-
       {currentResidence?.instance ? (
         (() => {
           const currentResidenceFields: GridFormFieldSchema[] = [
             {
               id: 'instanceId',
-              label: '호실 ID',
+              label: '세대 ID',
               component: (
                 <div className="flex items-center px-3 py-2 bg-blue-50 rounded-md border border-blue-200">
                   <span className="font-medium text-blue-700">
@@ -38,7 +31,7 @@ export default function CurrentResidenceInfo({
                   </span>
                 </div>
               ),
-              rules: 'API에서 관리하는 호실 고유 식별자'
+              rules: 'API에서 관리하는 세대 고유 식별자'
             },
             {
               id: 'address',
@@ -55,7 +48,7 @@ export default function CurrentResidenceInfo({
             },
             {
               id: 'instanceType',
-              label: '호실 타입',
+              label: '세대 타입',
               component: (
                 <div className="flex items-center px-3 py-2 bg-purple-50 rounded-md border border-purple-200">
                   <span className="font-medium text-purple-700">
@@ -90,7 +83,7 @@ export default function CurrentResidenceInfo({
                   </div>
                 </div>
               ),
-              rules: '거주자-호실 관계 상세 정보'
+              rules: '거주자-세대 관계 상세 정보'
             }
           ];
 
@@ -98,6 +91,8 @@ export default function CurrentResidenceInfo({
             <div className="space-y-4">
               <GridFormAuto 
                 fields={currentResidenceFields}
+                title="현재 거주지 정보"
+                subtitle="거주자가 현재 거주 중인 세대의 상세 정보입니다."
                 gap="16px"
                 bottomRightActions={null}
               />
@@ -111,7 +106,7 @@ export default function CurrentResidenceInfo({
             variant="primary" 
             size="default"
             onClick={onCreateRelation}
-            title="호실 관계 생성"
+            title="세대 관계 생성"
           >
             <Plus size={16} />
             거주지 연결

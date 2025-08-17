@@ -1,45 +1,50 @@
 'use client';
 
 import React from 'react';
-import { ChevronRight, MessageSquare } from 'lucide-react';
+import { MessageSquare, Eye, Minus, Trash2 } from 'lucide-react';
 
 // 필드 정보 타입
-export interface InfoCardField {
+export interface InstanceItemCardField {
   icon: React.ReactElement<{ size?: number; className?: string }>;
   value: string;
   show?: boolean;
 }
 
 // 배지 정보 타입
-export interface InfoCardBadge {
+export interface InstanceItemCardBadge {
   text: string;
   variant?: 'default' | 'success' | 'info' | 'warning' | 'danger';
 }
 
-// InfoCard Props 타입
-export interface InfoCardProps {
+// InstanceItemCard Props 타입
+export interface InstanceItemCardProps {
   // 헤더
   headerIcon: React.ReactElement<{ size?: number; className?: string }>;
   title: string;
   customTitle?: React.ReactElement; // 커스텀 제목 컴포넌트 (번호판 등)
-  badges?: InfoCardBadge[];
+  badges?: InstanceItemCardBadge[];
   
   // 바디 (2열 구조)
-  leftColumn: InfoCardField[];
-  rightColumn: InfoCardField[];
+  leftColumn: InstanceItemCardField[];
+  rightColumn: InstanceItemCardField[];
   
   // 푸터
   memo?: string;
   
-  // 인터랙션
+  // 인터랙션 (레거시 - 사용하지 않음)
   onClick?: () => void;
   clickable?: boolean;
+  
+  // 액션 버튼들
+  onDetail?: () => void;
+  onExclude?: () => void;
+  onDelete?: () => void;
   
   // 스타일링
   className?: string;
 }
 
-export default function InfoCard({
+export default function InstanceItemCard({
   headerIcon,
   title,
   customTitle,
@@ -47,11 +52,12 @@ export default function InfoCard({
   leftColumn,
   rightColumn,
   memo,
-  onClick,
-  clickable = true,
+  onDetail,
+  onExclude,
+  onDelete,
   className = ''
-}: InfoCardProps) {
-  const getBadgeVariantClass = (variant: InfoCardBadge['variant'] = 'default') => {
+}: InstanceItemCardProps) {
+  const getBadgeVariantClass = (variant: InstanceItemCardBadge['variant'] = 'default') => {
     const variants = {
       default: 'bg-gray-100 text-gray-600',
       success: 'bg-green-100 text-green-700',
@@ -64,10 +70,7 @@ export default function InfoCard({
 
   return (
     <div
-      onClick={clickable ? onClick : undefined}
-      className={`
-        relative p-4 rounded-lg border border-border neu-raised transition-all duration-200
-        ${clickable ? 'cursor-pointer group hover:shadow-md' : ''} ${className}`}
+      className={`relative p-4 rounded-lg border transition-all duration-200  border-border neu-elevated group hover:shadow-md ${className}`}
     >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4">
@@ -96,9 +99,46 @@ export default function InfoCard({
             ))}
           </div>
         </div>
-        {clickable && (
-          <ChevronRight size={16} className="flex-shrink-0 transition-colors text-muted-foreground group-hover:text-primary" />
-        )}
+        
+        {/* 액션 버튼들 */}
+        <div className="flex gap-1 items-center">
+          {onDetail && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDetail();
+              }}
+              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
+              title="상세 보기"
+            >
+              <Eye size={14} />
+            </button>
+          )}
+          {onExclude && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onExclude();
+              }}
+              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
+              title="제외"
+            >
+              <Minus size={14} />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-red-100 text-muted-foreground hover:text-red-600"
+              title="삭제"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 바디 - 2열 구조 */}

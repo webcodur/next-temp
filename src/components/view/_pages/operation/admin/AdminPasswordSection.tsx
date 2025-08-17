@@ -177,7 +177,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
     <div className="space-y-6">
       {/* 비밀번호 재설정 섹션 */}
       {canManage && (
-        <div className="p-6 rounded-lg border bg-card border-border">
+        <div className="p-6">
           <div className="flex gap-2 items-center mb-4">
             <Lock size={20} />
             <h2 className="text-lg font-semibold text-foreground">
@@ -238,7 +238,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               }
             ];
 
-            return <GridFormAuto fields={fields} gap="20px" />;
+            return <GridFormAuto fields={fields} title="비밀번호 변경" subtitle="관리자 계정의 비밀번호를 안전하게 변경합니다." gap="20px" />;
           })()}
 
           {/* 액션 버튼 */}

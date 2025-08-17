@@ -106,7 +106,7 @@ export default function InstanceDetailPage() {
         setOriginalData(initialData);
       } else {
         console.error('인스턴스 조회 실패:', result.errorMsg);
-        setModalMessage(`호실 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 정보를 불러올 수 없습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
         setTimeout(() => {
           router.push('/parking/occupancy/instance');
@@ -114,7 +114,7 @@ export default function InstanceDetailPage() {
       }
     } catch (error) {
       console.error('인스턴스 조회 중 오류:', error);
-      setModalMessage('호실 정보를 불러오는 중 오류가 발생했습니다.');
+      setModalMessage('세대 정보를 불러오는 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
       setTimeout(() => {
         router.push('/parking/occupancy/instance');
@@ -214,16 +214,16 @@ export default function InstanceDetailPage() {
         // 데이터 다시 로드
         await loadInstanceData();
         
-        setModalMessage('호실 정보가 성공적으로 수정되었습니다.');
+        setModalMessage('세대 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
       } else {
         console.error('인스턴스 수정 실패:', result.errorMsg);
-        setModalMessage(`호실 수정에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 수정에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('인스턴스 수정 중 오류:', error);
-      setModalMessage('호실 수정 중 오류가 발생했습니다.');
+      setModalMessage('세대 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -239,18 +239,18 @@ export default function InstanceDetailPage() {
     try {
       const result = await deleteInstance(instance.id);
       if (result.success) {
-        setModalMessage('호실이 성공적으로 삭제되었습니다.');
+        setModalMessage('세대이 성공적으로 삭제되었습니다.');
         setSuccessModalOpen(true);
         setTimeout(() => {
           router.push('/parking/occupancy/instance');
         }, 1500);
       } else {
-        setModalMessage(`호실 삭제에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('호실 삭제 중 오류:', error);
-      setModalMessage('호실 삭제 중 오류가 발생했습니다.');
+      console.error('세대 삭제 중 오류:', error);
+      setModalMessage('세대 삭제 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -269,7 +269,7 @@ export default function InstanceDetailPage() {
   if (!instance) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">호실 정보를 찾을 수 없습니다.</div>
+        <div className="text-muted-foreground">세대 정보를 찾을 수 없습니다.</div>
       </div>
     );
   }
@@ -278,7 +278,7 @@ export default function InstanceDetailPage() {
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
       <PageHeader 
-        title="호실 상세 정보"
+        title="세대 상세 정보"
         subtitle={`${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
         leftActions={
           <Button
@@ -305,7 +305,7 @@ export default function InstanceDetailPage() {
         <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
           {activeTab === 'basic' && (
             <div className="space-y-6">
-              {/* 호실 기본 정보 */}
+              {/* 세대 기본 정보 */}
               <InstanceForm
                 mode="edit"
                 instance={instance}
@@ -325,28 +325,17 @@ export default function InstanceDetailPage() {
                 <InstanceResidentList 
                   residentInstances={instance.residentInstance}
                   loading={loading}
+                  instanceId={instance.id}
+                  onDataChange={loadInstanceData}
                 />
                 <InstanceCarList 
                   carInstances={instance.carInstance}
                   loading={loading}
+                  instanceId={instance.id}
+                  onDataChange={loadInstanceData}
                 />
               </div>
-              
-              {/* 디버깅 정보 - 개발용 */}
-              {process.env.NODE_ENV === 'development' && (
-                <div className="p-4 mt-6 bg-gray-100 rounded-lg">
-                  <h4 className="mb-2 font-semibold">디버깅 정보:</h4>
-                  <p>거주민 수: {instance.residentInstance?.length || 0}</p>
-                  <p>차량 수: {instance.carInstance?.length || 0}</p>
-                  <details className="mt-2">
-                    <summary>원본 데이터</summary>
-                    <pre className="overflow-auto p-2 mt-2 max-h-40 text-xs bg-white rounded">
-                      {JSON.stringify(instance, null, 2)}
-                    </pre>
-                  </details>
-                </div>
-              )}
-            </div>
+          </div>
           )}
           
           {activeTab === 'service' && (
@@ -391,13 +380,13 @@ export default function InstanceDetailPage() {
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="호실 삭제 확인"
+        title="세대 삭제 확인"
         size="md"
       >
         <div className="space-y-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
-            <p className="text-muted-foreground">이 작업은 되돌릴 수 없습니다. 호실 정보가 영구적으로 삭제됩니다.</p>
+            <p className="text-muted-foreground">이 작업은 되돌릴 수 없습니다. 세대 정보가 영구적으로 삭제됩니다.</p>
           </div>
           <div className="flex gap-3 justify-end pt-4">
             <Button variant="ghost" onClick={() => setDeleteConfirmOpen(false)}>취소</Button>

@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Save } from 'lucide-react';
 
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
-import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+
+
 import { searchInstances } from '@/services/instances/instances$_GET';
 import { moveResident } from '@/services/residents/residents_move_POST';
 import { ResidentDetail, ResidentInstanceWithInstance } from '@/types/resident';
@@ -43,11 +41,11 @@ export default function ResidentMoveSection({
         setInstances(result.data.data || []);
       } else {
         setInstances([]);
-        setMoveError(`호실 목록을 불러올 수 없습니다${result.errorMsg ? `: ${result.errorMsg}` : ''}`);
+        setMoveError(`세대 목록을 불러올 수 없습니다${result.errorMsg ? `: ${result.errorMsg}` : ''}`);
       }
     } catch (error) {
-      console.error('호실 목록 조회 중 오류:', error);
-      setMoveError('호실 목록을 불러오는 중 오류가 발생했습니다.');
+      console.error('세대 목록 조회 중 오류:', error);
+      setMoveError('세대 목록을 불러오는 중 오류가 발생했습니다.');
       setInstances([]);
     } finally {
       setIsSearching(false);
@@ -94,19 +92,19 @@ export default function ResidentMoveSection({
       });
 
       if (result.success) {
-        const successMessage = '거주자 호실 이동이 성공적으로 완료되었습니다.';
+        const successMessage = '거주자 세대 이동이 성공적으로 완료되었습니다.';
         setMoveSuccess(successMessage);
         setSelectedInstanceId(null);
         setMoveMemo('');
         onMoveComplete(true, successMessage);
       } else {
-        const errorMessage = `호실 이동에 실패했습니다: ${result.errorMsg}`;
+        const errorMessage = `세대 이동에 실패했습니다: ${result.errorMsg}`;
         setMoveError(errorMessage);
         onMoveComplete(false, errorMessage);
       }
     } catch (error) {
-      console.error('호실 이동 중 오류:', error);
-      const errorMessage = '호실 이동 중 오류가 발생했습니다.';
+      console.error('세대 이동 중 오류:', error);
+      const errorMessage = '세대 이동 중 오류가 발생했습니다.';
       setMoveError(errorMessage);
       onMoveComplete(false, errorMessage);
     } finally {
@@ -115,49 +113,10 @@ export default function ResidentMoveSection({
   }, [resident, isMoveValid, isMoving, selectedInstanceId, moveMemo, onMoveComplete]);
   // #endregion
 
-  const fields: GridFormFieldSchema[] = [
-    {
-      id: 'newInstance',
-      label: '새 거주지',
-      required: true,
-      component: (
-        <SimpleDropdown
-          value={selectedInstanceId?.toString() || ''}
-          onChange={handleInstanceChange}
-          options={instanceOptions}
-          placeholder={isSearching ? '호실 목록을 불러오는 중...' : '이동할 호실을 선택하세요'}
-          disabled={isSearching || isMoving}
-          validationRule={{ type: 'free', mode: 'create' }}
-        />
-      ),
-      rules: '이동할 새로운 호실을 선택하세요'
-    },
-    {
-      id: 'moveMemo',
-      label: '이동 사유',
-      component: (
-        <SimpleTextInput
-          value={moveMemo}
-          onChange={setMoveMemo}
-          placeholder="이동 사유나 메모를 입력하세요"
-          disabled={isMoving}
-          validationRule={{ type: 'free', mode: 'create' }}
-        />
-      ),
-      rules: '이동 사유를 기록합니다 (선택사항)'
-    }
-  ];
+
 
   return (
     <div className="p-6 rounded-lg border bg-card border-border">
-      <div className="flex gap-2 items-center mb-4">
-        <Save size={20} />
-        <h2 className="text-lg font-semibold text-foreground">호실 이동</h2>
-        <div className="ml-2 text-sm text-muted-foreground">
-          현재 거주지를 퇴거 처리하고 선택한 호실로 이동합니다.
-        </div>
-      </div>
-
       {moveError && (
         <div className="p-3 mb-4 text-sm text-red-700 bg-red-50 rounded-md border border-red-200">
           {moveError}
@@ -169,20 +128,54 @@ export default function ResidentMoveSection({
         </div>
       )}
 
-      <GridFormAuto 
-        fields={fields}
-        gap="20px"
-        bottomRightActions={
+      <div className="space-y-4">
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              새 거주지 <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedInstanceId?.toString() || ''}
+              onChange={(e) => handleInstanceChange(e.target.value)}
+              disabled={isSearching || isMoving}
+              className="px-3 py-2 w-full rounded-md border border-input bg-background"
+            >
+              <option value="">
+                {isSearching ? '세대 목록을 불러오는 중...' : '이동할 세대을 선택하세요'}
+              </option>
+              {instanceOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">이동 사유</label>
+            <input
+              type="text"
+              value={moveMemo}
+              onChange={(e) => setMoveMemo(e.target.value)}
+              placeholder="이동 사유나 메모를 입력하세요"
+              disabled={isMoving}
+              className="px-3 py-2 w-full rounded-md border border-input bg-background"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end">
           <CrudButton
             action="save"
             onClick={handleExecuteMove}
             disabled={!isMoveValid || isMoving || isSearching}
-            title={isMoving ? '이동 중...' : !isMoveValid ? '호실을 선택해주세요' : '호실 이동 실행'}
+            title={isMoving ? '이동 중...' : !isMoveValid ? '세대을 선택해주세요' : '세대 이동 실행'}
           >
             {isMoving ? '이동 중...' : '이동 실행'}
           </CrudButton>
-        }
-      />
+        </div>
+      </div>
     </div>
   );
 }

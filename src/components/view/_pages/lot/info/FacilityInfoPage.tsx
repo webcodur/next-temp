@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Building2, Users, Smartphone, Settings, FileText } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
 export default function FacilityInfoPage() {
@@ -97,17 +98,23 @@ export default function FacilityInfoPage() {
               )
             }));
 
-            return <GridFormAuto fields={fields} />;
+            return (
+              <SectionPanel 
+                title="기본 정보" 
+                subtitle="시설의 기본적인 정보와 위치입니다."
+                icon={<Building2 size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={fields} />
+                </div>
+              </SectionPanel>
+            );
           })()}
         </section>
 
 
         {/* ----------------------------- 시설 규모 ----------------------------- */}
         <section className="py-6">
-          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
-            <Users className="w-5 h-5 neu-icon-active" />
-            시설 규모
-          </h2>
           {(() => {
             const fields: GridFormFieldSchema[] = facilityScale.map(({ label, value }) => ({
               id: label.replace(/\s+/g, ''),
@@ -117,17 +124,23 @@ export default function FacilityInfoPage() {
               )
             }));
 
-            return <GridFormAuto fields={fields} />;
+            return (
+              <SectionPanel 
+                title="시설 규모" 
+                subtitle="시설의 물리적 크기와 용량 정보입니다."
+                icon={<Building2 size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={fields} />
+                </div>
+              </SectionPanel>
+            );
           })()}
         </section>
 
 
         {/* ------------------------- 디지털 서비스 현황 ------------------------- */}
         <section className="py-6">
-          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
-            <Smartphone className="w-5 h-5 neu-icon-active" />
-            디지털 서비스 현황
-          </h2>
           {(() => {
             const fields: GridFormFieldSchema[] = digitalStatus.map(({ label, value }) => ({
               id: label.replace(/\s+/g, ''),
@@ -137,17 +150,23 @@ export default function FacilityInfoPage() {
               )
             }));
 
-            return <GridFormAuto fields={fields} />;
+            return (
+              <SectionPanel 
+                title="디지털 서비스 현황" 
+                subtitle="앱 설치 및 디지털화 진행 상황입니다."
+                icon={<Smartphone size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={fields} />
+                </div>
+              </SectionPanel>
+            );
           })()}
         </section>
 
 
         {/* ----------------------------- 운영 현황 ----------------------------- */}
         <section className="py-6">
-          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
-            <Settings className="w-5 h-5 neu-icon-active" />
-            운영 현황
-          </h2>
           {(() => {
             const fields: GridFormFieldSchema[] = operationStatus.map(({ label, value }) => ({
               id: label.replace(/\s+/g, ''),
@@ -157,17 +176,23 @@ export default function FacilityInfoPage() {
               )
             }));
 
-            return <GridFormAuto fields={fields} />;
+            return (
+              <SectionPanel 
+                title="운영 현황" 
+                subtitle="실제 운영되고 있는 시설과 인력 정보입니다."
+                icon={<Users size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={fields} />
+                </div>
+              </SectionPanel>
+            );
           })()}
         </section>
 
 
         {/* --------------------------- 계약 및 관리 --------------------------- */}
         <section className="py-6">
-          <h2 className="flex gap-2 items-center mb-6 text-xl font-semibold text-foreground">
-            <FileText className="w-5 h-5 neu-icon-active" />
-            계약 및 관리
-          </h2>
           {(() => {
             const fields: GridFormFieldSchema[] = contractManagement.map(({ label, value }) => ({
               id: label.replace(/\s+/g, ''),
@@ -177,7 +202,17 @@ export default function FacilityInfoPage() {
               )
             }));
 
-            return <GridFormAuto fields={fields} />;
+            return (
+              <SectionPanel 
+                title="계약 및 관리" 
+                subtitle="계약 정보와 관리 체계 내용입니다."
+                icon={<FileText size={18} />}
+              >
+                <div className="p-4">
+                  <GridFormAuto fields={fields} />
+                </div>
+              </SectionPanel>
+            );
           })()}
         </section>
       </div>

@@ -382,7 +382,7 @@ export default function CarsListPage() {
     },
     {
       key: 'carInstance',
-      header: '등록 호실',
+      header: '등록 세대',
       align: 'center',
       width: '10%',
       cell: (item: CarWithInstance) => `${item.carInstance?.length || 0}개`,
@@ -421,7 +421,7 @@ export default function CarsListPage() {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title="차량 관리" 
-        subtitle="차량 등록, 수정, 삭제 및 호실 연결 관리"
+        subtitle="차량 등록, 수정, 삭제 및 세대 연결 관리"
         rightActions={
           <CrudButton
             action="create"

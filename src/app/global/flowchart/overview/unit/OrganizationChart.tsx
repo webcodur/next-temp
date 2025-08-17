@@ -1,7 +1,7 @@
 /*
   파일명: OrganizationChart.tsx
   기능: 조직도 및 통합 다이어그램을 표시하는 플로우차트 컴포넌트
-  책임: 건물→호실→개인/차량의 계층 구조를 시각적으로 표현한다.
+  책임: 건물→세대→개인/차량의 계층 구조를 시각적으로 표현한다.
 */
 
 import { Workflow } from 'lucide-react';
@@ -58,7 +58,7 @@ const NODE_DEFINITIONS = [
   },
   {
     id: 'room',
-    label: '호실',
+    label: '세대',
     type: 'room' as const,
     level: 2,
     description: '각 세대별 주거 공간 단위'
@@ -93,7 +93,7 @@ const CONNECTIONS = [
   { from: 'building', to: 'room', type: 'solid' },
   { from: 'building', to: 'facility', type: 'solid' },
   
-  // 호실에서만 개인과 차량으로 연결
+  // 세대에서만 개인과 차량으로 연결
   { from: 'room', to: 'person', type: 'solid' },
   { from: 'room', to: 'vehicle', type: 'solid' },
   
@@ -123,9 +123,9 @@ const calculateNodePositions = (): ChartNode[] => {
       // 레벨 1: 중앙에 배치
       x = centerX;
     } else if (nodeDef.level === 2) {
-      // 레벨 2: 호실은 중앙, 주차장과 공용시설은 좌우에 배치
+      // 레벨 2: 세대은 중앙, 주차장과 공용시설은 좌우에 배치
       if (nodeDef.id === 'room') {
-        x = centerX; // 호실은 정확히 중앙
+        x = centerX; // 세대은 정확히 중앙
       } else if (nodeDef.id === 'parking') {
         x = centerX - 150; // 주차장은 중앙에서 왼쪽으로 150px (1.5배)
       } else if (nodeDef.id === 'facility') {
@@ -134,7 +134,7 @@ const calculateNodePositions = (): ChartNode[] => {
         x = centerX; // 기본값
       }
     } else {
-      // 레벨 3: 호실을 기준으로 좌우 배치 (호실이 중앙이므로 centerX 기준)
+      // 레벨 3: 세대을 기준으로 좌우 배치 (세대이 중앙이므로 centerX 기준)
       const level3Nodes = NODE_DEFINITIONS.filter(n => n.level === 3);
       const nodeIndex = level3Nodes.findIndex(n => n.id === nodeDef.id);
       const offset = (nodeIndex === 0) ? -75 : 75; // 좌우로 75px 떨어뜨리기 (1.5배)

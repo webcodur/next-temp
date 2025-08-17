@@ -45,16 +45,15 @@ const GridFormViewSelector: React.FC<GridFormViewSelectorProps> = ({
 					type="button"
 					onClick={() => onViewModeChange(mode)}
 					className={cn(
-						'flex items-center gap-2 px-3 py-2 rounded-md',
-						'text-sm font-medium whitespace-nowrap',
+						'flex items-center justify-center p-2 rounded-md',
+						'text-sm font-medium',
 						viewMode === mode
 							? 'neu-inset bg-background text-foreground'
 							: 'neu-raised text-muted-foreground hover:text-foreground'
 					)}
-					title={description}
+					title={`${label} - ${description}`}
 				>
 					<Icon className="w-4 h-4" />
-					<span>{label}</span>
 				</button>
 			))}
 		</div>

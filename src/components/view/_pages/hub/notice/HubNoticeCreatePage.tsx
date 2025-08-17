@@ -243,7 +243,7 @@ export default function HubNoticeCreatePage() {
             }
           ];
 
-          return <GridFormAuto fields={fields} />;
+          return <GridFormAuto fields={fields} title="공지사항 작성" subtitle="새로운 공지사항을 작성하고 게시 설정을 할 수 있습니다." />;
         })()}
 
         {/* 버튼 */}

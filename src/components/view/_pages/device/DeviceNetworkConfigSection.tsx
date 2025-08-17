@@ -4,7 +4,6 @@ import React, { useState, useMemo } from 'react';
 import { Save, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -166,7 +165,6 @@ export default function DeviceNetworkConfigSection({
   return (
     <div className="space-y-6">
       {/* 네트워크 설정 섹션 */}
-      <TitleRow title="네트워크 설정" subtitle="IP, 포트 등 네트워크 설정을 관리합니다." />
       {(() => {
         const fields: GridFormFieldSchema[] = [
           {
@@ -231,6 +229,8 @@ export default function DeviceNetworkConfigSection({
         return (
           <GridFormAuto 
             fields={fields}
+            title="네트워크 설정"
+            subtitle="IP, 포트 등 네트워크 설정을 관리합니다."
             gap="20px"
             bottomLeftActions={(
               <Button 
