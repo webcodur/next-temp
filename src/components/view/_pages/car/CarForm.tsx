@@ -5,6 +5,7 @@ import { Eraser, RotateCcw, Car as CarIcon } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -234,13 +235,13 @@ const CarForm: React.FC<CarFormProps> = ({
       label: '연식',
       rules: '4자리 연도 (예: 2023)',
       component: (
-        <SimpleTextInput
-          type="number"
-          value={data.year}
-          onChange={(value) => handleFieldChange('year', value)}
+        <SimpleNumberInput
+          value={data.year ? parseInt(data.year) : ''}
+          onChange={(value) => handleFieldChange('year', value.toString())}
           placeholder="연식"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          min={1900}
+          max={2050}
         />
       )
     },
@@ -387,14 +388,12 @@ const CarForm: React.FC<CarFormProps> = ({
       subtitle="차량의 기본 정보를 관리합니다."
       icon={<CarIcon size={18} />}
     >
-      <div className="p-4">
-        <GridFormAuto 
-          fields={fields}
-          gap="16px"
-          bottomLeftActions={bottomLeftActions}
-          bottomRightActions={bottomRightActions}
-        />
-      </div>
+      <GridFormAuto 
+        fields={fields}
+        gap="16px"
+        bottomLeftActions={bottomLeftActions}
+        bottomRightActions={bottomRightActions}
+      />
     </SectionPanel>
   );
 };

@@ -118,6 +118,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       label: '아이디',
       required: mode === 'create',
       rules: '영문, 숫자 4-20자',
+      align: 'start',
       component: (
         <SimpleTextInput
           value={data.account}
@@ -134,6 +135,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       label: '이름',
       required: true,
       rules: '한글, 영문 2-50자',
+      align: 'start',
       component: (
         <SimpleTextInput
           value={data.name}
@@ -149,6 +151,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       id: 'email',
       label: '이메일',
       rules: '유효한 이메일 형식',
+      align: 'start',
       component: (
         <SimpleTextInput
           type="email"
@@ -165,6 +168,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       id: 'phone',
       label: '연락처',
       rules: '010-0000-0000 형식',
+      align: 'start',
       component: (
         <SimpleTextInput
           value={data.phone}
@@ -181,6 +185,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       label: '권한',
       required: true,
       rules: '역할 및 권한 설정',
+      align: 'start',
       component: (
         <SimpleDropdown
           value={data.role}
@@ -201,6 +206,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       label: '비밀번호',
       required: passwordRequired,
       rules: '8자 이상 영문/숫자/특수문자',
+      align: 'start',
       component: (
         <SimpleTextInput
           type="password"
@@ -218,6 +224,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       label: '비밀번호 확인',
       required: passwordRequired,
       rules: '위와 동일한 비밀번호',
+      align: 'start',
       component: (
         <SimpleTextInput
           type="password"
@@ -242,6 +249,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       id: 'parkinglot',
       label: '주차장',
       rules: '시스템 자동 연결',
+      align: 'start',
       component: (
         <SimpleTextInput
           value={admin?.parkinglot?.name || '-'}
@@ -255,6 +263,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
       id: 'createdAt',
       label: '등록일자',
       rules: '시스템 자동 기록',
+      align: 'start',
       component: (
         <SimpleDatePicker
           value={admin?.createdAt || null}
@@ -273,8 +282,6 @@ const AdminForm: React.FC<AdminFormProps> = ({
   return (
     <GridFormAuto 
       fields={fields}
-      title="관리자 정보"
-      subtitle="시스템 관리자의 계정 정보를 관리합니다."
       gap="16px"
       topRightActions={topRightActions}
       bottomLeftActions={bottomLeftActions}

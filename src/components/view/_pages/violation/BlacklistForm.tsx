@@ -197,13 +197,11 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
       subtitle="차량 번호를 블랙리스트에 등록하고 관리합니다."
       icon={<Shield size={18} />}
     >
-      <div className="p-4">
-        <GridFormAuto 
-          fields={fields}
-          gap="16px" 
-          bottomRightActions={bottomRightActions}
-        />
-      </div>
+      <GridFormAuto 
+        fields={fields}
+        gap="16px" 
+        bottomRightActions={bottomRightActions}
+      />
     </SectionPanel>
   );
 };

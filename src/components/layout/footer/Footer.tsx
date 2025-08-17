@@ -7,7 +7,7 @@ export default function Footer() {
         {/* 로고 및 소개 - 중앙 정렬 */}
         <div className="mb-6 text-center">
           <div className="flex justify-center items-center mb-2">
-            <h2 className="text-2xl font-bold text-foreground">Meerkat API Center</h2>
+            <h2 className="text-2xl font-bold text-foreground">Meerkat Hub</h2>
           </div>
           <p className="mb-2 text-base">AX DX SPACE TECHNOLOGY</p>
         </div>

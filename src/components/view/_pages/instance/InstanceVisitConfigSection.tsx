@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { updateInstanceVisitConfig } from '@/services/instances/instances@id_visit-config_PUT';
 import { InstanceDetail } from '@/types/instance';
 
@@ -120,14 +120,15 @@ export default function InstanceVisitConfigSection({
         <div className="space-y-6">
           {/* 방문 시간 통계 정보 */}
           <div className="p-4 rounded-lg bg-muted">
-            <h4 className="mb-2 text-sm font-medium text-foreground">방문 시간 통계</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* 총 방문 시간 */}
               <div>
                 <span className="text-muted-foreground">총 방문 시간:</span>
                 <span className="ml-2 font-medium">
                   {formData.availableVisitTime + formData.purchasedVisitTime}분
                 </span>
               </div>
+              {/* 평균 요청당 시간 */}
               <div>
                 <span className="text-muted-foreground">평균 요청당 시간:</span>
                 <span className="ml-2 font-medium">
@@ -147,16 +148,12 @@ export default function InstanceVisitConfigSection({
             label: '방문 가능 시간 (분)',
             rules: '0 이상 숫자',
             component: (
-              <SimpleTextInput
-                type="number"
-                value={formData.availableVisitTime.toString()}
-                onChange={(value) => handleFieldChange('availableVisitTime', parseInt(value) || 0)}
+              <SimpleNumberInput
+                value={formData.availableVisitTime}
+                onChange={(value) => handleFieldChange('availableVisitTime', typeof value === 'number' ? value : 0)}
                 placeholder="방문 가능 시간"
                 disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'edit'
-                }}
+                min={0}
               />
             )
           },
@@ -165,16 +162,12 @@ export default function InstanceVisitConfigSection({
             label: '구매한 방문 시간 (분)',
             rules: '0 이상 숫자',
             component: (
-              <SimpleTextInput
-                type="number"
-                value={formData.purchasedVisitTime.toString()}
-                onChange={(value) => handleFieldChange('purchasedVisitTime', parseInt(value) || 0)}
+              <SimpleNumberInput
+                value={formData.purchasedVisitTime}
+                onChange={(value) => handleFieldChange('purchasedVisitTime', typeof value === 'number' ? value : 0)}
                 placeholder="구매 방문 시간"
                 disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'edit'
-                }}
+                min={0}
               />
             )
           },
@@ -183,16 +176,12 @@ export default function InstanceVisitConfigSection({
             label: '방문 요청 한도',
             rules: '1 이상 숫자',
             component: (
-              <SimpleTextInput
-                type="number"
-                value={formData.visitRequestLimit.toString()}
-                onChange={(value) => handleFieldChange('visitRequestLimit', parseInt(value) || 1)}
+              <SimpleNumberInput
+                value={formData.visitRequestLimit}
+                onChange={(value) => handleFieldChange('visitRequestLimit', typeof value === 'number' ? value : 1)}
                 placeholder="방문 요청 한도"
                 disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'edit'
-                }}
+                min={1}
               />
             )
           }

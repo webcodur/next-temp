@@ -16,6 +16,7 @@ import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } fr
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 // API 호출
 import { getConfigById } from '@/services/config/config@id_GET';
@@ -247,10 +248,9 @@ export default function SystemConfigEditPage() {
 
       case 'INTEGER':
         return (
-          <SimpleTextInput
-            type="number"
-            value={formData.value}
-            onChange={(value) => handleFieldChange('value', value)}
+          <SimpleNumberInput
+            value={formData.value === '' ? '' : parseInt(formData.value)}
+            onChange={(value) => handleFieldChange('value', value === '' ? '' : value.toString())}
             placeholder="숫자를 입력하세요"
             disabled={isSubmitting}
           />

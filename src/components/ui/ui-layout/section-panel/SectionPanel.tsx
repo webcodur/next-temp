@@ -1,5 +1,26 @@
 import React, { ReactNode } from 'react';
 
+// #region 상수 정의
+const STYLES = {
+	// 레이아웃 상수
+	HEADER_PADDING: "px-6",
+	HEADER_BACKGROUND: "ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-counter-6 to-counter-3 text-foreground",
+	CONTENT_BACKGROUND: "bg-serial-2",
+	PANEL_BASE: "flex overflow-hidden flex-col text-center rounded-sm neu-elevated",
+	
+	// 포지셔닝 상수
+	ABSOLUTE_LEFT_CENTER: "flex absolute left-6 top-1/2 items-center transform -translate-y-1/2",
+	ABSOLUTE_RIGHT_CENTER: "flex absolute right-6 top-1/2 items-center transform -translate-y-1/2",
+	FLEX_SHRINK_0: "flex-shrink-0",
+	
+	// 텍스트 스타일 상수
+	TITLE_STYLE: "text-base font-bold leading-none",
+	SUBTITLE_STYLE: "text-sm font-normal leading-none text-muted-foreground",
+	TITLE_WRAPPER: "flex gap-2 items-baseline text-foreground font-multilang",
+	TITLE_ELEMENT: "m-0 leading-none truncate",
+} as const;
+// #endregion
+
 // #region 타입 정의
 interface SectionPanelProps {
 	title?: string | ReactNode;
@@ -9,10 +30,12 @@ interface SectionPanelProps {
 	icon?: ReactNode; // 헤더 좌측 아이콘
 	headerHeight?: string; // 헤더 높이 (기본값: h-8)
 	titleAlign?: 'left' | 'center' | 'right'; // 타이틀 정렬 (기본값: left)
+	contentPadding?: string; // 콘텐츠 패딩 (기본값: p-4)
 }
 
 interface SectionPanelContentProps {
 	children: ReactNode;
+	contentPadding?: string; // 콘텐츠 패딩
 }
 // #endregion
 
@@ -23,8 +46,9 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	children,
 	headerActions,
 	icon,
-	headerHeight = "h-8", // 기본값 설정
+	headerHeight = "h-12", // 기본값 설정
 	titleAlign = "left", // 기본값 설정
+	contentPadding = "p-4", // 기본값 설정
 }) => {
 	const hasHeader = title || headerActions || icon;
 
@@ -42,81 +66,88 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	};
 
 	return (
-		<div className="flex overflow-hidden flex-col text-center rounded-sm neu-elevated">
-      {hasHeader && (
-				titleAlign === 'center' ? (
-					// Center 정렬 시 absolute positioning 사용
-					<div className={`relative flex-shrink-0 px-4 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-serial-6 to-serial-3 text-foreground ${headerHeight}`}>
-						{/* 왼쪽 영역: 아이콘 (absolute) */}
-						{icon && (
-							<div className={`flex absolute left-4 top-1/2 items-center transform -translate-y-1/2`}>
-								<span className="flex-shrink-0">{icon}</span>
-							</div>
-						)}
-
-						{/* 가운데 영역: 타이틀과 부제목 (전체 너비 중앙) */}
-            <div className="flex justify-center items-center w-full h-full">
-								<div className="flex gap-2 items-baseline text-center text-foreground font-multilang">
-									<div className="text-base font-bold leading-none">
-                    <h2 className="m-0 leading-none truncate">{title}</h2>
-									</div>
-									{subtitle && (
-										<span className="text-sm font-normal leading-none text-muted-foreground">
-											{subtitle}
-										</span>
-									)}
-								</div>
-							</div>
-
-						{/* 오른쪽 영역: 헤더 액션 (absolute) */}
-						{headerActions && (
-							<div className={`flex absolute right-4 top-1/2 items-center transform -translate-y-1/2`}>
-								<div className="flex-shrink-0">
-									{headerActions}
-								</div>
-							</div>
-						)}
-					</div>
-				) : (
-					// Left/Right 정렬 시 기존 flex 방식 사용
-					<div className={`flex flex-shrink-0 items-center px-4 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-serial-6 to-serial-3 text-foreground ${headerHeight}`}>
-						{/* 왼쪽 영역: 아이콘 */}
-						<div className={`flex justify-start items-center h-full ${icon ? 'shrink-0' : 'w-1'}`}>
-							{icon && <span className="flex-shrink-0">{icon}</span>}
+		<div className={STYLES.PANEL_BASE}>
+			{/* Center 정렬 시 absolute positioning 사용 */}
+			{hasHeader && titleAlign === 'center' && (
+				<div className={`relative ${STYLES.FLEX_SHRINK_0} ${STYLES.HEADER_PADDING} ${STYLES.HEADER_BACKGROUND} ${headerHeight}`}>
+					{/* 왼쪽 영역: 아이콘 (absolute) */}
+					{icon && (
+						<div className={STYLES.ABSOLUTE_LEFT_CENTER}>
+							<span className={STYLES.FLEX_SHRINK_0}>{icon}</span>
 						</div>
+					)}
 
-						{/* 가운데 영역: 타이틀과 부제목 */}
-						<div className={`flex flex-1 items-center px-2 min-w-0 h-full ${justifyClasses[titleAlign]}`}>
-							{title && (
-								<div className={`flex gap-2 items-baseline ${textClasses[titleAlign]} text-foreground font-multilang`}>
-									<div className="text-base font-bold leading-none">
-										{typeof title === 'string' ? (
-											<h2 className="m-0 leading-none truncate">{title}</h2>
-										) : (
-											title
-										)}
-									</div>
-									{subtitle && (
-										<span className="text-sm font-normal leading-none text-muted-foreground">
-											{subtitle}
-										</span>
-									)}
-								</div>
-							)}
-						</div>
-
-						{/* 오른쪽 영역: 헤더 액션 */}
-						<div className={`flex justify-end items-center h-full ${headerActions ? 'shrink-0' : 'w-1'}`}>
-							{headerActions && (
-								<div className="flex-shrink-0">
-									{headerActions}
-								</div>
+					{/* 가운데 영역: 타이틀과 부제목 (전체 너비 중앙) */}
+					<div className="flex justify-center items-center w-full h-full">
+						<div className={`${STYLES.TITLE_WRAPPER} text-center`}>
+							<div className={STYLES.TITLE_STYLE}>
+								<h2 className={STYLES.TITLE_ELEMENT}>{title}</h2>
+							</div>
+							{subtitle && (
+								<span className={STYLES.SUBTITLE_STYLE}>
+									{subtitle}
+								</span>
 							)}
 						</div>
 					</div>
-				)
+
+					{/* 오른쪽 영역: 헤더 액션 (absolute) */}
+					{headerActions && (
+						<div className={STYLES.ABSOLUTE_RIGHT_CENTER}>
+							<div className={STYLES.FLEX_SHRINK_0}>
+								{headerActions}
+							</div>
+						</div>
+					)}
+				</div>
 			)}
-			<SectionPanelContent>
+
+			{/* Left/Right 정렬 시 기존 flex 방식 사용 */}
+			{hasHeader && titleAlign !== 'center' && (
+				<div className={`flex ${STYLES.FLEX_SHRINK_0} items-center ${STYLES.HEADER_PADDING} ${STYLES.HEADER_BACKGROUND} ${headerHeight}`}>
+					{/* 왼쪽 영역: 아이콘 */}
+					{icon && (
+						<div className="flex justify-start items-center h-full shrink-0">
+							<span className={STYLES.FLEX_SHRINK_0}>{icon}</span>
+						</div>
+					)}
+					{!icon && (
+						<div className="flex justify-start items-center w-1 h-full"></div>
+					)}
+
+					{/* 가운데 영역: 타이틀과 부제목 */}
+					<div className={`flex flex-1 items-center px-2 min-w-0 h-full ${justifyClasses[titleAlign]}`}>
+						{title && (
+							<div className={`${STYLES.TITLE_WRAPPER} ${textClasses[titleAlign]}`}>
+								<div className={STYLES.TITLE_STYLE}>
+									{typeof title === 'string' && (
+										<h2 className={STYLES.TITLE_ELEMENT}>{title}</h2>
+									)}
+									{typeof title !== 'string' && title}
+								</div>
+								{subtitle && (
+									<span className={STYLES.SUBTITLE_STYLE}>
+										{subtitle}
+									</span>
+								)}
+							</div>
+						)}
+					</div>
+
+					{/* 오른쪽 영역: 헤더 액션 */}
+					{headerActions && (
+						<div className="flex justify-end items-center h-full shrink-0">
+							<div className={STYLES.FLEX_SHRINK_0}>
+								{headerActions}
+							</div>
+						</div>
+					)}
+					{!headerActions && (
+						<div className="flex justify-end items-center w-1 h-full"></div>
+					)}
+				</div>
+			)}
+			<SectionPanelContent contentPadding={contentPadding}>
 				{children}
 			</SectionPanelContent>
 		</div>
@@ -126,9 +157,10 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 // 독립적으로 사용할 수 있는 콘텐츠 컴포넌트
 export const SectionPanelContent: React.FC<SectionPanelContentProps> = ({
 	children,
+	contentPadding = "p-4", // 기본값 설정
 }) => {
 	return (
-		<div className="flex-1 bg-serial-2">
+		<div className={`flex-1 ${STYLES.CONTENT_BACKGROUND} ${contentPadding}`}>
 			{children}
 		</div>
 	);

@@ -427,14 +427,12 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         subtitle="거주자의 개인 정보를 관리합니다."
         icon={<User size={18} />}
       >
-        <div className="p-4">
-          <GridFormAuto 
-            fields={fields}
-            gap="16px"
-            bottomLeftActions={bottomLeftActions}
-            bottomRightActions={bottomRightActions}
-          />
-        </div>
+        <GridFormAuto 
+          fields={fields}
+          gap="16px"
+          bottomLeftActions={bottomLeftActions}
+          bottomRightActions={bottomRightActions}
+        />
       </SectionPanel>
 
       {/* 현재 거주지 정보 */}
@@ -444,13 +442,11 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         icon={<Building size={18} />}
       >
         {currentResidence?.instance ? (
-          <div className="p-4">
-            <GridFormAuto 
-              fields={currentResidenceFields}
-              gap="16px"
-              bottomRightActions={null}
-            />
-          </div>
+          <GridFormAuto 
+            fields={currentResidenceFields}
+            gap="16px"
+            bottomRightActions={null}
+          />
         ) : (
           <div className="py-8 text-center text-muted-foreground">
             현재 연결된 거주지가 없습니다.

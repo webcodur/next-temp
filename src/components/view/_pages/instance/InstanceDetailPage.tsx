@@ -320,7 +320,7 @@ export default function InstanceDetailPage() {
                 isValid={isValid}
               />
               
-              {/* 거주민 목록 | 차량 목록 */}
+              {/* 연결된 거주민 | 차량 목록 */}
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <InstanceResidentList 
                   residentInstances={instance.residentInstance}

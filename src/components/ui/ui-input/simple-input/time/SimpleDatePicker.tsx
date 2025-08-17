@@ -282,7 +282,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
 					wrapperClassName="w-full"
 					popperPlacement="bottom-start"
 				/>

@@ -13,7 +13,7 @@ import { Info } from 'lucide-react';
 
 // #region GridForm.Row 컴포넌트
 const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivElement>> = ({
-	align = 'center',
+	align = 'start',
 	children,
 }) => {
 	const context = React.useContext(GridFormContext);
@@ -125,11 +125,13 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 				)}
 				{contentElement && (
 					<div className={cn(
-						'px-3 py-2 bg-background',
+						'flex items-start px-3 py-2 bg-background',
 						'min-h-full',
 						alignClasses[align]
 					)}>
-						{(contentElement as React.ReactElement<GridFormContentProps>)?.props.children}
+						<div className="w-full">
+							{(contentElement as React.ReactElement<GridFormContentProps>)?.props.children}
+						</div>
 					</div>
 				)}
 			</div>

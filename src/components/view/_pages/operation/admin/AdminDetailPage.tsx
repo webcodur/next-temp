@@ -256,7 +256,6 @@ export default function AdminDetailPage() {
 
       {/* 관리자 상세 정보 섹션 */}
       <SectionPanel title="관리자 상세 정보">
-        <div className="p-6">
           <AdminForm
             mode="edit"
             admin={admin}
@@ -270,7 +269,6 @@ export default function AdminDetailPage() {
             hasChanges={hasChanges}
             isValid={isValid}
           />
-        </div>
       </SectionPanel>
 
       {/* 비밀번호 설정 섹션 */}

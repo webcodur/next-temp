@@ -7,6 +7,7 @@ import { useBackNavigation } from '@/hooks/useBackNavigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleCheckbox';
@@ -340,12 +341,13 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         subtitle={`${getViolationTypeText(violation.violationType)} | ${new Date(violation.violationTime).toLocaleDateString('ko-KR')}`}
         leftActions={
           <Button
-            variant="ghost"
-            size="sm"
+            variant="secondary"
+            size="default"
             onClick={handleBack}
             title="뒤로가기"
           >
             <ArrowLeft size={16} />
+            뒤로가기
           </Button>
         }
       />
@@ -386,8 +388,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
             subtitle="위반 사항을 빠르게 처리합니다."
             icon={<AlertTriangle size={18} />}
           >
-            <div className="p-4">
-              <GridFormAuto fields={fields} className="overflow-visible" />
+            <GridFormAuto fields={fields} className="overflow-visible" />
               <div className="flex gap-2 justify-end mt-4">
                 <Button
                   variant="primary"
@@ -397,7 +398,6 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                   {processing ? '처리 중...' : '처리 완료'}
                 </Button>
               </div>
-            </div>
           </SectionPanel>
         );
       })()}
@@ -559,9 +559,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 subtitle="위반 사항의 상세 내용과 시스템 기록 정보입니다."
                 icon={<Info size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={readOnlyFields} />
-                </div>
+                <GridFormAuto fields={readOnlyFields} />
               </SectionPanel>
             );
         })()}
@@ -719,11 +717,12 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '심각도',
                 rules: '1-10 범위',
                 component: (
-                  <SimpleTextInput
-                    type="number"
-                    value={editForm.severityLevel.toString()}
-                    onChange={(value) => handleEditInputChange('severityLevel', parseInt(value) || 1)}
+                  <SimpleNumberInput
+                    value={editForm.severityLevel}
+                    onChange={(value) => handleEditInputChange('severityLevel', typeof value === 'number' ? value : 1)}
                     placeholder="1-10 사이의 값"
+                    min={1}
+                    max={10}
                   />
                 )
               },
@@ -732,11 +731,12 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 label: '벌점',
                 rules: '0-100 범위',
                 component: (
-                  <SimpleTextInput
-                    type="number"
-                    value={editForm.penaltyPoints.toString()}
-                    onChange={(value) => handleEditInputChange('penaltyPoints', parseInt(value) || 0)}
+                  <SimpleNumberInput
+                    value={editForm.penaltyPoints}
+                    onChange={(value) => handleEditInputChange('penaltyPoints', typeof value === 'number' ? value : 0)}
                     placeholder="0-100 사이의 값"
+                    min={0}
+                    max={100}
                   />
                 )
               }
@@ -748,8 +748,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                 subtitle="위반 사항의 상태 및 세부 정보를 수정할 수 있습니다."
                 icon={<Edit size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={editableFields} />
+                <GridFormAuto fields={editableFields} />
                   {/* 상세 정보 액션 버튼 */}
                   <div className="flex gap-2 justify-end mt-6">
                     <Button
@@ -768,7 +767,6 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                       {saving ? '저장 중...' : '저장'}
                     </Button>
                   </div>
-                </div>
               </SectionPanel>
             );
         })()}

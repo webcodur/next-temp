@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Home, Plus, MapPin } from 'lucide-react';
+import { Plus, MapPin } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
@@ -91,8 +91,8 @@ export default function CurrentResidenceInfo({
             <div className="space-y-4">
               <GridFormAuto 
                 fields={currentResidenceFields}
-                title="현재 거주지 정보"
-                subtitle="거주자가 현재 거주 중인 세대의 상세 정보입니다."
+                // title="현재 거주지 정보"
+                // subtitle="거주자가 현재 거주 중인 세대의 상세 정보입니다."
                 gap="16px"
                 bottomRightActions={null}
               />
@@ -106,7 +106,7 @@ export default function CurrentResidenceInfo({
             variant="primary" 
             size="default"
             onClick={onCreateRelation}
-            title="세대 관계 생성"
+            title="세대 연결 생성"
           >
             <Plus size={16} />
             거주지 연결

@@ -164,7 +164,7 @@ export default function InstanceResidentList({
   if (loading) {
     return (
       <SectionPanel 
-        title="거주민 목록" 
+        title="연결된 거주민" 
         subtitle="세대에 등록된 거주민을 관리합니다."
         icon={<Users size={18} />}
         headerActions={(
@@ -198,7 +198,7 @@ export default function InstanceResidentList({
       <SectionPanel 
       title={
         <span className="flex gap-2 items-center">
-          거주민 목록
+          연결된 거주민
           <span className="text-sm text-muted-foreground">({residentInstances.length}명)</span>
         </span>
       }

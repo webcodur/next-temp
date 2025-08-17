@@ -21,6 +21,7 @@ import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 // API 호출
 import { searchConfigs } from '@/services/config/config$_GET';
@@ -356,10 +357,9 @@ export default function ConfigManagement({
 
       case 'INTEGER':
         return (
-          <SimpleTextInput
-            type="number"
-            value={formData.value}
-            onChange={(value) => handleFieldChange('value', value)}
+          <SimpleNumberInput
+            value={formData.value === '' ? '' : parseInt(formData.value)}
+            onChange={(value) => handleFieldChange('value', value === '' ? '' : value.toString())}
             placeholder="숫자를 입력하세요"
             disabled={isSubmitting}
           />

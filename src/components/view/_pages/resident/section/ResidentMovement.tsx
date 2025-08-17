@@ -35,12 +35,12 @@ export default function ResidentMovement({
     <div className="space-y-6">
       <SectionPanel 
         title="세대 이전"
-        subtitle="거주자의 세대 이동 및 이동 이력을 관리합니다."
+        subtitle="거주자의 세대 이전 및 이동 이력을 관리합니다."
         icon={<MoveRight size={18} />}
       >
         <div className="space-y-6">
           
-          {/* 세대 이동 섹션 */}
+          {/* 세대 이전 섹션 */}
           <ResidentMoveSection 
             resident={resident}
             currentResidence={currentResidence}

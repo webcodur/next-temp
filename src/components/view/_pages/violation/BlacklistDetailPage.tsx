@@ -252,7 +252,7 @@ export default function BlacklistDetailPage() {
         rightActions={
           blacklistData.isActive ? (
             <Button
-              variant="destructive"
+              variant="primary"
               size="default"
               onClick={handleUnblockClick}
               title="블랙리스트 해제"

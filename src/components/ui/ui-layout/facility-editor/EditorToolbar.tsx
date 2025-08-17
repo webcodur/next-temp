@@ -1,6 +1,7 @@
 import { CellType, FacilityLayout, MIN_CELL_SIZE, MAX_CELL_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE } from '@/types/facility-editor';
 import { Undo, Redo, Square, Armchair, Package, Grid, Maximize2 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 // #region 타입 정의
 interface EditorToolbarProps {
@@ -169,13 +170,13 @@ export const EditorToolbar = ({
           
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-500">너비:</span>
-            <input
-              type="number"
+            <SimpleNumberInput
+              value={layout.gridSize.width}
+              onChange={(value) => onGridSizeChange(typeof value === 'number' ? value : MIN_GRID_SIZE.width, layout.gridSize.height)}
               min={MIN_GRID_SIZE.width}
               max={MAX_GRID_SIZE.width}
-              value={layout.gridSize.width}
-              onChange={(e) => onGridSizeChange(parseInt(e.target.value), layout.gridSize.height)}
-              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-serial-1 border-none focus:outline-none focus:neu-flat"
+              className="w-16"
+              showIcon={false}
             />
           </div>
           
@@ -183,13 +184,13 @@ export const EditorToolbar = ({
           
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-500">높이:</span>
-            <input
-              type="number"
+            <SimpleNumberInput
+              value={layout.gridSize.height}
+              onChange={(value) => onGridSizeChange(layout.gridSize.width, typeof value === 'number' ? value : MIN_GRID_SIZE.height)}
               min={MIN_GRID_SIZE.height}
               max={MAX_GRID_SIZE.height}
-              value={layout.gridSize.height}
-              onChange={(e) => onGridSizeChange(layout.gridSize.width, parseInt(e.target.value))}
-              className="w-16 px-2 py-1 text-sm rounded neu-inset bg-serial-1 border-none focus:outline-none focus:neu-flat"
+              className="w-16"
+              showIcon={false}
             />
           </div>
         </div>

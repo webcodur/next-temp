@@ -8,7 +8,7 @@ import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layou
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { updateInstanceServiceConfig } from '@/services/instances/instances@id_service-config_PUT';
 import { InstanceDetail } from '@/types/instance';
 
@@ -166,16 +166,12 @@ export default function InstanceServiceConfigSection({
             label: '임시 차량 한도',
             rules: '0 이상 숫자',
             component: (
-              <SimpleTextInput
-                type="number"
-                value={formData.tempCarLimit.toString()}
-                onChange={(value) => handleFieldChange('tempCarLimit', parseInt(value) || 0)}
+              <SimpleNumberInput
+                value={formData.tempCarLimit}
+                onChange={(value) => handleFieldChange('tempCarLimit', typeof value === 'number' ? value : 0)}
                 placeholder="임시 차량 한도"
                 disabled={isSubmitting}
-                validationRule={{
-                  type: 'free',
-                  mode: 'edit'
-                }}
+                min={0}
               />
             )
           }

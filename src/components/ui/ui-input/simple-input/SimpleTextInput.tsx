@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, X, Binary, Eye, EyeOff } from 'lucide-react';
+import { Type, X, Eye, EyeOff } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
@@ -12,7 +12,7 @@ interface SimpleTextInputProps {
 	placeholder?: string;
 	disabled?: boolean;
 	className?: string;
-	type?: 'text' | 'email' | 'password' | 'number';
+	type?: 'text' | 'email' | 'password';
 	validationRule?: ValidationRule;
 	colorVariant?: 'primary' | 'secondary';
 	autocomplete?: string;
@@ -103,11 +103,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				
 				{/* 왼쪽 아이콘 */}
 				{showIcon && (
-					type === 'number' ? (
-						<Binary className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
-					) : (
-						<Type className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
-					)
+					<Type className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 				)}
 
 				{/* 중앙 입력 필드 */}
@@ -122,7 +118,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					autoComplete={autocomplete}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
 				/>
 
 				{/* 비밀번호 보기/숨기기 버튼 */}

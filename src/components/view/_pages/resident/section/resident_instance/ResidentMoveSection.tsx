@@ -92,19 +92,19 @@ export default function ResidentMoveSection({
       });
 
       if (result.success) {
-        const successMessage = '거주자 세대 이동이 성공적으로 완료되었습니다.';
+        const successMessage = '거주자 세대 이전이 성공적으로 완료되었습니다.';
         setMoveSuccess(successMessage);
         setSelectedInstanceId(null);
         setMoveMemo('');
         onMoveComplete(true, successMessage);
       } else {
-        const errorMessage = `세대 이동에 실패했습니다: ${result.errorMsg}`;
+        const errorMessage = `세대 이전에 실패했습니다: ${result.errorMsg}`;
         setMoveError(errorMessage);
         onMoveComplete(false, errorMessage);
       }
     } catch (error) {
-      console.error('세대 이동 중 오류:', error);
-      const errorMessage = '세대 이동 중 오류가 발생했습니다.';
+      console.error('세대 이전 중 오류:', error);
+      const errorMessage = '세대 이전 중 오류가 발생했습니다.';
       setMoveError(errorMessage);
       onMoveComplete(false, errorMessage);
     } finally {
@@ -170,7 +170,7 @@ export default function ResidentMoveSection({
             action="save"
             onClick={handleExecuteMove}
             disabled={!isMoveValid || isMoving || isSearching}
-            title={isMoving ? '이동 중...' : !isMoveValid ? '세대을 선택해주세요' : '세대 이동 실행'}
+            title={isMoving ? '이동 중...' : !isMoveValid ? '세대을 선택해주세요' : '세대 이전 실행'}
           >
             {isMoving ? '이동 중...' : '이동 실행'}
           </CrudButton>

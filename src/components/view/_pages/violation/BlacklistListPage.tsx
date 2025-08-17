@@ -18,6 +18,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/ui-effe
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 
+// Simple Input 컴포넌트들
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
+
 // API 호출
 import { searchBlacklists } from '@/services/blacklist/blacklists$_GET';
 import { unblockBlacklist } from '@/services/blacklist/blacklists@id_unblock_PATCH';
@@ -611,16 +614,14 @@ export default function BlacklistListPage() {
                 </select>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium">차단 기간 (일)</label>
-                <input
-                  type="number"
-                  value={createFormData.blockDays}
-                  onChange={(e) => handleCreateFormChange('blockDays', e.target.value)}
+                <SimpleNumberInput
+                  label="차단 기간 (일)"
+                  value={createFormData.blockDays === '' ? '' : parseInt(createFormData.blockDays)}
+                  onChange={(value) => handleCreateFormChange('blockDays', value === '' ? '' : value.toString())}
                   placeholder="차단 기간 (기본: 30일)"
-                  className="px-3 py-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary/20"
                   disabled={isCreating}
-                  min="1"
-                  max="999"
+                  min={1}
+                  max={999}
                 />
                 <div className="mt-1 text-xs text-muted-foreground">
                   미입력 시 30일로 설정됩니다.

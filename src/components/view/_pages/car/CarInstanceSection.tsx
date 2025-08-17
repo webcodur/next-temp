@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -10,6 +11,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // 더 이상 사용하지 않음
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
@@ -32,6 +34,7 @@ export default function CarInstanceSection({
   onDataChange 
 }: CarInstanceSectionProps) {
   // #region 상태 관리
+  const router = useRouter();
   const [instanceList, setInstanceList] = useState<CarInstanceResidentDetail[]>([]);
   const [loading, setLoading] = useState(false);
   
@@ -188,6 +191,12 @@ export default function CarInstanceSection({
     setDeleteTargetId(instanceId);
     setDeleteConfirmOpen(true);
   };
+
+  const handleRowClick = (item: CarInstanceResidentDetail) => {
+    if (item.carInstance?.instanceId) {
+      router.push(`/parking/occupancy/instance/${item.carInstance.instanceId}`);
+    }
+  };
   // #endregion
 
   // #region 컬럼 정의
@@ -286,16 +295,15 @@ export default function CarInstanceSection({
         <div className="space-y-4">
           
           {/* 테이블 */}
-          <div className="p-4">
-            <PaginatedTable
+          <PaginatedTable
               data={instanceList as unknown as Record<string, unknown>[]}
               columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
               pageSize={5}
               pageSizeOptions={[5, 10, 20]}
               itemName="세대 연결"
               isFetching={loading}
+              onRowClick={(item) => handleRowClick(item as unknown as CarInstanceResidentDetail)}
             />
-          </div>
         </div>
       </SectionPanel>
 
@@ -315,16 +323,12 @@ export default function CarInstanceSection({
                 required: true,
                 rules: '연결할 세대 선택',
                 component: (
-                  <SimpleTextInput
-                    type="number"
-                    value={createFormData.instanceId}
-                    onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value }))}
+                  <SimpleNumberInput
+                    value={createFormData.instanceId ? parseInt(createFormData.instanceId) : ''}
+                    onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value.toString() }))}
                     placeholder="세대 ID"
                     disabled={isSubmitting}
-                    validationRule={{
-                      type: 'free',
-                      mode: 'create'
-                    }}
+                    min={1}
                   />
                 )
               },

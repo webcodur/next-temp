@@ -25,6 +25,7 @@ import { Construction } from 'lucide-react';
 import { ParkingBarrier, OperationMode } from '@/types/parking';
 import { SimpleRadioGroup } from '@/components/ui/ui-input/simple-input/SimpleRadioGroup';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 import BarrierCard from '../barrierManager/barrierCard/BarrierCard';
 
@@ -140,12 +141,12 @@ const PolicyPanel: React.FC<PolicyPanelProps> = ({
         {/* 블랙리스트 등록 기준 */}
         <div className="flex gap-3 items-center">
           <span className="text-sm font-medium font-multilang shrink-0">블랙리스트 등록 기준</span>
-          <input
-            type="number"
-            min={1}
-            className="px-3 py-1.5 w-16 text-center rounded-md outline-none neu-flat bg-background focus:neu-inset"
+          <SimpleNumberInput
             value={warningCount}
-            onChange={(e) => onWarningCountChange(Number(e.target.value))}
+            onChange={(value) => onWarningCountChange(typeof value === 'number' ? value : 1)}
+            min={1}
+            className="w-16"
+            showIcon={false}
           />
           <span className="text-sm font-multilang shrink-0">회 이상 경고 시</span>
         </div>

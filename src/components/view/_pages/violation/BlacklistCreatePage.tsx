@@ -15,6 +15,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 // API 호출
 import { createManualBlacklist } from '@/services/blacklist/blacklists_manual_POST';
@@ -145,12 +146,12 @@ export default function BlacklistCreatePage() {
             placeholder="등록 사유를 선택하세요"
           />
           
-          <SimpleTextInput
+          <SimpleNumberInput
             label="차단 기간 (일)"
-            value={formData.blockDays}
-            onChange={(value) => handleFormChange('blockDays', value)}
+            value={formData.blockDays === '' ? '' : parseInt(formData.blockDays)}
+            onChange={(value) => handleFormChange('blockDays', value === '' ? '' : value.toString())}
             placeholder="차단 기간을 입력하세요 (기본: 30일)"
-            type="number"
+            min={1}
           />
         </div>
         

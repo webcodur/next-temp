@@ -1,52 +1,32 @@
 /* 메뉴 설명: 인스턴스 관리 목록 페이지 */
 'use client';
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 // Plus, Trash2 아이콘은 CrudButton에서 처리
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
+import { BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
-
-// Field 컴포넌트들
-import FieldText from '@/components/ui/ui-input/field/text/FieldText';
-import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
+import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 
 // API 호출
-import { searchInstances } from '@/services/instances/instances$_GET';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 
 // 타입 정의
-import { Instance, InstanceType } from '@/types/instance';
-import { Option } from '@/components/ui/ui-input/field/core/types';
+import { Instance } from '@/types/instance';
 
-// #region 검색 필터 인터페이스
-interface SearchFilters {
-  address1Depth: string;
-  address2Depth: string;
-  instanceType: string;
-  instanceName: string;
-}
-// #endregion
+
 
 export default function InstancesListPage() {
   const router = useRouter();
   
+  // 안정한 빈 배열
+  const excludeInstanceIds = useMemo(() => [], []);
+  
   // #region 상태 관리
-  const [instanceList, setInstanceList] = useState<Instance[]>([]);
-  
-  // 검색 필터 상태
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
-    address1Depth: '',
-    address2Depth: '',
-    instanceType: '',
-    instanceName: '',
-  });
-  
   // 다이얼로그 관련 상태
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
@@ -55,75 +35,11 @@ export default function InstancesListPage() {
   const [dialogMessage, setDialogMessage] = useState('');
   // #endregion
 
-  // #region 인스턴스 타입 옵션
-  const instanceTypeOptions: Option[] = useMemo(() => [
-    { value: 'GENERAL', label: '일반' },
-    { value: 'TEMP', label: '임시' },
-    { value: 'COMMERCIAL', label: '상업' },
-  ], []);
-  // #endregion
 
-  // #region 데이터 로드
-  const loadInstanceData = useCallback(async (filters?: Partial<SearchFilters>) => {
-    try {
-      const searchParams = {
-        page: 1,
-        limit: 100,
-        ...(filters?.address1Depth && { address1Depth: filters.address1Depth }),
-        ...(filters?.address2Depth && { address2Depth: filters.address2Depth }),
-        ...(filters?.instanceType && { instanceType: filters.instanceType as InstanceType }),
-        ...(filters?.instanceName && { instanceName: filters.instanceName }),
-      };
 
-      const result = await searchInstances(searchParams);
-      
-      if (result.success) {
-        setInstanceList(result.data?.data || []);
-      } else {
-        console.error('인스턴스 목록 로드 실패:', result.errorMsg);
-        setInstanceList([]);
-      }
-    } catch (error) {
-      console.error('인스턴스 목록 로드 중 오류:', error);
-      setInstanceList([]);
-    }
-  }, []);
 
-  useEffect(() => {
-    loadInstanceData();
-  }, [loadInstanceData]);
-  // #endregion
 
-  // #region 검색 관련 핸들러
-  const handleSearch = useCallback(() => {
-    const activeFilters = Object.entries(searchFilters).reduce((acc, [key, value]) => {
-      if (value.trim()) {
-        acc[key as keyof SearchFilters] = value.trim();
-      }
-      return acc;
-    }, {} as Partial<SearchFilters>);
 
-    loadInstanceData(activeFilters);
-  }, [searchFilters, loadInstanceData]);
-
-  const handleReset = useCallback(() => {
-    const resetFilters = {
-      address1Depth: '',
-      address2Depth: '',
-      instanceType: '',
-      instanceName: '',
-    };
-    setSearchFilters(resetFilters);
-    loadInstanceData({});
-  }, [loadInstanceData]);
-
-  const updateFilter = useCallback((field: keyof SearchFilters, value: string) => {
-    setSearchFilters(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  }, []);
-  // #endregion
 
   // #region 이벤트 핸들러
   const handleCreateClick = useCallback(() => {
@@ -134,11 +50,7 @@ export default function InstancesListPage() {
     router.push(`/parking/occupancy/instance/${instance.id}`);
   }, [router]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  }, [handleSearch]);
+
 
   const handleDeleteClick = useCallback((id: number) => {
     setDeleteTargetId(id);
@@ -152,8 +64,9 @@ export default function InstancesListPage() {
       const result = await deleteInstance(deleteTargetId);
       
       if (result.success) {
-        setInstanceList((prev) => prev.filter((instance) => instance.id !== deleteTargetId));
-        setDialogMessage('세대이 성공적으로 삭제되었습니다.');
+        // 삭제 성공 시 검색 결과를 새로고침하기 위해 페이지 새로고침이나 
+        // 상위 컴포넌트에서 다시 검색을 실행하도록 함
+        setDialogMessage('세대가 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
         setDialogMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
@@ -171,100 +84,79 @@ export default function InstancesListPage() {
   // #endregion
 
   // #region 검색 필드 구성
-  const searchFields = useMemo(() => [
+  const searchFields: InstanceSearchField[] = useMemo(() => [
     {
       key: 'address1Depth',
       label: '동 정보 검색',
-      element: (
-        <FieldText
-          id="search-address1"
-          label="동 정보"
-          placeholder="동 정보를 입력하세요"
-          value={searchFilters.address1Depth}
-          onChange={(value) => updateFilter('address1Depth', value)}
-          showSearchIcon={true}
-          onKeyDown={handleKeyDown}
-        />
-      ),
+      placeholder: '동 정보를 입력하세요',
+      type: 'text',
       visible: true,
     },
     {
       key: 'address2Depth',
       label: '호수 정보 검색',
-      element: (
-        <FieldText
-          id="search-address2"
-          label="호수 정보"
-          placeholder="호수 정보를 입력하세요"
-          value={searchFilters.address2Depth}
-          onChange={(value) => updateFilter('address2Depth', value)}
-          showSearchIcon={true}
-          onKeyDown={handleKeyDown}
-        />
-      ),
+      placeholder: '호수 정보를 입력하세요',
+      type: 'text',
       visible: true,
     },
     {
       key: 'instanceType',
       label: '세대 타입 검색',
-      element: (
-        <FieldSelect
-          id="search-type"
-          label="세대 타입"
-          placeholder="타입을 선택하세요"
-          options={instanceTypeOptions}
-          value={searchFilters.instanceType}
-          onChange={(value) => updateFilter('instanceType', value)}
-        />
-      ),
+      placeholder: '타입을 선택하세요',
+      type: 'select',
       visible: true,
     },
     {
       key: 'instanceName',
       label: '세대명 검색',
-      element: (
-        <FieldText
-          id="search-name"
-          label="세대명"
-          placeholder="세대명을 입력하세요"
-          value={searchFilters.instanceName}
-          onChange={(value) => updateFilter('instanceName', value)}
-          showSearchIcon={true}
-          onKeyDown={handleKeyDown}
-        />
-      ),
+      placeholder: '세대명을 입력하세요',
+      type: 'text',
       visible: true,
     },
-  ], [searchFilters, instanceTypeOptions, updateFilter, handleKeyDown]);
+  ], []);
   // #endregion
 
   // #region 컬럼 정의
-  const columns: BaseTableColumn<Instance>[] = [
+  const columns: BaseTableColumn<Instance>[] = useMemo(() => [
     {
       key: 'id',
       header: 'ID',
-      width: '6%',
+      width: '4%',
       align: 'center',
     },
     {
       key: 'dongHosu',
       header: '동호수',
       align: 'start',
-      width: '15%',
+      width: '8%',
       cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
     },
     {
-      key: 'address3Depth',
-      header: '기타 주소 정보',
+      key: 'name',
+      header: '세대명',
       align: 'start',
-      width: '15%',
-      cell: (item: Instance) => item.address3Depth || '-',
+      width: '10%',
+      cell: (item: Instance) => item.name || '-',
+    },
+    {
+      key: 'ownerName',
+      header: '소유자',
+      align: 'start',
+      width: '8%',
+      cell: (item: Instance) => item.ownerName || '-',
+    },
+    {
+      key: 'phone',
+      header: '연락처',
+      align: 'start',
+      width: '10%',
+      cell: (item: Instance) => item.phone || '-',
     },
     {
       key: 'instanceType',
       header: '타입',
       align: 'center',
-      width: '8%',
+      width: '6%',
       cell: (item: Instance) => {
         const typeMap = {
           GENERAL: '일반',
@@ -275,29 +167,51 @@ export default function InstancesListPage() {
       },
     },
     {
-      key: 'parkinglotId',
-      header: '주차장 ID',
+      key: 'residentCount',
+      header: '거주민',
       align: 'center',
-      width: '10%',
+      width: '6%',
+      cell: (item: Instance) => `${item.residentInstance?.length || 0}명`,
+    },
+    {
+      key: 'carCount',
+      header: '차량',
+      align: 'center',
+      width: '6%',
+      cell: (item: Instance) => `${item.carInstance?.length || 0}대`,
+    },
+    {
+      key: 'address3Depth',
+      header: '기타주소',
+      align: 'start',
+      width: '8%',
+      cell: (item: Instance) => item.address3Depth || '-',
     },
     {
       key: 'memo',
       header: '메모',
       align: 'start',
-      width: '15%',
+      width: '10%',
       cell: (item: Instance) => item.memo || '-',
     },
     {
-      key: 'createdAt',
-      header: '등록일자',
+      key: 'updatedAt',
+      header: '수정일',
       align: 'center',
-      width: '12%',
+      width: '8%',
+      type: 'datetime',
+    },
+    {
+      key: 'createdAt',
+      header: '등록일',
+      align: 'center',
+      width: '8%',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '10%',
+      width: '6%',
       cell: (item: Instance) => (
         <div className="flex gap-1 justify-center">
           <CrudButton
@@ -313,7 +227,7 @@ export default function InstancesListPage() {
         </div>
       ),
     },
-  ];
+  ], [handleDeleteClick]);
   // #endregion
 
   // #region 렌더링
@@ -334,23 +248,19 @@ export default function InstancesListPage() {
         }
       />
 
-      {/* 고급 검색 */}
-      <AdvancedSearch
-        fields={searchFields}
-        onSearch={handleSearch}
-        onReset={handleReset}
-        defaultOpen={false}
-      />
-      
-      {/* 테이블 */}
-      <PaginatedTable
-        data={instanceList as unknown as Record<string, unknown>[]}
-        columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
-        onRowClick={handleRowClick as unknown as (item: Record<string, unknown>, index: number) => void}
+      {/* 세대 검색 및 목록 */}
+      <InstanceSearchSection
+        searchFields={searchFields}
+        tableType="paginated"
+        columns={columns}
+        onRowClick={handleRowClick}
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="세대"
-        minWidth="1000px"
+        minWidth="1400px"
+        showSection={false}
+        defaultSearchOpen={false}
+        excludeInstanceIds={excludeInstanceIds}
       />
 
       {/* 삭제 확인 다이얼로그 */}

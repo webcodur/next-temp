@@ -1,10 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { searchParkingDeviceCommandLogs } from '@/services/devices/devices@id_command-logs$_GET';
 import { ParkingDevice, ParkingDeviceCommandLog } from '@/types/device';
@@ -13,9 +10,13 @@ interface DeviceCommandLogSectionProps {
   device: ParkingDevice;
 }
 
-export default function DeviceCommandLogSection({ 
+export interface DeviceCommandLogSectionRef {
+  refresh: () => void;
+}
+
+const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCommandLogSectionProps>(({ 
   device 
-}: DeviceCommandLogSectionProps) {
+}, ref) => {
   // #region 상태 관리
   const [commandLogs, setCommandLogs] = useState<ParkingDeviceCommandLog[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,9 +58,13 @@ export default function DeviceCommandLogSection({
   // #endregion
 
   // #region 핸들러
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     loadCommandLogs(currentPage, pageSize);
-  };
+  }, [loadCommandLogs, currentPage, pageSize]);
+
+  useImperativeHandle(ref, () => ({
+    refresh: handleRefresh
+  }), [handleRefresh]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -171,26 +176,8 @@ export default function DeviceCommandLogSection({
   // #endregion
 
   return (
-    <div className="space-y-6">
-      {/* 명령 로그 섹션 */}
-      <TitleRow 
-        title="명령 실행 로그" 
-        subtitle="차단기 명령 실행 이력을 조회합니다."
-        endContent={(
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={loading}
-            title="새로고침"
-          >
-            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-            새로고침
-          </Button>
-        )}
-      />
-
-        {/* 테이블 */}
+    <>
+      {/* 테이블 */}
         <PaginatedTable
           data={commandLogs as unknown as Record<string, unknown>[]}
           columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
@@ -203,6 +190,10 @@ export default function DeviceCommandLogSection({
           onPageSizeChange={handlePageSizeChange}
           minWidth="1000px"
         />
-    </div>
+    </>
   );
-}
+});
+
+DeviceCommandLogSection.displayName = 'DeviceCommandLogSection';
+
+export default DeviceCommandLogSection;

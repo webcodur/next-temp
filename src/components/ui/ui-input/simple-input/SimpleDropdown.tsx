@@ -174,7 +174,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 					{/* 표시 텍스트 */}
 					<div
 						ref={triggerRef}
-						className={`w-full h-full flex items-center ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium cursor-pointer ${
+						className={`w-full h-full flex items-center justify-start ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium cursor-pointer ${
 							selectedOption ? 'text-foreground' : 'text-muted-foreground'
 						}`}
 						onClick={handleToggle}
@@ -182,7 +182,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 						tabIndex={disabled ? -1 : 0}
 						aria-expanded={isOpen}
 						aria-haspopup="listbox">
-						<span className="flex-1 select-none">
+						<span className="flex-1 text-start select-none">
 							{selectedOption ? selectedOption.label : placeholder}
 						</span>
 					</div>

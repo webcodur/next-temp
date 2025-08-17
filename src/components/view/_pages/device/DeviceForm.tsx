@@ -267,9 +267,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
               subtitle="차단기의 기본 설정을 관리합니다."
               icon={<Router size={18} />}
             >
-              <div className="p-4">
-                <GridFormAuto fields={basicFields} gap="16px" />
-              </div>
+              <GridFormAuto fields={basicFields} gap="16px" />
             </SectionPanel>
           );
         })()}
@@ -281,8 +279,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
         subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다."
         icon={<Settings size={18} />}
       >
-        <div className="p-4">
-          <GridFormAuto
+        <GridFormAuto
           fields={[
             {
               id: 'ip',
@@ -340,10 +337,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                 />
               )
             }
-          ]}
-          gap="16px"
-        />
-      </div>
+                      ]}
+            gap="16px"
+          />
       </SectionPanel>
 
       {/* 운영 설정 섹션 */}
@@ -352,8 +348,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
         subtitle="차단기 운영 상태 및 기능을 설정합니다."
         icon={<Settings size={18} />}
       >
-        <div className="p-4">
-          <GridFormAuto
+        <GridFormAuto
           fields={[
             {
               id: 'status',
@@ -429,10 +424,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                 />
               )
             }
-          ]}
-          gap="16px"
-        />
-      </div>
+                      ]}
+            gap="16px"
+          />
       </SectionPanel>
 
       {/* view/edit 모드에서만 표시되는 추가 정보 */}
@@ -442,8 +436,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
           subtitle="차단기의 시스템 관련 정보입니다."
           icon={<Info size={18} />}
         >
-          <div className="p-4">
-            <GridFormAuto
+          <GridFormAuto
             fields={[
               {
                 id: 'parkinglotId',
@@ -491,10 +484,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   />
                 )
               }
-            ]}
+                        ]}
             gap="16px"
           />
-          </div>
         </SectionPanel>
       )}
 

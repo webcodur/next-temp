@@ -4,77 +4,21 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
-import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
-import { ImageUrlInput } from '@/components/ui/ui-input/simple-input/ImageUrlInput';
-import { PickDate } from '@/components/ui/ui-input/datepicker/Datepicker';
+import ViolationForm, { ViolationFormData } from './ViolationForm';
 import { ArrowLeft, AlertTriangle } from 'lucide-react';
 import { createViolation } from '@/services/violations';
 import type { 
-  CreateCarViolationRequest,
-  CarViolationType,
-  ViolationReporterType
+  CreateCarViolationRequest
 } from '@/types/carViolation';
 
 // #region 타입 정의
-interface FormData {
-  carNumber: string;
-  violationType: CarViolationType;
-  violationCode: string;
-  violationLocation: string;
-  violationTime: Date | null;
-  description: string;
-  evidenceImageUrls: string[];
-  reporterType: ViolationReporterType;
-  reporterId: string;
-  severityLevel: number;
-  penaltyPoints: number;
-}
+// ViolationFormData는 ViolationForm.tsx에서 import
 // #endregion
 
 // #region 상수 정의
-const VIOLATION_TYPE_OPTIONS = [
-  { value: 'UNAUTHORIZED_PARKING', label: '무단 주차' },
-  { value: 'OVERTIME_PARKING', label: '초과 주차' },
-  { value: 'RESERVED_SPOT_VIOLATION', label: '지정석 위반' },
-  { value: 'FIRE_LANE_PARKING', label: '소방차로 주차' },
-  { value: 'DISABLED_SPOT_VIOLATION', label: '장애인 구역 위반' },
-  { value: 'DOUBLE_PARKING', label: '이중 주차' },
-  { value: 'BLOCKING_EXIT', label: '출구 차단' },
-  { value: 'NO_PERMIT_PARKING', label: '허가증 없는 주차' },
-  { value: 'EXPIRED_PERMIT', label: '허가증 만료' },
-  { value: 'SPEEDING', label: '과속' },
-  { value: 'NOISE_VIOLATION', label: '소음 위반' },
-  { value: 'VANDALISM', label: '기물 파손' },
-  { value: 'OTHER', label: '기타' },
-];
-
-const VIOLATION_CODE_MAPPING: Record<CarViolationType, string> = {
-  UNAUTHORIZED_PARKING: 'VP001',
-  OVERTIME_PARKING: 'VP002',
-  RESERVED_SPOT_VIOLATION: 'VP003',
-  FIRE_LANE_PARKING: 'VP004',
-  DISABLED_SPOT_VIOLATION: 'VP005',
-  DOUBLE_PARKING: 'VP006',
-  BLOCKING_EXIT: 'VP007',
-  NO_PERMIT_PARKING: 'VP008',
-  EXPIRED_PERMIT: 'VP009',
-  SPEEDING: 'VP010',
-  NOISE_VIOLATION: 'VP011',
-  VANDALISM: 'VP012',
-  OTHER: 'VP013',
-};
-
-const REPORTER_TYPE_OPTIONS = [
-  { value: 'SYSTEM', label: '시스템' },
-  { value: 'ADMIN', label: '관리자' },
-  { value: 'RESIDENT', label: '입주민' },
-  { value: 'SECURITY', label: '경비원' },
-];
-
-const INITIAL_FORM_DATA: FormData = {
+const INITIAL_FORM_DATA: ViolationFormData = {
   carNumber: '',
   violationType: 'UNAUTHORIZED_PARKING',
   violationCode: 'VP001',
@@ -93,32 +37,54 @@ export default function ViolationCreatePage() {
   const router = useRouter();
 
   // #region 상태 관리
-  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [formData, setFormData] = useState<ViolationFormData>(INITIAL_FORM_DATA);
+  const [originalData] = useState<ViolationFormData>(INITIAL_FORM_DATA); // create 모드에서는 변경하지 않음
   const [creating, setCreating] = useState(false);
   const [showBlacklistModal, setShowBlacklistModal] = useState(false);
   const [blacklistedCarNumber, setBlacklistedCarNumber] = useState('');
   // #endregion
 
-  // #region 폼 유효성 검사
-  const isFormValid = useMemo(() => {
+  // #region 변경 감지 및 유효성 검사
+  const hasChanges = useMemo(() => {
     return (
-      formData.carNumber.trim() !== '' &&
-      formData.violationCode.trim() !== '' &&
-      formData.violationTime !== null &&
+      formData.carNumber !== originalData.carNumber ||
+      formData.violationType !== originalData.violationType ||
+      formData.violationCode !== originalData.violationCode ||
+      formData.violationLocation !== originalData.violationLocation ||
+      formData.violationTime !== originalData.violationTime ||
+      formData.description !== originalData.description ||
+      JSON.stringify(formData.evidenceImageUrls) !== JSON.stringify(originalData.evidenceImageUrls) ||
+      formData.reporterType !== originalData.reporterType ||
+      formData.reporterId !== originalData.reporterId ||
+      formData.severityLevel !== originalData.severityLevel ||
+      formData.penaltyPoints !== originalData.penaltyPoints
+    );
+  }, [formData, originalData]);
+
+  const isValid = useMemo(() => {
+    return Boolean(
+      formData.carNumber.trim() &&
+      formData.violationCode.trim() &&
+      formData.violationTime &&
       formData.severityLevel >= 1 &&
       formData.penaltyPoints >= 1
     );
   }, [formData]);
 
   const canCreate = useMemo(() => {
-    return isFormValid && !creating;
-  }, [isFormValid, creating]);
+    return isValid && !creating;
+  }, [isValid, creating]);
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleInputChange = useCallback((field: keyof FormData, value: string | string[] | Date | null) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleFormChange = useCallback((data: ViolationFormData) => {
+    setFormData(data);
   }, []);
+
+  const handleReset = useCallback(() => {
+    if (!hasChanges) return;
+    setFormData(originalData);
+  }, [hasChanges, originalData]);
 
   const handleCancel = useCallback(() => {
     router.push('/parking/violation/history');
@@ -199,138 +165,21 @@ export default function ViolationCreatePage() {
           }
         />
 
-        {/* 메인 폼 */}
-        <div className="p-6 rounded-lg border bg-card border-border">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <SimpleTextInput
-              label="차량번호 *"
-              value={formData.carNumber}
-              onChange={(value) => handleInputChange('carNumber', value)}
-              placeholder="차량번호를 입력하세요 (예: 12가3456)"
-            />
-            
-            <SimpleDropdown
-              label="위반 유형 *"
-              value={formData.violationType}
-              options={VIOLATION_TYPE_OPTIONS}
-              onChange={(value) => {
-                const selectedViolationType = value as CarViolationType;
-                handleInputChange('violationType', selectedViolationType);
-                handleInputChange('violationCode', VIOLATION_CODE_MAPPING[selectedViolationType]);
-              }}
-            />
-            
-            <SimpleDropdown
-              label="위반 코드 *"
-              value={formData.violationCode}
-              options={VIOLATION_TYPE_OPTIONS.map(option => ({
-                value: VIOLATION_CODE_MAPPING[option.value as CarViolationType],
-                label: `${VIOLATION_CODE_MAPPING[option.value as CarViolationType]} - ${option.label}`
-              }))}
-              onChange={(value) => {
-                handleInputChange('violationCode', value);
-                // 위반 코드에 해당하는 위반 유형도 함께 업데이트
-                const violationType = Object.entries(VIOLATION_CODE_MAPPING).find(
-                  ([, code]) => code === value
-                )?.[0] as CarViolationType;
-                if (violationType) {
-                  handleInputChange('violationType', violationType);
-                }
-              }}
-            />
-            
-            <SimpleTextInput
-              label="위반 장소"
-              value={formData.violationLocation}
-              onChange={(value) => handleInputChange('violationLocation', value)}
-              placeholder="위반 발생 장소를 입력하세요"
-            />
-            
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
-                위반 시각 *
-              </label>
-              <PickDate
-                selected={formData.violationTime}
-                onChange={(date) => handleInputChange('violationTime', date)}
-                dateFormat="yyyy-MM-dd HH:mm"
-                placeholderText="위반 시각을 선택하세요"
-                showTimeSelect={true}
-                className="w-full"
-              />
-            </div>
-            
-            <SimpleDropdown
-              label="신고자 유형"
-              value={formData.reporterType}
-              options={REPORTER_TYPE_OPTIONS}
-              onChange={(value) => handleInputChange('reporterType', value)}
-            />
-            
-            <SimpleTextInput
-              label="신고자 ID"
-              type="number"
-              value={formData.reporterId}
-              onChange={(value) => handleInputChange('reporterId', value)}
-              placeholder="신고자 사용자 ID를 입력하세요"
-            />
-            
-            <SimpleTextInput
-              label="심각도 *"
-              type="number"
-              value={formData.severityLevel.toString()}
-              onChange={(value) => handleInputChange('severityLevel', (parseInt(value) || 1).toString())}
-            />
-            
-            <SimpleTextInput
-              label="벌점 *"
-              type="number"
-              value={formData.penaltyPoints.toString()}
-              onChange={(value) => {
-                const numValue = parseInt(value) || 1;
-                const clampedValue = Math.max(1, numValue);
-                handleInputChange('penaltyPoints', clampedValue.toString());
-              }}
-            />
-            
-            <div className="md:col-span-2">
-              <SimpleTextInput
-                label="설명"
-                value={formData.description}
-                onChange={(value) => handleInputChange('description', value)}
-                placeholder="위반 상황에 대한 설명을 입력하세요"
-              />
-            </div>
-            
-            <div className="md:col-span-2">
-              <ImageUrlInput
-                label="증거 이미지 URL"
-                value={formData.evidenceImageUrls}
-                onChange={(value) => handleInputChange('evidenceImageUrls', value)}
-                placeholder="이미지 URL을 입력하세요"
-                maxImages={5}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 액션 버튼 */}
-        <div className="flex gap-2 justify-end">
-          <Button
-            onClick={handleCancel}
+        {/* 위반 기록 생성 섹션 */}
+        <SectionPanel title="위반 기록 정보">
+          <ViolationForm
+            mode="create"
+            data={formData}
+            onChange={handleFormChange}
             disabled={creating}
-          >
-            취소
-          </Button>
-          
-          <Button
-            onClick={handleCreate}
-            disabled={!canCreate}
-            loading={creating}
-          >
-            등록
-          </Button>
-        </div>
+            showActions={true}
+            onReset={handleReset}
+            onSubmit={handleCreate}
+            onCancel={handleCancel}
+            hasChanges={hasChanges}
+            isValid={isValid}
+          />
+        </SectionPanel>
       </div>
 
       {/* 블랙리스트 모달 */}

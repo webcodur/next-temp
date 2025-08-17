@@ -341,14 +341,12 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       subtitle="세대의 기본 설정을 관리합니다."
       icon={<Building size={18} />}
     >
-      <div className="p-4">
-        <GridFormAuto 
-          fields={fields}
-          gap="16px"
-          bottomLeftActions={bottomLeftActions}
-          bottomRightActions={bottomRightActions}
-        />
-      </div>
+      <GridFormAuto 
+        fields={fields}
+        gap="16px"
+        bottomLeftActions={bottomLeftActions}
+        bottomRightActions={bottomRightActions}
+      />
     </SectionPanel>
   );
 };

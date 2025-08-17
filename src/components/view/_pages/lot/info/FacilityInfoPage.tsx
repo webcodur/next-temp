@@ -104,9 +104,7 @@ export default function FacilityInfoPage() {
                 subtitle="시설의 기본적인 정보와 위치입니다."
                 icon={<Building2 size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={fields} />
-                </div>
+                <GridFormAuto fields={fields} />
               </SectionPanel>
             );
           })()}
@@ -130,9 +128,7 @@ export default function FacilityInfoPage() {
                 subtitle="시설의 물리적 크기와 용량 정보입니다."
                 icon={<Building2 size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={fields} />
-                </div>
+                <GridFormAuto fields={fields} />
               </SectionPanel>
             );
           })()}
@@ -156,9 +152,7 @@ export default function FacilityInfoPage() {
                 subtitle="앱 설치 및 디지털화 진행 상황입니다."
                 icon={<Smartphone size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={fields} />
-                </div>
+                <GridFormAuto fields={fields} />
               </SectionPanel>
             );
           })()}
@@ -182,9 +176,7 @@ export default function FacilityInfoPage() {
                 subtitle="실제 운영되고 있는 시설과 인력 정보입니다."
                 icon={<Users size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={fields} />
-                </div>
+                <GridFormAuto fields={fields} />
               </SectionPanel>
             );
           })()}
@@ -208,9 +200,7 @@ export default function FacilityInfoPage() {
                 subtitle="계약 정보와 관리 체계 내용입니다."
                 icon={<FileText size={18} />}
               >
-                <div className="p-4">
-                  <GridFormAuto fields={fields} />
-                </div>
+                <GridFormAuto fields={fields} />
               </SectionPanel>
             );
           })()}

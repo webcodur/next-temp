@@ -1,8 +1,8 @@
 /* 메뉴 설명: 차단기 상세 페이지 */
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
 
@@ -10,10 +10,11 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import DeviceForm, { DeviceFormData } from './DeviceForm';
 import DevicePermissionConfigSection from './DevicePermissionConfigSection';
-import DeviceCommandLogSection from './DeviceCommandLogSection';
-import DeviceHistorySection from './DeviceHistorySection';
+import DeviceCommandLogSection, { DeviceCommandLogSectionRef } from './DeviceCommandLogSection';
+import DeviceHistorySection, { DeviceHistorySectionRef } from './DeviceHistorySection';
 import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
@@ -30,6 +31,10 @@ export default function DeviceDetailPage() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
+  
+  // Refs
+  const commandLogSectionRef = useRef<DeviceCommandLogSectionRef>(null);
+  const historySectionRef = useRef<DeviceHistorySectionRef>(null);
   
   const [formData, setFormData] = useState<DeviceFormData>({
     name: '',
@@ -297,6 +302,14 @@ export default function DeviceDetailPage() {
       setDeleteConfirmOpen(false);
     }
   }, [device, router]);
+
+  const handleCommandLogRefresh = useCallback(() => {
+    commandLogSectionRef.current?.refresh();
+  }, []);
+
+  const handleHistoryRefresh = useCallback(() => {
+    historySectionRef.current?.refresh();
+  }, []);
   // #endregion
 
   if (loading) {
@@ -361,22 +374,61 @@ export default function DeviceDetailPage() {
           )}
           
           {activeTab === 'permissions' && (
-            <DevicePermissionConfigSection 
-              device={device}
-              onDataChange={loadDeviceData}
-            />
+            <SectionPanel 
+              title="출입 권한 설정"
+              subtitle="차량 유형별 출입 권한을 설정합니다"
+            >
+              <DevicePermissionConfigSection 
+                device={device}
+                onDataChange={loadDeviceData}
+              />
+            </SectionPanel>
           )}
           
           {activeTab === 'logs' && (
-            <DeviceCommandLogSection 
-              device={device}
-            />
+            <SectionPanel 
+              title="명령 로그"
+              subtitle="차단기 명령 실행 이력을 조회합니다"
+              headerActions={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCommandLogRefresh}
+                  title="새로고침"
+                >
+                  <RefreshCw size={16} />
+                  새로고침
+                </Button>
+              }
+            >
+              <DeviceCommandLogSection 
+                ref={commandLogSectionRef}
+                device={device}
+              />
+            </SectionPanel>
           )}
           
           {activeTab === 'history' && (
-            <DeviceHistorySection 
-              device={device}
-            />
+            <SectionPanel 
+              title="변경 이력"
+              subtitle="차단기 설정 변경 이력을 조회합니다"
+              headerActions={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleHistoryRefresh}
+                  title="새로고침"
+                >
+                  <RefreshCw size={16} />
+                  새로고침
+                </Button>
+              }
+            >
+              <DeviceHistorySection 
+                ref={historySectionRef}
+                device={device}
+              />
+            </SectionPanel>
           )}
         </div>
       </div>

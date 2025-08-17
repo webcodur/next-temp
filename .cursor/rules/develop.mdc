@@ -12,3 +12,5 @@ alwaysApply: true
 
 - 폼 관리: GridFormAuto + simple-input 방식
 - 검색대 관리: AdvancedSearch + field 방식
+- 컴포넌트 랜더링 시 삼항연산저 없이 && 만으로 처리
+- left right 이 아닌 start end 처리

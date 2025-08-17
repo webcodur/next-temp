@@ -24,7 +24,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 	return (
 		<div
 			onClick={onClick}
-			className={`relative flex ${isTextArea ? '':'items-center p-1 rounded border'} border-border ${className}`}>
+			className={`relative flex justify-start ${isTextArea ? '':'items-center p-1 rounded border'} border-border ${className}`}>
 			{children}
 		</div>
 	);

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { Hash, X } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Hash, Plus, Minus } from 'lucide-react';
 import { ValidationRule } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
@@ -34,6 +34,8 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const handleFocus = () => {
 		if (disabled) return;
@@ -82,17 +84,107 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 		}
 	};
 
-	const handleClear = (e: React.MouseEvent) => {
+	const clearIntervals = useCallback(() => {
+		if (intervalRef.current) {
+			clearInterval(intervalRef.current);
+			intervalRef.current = null;
+		}
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+			timeoutRef.current = null;
+		}
+	}, []);
+
+	const incrementValue = useCallback(() => {
+		if (disabled) return false;
+		
+		const currentValue = typeof value === 'number' ? value : 0;
+		const newValue = currentValue + 1;
+		
+		if (max !== undefined && newValue > max) return false;
+		
+		onChange?.(newValue);
+		return true;
+	}, [disabled, value, max, onChange]);
+
+	const decrementValue = useCallback(() => {
+		if (disabled) return false;
+		
+		const currentValue = typeof value === 'number' ? value : 0;
+		const newValue = currentValue - 1;
+		
+		if (min !== undefined && newValue < min) return false;
+		
+		onChange?.(newValue);
+		return true;
+	}, [disabled, value, min, onChange]);
+
+	const startContinuousChange = useCallback((changeFunction: () => boolean) => {
+		clearIntervals();
+		
+		let currentInterval = 200; // 시작 간격 (ms)
+		const minInterval = 50; // 최소 간격 (ms)
+		const intervalDecrement = 20; // 간격 감소량 (ms)
+		
+		const runChange = () => {
+			const canContinue = changeFunction();
+			if (!canContinue) {
+				clearIntervals();
+				return;
+			}
+			
+			// 점점 빨라지도록 간격 조정
+			if (currentInterval > minInterval) {
+				currentInterval = Math.max(minInterval, currentInterval - intervalDecrement);
+			}
+			
+			timeoutRef.current = setTimeout(() => {
+				intervalRef.current = setInterval(() => {
+					const canContinue = changeFunction();
+					if (!canContinue) {
+						clearIntervals();
+					}
+				}, currentInterval);
+			}, currentInterval);
+		};
+		
+		// 500ms 후 연속 변경 시작
+		timeoutRef.current = setTimeout(runChange, 500);
+	}, [clearIntervals]);
+
+	const handleIncrementMouseDown = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (disabled) return;
-		onChange?.('');
+		
+		incrementValue();
+		startContinuousChange(incrementValue);
 		inputRef.current?.focus();
+	};
+
+	const handleDecrementMouseDown = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (disabled) return;
+		
+		decrementValue();
+		startContinuousChange(decrementValue);
+		inputRef.current?.focus();
+	};
+
+	const handleMouseUpOrLeave = () => {
+		clearIntervals();
 	};
 
 	const handleContainerClick = () => {
 		if (disabled) return;
 		inputRef.current?.focus();
 	};
+
+	// cleanup on unmount
+	useEffect(() => {
+		return () => {
+			clearIntervals();
+		};
+	}, [clearIntervals]);
 
 
 	return (
@@ -115,7 +207,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 				
 				{/* 왼쪽 해시 아이콘 */}
 				{showIcon && (
-					<Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+					<Hash className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 				)}
 
 				{/* 중앙 입력 필드 */}
@@ -131,18 +223,33 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 					disabled={disabled}
 					min={min}
 					max={max}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 				/>
 
-				{/* 우측 X 아이콘 */}
-				{value !== '' && !disabled && (
-					<button
-						type="button"
-						onClick={handleClear}
-						className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
-						aria-label="값 지우기">
-						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-					</button>
+				{/* 우측 증감 버튼 */}
+				{!disabled && (
+					<div className="flex absolute right-2 top-1/2 gap-1 transform -translate-y-1/2">
+						<button
+							type="button"
+							onMouseDown={handleDecrementMouseDown}
+							onMouseUp={handleMouseUpOrLeave}
+							onMouseLeave={handleMouseUpOrLeave}
+							disabled={min !== undefined && typeof value === 'number' && value <= min}
+							className="p-0.5 rounded border border-border cursor-pointer transition-colors duration-200 hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed neu-raised"
+							aria-label="숫자 감소">
+							<Minus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
+						</button>
+						<button
+							type="button"
+							onMouseDown={handleIncrementMouseDown}
+							onMouseUp={handleMouseUpOrLeave}
+							onMouseLeave={handleMouseUpOrLeave}
+							disabled={max !== undefined && typeof value === 'number' && value >= max}
+							className="p-0.5 rounded border border-border cursor-pointer transition-colors duration-200 hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed neu-raised"
+							aria-label="숫자 증가">
+							<Plus className="w-3 h-3 text-muted-foreground hover:text-foreground" />
+						</button>
+					</div>
 				)}
 			</InputContainer>
 		</div>

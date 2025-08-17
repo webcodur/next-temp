@@ -10,6 +10,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // API가 존재하지 않음
@@ -332,15 +333,14 @@ export default function CarResidentSection({
               </CrudButton>
             </div>
           ) : (
-            <div className="p-4">
-              <PaginatedTable
+            <PaginatedTable
                 data={residentList as unknown as Record<string, unknown>[]}
                 columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
                 pageSize={5}
                 pageSizeOptions={[5, 10, 20]}
                 itemName="거주자 연결"
+                isFetching={loading}
               />
-            </div>
           )}
         </div>
       </SectionPanel>
@@ -380,16 +380,12 @@ export default function CarResidentSection({
                 required: true,
                 rules: '연결할 거주자 선택',
                 component: (
-                  <SimpleTextInput
-                    type="number"
-                    value={createFormData.residentId}
-                    onChange={(value) => setCreateFormData(prev => ({ ...prev, residentId: value }))}
+                  <SimpleNumberInput
+                    value={createFormData.residentId ? parseInt(createFormData.residentId) : ''}
+                    onChange={(value) => setCreateFormData(prev => ({ ...prev, residentId: value.toString() }))}
                     placeholder="거주자 ID"
                     disabled={isSubmitting}
-                    validationRule={{
-                      type: 'free',
-                      mode: 'create'
-                    }}
+                    min={1}
                   />
                 )
               },

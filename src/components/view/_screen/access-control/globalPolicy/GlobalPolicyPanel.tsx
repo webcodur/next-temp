@@ -7,6 +7,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
+import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 
 import { EntryPolicyType } from '@/hooks/domain/useAccessControl';
 
@@ -139,14 +140,14 @@ const GlobalPolicyPanel: React.FC<GlobalPolicyPanelProps> = ({
               <div className={STYLES.inputContainer}>
                 <div className={STYLES.label}>경고 횟수</div>
                 <div className={STYLES.inputWrapper}>
-                  <input
-                    type="number"
+                  <SimpleNumberInput
+                    value={warningCount}
+                    onChange={(value) => onWarningCountChange(typeof value === 'number' ? value : 1)}
                     min={1}
                     max={99}
-                    className={STYLES.numberInput}
-                    value={warningCount}
-                    onChange={(e) => onWarningCountChange(Number(e.target.value))}
                     disabled={isLocked}
+                    className="w-16"
+                    showIcon={false}
                   />
                   <span className={STYLES.label}>회 이상</span>
                 </div>

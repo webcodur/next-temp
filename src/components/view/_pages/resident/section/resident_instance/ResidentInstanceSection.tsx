@@ -57,7 +57,7 @@ export default function ResidentInstanceSection({
         onCreateRelation={handleCreateInstanceRelation}
       />
 
-      {/* 세대 이동 섹션 */}
+      {/* 세대 이전 섹션 */}
       <ResidentMoveSection 
         resident={resident}
         currentResidence={currentResidence}

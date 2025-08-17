@@ -142,46 +142,42 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 							{/* 정책 설정 콘텐츠 */}
 							<div className="flex flex-col gap-4 lg:flex-row lg:items-start">
 								{/* 현장 출입 정책 설정 */}
-								<div className="w-full lg:max-w-xs xl:max-w-sm shrink-0">
-									<div className="p-4">
-										<h3 className="mb-4 text-lg font-semibold text-foreground">현장 출입 정책 설정</h3>
-										<GlobalPolicyPanel
-											entryPolicy={entryPolicy}
-											returnHourEnabled={returnHourEnabled}
-											warningCount={warningCount}
-											isLocked={false}
-											onEntryPolicyChange={(policy) => {
-												handleEntryPolicyChange(policy);
-												setHasChanges(true);
-											}}
-											onReturnHourEnabledChange={(enabled) => {
-												handleReturnHourEnabledChange(enabled);
-												setHasChanges(true);
-											}}
-											onWarningCountChange={(count) => {
-												handleWarningCountChange(count);
-												setHasChanges(true);
-											}}
-										/>
-									</div>
+								<div className="p-4 w-full lg:max-w-xs xl:max-w-sm shrink-0">
+									<h3 className="mb-4 text-lg font-semibold text-foreground">현장 출입 정책 설정</h3>
+									<GlobalPolicyPanel
+										entryPolicy={entryPolicy}
+										returnHourEnabled={returnHourEnabled}
+										warningCount={warningCount}
+										isLocked={false}
+										onEntryPolicyChange={(policy) => {
+											handleEntryPolicyChange(policy);
+											setHasChanges(true);
+										}}
+										onReturnHourEnabledChange={(enabled) => {
+											handleReturnHourEnabledChange(enabled);
+											setHasChanges(true);
+										}}
+										onWarningCountChange={(count) => {
+											handleWarningCountChange(count);
+											setHasChanges(true);
+										}}
+									/>
 								</div>
 
 								{/* 각 차단기 설정 */}
-								<div className="flex-1 w-full min-w-80 lg:min-w-96">
-									<div className="p-4">
-										<h3 className="mb-4 text-lg font-semibold text-foreground">각 차단기 설정</h3>
-										<BarrierPolicyGrid
-											barriers={barriers}
-											barrierPolicies={barrierPolicies}
-											barrierOrder={barrierOrder}
-											returnHourEnabled={returnHourEnabled}
-											onPolicyUpdate={(barrierId, policy) => {
-												handlePolicyUpdate(barrierId, policy);
-												setHasChanges(true);
-											}}
-											onBarrierOrderChange={handleBarrierOrderChange}
-										/>
-									</div>
+								<div className="flex-1 p-4 w-full min-w-80 lg:min-w-96">
+									<h3 className="mb-4 text-lg font-semibold text-foreground">각 차단기 설정</h3>
+									<BarrierPolicyGrid
+										barriers={barriers}
+										barrierPolicies={barrierPolicies}
+										barrierOrder={barrierOrder}
+										returnHourEnabled={returnHourEnabled}
+										onPolicyUpdate={(barrierId, policy) => {
+											handlePolicyUpdate(barrierId, policy);
+											setHasChanges(true);
+										}}
+										onBarrierOrderChange={handleBarrierOrderChange}
+									/>
 								</div>
 							</div>
 						</div>

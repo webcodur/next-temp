@@ -104,8 +104,7 @@ const SectionPanelExample = () => {
 									<Settings className="w-5 h-5 text-foreground transition-transform cursor-pointer hover:scale-110" />
 								}
 							>
-								<div className="p-4">
-									<div className="space-y-3">
+								<div className="space-y-3">
 										<div className="flex gap-3 items-center">
 											<div className="flex justify-center items-center w-12 h-12 rounded-full bg-primary/20">
 												<User className="w-6 h-6 text-primary" />
@@ -136,8 +135,7 @@ const SectionPanelExample = () => {
 						title="오늘의 일정"
 						icon={<Calendar className="w-5 h-5 text-foreground" />}
 					>
-						<div className="p-4">
-							<div className="space-y-3">
+						<div className="space-y-3">
 								<div className="flex gap-3 items-start">
 									<div className="mt-2 w-2 h-2 bg-green-500 rounded-full"></div>
 									<div>

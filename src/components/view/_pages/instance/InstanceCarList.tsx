@@ -198,7 +198,7 @@ export default function InstanceCarList({
       <SectionPanel 
       title={
         <span className="flex gap-2 items-center">
-          차량 목록
+          연결된 차량
           <span className="text-sm text-muted-foreground">({carInstances.length}대)</span>
         </span>
       }
@@ -234,7 +234,7 @@ export default function InstanceCarList({
             </p>
           </div>
         ) : (
-          <div className="space-y-2 p-4">
+          <div className="p-4 space-y-2">
             {carInstances.map((carInstance) => {
               // 배지 정보
               const badges: InstanceItemCardBadge[] = [];

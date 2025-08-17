@@ -64,8 +64,10 @@ const GridFormAuto = React.forwardRef<
               {field.label}
             </GridFormLabel>
             
-            <GridFormContent>
-              {field.component}
+            <GridFormContent className="items-start justify-start">
+              <div className="w-full text-start">
+                {field.component}
+              </div>
             </GridFormContent>
             
             {field.rules && (

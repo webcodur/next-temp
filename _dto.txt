@@ -729,7 +729,7 @@ components:
         memo:
           type: string
           description: 메모 (선택사항)
-          example: 새로운 세대 이동
+          example: 새로운 세대 이전
       required:
         - resident_id
         - target_household_instance_id

@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw, Calendar } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
+import { Calendar } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import TitleRow from '@/components/ui/ui-layout/title-row/TitleRow';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
@@ -18,6 +17,10 @@ interface DeviceHistorySectionProps {
   device: ParkingDevice;
 }
 
+export interface DeviceHistorySectionRef {
+  refresh: () => void;
+}
+
 const ACTION_TYPE_OPTIONS = [
   { value: '', label: '전체' },
   { value: 'CREATED', label: '생성' },
@@ -25,9 +28,9 @@ const ACTION_TYPE_OPTIONS = [
   { value: 'DELETED', label: '삭제' },
 ];
 
-export default function DeviceHistorySection({ 
+const DeviceHistorySection = forwardRef<DeviceHistorySectionRef, DeviceHistorySectionProps>(({ 
   device 
-}: DeviceHistorySectionProps) {
+}, ref) => {
   // #region 타입 정의
   interface HistoryFilters {
     actionType: string;
@@ -109,9 +112,13 @@ export default function DeviceHistorySection({
   // #endregion
 
   // #region 핸들러
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     loadHistory(currentPage, pageSize);
-  };
+  }, [loadHistory, currentPage, pageSize]);
+
+  useImperativeHandle(ref, () => ({
+    refresh: handleRefresh
+  }), [handleRefresh]);
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -410,26 +417,8 @@ export default function DeviceHistorySection({
   // #endregion
 
   return (
-    <div className="space-y-6">
-      {/* 변경 이력 섹션 */}
-      <TitleRow 
-        title="변경 이력" 
-        subtitle="차단기 설정 변경 이력을 조회합니다."
-        endContent={(
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={loading}
-            title="새로고침"
-          >
-            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-            새로고침
-          </Button>
-        )}
-      />
-
-        {/* 검색 필터: AdvancedSearch */}
+    <>
+      {/* 검색 필터: AdvancedSearch */}
         <AdvancedSearch
           fields={searchFields}
           onSearch={handleSearch}
@@ -492,6 +481,10 @@ export default function DeviceHistorySection({
             </div>
           </div>
         </Modal>
-    </div>
+    </>
   );
-}
+});
+
+DeviceHistorySection.displayName = 'DeviceHistorySection';
+
+export default DeviceHistorySection;

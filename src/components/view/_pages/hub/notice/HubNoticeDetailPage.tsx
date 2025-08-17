@@ -450,9 +450,7 @@ export default function HubNoticeDetailPage() {
               subtitle="공지사항의 세부 내용을 확인하고 수정할 수 있습니다."
               icon={<Bell size={18} />}
             >
-              <div className="p-4">
-                <GridFormAuto fields={fields} />
-              </div>
+              <GridFormAuto fields={fields} />
             </SectionPanel>
           );
         })()}

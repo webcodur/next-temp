@@ -167,7 +167,7 @@ export default function ResidentHistorySection({
         <div className="flex gap-2 items-center mb-4">
           <History size={20} />
           <h2 className="text-lg font-semibold text-foreground">
-            세대 이동 이력
+            세대 이전 이력
           </h2>
           <div className="flex gap-1 items-center ml-2 text-sm text-muted-foreground">
             <Calendar size={16} />
@@ -201,7 +201,7 @@ export default function ResidentHistorySection({
       <div className="p-4 rounded-lg border bg-muted/50 border-border">
         <h4 className="mb-2 text-sm font-medium text-foreground">이동 이력 안내</h4>
         <ul className="space-y-1 text-sm text-muted-foreground">
-          <li>• 세대 이동 시 이전 거주지는 자동으로 퇴거 처리됩니다.</li>
+          <li>• 세대 이전 시 이전 거주지는 자동으로 퇴거 처리됩니다.</li>
           <li>• 삭제된 관계도 이력에서 확인할 수 있습니다.</li>
           <li>• &ldquo;현재 거주&rdquo; 상태는 퇴거일이 없는 관계를 의미합니다.</li>
         </ul>
