@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 // UI 컴포넌트
@@ -329,17 +329,6 @@ export default function ConfigEdit({
       <PageHeader
         title={title}
         subtitle={`${formData.title || formData.key} 설정을 편집합니다`}
-        leftActions={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push(backRoute)}
-            className="flex gap-2 items-center"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            뒤로가기
-          </Button>
-        }
       />
 
       {/* 편집 폼 */}

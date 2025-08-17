@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -128,10 +128,6 @@ export default function DeviceCreatePage() {
     }
   };
 
-  const handleCancel = () => {
-    router.push('/parking/lot/device');
-  };
-
   const handleFormChange = (data: DeviceFormData) => {
     setFormData(data);
   };
@@ -167,17 +163,6 @@ export default function DeviceCreatePage() {
       <PageHeader 
         title="차단기 추가"
         subtitle="새로운 차단기를 등록합니다"
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleCancel}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
       />
 
       {/* 통합 폼 컨테이너 */}

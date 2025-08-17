@@ -16,12 +16,14 @@
 import React from 'react';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/ui-input/button/Button';
+import { ArrowLeft } from 'lucide-react';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 // #region 타입
 export interface PageHeaderProps extends HTMLAttributes<HTMLDivElement> {
 	title: string;
 	subtitle?: string;
-	leftActions?: ReactNode;
 	rightActions?: ReactNode;
 }
 // #endregion
@@ -29,12 +31,14 @@ export interface PageHeaderProps extends HTMLAttributes<HTMLDivElement> {
 export default function PageHeader({
 	title,
 	subtitle,
-	leftActions,
 	rightActions,
 	children,
 	className,
 	...props
 }: PageHeaderProps) {
+	// 뒤로가기 기능
+	const { handleBack } = useBackNavigation();
+	
 	// children이 있으면 rightActions로 처리 (하위 호환성)
 	const finalRightActions = rightActions || children;
 
@@ -44,12 +48,17 @@ export default function PageHeader({
 			className={cn('flex relative items-start', className)}
 			{...props}
 		>
-			{/* 좌측 영역 - 서브타이틀 라인에 정렬 */}
-			{leftActions && (
-				<div className="flex absolute bottom-0 left-0 gap-2 items-center">
-					{leftActions}
-				</div>
-			)}
+			{/* 좌측 영역 - 뒤로가기 버튼 */}
+			<div className="flex absolute bottom-0 left-0 gap-2 items-center">
+				<Button
+					variant="ghost"
+					size="sm"
+					onClick={handleBack}
+					title="뒤로가기"
+				>
+					<ArrowLeft className="w-4 h-4" />
+				</Button>
+			</div>
 
 			{/* 제목 영역 - 전체 너비 차지 & 중앙 정렬 */}
 			<div className="space-y-3 w-full">

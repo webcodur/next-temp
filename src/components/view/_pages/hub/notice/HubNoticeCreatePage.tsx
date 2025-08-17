@@ -7,7 +7,7 @@
 'use client';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -99,19 +99,10 @@ export default function HubNoticeCreatePage() {
       <PageHeader 
         title="공지사항 등록"
         subtitle="새로운 공지사항을 등록합니다."
-        leftActions={
-          <Button
-            variant="ghost"
-            onClick={handleCancel}
-            title="취소하고 뒤로가기"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        }
       />
 
       {/* 폼 */}
-      <div className="bg-card rounded-lg border border-border p-6">
+      <div className="p-6 rounded-lg border bg-card border-border">
         {(() => {
           const fields: GridFormFieldSchema[] = [
             {
@@ -194,7 +185,7 @@ export default function HubNoticeCreatePage() {
               component: (
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium mb-1">시작일</label>
+                    <label className="block mb-1 text-sm font-medium">시작일</label>
                     <input
                       type="date"
                       value={formData.startDate || ''}
@@ -203,7 +194,7 @@ export default function HubNoticeCreatePage() {
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-sm font-medium mb-1">종료일</label>
+                    <label className="block mb-1 text-sm font-medium">종료일</label>
                     <input
                       type="date"
                       value={formData.endDate || ''}
@@ -243,11 +234,15 @@ export default function HubNoticeCreatePage() {
             }
           ];
 
-          return <GridFormAuto fields={fields} title="공지사항 작성" subtitle="새로운 공지사항을 작성하고 게시 설정을 할 수 있습니다." />;
+          return <GridFormAuto 
+            fields={fields} 
+            // title="공지사항 작성" 
+            // subtitle="새로운 공지사항을 작성하고 게시 설정을 할 수 있습니다." 
+            />;
         })()}
 
         {/* 버튼 */}
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex gap-2 justify-end mt-4">
           <Button
             variant="ghost"
             onClick={handleCancel}
@@ -261,7 +256,7 @@ export default function HubNoticeCreatePage() {
             disabled={!isValid || submitting}
             title="공지사항 등록"
           >
-            <Save className="w-4 h-4 mr-2" />
+            <Save className="mr-2 w-4 h-4" />
             {submitting ? '등록 중...' : '등록'}
           </Button>
         </div>

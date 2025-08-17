@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -84,10 +84,6 @@ export default function CarCreatePage() {
     }
   };
 
-  const handleCancel = () => {
-    router.push('/parking/occupancy/car');
-  };
-
   const handleFormChange = (data: CarFormData) => {
     setFormData(data);
   };
@@ -99,21 +95,10 @@ export default function CarCreatePage() {
       <PageHeader 
         title="차량 추가"
         subtitle="새로운 차량을 등록합니다"
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleCancel}
-            title="목록으로"
-          >
-            <ArrowLeft size={16} />
-            목록
-          </Button>
-        }
       />
 
       {/* 폼 섹션 */}
-      <div className="bg-card rounded-lg border border-border p-6">
+      <div className="p-6 rounded-lg border bg-card border-border">
         <CarForm
           mode="create"
           data={formData}
@@ -123,7 +108,7 @@ export default function CarCreatePage() {
       </div>
 
       {/* 저장 버튼 - 우하단 고정 */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed right-6 bottom-6 z-50">
         <Button 
           variant="primary"
           size="lg"
@@ -146,7 +131,7 @@ export default function CarCreatePage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{errorMessage}</p>
           </div>
           

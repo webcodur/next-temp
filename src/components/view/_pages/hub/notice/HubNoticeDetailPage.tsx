@@ -6,9 +6,9 @@
 
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
-import { ArrowLeft, Save, RotateCcw, Pin, AlertCircle, Paperclip, Bell } from 'lucide-react';
+import { useParams } from 'next/navigation';
+
+import { Save, RotateCcw, Pin, AlertCircle, Paperclip, Bell } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
@@ -86,7 +86,7 @@ const mockNotice: Notice = {
 // #endregion
 
 export default function HubNoticeDetailPage() {
-  const router = useRouter();
+  // const router = useRouter();
   const params = useParams();
   const noticeId = params?.id as string;
 
@@ -152,7 +152,7 @@ export default function HubNoticeDetailPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const { handleBack } = useBackNavigation({});
+
 
   const handleFieldChange = useCallback((field: keyof Notice, value: string | string[] | boolean) => {
     setFormData(prev => prev ? { ...prev, [field]: value } : null);
@@ -216,15 +216,6 @@ export default function HubNoticeDetailPage() {
       <PageHeader 
         title="공지사항 상세"
         subtitle={`공지사항의 상세 정보를 조회하고 관리합니다. | 조회수 ${data.viewCount.toLocaleString()}회`}
-        leftActions={
-          <Button
-            variant="ghost"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-        }
         rightActions={
           <div className="flex gap-2 items-center">
             {formData.isPinned && <Pin className="w-5 h-5 text-accent" />}
@@ -373,7 +364,7 @@ export default function HubNoticeDetailPage() {
               component: (
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium mb-1">시작일</label>
+                    <label className="block mb-1 text-sm font-medium">시작일</label>
                     <input
                       type="date"
                       value={formData.startDate || ''}
@@ -382,7 +373,7 @@ export default function HubNoticeDetailPage() {
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-sm font-medium mb-1">종료일</label>
+                    <label className="block mb-1 text-sm font-medium">종료일</label>
                     <input
                       type="date"
                       value={formData.endDate || ''}
@@ -429,7 +420,7 @@ export default function HubNoticeDetailPage() {
               component: (
                 <div className="space-y-2">
                   {data.attachments.map((file) => (
-                    <div key={file.id} className="flex items-center gap-2 text-sm">
+                    <div key={file.id} className="flex gap-2 items-center text-sm">
                       <Paperclip className="w-4 h-4" />
                       <a href={file.fileUrl} className="text-blue-600 hover:underline">
                         {file.fileName}

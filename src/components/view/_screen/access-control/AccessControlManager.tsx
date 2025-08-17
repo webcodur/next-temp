@@ -5,7 +5,7 @@
 */
 
 import React, { useState } from 'react';
-import { Send, RotateCcw } from 'lucide-react';
+import { Send, RotateCcw, Zap, Settings2 } from 'lucide-react';
 import { useAccessControl } from '@/hooks/domain/useAccessControl';
 import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierControlGrid from './barrierManager/barrierControl/BarrierControlGrid';
@@ -82,6 +82,8 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 				<div className="neu-elevated">
 					<SectionPanel 
 						title="개별 차단기 제어 컨트롤러"
+						subtitle="각 차단기를 개별적으로 제어합니다"
+						icon={<Zap size={18} />}
 						headerHeight="h-[70px]"
 						titleAlign="center"
 						headerActions={
@@ -113,6 +115,8 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 				<div className="neu-elevated">
 					<SectionPanel 
 						title="출입 정책 설정"
+						subtitle="차단기 출입 정책을 설정하고 관리합니다"
+						icon={<Settings2 size={18} />}
 						headerHeight="h-[70px]"
 						titleAlign="center"
 						headerActions={

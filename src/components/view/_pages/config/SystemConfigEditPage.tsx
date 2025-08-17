@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { ArrowLeft, Save, RotateCcw } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+import { Save, RotateCcw } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+
 
 // UI 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -40,13 +40,9 @@ interface ConfigFormData {
 // #endregion
 
 export default function SystemConfigEditPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const rawConfigId = searchParams.get('id');
   const configId = rawConfigId ? parseInt(rawConfigId, 10) : null;
-
-
-
 
   // #region 상태 관리
   const [configData, setConfigData] = useState<ConfigFormData | null>(null);
@@ -143,10 +139,7 @@ export default function SystemConfigEditPage() {
   // #endregion
 
   // #region 네비게이션 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/system/config/settings',
-    hasChanges
-  });
+
   // #endregion
 
   // #region 폼 핸들러
@@ -304,17 +297,6 @@ export default function SystemConfigEditPage() {
       <PageHeader 
         title="시스템 설정 편집"
         subtitle={`시스템 설정값을 수정합니다`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
       />
 
       {/* 설정 편집 폼 */}
@@ -398,8 +380,8 @@ export default function SystemConfigEditPage() {
             return (
               <GridFormAuto 
                 fields={fields}
-                title="시스템 설정 편집"
-                subtitle="시스템 전체 설정 값을 수정할 수 있습니다."
+                // title="시스템 설정 편집"
+                // subtitle="시스템 전체 설정 값을 수정할 수 있습니다."
                 gap="20px"
                 bottomRightActions={
                   <div className="flex gap-3">

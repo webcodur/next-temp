@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
@@ -15,7 +15,7 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { ImagePreview, ImageData } from '@/components/ui/ui-effects/image-preview/ImagePreview';
-import { ArrowLeft, RotateCcw, Eye, ImageIcon, AlertTriangle, Info, Edit } from 'lucide-react';
+import { RotateCcw, Eye, ImageIcon, AlertTriangle, Info, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { getViolationDetail, updateViolation, processViolation } from '@/services/violations';
 import type { 
@@ -308,9 +308,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
     }
   }, [violation, processForm.processingNote, processForm.status]);
 
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/violation/history'
-  });
+
 
   const handleImagePreview = useCallback((index: number = 0) => {
     if (imageData.length === 0) return;
@@ -339,17 +337,6 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
       <PageHeader 
         title={`위반 차량 상세 - ${violation.carNumber}`}
         subtitle={`${getViolationTypeText(violation.violationType)} | ${new Date(violation.violationTime).toLocaleDateString('ko-KR')}`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
       />
 
       {/* 퀵 메뉴 - 위반 기록 처리 */}

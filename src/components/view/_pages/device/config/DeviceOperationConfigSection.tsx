@@ -181,8 +181,8 @@ export default function DeviceOperationConfigSection({
         return (
           <GridFormAuto 
             fields={fields}
-            title="운영 설정"
-            subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다."
+            // title="운영 설정"
+            // subtitle="디바이스 타입, 발권/영수증 기능을 관리합니다."
             gap="20px"
             bottomLeftActions={(
               <Button 

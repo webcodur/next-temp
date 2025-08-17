@@ -229,8 +229,8 @@ export default function DeviceNetworkConfigSection({
         return (
           <GridFormAuto 
             fields={fields}
-            title="네트워크 설정"
-            subtitle="IP, 포트 등 네트워크 설정을 관리합니다."
+            // title="네트워크 설정"
+            // subtitle="IP, 포트 등 네트워크 설정을 관리합니다."
             gap="20px"
             bottomLeftActions={(
               <Button 

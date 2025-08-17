@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { ArrowLeft, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -181,10 +181,6 @@ export default function AdminCreatePage() {
     }
   };
 
-  const handleCancel = () => {
-    router.push('/parking/lot/admin');
-  };
-
   const handleFormChange = (data: AdminFormData) => {
     setFormData(data);
   };
@@ -204,17 +200,6 @@ export default function AdminCreatePage() {
       <PageHeader 
         title="관리자 추가"
         subtitle="새로운 관리자 계정을 생성합니다"
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleCancel}
-            title="목록으로"
-          >
-            <ArrowLeft size={16} />
-            목록
-          </Button>
-        }
       />
 
       {/* 복사 정보 안내 */}

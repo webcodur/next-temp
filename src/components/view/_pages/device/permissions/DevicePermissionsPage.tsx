@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
+import { KeyRound } from 'lucide-react';
 
 import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
@@ -78,6 +79,7 @@ export default function DevicePermissionsPage() {
       <SectionPanel 
         title="출입 권한 설정"
         subtitle="차량 유형별 출입 권한을 설정합니다"
+        icon={<KeyRound size={18} />}
       >
         <DevicePermissionConfigSection 
           device={device}

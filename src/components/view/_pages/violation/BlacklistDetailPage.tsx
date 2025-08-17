@@ -2,8 +2,9 @@
 'use client';
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Unlock } from 'lucide-react';
+import { Unlock } from 'lucide-react';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
+
 
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -238,17 +239,6 @@ export default function BlacklistDetailPage() {
       <PageHeader
         title="블랙리스트 상세 정보"
         subtitle={`${blacklistData.carNumber}`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
         rightActions={
           blacklistData.isActive ? (
             <Button

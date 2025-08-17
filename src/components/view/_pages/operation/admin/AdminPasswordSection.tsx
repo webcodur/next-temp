@@ -238,7 +238,10 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               }
             ];
 
-            return <GridFormAuto fields={fields} title="비밀번호 변경" subtitle="관리자 계정의 비밀번호를 안전하게 변경합니다." gap="20px" />;
+            return <GridFormAuto fields={fields} 
+            // title="비밀번호 변경" 
+            // subtitle="관리자 계정의 비밀번호를 안전하게 변경합니다." 
+            gap="20px" />;
           })()}
 
           {/* 액션 버튼 */}
@@ -302,7 +305,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -323,7 +326,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -344,7 +347,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-blue-600 mb-2">알림</h3>
+            <h3 className="mb-2 text-lg font-semibold text-blue-600">알림</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           

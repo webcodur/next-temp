@@ -59,7 +59,7 @@ const DeviceHistorySection = forwardRef<DeviceHistorySectionRef, DeviceHistorySe
     } finally {
       setLoading(false);
     }
-  }, [device.id, device.ip]);
+  }, [device.ip]);
 
   useEffect(() => {
     loadHistoryRecords();
@@ -123,7 +123,7 @@ const DeviceHistorySection = forwardRef<DeviceHistorySectionRef, DeviceHistorySe
         itemName="히스토리"
         isFetching={loading}
         minWidth="800px"
-        emptyMessage="변경 이력이 없습니다."
+        // emptyMessage="변경 이력이 없습니다."
       />
     </div>
   );

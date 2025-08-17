@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, FileText } from 'lucide-react';
 
 import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -87,6 +87,7 @@ export default function DeviceLogsPage() {
       <SectionPanel 
         title="명령 로그"
         subtitle="차단기 명령 실행 이력을 조회합니다"
+        icon={<FileText size={18} />}
         headerActions={
           <Button
             variant="outline"

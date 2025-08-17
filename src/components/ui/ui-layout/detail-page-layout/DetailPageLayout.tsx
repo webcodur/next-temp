@@ -7,13 +7,13 @@
 'use client';
 
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+
 
 interface Tab {
   id: string;
@@ -42,10 +42,7 @@ export default function DetailPageLayout({
 }: DetailPageLayoutProps) {
   const router = useRouter();
   
-  const { handleBack } = useBackNavigation({
-    fallbackPath,
-    hasChanges
-  });
+
 
   // 탭 클릭 시 해당 href로 페이지 이동
   const handleTabChange = (tabId: string) => {
@@ -61,17 +58,6 @@ export default function DetailPageLayout({
       <PageHeader 
         title={title}
         subtitle={subtitle}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
       />
 
       {/* 탭과 콘텐츠 */}

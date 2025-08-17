@@ -2,9 +2,8 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -14,8 +13,6 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
-
-
 
 // Admin 타입 정의
 interface Admin {
@@ -109,9 +106,7 @@ export default function AdminPasswordChangePage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: `/parking/lot/admin/${adminId}`
-  });
+
 
   const handleFieldChange = (field: keyof PasswordChangeData, value: string) => {
     setFormData(prev => ({
@@ -176,17 +171,6 @@ export default function AdminPasswordChangePage() {
       <PageHeader 
         title="비밀번호 변경"
         subtitle={`${admin.name || admin.account} (${admin.account})`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로
-          </Button>
-        }
       />
 
       {/* 폼 섹션 */}
@@ -244,7 +228,12 @@ export default function AdminPasswordChangePage() {
             }
           ];
 
-          return <GridFormAuto fields={fields} title="비밀번호 변경" subtitle="현재 비밀번호를 확인하고 새로운 비밀번호로 변경합니다." gap="20px" />;
+          return <GridFormAuto 
+          fields={fields} 
+          // title="비밀번호 변경" 
+          // subtitle="현재 비밀번호를 확인하고 새로운 비밀번호로 변경합니다." 
+          gap="20px" 
+          />;
         })()}
       </div>
 

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, History } from 'lucide-react';
 
 import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -87,6 +87,7 @@ export default function DeviceHistoryPage() {
       <SectionPanel 
         title="변경 이력"
         subtitle="차단기 설정 변경 이력을 조회합니다"
+        icon={<History size={18} />}
         headerActions={
           <Button
             variant="outline"

@@ -1,11 +1,49 @@
-import { Crown, Presentation, SquareParking } from 'lucide-react';
+import { Car, Monitor, MonitorCog } from 'lucide-react';
+// library-big SquareParking monitor
 import type { MenuData } from '@/components/layout/sidebar/types';
 
 //  주차장 관리 시스템 메뉴 데이터 구조
 //  언어팩 시스템 사용: 메뉴_{key} 형태로 텍스트 제공
 export const menuData: MenuData = {
+	'시스템 관리': {
+		icon: MonitorCog,
+		midItems: {
+			'IP 차단 관리': {
+				botItems: [
+					{
+						key: 'IP 차단 실시간 내역',
+						href: '/system/ip/realtime',
+					},
+					{
+						key: 'IP 차단 전체 히스토리',
+						href: '/system/ip/history',
+					},
+				],
+			},
+			캐시관리: {
+				botItems: [
+					{
+						key: '캐시통계',
+						href: '/system/cache/stats',
+					},
+					{
+						key: '캐시관리',
+						href: '/system/cache/manage',
+					},
+				],
+			},
+			'시스템 설정': {
+				botItems: [
+					{
+						key: '시스템 설정',
+						href: '/system/config/settings',
+					},
+				],
+			},
+		},
+	},
 	'종합 정보': {
-		icon: Presentation,
+		icon: Monitor,
 		midItems: {
 			'허브 정보': {
 				botItems: [
@@ -42,7 +80,7 @@ export const menuData: MenuData = {
 		},
 	},
 	'주차 관제': {
-		icon: SquareParking,
+		icon: Car,
 		midItems: {
 			'주차장 관리': {
 				botItems: [
@@ -85,43 +123,6 @@ export const menuData: MenuData = {
 					{
 						key: '차량 관리',
 						href: '/parking/occupancy/car',
-					},
-				],
-			},
-		},
-	},
-	'시스템 관리': {
-		icon: Crown,
-		midItems: {
-			'IP 차단 관리': {
-				botItems: [
-					{
-						key: 'IP 차단 실시간 내역',
-						href: '/system/ip/realtime',
-					},
-					{
-						key: 'IP 차단 전체 히스토리',
-						href: '/system/ip/history',
-					},
-				],
-			},
-			캐시관리: {
-				botItems: [
-					{
-						key: '캐시통계',
-						href: '/system/cache/stats',
-					},
-					{
-						key: '캐시관리',
-						href: '/system/cache/manage',
-					},
-				],
-			},
-			'시스템 설정': {
-				botItems: [
-					{
-						key: '시스템 설정',
-						href: '/system/config/settings',
 					},
 				],
 			},

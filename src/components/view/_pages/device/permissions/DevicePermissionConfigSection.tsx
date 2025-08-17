@@ -254,8 +254,8 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
       {mode === 'edit' && (
         <GridFormAuto
           fields={[]} // 빈 필드 배열
-          title="차량 유형별 출입 권한"
-          subtitle="차량 유형별 출입 허가 설정을 관리합니다."
+          // title="차량 유형별 출입 권한"
+          // subtitle="차량 유형별 출입 허가 설정을 관리합니다."
           gap="0px"
           bottomLeftActions={(
             <Button 

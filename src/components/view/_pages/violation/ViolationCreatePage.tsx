@@ -7,7 +7,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import ViolationForm, { ViolationFormData } from './ViolationForm';
-import { ArrowLeft, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { createViolation } from '@/services/violations';
 import type { 
   CreateCarViolationRequest
@@ -157,16 +157,14 @@ export default function ViolationCreatePage() {
         <PageHeader
           title="위반 기록 추가"
           subtitle="새로운 차량 위반 기록을 등록합니다"
-          leftActions={
-            <Button onClick={handleCancel}>
-              <ArrowLeft className="mr-2 w-4 h-4" />
-              뒤로가기
-            </Button>
-          }
         />
 
         {/* 위반 기록 생성 섹션 */}
-        <SectionPanel title="위반 기록 정보">
+        <SectionPanel 
+          title="위반 기록 정보"
+          subtitle="새로운 차량 위반 기록의 상세 정보를 입력합니다"
+          icon={<AlertTriangle size={18} />}
+        >
           <ViolationForm
             mode="create"
             data={formData}

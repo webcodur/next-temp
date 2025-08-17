@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { UserCog, Lock } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -136,10 +136,7 @@ export default function AdminDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/lot/admin',
-    hasChanges
-  });
+
 
   const handleFormChange = useCallback((data: AdminFormData) => {
     setFormData(data);
@@ -240,22 +237,14 @@ export default function AdminDetailPage() {
       <PageHeader 
         title="관리자 상세 정보"
         subtitle={`${admin.name || admin.account} (${admin.account})`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
-        rightActions={null}
       />
 
       {/* 관리자 상세 정보 섹션 */}
-      <SectionPanel title="관리자 상세 정보">
+      <SectionPanel 
+        title="관리자 상세 정보"
+        subtitle="관리자의 기본 정보를 관리합니다"
+        icon={<UserCog size={18} />}
+      >
           <AdminForm
             mode="edit"
             admin={admin}
@@ -272,7 +261,11 @@ export default function AdminDetailPage() {
       </SectionPanel>
 
       {/* 비밀번호 설정 섹션 */}
-      <SectionPanel title="비밀번호 설정">
+      <SectionPanel 
+        title="비밀번호 설정"
+        subtitle="관리자 계정의 비밀번호를 변경합니다"
+        icon={<Lock size={18} />}
+      >
         <AdminPasswordSection 
           admin={admin} 
           adminId={adminId}

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -85,9 +85,9 @@ export default function InstanceCreatePage() {
     }
   };
 
-  const handleCancel = () => {
-    router.push('/parking/occupancy/instance');
-  };
+  // const handleCancel = () => {
+  //   router.push('/parking/occupancy/instance');
+  // };
 
   const handleFormChange = (data: InstanceFormData) => {
     setFormData(data);
@@ -100,17 +100,6 @@ export default function InstanceCreatePage() {
       <PageHeader 
         title="세대 추가"
         subtitle="새로운 세대을 생성합니다"
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleCancel}
-            title="목록으로"
-          >
-            <ArrowLeft size={16} />
-            목록
-          </Button>
-        }
       />
 
       {/* 폼 섹션 */}

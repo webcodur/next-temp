@@ -2,7 +2,7 @@
 'use client';
 import React from 'react';
 
-import { Building2, Users, Smartphone, Settings, FileText } from 'lucide-react';
+import { Building2, Users, Smartphone, FileText } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
