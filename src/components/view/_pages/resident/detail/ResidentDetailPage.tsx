@@ -2,17 +2,13 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import ResidentForm, { ResidentFormData } from './section/ResidentBasic';
-import ResidentConnection from '@/components/view/_pages/resident/section/ResidentConnection';
-import ResidentMovement from '@/components/view/_pages/resident/section/ResidentMovement';
+import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
+import ResidentForm, { ResidentFormData } from './ResidentBasic';
+import { createResidentTabs } from '../_shared/residentTabs';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
 import { updateResident } from '@/services/residents/residents@id_PATCH';
 import { deleteResident } from '@/services/residents/residents@id_DELETE';
@@ -27,7 +23,6 @@ export default function ResidentDetailPage() {
   const [resident, setResident] = useState<ResidentDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<ResidentFormData>({
     name: '',
@@ -53,26 +48,10 @@ export default function ResidentDetailPage() {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [operationModalOpen, setOperationModalOpen] = useState(false);
-  const [operationModalSuccess, setOperationModalSuccess] = useState(false);
-  const [operationModalMessage, setOperationModalMessage] = useState('');
   // #endregion
 
   // #region 탭 설정
-  const tabs = [
-    {
-      id: 'basic',
-      label: '기본 정보',
-    },
-    {
-      id: 'connection',
-      label: '세대 연결',
-    },
-    {
-      id: 'movement',
-      label: '세대 이전',
-    },
-  ];
+  const tabs = createResidentTabs(residentId);
   // #endregion
 
   // #region 데이터 로드
@@ -145,11 +124,6 @@ export default function ResidentDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/occupancy/resident',
-    hasChanges
-  });
-
   const handleFormChange = useCallback((data: ResidentFormData) => {
     setFormData(data);
   }, []);
@@ -239,11 +213,7 @@ export default function ResidentDetailPage() {
     }
   }, [resident, router]);
 
-  const handleOperationComplete = useCallback((success: boolean, message: string) => {
-    setOperationModalMessage(message);
-    setOperationModalSuccess(success);
-    setOperationModalOpen(true);
-  }, []);
+
   // #endregion
 
   if (loading) {
@@ -263,67 +233,27 @@ export default function ResidentDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 헤더 */}
-      <PageHeader 
-        title="거주자 상세 정보"
-        subtitle={`${resident.name} - ${resident.phone || '전화번호 없음'}`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
+    <DetailPageLayout
+      title="거주자 상세 정보"
+      subtitle={`${resident.name} - ${resident.phone || '전화번호 없음'}`}
+      tabs={tabs}
+      activeTabId="basic"
+      fallbackPath="/parking/occupancy/resident"
+      hasChanges={hasChanges}
+    >
+      <ResidentForm
+        mode="edit"
+        resident={resident}
+        data={formData}
+        onChange={handleFormChange}
+        disabled={isSubmitting}
+        showActions={true}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        onDelete={handleDelete}
+        hasChanges={hasChanges}
+        isValid={isValid}
       />
-
-      {/* 탭과 콘텐츠 */}
-      <div className="flex flex-col">
-        <Tabs
-          tabs={tabs}
-          activeId={activeTab}
-          onTabChange={setActiveTab}
-        />
-
-        {/* 콘텐츠 영역 */}
-        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-          {activeTab === 'basic' && (
-            <ResidentForm
-              mode="edit"
-              resident={resident}
-              data={formData}
-              onChange={handleFormChange}
-              disabled={isSubmitting}
-              showActions={true}
-              onReset={handleReset}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-              hasChanges={hasChanges}
-              isValid={isValid}
-            />
-          )}
-          
-          {activeTab === 'connection' && (
-            <ResidentConnection 
-              resident={resident}
-              onDataChange={loadResidentData}
-              onOperationComplete={handleOperationComplete}
-            />
-          )}
-          
-          {activeTab === 'movement' && (
-            <ResidentMovement 
-              resident={resident}
-              onDataChange={loadResidentData}
-              onOperationComplete={handleOperationComplete}
-            />
-          )}
-        </div>
-      </div>
 
       {/* 성공 모달 */}
       <Modal
@@ -385,28 +315,7 @@ export default function ResidentDetailPage() {
         </div>
       </Modal>
 
-      {/* 세대 연결/이전 작업 모달 */}
-      <Modal
-        isOpen={operationModalOpen}
-        onClose={() => setOperationModalOpen(false)}
-        title="작업 완료"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className={`mb-2 text-lg font-semibold ${operationModalSuccess ? 'text-green-600' : 'text-red-600'}`}>
-              {operationModalSuccess ? '성공' : '오류'}
-            </h3>
-            <p className="text-muted-foreground">{operationModalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setOperationModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+
+    </DetailPageLayout>
   );
 }

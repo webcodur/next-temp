@@ -84,7 +84,8 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 			if (child.type === GridFormContent) {
 				contentElement = React.cloneElement(child as React.ReactElement<GridFormContentProps>, {
 					className: cn(
-						'bg-background border-b border-border/40',
+						'flex items-start px-3 py-2 bg-background border-b border-border/40',
+						'min-h-full',
 						// 마지막 요소의 하단 테두리 제거 (컨텐츠)
 						'last:border-b-0',
 						alignClasses[align],
@@ -158,20 +159,16 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 			{/* 룰 열: 세로 모니터에서는 작은 버튼, 가로에서는 기존 방식 */}
 			{rulesElement ? (
 				<div className="flex justify-center items-center px-2 py-2 border-b border-border/40 last:border-b-0 bg-muted/10">
-					{/* lg 이상: 기존 룰 표시 */}
-					<div className="hidden justify-start items-center px-2 w-full min-h-full text-sm lg:flex text-muted-foreground text-start">
-						{rulesElement && (rulesElement as React.ReactElement<GridFormRulesProps>).props.children}
-					</div>
-					
-					{/* lg 미만: 작은 정보 버튼 */}
-					<button
-						type="button"
+					{/* 룰 텍스트 표시 - 클릭 시 모달 */}
+					<div 
+						className="flex justify-start items-center px-2 w-full min-h-full text-sm text-muted-foreground text-start cursor-pointer hover:text-foreground transition-colors"
 						onClick={() => setIsRulesModalOpen(true)}
-						className="flex justify-center items-center w-6 h-6 rounded-sm transition-colors cursor-pointer lg:hidden text-muted-foreground hover:text-foreground hover:bg-muted/50"
-						title="입력 규칙 보기"
+						title="클릭하여 전체 내용 보기"
 					>
-						<Info size={14} />
-					</button>
+						<span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap">
+							{rulesElement && (rulesElement as React.ReactElement<GridFormRulesProps>).props.children}
+						</span>
+					</div>
 				</div>
 			) : (
 				// 룰이 없는 경우 빈 셀

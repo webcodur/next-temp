@@ -2,21 +2,17 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
+import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import CarForm, { CarFormData } from './CarForm';
-import CarInstanceSection from './CarInstanceSection';
-import CarResidentSection from './CarResidentSection';
 import { searchCars } from '@/services/cars/cars$_GET';
 import { updateCar } from '@/services/cars/cars@id_PATCH';
 import { deleteCar } from '@/services/cars/cars@id_DELETE';
 import { CarWithInstance } from '@/types/car';
+import { createCarTabs } from '../_shared/carTabs';
 
 export default function CarDetailPage() {  
   const router = useRouter();
@@ -27,7 +23,6 @@ export default function CarDetailPage() {
   const [car, setCar] = useState<CarWithInstance | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<CarFormData>({
     carNumber: '',
@@ -66,20 +61,7 @@ export default function CarDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = [
-    {
-      id: 'basic',
-      label: '기본 정보',
-    },
-    {
-      id: 'instances',
-      label: '세대 연결',
-    },
-    {
-      id: 'residents',
-      label: '거주자 연결',
-    },
-  ];
+  const tabs = createCarTabs(carId);
   // #endregion
 
   // #region 데이터 로드
@@ -175,11 +157,6 @@ export default function CarDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/occupancy/car',
-    hasChanges
-  });
-
   const handleFormChange = useCallback((data: CarFormData) => {
     setFormData(data);
   }, []);
@@ -295,65 +272,27 @@ export default function CarDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 헤더 */}
-      <PageHeader 
-        title="차량 상세 정보"
-        subtitle={`${car.carNumber} ${car.brand ? `- ${car.brand}` : ''} ${car.model || ''}`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
+    <DetailPageLayout
+      title="차량 상세 정보"
+      subtitle={`${car.carNumber} ${car.brand ? `- ${car.brand}` : ''} ${car.model || ''}`}
+      tabs={tabs}
+      activeTabId="basic"
+      fallbackPath="/parking/occupancy/car"
+      hasChanges={hasChanges}
+    >
+      <CarForm
+        mode="edit"
+        car={car}
+        data={formData}
+        onChange={handleFormChange}
+        disabled={isSubmitting}
+        showActions={true}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        onDelete={handleDelete}
+        hasChanges={hasChanges}
+        isValid={isValid}
       />
-
-      {/* 탭과 콘텐츠 */}
-      <div className="flex flex-col">
-        <Tabs
-          tabs={tabs}
-          activeId={activeTab}
-          onTabChange={setActiveTab}
-        />
-
-        {/* 콘텐츠 영역 */}
-        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-          {activeTab === 'basic' && (
-            <CarForm
-              mode="edit"
-              car={car}
-              data={formData}
-              onChange={handleFormChange}
-              disabled={isSubmitting}
-              showActions={true}
-              onReset={handleReset}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-              hasChanges={hasChanges}
-              isValid={isValid}
-            />
-          )}
-          
-          {activeTab === 'instances' && (
-            <CarInstanceSection 
-              car={car}
-              onDataChange={loadCarData}
-            />
-          )}
-          
-          {activeTab === 'residents' && (
-            <CarResidentSection 
-              car={car}
-              onDataChange={loadCarData}
-            />
-          )}
-        </div>
-      </div>
 
       {/* 성공 모달 */}
       <Modal
@@ -414,6 +353,6 @@ export default function CarDetailPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </DetailPageLayout>
   );
 }

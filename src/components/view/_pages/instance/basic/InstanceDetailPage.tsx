@@ -2,23 +2,19 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
+import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import InstanceForm, { InstanceFormData } from './InstanceForm';
-import InstanceServiceConfigSection from './InstanceServiceConfigSection';
-import InstanceVisitConfigSection from './InstanceVisitConfigSection';
 import InstanceResidentList from './InstanceResidentList';
 import InstanceCarList from './InstanceCarList';
 import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 import { InstanceDetail, InstanceType } from '@/types/instance';
+import { createInstanceTabs } from '../_shared/instanceTabs';
 
 export default function InstanceDetailPage() {  
   const router = useRouter();
@@ -29,7 +25,6 @@ export default function InstanceDetailPage() {
   const [instance, setInstance] = useState<InstanceDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<InstanceFormData>({
     name: '',
@@ -62,20 +57,7 @@ export default function InstanceDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = [
-    {
-      id: 'basic',
-      label: '기본 정보',
-    },
-    {
-      id: 'service',
-      label: '서비스 설정',
-    },
-    {
-      id: 'visit',
-      label: '방문 설정',
-    },
-  ];
+  const tabs = createInstanceTabs(instanceId);
   // #endregion
 
   // #region 데이터 로드
@@ -159,11 +141,6 @@ export default function InstanceDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/occupancy/instance',
-    hasChanges
-  });
-
   const handleFormChange = useCallback((data: InstanceFormData) => {
     setFormData(data);
   }, []);
@@ -275,82 +252,44 @@ export default function InstanceDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 헤더 */}
-      <PageHeader 
-        title="세대 상세 정보"
-        subtitle={`${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
-      />
-
-      {/* 탭과 콘텐츠 */}
-      <div className="flex flex-col">
-        <Tabs
-          tabs={tabs}
-          activeId={activeTab}
-          onTabChange={setActiveTab}
+    <DetailPageLayout
+      title="세대 상세 정보"
+      subtitle={`${instance.name} - ${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
+      tabs={tabs}
+      activeTabId="basic"
+      fallbackPath="/parking/occupancy/instance"
+      hasChanges={hasChanges}
+    >
+      <div className="space-y-6">
+        {/* 세대 기본 정보 */}
+        <InstanceForm
+          mode="edit"
+          instance={instance}
+          data={formData}
+          onChange={handleFormChange}
+          disabled={isSubmitting}
+          showActions={true}
+          onReset={handleReset}
+          onSubmit={handleSubmit}
+          onDelete={handleDelete}
+          hasChanges={hasChanges}
+          isValid={isValid}
         />
-
-        {/* 콘텐츠 영역 */}
-        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-          {activeTab === 'basic' && (
-            <div className="space-y-6">
-              {/* 세대 기본 정보 */}
-              <InstanceForm
-                mode="edit"
-                instance={instance}
-                data={formData}
-                onChange={handleFormChange}
-                disabled={isSubmitting}
-                showActions={true}
-                onReset={handleReset}
-                onSubmit={handleSubmit}
-                onDelete={handleDelete}
-                hasChanges={hasChanges}
-                isValid={isValid}
-              />
-              
-              {/* 연결된 거주민 | 차량 목록 */}
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <InstanceResidentList 
-                  residentInstances={instance.residentInstance}
-                  loading={loading}
-                  instanceId={instance.id}
-                  onDataChange={loadInstanceData}
-                />
-                <InstanceCarList 
-                  carInstances={instance.carInstance}
-                  loading={loading}
-                  instanceId={instance.id}
-                  onDataChange={loadInstanceData}
-                />
-              </div>
-          </div>
-          )}
-          
-          {activeTab === 'service' && (
-            <InstanceServiceConfigSection 
-              instance={instance}
-              onDataChange={loadInstanceData}
-            />
-          )}
-          
-          {activeTab === 'visit' && (
-            <InstanceVisitConfigSection 
-              instance={instance}
-              onDataChange={loadInstanceData}
-            />
-          )}
+        
+        {/* 연결된 거주민 | 차량 목록 */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <InstanceResidentList 
+            residentInstances={instance.residentInstance}
+            loading={loading}
+            instanceId={instance.id}
+            onDataChange={loadInstanceData}
+          />
+          <InstanceCarList 
+            carInstances={instance.carInstance}
+            loading={loading}
+            instanceId={instance.id}
+            onDataChange={loadInstanceData}
+          />
         </div>
       </div>
 
@@ -413,6 +352,6 @@ export default function InstanceDetailPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </DetailPageLayout>
   );
 }

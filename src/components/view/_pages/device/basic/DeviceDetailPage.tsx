@@ -1,40 +1,29 @@
 /* 메뉴 설명: 차단기 상세 페이지 */
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
-import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
 import DeviceForm, { DeviceFormData } from './DeviceForm';
-import DevicePermissionConfigSection from './DevicePermissionConfigSection';
-import DeviceCommandLogSection, { DeviceCommandLogSectionRef } from './DeviceCommandLogSection';
-import DeviceHistorySection, { DeviceHistorySectionRef } from './DeviceHistorySection';
 import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
 import { ParkingDevice } from '@/types/device';
 import { validateIP, validatePort } from '@/utils/ipValidation';
+import { createDeviceTabs } from '../_shared/deviceTabs';
 
 export default function DeviceDetailPage() {  
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
   const deviceId = Number(params.id);
   
   // #region 상태 관리
   const [device, setDevice] = useState<ParkingDevice | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState('basic');
-  
-  // Refs
-  const commandLogSectionRef = useRef<DeviceCommandLogSectionRef>(null);
-  const historySectionRef = useRef<DeviceHistorySectionRef>(null);
   
   const [formData, setFormData] = useState<DeviceFormData>({
     name: '',
@@ -71,24 +60,7 @@ export default function DeviceDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = [
-    {
-      id: 'basic',
-      label: '기본 정보',
-    },
-    {
-      id: 'permissions',
-      label: '출입 권한',
-    },
-    {
-      id: 'logs',
-      label: '명령 로그',
-    },
-    {
-      id: 'history',
-      label: '변경 이력',
-    },
-  ];
+  const tabs = createDeviceTabs(deviceId);
   // #endregion
 
   // #region 데이터 로드
@@ -199,11 +171,6 @@ export default function DeviceDetailPage() {
   // #endregion
 
   // #region 핸들러
-  const { handleBack } = useBackNavigation({
-    fallbackPath: '/parking/lot/device',
-    hasChanges
-  });
-
   const handleFormChange = useCallback((data: DeviceFormData) => {
     setFormData(data);
   }, []);
@@ -303,13 +270,7 @@ export default function DeviceDetailPage() {
     }
   }, [device, router]);
 
-  const handleCommandLogRefresh = useCallback(() => {
-    commandLogSectionRef.current?.refresh();
-  }, []);
 
-  const handleHistoryRefresh = useCallback(() => {
-    historySectionRef.current?.refresh();
-  }, []);
   // #endregion
 
   if (loading) {
@@ -329,109 +290,27 @@ export default function DeviceDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* 헤더 */}
-      <PageHeader 
-        title="차단기 상세 정보"
-        subtitle={`${device.name} (${device.ip}:${device.port})`}
-        leftActions={
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={handleBack}
-            title="뒤로가기"
-          >
-            <ArrowLeft size={16} />
-            뒤로가기
-          </Button>
-        }
+    <DetailPageLayout
+      title="차단기 상세 정보"
+      subtitle={`${device.name} (${device.ip}:${device.port})`}
+      tabs={tabs}
+      activeTabId="basic"
+      fallbackPath="/parking/lot/device"
+      hasChanges={hasChanges}
+    >
+      <DeviceForm
+        mode="edit"
+        device={device}
+        data={formData}
+        onChange={handleFormChange}
+        disabled={isSubmitting}
+        showActions={true}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        onDelete={handleDelete}
+        hasChanges={hasChanges}
+        isValid={isValid}
       />
-
-      {/* 탭과 콘텐츠 */}
-      <div className="flex flex-col">
-        <Tabs
-          tabs={tabs}
-          activeId={activeTab}
-          onTabChange={setActiveTab}
-        />
-
-        {/* 콘텐츠 영역 */}
-        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-          {activeTab === 'basic' && (
-            <DeviceForm
-              mode="edit"
-              device={device}
-              data={formData}
-              onChange={handleFormChange}
-              disabled={isSubmitting}
-              showActions={true}
-              onReset={handleReset}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-              hasChanges={hasChanges}
-              isValid={isValid}
-            />
-          )}
-          
-          {activeTab === 'permissions' && (
-            <SectionPanel 
-              title="출입 권한 설정"
-              subtitle="차량 유형별 출입 권한을 설정합니다"
-            >
-              <DevicePermissionConfigSection 
-                device={device}
-                onDataChange={loadDeviceData}
-              />
-            </SectionPanel>
-          )}
-          
-          {activeTab === 'logs' && (
-            <SectionPanel 
-              title="명령 로그"
-              subtitle="차단기 명령 실행 이력을 조회합니다"
-              headerActions={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCommandLogRefresh}
-                  title="새로고침"
-                >
-                  <RefreshCw size={16} />
-                  새로고침
-                </Button>
-              }
-            >
-              <DeviceCommandLogSection 
-                ref={commandLogSectionRef}
-                device={device}
-              />
-            </SectionPanel>
-          )}
-          
-          {activeTab === 'history' && (
-            <SectionPanel 
-              title="변경 이력"
-              subtitle="차단기 설정 변경 이력을 조회합니다"
-              headerActions={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleHistoryRefresh}
-                  title="새로고침"
-                >
-                  <RefreshCw size={16} />
-                  새로고침
-                </Button>
-              }
-            >
-              <DeviceHistorySection 
-                ref={historySectionRef}
-                device={device}
-              />
-            </SectionPanel>
-          )}
-        </div>
-      </div>
 
       {/* 삭제 확인 모달 */}
       <Modal
@@ -506,6 +385,6 @@ export default function DeviceDetailPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </DetailPageLayout>
   );
 }

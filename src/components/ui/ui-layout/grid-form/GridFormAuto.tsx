@@ -24,7 +24,7 @@ const GridFormAuto = React.forwardRef<
   topRightActions,
   bottomLeftActions,
   bottomRightActions,
-  showViewSelector = false,
+  showViewSelector = true,
   ...props
 }, ref) => {
   // 뷰 모드 상태 관리를 GridFormAuto에서 담당
@@ -64,7 +64,7 @@ const GridFormAuto = React.forwardRef<
               {field.label}
             </GridFormLabel>
             
-            <GridFormContent className="items-start justify-start">
+            <GridFormContent className="justify-start items-start">
               <div className="w-full text-start">
                 {field.component}
               </div>

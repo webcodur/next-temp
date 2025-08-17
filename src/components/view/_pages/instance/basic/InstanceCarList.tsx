@@ -137,7 +137,7 @@ export default function InstanceCarList({
       case 'delete':
         return {
           title: '차량 정보 삭제',
-          message: `${confirmModal.carNumber} 차량 정보를 서비스에서 완전히 삭제하시겠습니까?`
+          message: `${confirmModal.carNumber} 차량 정보를 전체 서비스 및 DB에서 완전히 삭제하시겠습니까?`
         };
       default:
         return { title: '', message: '' };
@@ -154,7 +154,7 @@ export default function InstanceCarList({
       case 'connect':
         return {
           title: '차량 연결',
-          message: '다른 차량을 이 세대에 연결하시겠습니까?'
+          message: '이 세대에 연결할 차량을 검색하시겠습니까?'
         };
       default:
         return { title: '', message: '' };

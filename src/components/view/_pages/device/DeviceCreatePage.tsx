@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { GridForm } from '@/components/ui/ui-layout/grid-form';
-import DeviceForm, { DeviceFormData } from './DeviceForm';
-import DevicePermissionConfigSection, { DevicePermissionConfigSectionRef } from './DevicePermissionConfigSection';
+import DeviceForm, { DeviceFormData } from './basic/DeviceForm';
+import DevicePermissionConfigSection, { DevicePermissionConfigSectionRef } from './permissions/DevicePermissionConfigSection';
 import { createParkingDevice } from '@/services/devices/devices_POST';
 
 export default function DeviceCreatePage() {

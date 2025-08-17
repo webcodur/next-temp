@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import CarForm, { CarFormData } from './CarForm';
+import CarForm, { CarFormData } from './basic/CarForm';
 import { createCar } from '@/services/cars/cars_POST';
 
 export default function CarCreatePage() {

@@ -137,7 +137,7 @@ export default function InstanceResidentList({
       case 'delete':
         return {
           title: '거주민 정보 삭제',
-          message: `${confirmModal.residentName} 거주민 정보를 서비스에서 완전히 삭제하시겠습니까?`
+          message: `${confirmModal.residentName} 거주민 정보를 전체 서비스 및 DB에서 완전히 삭제하시겠습니까?`
         };
       default:
         return { title: '', message: '' };
@@ -154,7 +154,7 @@ export default function InstanceResidentList({
       case 'connect':
         return {
           title: '거주민 연결',
-          message: '다른 거주민을 이 세대에 연결하시겠습니까?'
+          message: '이 세대에 연결할 거주민을 검색하시겠습니까?'
         };
       default:
         return { title: '', message: '' };
@@ -234,7 +234,7 @@ export default function InstanceResidentList({
             </p>
           </div>
         ) : (
-          <div className="space-y-2 p-4">
+          <div className="p-4 space-y-2">
             {residentInstances.map((residentInstance) => {
               // 배지 정보
               const badges: InstanceItemCardBadge[] = [];

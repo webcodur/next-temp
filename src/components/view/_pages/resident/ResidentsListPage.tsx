@@ -24,7 +24,7 @@ import { ResidentDetail, SearchResidentParams } from '@/types/resident';
 import { Option } from '@/components/ui/ui-input/field/core/types';
 
 // #region 검색 필터 인터페이스
-interface SearchFilters {
+interface SearchParams {
   name: string;
   phone: string;
   email: string;
@@ -43,7 +43,7 @@ export default function ResidentsListPage() {
   const [isLoading, setIsLoading] = useState(false);
   
   // 검색 필터 상태
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+  const [searchParams, setSearchParams] = useState<SearchParams>({
     name: '',
     phone: '',
     email: '',
@@ -69,22 +69,22 @@ export default function ResidentsListPage() {
   // #endregion
 
   // #region 데이터 로드
-  const loadResidentData = useCallback(async (filters?: Partial<SearchFilters>) => {
+  const loadResidentData = useCallback(async (searchParams?: Partial<SearchParams>) => {
     setIsLoading(true);
     try {
-      const searchParams: SearchResidentParams = {
+      const apiParams: SearchResidentParams = {
         page: 1,
         limit: 100,
-        ...(filters?.name && { name: filters.name }),
-        ...(filters?.phone && { phone: filters.phone }),
-        ...(filters?.email && { email: filters.email }),
-        ...(filters?.gender && { gender: filters.gender as 'M' | 'F' }),
-        ...(filters?.address1Depth && { address1Depth: filters.address1Depth }),
-        ...(filters?.address2Depth && { address2Depth: filters.address2Depth }),
-        ...(filters?.address3Depth && { address3Depth: filters.address3Depth }),
+        ...(searchParams?.name && { name: searchParams.name }),
+        ...(searchParams?.phone && { phone: searchParams.phone }),
+        ...(searchParams?.email && { email: searchParams.email }),
+        ...(searchParams?.gender && { gender: searchParams.gender as 'M' | 'F' }),
+        ...(searchParams?.address1Depth && { address1Depth: searchParams.address1Depth }),
+        ...(searchParams?.address2Depth && { address2Depth: searchParams.address2Depth }),
+        ...(searchParams?.address3Depth && { address3Depth: searchParams.address3Depth }),
       };
 
-      const result = await searchResidents(searchParams);
+      const result = await searchResidents(apiParams);
       
       if (result.success) {
         setResidentList(result.data?.data || []);
@@ -107,18 +107,18 @@ export default function ResidentsListPage() {
 
   // #region 검색 관련 핸들러
   const handleSearch = useCallback(() => {
-    const activeFilters = Object.entries(searchFilters).reduce((acc, [key, value]) => {
+    const activeSearchParams = Object.entries(searchParams).reduce((acc, [key, value]) => {
       if (value.trim()) {
-        acc[key as keyof SearchFilters] = value.trim();
+        acc[key as keyof SearchParams] = value.trim();
       }
       return acc;
-    }, {} as Partial<SearchFilters>);
+    }, {} as Partial<SearchParams>);
 
-    loadResidentData(activeFilters);
-  }, [searchFilters, loadResidentData]);
+    loadResidentData(activeSearchParams);
+  }, [searchParams, loadResidentData]);
 
   const handleReset = useCallback(() => {
-    const resetFilters = {
+    const resetParams = {
       name: '',
       phone: '',
       email: '',
@@ -127,12 +127,12 @@ export default function ResidentsListPage() {
       address2Depth: '',
       address3Depth: '',
     };
-    setSearchFilters(resetFilters);
+    setSearchParams(resetParams);
     loadResidentData({});
   }, [loadResidentData]);
 
-  const updateFilter = useCallback((field: keyof SearchFilters, value: string) => {
-    setSearchFilters(prev => ({
+  const updateSearchParam = useCallback((field: keyof SearchParams, value: string) => {
+    setSearchParams(prev => ({
       ...prev,
       [field]: value,
     }));
@@ -194,8 +194,8 @@ export default function ResidentsListPage() {
           id="search-name"
           label="이름"
           placeholder="이름을 입력하세요"
-          value={searchFilters.name}
-          onChange={(value) => updateFilter('name', value)}
+          value={searchParams.name}
+          onChange={(value) => updateSearchParam('name', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
@@ -210,8 +210,8 @@ export default function ResidentsListPage() {
           id="search-phone"
           label="전화번호"
           placeholder="전화번호를 입력하세요"
-          value={searchFilters.phone}
-          onChange={(value) => updateFilter('phone', value)}
+          value={searchParams.phone}
+          onChange={(value) => updateSearchParam('phone', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
@@ -226,8 +226,8 @@ export default function ResidentsListPage() {
           id="search-email"
           label="이메일"
           placeholder="이메일을 입력하세요"
-          value={searchFilters.email}
-          onChange={(value) => updateFilter('email', value)}
+          value={searchParams.email}
+          onChange={(value) => updateSearchParam('email', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
@@ -243,8 +243,8 @@ export default function ResidentsListPage() {
           label="성별"
           placeholder="성별을 선택하세요"
           options={genderOptions}
-          value={searchFilters.gender}
-          onChange={(value) => updateFilter('gender', value)}
+          value={searchParams.gender}
+          onChange={(value) => updateSearchParam('gender', value)}
         />
       ),
       visible: true,
@@ -257,8 +257,8 @@ export default function ResidentsListPage() {
           id="search-address1"
           label="동 정보"
           placeholder="동 정보를 입력하세요"
-          value={searchFilters.address1Depth}
-          onChange={(value) => updateFilter('address1Depth', value)}
+          value={searchParams.address1Depth}
+          onChange={(value) => updateSearchParam('address1Depth', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
@@ -273,8 +273,8 @@ export default function ResidentsListPage() {
           id="search-address2"
           label="호수 정보"
           placeholder="호수 정보를 입력하세요"
-          value={searchFilters.address2Depth}
-          onChange={(value) => updateFilter('address2Depth', value)}
+          value={searchParams.address2Depth}
+          onChange={(value) => updateSearchParam('address2Depth', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
@@ -289,15 +289,15 @@ export default function ResidentsListPage() {
           id="search-address3"
           label="기타 주소 정보"
           placeholder="기타 주소 정보를 입력하세요"
-          value={searchFilters.address3Depth}
-          onChange={(value) => updateFilter('address3Depth', value)}
+          value={searchParams.address3Depth}
+          onChange={(value) => updateSearchParam('address3Depth', value)}
           showSearchIcon={true}
           onKeyDown={handleKeyDown}
         />
       ),
       visible: true,
     },
-  ], [searchFilters, genderOptions, updateFilter, handleKeyDown]);
+  ], [searchParams, genderOptions, updateSearchParam, handleKeyDown]);
   // #endregion
 
   // #region 컬럼 정의

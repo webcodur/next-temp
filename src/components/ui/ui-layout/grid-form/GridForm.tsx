@@ -15,7 +15,7 @@ const GridForm = React.forwardRef<
 >(({
 	viewMode = 'default',
 	sequenceWidth = '60px',
-	rulesWidth = '200px',
+	rulesWidth = '280px',
 	gap = '20px',
 	colorVariant = 'primary',
 	className,
@@ -73,7 +73,7 @@ const GridForm = React.forwardRef<
 		}
 		
 		// 상세뷰: 4열 구조 [순서 - 필드명 - 필드값 - 룰]
-		const rulesColumnWidth = isLargeScreen ? rulesWidth : '32px'; // 세로 모니터에서 info 버튼 크기에 맞춰 최소화
+		const rulesColumnWidth = isLargeScreen ? rulesWidth : '120px'; // 작은 화면에서도 최소한의 텍스트 표시
 		return `${sequenceWidth} ${labelWidth} 1fr ${rulesColumnWidth}`;
 	}, [viewMode, sequenceWidth, labelWidth, rulesWidth, isLargeScreen]);
 
@@ -108,7 +108,7 @@ const GridForm = React.forwardRef<
 						'w-full transition-all duration-200 ease-in-out', // 부드러운 전환 효과
 						viewMode === 'default' 
 							? 'rounded-lg border backdrop-blur-sm border-border/40 overflow-hidden' // 기본뷰: 전체 컨테이너에 border
-							: 'rounded-lg border backdrop-blur-sm border-border/40 grid auto-rows-min items-stretch', // 상세뷰: 기존 그리드 레이아웃
+							: 'rounded-lg border backdrop-blur-sm border-border/40 grid auto-rows-min items-stretch overflow-hidden', // 상세뷰: 기존 그리드 레이아웃 + overflow 제어
 						className
 					)}
 					style={{

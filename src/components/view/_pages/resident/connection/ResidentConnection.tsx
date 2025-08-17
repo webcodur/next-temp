@@ -6,7 +6,7 @@ import { Link, Home } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
-import ResidentInstanceTable from './resident_instance/ResidentInstanceTable';
+import ResidentInstanceTable from './ResidentInstanceTable';
 import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 
 import { createResidentInstance } from '@/services/residents/residents_instances_POST';
