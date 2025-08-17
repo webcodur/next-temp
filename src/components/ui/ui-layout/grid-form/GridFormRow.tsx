@@ -9,7 +9,7 @@ import GridFormLabel from './GridFormLabel';
 import GridFormContent from './GridFormContent';
 import GridFormRules from './GridFormRules';
 import GridFormRulesModal from './GridFormRulesModal';
-import { Info } from 'lucide-react';
+// import { Info } from 'lucide-react';
 
 // #region GridForm.Row 컴포넌트
 const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -161,11 +161,11 @@ const GridFormRow: React.FC<GridFormRowProps & React.HTMLAttributes<HTMLDivEleme
 				<div className="flex justify-center items-center px-2 py-2 border-b border-border/40 last:border-b-0 bg-muted/10">
 					{/* 룰 텍스트 표시 - 클릭 시 모달 */}
 					<div 
-						className="flex justify-start items-center px-2 w-full min-h-full text-sm text-muted-foreground text-start cursor-pointer hover:text-foreground transition-colors"
+						className="flex justify-start items-center px-2 w-full min-h-full text-sm transition-colors cursor-pointer text-muted-foreground text-start hover:text-foreground"
 						onClick={() => setIsRulesModalOpen(true)}
 						title="클릭하여 전체 내용 보기"
 					>
-						<span className="block w-full overflow-hidden text-ellipsis whitespace-nowrap">
+						<span className="block overflow-hidden w-full whitespace-nowrap text-ellipsis">
 							{rulesElement && (rulesElement as React.ReactElement<GridFormRulesProps>).props.children}
 						</span>
 					</div>

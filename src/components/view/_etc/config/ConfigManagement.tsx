@@ -686,8 +686,8 @@ export default function ConfigManagement({
                 return (
                   <GridFormAuto 
                     fields={fields}
-                    title="설정 항목 편집"
-                    subtitle="선택한 설정 항목의 값을 수정할 수 있습니다."
+                    // title="설정 항목 편집"
+                    // subtitle="선택한 설정 항목의 값을 수정할 수 있습니다."
                     gap="20px"
                     bottomRightActions={
                       <div className="flex gap-3">

@@ -1,29 +1,29 @@
 'use client';
 
 import { atom } from 'jotai';
-import { defaults } from '@/data/sidebarConfig';
+// import { defaults } from '@/data/sidebarConfig';
 
 // #region localStorage 유틸리티 함수들
 // localStorage에서 단일 열기 모드 상태 가져오기
 const getSavedSingleOpenMode = () => {
-  if (typeof window === 'undefined') return false;
-  try {
-    const saved = localStorage.getItem('sidebarSingleOpenMode');
-    return saved ? JSON.parse(saved) : false;
-  } catch {
-    return false;
-  }
+	if (typeof window === 'undefined') return false;
+	try {
+		const saved = localStorage.getItem('sidebarSingleOpenMode');
+		return saved ? JSON.parse(saved) : false;
+	} catch {
+		return false;
+	}
 };
 // #endregion
 
 // #region 사이드바 상태 atom들
-// 중복 정의 방지: sidebarCollapsedAtom, endPanelWidthAtom, activeTopMenuAtom은 
+// 중복 정의 방지: sidebarCollapsedAtom, endPanelWidthAtom, activeTopMenuAtom은
 // src/store/ui.ts에서 정의되어 있으므로 이곳에서는 제거
 
 // 사이드바 접힘/펼침 상태는 src/store/ui.ts에서 관리
 // export const sidebarCollapsedAtom = ...
 
-// 사이드바 끝 패널 너비는 src/store/ui.ts에서 관리  
+// 사이드바 끝 패널 너비는 src/store/ui.ts에서 관리
 // export const endPanelWidthAtom = ...
 
 // 활성 탑 메뉴는 src/store/ui.ts에서 관리
@@ -31,17 +31,17 @@ const getSavedSingleOpenMode = () => {
 
 // 단일 열기 모드 상태 (localStorage 연동)
 export const singleOpenModeAtom = atom(
-  getSavedSingleOpenMode(),
-  (get, set, newValue: boolean) => {
-    set(singleOpenModeAtom, newValue);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sidebarSingleOpenMode', JSON.stringify(newValue));
-      } catch {
-        // localStorage 저장 실패 시 무시
-      }
-    }
-  }
+	getSavedSingleOpenMode(),
+	(get, set, newValue: boolean) => {
+		set(singleOpenModeAtom, newValue);
+		if (typeof window !== 'undefined') {
+			try {
+				localStorage.setItem('sidebarSingleOpenMode', JSON.stringify(newValue));
+			} catch {
+				// localStorage 저장 실패 시 무시
+			}
+		}
+	}
 );
 // #endregion
 

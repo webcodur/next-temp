@@ -10,7 +10,7 @@ import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
+// import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 
@@ -36,8 +36,8 @@ export default function DetailPageLayout({
   subtitle,
   tabs,
   activeTabId,
-  fallbackPath,
-  hasChanges = false,
+  // fallbackPath,
+  // hasChanges = false,
   children,
 }: DetailPageLayoutProps) {
   const router = useRouter();
