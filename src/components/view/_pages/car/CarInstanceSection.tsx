@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Home } from 'lucide-react';
 
@@ -11,13 +11,14 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
-import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
+import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // 더 이상 사용하지 않음
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
 import { updateCarInstance } from '@/services/cars/cars_instances@id_PATCH';
 import { CarWithInstance, CarInstanceResidentDetail } from '@/types/car';
+import { Instance } from '@/types/instance';
 
 interface CarInstanceSectionProps {
   car: CarWithInstance;
@@ -25,7 +26,7 @@ interface CarInstanceSectionProps {
 }
 
 interface CreateInstanceFormData {
-  instanceId: string;
+  selectedInstance: Instance | null;
   carShareOnoff: boolean;
 }
 
@@ -48,7 +49,7 @@ export default function CarInstanceSection({
   
   // 폼 상태
   const [createFormData, setCreateFormData] = useState<CreateInstanceFormData>({
-    instanceId: '',
+    selectedInstance: null,
     carShareOnoff: false,
   });
   const [editTarget, setEditTarget] = useState<CarInstanceResidentDetail | null>(null);
@@ -88,25 +89,30 @@ export default function CarInstanceSection({
   // #endregion
 
   // #region 이벤트 핸들러
+  const handleInstanceSelect = useCallback((instance: Instance) => {
+    setCreateFormData(prev => ({ ...prev, selectedInstance: instance }));
+  }, []);
+
   const handleCreate = async () => {
-    if (!createFormData.instanceId.trim() || isSubmitting) return;
+    if (!createFormData.selectedInstance || isSubmitting) return;
     
     setIsSubmitting(true);
     
     try {
       const createData = {
         carNumber: car.carNumber,
-        instanceId: parseInt(createFormData.instanceId),
+        instanceId: createFormData.selectedInstance.id,
         carShareOnoff: createFormData.carShareOnoff,
       };
 
       const result = await createCarInstance(createData);
 
       if (result.success) {
-        setModalMessage('세대 연결이 성공적으로 생성되었습니다.');
+        const address = `${createFormData.selectedInstance.address1Depth} ${createFormData.selectedInstance.address2Depth} ${createFormData.selectedInstance.address3Depth || ''}`.trim();
+        setModalMessage(`${car.carNumber} 차량이 ${address} 세대에 성공적으로 연결되었습니다.`);
         setSuccessModalOpen(true);
         setCreateModalOpen(false);
-        setCreateFormData({ instanceId: '', carShareOnoff: false });
+        setCreateFormData({ selectedInstance: null, carShareOnoff: false });
         await loadInstanceData();
         onDataChange();
       } else {
@@ -197,6 +203,96 @@ export default function CarInstanceSection({
       router.push(`/parking/occupancy/instance/${item.carInstance.instanceId}`);
     }
   };
+  // #endregion
+
+  // #region 검색 필드 구성 (모달용)
+  const searchFields: InstanceSearchField[] = useMemo(() => [
+    {
+      key: 'address1Depth',
+      label: '동 정보 검색',
+      placeholder: '동 정보 입력',
+      type: 'text',
+      visible: true,
+    },
+    {
+      key: 'address2Depth',
+      label: '호수 정보 검색',
+      placeholder: '호수 정보 입력',
+      type: 'text',
+      visible: true,
+    },
+    {
+      key: 'instanceType',
+      label: '세대 타입 검색',
+      placeholder: '타입 선택',
+      type: 'select',
+      visible: true,
+    },
+  ], []);
+
+  // #region 모달용 세대 검색 컬럼 정의
+  const instanceSearchColumns: BaseTableColumn<Instance>[] = [
+    {
+      key: 'id',
+      header: 'ID',
+      width: '8%',
+      align: 'center',
+    },
+    {
+      key: 'dongHosu',
+      header: '동호수',
+      width: '20%',
+      align: 'start',
+      cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
+    },
+    {
+      key: 'name',
+      header: '세대명',
+      width: '15%',
+      align: 'start',
+      cell: (item: Instance) => item.name || '-',
+    },
+    {
+      key: 'ownerName',
+      header: '소유자',
+      width: '12%',
+      align: 'start',
+      cell: (item: Instance) => item.ownerName || '-',
+    },
+    {
+      key: 'instanceType',
+      header: '타입',
+      width: '10%',
+      align: 'center',
+      cell: (item: Instance) => {
+        const typeMap = {
+          GENERAL: '일반',
+          TEMP: '임시',
+          COMMERCIAL: '상업',
+        };
+        return typeMap[item.instanceType as keyof typeof typeMap] || item.instanceType;
+      },
+    },
+    {
+      header: '선택',
+      width: '15%',
+      align: 'center',
+      cell: (item: Instance) => {
+        const isSelected = createFormData.selectedInstance?.id === item.id;
+        
+        return (
+          <Button
+            variant={isSelected ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => handleInstanceSelect(item)}
+            disabled={isSubmitting}
+          >
+            {isSelected ? '선택됨' : '선택'}
+          </Button>
+        );
+      },
+    },
+  ];
   // #endregion
 
   // #region 컬럼 정의
@@ -312,45 +408,76 @@ export default function CarInstanceSection({
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         title="세대 연결 추가"
-        size="md"
+        size="xl"
       >
-        <div className="space-y-4">
-          {(() => {
-            const fields: GridFormFieldSchema[] = [
-              {
-                id: 'instanceId',
-                label: '세대 ID',
-                required: true,
-                rules: '연결할 세대 선택',
-                component: (
-                  <SimpleNumberInput
-                    value={createFormData.instanceId ? parseInt(createFormData.instanceId) : ''}
-                    onChange={(value) => setCreateFormData(prev => ({ ...prev, instanceId: value.toString() }))}
-                    placeholder="세대 ID"
-                    disabled={isSubmitting}
-                    min={1}
-                  />
-                )
-              },
-              {
-                id: 'carShareOnoff',
-                label: '공유 설정',
-                rules: '공유/비공유 선택',
-                component: (
-                  <SimpleToggleSwitch
-                    checked={createFormData.carShareOnoff}
-                    onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
-                    disabled={isSubmitting}
-                    size="md"
-                  />
-                )
-              }
-            ];
+        <div className="space-y-6">
+          {/* 세대 검색 및 선택 */}
+          <div className="space-y-4">
+            <InstanceSearchSection
+              searchFields={searchFields}
+              tableType="base"
+              columns={instanceSearchColumns}
+              onRowClick={handleInstanceSelect}
+              getRowClassName={(instance: Instance) => {
+                const isSelected = createFormData.selectedInstance?.id === instance.id;
+                return isSelected 
+                  ? 'bg-blue-50 border-blue-200 cursor-pointer' 
+                  : 'cursor-pointer hover:bg-muted/50';
+              }}
+              showSection={false}
+              defaultSearchOpen={true}
+              searchMode="server"
+              pageSize={5}
+              minWidth="700px"
+              title="연결할 세대 검색"
+              subtitle="차량을 연결할 세대를 검색하고 선택하세요."
+            />
+          </div>
 
-            return <GridFormAuto fields={fields} rulesWidth="120px" gap="16px" />;
-          })()}
+          {/* 선택된 세대 정보 및 공유 설정 */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {/* 선택된 세대 */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="mb-2">
+                <span className="font-medium text-foreground">
+                  선택된 세대
+                </span>
+              </div>
+              {createFormData.selectedInstance ? (
+                <p className="text-sm text-foreground">
+                  {createFormData.selectedInstance.address1Depth} {createFormData.selectedInstance.address2Depth} {createFormData.selectedInstance.address3Depth || ''}
+                  <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
+                    {{
+                      GENERAL: '일반',
+                      TEMP: '임시',
+                      COMMERCIAL: '상업',
+                    }[createFormData.selectedInstance.instanceType] || createFormData.selectedInstance.instanceType}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  위 목록에서 세대를 선택해주세요
+                </p>
+              )}
+            </div>
+
+            {/* 공유 설정 */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-foreground">
+                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 거주자의 차량 이용 허용)</span>
+                </label>
+                <SimpleToggleSwitch
+                  checked={createFormData.carShareOnoff}
+                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
+                  disabled={isSubmitting}
+                  size="md"
+                />
+              </div>
+            </div>
+          </div>
           
-          <div className="flex gap-3 justify-end pt-4">
+          <div className="flex gap-3 justify-end pt-4 border-t">
             <Button 
               variant="ghost" 
               onClick={() => setCreateModalOpen(false)}
@@ -361,9 +488,9 @@ export default function CarInstanceSection({
             <Button 
               variant="primary" 
               onClick={handleCreate}
-              disabled={!createFormData.instanceId.trim() || isSubmitting}
+              disabled={!createFormData.selectedInstance || isSubmitting}
             >
-              {isSubmitting ? '생성 중...' : '생성'}
+              {isSubmitting ? '생성 중...' : '연결 생성'}
             </Button>
           </div>
         </div>
