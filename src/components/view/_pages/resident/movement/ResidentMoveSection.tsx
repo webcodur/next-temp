@@ -203,50 +203,51 @@ export default function ResidentMoveSection({
         />
       </div>
 
-      {/* 선택된 세대 정보 */}
-      <div className={`p-4 rounded-lg border transition-all duration-200 ${
-        selectedInstance 
-          ? 'bg-blue-50 border-blue-200' 
-          : 'bg-muted/30 border-muted-foreground/20'
-      }`}>
-        <div className="flex gap-2 items-center mb-2">
-          <Home size={16} className={selectedInstance ? 'text-blue-600' : 'text-muted-foreground'} />
-          <span className={`font-medium ${selectedInstance ? 'text-blue-800' : 'text-muted-foreground'}`}>
-            이전할 세대
-          </span>
-        </div>
-        {selectedInstance ? (
-          <p className="text-sm text-blue-700">
-            {selectedInstance.address1Depth} {selectedInstance.address2Depth} {selectedInstance.address3Depth || ''}
-            <span className="px-2 py-1 ml-2 text-xs bg-blue-100 rounded">
-              {{
-                GENERAL: '일반',
-                TEMP: '임시',
-                COMMERCIAL: '상업',
-              }[selectedInstance.instanceType] || selectedInstance.instanceType}
+      {/* 선택된 세대 정보 및 이동 사유 */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* 선택된 세대 */}
+        <div className="p-4 rounded-lg border bg-card">
+          <div className="flex gap-2 items-center mb-2">
+            <Home size={16} className={selectedInstance ? 'text-blue-600' : 'text-muted-foreground'} />
+            <span className={`font-medium ${selectedInstance ? 'text-blue-800' : 'text-muted-foreground'}`}>
+              이전할 세대
             </span>
-          </p>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            위 목록에서 이전할 세대를 선택해주세요
-          </p>
-        )}
-      </div>
+          </div>
+          {selectedInstance ? (
+            <p className="text-sm text-foreground">
+              {selectedInstance.address1Depth} {selectedInstance.address2Depth} {selectedInstance.address3Depth || ''}
+              <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
+                {{
+                  GENERAL: '일반',
+                  TEMP: '임시',
+                  COMMERCIAL: '상업',
+                }[selectedInstance.instanceType] || selectedInstance.instanceType}
+              </span>
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              위 목록에서 이전할 세대를 선택해주세요
+            </p>
+          )}
+        </div>
 
-      {/* 이동 사유 입력 */}
-      <div className="space-y-2">
-        <label htmlFor="moveMemo" className="block text-sm font-medium text-foreground">
-          이동 사유 (선택사항)
-        </label>
-        <input
-          id="moveMemo"
-          type="text"
-          value={moveMemo}
-          onChange={(e) => setMoveMemo(e.target.value)}
-          placeholder="이동 사유나 메모를 입력하세요"
-          disabled={isMoving}
-          className="px-3 py-2 w-full text-sm rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-        />
+        {/* 이동 사유 입력 */}
+        <div className="p-4 rounded-lg border bg-card">
+          <div className="space-y-3">
+            <label htmlFor="moveMemo" className="block text-sm font-medium text-foreground">
+              이동 사유 <span className="text-xs text-muted-foreground">(선택사항)</span>
+            </label>
+            <input
+              id="moveMemo"
+              type="text"
+              value={moveMemo}
+              onChange={(e) => setMoveMemo(e.target.value)}
+              placeholder="이동 사유나 메모를 입력하세요"
+              disabled={isMoving}
+              className="px-3 py-2 w-full text-sm rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+            />
+          </div>
+        </div>
       </div>
 
       {/* 액션 버튼 */}

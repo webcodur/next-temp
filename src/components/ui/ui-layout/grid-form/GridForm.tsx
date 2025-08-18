@@ -4,9 +4,10 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { GridFormContext } from './context';
 import type { GridFormProps } from './types';
-import { calculateOptimalLabelWidth, calculateColumnLabelWidths } from './utils';
+import { calculateOptimalLabelWidth, calculateColumnLabelWidths, calculateOptimalRulesWidth } from './utils';
 import GridFormRow from './GridFormRow';
 import GridFormLabel from './GridFormLabel';
+import GridFormRules from './GridFormRules';
 
 // #region GridForm 메인 컴포넌트
 const GridForm = React.forwardRef<
@@ -31,6 +32,9 @@ const GridForm = React.forwardRef<
 	
 	// 기본뷰용 열별 라벨 너비 계산
 	const columnLabelWidths = React.useMemo(() => calculateColumnLabelWidths(children, GridFormRow, GridFormLabel, 2), [children]);
+	
+	// 동적으로 룰즈 너비 계산 (상세뷰용)
+	const calculatedRulesWidth = React.useMemo(() => calculateOptimalRulesWidth(children, GridFormRow, GridFormRules), [children]);
 	
 	// 단순화를 위해 총 개수 계산은 생략 (조건부/프래그먼트에도 안전)
 	const totalCount = 0;
@@ -73,9 +77,11 @@ const GridForm = React.forwardRef<
 		}
 		
 		// 상세뷰: 4열 구조 [순서 - 필드명 - 필드값 - 룰]
-		const rulesColumnWidth = isLargeScreen ? rulesWidth : '120px'; // 작은 화면에서도 최소한의 텍스트 표시
+		// 동적으로 계산된 룰즈 너비를 사용하되, 사용자 설정값이 있으면 그것을 우선시
+		const finalRulesWidth = rulesWidth === '280px' ? calculatedRulesWidth : rulesWidth;
+		const rulesColumnWidth = isLargeScreen ? finalRulesWidth : '120px'; // 작은 화면에서는 최소값
 		return `${sequenceWidth} ${labelWidth} 1fr ${rulesColumnWidth}`;
-	}, [viewMode, sequenceWidth, labelWidth, rulesWidth, isLargeScreen]);
+	}, [viewMode, sequenceWidth, labelWidth, rulesWidth, calculatedRulesWidth, isLargeScreen]);
 
 	return (
 		<GridFormContext.Provider value={{ 
@@ -83,7 +89,7 @@ const GridForm = React.forwardRef<
 			sequenceWidth, 
 			labelWidth,
 			columnLabelWidths,
-			rulesWidth,
+			rulesWidth: calculatedRulesWidth, // 동적으로 계산된 룰즈 너비 사용
 			responsiveRulesWidth: '40px', // 반응형에서 사용할 rules 컬럼 너비
 			gap, 
 			colorVariant, 

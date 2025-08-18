@@ -51,7 +51,7 @@ export default function PageHeader({
 			{/* 좌측 영역 - 뒤로가기 버튼 */}
 			<div className="flex absolute bottom-0 left-0 gap-2 items-center">
 				<Button
-					variant="ghost"
+					variant="primary"
 					size="sm"
 					onClick={handleBack}
 					title="뒤로가기"

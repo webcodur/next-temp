@@ -140,9 +140,7 @@ export default function ResidentsListPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleCreateClick = useCallback(() => {
-    router.push('/parking/occupancy/resident/create');
-  }, [router]);
+
 
   const handleRowClick = useCallback((resident: ResidentDetail, _index: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     router.push(`/parking/occupancy/resident/${resident.id}`);
@@ -394,16 +392,6 @@ export default function ResidentsListPage() {
       <PageHeader 
         title="거주자 관리" 
         subtitle="거주자 등록, 수정, 삭제 및 세대 관계 관리"
-        rightActions={
-          <CrudButton
-            action="create"
-            size="default"
-            onClick={handleCreateClick}
-            title="거주자 추가"
-          >
-            추가
-          </CrudButton>
-        }
       />
 
       {/* 고급 검색 */}

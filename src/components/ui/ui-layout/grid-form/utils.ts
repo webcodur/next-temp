@@ -43,8 +43,9 @@ export const calculateOptimalLabelWidth = (
 	GridFormLabel: React.ComponentType<import('./types').GridFormLabelProps>
 ): string => {
 	let maxWidth = 0;
-
-	const extractLabelTexts = (node: React.ReactNode): void => {
+	const allLabelsDetailed: Array<{text: string, width: number, hasRequired: boolean}> = [];
+	
+	const extractLabelTextsDetailed = (node: React.ReactNode): void => {
 		React.Children.forEach(node, (child) => {
 			if (React.isValidElement(child)) {
 				if (child.type === GridFormRow) {
@@ -60,10 +61,15 @@ export const calculateOptimalLabelWidth = (
 									(rowChild.props as GridFormLabelProps).children
 								);
 								const textWidth = calculateTextWidth(labelText);
-								// required 표시 고려 (+20px)
-								const totalWidth =
-									textWidth +
-									((rowChild.props as GridFormLabelProps).required ? 20 : 0);
+								const hasRequired = !!(rowChild.props as GridFormLabelProps).required;
+								const totalWidth = textWidth + (hasRequired ? 20 : 0);
+								
+								allLabelsDetailed.push({
+									text: labelText,
+									width: totalWidth,
+									hasRequired
+								});
+								
 								maxWidth = Math.max(maxWidth, totalWidth);
 							}
 						}
@@ -73,13 +79,30 @@ export const calculateOptimalLabelWidth = (
 		});
 	};
 
-	extractLabelTexts(children);
+	extractLabelTextsDetailed(children);
 
 	// 패딩(32px) + 여유분(40px) 추가
 	const totalWidth = maxWidth + 72;
 
 	// 최소 120px, 최대 400px 제한
 	const clampedWidth = Math.max(120, Math.min(400, totalWidth));
+
+	// 디버깅용 로그 (개발 환경에서만)
+	if (process.env.NODE_ENV === 'development') {
+		const longestLabel = allLabelsDetailed.reduce((prev, current) => 
+			(current.width > prev.width) ? current : prev, allLabelsDetailed[0] || {text: '', width: 0, hasRequired: false}
+		);
+		
+		console.log('🔧 GridForm Label Width Calculation (Detail View):', {
+			totalLabelsFound: allLabelsDetailed.length,
+			allLabelsWithDetails: allLabelsDetailed,
+			longestLabel: longestLabel ? `"${longestLabel.text}" (${longestLabel.width}px, required: ${longestLabel.hasRequired})` : 'none',
+			maxWidthCalculated: `${maxWidth}px`,
+			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 72px padding)`,
+			clampedWidth: `${clampedWidth}px (min: 120px, max: 400px)`,
+			finalWidth: `${clampedWidth}px`,
+		});
+	}
 
 	return `${clampedWidth}px`;
 };
@@ -140,17 +163,93 @@ export const calculateColumnLabelWidths = (
 
 	// 디버깅용 로그 (개발 환경에서만)
 	if (process.env.NODE_ENV === 'development') {
-		console.log('GridForm Label Width Calculation:', {
+		console.log('🔧 GridForm Label Width Calculation (Default View):', {
+			columnsCount,
+			totalLabelsFound: allLabels.length,
 			allLabels,
-			longestLabel,
-			maxWidth,
-			totalWidth,
-			clampedWidth,
-			unifiedWidth,
+			longestLabel: `"${longestLabel}" (${longestLabel.length} chars)`,
+			maxWidth: `${maxWidth}px`,
+			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 74px padding)`,
+			clampedWidth: `${clampedWidth}px (min: 120px, max: 320px)`,
+			finalUnifiedWidth: unifiedWidth,
+			appliedToAllColumns: `${columnsCount} columns`,
 		});
 	}
 
 	// 모든 열에 동일한 너비 적용 (반응형에서 1열이 되어도 일관성 유지)
 	return Array.from({ length: columnsCount }, () => unifiedWidth);
+};
+
+// 룰즈 컬럼 동적 너비 계산
+export const calculateOptimalRulesWidth = (
+	children: React.ReactNode,
+	GridFormRow: React.ComponentType<import('./types').GridFormRowProps>,
+	GridFormRules: React.ComponentType<import('./types').GridFormRulesProps>
+): string => {
+	let maxWidth = 0;
+	const allRulesDetailed: Array<{text: string, width: number}> = [];
+	
+	const extractRulesTexts = (node: React.ReactNode): void => {
+		React.Children.forEach(node, (child) => {
+			if (React.isValidElement(child)) {
+				if (child.type === GridFormRow) {
+					// Row의 children에서 Rules 찾기
+					React.Children.forEach(
+						(child.props as { children?: React.ReactNode }).children,
+						(rowChild) => {
+							if (
+								React.isValidElement(rowChild) &&
+								rowChild.type === GridFormRules
+							) {
+								const rulesText = extractTextFromNode(
+									(rowChild.props as import('./types').GridFormRulesProps).children
+								);
+								const textWidth = calculateTextWidth(rulesText);
+								
+								allRulesDetailed.push({
+									text: rulesText,
+									width: textWidth
+								});
+								
+								maxWidth = Math.max(maxWidth, textWidth);
+							}
+						}
+					);
+				}
+			}
+		});
+	};
+
+	extractRulesTexts(children);
+
+	// 룰즈가 없는 경우 최소 너비 반환
+	if (allRulesDetailed.length === 0) {
+		return '120px';
+	}
+
+	// 패딩(24px) + 여유분(40px) 추가
+	const totalWidth = maxWidth + 64;
+
+	// 최소 120px, 최대 300px 제한 (룰즈는 적당히 제한)
+	const clampedWidth = Math.max(120, Math.min(300, totalWidth));
+
+	// 디버깅용 로그 (개발 환경에서만)
+	if (process.env.NODE_ENV === 'development') {
+		const longestRules = allRulesDetailed.reduce((prev, current) => 
+			(current.width > prev.width) ? current : prev, allRulesDetailed[0] || {text: '', width: 0}
+		);
+		
+		console.log('🔧 GridForm Rules Width Calculation:', {
+			totalRulesFound: allRulesDetailed.length,
+			allRulesWithDetails: allRulesDetailed,
+			longestRules: longestRules ? `"${longestRules.text}" (${longestRules.width}px)` : 'none',
+			maxWidthCalculated: `${maxWidth}px`,
+			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 64px padding)`,
+			clampedWidth: `${clampedWidth}px (min: 120px, max: 300px)`,
+			finalWidth: `${clampedWidth}px`,
+		});
+	}
+
+	return `${clampedWidth}px`;
 };
 // #endregion

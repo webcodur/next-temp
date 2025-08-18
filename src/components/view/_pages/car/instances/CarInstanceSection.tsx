@@ -9,8 +9,7 @@ import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
+
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 // import { searchCarInstances } from '@/services/cars/cars_instances$_GET'; // 더 이상 사용하지 않음
@@ -57,6 +56,12 @@ export default function CarInstanceSection({
   const [isSubmitting, setIsSubmitting] = useState(false);
   // #endregion
 
+  // #region 기존 세대 ID 목록
+  const existingInstanceIds = useMemo(() => 
+    car.carInstance?.map(instance => instance.instanceId) || []
+  , [car.carInstance]);
+  // #endregion
+
   // #region 데이터 로드
   const loadInstanceData = useCallback(async () => {
     setLoading(true);
@@ -89,9 +94,30 @@ export default function CarInstanceSection({
   // #endregion
 
   // #region 이벤트 핸들러
+  // 이미 연결된 세대인지 확인 (수정 모드에서는 현재 편집 중인 세대는 선택 가능)
+  const isInstanceAlreadyConnected = useCallback((instanceId: number) => {
+    const currentEditInstanceId = editTarget?.carInstance?.instanceId;
+    
+    // 수정 모드가 아닌 경우: 모든 기존 연결된 세대 제외
+    if (!editTarget) {
+      return existingInstanceIds.includes(instanceId);
+    }
+    
+    // 수정 모드인 경우: 현재 편집 중인 세대는 선택 가능, 나머지는 제외
+    if (currentEditInstanceId === instanceId) {
+      return false; // 현재 편집 중인 세대는 선택 가능
+    }
+    
+    return existingInstanceIds.includes(instanceId);
+  }, [existingInstanceIds, editTarget]);
+
   const handleInstanceSelect = useCallback((instance: Instance) => {
+    // 이미 연결된 세대는 선택할 수 없음 (단, 수정 모드에서 현재 편집 중인 세대는 예외)
+    if (isInstanceAlreadyConnected(instance.id)) {
+      return;
+    }
     setCreateFormData(prev => ({ ...prev, selectedInstance: instance }));
-  }, []);
+  }, [isInstanceAlreadyConnected]);
 
   const handleCreate = async () => {
     if (!createFormData.selectedInstance || isSubmitting) return;
@@ -129,31 +155,54 @@ export default function CarInstanceSection({
   };
 
   const handleEdit = async () => {
-    if (!editTarget?.carInstance || isSubmitting) return;
+    if (!editTarget?.carInstance || !createFormData.selectedInstance || isSubmitting) return;
     
     setIsSubmitting(true);
     
     try {
-      const updateData = {
-        carShareOnoff: editTarget.carInstance.carShareOnoff,
-      };
+      // 세대가 변경된 경우: 기존 연결 삭제 후 새로 생성
+      if (editTarget.carInstance.instanceId !== createFormData.selectedInstance.id) {
+        // 1. 기존 연결 삭제
+        const deleteResult = await deleteCarInstance(editTarget.carInstance.id);
+        if (!deleteResult.success) {
+          throw new Error(`기존 연결 삭제 실패: ${deleteResult.errorMsg}`);
+        }
 
-      const result = await updateCarInstance(editTarget.carInstance.id, updateData);
+        // 2. 새 연결 생성
+        const createData = {
+          carNumber: car.carNumber,
+          instanceId: createFormData.selectedInstance.id,
+          carShareOnoff: createFormData.carShareOnoff,
+        };
+        const createResult = await createCarInstance(createData);
+        if (!createResult.success) {
+          throw new Error(`새 연결 생성 실패: ${createResult.errorMsg}`);
+        }
 
-      if (result.success) {
-        setModalMessage('세대 연결이 성공적으로 수정되었습니다.');
-        setSuccessModalOpen(true);
-        setEditModalOpen(false);
-        setEditTarget(null);
-        await loadInstanceData();
-        onDataChange();
+        const address = `${createFormData.selectedInstance.address1Depth} ${createFormData.selectedInstance.address2Depth} ${createFormData.selectedInstance.address3Depth || ''}`.trim();
+        setModalMessage(`${car.carNumber} 차량의 세대 연결이 ${address}로 성공적으로 변경되었습니다.`);
       } else {
-        setModalMessage(`세대 연결 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        // 세대는 같고 공유 설정만 변경
+        const updateData = {
+          carShareOnoff: createFormData.carShareOnoff,
+        };
+        const result = await updateCarInstance(editTarget.carInstance.id, updateData);
+        if (!result.success) {
+          throw new Error(`연결 수정 실패: ${result.errorMsg}`);
+        }
+        
+        setModalMessage('세대 연결 설정이 성공적으로 수정되었습니다.');
       }
+
+      setSuccessModalOpen(true);
+      setEditModalOpen(false);
+      setEditTarget(null);
+      setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+      await loadInstanceData();
+      onDataChange();
     } catch (error) {
       console.error('세대 연결 수정 중 오류:', error);
-      setModalMessage('세대 연결 수정 중 오류가 발생했습니다.');
+      setModalMessage(error instanceof Error ? error.message : '세대 연결 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -190,6 +239,31 @@ export default function CarInstanceSection({
 
   const handleEditClick = (instance: CarInstanceResidentDetail) => {
     setEditTarget(instance);
+    // 수정 시 현재 연결된 세대를 초기값으로 설정
+    if (instance.carInstance?.instanceId) {
+      // 현재 세대 정보를 찾기 위해 임시 Instance 객체 생성 (실제로는 서버에서 가져와야 함)
+      const currentInstance: Instance = {
+        id: instance.carInstance.instanceId,
+        parkinglotId: 1, // 임시값
+        address1Depth: '현재 세대', // 실제 구현에서는 서버에서 세대 정보를 가져와야 함
+        address2Depth: `ID: ${instance.carInstance.instanceId}`,
+        address3Depth: '',
+        instanceType: 'GENERAL',
+        name: '',
+        ownerName: '',
+        phone: '',
+        password: '', // 임시값
+        memo: '',
+        residentInstance: [],
+        carInstance: [],
+        createdAt: '',
+        updatedAt: ''
+      };
+      setCreateFormData({
+        selectedInstance: currentInstance,
+        carShareOnoff: instance.carInstance.carShareOnoff || false
+      });
+    }
     setEditModalOpen(true);
   };
 
@@ -278,7 +352,22 @@ export default function CarInstanceSection({
       width: '15%',
       align: 'center',
       cell: (item: Instance) => {
+        const isAlreadyConnected = isInstanceAlreadyConnected(item.id);
         const isSelected = createFormData.selectedInstance?.id === item.id;
+        const isCurrentInstance = editTarget?.carInstance?.instanceId === item.id;
+        
+        if (isAlreadyConnected) {
+          return (
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={true}
+              className="opacity-60 cursor-not-allowed"
+            >
+              이미 연결됨
+            </Button>
+          );
+        }
         
         return (
           <Button
@@ -287,7 +376,8 @@ export default function CarInstanceSection({
             onClick={() => handleInstanceSelect(item)}
             disabled={isSubmitting}
           >
-            {isSelected ? '선택됨' : '선택'}
+            {isCurrentInstance && isSelected ? '기존 연결 세대' : 
+             isSelected ? '선택됨' : '선택'}
           </Button>
         );
       },
@@ -419,14 +509,25 @@ export default function CarInstanceSection({
               columns={instanceSearchColumns}
               onRowClick={handleInstanceSelect}
               getRowClassName={(instance: Instance) => {
+                const isAlreadyConnected = isInstanceAlreadyConnected(instance.id);
                 const isSelected = createFormData.selectedInstance?.id === instance.id;
-                return isSelected 
-                  ? 'bg-blue-50 border-blue-200 cursor-pointer' 
-                  : 'cursor-pointer hover:bg-muted/50';
+                let className = '';
+                
+                if (isAlreadyConnected) {
+                  className += 'bg-muted/30 opacity-75';
+                } else {
+                  className += 'cursor-pointer hover:bg-muted/50';
+                  if (isSelected) {
+                    className += ' bg-blue-50 border-blue-200';
+                  }
+                }
+                
+                return className;
               }}
               showSection={false}
               defaultSearchOpen={true}
               searchMode="server"
+              excludeInstanceIds={existingInstanceIds}
               pageSize={5}
               minWidth="700px"
               title="연결할 세대 검색"
@@ -499,76 +600,115 @@ export default function CarInstanceSection({
       {/* 세대 연결 수정 모달 */}
       <Modal
         isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
+        onClose={() => {
+          setEditModalOpen(false);
+          setEditTarget(null);
+          setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+        }}
         title="세대 연결 수정"
-        size="md"
+        size="xl"
       >
-        {editTarget && (
+        <div className="space-y-6">
+          {/* 세대 검색 및 선택 */}
           <div className="space-y-4">
-            {(() => {
-              const fields: GridFormFieldSchema[] = [
-                {
-                  id: 'instanceId',
-                  label: '세대 ID',
-                  rules: '시스템 자동 연결',
-                  component: (
-                    <SimpleTextInput
-                      value={editTarget.carInstance?.instanceId?.toString() || ''}
-                      onChange={() => {}}
-                      disabled={true}
-                      validationRule={{
-                        type: 'free',
-                        mode: 'edit'
-                      }}
-                    />
-                  )
-                },
-                {
-                  id: 'carShareOnoff',
-                  label: '공유 설정',
-                  rules: '공유/비공유 상태',
-                  component: (
-                    <SimpleToggleSwitch
-                      checked={editTarget.carInstance?.carShareOnoff || false}
-                      onChange={(checked) => {
-                        if (editTarget.carInstance) {
-                          setEditTarget({
-                            ...editTarget,
-                            carInstance: {
-                              ...editTarget.carInstance,
-                              carShareOnoff: checked,
-                            }
-                          });
-                        }
-                      }}
-                      disabled={isSubmitting}
-                      size="md"
-                    />
-                  )
+            <InstanceSearchSection
+              searchFields={searchFields}
+              tableType="base"
+              columns={instanceSearchColumns}
+              onRowClick={handleInstanceSelect}
+              getRowClassName={(instance: Instance) => {
+                const isAlreadyConnected = isInstanceAlreadyConnected(instance.id);
+                const isSelected = createFormData.selectedInstance?.id === instance.id;
+                let className = '';
+                
+                if (isAlreadyConnected) {
+                  className += 'bg-muted/30 opacity-75';
+                } else {
+                  className += 'cursor-pointer hover:bg-muted/50';
+                  if (isSelected) {
+                    className += ' bg-blue-50 border-blue-200';
+                  }
                 }
-              ];
+                
+                return className;
+              }}
+              showSection={false}
+              defaultSearchOpen={true}
+              searchMode="server"
+              excludeInstanceIds={existingInstanceIds.filter(id => 
+                id !== editTarget?.carInstance?.instanceId // 현재 편집 중인 세대는 제외 목록에서 제거
+              )}
+              pageSize={5}
+              minWidth="700px"
+              title="연결할 세대 검색"
+              subtitle="차량을 연결할 세대를 검색하고 선택하세요. 현재 연결된 세대를 유지하거나 다른 세대로 변경할 수 있습니다."
+            />
+          </div>
 
-              return <GridFormAuto fields={fields} rulesWidth="120px" gap="16px" />;
-            })()}
-            
-            <div className="flex gap-3 justify-end pt-4">
-              <Button 
-                variant="ghost" 
-                onClick={() => setEditModalOpen(false)}
-                disabled={isSubmitting}
-              >
-                취소
-              </Button>
-              <Button 
-                variant="primary" 
-                onClick={handleEdit}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? '수정 중...' : '수정'}
-              </Button>
+          {/* 선택된 세대 정보 및 공유 설정 */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {/* 선택된 세대 */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="mb-2">
+                <span className="font-medium text-foreground">
+                  선택된 세대
+                </span>
+              </div>
+              {createFormData.selectedInstance ? (
+                <p className="text-sm text-foreground">
+                  {createFormData.selectedInstance.address1Depth} {createFormData.selectedInstance.address2Depth} {createFormData.selectedInstance.address3Depth || ''}
+                  <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
+                    {{
+                      GENERAL: '일반',
+                      TEMP: '임시',
+                      COMMERCIAL: '상업',
+                    }[createFormData.selectedInstance.instanceType] || createFormData.selectedInstance.instanceType}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  위 목록에서 세대를 선택해주세요
+                </p>
+              )}
+            </div>
+
+            {/* 공유 설정 */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-foreground">
+                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 거주자의 차량 이용 허용)</span>
+                </label>
+                <SimpleToggleSwitch
+                  checked={createFormData.carShareOnoff}
+                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
+                  disabled={isSubmitting}
+                  size="md"
+                />
+              </div>
             </div>
           </div>
-        )}
+          
+          <div className="flex gap-3 justify-end pt-4 border-t">
+            <Button 
+              variant="ghost" 
+              onClick={() => {
+                setEditModalOpen(false);
+                setEditTarget(null);
+                setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+              }}
+              disabled={isSubmitting}
+            >
+              취소
+            </Button>
+            <Button 
+              variant="primary" 
+              onClick={handleEdit}
+              disabled={!createFormData.selectedInstance || isSubmitting}
+            >
+              {isSubmitting ? '수정 중...' : '연결 수정'}
+            </Button>
+          </div>
+        </div>
       </Modal>
 
       {/* 삭제 확인 모달 */}

@@ -226,7 +226,6 @@ export default function ViolationsPage() {
         rightActions={
           <CrudButton
             action="create"
-            iconOnly
             size="sm"
             onClick={handleCreateClick}
             title="위반 기록 추가"

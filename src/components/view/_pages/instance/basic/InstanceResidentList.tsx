@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Users, User, Phone, Mail, Calendar, UserCheck, Plus, Link } from 'lucide-react';
+import { Users, User, Phone, Mail, Calendar, UserCheck, Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ResidentInstanceWithResident } from '@/types/instance';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
@@ -36,10 +36,10 @@ export default function InstanceResidentList({
 
   const [actionModal, setActionModal] = useState<{
     isOpen: boolean;
-    type: 'create' | 'connect';
+    type: 'connect';
   }>({
     isOpen: false,
-    type: 'create'
+    type: 'connect'
   });
 
   const handleResidentClick = (residentId: number) => {
@@ -90,12 +90,7 @@ export default function InstanceResidentList({
     setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  const handleCreateClick = () => {
-    setActionModal({
-      isOpen: true,
-      type: 'create'
-    });
-  };
+
 
   const handleConnectClick = () => {
     setActionModal({
@@ -106,10 +101,6 @@ export default function InstanceResidentList({
 
   const handleActionConfirm = () => {
     switch (actionModal.type) {
-      case 'create':
-        // TODO: 새 거주민 생성 로직
-        console.log('새 거주민 생성:', instanceId);
-        break;
       case 'connect':
         // TODO: 기존 거주민 연결 로직
         console.log('거주민 연결:', instanceId);
@@ -146,11 +137,6 @@ export default function InstanceResidentList({
 
   const getActionModalContent = () => {
     switch (actionModal.type) {
-      case 'create':
-        return {
-          title: '새 거주민 생성',
-          message: '새로운 거주민을 생성하고 세대에 바로 등록합니까?'
-        };
       case 'connect':
         return {
           title: '거주민 연결',
@@ -169,13 +155,6 @@ export default function InstanceResidentList({
         icon={<Users size={18} />}
         headerActions={(
           <div className="flex gap-1 items-center">
-            <button
-              onClick={handleCreateClick}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-green-100 text-muted-foreground hover:text-green-600"
-              title="새 거주민 생성"
-            >
-              <Plus size={16} />
-            </button>
             <button
               onClick={handleConnectClick}
               className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
@@ -205,13 +184,6 @@ export default function InstanceResidentList({
       icon={<Users size={18} />}
       headerActions={(
         <div className="flex gap-1 items-center">
-          <button
-            onClick={handleCreateClick}
-            className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-green-100 text-muted-foreground hover:text-green-600"
-            title="새 거주민 생성"
-          >
-            <Plus size={16} />
-          </button>
           <button
             onClick={handleConnectClick}
             className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
