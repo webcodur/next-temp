@@ -9,6 +9,7 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { Admin, ROLE_ID_MAP } from '@/types/admin';
+import { ValidationRule } from '@/utils/validation';
 
 export interface AdminFormData {
   account: string;
@@ -62,6 +63,47 @@ const AdminForm: React.FC<AdminFormProps> = ({
       ...data,
       [field]: value,
     });
+  };
+
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'account' | 'name' | 'email' | 'phone' | 'dropdown' | 'password' | 'passwordConfirm' | 'date' | 'readonly', required = false, originalPassword?: string): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'account':
+        validationType = 'id';
+        break;
+      case 'name':
+        validationType = 'name';
+        break;
+      case 'email':
+        validationType = 'email';
+        break;
+      case 'phone':
+        validationType = 'phone';
+        break;
+      case 'password':
+        validationType = 'password';
+        break;
+      case 'passwordConfirm':
+        validationType = 'password-confirm';
+        break;
+      case 'dropdown':
+      case 'readonly':
+        validationType = 'free';
+        break;
+      case 'date':
+        validationType = 'date';
+        break;
+    }
+    
+    const result: ValidationRule = { 
+      type: validationType, 
+      mode, 
+      required,
+      ...(originalPassword && { originalPassword })
+    };
+    return result;
   };
 
   // 액션 버튼들 정의 - 가이드에 따라 유틸(start) / 액션(end) 분리
@@ -126,7 +168,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="계정명"
           disabled={disabled || mode !== 'create'}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('account', mode === 'create')}
         />
       )
     },
@@ -143,7 +185,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="이름"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('name', true)}
         />
       )
     },
@@ -160,7 +202,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="이메일"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'email', mode: mode }}
+          validationRule={getValidationRule('email', false)}
         />
       )
     },
@@ -176,7 +218,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="010-0000-0000"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'phone', mode: mode }}
+          validationRule={getValidationRule('phone', false)}
         />
       )
     },
@@ -193,7 +235,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           options={ROLE_OPTIONS}
           placeholder="권한을 선택하세요"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('dropdown', true)}
         />
       )
     }
@@ -215,7 +257,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="비밀번호"
           disabled={disabled}
           autocomplete="new-password"
-          validationRule={{ type: 'password', mode: mode }}
+          validationRule={getValidationRule('password', passwordRequired)}
         />
       )
     },
@@ -233,11 +275,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           placeholder="비밀번호 확인"
           disabled={disabled}
           autocomplete="new-password"
-          validationRule={{ 
-            type: 'password-confirm', 
-            originalPassword: data.password, 
-            mode: mode 
-          }}
+          validationRule={getValidationRule('passwordConfirm', passwordRequired, data.password)}
         />
       )
     }
@@ -255,7 +293,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           value={admin?.parkinglot?.name || '-'}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -272,7 +310,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     }

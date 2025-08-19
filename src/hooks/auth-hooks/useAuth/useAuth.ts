@@ -122,7 +122,7 @@ export function useAuth() {
     });
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 진짜 한 번만 실행
+  }, []); // 한 번만 실행
   // #endregion
 
   // #region 주기적 토큰 검증 (전역으로 한 번만)
@@ -191,7 +191,7 @@ export function useAuth() {
       console.error('💥 로그인 중 오류:', error);
       return { success: false, error: '로그인 중 오류가 발생했습니다.' };
     }
-  }, [setTokenSelectedParkingLotId, setUserProfile, setParkingLots, setIsLoggedIn, manualSelectedParkingLotId]);
+  }, [setTokenSelectedParkingLotId, setUserProfile, setParkingLots, setIsLoggedIn]);
 
   // 로그아웃 처리
   const logout = useCallback(async () => {

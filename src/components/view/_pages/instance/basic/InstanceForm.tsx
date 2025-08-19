@@ -10,6 +10,7 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { InstanceDetail, InstanceType } from '@/types/instance';
+import { ValidationRule } from '@/utils/validation';
 
 export interface InstanceFormData {
   name: string;
@@ -62,6 +63,35 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       ...data,
       [field]: value,
     });
+  };
+
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'name' | 'owner' | 'address' | 'dropdown' | 'password' | 'text' | 'date' | 'readonly', required = false): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'name':
+      case 'owner':
+        validationType = 'name';
+        break;
+      case 'address':
+        validationType = 'address';
+        break;
+      case 'password':
+        validationType = 'password';
+        break;
+      case 'dropdown':
+      case 'text':
+      case 'readonly':
+        validationType = 'free';
+        break;
+      case 'date':
+        validationType = 'date';
+        break;
+    }
+    
+    const result: ValidationRule = { type: validationType, mode, required };
+    return result;
   };
 
   // 유틸/액션 버튼 구성
@@ -160,7 +190,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('name', value)}
           placeholder="세대 이름"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('name', true)}
         />
       )
     },
@@ -174,7 +204,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('ownerName', value)}
           placeholder="소유자"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('owner', false)}
         />
       )
     },
@@ -190,7 +220,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           placeholder="동 정보"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('address', true)}
         />
       )
     },
@@ -206,7 +236,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           placeholder="호수 정보"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('address', true)}
         />
       )
     },
@@ -221,7 +251,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           placeholder="기타 주소 정보"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('address', false)}
         />
       )
     },
@@ -238,7 +268,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           options={INSTANCE_TYPE_OPTIONS}
           placeholder="타입을 선택하세요"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('dropdown', true)}
         />
       )
     },
@@ -255,7 +285,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           placeholder="세대 비밀번호"
           disabled={isReadOnly}
           autocomplete="new-password"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('password', true)}
         />
       )
     },
@@ -269,7 +299,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('memo', value)}
           placeholder="메모"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     }
@@ -286,7 +316,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           value={instance.parkinglotId?.toString() || '-'}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -302,7 +332,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -318,7 +348,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     }

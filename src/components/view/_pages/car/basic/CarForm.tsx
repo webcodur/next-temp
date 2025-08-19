@@ -11,6 +11,7 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { Car } from '@/types/car';
+import { ValidationRule } from '@/utils/validation';
 
 export interface CarFormData {
   carNumber: string;
@@ -81,6 +82,31 @@ const CarForm: React.FC<CarFormProps> = ({
       ...data,
       [field]: value,
     });
+  };
+
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'carNumber' | 'text' | 'dropdown' | 'date' | 'url' | 'readonly', required = false): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'carNumber':
+        validationType = 'carNumber';
+        break;
+      case 'url':
+        validationType = 'url';
+        break;
+      case 'dropdown':
+      case 'text':
+      case 'readonly':
+        validationType = 'free';
+        break;
+      case 'date':
+        validationType = 'date';
+        break;
+    }
+    
+    const result: ValidationRule = { type: validationType, mode, required };
+    return result;
   };
 
   // 유틸/액션 버튼 구성
@@ -183,7 +209,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('carNumber', value)}
           placeholder="차량번호"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('carNumber', true)}
         />
       )
     },
@@ -197,7 +223,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('brand', value)}
           placeholder="브랜드"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     },
@@ -211,7 +237,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('model', value)}
           placeholder="모델"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     },
@@ -226,7 +252,7 @@ const CarForm: React.FC<CarFormProps> = ({
           options={CAR_TYPE_OPTIONS}
           placeholder="차종을 선택하세요"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('dropdown', false)}
         />
       )
     },
@@ -256,7 +282,7 @@ const CarForm: React.FC<CarFormProps> = ({
           options={FUEL_OPTIONS}
           placeholder="연료를 선택하세요"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('dropdown', false)}
         />
       )
     },
@@ -270,7 +296,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('outerText', value)}
           placeholder="외부 텍스트"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     },
@@ -284,7 +310,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('externalSticker', value)}
           placeholder="외부 스티커"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     },
@@ -298,7 +324,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('frontImageUrl', value)}
           placeholder="전면 이미지 URL"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('url', false)}
         />
       )
     },
@@ -312,7 +338,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('rearImageUrl', value)}
           placeholder="후면 이미지 URL"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('url', false)}
         />
       )
     },
@@ -326,7 +352,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('sideImageUrl', value)}
           placeholder="측면 이미지 URL"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('url', false)}
         />
       )
     },
@@ -340,7 +366,7 @@ const CarForm: React.FC<CarFormProps> = ({
           onChange={(value) => handleFieldChange('topImageUrl', value)}
           placeholder="상단 이미지 URL"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('url', false)}
         />
       )
     }
@@ -360,7 +386,7 @@ const CarForm: React.FC<CarFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -376,7 +402,7 @@ const CarForm: React.FC<CarFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     }

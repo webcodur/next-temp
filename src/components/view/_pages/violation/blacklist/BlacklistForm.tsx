@@ -9,6 +9,7 @@ import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTex
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { RotateCcw, Save, Shield } from 'lucide-react';
 import { BlacklistResponse } from '@/types/blacklist';
+import { ValidationRule } from '@/utils/validation';
 
 export interface BlacklistFormData {
   registrationReason: string;
@@ -57,6 +58,29 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
     });
   };
 
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'dropdown' | 'date' | 'text' | 'readonly', required = false): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'dropdown':
+        validationType = 'free';
+        break;
+      case 'date':
+        validationType = 'free';
+        break;
+      case 'text':
+        validationType = 'free';
+        break;
+      case 'readonly':
+        validationType = 'free';
+        break;
+    }
+    
+    const result: ValidationRule = { type: validationType, mode: 'edit', required };
+    return result;
+  };
+
   const bottomRightActions = (
     <div className="flex gap-3">
       <Button variant="secondary" size="default" onClick={onCancel} disabled={isSubmitting}>
@@ -81,7 +105,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           value={blacklist.carNumber}
           onChange={() => {}}
           disabled
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -94,7 +118,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           value={blacklist.blacklistType === 'AUTO' ? '자동' : '수동'}
           onChange={() => {}}
           disabled
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -107,7 +131,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           value={blacklist.isActive ? '활성' : '비활성'}
           onChange={() => {}}
           disabled
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -123,7 +147,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           dateFormat="yyyy-MM-dd HH:mm:ss"
           showTimeSelect={true}
           utcMode={true}
-          validationRule={{ type: 'free', mode: 'view' }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     }
@@ -142,7 +166,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           onChange={(value) => handleChange('registrationReason', value)}
           options={REGISTRATION_REASON_OPTIONS}
           placeholder="등록 사유를 선택하세요"
-          validationRule={{ type: 'free', mode: 'edit' }}
+          validationRule={getValidationRule('dropdown', true)}
         />
       )
     },
@@ -158,7 +182,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           placeholder="날짜와 시간을 선택하세요"
           dateFormat="yyyy-MM-dd HH:mm"
           showTimeSelect
-          validationRule={{ type: 'free', mode: 'edit' }}
+          validationRule={getValidationRule('date', true)}
         />
       )
     },
@@ -171,7 +195,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           value={data.blockReason}
           onChange={(value) => handleChange('blockReason', value)}
           placeholder="차단 사유를 입력하세요"
-          validationRule={{ type: 'free', mode: 'edit' }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     },
@@ -184,7 +208,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           value={data.unblockReason}
           onChange={(value) => handleChange('unblockReason', value)}
           placeholder="해제 사유를 입력하세요"
-          validationRule={{ type: 'free', mode: 'edit' }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     }

@@ -10,6 +10,7 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { ResidentDetail } from '@/types/resident';
+import { ValidationRule } from '@/utils/validation';
 
 export interface ResidentFormData {
   name: string;
@@ -60,6 +61,34 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       ...data,
       [field]: value,
     });
+  };
+
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'name' | 'phone' | 'email' | 'date' | 'dropdown' | 'text' | 'readonly', required = false): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'name':
+        validationType = 'name';
+        break;
+      case 'phone':
+        validationType = 'phone';
+        break;
+      case 'email':
+        validationType = 'email';
+        break;
+      case 'date':
+        validationType = 'date';
+        break;
+      case 'dropdown':
+      case 'text':
+      case 'readonly':
+        validationType = 'free';
+        break;
+    }
+    
+    const result: ValidationRule = { type: validationType, mode, required };
+    return result;
   };
 
   // 유틸/액션 버튼 구성
@@ -157,7 +186,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           onChange={(value) => handleFieldChange('name', value)}
           placeholder="이름"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('name', true)}
         />
       )
     },
@@ -172,7 +201,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           placeholder="전화번호"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('phone', false)}
         />
       )
     },
@@ -188,7 +217,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           placeholder="이메일"
           disabled={isReadOnly}
           autocomplete="off"
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('email', false)}
         />
       )
     },
@@ -204,7 +233,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('date', false)}
         />
       )
     },
@@ -219,7 +248,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           options={GENDER_OPTIONS}
           placeholder="성별을 선택하세요"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('dropdown', false)}
         />
       )
     },
@@ -233,7 +262,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           onChange={(value) => handleFieldChange('emergencyContact', value)}
           placeholder="비상연락처"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('phone', false)}
         />
       )
     },
@@ -247,7 +276,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           onChange={(value) => handleFieldChange('memo', value)}
           placeholder="메모"
           disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('text', false)}
         />
       )
     }
@@ -264,7 +293,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={resident.id?.toString() || '-'}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       )
     },
@@ -316,7 +345,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={`#${currentResidence.instance.id}`}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: 'API에서 관리하는 세대 고유 식별자'
@@ -329,7 +358,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={currentResidence.instance.address1Depth}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: '1차 주소 정보'
@@ -342,7 +371,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={currentResidence.instance.address2Depth}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: '2차 주소 정보'
@@ -355,7 +384,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={currentResidence.instance.address3Depth || '-'}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: '3차 주소 정보'
@@ -375,7 +404,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           })()}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: 'GENERAL/TEMP/COMMERCIAL 타입'
@@ -388,7 +417,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={`#${currentResidence.id}`}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: '거주자-세대 관계 ID'
@@ -401,7 +430,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           value={currentResidence.memo || '-'}
           onChange={() => {}}
           disabled={true}
-          validationRule={{ type: 'free', mode: mode }}
+          validationRule={getValidationRule('readonly', false)}
         />
       ),
       rules: '관계 메모 정보'

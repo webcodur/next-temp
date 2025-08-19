@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { Eraser, RotateCcw, Router, Settings, Info } from 'lucide-react';
+import React from 'react';
+import { Eraser, RotateCcw, Router } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -12,7 +12,7 @@ import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { ParkingDevice } from '@/types/device';
 import { ValidationRule } from '@/utils/validation';
 
-
+// #region 타입 정의 및 상수
 export interface DeviceFormData {
   name: string;
   ip: string;
@@ -54,6 +54,7 @@ const YES_NO_OPTIONS = [
   { value: 'Y', label: '예' },
   { value: 'N', label: '아니오' },
 ];
+// #endregion
 
 const DeviceForm: React.FC<DeviceFormProps> = ({
   mode,
@@ -70,6 +71,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
 }) => {
   const isReadOnly = disabled || mode === 'view';
 
+  // #region 핸들러 및 유틸리티 함수
   const handleFieldChange = (field: keyof DeviceFormData, value: string) => {
     onChange({
       ...data,
@@ -124,8 +126,9 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       sequence: '',
     });
   };
+  // #endregion
 
-  // 하단 버튼 구성
+  // #region 액션 버튼 구성
   const bottomLeftActions = showActions
     ? (
       mode === 'create' ? (
@@ -186,280 +189,240 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       ) : null
     )
     : null;
+  // #endregion
 
+  // #region 필드 구성
+  const allFields: GridFormFieldSchema[] = [
+    // 기본 정보
+    {
+      id: 'name',
+      label: '차단기명',
+      required: mode === 'create',
+      rules: '식별 가능한 고유명',
+      component: (
+        <SimpleTextInput
+          value={data.name}
+          onChange={(value) => handleFieldChange('name', value)}
+          placeholder="차단기명"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('name', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'ip',
+      label: 'IP 주소',
+      required: mode === 'create',
+      rules: 'IPv4 형식 (192.168.0.1)',
+      component: (
+        <SimpleTextInput
+          value={data.ip}
+          onChange={(value) => handleFieldChange('ip', value)}
+          placeholder="192.168.1.100"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={getValidationRule('ip', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'port',
+      label: '포트',
+      required: mode === 'create',
+      rules: '1-65535 범위 숫자',
+      component: (
+        <SimpleTextInput
+          value={data.port}
+          onChange={(value) => handleFieldChange('port', value)}
+          placeholder="8080"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={getValidationRule('port', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'serverPort',
+      label: '서버 포트',
+      rules: '1-65535 범위 숫자',
+      component: (
+        <SimpleTextInput
+          value={data.serverPort}
+          onChange={(value) => handleFieldChange('serverPort', value)}
+          placeholder="9090"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={getValidationRule('serverPort', false)}
+        />
+      )
+    },
+    {
+      id: 'cctvUrl',
+      label: 'CCTV URL',
+      required: mode === 'create',
+      rules: '유효한 URL 형식',
+      component: (
+        <SimpleTextInput
+          value={data.cctvUrl}
+          onChange={(value) => handleFieldChange('cctvUrl', value)}
+          placeholder="http://192.168.1.100:8080/stream"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('cctvUrl', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'status',
+      label: '운영 상태',
+      required: mode === 'create',
+      rules: '자동/열림/바이패스 선택',
+      component: (
+        <SimpleDropdown
+          value={data.status}
+          onChange={(value) => handleFieldChange('status', value)}
+          options={STATUS_OPTIONS}
+          placeholder="운영 상태를 선택하세요"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('status', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'deviceType',
+      label: '디바이스 타입',
+      required: mode === 'create',
+      rules: '라즈베리/통합보드 선택',
+      component: (
+        <SimpleDropdown
+          value={data.deviceType}
+          onChange={(value) => handleFieldChange('deviceType', value)}
+          options={DEVICE_TYPE_OPTIONS}
+          placeholder="디바이스 타입을 선택하세요"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('deviceType', mode === 'create')}
+        />
+      )
+    },
+    {
+      id: 'isTicketing',
+      label: '발권 기능',
+      rules: 'Y/N 선택',
+      component: (
+        <SimpleDropdown
+          value={data.isTicketing}
+          onChange={(value) => handleFieldChange('isTicketing', value)}
+          options={YES_NO_OPTIONS}
+          placeholder="발권 기능 사용 여부"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('ticketing', false)}
+        />
+      )
+    },
+    {
+      id: 'isReceipting',
+      label: '영수증 기능',
+      rules: 'Y/N 선택',
+      component: (
+        <SimpleDropdown
+          value={data.isReceipting}
+          onChange={(value) => handleFieldChange('isReceipting', value)}
+          options={YES_NO_OPTIONS}
+          placeholder="영수증 기능 사용 여부"
+          disabled={isReadOnly}
+          validationRule={getValidationRule('receipting', false)}
+        />
+      )
+    },
+    {
+      id: 'representativePhone',
+      label: '대표전화',
+      rules: '02-0000-0000 형식',
+      component: (
+        <SimpleTextInput
+          value={data.representativePhone}
+          onChange={(value) => handleFieldChange('representativePhone', value)}
+          placeholder="02-1234-5678"
+          disabled={isReadOnly}
+          autocomplete="off"
+          validationRule={getValidationRule('phone', false)}
+        />
+      )
+    },
+    {
+      id: 'sequence',
+      label: '순번',
+      rules: '양수 (1 이상)',
+      component: (
+        <SimpleTextInput
+          value={data.sequence}
+          onChange={(value) => handleFieldChange('sequence', value)}
+          placeholder="1"
+          disabled={true}
+          validationRule={getValidationRule('sequence', false)}
+        />
+      )
+    },
+    // 추가 정보 (view/edit 모드에서만)
+    ...(mode !== 'create' && device ? [
+      {
+        id: 'parkinglotId',
+        label: '주차장 ID',
+        rules: '시스템 자동 연결',
+        component: (
+          <SimpleTextInput
+            value={device.parkinglotId?.toString() || '-'}
+            onChange={() => {}}
+            disabled={true}
+            validationRule={getValidationRule('sequence', false)}
+          />
+        )
+      },
+      {
+        id: 'createdAt',
+        label: '등록일자',
+        rules: '시스템 자동 기록',
+        component: (
+          <SimpleDatePicker
+            value={device.createdAt || null}
+            onChange={() => {}}
+            disabled={true}
+            dateFormat="yyyy-MM-dd"
+            showTimeSelect={false}
+            utcMode={true}
+            validationRule={getValidationRule('sequence', false)}
+          />
+        )
+      },
+      {
+        id: 'updatedAt',
+        label: '수정일자',
+        rules: '시스템 자동 기록',
+        component: (
+          <SimpleDatePicker
+            value={device.updatedAt || null}
+            onChange={() => {}}
+            disabled={true}
+            dateFormat="yyyy-MM-dd"
+            showTimeSelect={false}
+            utcMode={true}
+            validationRule={getValidationRule('sequence', false)}
+          />
+        )
+      }
+    ] : [])
+  ];
+  // #endregion
+
+  // #region 렌더링
   return (
     <div className="space-y-6">
-      {/* 기본 정보 섹션 */}
-      <div>
-        {(() => {
-          const basicFields: GridFormFieldSchema[] = [
-            {
-              id: 'name',
-              label: '차단기명',
-              required: mode === 'create',
-              rules: '식별 가능한 고유명',
-              component: (
-                <SimpleTextInput
-                  value={data.name}
-                  onChange={(value) => handleFieldChange('name', value)}
-                  placeholder="차단기명"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('name', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'cctvUrl',
-              label: 'CCTV URL',
-              required: mode === 'create',
-              rules: '유횤한 URL 형식',
-              component: (
-                <SimpleTextInput
-                  value={data.cctvUrl}
-                  onChange={(value) => handleFieldChange('cctvUrl', value)}
-                  placeholder="http://192.168.1.100:8080/stream"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('cctvUrl', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'representativePhone',
-              label: '대표전화',
-              rules: '02-0000-0000 형식',
-              component: (
-                <SimpleTextInput
-                  value={data.representativePhone}
-                  onChange={(value) => handleFieldChange('representativePhone', value)}
-                  placeholder="02-1234-5678"
-                  disabled={isReadOnly}
-                  autocomplete="off"
-                  validationRule={getValidationRule('phone', false)}
-                />
-              )
-            },
-            {
-              id: 'sequence',
-              label: '순번',
-              rules: '좋자 (1 이상)',
-              component: (
-                <SimpleTextInput
-                  value={data.sequence}
-                  onChange={(value) => handleFieldChange('sequence', value)}
-                  placeholder="1"
-                  disabled={true}
-                  validationRule={getValidationRule('sequence', false)}
-                />
-              )
-            }
-          ];
-
-          return (
-            <SectionPanel 
-              title="차단기 기본 정보" 
-              subtitle="차단기의 기본 설정을 관리합니다."
-              icon={<Router size={18} />}
-            >
-              <GridFormAuto fields={basicFields} gap="16px" />
-            </SectionPanel>
-          );
-        })()}
-      </div>
-
-      {/* 네트워크 설정 섹션 */}
       <SectionPanel 
-        title="네트워크 설정"
-        subtitle="IP, 포트 등 네트워크 연결 정보를 설정합니다."
-        icon={<Settings size={18} />}
+        title="차단기 정보" 
+        subtitle="차단기 설정 및 운영 정보를 관리합니다."
+        icon={<Router size={18} />}
       >
-        <GridFormAuto
-          fields={[
-            {
-              id: 'ip',
-              label: 'IP 주소',
-              required: mode === 'create',
-              rules: 'IPv4 형식 (192.168.0.1)',
-              component: (
-                <SimpleTextInput
-                  value={data.ip}
-                  onChange={(value) => handleFieldChange('ip', value)}
-                  placeholder="192.168.1.100"
-                  disabled={isReadOnly}
-                  autocomplete="off"
-                  validationRule={getValidationRule('ip', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'port',
-              label: '포트',
-              required: mode === 'create',
-              rules: '1-65535 범위 숫자',
-              component: (
-                <SimpleTextInput
-                  value={data.port}
-                  onChange={(value) => handleFieldChange('port', value)}
-                  placeholder="8080"
-                  disabled={isReadOnly}
-                  autocomplete="off"
-                  validationRule={getValidationRule('port', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'serverPort',
-              label: '서버 포트',
-              rules: '1-65535 범위 숫자',
-              component: (
-                <SimpleTextInput
-                  value={data.serverPort}
-                  onChange={(value) => handleFieldChange('serverPort', value)}
-                  placeholder="9090"
-                  disabled={isReadOnly}
-                  autocomplete="off"
-                  validationRule={getValidationRule('serverPort', false)}
-                />
-              )
-            }
-                      ]}
-            gap="16px"
-          />
+        <GridFormAuto fields={allFields} gap="16px" />
       </SectionPanel>
-
-      {/* 운영 설정 섹션 */}
-      <SectionPanel 
-        title="운영 설정"
-        subtitle="차단기 운영 상태 및 기능을 설정합니다."
-        icon={<Settings size={18} />}
-      >
-        <GridFormAuto
-          fields={[
-            {
-              id: 'status',
-              label: '운영 상태',
-              required: mode === 'create',
-              rules: '자동/열림/바이패스 선택',
-              component: (
-                <SimpleDropdown
-                  value={data.status}
-                  onChange={(value) => handleFieldChange('status', value)}
-                  options={STATUS_OPTIONS}
-                  placeholder="운영 상태를 선택하세요"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('status', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'deviceType',
-              label: '디바이스 타입',
-              required: mode === 'create',
-              rules: '라즈베리/통합보드 선택',
-              component: (
-                <SimpleDropdown
-                  value={data.deviceType}
-                  onChange={(value) => handleFieldChange('deviceType', value)}
-                  options={DEVICE_TYPE_OPTIONS}
-                  placeholder="디바이스 타입을 선택하세요"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('deviceType', mode === 'create')}
-                />
-              )
-            },
-            {
-              id: 'isTicketing',
-              label: '발권 기능',
-              rules: 'Y/N 선택',
-              component: (
-                <SimpleDropdown
-                  value={data.isTicketing}
-                  onChange={(value) => handleFieldChange('isTicketing', value)}
-                  options={YES_NO_OPTIONS}
-                  placeholder="발권 기능 사용 여부"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('ticketing', false)}
-                />
-              )
-            },
-            {
-              id: 'isReceipting',
-              label: '영수증 기능',
-              rules: 'Y/N 선택',
-              component: (
-                <SimpleDropdown
-                  value={data.isReceipting}
-                  onChange={(value) => handleFieldChange('isReceipting', value)}
-                  options={YES_NO_OPTIONS}
-                  placeholder="영수증 기능 사용 여부"
-                  disabled={isReadOnly}
-                  validationRule={getValidationRule('receipting', false)}
-                />
-              )
-            }
-                      ]}
-            gap="16px"
-          />
-      </SectionPanel>
-
-      {/* view/edit 모드에서만 표시되는 추가 정보 */}
-      {mode !== 'create' && device && (
-        <SectionPanel 
-          title="추가 정보"
-          subtitle="차단기의 시스템 관련 정보입니다."
-          icon={<Info size={18} />}
-        >
-          <GridFormAuto
-            fields={[
-              {
-                id: 'parkinglotId',
-                label: '주차장 ID',
-                rules: '시스템 자동 연결',
-                component: (
-                  <SimpleTextInput
-                    value={device.parkinglotId?.toString() || '-'}
-                    onChange={() => {}}
-                    disabled={true}
-                    validationRule={getValidationRule('sequence', false)}
-                  />
-                )
-              },
-              {
-                id: 'createdAt',
-                label: '등록일자',
-                rules: '시스템 자동 기록',
-                component: (
-                  <SimpleDatePicker
-                    value={device.createdAt || null}
-                    onChange={() => {}}
-                    disabled={true}
-                    dateFormat="yyyy-MM-dd"
-                    showTimeSelect={false}
-                    utcMode={true}
-                    validationRule={getValidationRule('sequence', false)}
-                  />
-                )
-              },
-              {
-                id: 'updatedAt',
-                label: '수정일자',
-                rules: '시스템 자동 기록',
-                component: (
-                  <SimpleDatePicker
-                    value={device.updatedAt || null}
-                    onChange={() => {}}
-                    disabled={true}
-                    dateFormat="yyyy-MM-dd"
-                    showTimeSelect={false}
-                    utcMode={true}
-                    validationRule={getValidationRule('sequence', false)}
-                  />
-                )
-              }
-                        ]}
-            gap="16px"
-          />
-        </SectionPanel>
-      )}
 
       {/* 액션 버튼 표시 */}
       {showActions && (
@@ -474,6 +437,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
       )}
     </div>
   );
+  // #endregion
 };
 
 export default DeviceForm;

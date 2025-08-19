@@ -139,7 +139,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 					disabled={disabled}
 					rows={rows}
 					maxLength={maxLength}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${resizeClass[resize]} min-h-[2.5rem]`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${resizeClass[resize]} min-h-[2.5rem] ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 			</InputContainer>
 		</div>

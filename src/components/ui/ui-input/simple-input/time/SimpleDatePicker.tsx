@@ -270,6 +270,15 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
 					wrapperClassName="w-full"
 					popperPlacement="bottom-start"
+					popperModifiers={{
+						preventOverflow: {
+							enabled: false,
+						},
+						flip: {
+							enabled: false,
+						},
+					}}
+					calendarClassName="!z-50"
 				/>
 
 				{/* 우측 X 아이콘 */}

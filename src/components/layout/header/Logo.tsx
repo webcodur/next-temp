@@ -27,8 +27,8 @@ export const Logo = memo(() => {
 			<div className="flex flex-col gap-[2px] items-baseline ml-4">
 				{selectedParkingLot &&(
 					<>
-						<h1 className="text-xl font-bold text-foreground">{selectedParkingLot.name}</h1>
-						<p className="text-sm text-muted-foreground">{selectedParkingLot.description}</p>
+						<h1 className="text-xl font-black text-[hsl(var(--gray-9))]">{selectedParkingLot.name}</h1>
+						<p className="text-sm font-semibold text-[hsl(var(--gray-8))]">{selectedParkingLot.description}</p>
 					</>
 				)}
 			</div>

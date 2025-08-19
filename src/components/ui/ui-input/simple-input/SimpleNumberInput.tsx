@@ -238,7 +238,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 					disabled={disabled}
 					min={min}
 					max={max}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 
 				{/* 우측 증감 버튼 */}

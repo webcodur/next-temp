@@ -15,6 +15,7 @@ import type {
   ViolationReporterType
 } from '@/types/carViolation';
 import type { Admin } from '@/types/admin';
+import { ValidationRule } from '@/utils/validation';
 
 export interface ViolationFormData {
   carNumber: string;
@@ -109,6 +110,35 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
     });
   };
 
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'carNumber' | 'dropdown' | 'text' | 'date' | 'number' | 'textarea' | 'url' | 'readonly', required = false): ValidationRule => {
+    let validationType: ValidationRule['type'] = 'free';
+    
+    switch (fieldType) {
+      case 'carNumber':
+        validationType = 'carNumber';
+        break;
+      case 'date':
+        validationType = 'date';
+        break;
+      case 'number':
+        validationType = 'number';
+        break;
+      case 'url':
+        validationType = 'url';
+        break;
+      case 'dropdown':
+      case 'text':
+      case 'textarea':
+      case 'readonly':
+        validationType = 'free';
+        break;
+    }
+    
+    const result: ValidationRule = { type: validationType, mode, required };
+    return result;
+  };
+
   // 액션 버튼들 정의 - 가이드에 따라 유틸(start) / 액션(end) 분리
   const topRightActions = null; // 상단에는 버튼 배치하지 않음
 
@@ -179,6 +209,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
           onChange={(value) => handleFieldChange('carNumber', value)}
           placeholder="차량번호를 입력하세요 (예: 12가3456)"
           disabled={isReadOnly}
+          validationRule={getValidationRule('carNumber', true)}
         />
       )
     },
@@ -198,6 +229,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
             handleFieldChange('violationCode', VIOLATION_CODE_MAPPING[selectedViolationType]);
           }}
           disabled={isReadOnly}
+          validationRule={getValidationRule('dropdown', true)}
         />
       )
     },

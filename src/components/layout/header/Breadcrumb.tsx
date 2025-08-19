@@ -125,7 +125,7 @@ export default function Breadcrumb() {
 				<React.Fragment key={index}>
 					{index === 0 ? (
 						// 홈 아이콘
-						<Link href={item.href} className="flex items-center transition-colors text-foreground/70 hover:text-foreground">
+						<Link href={item.href} className="flex items-center transition-colors text-[hsl(var(--gray-8))] hover:text-[hsl(var(--gray-9))]">
 							<Home size={18} />
 						</Link>
 					) : (
@@ -134,12 +134,12 @@ export default function Breadcrumb() {
 							{item.isClickable && item.href !== pathname ? (
 								<Link 
 									href={item.href} 
-									className="transition-colors text-foreground/70 hover:text-foreground"
+									className="font-semibold transition-colors text-[hsl(var(--gray-8))] hover:text-[hsl(var(--gray-9))]"
 								>
 									{item.label}
 								</Link>
 							) : (
-								<span className={pathname === item.href ? 'text-foreground font-medium' : 'text-foreground/70'}>
+								<span className={pathname === item.href ? 'text-[hsl(var(--gray-9))] font-bold' : 'text-[hsl(var(--gray-8))] font-semibold'}>
 									{item.label}
 								</span>
 							)}

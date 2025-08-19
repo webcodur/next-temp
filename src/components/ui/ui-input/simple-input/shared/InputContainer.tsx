@@ -29,15 +29,15 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 		let borderClass = '';
 		switch (validationStatus) {
 			case 'success':
-				borderClass = '!border-2 !border-blue-500';
+				borderClass = '!border-2' + ' ' + '[border-color:hsl(var(--success))]';
 				break;
 			case 'error':
-				borderClass = '!border-2 !border-red-500';
+				borderClass = '!border-2' + ' ' + '[border-color:hsl(var(--destructive))]';
 				break;
 			case 'info':
 			case 'none':
 			default:
-				borderClass = 'border border-border';
+				borderClass = 'border' + ' ' + '[border-color:hsl(var(--border))]';
 				break;
 		}
 
@@ -52,9 +52,9 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 		if (disabled) {
 			return {
 				...baseStyle,
-				backgroundColor: '#f3f4f6', // gray-100 (더 탁한 회색)
-				border: '1px solid #d1d5db', // gray-300
-				borderRadius: '0.375rem',
+				backgroundColor: 'hsl(var(--muted))', // CSS 변수 활용
+				border: '1px solid hsl(var(--border))', // CSS 변수 활용
+				borderRadius: 'var(--radius)',
 				cursor: 'not-allowed'
 			};
 		}
@@ -63,14 +63,14 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 			case 'success':
 				return {
 					...baseStyle,
-					border: '1px solid #60a5fa', // blue-400 (더 연한 파란색)
-					borderRadius: '0.375rem'
+					border: '1px solid hsl(var(--success))', // CSS 변수 활용
+					borderRadius: 'var(--radius)'
 				};
 			case 'error':
 				return {
 					...baseStyle,
-					border: '1px solid #ef4444', // red-500 (1px로 통일)
-					borderRadius: '0.375rem'
+					border: '1px solid hsl(var(--destructive))', // CSS 변수 활용
+					borderRadius: 'var(--radius)'
 				};
 			default:
 				return baseStyle;
@@ -81,8 +81,10 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 		<div
 			onClick={onClick}
 			style={getInlineStyle()}
-			className={`relative flex justify-start ${isTextArea ? '':'items-center p-1 rounded'} ${validationStatus === 'success' || validationStatus === 'error' ? '' : getBorderClass()} ${className}`}>
-			{children}
+			className={`relative flex justify-start ${isTextArea ? '':'items-center p-1 rounded'} ${validationStatus === 'success' || validationStatus === 'error' ? '' : getBorderClass()} ${disabled ? 'cursor-not-allowed' : ''} ${className}`}>
+			<div className={`w-full ${disabled ? 'cursor-not-allowed' : ''}`}>
+				{children}
+			</div>
 		</div>
 	);
 };
