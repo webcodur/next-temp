@@ -13,7 +13,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // Field 컴포넌트들
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
-import BlacklistForm, { BlacklistFormData } from '@/components/view/_pages/violation/BlacklistForm';
+import BlacklistForm, { BlacklistFormData } from '@/components/view/_pages/violation/blacklist/BlacklistForm';
 
 // API 호출
 import { searchBlacklists } from '@/services/blacklist/blacklists$_GET';

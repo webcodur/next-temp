@@ -16,7 +16,7 @@ interface InputContainerProps {
 export const InputContainer: React.FC<InputContainerProps> = ({
 	children,
 	// isFocused = false,
-	// disabled = false,
+	disabled = false,
 	// colorVariant = 'primary',
 	onClick,
 	className = '',
@@ -25,8 +25,6 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 }) => {
 	// validation 상태에 따른 border 색상 클래스 결정
 
-
-  
 	const getBorderClass = () => {
 		let borderClass = '';
 		switch (validationStatus) {
@@ -50,6 +48,17 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 	const getInlineStyle = () => {
 		const baseStyle: React.CSSProperties = {};
 		
+		// disabled 상태는 validation보다 우선
+		if (disabled) {
+			return {
+				...baseStyle,
+				backgroundColor: '#f3f4f6', // gray-100 (더 탁한 회색)
+				border: '1px solid #d1d5db', // gray-300
+				borderRadius: '0.375rem',
+				cursor: 'not-allowed'
+			};
+		}
+		
 		switch (validationStatus) {
 			case 'success':
 				return {
@@ -60,7 +69,7 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 			case 'error':
 				return {
 					...baseStyle,
-					border: '2px solid #ef4444', // red-500  
+					border: '1px solid #ef4444', // red-500 (1px로 통일)
 					borderRadius: '0.375rem'
 				};
 			default:

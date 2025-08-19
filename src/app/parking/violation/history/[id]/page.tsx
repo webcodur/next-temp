@@ -1,5 +1,5 @@
 import { use } from 'react';
-import ViolationDetailPage from '@/components/view/_pages/violation/ViolationDetailPage';
+import ViolationDetailPage from '@/components/view/_pages/violation/violation/ViolationDetailPage';
 
 interface Props {
   params: Promise<{
