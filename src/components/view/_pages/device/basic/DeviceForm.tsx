@@ -10,7 +10,8 @@ import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/Sim
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { ParkingDevice } from '@/types/device';
-import { validateIP, validatePort } from '@/utils/ipValidation';
+import { ValidationRule } from '@/utils/validation';
+
 
 export interface DeviceFormData {
   name: string;
@@ -76,33 +77,36 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
     });
   };
 
-  // 유효성 검사 메시지
-  const validationMessages = useMemo(() => {
-    const messages: Record<string, string> = {};
+  // 필드별 유효성 규칙 생성 함수
+  const getValidationRule = (fieldType: 'name' | 'ip' | 'port' | 'serverPort' | 'cctvUrl' | 'phone' | 'sequence' | 'status' | 'deviceType' | 'ticketing' | 'receipting', required = false): ValidationRule => {
+    // 단일 ValidationRule 객체로 반환 (배열 대신)
+    let validationType: ValidationRule['type'] = 'free';
     
-    if (data.ip.trim()) {
-      const ipValidation = validateIP(data.ip);
-      if (!ipValidation.isValid) {
-        messages.ip = ipValidation.message || '올바른 IP 주소를 입력해주세요.';
-      }
+    switch (fieldType) {
+      case 'ip':
+        validationType = 'ip';
+        break;
+      case 'port':
+      case 'serverPort':
+        validationType = 'port';
+        break;
+      case 'phone':
+        validationType = 'phone';
+        break;
+      case 'name':
+      case 'cctvUrl':
+      case 'sequence':
+      case 'status':
+      case 'deviceType':
+      case 'ticketing':
+      case 'receipting':
+        validationType = 'free';
+        break;
     }
-
-    if (data.port.trim()) {
-      const portValidation = validatePort(data.port);
-      if (!portValidation.isValid) {
-        messages.port = portValidation.message || '올바른 포트 번호를 입력해주세요.';
-      }
-    }
-
-    if (data.serverPort.trim()) {
-      const serverPortValidation = validatePort(data.serverPort);
-      if (!serverPortValidation.isValid) {
-        messages.serverPort = serverPortValidation.message || '올바른 서버 포트 번호를 입력해주세요.';
-      }
-    }
-
-    return messages;
-  }, [data.ip, data.port, data.serverPort]);
+    
+    const result: ValidationRule = { type: validationType, mode, required };
+    return result;
+  };
 
   // 초기화 핸들러 (생성 폼 전용)
   const handleClearAllFields = () => {
@@ -200,10 +204,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('name', value)}
                   placeholder="차단기명"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('name', mode === 'create')}
                 />
               )
             },
@@ -218,10 +219,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('cctvUrl', value)}
                   placeholder="http://192.168.1.100:8080/stream"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('cctvUrl', mode === 'create')}
                 />
               )
             },
@@ -235,10 +233,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('representativePhone', value)}
                   placeholder="02-1234-5678"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'phone',
-                    mode: mode
-                  }}
+                  autocomplete="off"
+                  validationRule={getValidationRule('phone', false)}
                 />
               )
             },
@@ -252,10 +248,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('sequence', value)}
                   placeholder="1"
                   disabled={true}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('sequence', false)}
                 />
               )
             }
@@ -292,11 +285,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('ip', value)}
                   placeholder="192.168.1.100"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                  errorMessage={validationMessages.ip}
+                  autocomplete="off"
+                  validationRule={getValidationRule('ip', mode === 'create')}
                 />
               )
             },
@@ -311,11 +301,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('port', value)}
                   placeholder="8080"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                  errorMessage={validationMessages.port}
+                  autocomplete="off"
+                  validationRule={getValidationRule('port', mode === 'create')}
                 />
               )
             },
@@ -329,11 +316,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   onChange={(value) => handleFieldChange('serverPort', value)}
                   placeholder="9090"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
-                  errorMessage={validationMessages.serverPort}
+                  autocomplete="off"
+                  validationRule={getValidationRule('serverPort', false)}
                 />
               )
             }
@@ -362,10 +346,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   options={STATUS_OPTIONS}
                   placeholder="운영 상태를 선택하세요"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('status', mode === 'create')}
                 />
               )
             },
@@ -381,10 +362,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   options={DEVICE_TYPE_OPTIONS}
                   placeholder="디바이스 타입을 선택하세요"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('deviceType', mode === 'create')}
                 />
               )
             },
@@ -399,10 +377,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   options={YES_NO_OPTIONS}
                   placeholder="발권 기능 사용 여부"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('ticketing', false)}
                 />
               )
             },
@@ -417,10 +392,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                   options={YES_NO_OPTIONS}
                   placeholder="영수증 기능 사용 여부"
                   disabled={isReadOnly}
-                  validationRule={{
-                    type: 'free',
-                    mode: mode
-                  }}
+                  validationRule={getValidationRule('receipting', false)}
                 />
               )
             }
@@ -447,10 +419,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                     value={device.parkinglotId?.toString() || '-'}
                     onChange={() => {}}
                     disabled={true}
-                    validationRule={{
-                      type: 'free',
-                      mode: mode
-                    }}
+                    validationRule={getValidationRule('sequence', false)}
                   />
                 )
               },
@@ -466,6 +435,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                     dateFormat="yyyy-MM-dd"
                     showTimeSelect={false}
                     utcMode={true}
+                    validationRule={getValidationRule('sequence', false)}
                   />
                 )
               },
@@ -481,6 +451,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
                     dateFormat="yyyy-MM-dd"
                     showTimeSelect={false}
                     utcMode={true}
+                    validationRule={getValidationRule('sequence', false)}
                   />
                 )
               }
@@ -490,8 +461,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({
         </SectionPanel>
       )}
 
-      {/* 생성 모드이거나 추가 정보가 없는 경우 버튼 액션만 표시 */}
-      {(mode === 'create' || !device) && showActions && (
+      {/* 액션 버튼 표시 */}
+      {showActions && (
         <div className="flex justify-between items-center pt-4">
           <div className="flex gap-3">
             {bottomLeftActions}

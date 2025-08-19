@@ -51,6 +51,7 @@ export interface UpdateCarViolationRequest {
   penaltyPoints?: number;
   status?: ViolationStatus;
   processingNote?: string;
+  reporterId?: number;
 }
 
 export interface ProcessCarViolationRequest {

@@ -7,6 +7,10 @@ import { CarInstanceWithCar } from '@/types/instance';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import CarCreateModal from './CarCreateModal';
+import CarSearchModal from './CarSearchModal';
+import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
+import { deleteCar } from '@/services/cars/cars@id_DELETE';
 
 interface InstanceCarListProps {
   carInstances?: CarInstanceWithCar[];
@@ -34,13 +38,8 @@ export default function InstanceCarList({
     carNumber: ''
   });
 
-  const [actionModal, setActionModal] = useState<{
-    isOpen: boolean;
-    type: 'create' | 'connect';
-  }>({
-    isOpen: false,
-    type: 'create'
-  });
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
 
   const handleCarClick = (carId: number) => {
     router.push(`/parking/occupancy/car/${carId}`);
@@ -73,49 +72,56 @@ export default function InstanceCarList({
     });
   };
 
-  const handleConfirm = () => {
-    switch (confirmModal.type) {
-      case 'detail':
-        handleCarClick(confirmModal.carId);
-        break;
-      case 'exclude':
-        // TODO: 세대과의 연결 해지 로직
-        console.log('제외 처리:', confirmModal.carId);
-        break;
-      case 'delete':
-        // TODO: 차량 정보 삭제 로직
-        console.log('삭제 처리:', confirmModal.carId);
-        break;
+  const handleConfirm = async () => {
+    try {
+      switch (confirmModal.type) {
+        case 'detail':
+          handleCarClick(confirmModal.carId);
+          break;
+        case 'exclude':
+          // 차량-인스턴스 연결 해지
+          const carInstance = carInstances?.find(ci => ci.car.id === confirmModal.carId);
+          if (carInstance && instanceId) {
+            const result = await deleteCarInstance(carInstance.id);
+            if (result.success) {
+              // 데이터 새로고침
+              if (onDataChange) {
+                onDataChange();
+              }
+            } else {
+              console.error('연결 해지 실패:', result.errorMsg);
+            }
+          }
+          break;
+        case 'delete':
+          // 차량 완전 삭제
+          const deleteResult = await deleteCar(confirmModal.carId);
+          if (deleteResult.success) {
+            // 데이터 새로고침
+            if (onDataChange) {
+              onDataChange();
+            }
+          } else {
+            console.error('차량 삭제 실패:', deleteResult.errorMsg);
+          }
+          break;
+      }
+    } catch (error) {
+      console.error('작업 중 오류 발생:', error);
+    } finally {
+      setConfirmModal(prev => ({ ...prev, isOpen: false }));
     }
-    setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
   const handleCreateClick = () => {
-    setActionModal({
-      isOpen: true,
-      type: 'create'
-    });
+    setCreateModalOpen(true);
   };
 
   const handleConnectClick = () => {
-    setActionModal({
-      isOpen: true,
-      type: 'connect'
-    });
+    setConnectModalOpen(true);
   };
 
-  const handleActionConfirm = () => {
-    switch (actionModal.type) {
-      case 'create':
-        // TODO: 새 차량 생성 로직
-        console.log('새 차량 생성:', instanceId);
-        break;
-      case 'connect':
-        // TODO: 기존 차량 연결 로직
-        console.log('차량 연결:', instanceId);
-        break;
-    }
-    setActionModal(prev => ({ ...prev, isOpen: false }));
+  const handleModalSuccess = () => {
     // 데이터 새로고침
     if (onDataChange) {
       onDataChange();
@@ -144,22 +150,7 @@ export default function InstanceCarList({
     }
   };
 
-  const getActionModalContent = () => {
-    switch (actionModal.type) {
-      case 'create':
-        return {
-          title: '새 차량 생성',
-          message: '새로운 차량을 생성하고 세대에 바로 등록합니까?'
-        };
-      case 'connect':
-        return {
-          title: '차량 연결',
-          message: '이 세대에 연결할 차량을 검색하시겠습니까?'
-        };
-      default:
-        return { title: '', message: '' };
-    }
-  };
+
 
   if (loading) {
     return (
@@ -338,33 +329,25 @@ export default function InstanceCarList({
         </div>
       </Modal>
 
-      {/* 액션 모달 */}
-      <Modal
-        isOpen={actionModal.isOpen}
-        onClose={() => setActionModal(prev => ({ ...prev, isOpen: false }))}
-        title={getActionModalContent().title}
-        size="sm"
-      >
-        <div className="space-y-4">
-          <p className="text-center text-foreground">
-            {getActionModalContent().message}
-          </p>
-          <div className="flex gap-2 justify-center">
-            <button
-              onClick={() => setActionModal(prev => ({ ...prev, isOpen: false }))}
-              className="px-4 py-2 text-sm rounded-md border border-border text-muted-foreground hover:bg-muted"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleActionConfirm}
-              className="px-4 py-2 text-sm text-white rounded-md bg-primary hover:bg-primary/90"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      </Modal>
+      {/* 새 차량 생성 모달 */}
+      {instanceId && (
+        <CarCreateModal
+          isOpen={createModalOpen}
+          onClose={() => setCreateModalOpen(false)}
+          instanceId={instanceId}
+          onSuccess={handleModalSuccess}
+        />
+      )}
+
+      {/* 기존 차량 연결 모달 */}
+      {instanceId && (
+        <CarSearchModal
+          isOpen={connectModalOpen}
+          onClose={() => setConnectModalOpen(false)}
+          instanceId={instanceId}
+          onSuccess={handleModalSuccess}
+        />
+      )}
     </div>
   );
 }

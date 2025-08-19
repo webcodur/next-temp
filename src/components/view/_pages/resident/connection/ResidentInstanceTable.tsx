@@ -135,15 +135,15 @@ export default function ResidentInstanceTable({
 
   return (
     <>
-        {residentInstances && residentInstances.length > 0 ? (
+        {residentInstances && Array.isArray(residentInstances) && residentInstances.length > 0 ? (
           <BaseTable
-            data={residentInstances as unknown as Record<string, unknown>[]}
+            data={residentInstances.filter(item => item && typeof item === 'object') as unknown as Record<string, unknown>[]}
             columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
             pageSize={10}
           />
         ) : (
           <div className="py-8 text-center text-muted-foreground">
-            연결된 세대이 없습니다.
+            연결된 세대가 없습니다.
           </div>
         )}
 

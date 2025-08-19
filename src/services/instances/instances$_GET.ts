@@ -96,7 +96,6 @@ interface InstanceServerResponse {
   parkinglot_id: number;
   name: string;
   owner_name?: string | null;
-  phone: string;
   address_1depth: string;
   address_2depth: string;
   address_3depth?: string | null;
@@ -221,7 +220,6 @@ function serverToClient(server: InstanceServerResponse): Instance {
     parkinglotId: server.parkinglot_id,
     name: server.name,
     ownerName: server.owner_name,
-    phone: server.phone,
     address1Depth: server.address_1depth,
     address2Depth: server.address_2depth,
     address3Depth: server.address_3depth,

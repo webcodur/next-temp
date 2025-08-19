@@ -5,9 +5,8 @@ import { Link, Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import { BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
 import ResidentInstanceTable from './ResidentInstanceTable';
-import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
+import InstanceSearchSection, { InstanceSearchField, DisabledInstance, ColumnConfiguration } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 
 import { createResidentInstance } from '@/services/residents/residents_instances_POST';
 import { Instance } from '@/types/instance';
@@ -18,8 +17,6 @@ interface ResidentConnectionProps {
   onDataChange: () => void;
   onOperationComplete: (success: boolean, message: string) => void;
 }
-
-
 
 export default function ResidentConnection({ 
   resident, 
@@ -32,42 +29,51 @@ export default function ResidentConnection({
   const [isSubmitting, setIsSubmitting] = useState(false);
   // #endregion
 
+  // #region 기존 세대 ID 목록 및 비활성화 항목 설정
+  const existingInstanceIds = useMemo(() => {
+    if (!resident?.residentInstance || !Array.isArray(resident.residentInstance)) {
+      return [];
+    }
+    return resident.residentInstance.map(ri => ri.instanceId);
+  }, [resident?.residentInstance]);
 
-
-  // #region 기존 세대 ID 목록
-  const existingInstanceIds = useMemo(() => 
-    resident.residentInstance?.map(ri => ri.instanceId) || []
-  , [resident.residentInstance]);
+  const disabledInstances = useMemo((): DisabledInstance[] => {
+    return existingInstanceIds.map(instanceId => ({
+      instanceId,
+      disabledText: '이미 연결됨',
+      disabledClassName: '',
+    }));
+  }, [existingInstanceIds]);
   // #endregion
 
-
-
   // #region 핸들러
-  const handleOperationCompleteInternal = useCallback((success: boolean, message: string) => {
+  const handleOperationCompleteInternal = useCallback(async (success: boolean, message: string) => {
+    // 먼저 성공 메시지를 표시
     onOperationComplete(success, message);
+    
+    // 성공한 경우에만 데이터 새로고침 시도
     if (success) {
-      onDataChange(); // 데이터 새로고침
+      try {
+        await onDataChange(); // 데이터 새로고침
+      } catch (error) {
+        console.warn('데이터 새로고침 중 오류 발생:', error);
+        // 데이터 새로고침 실패는 별도 처리하지 않음 (성공 메시지는 유지)
+      }
     }
   }, [onDataChange, onOperationComplete]);
 
-
-
   const handleInstanceSelect = useCallback((instance: Instance) => {
-    // 이미 연결된 세대는 선택할 수 없음
-    if (existingInstanceIds.includes(instance.id)) {
-      return;
-    }
     setSelectedInstance(instance);
-  }, [existingInstanceIds]);
-
-  // 이미 연결된 세대인지 확인
-  const isInstanceAlreadyConnected = useCallback((instanceId: number) => {
-    return existingInstanceIds.includes(instanceId);
-  }, [existingInstanceIds]);
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!selectedInstance) {
       onOperationComplete(false, '세대를 선택해주세요.');
+      return;
+    }
+
+    if (!resident?.id) {
+      onOperationComplete(false, '거주자 정보가 유효하지 않습니다.');
       return;
     }
 
@@ -83,7 +89,10 @@ export default function ResidentConnection({
       
       if (result.success) {
         const address = `${selectedInstance.address1Depth} ${selectedInstance.address2Depth} ${selectedInstance.address3Depth || ''}`.trim();
-        handleOperationCompleteInternal(true, `${resident.name}님과 ${address} 세대의 관계가 성공적으로 생성되었습니다.`);
+        const residentName = resident?.name || '거주자';
+        
+        // 성공 처리 (데이터 새로고침 포함)
+        await handleOperationCompleteInternal(true, `${residentName}님과 ${address} 세대의 관계가 성공적으로 생성되었습니다.`);
         
         // 폼 초기화
         setSelectedInstance(null);
@@ -97,7 +106,7 @@ export default function ResidentConnection({
     } finally {
       setIsSubmitting(false);
     }
-  }, [selectedInstance, resident.id, resident.name, memo, handleOperationCompleteInternal, onOperationComplete]);
+  }, [selectedInstance, resident?.id, resident?.name, memo, handleOperationCompleteInternal, onOperationComplete]);
 
 
   // #endregion
@@ -128,112 +137,16 @@ export default function ResidentConnection({
   ], []);
   // #endregion
 
-  // #region 테이블 컬럼 정의
-  const columns: BaseTableColumn<Instance>[] = [
-    {
-      key: 'id',
-      header: 'ID',
-      width: '5%',
-      align: 'center',
+  // #region 컬럼 설정
+  const columnConfig: ColumnConfiguration = useMemo(() => ({
+    preset: 'detailed',
+    selectColumnConfig: {
+      selectedState: (instance) => selectedInstance?.id === instance.id,
+      onSelect: handleInstanceSelect,
+      buttonText: (instance) => selectedInstance?.id === instance.id ? '선택됨' : '선택',
+      isLoading: isSubmitting,
     },
-    {
-      key: 'dongHosu',
-      header: '동호수',
-      width: '10%',
-      align: 'start',
-      cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
-    },
-    {
-      key: 'name',
-      header: '세대명',
-      width: '12%',
-      align: 'start',
-      cell: (item: Instance) => item.name || '-',
-    },
-    {
-      key: 'ownerName',
-      header: '소유자',
-      width: '10%',
-      align: 'start',
-      cell: (item: Instance) => item.ownerName || '-',
-    },
-    {
-      key: 'phone',
-      header: '연락처',
-      width: '12%',
-      align: 'start',
-      cell: (item: Instance) => item.phone || '-',
-    },
-    {
-      key: 'instanceType',
-      header: '타입',
-      width: '8%',
-      align: 'center',
-      cell: (item: Instance) => {
-        const typeMap = {
-          GENERAL: '일반',
-          TEMP: '임시',
-          COMMERCIAL: '상업',
-        };
-        return typeMap[item.instanceType as keyof typeof typeMap] || item.instanceType;
-      },
-    },
-    {
-      key: 'residentCount',
-      header: '거주민',
-      width: '8%',
-      align: 'center',
-      cell: (item: Instance) => `${item.residentInstance?.length || 0}명`,
-    },
-    {
-      key: 'carCount',
-      header: '차량',
-      width: '8%',
-      align: 'center',
-      cell: (item: Instance) => `${item.carInstance?.length || 0}대`,
-    },
-    {
-      key: 'memo',
-      header: '메모',
-      width: '15%',
-      align: 'start',
-      cell: (item: Instance) => item.memo || '-',
-    },
-    {
-      header: '선택',
-      width: '12%',
-      align: 'center',
-      cell: (item: Instance) => {
-        const isAlreadyConnected = isInstanceAlreadyConnected(item.id);
-        const isSelected = selectedInstance?.id === item.id;
-        
-        if (isAlreadyConnected) {
-          return (
-            <div className="flex flex-col gap-1 items-center">
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={true}
-                className="opacity-60 cursor-not-allowed"
-              >
-                이미 연결됨
-              </Button>
-            </div>
-          );
-        }
-        
-        return (
-          <Button
-            variant={isSelected ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => handleInstanceSelect(item)}
-          >
-            {isSelected ? '선택됨' : '선택'}
-          </Button>
-        );
-      },
-    },
-  ];
+  }), [selectedInstance, handleInstanceSelect, isSubmitting]);
   // #endregion
 
   return (
@@ -246,7 +159,7 @@ export default function ResidentConnection({
       >
         <div className="space-y-4">
           <ResidentInstanceTable 
-            residentInstances={resident.residentInstance || []}
+            residentInstances={resident?.residentInstance && Array.isArray(resident.residentInstance) ? resident.residentInstance : []}
             onCreateRelation={() => {}} // 더이상 모달을 열지 않음
             onDeleteComplete={handleOperationCompleteInternal}
           />
@@ -264,28 +177,16 @@ export default function ResidentConnection({
           <InstanceSearchSection
             searchFields={searchFields}
             tableType="base"
-            columns={columns}
+            columnConfig={columnConfig}
             onRowClick={handleInstanceSelect}
             getRowClassName={(instance: Instance) => {
-              const isAlreadyConnected = isInstanceAlreadyConnected(instance.id);
               const isSelected = selectedInstance?.id === instance.id;
-              let className = '';
-              
-              if (isAlreadyConnected) {
-                className += 'bg-muted/30 opacity-75';
-              } else {
-                className += 'cursor-pointer hover:bg-muted/50';
-                if (isSelected) {
-                  className += ' bg-blue-50 border-blue-200';
-                }
-              }
-              
-              return className;
+              return isSelected ? 'cursor-pointer hover:bg-muted/50 bg-blue-50 border-blue-200' : 'cursor-pointer hover:bg-muted/50';
             }}
             showSection={false}
-            defaultSearchOpen={true}
             searchMode="server"
-            excludeInstanceIds={existingInstanceIds}
+            excludeInstanceIds={[]}
+            disabledInstances={disabledInstances}
             pageSize={10}
             minWidth="1200px"
           />
@@ -302,7 +203,7 @@ export default function ResidentConnection({
               {selectedInstance ? (
                 <p className="text-sm text-foreground">
                   {selectedInstance.address1Depth} {selectedInstance.address2Depth} {selectedInstance.address3Depth || ''}
-                  <span className="px-2 py-1 ml-2 text-xs bg-muted rounded">
+                  <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
                     {{
                       GENERAL: '일반',
                       TEMP: '임시',

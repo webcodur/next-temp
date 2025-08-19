@@ -4,8 +4,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
-import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
+import InstanceSearchSection, { InstanceSearchField, DisabledInstance, ColumnConfiguration } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 
 import { moveResident } from '@/services/residents/residents_move_POST';
 import { ResidentDetail, ResidentInstanceWithInstance } from '@/types/resident';
@@ -28,10 +27,12 @@ export default function ResidentMoveSection({
   const [isMoving, setIsMoving] = useState(false);
   // #endregion
 
-  // #region 제외할 세대 ID 목록
-  const excludeInstanceIds = useMemo(() => 
-    currentResidence?.instanceId ? [currentResidence.instanceId] : []
-  , [currentResidence?.instanceId]);
+  // #region 비활성화할 세대 목록 설정
+  const disabledInstances = useMemo((): DisabledInstance[] => {
+    return currentResidence?.instanceId 
+      ? [{ instanceId: currentResidence.instanceId, disabledText: '현재 거주지' }]
+      : [];
+  }, [currentResidence?.instanceId]);
   // #endregion
 
   // #region 핸들러
@@ -41,6 +42,12 @@ export default function ResidentMoveSection({
 
   const handleExecuteMove = useCallback(async () => {
     if (!resident || !selectedInstance || isMoving) return;
+    
+    // 현재 거주지와 동일한 세대로 이동하려는 경우 방지
+    if (currentResidence?.instanceId === selectedInstance.id) {
+      onMoveComplete(false, '이미 해당 세대에 거주하고 있습니다. 다른 세대를 선택해주세요.');
+      return;
+    }
     
     setIsMoving(true);
     
@@ -66,7 +73,7 @@ export default function ResidentMoveSection({
     } finally {
       setIsMoving(false);
     }
-  }, [resident, selectedInstance, isMoving, moveMemo, onMoveComplete]);
+  }, [resident, selectedInstance, isMoving, moveMemo, onMoveComplete, currentResidence?.instanceId]);
   // #endregion
 
   // #region 검색 필드 구성
@@ -95,76 +102,16 @@ export default function ResidentMoveSection({
   ], []);
   // #endregion
 
-  // #region 테이블 컬럼 정의
-  const columns: BaseTableColumn<Instance>[] = [
-    {
-      key: 'id',
-      header: 'ID',
-      width: '8%',
-      align: 'center',
+  // #region 컬럼 설정
+  const columnConfig: ColumnConfiguration = useMemo(() => ({
+    preset: 'basic',
+    selectColumnConfig: {
+      selectedState: (instance) => selectedInstance?.id === instance.id,
+      onSelect: handleInstanceSelect,
+      buttonText: (instance) => selectedInstance?.id === instance.id ? '선택됨' : '선택',
+      isLoading: isMoving,
     },
-    {
-      key: 'dongHosu',
-      header: '동호수',
-      width: '15%',
-      align: 'start',
-      cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
-    },
-    {
-      key: 'name',
-      header: '세대명',
-      width: '15%',
-      align: 'start',
-      cell: (item: Instance) => item.name || '-',
-    },
-    {
-      key: 'ownerName',
-      header: '소유자',
-      width: '12%',
-      align: 'start',
-      cell: (item: Instance) => item.ownerName || '-',
-    },
-    {
-      key: 'phone',
-      header: '연락처',
-      width: '15%',
-      align: 'start',
-      cell: (item: Instance) => item.phone || '-',
-    },
-    {
-      key: 'instanceType',
-      header: '타입',
-      width: '10%',
-      align: 'center',
-      cell: (item: Instance) => {
-        const typeMap = {
-          GENERAL: '일반',
-          TEMP: '임시',
-          COMMERCIAL: '상업',
-        };
-        return typeMap[item.instanceType as keyof typeof typeMap] || item.instanceType;
-      },
-    },
-    {
-      header: '선택',
-      width: '15%',
-      align: 'center',
-      cell: (item: Instance) => {
-        const isSelected = selectedInstance?.id === item.id;
-        
-        return (
-          <Button
-            variant={isSelected ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => handleInstanceSelect(item)}
-            disabled={isMoving}
-          >
-            {isSelected ? '선택됨' : '선택'}
-          </Button>
-        );
-      },
-    },
-  ];
+  }), [selectedInstance, handleInstanceSelect, isMoving]);
   // #endregion
 
   return (
@@ -184,18 +131,16 @@ export default function ResidentMoveSection({
         <InstanceSearchSection
           searchFields={searchFields}
           tableType="base"
-          columns={columns}
+          columnConfig={columnConfig}
           onRowClick={handleInstanceSelect}
           getRowClassName={(instance: Instance) => {
             const isSelected = selectedInstance?.id === instance.id;
-            return isSelected 
-              ? 'bg-blue-50 border-blue-200 cursor-pointer' 
-              : 'cursor-pointer hover:bg-muted/50';
+            return isSelected ? 'cursor-pointer hover:bg-muted/50 bg-blue-50 border-blue-200' : 'cursor-pointer hover:bg-muted/50';
           }}
           showSection={false}
-          defaultSearchOpen={true}
           searchMode="server"
-          excludeInstanceIds={excludeInstanceIds}
+          excludeInstanceIds={[]}
+          disabledInstances={disabledInstances}
           pageSize={5}
           minWidth="800px"
           title="이전할 세대 검색"

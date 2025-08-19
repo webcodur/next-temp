@@ -2,12 +2,11 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import InstanceForm, { InstanceFormData } from './basic/InstanceForm';
 import { createInstance } from '@/services/instances/instances_POST';
 import { InstanceType } from '@/types/instance';
@@ -19,7 +18,6 @@ export default function InstanceCreatePage() {
   const [formData, setFormData] = useState<InstanceFormData>({
     name: '',
     ownerName: '',
-    phone: '',
     address1Depth: '',
     address2Depth: '',
     address3Depth: '',
@@ -36,7 +34,7 @@ export default function InstanceCreatePage() {
 
   // #region 검증
   const isValid = useMemo(() => {
-    return (
+    return Boolean(
       formData.name.trim() &&
       formData.address1Depth.trim() &&
       formData.address2Depth.trim() &&
@@ -56,7 +54,6 @@ export default function InstanceCreatePage() {
       const createData = {
         name: formData.name,
         ownerName: formData.ownerName || undefined,
-        phone: formData.phone || undefined,
         address1Depth: formData.address1Depth,
         address2Depth: formData.address2Depth,
         address3Depth: formData.address3Depth || undefined,
@@ -99,33 +96,19 @@ export default function InstanceCreatePage() {
       {/* 헤더 */}
       <PageHeader 
         title="세대 추가"
-        subtitle="새로운 세대을 생성합니다"
+        subtitle="새로운 세대를 생성합니다"
       />
 
       {/* 폼 섹션 */}
-      <div className="p-6 rounded-lg border bg-card border-border">
-        <InstanceForm
-          mode="create"
-          data={formData}
-          onChange={handleFormChange}
-          disabled={isSubmitting}
-        />
-      </div>
-
-      {/* 저장 버튼 - 우하단 고정 */}
-      <div className="fixed right-6 bottom-6 z-50">
-        <Button 
-          variant="primary"
-          size="lg"
-          onClick={handleSubmit} 
-          disabled={!isValid || isSubmitting}
-          title={isSubmitting ? '생성 중...' : '생성'}
-          className="shadow-lg"
-        >
-          <Save size={20} />
-          {isSubmitting ? '생성 중...' : '생성'}
-        </Button>
-      </div>
+      <InstanceForm
+        mode="create"
+        data={formData}
+        onChange={handleFormChange}
+        disabled={isSubmitting}
+        showActions={true}
+        onSubmit={handleSubmit}
+        isValid={isValid}
+      />
 
       {/* 오류 모달 */}
       <Modal

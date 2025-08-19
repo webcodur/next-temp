@@ -123,6 +123,7 @@ const BlacklistForm: React.FC<BlacklistFormProps> = ({
           dateFormat="yyyy-MM-dd HH:mm:ss"
           showTimeSelect={true}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     }

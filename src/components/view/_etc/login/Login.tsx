@@ -27,13 +27,12 @@ export default function LoginPage() {
 	// #region 상수
 	const { login, isLoading: authIsLoading } = useAuth();
 	const { isRTL } = useLocale();
-	const isDev = process.env.NODE_ENV === 'development';
 	const showAccountExample = process.env.NEXT_PUBLIC_ACCOUNT_EXAMPLE === 'TRUE';
 	
 	// 환경변수에서 개발자 모드 계정 세트 로드 (한 번만)
 	const devAccountSets = useMemo(() => {
-		return (isDev && showAccountExample) ? loadDevAccounts() : [];
-	}, [isDev, showAccountExample]);
+		return (showAccountExample) ? loadDevAccounts() : [];
+	}, [showAccountExample]);
 	// #endregion
 
 	// #region 상태
@@ -125,7 +124,7 @@ export default function LoginPage() {
 					fontFamily: "'MultiLang', 'Pretendard', 'Inter', 'Cairo', system-ui, sans-serif"
 				}}
 			>
-				<div className={`flex gap-8 items-start font-multilang ${(isDev && showAccountExample) ? 'flex-row' : 'flex-col'}`}>
+				<div className={`flex gap-8 items-start font-multilang ${(showAccountExample) ? 'flex-row' : 'flex-col'}`}>
 					{/* 메인 로그인 영역 */}
 					<div className="space-y-4">
 						{/* 에러 메시지 */}
@@ -144,7 +143,7 @@ export default function LoginPage() {
 					</div>
 
 					{/* 개발자 모드 계정 세트 패널 */}
-					{isDev && showAccountExample && devAccountSets.length > 0 && (
+					{showAccountExample && devAccountSets.length > 0 && (
 						<div className="p-6 w-96 rounded-2xl neu-elevated bg-card">
 							<div className="mb-5">
 								<h2 className="mb-1 text-lg font-bold text-center font-multilang text-foreground">

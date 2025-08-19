@@ -98,6 +98,14 @@ export interface ResidentDetail extends Resident {
 	residentInstance: ResidentInstanceWithInstance[];
 }
 
+// 주소 정보가 포함된 거주자 (차량 연결 조회용)
+export interface ResidentWithAddress extends Resident {
+	address1Depth: string;
+	address2Depth: string;
+	address3Depth?: string | null;
+	deletedAt?: string | null;
+}
+
 // 페이지네이션 응답
 export interface PaginatedResidentResponse {
 	data: ResidentDetail[];

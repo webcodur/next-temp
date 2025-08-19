@@ -188,6 +188,8 @@ export default function AdminPasswordChangePage() {
                   onChange={(value) => handleFieldChange('currentPassword', value)}
                   placeholder="현재 비밀번호"
                   disabled={isSubmitting}
+                  autocomplete="current-password"
+                  validationRule={{ type: 'password', mode: 'edit' }}
                 />
               )
             },
@@ -202,6 +204,8 @@ export default function AdminPasswordChangePage() {
                   onChange={(value) => handleFieldChange('newPassword', value)}
                   placeholder="새 비밀번호 (최소 6자)"
                   disabled={isSubmitting}
+                  autocomplete="new-password"
+                  validationRule={{ type: 'password', mode: 'edit' }}
                 />
               )
             },
@@ -217,6 +221,8 @@ export default function AdminPasswordChangePage() {
                     onChange={(value) => handleFieldChange('confirmPassword', value)}
                     placeholder="비밀번호 확인"
                     disabled={isSubmitting}
+                    autocomplete="new-password"
+                    validationRule={{ type: 'password-confirm', originalPassword: formData.newPassword, mode: 'edit' }}
                   />
                   {showPasswordError && (
                     <p className="mt-1 text-sm text-destructive">

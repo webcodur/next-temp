@@ -22,6 +22,7 @@ import Footer from '@/components/layout/footer/Footer';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel/SecondaryPanel';
 import { ToastProvider } from '@/components/ui/ui-effects/toast/Toast';
+import { SectionNavigationProvider } from '@/contexts/SectionNavigationContext';
 
 // #region 타입
 interface MainLayoutProps {
@@ -116,12 +117,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
 	// #region 렌더링
 	return (
-		<ToastProvider>
+		<SectionNavigationProvider>
+			<ToastProvider>
 			<div className="flex flex-col h-screen" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 				<Header />
-				<div className="flex flex-1 overflow-hidden">
+				<div className="flex overflow-hidden flex-1">
 					<Sidebar />
-					<div className="relative flex flex-1 overflow-hidden">
+					<div className="flex overflow-hidden relative flex-1">
 						{/* PC 화면: 일반 flex layout으로 본문을 밀어내는 방식 */}
 						<div 
 							className={`flex-shrink-0 h-full shadow-xl transition-all duration-100 ease-in-out bg-serial-1 ${
@@ -136,7 +138,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						{/* 태블릿 이하: 오버레이 방식 */}
 						{!isDesktop && (showSecondaryPanel || isAnimating) && (
 							<div 
-								className="absolute top-0 z-50 h-full transition-transform duration-100 ease-in-out shadow-xl start-0 bg-serial-1"
+								className="absolute top-0 z-50 h-full shadow-xl transition-transform duration-100 ease-in-out start-0 bg-serial-1"
 								style={{ 
 									width: `${endPanelWidth}px`,
 									transform: `translateX(${shouldShow ? 'var(--translate-x-visible)' : 'var(--translate-x-hidden)'})`
@@ -146,7 +148,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						)}
 
 						{/* 페이지 */}   
-						<main className="flex-1 overflow-y-auto transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
+						<main className="overflow-y-auto flex-1 transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
               {/* 콘텐츠 */}
               <div className="px-[92px] mx-auto mt-12 max-w-[1656px] rounded-lg">
                 {children}
@@ -157,13 +159,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
 							</div>
 						</main>   
 
+
+
 					</div>
 				</div>
-			
-				{/* 현장 선택 모달 */}
-				<ParkingLotSelectionModal />
-			</div>
-		</ToastProvider>
+
+			{/* 현장 선택 모달 */}
+			<ParkingLotSelectionModal />
+		</div>
+			</ToastProvider>
+		</SectionNavigationProvider>
 	);
 	// #endregion
 }

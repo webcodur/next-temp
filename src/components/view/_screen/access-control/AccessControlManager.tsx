@@ -5,16 +5,12 @@
 */
 
 import React, { useState } from 'react';
-import { Send, RotateCcw, Zap, Settings2 } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { useAccessControl } from '@/hooks/domain/useAccessControl';
-import GlobalPolicyPanel from './globalPolicy/GlobalPolicyPanel';
 import BarrierControlGrid from './barrierManager/barrierControl/BarrierControlGrid';
-import BarrierPolicyGrid from './barrierManager/barrierPolicy/BarrierPolicyGrid';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import { Button } from '@/components/ui/ui-input/button/Button';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
-import { toast } from '@/components/ui/ui-effects/toast/Toast';
 
 // #region 타입 정의
 interface AccessControlManagerProps {
@@ -29,40 +25,15 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 	// #region 훅
 	const {
 		barriers,
-		barrierPolicies,
 		barrierOrder,
-		entryPolicy,
-		returnHourEnabled,
-		warningCount,
 		handleBarrierToggle,
 		handleOperationModeChange,
-		handlePolicyUpdate,
 		handleBarrierOrderChange,
-		handleEntryPolicyChange,
-		handleReturnHourEnabledChange,
-		handleWarningCountChange,
 	} = useAccessControl();
-	
-	// 인풋 폼 방식을 위한 상태
-	const [hasChanges, setHasChanges] = useState(false);
 	
 	// 차단기 잠금 상태
 	const [isBarrierLocked, setIsBarrierLocked] = useState(true);
 	// #endregion
-
-	// #region 인풋 폼 핸들러
-	const handleSavePolicyChanges = () => {
-		// 정책 변경사항 저장
-		toast.success('출입 정책이 성공적으로 저장되었습니다.');
-		setHasChanges(false);
-	};
-
-	const handleResetPolicyChanges = () => {
-		// 정책 변경사항 초기화
-		toast.info('출입 정책이 초기 상태로 복구되었습니다.');
-		setHasChanges(false);
-	};
-
 
 	// #endregion
 
@@ -76,117 +47,37 @@ const AccessControlManager: React.FC<AccessControlManagerProps> = ({
 				/>
 			)}
 
-			{/* 메인 콘텐츠 영역 - 2단 구조로 변경 */}
-			<div className="flex flex-col gap-4 min-h-0">
-				{/* 개별 차단기 (상단) */}
-				<div className="neu-elevated">
-					<SectionPanel 
-						title="개별 차단기 제어 컨트롤러"
-						subtitle="각 차단기를 개별적으로 제어합니다"
-						icon={<Zap size={18} />}
-						headerHeight="h-[70px]"
-						titleAlign="center"
-						headerActions={
-							<div className="flex gap-3 items-center w-auto">
-								<span className="text-sm font-medium whitespace-nowrap text-muted-foreground">
-									{isBarrierLocked ? '잠금상태' : '편집상태'}
-								</span>
-								<SimpleToggleSwitch
-									checked={!isBarrierLocked}
-									onChange={(checked) => setIsBarrierLocked(!checked)}
-									size="lg"
-									className="w-auto"
-								/>
-							</div>
-						}
-					>
-						<BarrierControlGrid
-							barriers={barriers}
-							barrierOrder={barrierOrder}
-							isLocked={isBarrierLocked}
-							onBarrierToggle={handleBarrierToggle}
-							onOperationModeChange={handleOperationModeChange}
-							onBarrierOrderChange={handleBarrierOrderChange}
-						/>
-					</SectionPanel>
-				</div>
-
-				{/* 출입 정책 설정 (하단) - 인풋 폼 방식 */}
-				<div className="neu-elevated">
-					<SectionPanel 
-						title="출입 정책 설정"
-						subtitle="차단기 출입 정책을 설정하고 관리합니다"
-						icon={<Settings2 size={18} />}
-						headerHeight="h-[70px]"
-						titleAlign="center"
-						headerActions={
-							<div className="flex gap-2">
-								<Button
-									variant="outline"
-									icon={RotateCcw}
-									onClick={handleResetPolicyChanges}
-									className="min-w-28"
-								>
-									복구/초기화
-								</Button>
-								<Button
-									variant={hasChanges ? "primary" : "outline"}
-									icon={Send}
-									onClick={handleSavePolicyChanges}
-									disabled={!hasChanges}
-									className="min-w-16"
-								>
-									전송
-								</Button>
-							</div>
-						}
-					>
-						<div className="space-y-4">
-
-							{/* 정책 설정 콘텐츠 */}
-							<div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-								{/* 현장 출입 정책 설정 */}
-								<div className="p-4 w-full lg:max-w-xs xl:max-w-sm shrink-0">
-									<h3 className="mb-4 text-lg font-semibold text-foreground">현장 출입 정책 설정</h3>
-									<GlobalPolicyPanel
-										entryPolicy={entryPolicy}
-										returnHourEnabled={returnHourEnabled}
-										warningCount={warningCount}
-										isLocked={false}
-										onEntryPolicyChange={(policy) => {
-											handleEntryPolicyChange(policy);
-											setHasChanges(true);
-										}}
-										onReturnHourEnabledChange={(enabled) => {
-											handleReturnHourEnabledChange(enabled);
-											setHasChanges(true);
-										}}
-										onWarningCountChange={(count) => {
-											handleWarningCountChange(count);
-											setHasChanges(true);
-										}}
-									/>
-								</div>
-
-								{/* 각 차단기 설정 */}
-								<div className="flex-1 p-4 w-full min-w-80 lg:min-w-96">
-									<h3 className="mb-4 text-lg font-semibold text-foreground">각 차단기 설정</h3>
-									<BarrierPolicyGrid
-										barriers={barriers}
-										barrierPolicies={barrierPolicies}
-										barrierOrder={barrierOrder}
-										returnHourEnabled={returnHourEnabled}
-										onPolicyUpdate={(barrierId, policy) => {
-											handlePolicyUpdate(barrierId, policy);
-											setHasChanges(true);
-										}}
-										onBarrierOrderChange={handleBarrierOrderChange}
-									/>
-								</div>
-							</div>
+			{/* 차단기 제어 영역 */}
+			<div className="neu-elevated">
+				<SectionPanel 
+					title="개별 차단기 제어 컨트롤러"
+					subtitle="각 차단기를 개별적으로 제어합니다"
+					icon={<Zap size={18} />}
+					headerHeight="h-[70px]"
+					titleAlign="center"
+					headerActions={
+						<div className="flex gap-3 items-center w-auto">
+							<span className="text-sm font-medium whitespace-nowrap text-muted-foreground">
+								{isBarrierLocked ? '잠금상태' : '편집상태'}
+							</span>
+							<SimpleToggleSwitch
+								checked={!isBarrierLocked}
+								onChange={(checked) => setIsBarrierLocked(!checked)}
+								size="lg"
+								className="w-auto"
+							/>
 						</div>
-					</SectionPanel>
-				</div>
+					}
+				>
+					<BarrierControlGrid
+						barriers={barriers}
+						barrierOrder={barrierOrder}
+						isLocked={isBarrierLocked}
+						onBarrierToggle={handleBarrierToggle}
+						onOperationModeChange={handleOperationModeChange}
+						onBarrierOrderChange={handleBarrierOrderChange}
+					/>
+				</SectionPanel>
 			</div>
 		</div>
 	);

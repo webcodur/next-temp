@@ -20,19 +20,19 @@ interface FieldConfig {
 }
 
 interface AdvancedSearchProps {
-	title?: string;
-	fields: FieldConfig[];
-	onSearch?: () => void;
-	onReset?: () => void;
-	defaultOpen?: boolean;
-	showButtons?: boolean;
-	statusText?: string;
-	fieldControlsLabel?: string;
-	colorVariant?: 'primary' | 'secondary';
-	searchMode?: 'client' | 'server';
+	title?: string; // 아코디언 헤더에 표시될 제목 (미설정시 searchMode에 따라 자동 생성)
+	fields: FieldConfig[]; // 검색 필드 설정 배열 (key, label, element, visible 포함)
+	onSearch?: () => void; // 검색 버튼 클릭 또는 Enter 키 입력시 실행될 콜백 함수
+	onReset?: () => void; // 리셋 버튼 클릭시 실행될 폼 초기화 콜백 함수
+	defaultOpen?: boolean; // 아코디언 초기 펼침 상태 (미설정시 searchMode에 따라 자동 설정)
+	showButtons?: boolean; // 검색/리셋 버튼 표시 여부 (미설정시 searchMode에 따라 자동 설정)
+	statusText?: string; // 아코디언 헤더 우측에 표시할 상태 텍스트
+	fieldControlsLabel?: string; // 필드 제어 영역의 레이블 (현재 사용되지 않음)
+	colorVariant?: 'primary' | 'secondary'; // 버튼 색상 테마 (미설정시 searchMode에 따라 자동 설정)
+	searchMode?: 'client' | 'server'; // 검색 동작 모드 - client: 실시간 필터링, server: 버튼 기반 검색
 	alwaysOpen?: boolean; // 아코디언 없이 항상 펼쳐진 상태로 고정
-	footerLeft?: ReactNode; // 푸터 좌측 액션 영역
-	columns?: 2 | 3; // 필드 열 개수 (기본값: 2)
+	footerLeft?: ReactNode; // 푸터 좌측에 표시할 커스텀 액션 영역 (server 모드에서만 표시)
+	columns?: 2 | 3; // 필드 그리드 열 개수 (2: md에서 2열, 3: md에서 2열 lg에서 3열)
 }
 // #endregion
 

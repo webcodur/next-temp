@@ -2,12 +2,14 @@
   파일명: PageHeader.tsx
   기능: 페이지 상단에 표시되는 헤더 컴포넌트
   책임: 페이지 제목과 좌우측 액션 버튼들을 포함하는 헤더 영역을 제공한다
+       상세/편집/생성 페이지에서는 자동으로 "목록으로" 버튼을 추가한다
 
   사용 예시:
   <PageHeader 
     title="IP 차단 전체 히스토리" 
     subtitle="비정상적인 방식으로 허브에 접속하다가 차단된 모든 IP를 검색 조회합니다."
     rightActions={<Button>검색</Button>}
+    hasChanges={hasUnsavedChanges} // 선택사항: 수정사항이 있을 때 확인창 표시
   />
 */
 
@@ -17,14 +19,16 @@ import React from 'react';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, List } from 'lucide-react';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
+import { useListNavigation } from '@/hooks/ui-hooks/useListNavigation';
 
 // #region 타입
 export interface PageHeaderProps extends HTMLAttributes<HTMLDivElement> {
 	title: string;
 	subtitle?: string;
 	rightActions?: ReactNode;
+	hasChanges?: boolean; // 수정사항 존재 여부 (목록으로 이동 시 확인용)
 }
 // #endregion
 
@@ -32,12 +36,16 @@ export default function PageHeader({
 	title,
 	subtitle,
 	rightActions,
+	hasChanges = false,
 	children,
 	className,
 	...props
 }: PageHeaderProps) {
 	// 뒤로가기 기능
-	const { handleBack } = useBackNavigation();
+	const { handleBack } = useBackNavigation({ hasChanges });
+	
+	// 목록으로 이동 기능
+	const { shouldShowList, handleGoToList, listPageTitle } = useListNavigation({ hasChanges });
 	
 	// children이 있으면 rightActions로 처리 (하위 호환성)
 	const finalRightActions = rightActions || children;
@@ -48,7 +56,7 @@ export default function PageHeader({
 			className={cn('flex relative items-start', className)}
 			{...props}
 		>
-			{/* 좌측 영역 - 뒤로가기 버튼 */}
+			{/* 좌측 영역 - 네비게이션 버튼들 */}
 			<div className="flex absolute bottom-0 left-0 gap-2 items-center">
 				<Button
 					variant="primary"
@@ -57,7 +65,21 @@ export default function PageHeader({
 					title="뒤로가기"
 				>
 					<ArrowLeft className="w-4 h-4" />
+          뒤로가기
 				</Button>
+				
+				{/* 상세/편집/생성 페이지에서만 목록으로 버튼 표시 */}
+				{shouldShowList && (
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={handleGoToList}
+						title={`${listPageTitle} 목록으로 이동`}
+					>
+						<List className="w-4 h-4" />
+						목록으로
+					</Button>
+				)}
 			</div>
 
 			{/* 제목 영역 - 전체 너비 차지 & 중앙 정렬 */}

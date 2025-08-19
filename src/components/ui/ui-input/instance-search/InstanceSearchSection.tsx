@@ -17,6 +17,7 @@ import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import { searchInstances } from '@/services/instances/instances$_GET';
 import { Instance, InstanceType } from '@/types/instance';
 import { Option } from '@/components/ui/ui-input/field/core/types';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // #region 인터페이스 정의
 export interface InstanceSearchFilters {
@@ -35,6 +36,26 @@ export interface InstanceSearchField {
   visible: boolean;
 }
 
+export interface DisabledInstance {
+  instanceId: number;
+  disabledText: string; // "현재 거주지", "이미 연결됨" 등
+  disabledClassName?: string; // 추가 스타일링
+}
+
+export interface ColumnConfiguration {
+  preset?: 'basic' | 'detailed' | 'compact';
+  includeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'residentCount' | 'carCount' | 'memo')[];
+  excludeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'residentCount' | 'carCount' | 'memo')[];
+  customColumns?: BaseTableColumn<Instance>[];
+  selectColumnConfig?: {
+    disabled?: boolean;
+    selectedState?: (instance: Instance) => boolean;
+    onSelect?: (instance: Instance) => void;
+    buttonText?: (instance: Instance) => string;
+    isLoading?: boolean;
+  };
+}
+
 export interface InstanceSearchSectionProps {
   // 검색 관련
   searchFields: InstanceSearchField[];
@@ -43,7 +64,8 @@ export interface InstanceSearchSectionProps {
   
   // 테이블 관련
   tableType?: 'base' | 'paginated';
-  columns: BaseTableColumn<Instance>[];
+  columns?: BaseTableColumn<Instance>[]; // 선택사항으로 변경
+  columnConfig?: ColumnConfiguration; // 새로운 컬럼 설정
   onRowClick?: (instance: Instance, index: number) => void;
   getRowClassName?: (instance: Instance) => string;
   pageSize?: number;
@@ -54,12 +76,12 @@ export interface InstanceSearchSectionProps {
   title?: string;
   subtitle?: string;
   showSection?: boolean;
-  defaultSearchOpen?: boolean;
   searchMode?: 'client' | 'server';
   itemName?: string;
   
   // 기타
   excludeInstanceIds?: number[]; // 제외할 인스턴스 ID 목록
+  disabledInstances?: DisabledInstance[]; // 비활성화할 인스턴스 목록
 }
 // #endregion
 
@@ -72,6 +94,7 @@ export default function InstanceSearchSection({
   // 테이블 관련
   tableType = 'base',
   columns,
+  columnConfig,
   onRowClick,
   getRowClassName,
   pageSize = 10,
@@ -82,12 +105,12 @@ export default function InstanceSearchSection({
   title = '세대 검색',
   subtitle = '조건에 맞는 세대를 검색합니다.',
   showSection = true,
-  defaultSearchOpen = true,
   searchMode = 'server',
   itemName = '세대',
   
   // 기타
   excludeInstanceIds = [],
+  disabledInstances = [],
 }: InstanceSearchSectionProps) {
   // #region 상태 관리
   const [instances, setInstances] = useState<Instance[]>([]);
@@ -101,12 +124,17 @@ export default function InstanceSearchSection({
   
   // props 안정화를 위한 ref
   const excludeIdsRef = useRef(excludeInstanceIds);
+  const disabledInstancesRef = useRef(disabledInstances);
   const onSearchCompleteRef = useRef(onSearchComplete);
   
   // props 변경시 ref 업데이트
   useEffect(() => {
     excludeIdsRef.current = excludeInstanceIds;
   }, [excludeInstanceIds]);
+  
+  useEffect(() => {
+    disabledInstancesRef.current = disabledInstances;
+  }, [disabledInstances]);
   
   useEffect(() => {
     onSearchCompleteRef.current = onSearchComplete;
@@ -119,6 +147,168 @@ export default function InstanceSearchSection({
     { value: 'TEMP', label: '임시' },
     { value: 'COMMERCIAL', label: '상업' },
   ], []);
+  // #endregion
+
+  // #region 비활성화 인스턴스 처리
+  const getDisabledInstance = useCallback((instanceId: number): DisabledInstance | undefined => {
+    return disabledInstancesRef.current.find(disabled => disabled.instanceId === instanceId);
+  }, []);
+
+  const isInstanceDisabled = useCallback((instanceId: number): boolean => {
+    return disabledInstancesRef.current.some(disabled => disabled.instanceId === instanceId);
+  }, []);
+  // #endregion
+
+  // #region 기본 컬럼 생성
+  const generateDefaultColumns = useCallback((): BaseTableColumn<Instance>[] => {
+    const allColumns: Record<string, BaseTableColumn<Instance>> = {
+      id: {
+        key: 'id',
+        header: 'ID',
+        width: '8%',
+        align: 'center',
+      },
+      dongHosu: {
+        key: 'dongHosu',
+        header: '동호수',
+        width: '12%',
+        align: 'start',
+        cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
+      },
+      name: {
+        key: 'name',
+        header: '세대명',
+        width: '12%',
+        align: 'start',
+        cell: (item: Instance) => item.name || '-',
+      },
+      ownerName: {
+        key: 'ownerName',
+        header: '소유자',
+        width: '10%',
+        align: 'start',
+        cell: (item: Instance) => item.ownerName || '-',
+      },
+
+      instanceType: {
+        key: 'instanceType',
+        header: '타입',
+        width: '8%',
+        align: 'center',
+        cell: (item: Instance) => {
+          const typeMap = {
+            GENERAL: '일반',
+            TEMP: '임시',
+            COMMERCIAL: '상업',
+          };
+          return typeMap[item.instanceType as keyof typeof typeMap] || item.instanceType;
+        },
+      },
+      residentCount: {
+        key: 'residentCount',
+        header: '거주민',
+        width: '8%',
+        align: 'center',
+        cell: (item: Instance) => `${item.residentInstance?.length || 0}명`,
+      },
+      carCount: {
+        key: 'carCount',
+        header: '차량',
+        width: '8%',
+        align: 'center',
+        cell: (item: Instance) => `${item.carInstance?.length || 0}대`,
+      },
+      memo: {
+        key: 'memo',
+        header: '메모',
+        width: '15%',
+        align: 'start',
+        cell: (item: Instance) => item.memo || '-',
+      },
+    };
+
+    const config = columnConfig || { preset: 'basic' };
+    let selectedColumns: BaseTableColumn<Instance>[] = [];
+
+    // 프리셋에 따른 기본 컬럼 선택
+    if (config.preset === 'compact') {
+      selectedColumns = [allColumns.id, allColumns.dongHosu, allColumns.instanceType];
+    } else if (config.preset === 'detailed') {
+      selectedColumns = Object.values(allColumns);
+    } else { // basic (default)
+      selectedColumns = [
+        allColumns.id, 
+        allColumns.dongHosu, 
+        allColumns.name, 
+        allColumns.ownerName, 
+        allColumns.instanceType
+      ];
+    }
+
+    // includeColumns/excludeColumns 처리
+    if (config.includeColumns) {
+      selectedColumns = config.includeColumns.map(key => allColumns[key]).filter(Boolean);
+    }
+
+    if (config.excludeColumns) {
+      const excludeKeys = config.excludeColumns;
+      selectedColumns = selectedColumns.filter(col => {
+        const key = col.key;
+        return !excludeKeys.some(excludeKey => excludeKey === key);
+      });
+    }
+
+    // 커스텀 컬럼 추가
+    if (config.customColumns) {
+      selectedColumns = [...selectedColumns, ...config.customColumns];
+    }
+
+    // 선택 컬럼 추가 (설정된 경우)
+    if (config.selectColumnConfig && !config.selectColumnConfig.disabled) {
+      const selectColumn: BaseTableColumn<Instance> = {
+        header: '선택',
+        width: '12%',
+        align: 'center',
+        cell: (item: Instance) => {
+          const disabledInstance = getDisabledInstance(item.id);
+          const isSelected = config.selectColumnConfig!.selectedState?.(item) || false;
+          
+          if (disabledInstance) {
+            return (
+              <div className="flex flex-col gap-1 items-center">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={true}
+                  className="opacity-60 cursor-not-allowed"
+                >
+                  {disabledInstance.disabledText}
+                </Button>
+              </div>
+            );
+          }
+          
+          return (
+            <Button
+              variant={isSelected ? 'primary' : 'outline'}
+              size="sm"
+              onClick={() => config.selectColumnConfig!.onSelect?.(item)}
+              disabled={config.selectColumnConfig!.isLoading}
+            >
+              {config.selectColumnConfig!.buttonText?.(item) || (isSelected ? '선택됨' : '선택')}
+            </Button>
+          );
+        },
+      };
+      selectedColumns.push(selectColumn);
+    }
+
+    return selectedColumns;
+  }, [columnConfig, getDisabledInstance]);
+
+  const finalColumns = useMemo(() => {
+    return columns || generateDefaultColumns();
+  }, [columns, generateDefaultColumns]);
   // #endregion
 
   // #region 검색 로직
@@ -271,15 +461,34 @@ export default function InstanceSearchSection({
 
     const tableProps = {
       data: instances as unknown as Record<string, unknown>[],
-      columns: columns as unknown as BaseTableColumn<Record<string, unknown>>[],
+      columns: finalColumns as unknown as BaseTableColumn<Record<string, unknown>>[],
       onRowClick: onRowClick ? (item: Record<string, unknown>, index: number) => {
         const instance = item as unknown as Instance;
+        // 비활성화된 인스턴스는 클릭할 수 없음
+        if (isInstanceDisabled(instance.id)) {
+          return;
+        }
         onRowClick(instance, index);
       } : undefined,
-      getRowClassName: getRowClassName ? (item: Record<string, unknown>) => {
+      getRowClassName: (item: Record<string, unknown>) => {
         const instance = item as unknown as Instance;
-        return getRowClassName(instance);
-      } : undefined,
+        const disabledInstance = getDisabledInstance(instance.id);
+        let className = '';
+        
+        if (disabledInstance) {
+          // 비활성화된 항목 기본 스타일
+          className += 'bg-muted/30 opacity-75';
+          // 커스텀 클래스명이 있으면 추가
+          if (disabledInstance.disabledClassName) {
+            className += ` ${disabledInstance.disabledClassName}`;
+          }
+        } else if (getRowClassName) {
+          // 사용자 정의 스타일 적용
+          className = getRowClassName(instance);
+        }
+        
+        return className;
+      },
     };
 
     if (tableType === 'paginated') {
@@ -314,7 +523,7 @@ export default function InstanceSearchSection({
         fields={searchFieldElements}
         onSearch={handleSearch}
         onReset={handleReset}
-        defaultOpen={defaultSearchOpen}
+        defaultOpen={false}
         searchMode={searchMode}
         columns={2}
         statusText={isSearching ? '검색 중...' : undefined}

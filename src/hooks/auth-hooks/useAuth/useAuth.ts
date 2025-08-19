@@ -133,18 +133,10 @@ export function useAuth() {
     if (globalTokenCheckStarted) return;
     globalTokenCheckStarted = true;
 
-    // 개발 모드에서만 로그 출력
-    if (process.env.NODE_ENV === 'development') {
-      console.log('⏲️ 토큰 검증 시작 (전역)');
-    }
-    
     const tokenCheckInterval = setInterval(async () => {
       const currentToken = getTokenFromCookie(ACCESS_TOKEN_NAME);
       
       if (!currentToken) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('🚨 토큰 손실');
-        }
         await handleTokenExpired();
       }
       // 정상 상태일 때는 로그 출력하지 않음
@@ -193,20 +185,6 @@ export function useAuth() {
 
       // 6. 인증 상태 설정 (마지막에 실행하여 리렌더링 트리거)
       setIsLoggedIn(true);
-
-      // 7. 디버깅 정보 출력
-      if (process.env.NODE_ENV === 'development') {
-        debugTokenPayload();
-        
-        // 상태 확인을 위한 지연된 로그
-        setTimeout(() => {
-          console.log('🔄 상태 확인 (1초 후):', {
-            isLoggedIn: true,
-            tokenSelectedParkingLotId: parkingLotIdFromToken,
-            effectiveSelectedParkingLotId: parkingLotIdFromToken === 0 ? manualSelectedParkingLotId : parkingLotIdFromToken
-          });
-        }, 1000);
-      }
 
       return { success: true };
     } catch (error) {

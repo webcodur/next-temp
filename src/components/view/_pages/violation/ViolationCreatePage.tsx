@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import AdminSelectModal from '@/components/ui/ui-layout/modal/AdminSelectModal';
 import ViolationForm, { ViolationFormData } from './ViolationForm';
 import { AlertTriangle } from 'lucide-react';
 import { createViolation } from '@/services/violations';
 import type { 
   CreateCarViolationRequest
 } from '@/types/carViolation';
+import type { Admin } from '@/types/admin';
 
 // #region 타입 정의
 // ViolationFormData는 ViolationForm.tsx에서 import
@@ -42,6 +44,10 @@ export default function ViolationCreatePage() {
   const [creating, setCreating] = useState(false);
   const [showBlacklistModal, setShowBlacklistModal] = useState(false);
   const [blacklistedCarNumber, setBlacklistedCarNumber] = useState('');
+  
+  // 관리자 선택 모달 관련 상태
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [showAdminSelectModal, setShowAdminSelectModal] = useState(false);
   // #endregion
 
   // #region 변경 감지 및 유효성 검사
@@ -148,6 +154,23 @@ export default function ViolationCreatePage() {
     setBlacklistedCarNumber('');
     router.push('/parking/violation/blacklist');
   }, [router]);
+
+  const handleAdminSelectOpen = useCallback(() => {
+    setShowAdminSelectModal(true);
+  }, []);
+
+  const handleAdminSelectClose = useCallback(() => {
+    setShowAdminSelectModal(false);
+  }, []);
+
+  const handleAdminSelect = useCallback((admin: Admin) => {
+    setSelectedAdmin(admin);
+    setFormData(prev => ({
+      ...prev,
+      reporterId: admin.id.toString()
+    }));
+    setShowAdminSelectModal(false);
+  }, []);
   // #endregion
 
   return (
@@ -176,6 +199,8 @@ export default function ViolationCreatePage() {
             onCancel={handleCancel}
             hasChanges={hasChanges}
             isValid={isValid}
+            selectedAdmin={selectedAdmin}
+            onAdminSelect={handleAdminSelectOpen}
           />
         </SectionPanel>
       </div>
@@ -215,6 +240,15 @@ export default function ViolationCreatePage() {
           </Button>
         </div>
       </Modal>
+
+      {/* 관리자 선택 모달 */}
+      <AdminSelectModal
+        isOpen={showAdminSelectModal}
+        onClose={handleAdminSelectClose}
+        onSelect={handleAdminSelect}
+        title="근무자에서 신고자 선택"
+        selectedAdminId={selectedAdmin?.id}
+      />
     </>
   );
 }

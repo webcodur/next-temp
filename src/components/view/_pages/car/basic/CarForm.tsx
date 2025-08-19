@@ -360,6 +360,7 @@ const CarForm: React.FC<CarFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     },
@@ -375,6 +376,7 @@ const CarForm: React.FC<CarFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     }

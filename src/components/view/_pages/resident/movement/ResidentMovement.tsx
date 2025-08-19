@@ -37,8 +37,8 @@ export default function ResidentMovement({
   return (
     <div className="space-y-6">
 
-            {/* 거주 이력 섹션 */}
-            <SectionPanel 
+      {/* 거주 이력 섹션 */}
+      <SectionPanel 
         title="거주 이력" 
         subtitle="거주자의 과거 거주 내역을 확인합니다"
         icon={<History size={18} />}

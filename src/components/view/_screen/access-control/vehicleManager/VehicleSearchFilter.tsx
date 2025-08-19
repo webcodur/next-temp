@@ -76,6 +76,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 							value={filters.car_type || ''}
 							onChange={(value) => handleFilterChange('car_type', value)}
 							placeholder={t('주차_필터_차량유형선택')}
+							validationRule={{ type: 'free', mode: 'edit' }}
 						/>
 
 						{/* 입출차 선택 */}
@@ -84,6 +85,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 							value={filters.in_out_status || ''}
 							onChange={(value) => handleFilterChange('in_out_status', value)}
 							placeholder={t('주차_필터_입출차선택')}
+							validationRule={{ type: 'free', mode: 'edit' }}
 						/>
 
 						{/* 통행입구 선택 */}
@@ -92,6 +94,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 							value={filters.entrance_status || ''}
 							onChange={(value) => handleFilterChange('entrance_status', value)}
 							placeholder={t('주차_필터_통행입구선택')}
+							validationRule={{ type: 'free', mode: 'edit' }}
 						/>
 
 						{/* 차량번호 검색 */}
@@ -99,6 +102,7 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 							value={filters.keyword || ''}
 							onChange={(value) => handleFilterChange('keyword', value)}
 							placeholder={t('주차_필터_차량번호플레이스홀더')}
+							validationRule={{ type: 'free', mode: 'edit' }}
 						/>
 					</div>
 

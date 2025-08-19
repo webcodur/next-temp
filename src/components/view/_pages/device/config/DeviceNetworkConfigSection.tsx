@@ -9,7 +9,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateParkingDeviceNetwork } from '@/services/devices/devices@id_network_PUT';
 import { ParkingDevice } from '@/types/device';
-import { validateIP, validatePort } from '@/utils/ipValidation';
+import { validateIP, validatePort } from '@/utils/validation';
 
 interface NetworkConfigData {
   ip: string;
@@ -178,6 +178,7 @@ export default function DeviceNetworkConfigSection({
                 onChange={(value) => handleFieldChange('ip', value)}
                 placeholder="192.168.1.100"
                 disabled={isSubmitting}
+                autocomplete="off"
                 validationRule={{
                   type: 'ip',
                   mode: 'edit',
@@ -198,6 +199,7 @@ export default function DeviceNetworkConfigSection({
                 onChange={(value) => handleFieldChange('port', value)}
                 placeholder="8080"
                 disabled={isSubmitting}
+                autocomplete="off"
                 validationRule={{
                   type: 'port',
                   mode: 'edit'
@@ -216,6 +218,7 @@ export default function DeviceNetworkConfigSection({
                 onChange={(value) => handleFieldChange('serverPort', value)}
                 placeholder="9090"
                 disabled={isSubmitting}
+                autocomplete="off"
                 validationRule={{
                   type: 'port',
                   mode: 'edit'

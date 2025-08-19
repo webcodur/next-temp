@@ -240,26 +240,11 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				)}
 			</div>
 
-			{/* Validation Rule 표시 */}
-			{validationRule && (
-				<div className={`mb-2 text-sm ${getFeedbackType() === 'success' ? 'text-blue-600' : getFeedbackType() === 'error' ? 'text-red-600' : 'text-gray-600'}`}>
-					<div className="flex items-center">
-						<span>{validationResult?.message}</span>
-						{shouldShowIcon && (
-							validationResult.isValid ? (
-								<div className="ml-2 w-4 h-4 text-blue-500">✓</div>
-							) : (
-								<div className="ml-2 w-4 h-4 text-red-500">✗</div>
-							)
-						)}
-					</div>
-				</div>
-			)}
-
 			<InputContainer
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
+				validationStatus={getFeedbackType()}
 				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 캘린더 아이콘 */}

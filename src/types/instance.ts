@@ -7,7 +7,6 @@ export interface Instance {
   parkinglotId: number;
   name: string;
   ownerName?: string | null;
-  phone: string;
   address1Depth: string;
   address2Depth: string;
   address3Depth?: string | null;

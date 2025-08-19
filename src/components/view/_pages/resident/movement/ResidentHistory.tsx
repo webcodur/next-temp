@@ -24,6 +24,7 @@ interface ResidentInstanceHistory {
   residentId: number;
   instanceId: number;
   memo?: string | null;
+  status: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
@@ -31,13 +32,25 @@ interface ResidentInstanceHistory {
   instance: {
     id: number;
     parkinglotId: number;
+    name: string;
     address1Depth: string;
     address2Depth: string;
     address3Depth?: string | null;
     instanceType: string;
+    password: string;
     memo?: string | null;
     createdAt: string;
     updatedAt: string;
+    deletedAt?: string | null;
+    parkinglot: {
+      id: number;
+      code: string;
+      name: string;
+      description?: string | null;
+      createdAt: string;
+      updatedAt: string;
+      deletedAt?: string | null;
+    };
   } | null;
 }
 
@@ -47,14 +60,27 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
   const [loading, setLoading] = useState(false);
   const [historyData, setHistoryData] = useState<ResidentInstanceHistory[]>([]);
   
+  // #region 인스턴스 유형 매핑
+  const instanceTypeMap = {
+    GENERAL: '일반',
+    TEMP: '임시', 
+    COMMERCIAL: '상업',
+  } as const;
+  
+  const getInstanceTypeLabel = (type?: string | null) => {
+    if (!type) return '-';
+    return instanceTypeMap[type as keyof typeof instanceTypeMap] || type;
+  };
+  // #endregion
+  
   // #region 거주 이력 데이터 로딩
   useEffect(() => {
     const loadHistory = async () => {
       setLoading(true);
       try {
         const result = await getResidentHistory(resident.id);
-        if (result.success && result.data) {
-          const processedData = result.data.map(history => ({
+        if (result.success && result.data && result.data.instanceHistory) {
+          const processedData = result.data.instanceHistory.map(history => ({
             ...history,
             isActive: !history.deletedAt
           })).sort((a, b) => {
@@ -148,7 +174,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
       width: '12%',
       cell: (item: ResidentInstanceHistory) => (
         <div className="text-center">
-          <div className="text-sm">{item.instance?.instanceType || '-'}</div>
+          <div className="text-sm">{getInstanceTypeLabel(item.instance?.instanceType)}</div>
         </div>
       ),
     },

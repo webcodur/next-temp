@@ -171,6 +171,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           onChange={(value) => handleFieldChange('phone', value)}
           placeholder="전화번호"
           disabled={isReadOnly}
+          autocomplete="off"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
@@ -186,6 +187,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           onChange={(value) => handleFieldChange('email', value)}
           placeholder="이메일"
           disabled={isReadOnly}
+          autocomplete="off"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
@@ -202,6 +204,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: mode }}
         />
       )
     },
@@ -277,6 +280,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     },
@@ -292,6 +296,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     }
@@ -412,6 +417,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
           dateFormat="yyyy-MM-dd HH:mm"
           showTimeSelect={true}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       ),
       rules: '관계 생성 일시'

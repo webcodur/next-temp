@@ -33,7 +33,6 @@ function serverToClient(server: InstanceServerResponse): Instance {
     parkinglotId: server.parkinglot_id,
     name: '',
     ownerName: null,
-    phone: '',
     address1Depth: server.address_1depth,
     address2Depth: server.address_2depth,
     address3Depth: server.address_3depth,

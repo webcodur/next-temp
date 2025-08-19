@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { List, ChevronDown, ChevronUp, X } from 'lucide-react';
-import { ValidationRule } from '@/utils/validation';
+import { ValidationRule, validateField } from '@/utils/validation';
 import { Portal } from '../field/shared/Portal';
 import { InputContainer } from './shared/InputContainer';
 
@@ -35,6 +35,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	disabled = false,
 	colorVariant = 'primary',
 	className = '',
+	validationRule,
 	showIcon = true,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -141,6 +142,18 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 		}
 	};
 
+	// validation 결과 계산
+	const validationResult = validationRule ? validateField(value || '', validationRule) : null;
+	
+	// 피드백 타입 결정
+	const getFeedbackType = () => {
+		if (!validationRule || !validationResult) return 'info';
+		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+			return validationResult.isValid ? 'success' : 'error';
+		}
+		return 'info';
+	};
+
 	// 색상 variant에 따른 스타일
 	const colorStyles = {
 		borderFocus: colorVariant === 'primary' ? 'border-primary/30' : 'border-secondary/30',
@@ -165,6 +178,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 					isFocused={isOpen}
 					disabled={disabled}
 					colorVariant={colorVariant}
+					validationStatus={getFeedbackType()}
 					className="cursor-pointer">
 					{/* 왼쪽 리스트 아이콘 */}
 					{showIcon && (

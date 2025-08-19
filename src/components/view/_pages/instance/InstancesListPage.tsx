@@ -145,13 +145,7 @@ export default function InstancesListPage() {
       width: '8%',
       cell: (item: Instance) => item.ownerName || '-',
     },
-    {
-      key: 'phone',
-      header: '연락처',
-      align: 'start',
-      width: '10%',
-      cell: (item: Instance) => item.phone || '-',
-    },
+
     {
       key: 'instanceType',
       header: '타입',
@@ -259,7 +253,6 @@ export default function InstancesListPage() {
         itemName="세대"
         minWidth="1400px"
         showSection={false}
-        defaultSearchOpen={false}
         excludeInstanceIds={excludeInstanceIds}
       />
 

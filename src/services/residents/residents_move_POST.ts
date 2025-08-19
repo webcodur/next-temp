@@ -40,7 +40,7 @@ interface ResidentDetailServerResponse {
   memo?: string | null;
   created_at: string;
   updated_at: string;
-  resident_instance: ResidentInstanceServerResponse[];
+  resident_instance?: ResidentInstanceServerResponse[];
 }
 // #endregion
 
@@ -65,7 +65,7 @@ function serverToClient(server: ResidentDetailServerResponse): ResidentDetail {
     memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
-    residentInstance: server.resident_instance.map(ri => ({
+    residentInstance: server.resident_instance?.map(ri => ({
       id: ri.id,
       residentId: ri.resident_id,
       instanceId: ri.instance_id,
@@ -83,29 +83,42 @@ function serverToClient(server: ResidentDetailServerResponse): ResidentDetail {
         createdAt: ri.instance.created_at,
         updatedAt: ri.instance.updated_at,
       } : null,
-    })),
+    })) || [],
   };
 }
 // #endregion
 
 export async function moveResident(data: MoveResidentRequest) {
   const serverRequest = clientToServer(data);
-  const response = await fetchDefault('/residents/move', {
-    method: 'POST',
-    body: JSON.stringify(serverRequest),
-  });
-
-  const result = await response.json();
   
-  if (!response.ok) {
-    const errorMsg = result.message || `거주자 인스턴스 이동 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+  try {
+    const response = await fetchDefault('/residents/move', {
+      method: 'POST',
+      body: JSON.stringify(serverRequest),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      const errorMsg = result?.message || `거주자 인스턴스 이동 실패(코드): ${response.status}`;
+      console.log(errorMsg);
+      return { success: false, errorMsg };
+    }
+    
+    if (!result || typeof result !== 'object') {
+      const errorMsg = '서버 응답 형식이 올바르지 않습니다.';
+      console.error('Invalid server response:', result);
+      return { success: false, errorMsg };
+    }
+    
+    const serverResponse = result as ResidentDetailServerResponse;
+    return {
+      success: true,
+      data: serverToClient(serverResponse),
+    };
+  } catch (error) {
+    console.error('moveResident API 호출 중 오류:', error);
+    const errorMsg = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
     return { success: false, errorMsg };
   }
-  
-  const serverResponse = result as ResidentDetailServerResponse;
-  return {
-    success: true,
-    data: serverToClient(serverResponse),
-  };
 }

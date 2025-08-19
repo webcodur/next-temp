@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Hash, Plus, Minus } from 'lucide-react';
-import { ValidationRule } from '@/utils/validation';
+import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
 interface SimpleNumberInputProps {
@@ -29,6 +29,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 	className = '',
 	min,
 	max,
+	validationRule,
 	colorVariant = 'primary',
 	showIcon = true,
 }) => {
@@ -179,6 +180,19 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 		inputRef.current?.focus();
 	};
 
+	// validation 결과 계산 (숫자를 문자열로 변환)
+	const stringValue = value === '' ? '' : String(value);
+	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
+	
+	// 피드백 타입 결정
+	const getFeedbackType = () => {
+		if (!validationRule || !validationResult) return 'info';
+		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+			return validationResult.isValid ? 'success' : 'error';
+		}
+		return 'info';
+	};
+
 	// cleanup on unmount
 	useEffect(() => {
 		return () => {
@@ -203,6 +217,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
+				validationStatus={getFeedbackType()}
 				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 해시 아이콘 */}

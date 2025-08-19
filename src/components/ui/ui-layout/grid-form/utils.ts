@@ -86,24 +86,6 @@ export const calculateOptimalLabelWidth = (
 
 	// 최소 120px, 최대 400px 제한
 	const clampedWidth = Math.max(120, Math.min(400, totalWidth));
-
-	// 디버깅용 로그 (개발 환경에서만)
-	if (process.env.NODE_ENV === 'development') {
-		const longestLabel = allLabelsDetailed.reduce((prev, current) => 
-			(current.width > prev.width) ? current : prev, allLabelsDetailed[0] || {text: '', width: 0, hasRequired: false}
-		);
-		
-		console.log('🔧 GridForm Label Width Calculation (Detail View):', {
-			totalLabelsFound: allLabelsDetailed.length,
-			allLabelsWithDetails: allLabelsDetailed,
-			longestLabel: longestLabel ? `"${longestLabel.text}" (${longestLabel.width}px, required: ${longestLabel.hasRequired})` : 'none',
-			maxWidthCalculated: `${maxWidth}px`,
-			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 72px padding)`,
-			clampedWidth: `${clampedWidth}px (min: 120px, max: 400px)`,
-			finalWidth: `${clampedWidth}px`,
-		});
-	}
-
 	return `${clampedWidth}px`;
 };
 
@@ -145,12 +127,12 @@ export const calculateColumnLabelWidths = (
 
 	// 모든 라벨 중 최대 너비 계산
 	let maxWidth = 0;
-	let longestLabel = '';
+	// let longestLabel = '';
 	allLabels.forEach((labelText) => {
 		const textWidth = calculateTextWidth(labelText);
 		if (textWidth > maxWidth) {
 			maxWidth = textWidth;
-			longestLabel = labelText;
+			// longestLabel = labelText;
 		}
 	});
 
@@ -160,21 +142,6 @@ export const calculateColumnLabelWidths = (
 	// 최소 120px, 최대 320px 제한 (더 넉넉하게)
 	const clampedWidth = Math.max(120, Math.min(320, totalWidth));
 	const unifiedWidth = `${clampedWidth}px`;
-
-	// 디버깅용 로그 (개발 환경에서만)
-	if (process.env.NODE_ENV === 'development') {
-		console.log('🔧 GridForm Label Width Calculation (Default View):', {
-			columnsCount,
-			totalLabelsFound: allLabels.length,
-			allLabels,
-			longestLabel: `"${longestLabel}" (${longestLabel.length} chars)`,
-			maxWidth: `${maxWidth}px`,
-			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 74px padding)`,
-			clampedWidth: `${clampedWidth}px (min: 120px, max: 320px)`,
-			finalUnifiedWidth: unifiedWidth,
-			appliedToAllColumns: `${columnsCount} columns`,
-		});
-	}
 
 	// 모든 열에 동일한 너비 적용 (반응형에서 1열이 되어도 일관성 유지)
 	return Array.from({ length: columnsCount }, () => unifiedWidth);
@@ -232,23 +199,6 @@ export const calculateOptimalRulesWidth = (
 
 	// 최소 120px, 최대 300px 제한 (룰즈는 적당히 제한)
 	const clampedWidth = Math.max(120, Math.min(300, totalWidth));
-
-	// 디버깅용 로그 (개발 환경에서만)
-	if (process.env.NODE_ENV === 'development') {
-		const longestRules = allRulesDetailed.reduce((prev, current) => 
-			(current.width > prev.width) ? current : prev, allRulesDetailed[0] || {text: '', width: 0}
-		);
-		
-		console.log('🔧 GridForm Rules Width Calculation:', {
-			totalRulesFound: allRulesDetailed.length,
-			allRulesWithDetails: allRulesDetailed,
-			longestRules: longestRules ? `"${longestRules.text}" (${longestRules.width}px)` : 'none',
-			maxWidthCalculated: `${maxWidth}px`,
-			totalWidthWithPadding: `${totalWidth}px (${maxWidth} + 64px padding)`,
-			clampedWidth: `${clampedWidth}px (min: 120px, max: 300px)`,
-			finalWidth: `${clampedWidth}px`,
-		});
-	}
 
 	return `${clampedWidth}px`;
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw, Save } from 'lucide-react';
+import { RotateCcw, Save, User, Search } from 'lucide-react';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
@@ -14,6 +14,7 @@ import type {
   CarViolationType,
   ViolationReporterType
 } from '@/types/carViolation';
+import type { Admin } from '@/types/admin';
 
 export interface ViolationFormData {
   carNumber: string;
@@ -40,6 +41,8 @@ interface ViolationFormProps {
   onCancel?: () => void;
   hasChanges?: boolean;
   isValid?: boolean;
+  selectedAdmin?: Admin | null;
+  onAdminSelect?: () => void;
 }
 
 // #region 상수 정의
@@ -94,6 +97,8 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
   onCancel,
   hasChanges = false,
   isValid = false,
+  selectedAdmin,
+  onAdminSelect,
 }) => {
   const isReadOnly = disabled || mode === 'view';
 
@@ -255,6 +260,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
           showTimeSelect={true}
           disabled={isReadOnly}
           utcMode={false}
+          validationRule={{ type: 'free', mode: mode }}
         />
       )
     },
@@ -274,16 +280,49 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
     },
     {
       id: 'reporterId',
-      label: '신고자 ID',
-      rules: '신고자의 사용자 ID',
+      label: '신고자 선택',
+      rules: '신고자를 선택하세요',
       align: 'start',
       component: (
-        <SimpleNumberInput
-          value={data.reporterId === '' ? '' : parseInt(data.reporterId)}
-          onChange={(value) => handleFieldChange('reporterId', value === '' ? '' : value.toString())}
-          placeholder="신고자 사용자 ID를 입력하세요"
-          disabled={isReadOnly}
-        />
+        <div className="flex gap-2 items-center">
+          {selectedAdmin ? (
+            // 선택된 관리자 정보 표시
+            <div className="flex-1 flex gap-3 items-center p-3 border rounded-md border-border bg-muted/50">
+              <div className="flex justify-center items-center w-8 h-8 rounded-full bg-primary/10">
+                <User className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-medium">
+                  {selectedAdmin.name} ({selectedAdmin.account})
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  ID: {selectedAdmin.id} | {selectedAdmin.role?.name || '권한 없음'}
+                </div>
+              </div>
+            </div>
+          ) : (
+            // 선택되지 않은 상태
+            <div className="flex-1 flex gap-2 items-center p-3 border border-dashed rounded-md border-muted-foreground/30 bg-muted/20">
+              <User className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
+                신고자를 선택해주세요
+              </span>
+            </div>
+          )}
+          
+          {/* 선택 버튼 */}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onAdminSelect}
+            disabled={isReadOnly}
+            className="flex-shrink-0"
+          >
+            <Search className="w-4 h-4 mr-1" />
+            {selectedAdmin ? '변경' : '선택'}
+          </Button>
+        </div>
       )
     },
     {

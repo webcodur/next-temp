@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { AlignLeft } from 'lucide-react';
-import { ValidationRule } from '@/utils/validation';
+import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
 interface SimpleTextAreaProps {
@@ -31,6 +31,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 	rows = 4,
 	maxLength,
 	resize = 'vertical',
+	validationRule,
 	colorVariant = 'primary',
 	showCharCount = false,
 	showIcon = true,
@@ -72,6 +73,18 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 		textareaRef.current?.focus();
 	};
 
+	// validation 결과 계산
+	const validationResult = validationRule ? validateField(value, validationRule) : null;
+	
+	// 피드백 타입 결정
+	const getFeedbackType = () => {
+		if (!validationRule || !validationResult) return 'info';
+		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+			return validationResult.isValid ? 'success' : 'error';
+		}
+		return 'info';
+	};
+
 	// resize 클래스 매핑
 	const resizeClass = {
 		none: 'resize-none',
@@ -105,6 +118,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
+				validationStatus={getFeedbackType()}
 				onClick={handleContainerClick}
 				isTextArea={true}>
 				

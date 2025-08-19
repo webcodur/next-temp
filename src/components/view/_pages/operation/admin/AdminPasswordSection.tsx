@@ -198,6 +198,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                     onChange={(value) => handleFieldChange('currentPassword', value)}
                     placeholder="현재 비밀번호"
                     disabled={isSubmitting || isResetting}
+                    autocomplete="current-password"
                   />
                 )
               },
@@ -212,6 +213,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                     onChange={(value) => handleFieldChange('newPassword', value)}
                     placeholder="새 비밀번호 (최소 6자)"
                     disabled={isSubmitting || isResetting}
+                    autocomplete="new-password"
                   />
                 )
               },
@@ -227,6 +229,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
                       onChange={(value) => handleFieldChange('confirmPassword', value)}
                       placeholder="비밀번호 확인"
                       disabled={isSubmitting || isResetting}
+                      autocomplete="new-password"
                     />
                     {showPasswordError && (
                       <p className="mt-1 text-sm text-destructive">

@@ -10,6 +10,12 @@ export const sidebarCollapsedAtom = atomWithStorage<boolean>('sidebar-collapsed'
 // 사이드바 끝 패널 너비
 export const endPanelWidthAtom = atomWithStorage<number>('sidebar-width', 320);
 
+// 섹션 네비게이션 패널 관련
+export const sectionNavVisibleAtom = atom<boolean>(false);
+export const sectionNavWidthAtom = atomWithStorage<number>('section-nav-width', 280);
+export const sectionNavCollapsedAtom = atomWithStorage<boolean>('section-nav-collapsed', false);
+export const currentSectionIdAtom = atom<string>('');
+
 // 활성 탑 메뉴 (간소화)
 export const activeTopMenuAtom = atomWithStorage<string>('active-top-menu', '주차');
 

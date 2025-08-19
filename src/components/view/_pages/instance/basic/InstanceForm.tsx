@@ -14,7 +14,6 @@ import { InstanceDetail, InstanceType } from '@/types/instance';
 export interface InstanceFormData {
   name: string;
   ownerName: string;
-  phone: string;
   address1Depth: string;
   address2Depth: string;
   address3Depth: string;
@@ -70,7 +69,6 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
     onChange({
       name: '',
       ownerName: '',
-      phone: '',
       address1Depth: '',
       address2Depth: '',
       address3Depth: '',
@@ -191,6 +189,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('address1Depth', value)}
           placeholder="동 정보"
           disabled={isReadOnly}
+          autocomplete="off"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
@@ -206,6 +205,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('address2Depth', value)}
           placeholder="호수 정보"
           disabled={isReadOnly}
+          autocomplete="off"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
@@ -220,24 +220,12 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('address3Depth', value)}
           placeholder="기타 주소 정보"
           disabled={isReadOnly}
+          autocomplete="off"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
     },
-    {
-      id: 'phone',
-      label: '전화번호',
-      rules: '010-0000-0000 형식',
-      component: (
-        <SimpleTextInput
-          value={data.phone}
-          onChange={(value) => handleFieldChange('phone', value)}
-          placeholder="전화번호"
-          disabled={isReadOnly}
-          validationRule={{ type: 'free', mode: mode }}
-        />
-      )
-    },
+
     {
       id: 'instanceType',
       label: '세대 타입',
@@ -266,6 +254,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           onChange={(value) => handleFieldChange('password', value)}
           placeholder="세대 비밀번호"
           disabled={isReadOnly}
+          autocomplete="new-password"
           validationRule={{ type: 'free', mode: mode }}
         />
       )
@@ -313,6 +302,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     },
@@ -328,6 +318,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     }

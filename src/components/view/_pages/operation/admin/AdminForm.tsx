@@ -272,6 +272,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
           dateFormat="yyyy-MM-dd"
           showTimeSelect={false}
           utcMode={true}
+          validationRule={{ type: 'free', mode: 'view' }}
         />
       )
     }

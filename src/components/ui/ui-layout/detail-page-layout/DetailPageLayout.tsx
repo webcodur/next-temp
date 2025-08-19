@@ -43,7 +43,6 @@ export default function DetailPageLayout({
   const router = useRouter();
   
 
-
   // 탭 클릭 시 해당 href로 페이지 이동
   const handleTabChange = (tabId: string) => {
     const targetTab = tabs.find(tab => tab.id === tabId);

@@ -12,7 +12,7 @@ import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
 import { ParkingDevice } from '@/types/device';
-import { validateIP, validatePort } from '@/utils/ipValidation';
+import { validateField, ValidationRule } from '@/utils/validation';
 import { createDeviceTabs } from '../_shared/deviceTabs';
 
 export default function DeviceDetailPage() {  
@@ -146,23 +146,27 @@ export default function DeviceDetailPage() {
       return false;
     }
 
-    // IP 주소 유효성 검사
-    const ipValidation = validateIP(formData.ip);
-    if (!ipValidation.isValid) {
-      return false;
-    }
+    // 유효성 검사 규칙에 따른 검사
+    const requiredFields = [
+      { value: formData.name, rules: [{ type: 'required' }] },
+      { value: formData.ip, rules: [{ type: 'required' }, { type: 'ip' }] },
+      { value: formData.port, rules: [{ type: 'required' }, { type: 'port' }] },
+      { value: formData.cctvUrl, rules: [{ type: 'required' }] },
+    ];
 
-    // 포트 번호 유효성 검사
-    const portValidation = validatePort(formData.port);
-    if (!portValidation.isValid) {
-      return false;
-    }
+    // 선택적 필드들
+    const optionalFields = [
+      { value: formData.serverPort, rules: formData.serverPort.trim() ? [{ type: 'port' }] : [] },
+      { value: formData.representativePhone, rules: formData.representativePhone.trim() ? [{ type: 'phone' }] : [] },
+    ];
 
-    // 서버 포트가 있는 경우 유효성 검사
-    if (formData.serverPort.trim()) {
-      const serverPortValidation = validatePort(formData.serverPort);
-      if (!serverPortValidation.isValid) {
-        return false;
+    // 모든 필드 검사
+    for (const field of [...requiredFields, ...optionalFields]) {
+      for (const rule of field.rules) {
+        const result = validateField(field.value, rule as ValidationRule);
+        if (!result.isValid) {
+          return false;
+        }
       }
     }
 

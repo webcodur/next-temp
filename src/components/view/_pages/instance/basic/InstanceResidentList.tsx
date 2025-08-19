@@ -7,6 +7,9 @@ import { ResidentInstanceWithResident } from '@/types/instance';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import ResidentSearchModal from './ResidentSearchModal';
+import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
+import { deleteResident } from '@/services/residents/residents@id_DELETE';
 
 interface InstanceResidentListProps {
   residentInstances?: ResidentInstanceWithResident[];
@@ -34,13 +37,7 @@ export default function InstanceResidentList({
     residentName: ''
   });
 
-  const [actionModal, setActionModal] = useState<{
-    isOpen: boolean;
-    type: 'connect';
-  }>({
-    isOpen: false,
-    type: 'connect'
-  });
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
 
   const handleResidentClick = (residentId: number) => {
     router.push(`/parking/occupancy/resident/${residentId}`);
@@ -73,40 +70,54 @@ export default function InstanceResidentList({
     });
   };
 
-  const handleConfirm = () => {
-    switch (confirmModal.type) {
-      case 'detail':
-        handleResidentClick(confirmModal.residentId);
-        break;
-      case 'exclude':
-        // TODO: 세대과의 연결 해지 로직
-        console.log('제외 처리:', confirmModal.residentId);
-        break;
-      case 'delete':
-        // TODO: 거주민 정보 삭제 로직
-        console.log('삭제 처리:', confirmModal.residentId);
-        break;
+  const handleConfirm = async () => {
+    try {
+      switch (confirmModal.type) {
+        case 'detail':
+          handleResidentClick(confirmModal.residentId);
+          break;
+        case 'exclude':
+          // 거주민-인스턴스 연결 해지
+          const residentInstance = residentInstances?.find(ri => ri.resident.id === confirmModal.residentId);
+          if (residentInstance) {
+            const result = await deleteResidentInstance(residentInstance.id);
+            if (result.success) {
+              // 데이터 새로고침
+              if (onDataChange) {
+                onDataChange();
+              }
+            } else {
+              console.error('연결 해지 실패:', result.errorMsg);
+            }
+          }
+          break;
+        case 'delete':
+          // 거주민 완전 삭제
+          const deleteResult = await deleteResident(confirmModal.residentId);
+          if (deleteResult.success) {
+            // 데이터 새로고침
+            if (onDataChange) {
+              onDataChange();
+            }
+          } else {
+            console.error('거주민 삭제 실패:', deleteResult.errorMsg);
+          }
+          break;
+      }
+    } catch (error) {
+      console.error('작업 중 오류 발생:', error);
+    } finally {
+      setConfirmModal(prev => ({ ...prev, isOpen: false }));
     }
-    setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
 
 
   const handleConnectClick = () => {
-    setActionModal({
-      isOpen: true,
-      type: 'connect'
-    });
+    setConnectModalOpen(true);
   };
 
-  const handleActionConfirm = () => {
-    switch (actionModal.type) {
-      case 'connect':
-        // TODO: 기존 거주민 연결 로직
-        console.log('거주민 연결:', instanceId);
-        break;
-    }
-    setActionModal(prev => ({ ...prev, isOpen: false }));
+  const handleModalSuccess = () => {
     // 데이터 새로고침
     if (onDataChange) {
       onDataChange();
@@ -135,17 +146,7 @@ export default function InstanceResidentList({
     }
   };
 
-  const getActionModalContent = () => {
-    switch (actionModal.type) {
-      case 'connect':
-        return {
-          title: '거주민 연결',
-          message: '이 세대에 연결할 거주민을 검색하시겠습니까?'
-        };
-      default:
-        return { title: '', message: '' };
-    }
-  };
+
 
   if (loading) {
     return (
@@ -295,33 +296,15 @@ export default function InstanceResidentList({
         </div>
       </Modal>
 
-      {/* 액션 모달 */}
-      <Modal
-        isOpen={actionModal.isOpen}
-        onClose={() => setActionModal(prev => ({ ...prev, isOpen: false }))}
-        title={getActionModalContent().title}
-        size="sm"
-      >
-        <div className="space-y-4">
-          <p className="text-center text-foreground">
-            {getActionModalContent().message}
-          </p>
-          <div className="flex gap-2 justify-center">
-            <button
-              onClick={() => setActionModal(prev => ({ ...prev, isOpen: false }))}
-              className="px-4 py-2 text-sm rounded-md border border-border text-muted-foreground hover:bg-muted"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleActionConfirm}
-              className="px-4 py-2 text-sm text-white rounded-md bg-primary hover:bg-primary/90"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      </Modal>
+      {/* 거주민 검색 및 연결 모달 */}
+      {instanceId && (
+        <ResidentSearchModal
+          isOpen={connectModalOpen}
+          onClose={() => setConnectModalOpen(false)}
+          instanceId={instanceId}
+          onSuccess={handleModalSuccess}
+        />
+      )}
     </div>
   );
 }

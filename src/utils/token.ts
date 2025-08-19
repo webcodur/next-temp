@@ -65,15 +65,6 @@ export function isValidToken(token: string | undefined | null): boolean {
 export async function verifyToken(token: string | undefined): Promise<boolean> {
 	if (!token) return false;
 
-	// 개발자 모드 토큰 우회 처리
-	if (
-		process.env.NODE_ENV === 'development' &&
-		token.startsWith('dev-access-token-')
-	) {
-		console.log('개발자 모드: 토큰 검증 우회:', token);
-		return true;
-	}
-
 	try {
 		// 기본적인 토큰 구조 확인
 		const payload = decodeToken(token);

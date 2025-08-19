@@ -40,7 +40,7 @@ interface ResidentDetailServerResponse {
   memo?: string | null;
   created_at: string;
   updated_at: string;
-  resident_instance: ResidentInstanceServerResponse[];
+  resident_instance?: ResidentInstanceServerResponse[] | null;
 }
 // #endregion
 
@@ -65,25 +65,27 @@ function serverToClient(server: ResidentDetailServerResponse): ResidentDetail {
     memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
-    residentInstance: server.resident_instance.map(ri => ({
-      id: ri.id,
-      residentId: ri.resident_id,
-      instanceId: ri.instance_id,
-      memo: ri.memo,
-      createdAt: ri.created_at,
-      updatedAt: ri.updated_at,
-      instance: ri.instance ? {
-        id: ri.instance.id,
-        parkinglotId: ri.instance.parkinglot_id,
-        address1Depth: ri.instance.address_1depth,
-        address2Depth: ri.instance.address_2depth,
-        address3Depth: ri.instance.address_3depth,
-        instanceType: ri.instance.instance_type,
-        memo: ri.instance.memo,
-        createdAt: ri.instance.created_at,
-        updatedAt: ri.instance.updated_at,
-      } : null,
-    })),
+    residentInstance: server.resident_instance && Array.isArray(server.resident_instance) 
+      ? server.resident_instance.map(ri => ({
+          id: ri.id,
+          residentId: ri.resident_id,
+          instanceId: ri.instance_id,
+          memo: ri.memo,
+          createdAt: ri.created_at,
+          updatedAt: ri.updated_at,
+          instance: ri.instance ? {
+            id: ri.instance.id,
+            parkinglotId: ri.instance.parkinglot_id,
+            address1Depth: ri.instance.address_1depth,
+            address2Depth: ri.instance.address_2depth,
+            address3Depth: ri.instance.address_3depth,
+            instanceType: ri.instance.instance_type,
+            memo: ri.instance.memo,
+            createdAt: ri.instance.created_at,
+            updatedAt: ri.instance.updated_at,
+          } : null,
+        }))
+      : [],
   };
 }
 // #endregion

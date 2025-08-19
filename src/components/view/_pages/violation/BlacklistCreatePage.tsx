@@ -136,6 +136,7 @@ export default function BlacklistCreatePage() {
             value={formData.carNumber}
             onChange={(value) => handleFormChange('carNumber', value)}
             placeholder="차량번호를 입력하세요"
+            validationRule={{ type: 'free', mode: 'create' }}
           />
           
           <SimpleDropdown
@@ -144,6 +145,7 @@ export default function BlacklistCreatePage() {
             onChange={(value) => handleFormChange('registrationReason', value)}
             options={REGISTRATION_REASON_OPTIONS}
             placeholder="등록 사유를 선택하세요"
+            validationRule={{ type: 'free', mode: 'create' }}
           />
           
           <SimpleNumberInput
@@ -152,6 +154,7 @@ export default function BlacklistCreatePage() {
             onChange={(value) => handleFormChange('blockDays', value === '' ? '' : value.toString())}
             placeholder="차단 기간을 입력하세요 (기본: 30일)"
             min={1}
+            validationRule={{ type: 'free', mode: 'create' }}
           />
         </div>
         
@@ -161,6 +164,7 @@ export default function BlacklistCreatePage() {
           onChange={(value) => handleFormChange('blockReason', value)}
           placeholder="차단 사유를 상세히 입력하세요 (필수)"
           rows={4}
+          validationRule={{ type: 'free', mode: 'create' }}
         />
 
         {/* 등록 버튼 */}

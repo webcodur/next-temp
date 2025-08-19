@@ -14,8 +14,9 @@ import { SimpleCheckbox } from '@/components/ui/ui-input/simple-input/SimpleChec
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import AdminSelectModal from '@/components/ui/ui-layout/modal/AdminSelectModal';
 import { ImagePreview, ImageData } from '@/components/ui/ui-effects/image-preview/ImagePreview';
-import { RotateCcw, Eye, ImageIcon, AlertTriangle, Info, Edit } from 'lucide-react';
+import { RotateCcw, Eye, ImageIcon, AlertTriangle, Info, Edit, User, Search } from 'lucide-react';
 import Image from 'next/image';
 import { getViolationDetail, updateViolation, processViolation } from '@/services/violations';
 import type { 
@@ -26,6 +27,7 @@ import type {
   ViolationStatus,
   ViolationReporterType
 } from '@/types/carViolation';
+import type { Admin } from '@/types/admin';
 
 // #region 타입 정의
 interface ViolationDetailPageProps {
@@ -44,6 +46,7 @@ interface EditFormData {
   penaltyPoints: number;
   status: ViolationStatus;
   processingNote: string;
+  reporterId: string;
 }
 // #endregion
 
@@ -105,6 +108,7 @@ function violationToEditForm(violation: CarViolation): EditFormData {
     penaltyPoints: violation.penaltyPoints,
     status: violation.status,
     processingNote: violation.processingNote || '',
+    reporterId: violation.reporterId?.toString() || '',
   };
 }
 
@@ -156,12 +160,17 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
     penaltyPoints: 0,
     status: 'ACTIVE',
     processingNote: '',
+    reporterId: '',
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  
+  // 관리자 선택 모달 관련 상태
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [showAdminSelectModal, setShowAdminSelectModal] = useState(false);
   // #endregion
 
   // #region 데이터 로드
@@ -260,6 +269,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         penaltyPoints: editForm.penaltyPoints,
         status: editForm.status,
         processingNote: editForm.processingNote || undefined,
+        reporterId: editForm.reporterId ? parseInt(editForm.reporterId) : undefined,
       };
 
       const result = await updateViolation(violation.id, updateRequest);
@@ -318,6 +328,23 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
 
   const handleImagePreviewClose = useCallback(() => {
     setImagePreviewOpen(false);
+  }, []);
+
+  const handleAdminSelectOpen = useCallback(() => {
+    setShowAdminSelectModal(true);
+  }, []);
+
+  const handleAdminSelectClose = useCallback(() => {
+    setShowAdminSelectModal(false);
+  }, []);
+
+  const handleAdminSelect = useCallback((admin: Admin) => {
+    setSelectedAdmin(admin);
+    setEditForm(prev => ({
+      ...prev,
+      reporterId: admin.id.toString()
+    }));
+    setShowAdminSelectModal(false);
   }, []);
   // #endregion
 
@@ -460,6 +487,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     dateFormat="yyyy-MM-dd HH:mm:ss"
                     showTimeSelect={true}
                     utcMode={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -501,6 +529,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     dateFormat="yyyy-MM-dd HH:mm:ss"
                     showTimeSelect={true}
                     utcMode={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               });
@@ -520,6 +549,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     dateFormat="yyyy-MM-dd HH:mm:ss"
                     showTimeSelect={true}
                     utcMode={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -535,6 +565,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     dateFormat="yyyy-MM-dd HH:mm:ss"
                     showTimeSelect={true}
                     utcMode={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               }
@@ -726,6 +757,52 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
                     max={100}
                   />
                 )
+              },
+              {
+                id: 'editReporterId',
+                label: '신고자 선택',
+                rules: '신고자를 선택하세요',
+                component: (
+                  <div className="flex gap-2 items-center">
+                    {selectedAdmin ? (
+                      // 선택된 관리자 정보 표시
+                      <div className="flex-1 flex gap-3 items-center p-3 border rounded-md border-border bg-muted/50">
+                        <div className="flex justify-center items-center w-8 h-8 rounded-full bg-primary/10">
+                          <User className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">
+                            {selectedAdmin.name} ({selectedAdmin.account})
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            ID: {selectedAdmin.id} | {selectedAdmin.role?.name || '권한 없음'}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // 선택되지 않은 상태
+                      <div className="flex-1 flex gap-2 items-center p-3 border border-dashed rounded-md border-muted-foreground/30 bg-muted/20">
+                        <User className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">
+                          신고자를 선택해주세요
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* 선택 버튼 */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAdminSelectOpen}
+                      disabled={saving || processing}
+                      className="flex-shrink-0"
+                    >
+                      <Search className="w-4 h-4 mr-1" />
+                      {selectedAdmin ? '변경' : '선택'}
+                    </Button>
+                  </div>
+                )
               }
             ];
 
@@ -771,6 +848,15 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
           enableDownload={true}
         />
       )}
+
+      {/* 관리자 선택 모달 */}
+      <AdminSelectModal
+        isOpen={showAdminSelectModal}
+        onClose={handleAdminSelectClose}
+        onSelect={handleAdminSelect}
+        title="신고자 선택"
+        selectedAdminId={selectedAdmin?.id}
+      />
     </div>
   );
   // #endregion

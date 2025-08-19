@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, ReactNode } from 'react';
-import { AlertCircle, RefreshCw, ArrowLeft, Home, Copy } from 'lucide-react';
+import { AlertCircle, RefreshCw, ArrowLeft, Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { Portal } from '@/components/ui/ui-layout/portal/Portal';
@@ -101,32 +101,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     페이지를 새로고침하거나 잠시 후 다시 시도해주세요.
                   </p>
                 </div>
-
-                {/* 개발 모드 에러 상세 */}
-                {process.env.NODE_ENV === 'development' && this.state.error && (
-                  <details className="p-4 text-sm text-left rounded-xl neu-inset">
-                    <summary className="font-medium cursor-pointer text-foreground/80">
-                      에러 상세 정보
-                    </summary>
-                    <div className="mt-2 space-y-2">
-                      <div className="flex justify-end">
-                        <Button
-                          onClick={this.handleCopyError}
-                          variant="outline"
-                          size="sm"
-                          className="neu-raised">
-                          <Copy size={14} className="me-1" />
-                          복사
-                        </Button>
-                      </div>
-                      <pre className="overflow-auto max-h-32 text-xs text-red-600 whitespace-pre-wrap">
-                        {this.state.error.message}
-                        {'\n\n'}
-                        {this.state.error.stack}
-                      </pre>
-                    </div>
-                  </details>
-                )}
 
                 {/* 액션 버튼 */}
                 <div className="space-y-3">

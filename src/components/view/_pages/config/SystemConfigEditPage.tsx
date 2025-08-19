@@ -246,6 +246,7 @@ export default function SystemConfigEditPage() {
             onChange={(value) => handleFieldChange('value', value === '' ? '' : value.toString())}
             placeholder="숫자를 입력하세요"
             disabled={isSubmitting}
+            validationRule={{ type: 'number', mode: 'edit' }}
           />
         );
 
@@ -269,6 +270,7 @@ export default function SystemConfigEditPage() {
             onChange={(value) => handleFieldChange('value', value)}
             placeholder="값을 입력하세요"
             disabled={isSubmitting}
+            validationRule={{ type: 'free', mode: 'edit' }}
           />
         );
     }
@@ -312,6 +314,7 @@ export default function SystemConfigEditPage() {
                     value={formData.key}
                     disabled={true}
                     className="font-mono"
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -323,6 +326,7 @@ export default function SystemConfigEditPage() {
                   <SimpleTextInput
                     value={formData.group}
                     disabled={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -334,6 +338,7 @@ export default function SystemConfigEditPage() {
                   <SimpleTextInput
                     value={formData.category}
                     disabled={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -345,6 +350,7 @@ export default function SystemConfigEditPage() {
                   <SimpleTextInput
                     value={formData.type}
                     disabled={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },
@@ -356,6 +362,7 @@ export default function SystemConfigEditPage() {
                   <SimpleTextInput
                     value={formData.description}
                     disabled={true}
+                    validationRule={{ type: 'free', mode: 'view' }}
                   />
                 )
               },

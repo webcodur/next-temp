@@ -23,7 +23,6 @@
 | [Dialog](./ui-layout/dialog/dialog.md)                                                      | 사용자에게 작업이나 정보를 요청하는 팝업 창입니다.                         |
 | [Modal](./ui-layout/modal/modal.md)                                                         | Dialog보다 간소화된 형태의 기본 모달 창입니다.                             |
 | [Nested Tabs](./ui-layout/nested-tabs/nested-tabs.md)                                       | 탭 내부에 또 다른 탭을 중첩하여 사용할 수 있습니다.                        |
-| [Stepper](./ui-layout/stepper/stepper.md)                                                   | 여러 단계로 구성된 프로세스의 진행 상태를 표시합니다.                      |
 | [Tabs](./ui-layout/tabs/tabs.md)                                                            | 콘텐츠를 여러 패널로 나누어 보여주는 탭 인터페이스입니다.                  |
 | [SeatMap](./ui-layout/seat-map/seat-map.md)                                                 | 시설별 좌석 예약 시스템의 좌석 맵 컴포넌트입니다.                          |
 | [FacilityEditor](./ui-layout/facility-editor/facility-editor.md)                            | 관리자용 시설 레이아웃 편집 도구입니다.                                    |

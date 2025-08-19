@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Type, X, Eye, EyeOff } from 'lucide-react';
-import { ValidationRule } from '@/utils/validation';
+import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
 interface SimpleTextInputProps {
@@ -81,6 +81,22 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 		inputRef.current?.focus();
 	};
 
+	// validation 결과 계산
+	const validationResult = validationRule ? validateField(value, validationRule) : null;
+	
+	// 피드백 타입 결정
+	const getFeedbackType = () => {
+		if (!validationRule || !validationResult) {
+			return 'info';
+		}
+		
+		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+			return validationResult.isValid ? 'success' : 'error';
+		}
+		
+		return 'info';
+	};
+
 
 
 	return (
@@ -99,6 +115,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
+				validationStatus={getFeedbackType()}
 				onClick={handleContainerClick}>
 				
 				{/* 왼쪽 아이콘 */}

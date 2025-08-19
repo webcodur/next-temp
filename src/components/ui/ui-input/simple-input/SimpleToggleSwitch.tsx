@@ -60,7 +60,7 @@ export const SimpleToggleSwitch: React.FC<SimpleToggleSwitchProps> = ({
 	const currentSize = sizeStyles[size];
 
 	return (
-		<div className={`flex justify-between items-center w-full ${className}`}>
+		<div className={`flex justify-between items-center ${label ? 'w-full' : ''} ${className}`}>
 			{label && (
 				<label className="text-sm font-medium leading-6 text-foreground">
 					{label}
