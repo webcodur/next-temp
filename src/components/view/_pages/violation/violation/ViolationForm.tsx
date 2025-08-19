@@ -116,16 +116,16 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
     
     switch (fieldType) {
       case 'carNumber':
-        validationType = 'carNumber';
+        validationType = 'custom'; // 차량번호 검증
         break;
       case 'date':
-        validationType = 'date';
+        validationType = 'free'; // 별도 컴포넌트에서 검증
         break;
       case 'number':
         validationType = 'number';
         break;
       case 'url':
-        validationType = 'url';
+        validationType = 'custom'; // URL 검증
         break;
       case 'dropdown':
       case 'text':
@@ -319,7 +319,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
         <div className="flex gap-2 items-center">
           {selectedAdmin ? (
             // 선택된 관리자 정보 표시
-            <div className="flex-1 flex gap-3 items-center p-3 border rounded-md border-border bg-muted/50">
+            <div className="flex flex-1 gap-3 items-center p-3 rounded-md border border-border bg-muted/50">
               <div className="flex justify-center items-center w-8 h-8 rounded-full bg-primary/10">
                 <User className="w-4 h-4 text-primary" />
               </div>
@@ -334,7 +334,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
             </div>
           ) : (
             // 선택되지 않은 상태
-            <div className="flex-1 flex gap-2 items-center p-3 border border-dashed rounded-md border-muted-foreground/30 bg-muted/20">
+            <div className="flex flex-1 gap-2 items-center p-3 rounded-md border border-dashed border-muted-foreground/30 bg-muted/20">
               <User className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
                 신고자를 선택해주세요
@@ -351,7 +351,7 @@ const ViolationForm: React.FC<ViolationFormProps> = ({
             disabled={isReadOnly}
             className="flex-shrink-0"
           >
-            <Search className="w-4 h-4 mr-1" />
+            <Search className="mr-1 w-4 h-4" />
             {selectedAdmin ? '변경' : '선택'}
           </Button>
         </div>

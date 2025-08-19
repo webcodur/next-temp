@@ -36,7 +36,7 @@ export async function deleteResident(id: number) {
       success: true,
       data: result,
     };
-  } catch (error) {
+  } catch {
     // JSON 파싱 실패 시에도 성공으로 처리 (DELETE 요청이므로)
     return { success: true, data: { message: '삭제 완료' } };
   }

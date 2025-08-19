@@ -69,7 +69,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
     
     switch (fieldType) {
       case 'name':
-        validationType = 'name';
+        validationType = 'custom'; // 한글, 영문 2-50자 검증
         break;
       case 'phone':
         validationType = 'phone';
@@ -78,7 +78,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
         validationType = 'email';
         break;
       case 'date':
-        validationType = 'date';
+        validationType = 'free'; // 별도 컴포넌트에서 검증
         break;
       case 'dropdown':
       case 'text':

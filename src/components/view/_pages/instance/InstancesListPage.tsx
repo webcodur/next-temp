@@ -1,7 +1,6 @@
 /* 메뉴 설명: 인스턴스 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useMemo } from 'react';
-// Plus, Trash2 아이콘은 CrudButton에서 처리
 import { useRouter } from 'next/navigation';
 
 // UI 라이브러리 컴포넌트
@@ -17,8 +16,6 @@ import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 
 // 타입 정의
 import { Instance } from '@/types/instance';
-
-
 
 export default function InstancesListPage() {
   const router = useRouter();
@@ -43,8 +40,6 @@ export default function InstancesListPage() {
   const handleRowClick = useCallback((instance: Instance, _index: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     router.push(`/parking/occupancy/instance/${instance.id}`);
   }, [router]);
-
-
 
   const handleDeleteClick = useCallback((id: number) => {
     setDeleteTargetId(id);
@@ -154,20 +149,7 @@ export default function InstancesListPage() {
         return typeMap[item.instanceType] || item.instanceType;
       },
     },
-    {
-      key: 'residentCount',
-      header: '거주민',
-      align: 'center',
-      width: '6%',
-      cell: (item: Instance) => `${item.residentInstance?.length || 0}명`,
-    },
-    {
-      key: 'carCount',
-      header: '차량',
-      align: 'center',
-      width: '6%',
-      cell: (item: Instance) => `${item.carInstance?.length || 0}대`,
-    },
+
     {
       key: 'address3Depth',
       header: '기타주소',

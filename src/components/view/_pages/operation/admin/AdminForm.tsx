@@ -71,10 +71,10 @@ const AdminForm: React.FC<AdminFormProps> = ({
     
     switch (fieldType) {
       case 'account':
-        validationType = 'id';
+        validationType = 'custom'; // 영문, 숫자 4-20자 검증
         break;
       case 'name':
-        validationType = 'name';
+        validationType = 'custom'; // 한글, 영문 2-50자 검증
         break;
       case 'email':
         validationType = 'email';
@@ -90,10 +90,8 @@ const AdminForm: React.FC<AdminFormProps> = ({
         break;
       case 'dropdown':
       case 'readonly':
-        validationType = 'free';
-        break;
       case 'date':
-        validationType = 'date';
+        validationType = 'free';
         break;
     }
     

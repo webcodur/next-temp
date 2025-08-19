@@ -42,7 +42,7 @@ export async function createCarInstance(data: CreateCarInstanceRequest, parkingl
       const errorMsg = result.message || `차량-인스턴스 연결 실패(코드): ${response.status}`;
       console.log(errorMsg);
       return { success: false, errorMsg };
-    } catch (error) {
+    } catch {
       // JSON 파싱 실패 시 기본 에러 메시지
       return { success: false, errorMsg: `차량-인스턴스 연결 실패(코드): ${response.status}` };
     }
@@ -68,7 +68,7 @@ export async function createCarInstance(data: CreateCarInstanceRequest, parkingl
         success: true,
         data: result,
       };
-    } catch (error) {
+    } catch {
       // JSON 파싱 실패 시에도 성공으로 처리 (POST 요청이 성공했으므로)
       return { success: true, data: { message: '연결 완료' } };
     }

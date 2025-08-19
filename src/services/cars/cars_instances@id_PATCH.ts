@@ -68,7 +68,7 @@ export async function updateCarInstance(carInstanceId: number, data: UpdateCarIn
       const errorMsg = result.message || `차량-인스턴스 연결 수정 실패(코드): ${response.status}`;
       console.log(errorMsg);
       return { success: false, errorMsg };
-    } catch (error) {
+    } catch {
       return { success: false, errorMsg: `차량-인스턴스 연결 수정 실패(코드): ${response.status}` };
     }
   }
@@ -100,7 +100,7 @@ export async function updateCarInstance(carInstanceId: number, data: UpdateCarIn
         success: true,
         data: serverToClient(serverResponse),
       };
-    } catch (error) {
+    } catch {
       // JSON 파싱 실패 시 기본 응답
       return {
         success: true,

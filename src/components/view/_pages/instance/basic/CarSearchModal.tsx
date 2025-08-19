@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { CarFront, Calendar, Fuel, Tag } from 'lucide-react';
+import { CarFront } from 'lucide-react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
