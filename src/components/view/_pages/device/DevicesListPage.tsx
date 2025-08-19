@@ -510,6 +510,7 @@ export default function DevicesListPage() {
         onClose={() => setDeleteConfirmOpen(false)}
         title="차단기 삭제 확인"
         size="md"
+        onConfirm={handleDeleteConfirm}
       >
         <div className="space-y-4">
           <div>
@@ -542,6 +543,7 @@ export default function DevicesListPage() {
         onClose={() => setErrorDialogOpen(false)}
         title="오류 발생"
         size="sm"
+        onConfirm={() => setErrorDialogOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

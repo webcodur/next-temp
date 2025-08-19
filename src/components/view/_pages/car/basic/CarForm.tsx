@@ -40,6 +40,8 @@ interface CarFormProps {
   onDelete?: () => void;
   hasChanges?: boolean;
   isValid?: boolean;
+  title?: string;
+  subtitle?: string;
 }
 
 const CAR_TYPE_OPTIONS = [
@@ -74,6 +76,8 @@ const CarForm: React.FC<CarFormProps> = ({
   onDelete,
   hasChanges = false,
   isValid = false,
+  title = '차량 기본 정보',
+  subtitle = '차량의 기본 정보를 관리합니다.',
 }) => {
   const isReadOnly = disabled;
 
@@ -90,18 +94,16 @@ const CarForm: React.FC<CarFormProps> = ({
     
     switch (fieldType) {
       case 'carNumber':
-        validationType = 'carNumber';
+        validationType = 'free'; // 차량번호는 free 타입으로 처리
         break;
       case 'url':
-        validationType = 'url';
+        validationType = 'free'; // URL은 free 타입으로 처리
         break;
       case 'dropdown':
       case 'text':
       case 'readonly':
-        validationType = 'free';
-        break;
       case 'date':
-        validationType = 'date';
+        validationType = 'free';
         break;
     }
     
@@ -262,8 +264,8 @@ const CarForm: React.FC<CarFormProps> = ({
       rules: '4자리 연도 (예: 2023)',
       component: (
         <SimpleNumberInput
-          value={data.year ? parseInt(data.year) : ''}
-          onChange={(value) => handleFieldChange('year', value.toString())}
+          value={data.year && !isNaN(Number(data.year)) ? Number(data.year) : ''}
+          onChange={(value) => handleFieldChange('year', value === '' ? '' : String(value))}
           placeholder="연식"
           disabled={isReadOnly}
           min={1900}
@@ -412,8 +414,8 @@ const CarForm: React.FC<CarFormProps> = ({
 
   return (
     <SectionPanel 
-      title="차량 기본 정보"
-      subtitle="차량의 기본 정보를 관리합니다."
+      title={title}
+      subtitle={subtitle}
       icon={<CarIcon size={18} />}
     >
       <GridFormAuto 

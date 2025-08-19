@@ -72,10 +72,10 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
     switch (fieldType) {
       case 'name':
       case 'owner':
-        validationType = 'name';
+        validationType = 'custom';
         break;
       case 'address':
-        validationType = 'address';
+        validationType = 'free';
         break;
       case 'password':
         validationType = 'password';
@@ -83,10 +83,8 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       case 'dropdown':
       case 'text':
       case 'readonly':
-        validationType = 'free';
-        break;
       case 'date':
-        validationType = 'date';
+        validationType = 'free';
         break;
     }
     

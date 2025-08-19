@@ -62,7 +62,6 @@ export default function CarInstanceSection({
   const loadInstanceData = useCallback(async () => {
     setLoading(true);
     try {
-      // CarWithInstance 데이터에서 직접 차량 세대 정보 사용
       const carInstances = car.carInstance?.map(instance => ({
         id: instance.id, // CarInstanceResident ID는 임시로 CarInstance ID 사용
         carInstanceId: instance.id,
@@ -401,8 +400,6 @@ export default function CarInstanceSection({
       align: 'start',
       width: '15%',
       cell: (item: CarInstanceResidentDetail) => {
-        // 현재는 Instance 정보가 없어서 instanceId로 대체 표시
-        // TODO: 서버에서 Instance 정보를 포함한 데이터를 가져와서 실제 동호수 표시
         if (item.carInstance?.instance) {
           const { address1Depth, address2Depth, address3Depth } = item.carInstance.instance;
           return `${address1Depth} ${address2Depth}${address3Depth ? ` ${address3Depth}` : ''}`;
@@ -753,7 +750,7 @@ export default function CarInstanceSection({
               onClick={handleDeleteConfirm}
               disabled={isSubmitting}
             >
-              {isSubmitting ? '삭제 중...' : '삭제'}
+              {isSubmitting ? '해제 중...' : '해제'}
             </Button>
           </div>
         </div>

@@ -485,6 +485,7 @@ export default function BlacklistListPage() {
         onClose={() => setUnblockConfirmOpen(false)}
         title="블랙리스트 해제 확인"
         size="md"
+        onConfirm={unblockReason.trim() ? handleUnblockConfirm : undefined}
       >
         <div className="space-y-4">
           <div>
@@ -529,6 +530,7 @@ export default function BlacklistListPage() {
         onClose={() => setSuccessDialogOpen(false)}
         title="작업 완료"
         size="sm"
+        onConfirm={() => setSuccessDialogOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">
@@ -550,6 +552,7 @@ export default function BlacklistListPage() {
         onClose={() => setErrorDialogOpen(false)}
         title="오류 발생"
         size="sm"
+        onConfirm={() => setErrorDialogOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

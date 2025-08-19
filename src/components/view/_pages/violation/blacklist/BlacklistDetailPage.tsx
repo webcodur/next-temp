@@ -267,7 +267,13 @@ export default function BlacklistDetailPage() {
       />
 
       {/* 해제 확인 다이얼로그 */}
-      <Modal isOpen={unblockConfirmOpen} onClose={() => setUnblockConfirmOpen(false)} title="블랙리스트 해제" size="sm">
+      <Modal 
+        isOpen={unblockConfirmOpen} 
+        onClose={() => setUnblockConfirmOpen(false)} 
+        title="블랙리스트 해제" 
+        size="sm"
+        onConfirm={unblockReason.trim() ? handleUnblockConfirm : undefined}
+      >
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="mb-2 text-lg font-semibold">해제 확인</h3>
@@ -294,7 +300,13 @@ export default function BlacklistDetailPage() {
       </Modal>
 
       {/* 성공 다이얼로그 */}
-      <Modal isOpen={successDialogOpen} onClose={() => setSuccessDialogOpen(false)} title="작업 완료" size="sm">
+      <Modal 
+        isOpen={successDialogOpen} 
+        onClose={() => setSuccessDialogOpen(false)} 
+        title="작업 완료" 
+        size="sm"
+        onConfirm={() => setSuccessDialogOpen(false)}
+      >
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
@@ -307,7 +319,13 @@ export default function BlacklistDetailPage() {
       </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Modal isOpen={errorDialogOpen} onClose={() => setErrorDialogOpen(false)} title="오류 발생" size="sm">
+      <Modal 
+        isOpen={errorDialogOpen} 
+        onClose={() => setErrorDialogOpen(false)} 
+        title="오류 발생" 
+        size="sm"
+        onConfirm={() => setErrorDialogOpen(false)}
+      >
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>

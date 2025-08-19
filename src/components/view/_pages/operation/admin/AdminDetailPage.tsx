@@ -278,6 +278,7 @@ export default function AdminDetailPage() {
         onClose={() => setSuccessModalOpen(false)}
         title="작업 완료"
         size="sm"
+        onConfirm={() => setSuccessModalOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">
@@ -299,6 +300,7 @@ export default function AdminDetailPage() {
         onClose={() => setErrorModalOpen(false)}
         title="오류 발생"
         size="sm"
+        onConfirm={() => setErrorModalOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">
@@ -320,6 +322,7 @@ export default function AdminDetailPage() {
         onClose={() => setInfoModalOpen(false)}
         title="알림"
         size="sm"
+        onConfirm={() => setInfoModalOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

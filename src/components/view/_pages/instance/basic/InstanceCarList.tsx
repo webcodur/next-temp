@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Car, CarFront, Calendar, Fuel, Tag, Plus, Link } from 'lucide-react';
+import { Car, CarFront, Calendar, Fuel, Tag, Plus, Link, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CarInstanceWithCar } from '@/types/instance';
-import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
+import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge, CustomAction } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import CarCreateModal from './CarCreateModal';
@@ -17,13 +17,15 @@ interface InstanceCarListProps {
   loading?: boolean;
   instanceId?: number;
   onDataChange?: () => void;
+  onManageResidents?: (carInstanceId: number, carNumber: string) => void;
 }
 
 export default function InstanceCarList({ 
   carInstances = [], 
   loading = false,
   instanceId,
-  onDataChange
+  onDataChange,
+  onManageResidents
 }: InstanceCarListProps) {
   const router = useRouter();
   const [confirmModal, setConfirmModal] = useState<{
@@ -128,6 +130,12 @@ export default function InstanceCarList({
     }
   };
 
+  const handleManageResidentsClick = (carInstanceId: number, carNumber: string) => {
+    if (onManageResidents) {
+      onManageResidents(carInstanceId, carNumber);
+    }
+  };
+
   const getModalContent = () => {
     switch (confirmModal.type) {
       case 'detail':
@@ -143,7 +151,7 @@ export default function InstanceCarList({
       case 'delete':
         return {
           title: '차량 정보 삭제',
-          message: `${confirmModal.carNumber} 차량 정보를 전체 서비스 및 DB에서 완전히 삭제하시겠습니까?`
+          message: `${confirmModal.carNumber} 차량 정보를 \n 전체 서비스에서 완전히 삭제하시겠습니까?`
         };
       default:
         return { title: '', message: '' };
@@ -281,6 +289,14 @@ export default function InstanceCarList({
                 </div>
               );
 
+              // 커스텀 액션 - 거주민 관리 버튼
+              const customActions: CustomAction[] = onManageResidents ? [{
+                icon: <Users />,
+                onClick: () => handleManageResidentsClick(carInstance.id, carInstance.car.carNumber || '번호판 없음'),
+                title: '거주민 연결 관리',
+                hoverClass: 'hover:bg-purple-100 hover:text-purple-600'
+              }] : [];
+
               return (
                 <InstanceItemCard
                   key={carInstance.id}
@@ -291,6 +307,7 @@ export default function InstanceCarList({
                   leftColumn={leftColumn}
                   rightColumn={rightColumn}
                   memo={carInstance.car.outerText || undefined}
+                  customActions={customActions}
                   onDetail={() => handleDetailClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
                   onExclude={() => handleExcludeClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
                   onDelete={() => handleDeleteClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}

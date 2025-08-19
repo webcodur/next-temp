@@ -277,7 +277,7 @@ export default function AdminSelectModal({
       cell: (item: Admin) => (
         <Button
           size="sm"
-          variant={selectedAdminId === item.id ? "default" : "outline"}
+          variant={selectedAdminId === item.id ? "primary" : "outline"}
           onClick={(e) => {
             e.stopPropagation();
             handleAdminSelect(item);
@@ -306,7 +306,6 @@ export default function AdminSelectModal({
             onSearch={handleSearch}
             onReset={handleReset}
             defaultOpen={true}
-            compact={true}
           />
         </div>
         
@@ -324,7 +323,6 @@ export default function AdminSelectModal({
               pageSize={10}
               pageSizeOptions={[5, 10, 20]}
               itemName="근무자"
-              showItemCount={true}
               className="h-full"
               getRowClassName={(item: Admin) => 
                 selectedAdminId === item.id ? 'bg-primary/5 hover:bg-primary/10' : ''

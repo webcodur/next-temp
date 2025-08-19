@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, CarFront, Calendar, Fuel, Tag } from 'lucide-react';
+import { CarFront, Calendar, Fuel, Tag } from 'lucide-react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
+import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import { searchCars } from '@/services/cars/cars$_GET';
@@ -172,6 +173,74 @@ export default function CarSearchModal({
     }
   };
 
+  // #region 테이블 컬럼 정의
+  const columns: BaseTableColumn<CarWithInstance>[] = [
+    {
+      key: 'selected',
+      header: '선택',
+      width: '8%',
+      align: 'center',
+      cell: (item: CarWithInstance) => (
+        <input
+          type="radio"
+          name="selectedCar"
+          checked={selectedCar?.id === item.id}
+          onChange={() => handleCarSelect(item)}
+          className="w-4 h-4 text-primary"
+        />
+      ),
+    },
+    {
+      key: 'carNumber',
+      header: '차량번호',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      key: 'brand',
+      header: '브랜드',
+      align: 'center',
+      width: '12%',
+      cell: (item: CarWithInstance) => item.brand || '-',
+    },
+    {
+      key: 'model',
+      header: '모델',
+      align: 'center',
+      width: '15%',
+      cell: (item: CarWithInstance) => item.model || '-',
+    },
+    {
+      key: 'type',
+      header: '차종',
+      align: 'center',
+      width: '12%',
+      cell: (item: CarWithInstance) => item.type || '-',
+    },
+    {
+      key: 'fuel',
+      header: '연료',
+      align: 'center',
+      width: '12%',
+      cell: (item: CarWithInstance) => item.fuel || '-',
+    },
+    {
+      key: 'year',
+      header: '연식',
+      align: 'center',
+      width: '10%',
+      cell: (item: CarWithInstance) => item.year ? `${item.year}년` : '-',
+    },
+    {
+      key: 'externalSticker',
+      header: '외부 스티커',
+      align: 'center',
+      width: '16%',
+      cell: (item: CarWithInstance) => item.externalSticker || '-',
+    },
+  ];
+  // #endregion
+
   // 검색 필드 구성
   const searchFields = [
     {
@@ -261,91 +330,45 @@ export default function CarSearchModal({
       <div className="space-y-4">
         {/* 검색 섹션 */}
         <AdvancedSearch
-          searchFields={searchFields}
+          fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          loading={isLoading}
         />
 
         {/* 에러 메시지 */}
         {errorMessage && (
-          <div className="p-4 rounded-md bg-red-50 border border-red-200">
-            <p className="text-red-800 text-sm">{errorMessage}</p>
+          <div className="p-4 bg-red-50 rounded-md border border-red-200">
+            <p className="text-sm text-red-800">{errorMessage}</p>
           </div>
         )}
 
         {/* 차량 목록 */}
-        <div className="space-y-2 max-h-96 overflow-y-auto">
-          {isLoading ? (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-muted-foreground">검색 중...</div>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-muted-foreground">검색 중...</div>
+          </div>
+        ) : carList.length === 0 ? (
+          <div className="flex justify-center items-center py-8 text-center">
+            <div>
+              <CarFront size={32} className="mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                연결 가능한 차량이 없습니다
+              </p>
             </div>
-          ) : carList.length === 0 ? (
-            <div className="flex justify-center items-center py-8 text-center">
-              <div>
-                <CarFront size={32} className="mx-auto mb-3 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  연결 가능한 차량이 없습니다
-                </p>
-              </div>
-            </div>
-          ) : (
-            carList.map((car) => (
-              <div
-                key={car.id}
-                className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                  selectedCar?.id === car.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:bg-muted/30'
-                }`}
-                onClick={() => handleCarSelect(car)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CarFront size={20} className="text-muted-foreground" />
-                    <div>
-                      <h4 className="font-medium text-foreground">
-                        {car.carNumber}
-                      </h4>
-                      <div className="flex gap-4 mt-1 text-sm text-muted-foreground">
-                        {car.brand && (
-                          <span>{car.brand}</span>
-                        )}
-                        {car.model && (
-                          <span>{car.model}</span>
-                        )}
-                        {car.type && (
-                          <span>{car.type}</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4 text-sm text-muted-foreground">
-                    {car.fuel && (
-                      <div className="flex items-center gap-1">
-                        <Fuel size={14} />
-                        <span>{car.fuel}</span>
-                      </div>
-                    )}
-                    {car.year && (
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        <span>{car.year}년</span>
-                      </div>
-                    )}
-                    {car.externalSticker && (
-                      <div className="flex items-center gap-1">
-                        <Tag size={14} />
-                        <span>{car.externalSticker}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="max-h-96 overflow-hidden">
+            <PaginatedTable
+              data={carList as unknown as Record<string, unknown>[]}
+              columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
+              onRowClick={(car) => handleCarSelect(car as unknown as CarWithInstance)}
+              pageSize={10}
+              pageSizeOptions={[5, 10, 20]}
+              itemName="차량"
+              showPagination={false}
+            />
+          </div>
+        )}
 
         {/* 하단 버튼 */}
         <div className="flex gap-3 justify-end pt-4 border-t border-border">

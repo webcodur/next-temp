@@ -35,12 +35,6 @@ export default function InstancesListPage() {
   const [dialogMessage, setDialogMessage] = useState('');
   // #endregion
 
-
-
-
-
-
-
   // #region 이벤트 핸들러
   const handleCreateClick = useCallback(() => {
     router.push('/parking/occupancy/instance/create');
@@ -262,6 +256,7 @@ export default function InstancesListPage() {
         onClose={() => setDeleteConfirmOpen(false)}
         title="세대 삭제 확인"
         size="md"
+        onConfirm={handleDeleteConfirm}
       >
         <div className="space-y-4">
           <div>
@@ -294,6 +289,7 @@ export default function InstancesListPage() {
         onClose={() => setSuccessDialogOpen(false)}
         title="작업 완료"
         size="sm"
+        onConfirm={() => setSuccessDialogOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">
@@ -315,6 +311,7 @@ export default function InstancesListPage() {
         onClose={() => setErrorDialogOpen(false)}
         title="오류 발생"
         size="sm"
+        onConfirm={() => setErrorDialogOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

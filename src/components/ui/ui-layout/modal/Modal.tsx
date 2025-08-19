@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import ModalContainer from './unit/ModalContainer';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,6 +14,8 @@ interface ModalProps {
 	size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 	showCloseButton?: boolean;
 	closeOnBackdropClick?: boolean;
+	/** confirm 기능이 있는 모달에서 space키로 confirm 실행 */
+	onConfirm?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -25,7 +27,24 @@ const Modal: React.FC<ModalProps> = ({
 	size = 'md',
 	showCloseButton = true,
 	closeOnBackdropClick = true,
+	onConfirm,
 }) => {
+	// space키로 confirm 기능 처리
+	useEffect(() => {
+		if (!isOpen || !onConfirm) return;
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			// space키를 누르고 input이나 textarea가 focus되어 있지 않을 때
+			if (event.code === 'Space' && !['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement)?.tagName)) {
+				event.preventDefault();
+				onConfirm();
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, [isOpen, onConfirm]);
+
 	if (!isOpen) return null;
 
 	const sizeClasses = {

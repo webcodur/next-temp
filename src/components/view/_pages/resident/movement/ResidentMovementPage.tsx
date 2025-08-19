@@ -99,6 +99,7 @@ export default function ResidentMovementPage() {
         onClose={() => setOperationModalOpen(false)}
         title="작업 완료"
         size="sm"
+        onConfirm={() => setOperationModalOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

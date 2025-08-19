@@ -531,13 +531,6 @@ export default function InstanceSearchSection({
 
       {/* 검색 결과 테이블 */}
       <div className="space-y-3">
-        <div className="flex justify-between items-center">
-          <h3 className="font-medium">{itemName} 목록</h3>
-          <div className="text-sm text-muted-foreground">
-            총 {instances.length}개
-          </div>
-        </div>
-        
         {renderTable()}
       </div>
     </div>

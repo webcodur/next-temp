@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { Calendar, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { Calendar, X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from '../shared/InputContainer';
 
@@ -74,9 +74,6 @@ export const SimpleMonthPicker: React.FC<SimpleMonthPickerProps> = ({
 	const stringValue = value ? value.toISOString().slice(0, 7) : '';
 	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
 	
-	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
-	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-	
 	// 피드백 타입 결정
 	const getFeedbackType = () => {
 		if (!validationRule || !validationResult) return 'info';
@@ -107,7 +104,7 @@ export const SimpleMonthPicker: React.FC<SimpleMonthPickerProps> = ({
 				
 				{/* 왼쪽 캘린더 아이콘 */}
 				{showIcon && (
-					<Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+					<Calendar className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 				)}
 
 				{/* 중앙 MonthPicker */}
@@ -133,7 +130,7 @@ export const SimpleMonthPicker: React.FC<SimpleMonthPickerProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full transition-colors duration-200 hover:bg-muted"
+						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>

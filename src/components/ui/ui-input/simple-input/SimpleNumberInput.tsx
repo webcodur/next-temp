@@ -45,6 +45,11 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 
 	const handleBlur = () => {
 		setIsFocused(false);
+		
+		// blur 시 min 값 검증 및 보정
+		if (typeof value === 'number' && min !== undefined && value < min) {
+			onChange?.(min);
+		}
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,10 +71,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 			return;
 		}
 		
-		// min/max 검증
-		if (min !== undefined && numValue < min) {
-			return;
-		}
+		// 입력 중에는 max만 검증 (키보드 입력 허용을 위해 min 검증 제거)
 		if (max !== undefined && numValue > max) {
 			return;
 		}

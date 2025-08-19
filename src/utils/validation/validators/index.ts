@@ -16,8 +16,6 @@ export * from './custom';
 
 // 모든 검증 함수를 하나의 객체로 통합
 import * as basicValidators from './basic';
-import * as ipValidators from './ip';
-import * as portValidators from './port';
 import * as customValidators from './custom';
 
 export const validators = {

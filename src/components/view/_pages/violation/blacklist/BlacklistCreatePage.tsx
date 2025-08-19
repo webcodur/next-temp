@@ -193,6 +193,7 @@ export default function BlacklistCreatePage() {
         onClose={() => setSuccessDialogOpen(false)}
         title="등록 완료"
         size="sm"
+        onConfirm={handleSuccessConfirm}
       >
         <div className="space-y-4">
           <p className="text-gray-700">{dialogMessage}</p>
@@ -213,6 +214,7 @@ export default function BlacklistCreatePage() {
         onClose={() => setErrorDialogOpen(false)}
         title="오류"
         size="sm"
+        onConfirm={() => setErrorDialogOpen(false)}
       >
         <div className="space-y-4">
           <p className="text-red-600">{dialogMessage}</p>

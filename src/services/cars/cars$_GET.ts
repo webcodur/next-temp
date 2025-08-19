@@ -2,11 +2,42 @@
 import { fetchDefault } from '@/services/fetchClient';
 import { SearchCarParams, CarListResponse, CarWithInstance } from '@/types/car';
 
-// Instance 타입 정의
+// 클라이언트 Instance 타입 정의 (CarInstance와 호환)
 interface Instance {
   id: number;
-  [key: string]: unknown;
+  parkinglotId: number;
+  name: string;
+  ownerName?: string | null;
+  address1Depth: string;
+  address2Depth: string;
+  address3Depth?: string | null;
+  instanceType: string;
+  password: string;
+  memo?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+  [key: string]: unknown; // CarInstance 호환성을 위한 인덱스 시그니처
 }
+
+// 서버 Instance 타입 정의 
+interface InstanceServerResponse {
+  id: number;
+  parkinglot_id: number;
+  name: string;
+  owner_name?: string | null;
+  address_1depth: string;
+  address_2depth: string;
+  address_3depth?: string | null;
+  instance_type: string;
+  password: string;
+  memo?: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarServerResponse {
@@ -35,7 +66,7 @@ interface CarInstanceServerResponse {
   created_at: string;
   updated_at: string;
   car?: CarServerResponse;
-  instance?: Record<string, unknown>;
+  instance?: InstanceServerResponse;
 }
 
 interface CarWithInstanceServerResponse extends CarServerResponse {
@@ -52,6 +83,24 @@ interface PaginatedServerResponse {
 // #endregion
 
 // #region 변환 함수 (내부 사용)
+function convertInstance(server: InstanceServerResponse): Instance {
+  return {
+    id: server.id,
+    parkinglotId: server.parkinglot_id,
+    name: server.name,
+    ownerName: server.owner_name,
+    address1Depth: server.address_1depth,
+    address2Depth: server.address_2depth,
+    address3Depth: server.address_3depth,
+    instanceType: server.instance_type as string,
+    password: server.password,
+    memo: server.memo,
+    createdAt: server.created_at,
+    updatedAt: server.updated_at,
+    deletedAt: server.deleted_at,
+  };
+}
+
 function serverToClient(server: CarWithInstanceServerResponse): CarWithInstance {
   return {
     id: server.id,
@@ -93,7 +142,7 @@ function serverToClient(server: CarWithInstanceServerResponse): CarWithInstance 
         createdAt: instance.car.created_at,
         updatedAt: instance.car.updated_at,
       } : undefined,
-      instance: instance.instance as Instance | undefined,
+      instance: instance.instance ? convertInstance(instance.instance) : undefined,
     })),
   };
 }

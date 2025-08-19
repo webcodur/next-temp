@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, User, Calendar, UserCheck, Phone, Mail } from 'lucide-react';
+import { User, Calendar, UserCheck, Phone, Mail } from 'lucide-react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
+import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
 import FieldText from '@/components/ui/ui-input/field/text/FieldText';
 import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 import { searchResidents } from '@/services/residents/residents$_GET';
@@ -151,6 +152,78 @@ export default function ResidentSearchModal({
     }
   };
 
+  // #region 테이블 컬럼 정의
+  const columns: BaseTableColumn<ResidentDetail>[] = [
+    {
+      key: 'selected',
+      header: '선택',
+      width: '8%',
+      align: 'center',
+      cell: (item: ResidentDetail) => (
+        <input
+          type="radio"
+          name="selectedResident"
+          checked={selectedResident?.id === item.id}
+          onChange={() => handleResidentSelect(item)}
+          className="w-4 h-4 text-primary"
+        />
+      ),
+    },
+    {
+      key: 'name',
+      header: '이름',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      key: 'phone',
+      header: '전화번호',
+      align: 'center',
+      width: '18%',
+      cell: (item: ResidentDetail) => item.phone || '-',
+    },
+    {
+      key: 'email',
+      header: '이메일',
+      align: 'start',
+      width: '20%',
+      cell: (item: ResidentDetail) => item.email || '-',
+    },
+    {
+      key: 'gender',
+      header: '성별',
+      align: 'center',
+      width: '10%',
+      cell: (item: ResidentDetail) => {
+        if (item.gender === 'M') return '남성';
+        if (item.gender === 'F') return '여성';
+        return '-';
+      },
+    },
+    {
+      key: 'birthDate',
+      header: '생년월일',
+      align: 'center',
+      width: '15%',
+      cell: (item: ResidentDetail) => {
+        if (!item.birthDate) return '-';
+        return new Date(item.birthDate).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+    },
+    {
+      key: 'emergencyContact',
+      header: '긴급연락처',
+      align: 'center',
+      width: '14%',
+      cell: (item: ResidentDetail) => item.emergencyContact || '-',
+    },
+  ];
+  // #endregion
+
   // 검색 필드 구성
   const searchFields = [
     {
@@ -225,94 +298,45 @@ export default function ResidentSearchModal({
       <div className="space-y-4">
         {/* 검색 섹션 */}
         <AdvancedSearch
-          searchFields={searchFields}
+          fields={searchFields}
           onSearch={handleSearch}
           onReset={handleReset}
-          loading={isLoading}
         />
 
         {/* 에러 메시지 */}
         {errorMessage && (
-          <div className="p-4 rounded-md bg-red-50 border border-red-200">
-            <p className="text-red-800 text-sm">{errorMessage}</p>
+          <div className="p-4 bg-red-50 rounded-md border border-red-200">
+            <p className="text-sm text-red-800">{errorMessage}</p>
           </div>
         )}
 
         {/* 거주민 목록 */}
-        <div className="space-y-2 max-h-96 overflow-y-auto">
-          {isLoading ? (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-muted-foreground">검색 중...</div>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-muted-foreground">검색 중...</div>
+          </div>
+        ) : residentList.length === 0 ? (
+          <div className="flex justify-center items-center py-8 text-center">
+            <div>
+              <User size={32} className="mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                연결 가능한 거주민이 없습니다
+              </p>
             </div>
-          ) : residentList.length === 0 ? (
-            <div className="flex justify-center items-center py-8 text-center">
-              <div>
-                <User size={32} className="mx-auto mb-3 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  연결 가능한 거주민이 없습니다
-                </p>
-              </div>
-            </div>
-          ) : (
-            residentList.map((resident) => (
-              <div
-                key={resident.id}
-                className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                  selectedResident?.id === resident.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:bg-muted/30'
-                }`}
-                onClick={() => handleResidentSelect(resident)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <User size={20} className="text-muted-foreground" />
-                    <div>
-                      <h4 className="font-medium text-foreground">
-                        {resident.name}
-                      </h4>
-                      <div className="flex gap-4 mt-1 text-sm text-muted-foreground">
-                        {resident.phone && (
-                          <div className="flex items-center gap-1">
-                            <Phone size={12} />
-                            <span>{resident.phone}</span>
-                          </div>
-                        )}
-                        {resident.email && (
-                          <div className="flex items-center gap-1">
-                            <Mail size={12} />
-                            <span>{resident.email}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4 text-sm text-muted-foreground">
-                    {resident.gender && (
-                      <div className="flex items-center gap-1">
-                        <UserCheck size={14} />
-                        <span>{resident.gender === 'M' ? '남성' : '여성'}</span>
-                      </div>
-                    )}
-                    {resident.birthDate && (
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        <span>
-                          {new Date(resident.birthDate).toLocaleDateString('ko-KR', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="max-h-96 overflow-hidden">
+            <PaginatedTable
+              data={residentList as unknown as Record<string, unknown>[]}
+              columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
+              onRowClick={(resident) => handleResidentSelect(resident as unknown as ResidentDetail)}
+              pageSize={10}
+              pageSizeOptions={[5, 10, 20]}
+              itemName="거주민"
+              showPagination={false}
+            />
+          </div>
+        )}
 
         {/* 하단 버튼 */}
         <div className="flex gap-3 justify-end pt-4 border-t border-border">

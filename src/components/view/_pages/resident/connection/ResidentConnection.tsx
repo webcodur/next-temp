@@ -2,9 +2,11 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { Link, Home } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import ResidentInstanceTable from './ResidentInstanceTable';
 import InstanceSearchSection, { InstanceSearchField, DisabledInstance, ColumnConfiguration } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
 
@@ -23,10 +25,13 @@ export default function ResidentConnection({
   onDataChange,
   onOperationComplete
 }: ResidentConnectionProps) {
+  const router = useRouter();
+  
   // #region 상태 관리
   const [selectedInstance, setSelectedInstance] = useState<Instance | null>(null);
   const [memo, setMemo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDisconnectCompleteModal, setShowDisconnectCompleteModal] = useState(false);
   // #endregion
 
   // #region 기존 세대 ID 목록 및 비활성화 항목 설정
@@ -48,6 +53,16 @@ export default function ResidentConnection({
 
   // #region 핸들러
   const handleOperationCompleteInternal = useCallback(async (success: boolean, message: string) => {
+    // 해지 작업 성공 시 연결된 세대가 1개였다면 모달 표시
+    if (success && message.includes('관계가 성공적으로 해제되었습니다')) {
+      const currentInstanceCount = resident?.residentInstance?.length || 0;
+      if (currentInstanceCount === 1) {
+        // 해지 전에 1개였으므로 해지 후 0개가 됨 -> 안내 모달 표시
+        setShowDisconnectCompleteModal(true);
+        return;
+      }
+    }
+    
     // 먼저 성공 메시지를 표시
     onOperationComplete(success, message);
     
@@ -60,7 +75,12 @@ export default function ResidentConnection({
         // 데이터 새로고침 실패는 별도 처리하지 않음 (성공 메시지는 유지)
       }
     }
-  }, [onDataChange, onOperationComplete]);
+  }, [onDataChange, onOperationComplete, resident?.residentInstance?.length]);
+
+  const handleDisconnectCompleteConfirm = useCallback(() => {
+    setShowDisconnectCompleteModal(false);
+    router.push('/parking/occupancy/resident');
+  }, [router]);
 
   const handleInstanceSelect = useCallback((instance: Instance) => {
     setSelectedInstance(instance);
@@ -248,6 +268,28 @@ export default function ResidentConnection({
           </div>
         </div>
       </SectionPanel>
+
+      {/* 연결 해제 완료 안내 모달 */}
+      <Modal
+        isOpen={showDisconnectCompleteModal}
+        onClose={handleDisconnectCompleteConfirm}
+        title="세대 연결 해제 완료"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <p className="text-muted-foreground">
+              해당 거주자는 건물의 모든 세대에서 연결이 해제되어 더이상 시스템에서 확인할 수 없습니다.
+            </p>
+          </div>
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={handleDisconnectCompleteConfirm}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

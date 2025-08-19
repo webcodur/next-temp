@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Users, User, Phone, Mail, Calendar, UserCheck, Link } from 'lucide-react';
+import { Users, User, Phone, Mail, Calendar, UserCheck, Link, Plus, Unplug, Car, X, CarFront, BellRing } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ResidentInstanceWithResident } from '@/types/instance';
+import { CarResidentWithDetails } from '@/types/car';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -16,13 +17,31 @@ interface InstanceResidentListProps {
   loading?: boolean;
   instanceId?: number;
   onDataChange?: () => void;
+  residentManagementMode?: boolean;
+  selectedCarNumber?: string;
+  carResidents?: CarResidentWithDetails[];
+  loadingCarResidents?: boolean;
+  onCloseResidentManagement?: () => void;
+  onConnectResident?: (residentId: number) => void;
+  onDisconnectResident?: (residentId: number) => void;
+  onTogglePrimary?: (residentId: number) => void;
+  onToggleAlarm?: (residentId: number) => void;
 }
 
 export default function InstanceResidentList({ 
   residentInstances = [], 
   loading = false,
   instanceId,
-  onDataChange
+  onDataChange,
+  residentManagementMode = false,
+  selectedCarNumber = '',
+  carResidents = [],
+  loadingCarResidents = false,
+  onCloseResidentManagement,
+  onConnectResident,
+  onDisconnectResident,
+  onTogglePrimary,
+  onToggleAlarm
 }: InstanceResidentListProps) {
   const router = useRouter();
   const [confirmModal, setConfirmModal] = useState<{
@@ -139,7 +158,7 @@ export default function InstanceResidentList({
       case 'delete':
         return {
           title: '거주민 정보 삭제',
-          message: `${confirmModal.residentName} 거주민 정보를 전체 서비스 및 DB에서 완전히 삭제하시겠습니까?`
+          message: `${confirmModal.residentName} 거주민 정보를 전체 서비스에서 완전히 삭제하시겠습니까?`
         };
       default:
         return { title: '', message: '' };
@@ -173,8 +192,13 @@ export default function InstanceResidentList({
     );
   }
 
+  // 거주민이 차량에 연결되어 있는지 확인
+  const isResidentConnectedToCar = (residentId: number) => {
+    return carResidents.some(carResident => carResident.resident.id === residentId);
+  };
+
   return (
-    <div>
+    <div className="relative">
       <SectionPanel 
       title={
         <span className="flex gap-2 items-center">
@@ -185,6 +209,19 @@ export default function InstanceResidentList({
       icon={<Users size={18} />}
       headerActions={(
         <div className="flex gap-1 items-center">
+          {residentManagementMode && (
+            <div className="flex gap-2 items-center mr-2">
+              <Car size={14} className="text-purple-600" />
+              <span className="text-sm font-medium text-purple-600">{selectedCarNumber}</span>
+              <button
+                onClick={onCloseResidentManagement}
+                className="flex justify-center items-center w-6 h-6 rounded-full transition-colors hover:bg-red-100 text-muted-foreground hover:text-red-600"
+                title="관리 모드 종료"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          )}
           <button
             onClick={handleConnectClick}
             className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
@@ -236,8 +273,8 @@ export default function InstanceResidentList({
                 {
                   icon: <UserCheck />,
                   value: residentInstance.resident.gender === 'M' ? '남성' : 
-                         residentInstance.resident.gender === 'F' ? '여성' : 
-                         residentInstance.resident.gender || '',
+                        residentInstance.resident.gender === 'F' ? '여성' : 
+                        residentInstance.resident.gender || '',
                   show: !!residentInstance.resident.gender
                 },
                 {
@@ -249,19 +286,124 @@ export default function InstanceResidentList({
                 }
               ];
 
+              const isConnected = isResidentConnectedToCar(residentInstance.resident.id);
+              const carResident = carResidents.find(cr => cr.resident.id === residentInstance.resident.id);
+
               return (
-                <InstanceItemCard
-                  key={residentInstance.id}
-                  headerIcon={<User />}
-                  title={residentInstance.resident.name}
-                  badges={badges}
-                  leftColumn={leftColumn}
-                  rightColumn={rightColumn}
-                  memo={residentInstance.memo || undefined}
-                  onDetail={() => handleDetailClick(residentInstance.resident.id, residentInstance.resident.name)}
-                  onExclude={() => handleExcludeClick(residentInstance.resident.id, residentInstance.resident.name)}
-                  onDelete={() => handleDeleteClick(residentInstance.resident.id, residentInstance.resident.name)}
-                />
+                <div key={residentInstance.id} className="relative">
+                  <InstanceItemCard
+                    headerIcon={<User />}
+                    title={residentInstance.resident.name}
+                    badges={badges}
+                    leftColumn={leftColumn}
+                    rightColumn={rightColumn}
+                    memo={residentInstance.memo || undefined}
+                    onDetail={() => handleDetailClick(residentInstance.resident.id, residentInstance.resident.name)}
+                    onExclude={() => handleExcludeClick(residentInstance.resident.id, residentInstance.resident.name)}
+                    onDelete={() => handleDeleteClick(residentInstance.resident.id, residentInstance.resident.name)}
+                  />
+                  
+                  {/* 거주민 관리 모드 overlay */}
+                  {residentManagementMode && (
+                    <div className="flex absolute right-0 bottom-0 left-0 top-16 z-10 justify-center items-center rounded-b-lg backdrop-blur-sm bg-black/10">
+                      {loadingCarResidents ? (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/90 rounded-full text-sm text-muted-foreground shadow-sm">
+                          <div className="w-3 h-3 rounded-full border-2 border-current animate-spin border-t-transparent"></div>
+                          로딩 중...
+                        </div>
+                      ) : (
+                        <div className="flex gap-3 items-center">
+                          {isConnected ? (
+                            <>
+                              {/* 연결 해지 버튼 */}
+                              <div className="relative group">
+                                <button
+                                  onClick={() => onDisconnectResident && onDisconnectResident(residentInstance.resident.id)}
+                                  className="flex justify-center items-center w-12 h-12 text-white bg-red-500 rounded-full shadow-lg transition-all duration-200 group hover:bg-red-600 hover:scale-110 hover:shadow-xl"
+                                  title="차량 연결 해지"
+                                >
+                                  <Unplug size={20} className="transition-all duration-200 group-hover:scale-110 group-hover:rotate-90" />
+                                </button>
+                                {/* 경고 표시 */}
+                                <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full border-2 border-white shadow-sm opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-100">
+                                  <X size={8} className="absolute inset-0 m-auto text-white" />
+                                </div>
+                              </div>
+                              {/* 주차량 설정 버튼 */}
+                              <div className="relative group">
+                                <button
+                                  onClick={() => onTogglePrimary && onTogglePrimary(residentInstance.resident.id)}
+                                  className={`group flex justify-center items-center w-12 h-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl ${
+                                    carResident?.isPrimary 
+                                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' 
+                                      : 'bg-blue-500 hover:bg-blue-600'
+                                  }`}
+                                  title={`주차량 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
+                                >
+                                  <CarFront size={18} className="transition-transform duration-200 group-hover:scale-110" />
+                                </button>
+                                {/* 설정 상태 표시 */}
+                                <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
+                                  carResident?.isPrimary 
+                                    ? 'bg-green-400 opacity-100' 
+                                    : 'bg-gray-300 opacity-0 group-hover:opacity-100'
+                                }`}>
+                                  {carResident?.isPrimary && (
+                                    <div className="w-full h-full bg-green-400 rounded-full animate-ping pointer-events-none"></div>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              {/* 알람 설정 버튼 */}
+                              <div className="relative group">
+                                <button
+                                  onClick={() => onToggleAlarm && onToggleAlarm(residentInstance.resident.id)}
+                                  className={`group flex justify-center items-center w-12 h-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl ${
+                                    carResident?.carAlarm 
+                                      ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700' 
+                                      : 'bg-orange-500 hover:bg-orange-600'
+                                  }`}
+                                  title={`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}
+                                >
+                                  <BellRing size={18} className={`group-hover:scale-110 transition-transform duration-200 ${carResident?.carAlarm ? 'animate-pulse' : ''}`} />
+                                </button>
+                                {/* 설정 상태 표시 */}
+                                <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
+                                  carResident?.carAlarm 
+                                    ? 'bg-yellow-400 opacity-100' 
+                                    : 'bg-gray-300 opacity-0 group-hover:opacity-100'
+                                }`}>
+                                  {carResident?.carAlarm && (
+                                    <div className="w-full h-full bg-yellow-400 rounded-full animate-ping pointer-events-none"></div>
+                                  )}
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              {/* 연결 추가 버튼 */}
+                              <div className="relative">
+                                <button
+                                  onClick={() => onConnectResident && onConnectResident(residentInstance.resident.id)}
+                                  className="flex justify-center items-center w-16 h-16 text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg transition-all duration-300 animate-pulse group hover:from-green-600 hover:to-emerald-600 hover:scale-110 hover:shadow-xl hover:animate-none"
+                                  title="차량과 연결"
+                                >
+                                  <Plus size={28} className="transition-all duration-300 group-hover:rotate-90" />
+                                </button>
+                                {/* 펄스 효과 */}
+                                <div className="absolute inset-0 bg-green-400 rounded-full opacity-20 animate-ping pointer-events-none"></div>
+                                {/* 연결 아이콘 */}
+                                <div className="absolute -top-1 -right-1 p-1 bg-white rounded-full shadow-sm pointer-events-none">
+                                  <Link size={12} className="text-green-600" />
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>

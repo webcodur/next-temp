@@ -226,6 +226,7 @@ export default function DeviceCreatePage() {
         onClose={() => setErrorModalOpen(false)}
         title="오류 발생"
         size="sm"
+        onConfirm={() => setErrorModalOpen(false)}
       >
         <div className="space-y-4">
           <div className="text-center">

@@ -62,17 +62,62 @@ export async function updateCarInstance(carInstanceId: number, data: UpdateCarIn
     body: JSON.stringify(serverRequest),
   });
 
-  const result = await response.json();
-  
   if (!response.ok) {
-    const errorMsg = result.message || `차량-인스턴스 연결 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
-    return { success: false, errorMsg };
+    try {
+      const result = await response.json();
+      const errorMsg = result.message || `차량-인스턴스 연결 수정 실패(코드): ${response.status}`;
+      console.log(errorMsg);
+      return { success: false, errorMsg };
+    } catch (error) {
+      return { success: false, errorMsg: `차량-인스턴스 연결 수정 실패(코드): ${response.status}` };
+    }
   }
   
-  const serverResponse = result as CarInstanceServerResponse;
+  // 성공 응답 처리 - 200 OK 또는 201 Created
+  if (response.status === 200 || response.status === 201) {
+    // 응답 내용이 있는지 확인
+    const contentType = response.headers.get('content-type');
+    const hasJsonContent = contentType && contentType.includes('application/json');
+    
+    // 응답 텍스트를 먼저 가져와서 빈 내용인지 확인
+    const responseText = await response.text();
+    
+    if (!responseText.trim() || !hasJsonContent) {
+      // 빈 응답이거나 JSON이 아닌 경우 - 기본 응답 구조로 반환
+      return {
+        success: true,
+        data: {
+          id: carInstanceId,
+          carShareOnoff: data.carShareOnoff,
+        } as Partial<CarInstance>,
+      };
+    }
+    
+    try {
+      const result = JSON.parse(responseText);
+      const serverResponse = result as CarInstanceServerResponse;
+      return {
+        success: true,
+        data: serverToClient(serverResponse),
+      };
+    } catch (error) {
+      // JSON 파싱 실패 시 기본 응답
+      return {
+        success: true,
+        data: {
+          id: carInstanceId,
+          carShareOnoff: data.carShareOnoff,
+        } as Partial<CarInstance>,
+      };
+    }
+  }
+  
+  // 다른 성공 코드의 경우도 성공으로 처리
   return {
     success: true,
-    data: serverToClient(serverResponse),
+    data: {
+      id: carInstanceId,
+      carShareOnoff: data.carShareOnoff,
+    } as Partial<CarInstance>,
   };
 }

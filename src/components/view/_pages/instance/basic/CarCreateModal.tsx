@@ -116,14 +116,14 @@ export default function CarCreateModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="새 차량 생성"
+      title="새 차량 생성하여 세대 연결"
       size="xl"
     >
       <div className="space-y-4">
         {/* 에러 메시지 */}
         {errorMessage && (
-          <div className="p-4 rounded-md bg-red-50 border border-red-200">
-            <p className="text-red-800 text-sm">{errorMessage}</p>
+          <div className="p-4 bg-red-50 rounded-md border border-red-200">
+            <p className="text-sm text-red-800">{errorMessage}</p>
           </div>
         )}
 
@@ -139,6 +139,8 @@ export default function CarCreateModal({
             onSubmit={handleSubmit}
             hasChanges={hasChanges}
             isValid={isValid}
+            title="차량 기본 정보"
+            subtitle="차량의 기본 정보를 생성하여 현재 세대에 바로 연결합니다."
           />
         </div>
 

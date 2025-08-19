@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { Clock, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { Clock, X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from '../shared/InputContainer';
 
@@ -75,8 +75,6 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 	const validationResult = validationRule ? validateField(stringValue, validationRule) : null;
 	
 	// 검증 아이콘 렌더링 (edit 모드이고 값이 있으며 disabled가 아닐 때만)
-	const shouldShowIcon = validationRule?.mode === 'edit' && !disabled && validationResult?.hasValue;
-	
 	// 피드백 타입 결정
 	const getFeedbackType = () => {
 		if (!validationRule || !validationResult) return 'info';

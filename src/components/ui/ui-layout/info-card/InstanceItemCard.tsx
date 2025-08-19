@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MessageSquare, Eye, Minus, Trash2 } from 'lucide-react';
+import { MessageSquare, Eye, Unplug, Trash2 } from 'lucide-react';
 
 // 필드 정보 타입
 export interface InstanceItemCardField {
@@ -14,6 +14,14 @@ export interface InstanceItemCardField {
 export interface InstanceItemCardBadge {
   text: string;
   variant?: 'default' | 'success' | 'info' | 'warning' | 'danger';
+}
+
+// 커스텀 액션 버튼 타입
+export interface CustomAction {
+  icon: React.ReactElement<{ size?: number; className?: string }>;
+  onClick: () => void;
+  title: string;
+  hoverClass: string;
 }
 
 // InstanceItemCard Props 타입
@@ -39,6 +47,7 @@ export interface InstanceItemCardProps {
   onDetail?: () => void;
   onExclude?: () => void;
   onDelete?: () => void;
+  customActions?: CustomAction[];
   
   // 스타일링
   className?: string;
@@ -55,6 +64,7 @@ export default function InstanceItemCard({
   onDetail,
   onExclude,
   onDelete,
+  customActions = [],
   className = ''
 }: InstanceItemCardProps) {
   const getBadgeVariantClass = (variant: InstanceItemCardBadge['variant'] = 'default') => {
@@ -102,6 +112,19 @@ export default function InstanceItemCard({
         
         {/* 액션 버튼들 */}
         <div className="flex gap-1 items-center">
+          {customActions.map((action, index) => (
+            <button
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                action.onClick();
+              }}
+              className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors text-muted-foreground ${action.hoverClass}`}
+              title={action.title}
+            >
+              {React.cloneElement(action.icon, { size: 14 })}
+            </button>
+          ))}
           {onDetail && (
             <button
               onClick={(e) => {
@@ -123,7 +146,7 @@ export default function InstanceItemCard({
               className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
               title="제외"
             >
-              <Minus size={14} />
+              <Unplug size={14} />
             </button>
           )}
           {onDelete && (

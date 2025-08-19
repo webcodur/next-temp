@@ -47,6 +47,33 @@ export interface CarInstanceResidentDetail extends CarInstanceResident {
   resident?: Resident;
 }
 
+export interface CarResidentWithDetails {
+  id: number;
+  carInstanceId: number;
+  residentId: number;
+  carAlarm: boolean;
+  isPrimary: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+  resident: {
+    id: number;
+    name: string;
+    phone?: string | null;
+    email?: string | null;
+    birthDate?: string | null;
+    gender?: 'M' | 'F' | null;
+    emergencyContact?: string | null;
+    memo?: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt?: string | null;
+    address1Depth: string;
+    address2Depth: string;
+    address3Depth?: string | null;
+  };
+}
+
 export interface CarWithInstance extends Car {
   carInstance: CarInstance[];
 }

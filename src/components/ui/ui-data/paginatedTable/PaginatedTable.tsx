@@ -56,7 +56,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 
 	// #region 렌더링
 	return (
-		<div className="space-y-6">
+		<div className="p-4 space-y-6 rounded-lg border bg-card">
 			{/* BaseTable 렌더링 */}
 			<BaseTable
 				data={paginationData.isInitialLoading ? null : paginationData.paginatedData}
