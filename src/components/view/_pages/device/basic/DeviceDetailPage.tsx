@@ -1,13 +1,19 @@
 /* 메뉴 설명: 차단기 상세 페이지 */
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { RefreshCw, FileText, History, KeyRound } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
+
 import DeviceForm, { DeviceFormData } from './DeviceForm';
+import DevicePermissionConfigSection from '../permissions/DevicePermissionConfigSection';
+import DeviceCommandLogSection, { DeviceCommandLogSectionRef } from '../logs/DeviceCommandLogSection';
+import DeviceHistorySection, { DeviceHistorySectionRef } from '../history/DeviceHistorySection';
 import { getParkingDeviceDetail } from '@/services/devices/devices@id_GET';
 import { updateParkingDevice } from '@/services/devices/devices@id_PUT';
 import { deleteParkingDevice } from '@/services/devices/devices@id_DELETE';
@@ -24,6 +30,13 @@ export default function DeviceDetailPage() {
   const [device, setDevice] = useState<ParkingDevice | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 탭 상태 관리
+  const [activeTab, setActiveTab] = useState('basic');
+  
+  // Section 레퍼런스
+  const commandLogSectionRef = useRef<DeviceCommandLogSectionRef>(null);
+  const historySectionRef = useRef<DeviceHistorySectionRef>(null);
   
   const [formData, setFormData] = useState<DeviceFormData>({
     name: '',
@@ -60,7 +73,16 @@ export default function DeviceDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = createDeviceTabs(deviceId);
+  const tabs = createDeviceTabs();
+  
+  // 새로고침 핸들러들
+  const handleRefreshLogs = useCallback(() => {
+    commandLogSectionRef.current?.refresh();
+  }, []);
+
+  const handleRefreshHistory = useCallback(() => {
+    historySectionRef.current?.refresh();
+  }, []);
   // #endregion
 
   // #region 데이터 로드
@@ -294,27 +316,117 @@ export default function DeviceDetailPage() {
   }
 
   return (
-    <DetailPageLayout
-      title="차단기 상세 정보"
-      subtitle={`${device.name} (${device.ip}:${device.port})`}
-      tabs={tabs}
-      activeTabId="basic"
-      fallbackPath="/parking/lot/device"
-      hasChanges={hasChanges}
-    >
-      <DeviceForm
-        mode="edit"
-        device={device}
-        data={formData}
-        onChange={handleFormChange}
-        disabled={isSubmitting}
-        showActions={true}
-        onReset={handleReset}
-        onSubmit={handleSubmit}
-        onDelete={handleDelete}
+    <div className="flex flex-col gap-6">
+      {/* 헤더 */}
+      <PageHeader 
+        title="차단기 상세 정보"
+        subtitle={`${device.name} (${device.ip}:${device.port})`}
         hasChanges={hasChanges}
-        isValid={isValid}
       />
+
+      {/* 탭과 콘텐츠 */}
+      <div className="flex flex-col">
+        <Tabs
+          tabs={tabs}
+          activeId={activeTab}
+          onTabChange={setActiveTab}
+        />
+
+        {/* 콘텐츠 영역 */}
+        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
+          {/* 기본 정보 탭 */}
+          {activeTab === 'basic' && (
+            <DeviceForm
+              mode="edit"
+              device={device}
+              data={formData}
+              onChange={handleFormChange}
+              disabled={isSubmitting}
+              showActions={true}
+              onReset={handleReset}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              hasChanges={hasChanges}
+              isValid={isValid}
+            />
+          )}
+
+          {/* 출입 권한 탭 */}
+          {activeTab === 'permissions' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-3 items-center">
+                  <KeyRound className="w-5 h-5 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">출입 권한 설정</h3>
+                    <p className="text-sm text-muted-foreground">차단기의 차량 유형별 출입 권한을 설정합니다.</p>
+                  </div>
+                </div>
+              </div>
+              <DevicePermissionConfigSection
+                device={device}
+                onDataChange={loadDeviceData}
+              />
+            </div>
+          )}
+
+          {/* 명령 로그 탭 */}
+          {activeTab === 'logs' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-3 items-center">
+                  <FileText className="w-5 h-5 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">명령 로그</h3>
+                    <p className="text-sm text-muted-foreground">차단기 명령 실행 내역을 조회합니다.</p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRefreshLogs}
+                  title="로그 새로고침"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  새로고침
+                </Button>
+              </div>
+              <DeviceCommandLogSection
+                ref={commandLogSectionRef}
+                device={device}
+              />
+            </div>
+          )}
+
+          {/* 변경 이력 탭 */}
+          {activeTab === 'history' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-3 items-center">
+                  <History className="w-5 h-5 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">변경 이력</h3>
+                    <p className="text-sm text-muted-foreground">차단기 설정 변경 이력을 조회합니다.</p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRefreshHistory}
+                  title="이력 새로고침"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  새로고침
+                </Button>
+              </div>
+              <DeviceHistorySection
+                ref={historySectionRef}
+                device={device}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* 삭제 확인 모달 */}
       <Modal
@@ -392,6 +504,6 @@ export default function DeviceDetailPage() {
           </div>
         </div>
       </Modal>
-    </DetailPageLayout>
+    </div>
   );
 }

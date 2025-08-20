@@ -9,15 +9,10 @@ export { default as DeviceDetailPage } from './basic/DeviceDetailPage';
 export { default as DeviceForm } from './basic/DeviceForm';
 
 // 권한 관련
-export { default as DevicePermissionsPage } from './permissions/DevicePermissionsPage';
 export { default as DevicePermissionConfigSection } from './permissions/DevicePermissionConfigSection';
 
 // 로그 관련
-export { default as DeviceLogsPage } from './logs/DeviceLogsPage';
 export { default as DeviceCommandLogSection } from './logs/DeviceCommandLogSection';
-
-// 이력 관련
-export { default as DeviceHistoryPage } from './history/DeviceHistoryPage';
 
 // 설정 관련
 export { default as DeviceNetworkConfigSection } from './config/DeviceNetworkConfigSection';

@@ -3,7 +3,6 @@
 export interface ResidentTab {
 	id: string;
 	label: string;
-	href: string;
 }
 
 export interface ResidentPageProps {

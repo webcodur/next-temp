@@ -3,5 +3,4 @@
 export interface DeviceTab {
 	id: string;
 	label: string;
-	href: string;
 }

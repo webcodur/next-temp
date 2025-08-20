@@ -3,5 +3,4 @@
 export interface CarTab {
 	id: string;
 	label: string;
-	href: string;
 }

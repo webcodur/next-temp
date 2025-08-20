@@ -13,16 +13,13 @@ export function shouldShowListButton(pathname: string): boolean {
   // [id] 패턴: 숫자로 끝나는 경로 (상세 페이지)
   const hasIdPattern = /\/\d+$/.test(pathname);
   
-  // [id]/sub 패턴: 숫자 뒤에 서브 경로가 있는 경우 (상세 페이지의 탭들)
-  const hasIdSubPattern = /\/\d+\/[^/]+/.test(pathname);
-  
   // 편집 페이지 패턴
   const isEditPage = pathname.endsWith('/edit');
   
   // 생성 페이지 패턴  
   const isCreatePage = pathname.endsWith('/create');
 
-  return hasIdPattern || hasIdSubPattern || isEditPage || isCreatePage;
+  return hasIdPattern || isEditPage || isCreatePage;
 }
 
 /**
@@ -34,11 +31,6 @@ export function getListPageUrl(pathname: string): string {
   // [id] 패턴: 마지막 숫자 세그먼트 제거
   if (/\/\d+$/.test(pathname)) {
     return pathname.replace(/\/\d+$/, '');
-  }
-  
-  // [id]/sub 패턴: 숫자와 그 뒤의 서브 경로를 모두 제거
-  if (/\/\d+\/[^/]+/.test(pathname)) {
-    return pathname.replace(/\/\d+\/.*$/, '');
   }
   
   // 편집 페이지: /edit 제거

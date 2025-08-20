@@ -3,11 +3,15 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Users, Building2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import CarForm, { CarFormData } from './CarForm';
+import CarInstanceSection from '../instances/CarInstanceSection';
+import CarResidentSection from '../residents/CarResidentSection';
 import { searchCars } from '@/services/cars/cars$_GET';
 import { updateCar } from '@/services/cars/cars@id_PATCH';
 import { deleteCar } from '@/services/cars/cars@id_DELETE';
@@ -23,6 +27,9 @@ export default function CarDetailPage() {
   const [car, setCar] = useState<CarWithInstance | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 탭 상태 관리
+  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<CarFormData>({
     carNumber: '',
@@ -61,7 +68,7 @@ export default function CarDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = createCarTabs(carId);
+  const tabs = createCarTabs();
   // #endregion
 
   // #region 데이터 로드
@@ -272,27 +279,76 @@ export default function CarDetailPage() {
   }
 
   return (
-    <DetailPageLayout
-      title="차량 상세 정보"
-      subtitle={`${car.carNumber} ${car.brand ? `- ${car.brand}` : ''} ${car.model || ''}`}
-      tabs={tabs}
-      activeTabId="basic"
-      fallbackPath="/parking/occupancy/car"
-      hasChanges={hasChanges}
-    >
-      <CarForm
-        mode="edit"
-        car={car}
-        data={formData}
-        onChange={handleFormChange}
-        disabled={isSubmitting}
-        showActions={true}
-        onReset={handleReset}
-        onSubmit={handleSubmit}
-        onDelete={handleDelete}
+    <div className="flex flex-col gap-6">
+      {/* 헤더 */}
+      <PageHeader 
+        title="차량 상세 정보"
+        subtitle={`${car.carNumber} ${car.brand ? `- ${car.brand}` : ''} ${car.model || ''}`}
         hasChanges={hasChanges}
-        isValid={isValid}
       />
+
+      {/* 탭과 콘텐츠 */}
+      <div className="flex flex-col">
+        <Tabs
+          tabs={tabs}
+          activeId={activeTab}
+          onTabChange={setActiveTab}
+        />
+
+        {/* 콘텐츠 영역 */}
+        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
+          {/* 기본 정보 탭 */}
+          {activeTab === 'basic' && (
+            <CarForm
+              mode="edit"
+              car={car}
+              data={formData}
+              onChange={handleFormChange}
+              disabled={isSubmitting}
+              showActions={true}
+              onReset={handleReset}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              hasChanges={hasChanges}
+              isValid={isValid}
+            />
+          )}
+
+          {/* 세대 연결 탭 */}
+          {activeTab === 'instances' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Building2 className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">세대 연결</h3>
+                  <p className="text-sm text-muted-foreground">차량과 연결된 세대 목록을 관리합니다.</p>
+                </div>
+              </div>
+              <CarInstanceSection
+                car={car}
+                onDataChange={loadCarData}
+              />
+            </div>
+          )}
+
+          {/* 거주자 연결 탭 */}
+          {activeTab === 'residents' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">거주자 연결</h3>
+                  <p className="text-sm text-muted-foreground">차량과 연결된 거주자 목록을 관리합니다.</p>
+                </div>
+              </div>
+              <CarResidentSection
+                car={car}
+                onDataChange={loadCarData}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* 성공 모달 */}
       <Modal
@@ -356,6 +412,6 @@ export default function CarDetailPage() {
           </div>
         </div>
       </Modal>
-    </DetailPageLayout>
+    </div>
   );
 }

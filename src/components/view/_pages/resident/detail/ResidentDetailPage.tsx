@@ -3,11 +3,15 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Building2, Truck } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import ResidentForm, { ResidentFormData } from './ResidentBasic';
+import ResidentConnection from '../connection/ResidentConnection';
+import ResidentMovement from '../movement/ResidentMovement';
 import { createResidentTabs } from '../_shared/residentTabs';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
 import { updateResident } from '@/services/residents/residents@id_PATCH';
@@ -23,6 +27,9 @@ export default function ResidentDetailPage() {
   const [resident, setResident] = useState<ResidentDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 탭 상태 관리
+  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<ResidentFormData>({
     name: '',
@@ -51,7 +58,7 @@ export default function ResidentDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = createResidentTabs(residentId);
+  const tabs = createResidentTabs();
   // #endregion
 
   // #region 데이터 로드
@@ -233,27 +240,92 @@ export default function ResidentDetailPage() {
   }
 
   return (
-    <DetailPageLayout
-      title="거주자 상세 정보"
-      subtitle={`${resident.name} - ${resident.phone || '전화번호 없음'}`}
-      tabs={tabs}
-      activeTabId="basic"
-      fallbackPath="/parking/occupancy/resident"
-      hasChanges={hasChanges}
-    >
-      <ResidentForm
-        mode="edit"
-        resident={resident}
-        data={formData}
-        onChange={handleFormChange}
-        disabled={isSubmitting}
-        showActions={true}
-        onReset={handleReset}
-        onSubmit={handleSubmit}
-        onDelete={handleDelete}
+    <div className="flex flex-col gap-6">
+      {/* 헤더 */}
+      <PageHeader 
+        title="거주자 상세 정보"
+        subtitle={`${resident.name} - ${resident.phone || '전화번호 없음'}`}
         hasChanges={hasChanges}
-        isValid={isValid}
       />
+
+      {/* 탭과 콘텐츠 */}
+      <div className="flex flex-col">
+        <Tabs
+          tabs={tabs}
+          activeId={activeTab}
+          onTabChange={setActiveTab}
+        />
+
+        {/* 콘텐츠 영역 */}
+        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
+          {/* 기본 정보 탭 */}
+          {activeTab === 'basic' && (
+            <ResidentForm
+              mode="edit"
+              resident={resident}
+              data={formData}
+              onChange={handleFormChange}
+              disabled={isSubmitting}
+              showActions={true}
+              onReset={handleReset}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              hasChanges={hasChanges}
+              isValid={isValid}
+            />
+          )}
+
+          {/* 세대 연결 탭 */}
+          {activeTab === 'connection' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Building2 className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">세대 연결</h3>
+                  <p className="text-sm text-muted-foreground">거주자의 세대 연결 현황을 관리합니다.</p>
+                </div>
+              </div>
+              <ResidentConnection
+                resident={resident}
+                onDataChange={loadResidentData}
+                onOperationComplete={(success, message) => {
+                  setModalMessage(message);
+                  if (success) {
+                    setSuccessModalOpen(true);
+                  } else {
+                    setErrorModalOpen(true);
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          {/* 세대 이전 탭 */}
+          {activeTab === 'movement' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Truck className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">세대 이전</h3>
+                  <p className="text-sm text-muted-foreground">거주자의 세대 이전 이력을 관리합니다.</p>
+                </div>
+              </div>
+              <ResidentMovement
+                resident={resident}
+                onDataChange={loadResidentData}
+                onOperationComplete={(success, message) => {
+                  setModalMessage(message);
+                  if (success) {
+                    setSuccessModalOpen(true);
+                  } else {
+                    setErrorModalOpen(true);
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* 성공 모달 */}
       <Modal
@@ -319,6 +391,6 @@ export default function ResidentDetailPage() {
       </Modal>
 
 
-    </DetailPageLayout>
+    </div>
   );
 }

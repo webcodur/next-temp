@@ -3,13 +3,17 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Settings, UserPlus } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import DetailPageLayout from '@/components/ui/ui-layout/detail-page-layout/DetailPageLayout';
+import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import InstanceForm, { InstanceFormData } from './InstanceForm';
 import InstanceResidentList from './InstanceResidentList';
 import InstanceCarList from './InstanceCarList';
+import InstanceServiceConfigSection from '../service/InstanceServiceConfigSection';
+import InstanceVisitConfigSection from '../visit/InstanceVisitConfigSection';
 import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
@@ -30,6 +34,9 @@ export default function InstanceDetailPage() {
   const [instance, setInstance] = useState<InstanceDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 탭 상태 관리
+  const [activeTab, setActiveTab] = useState('basic');
   
   const [formData, setFormData] = useState<InstanceFormData>({
     name: '',
@@ -67,7 +74,7 @@ export default function InstanceDetailPage() {
   // #endregion
 
   // #region 탭 설정
-  const tabs = createInstanceTabs(instanceId);
+  const tabs = createInstanceTabs();
   // #endregion
 
   // #region 데이터 로드
@@ -461,54 +468,103 @@ export default function InstanceDetailPage() {
   }
 
   return (
-    <DetailPageLayout
-      title="세대 상세 정보"
-      subtitle={`${instance.name} - ${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
-      tabs={tabs}
-      activeTabId="basic"
-      fallbackPath="/parking/occupancy/instance"
-      hasChanges={hasChanges}
-    >
-      <div className="space-y-6">
-        {/* 세대 기본 정보 */}
-        <InstanceForm
-          mode="edit"
-          instance={instance}
-          data={formData}
-          onChange={handleFormChange}
-          disabled={isSubmitting}
-          showActions={true}
-          onReset={handleReset}
-          onSubmit={handleSubmit}
-          onDelete={handleDelete}
-          hasChanges={hasChanges}
-          isValid={isValid}
+    <div className="flex flex-col gap-6">
+      {/* 헤더 */}
+      <PageHeader 
+        title="세대 상세 정보"
+        subtitle={`${instance.name} - ${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
+        hasChanges={hasChanges}
+      />
+
+      {/* 탭과 콘텐츠 */}
+      <div className="flex flex-col">
+        <Tabs
+          tabs={tabs}
+          activeId={activeTab}
+          onTabChange={setActiveTab}
         />
-        
-        {/* 연결된 거주민 | 차량 목록 */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <InstanceResidentList 
-            residentInstances={instance.residentInstance}
-            loading={loading}
-            instanceId={instance.id}
-            onDataChange={loadInstanceData}
-            residentManagementMode={residentManagementMode}
-            selectedCarNumber={selectedCarNumber}
-            carResidents={carResidents}
-            loadingCarResidents={loadingCarResidents}
-            onCloseResidentManagement={handleCloseResidentManagement}
-            onConnectResident={handleConnectResident}
-            onDisconnectResident={handleDisconnectResident}
-            onTogglePrimary={handleTogglePrimary}
-            onToggleAlarm={handleToggleAlarm}
-          />
-          <InstanceCarList 
-            carInstances={instance.carInstance}
-            loading={loading}
-            instanceId={instance.id}
-            onDataChange={loadInstanceData}
-            onManageResidents={handleManageResidents}
-          />
+
+        {/* 콘텐츠 영역 */}
+        <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
+          {/* 기본 정보 탭 */}
+          {activeTab === 'basic' && (
+            <div className="space-y-6">
+              {/* 세대 기본 정보 */}
+              <InstanceForm
+                mode="edit"
+                instance={instance}
+                data={formData}
+                onChange={handleFormChange}
+                disabled={isSubmitting}
+                showActions={true}
+                onReset={handleReset}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
+                hasChanges={hasChanges}
+                isValid={isValid}
+              />
+              
+              {/* 연결된 거주민 | 차량 목록 */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <InstanceResidentList 
+                  residentInstances={instance.residentInstance}
+                  loading={loading}
+                  instanceId={instance.id}
+                  onDataChange={loadInstanceData}
+                  residentManagementMode={residentManagementMode}
+                  selectedCarNumber={selectedCarNumber}
+                  carResidents={carResidents}
+                  loadingCarResidents={loadingCarResidents}
+                  onCloseResidentManagement={handleCloseResidentManagement}
+                  onConnectResident={handleConnectResident}
+                  onDisconnectResident={handleDisconnectResident}
+                  onTogglePrimary={handleTogglePrimary}
+                  onToggleAlarm={handleToggleAlarm}
+                />
+                <InstanceCarList 
+                  carInstances={instance.carInstance}
+                  loading={loading}
+                  instanceId={instance.id}
+                  onDataChange={loadInstanceData}
+                  onManageResidents={handleManageResidents}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* 서비스 설정 탭 */}
+          {activeTab === 'service' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Settings className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">서비스 설정</h3>
+                  <p className="text-sm text-muted-foreground">세대의 각종 서비스 설정을 관리합니다.</p>
+                </div>
+              </div>
+              <InstanceServiceConfigSection 
+                instance={instance}
+                onDataChange={loadInstanceData}
+              />
+            </div>
+          )}
+
+          {/* 방문 설정 탭 */}
+          {activeTab === 'visit' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <UserPlus className="w-5 h-5 text-primary" />
+                <div>
+                  <h3 className="text-lg font-semibold">방문 설정</h3>
+                  <p className="text-sm text-muted-foreground">세대의 방문자 관련 설정을 관리합니다.</p>
+                </div>
+              </div>
+              <InstanceVisitConfigSection 
+                instance={instance}
+                onDataChange={loadInstanceData}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -571,6 +627,6 @@ export default function InstanceDetailPage() {
           </div>
         </div>
       </Modal>
-    </DetailPageLayout>
+    </div>
   );
 }

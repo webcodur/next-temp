@@ -3,5 +3,4 @@
 export interface InstanceTab {
 	id: string;
 	label: string;
-	href: string;
 }
