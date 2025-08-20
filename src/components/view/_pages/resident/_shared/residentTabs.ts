@@ -17,10 +17,6 @@ export function createResidentTabs(): ResidentTab[] {
 			id: 'connection',
 			label: '세대 연결',
 		},
-    {
-			id: 'connection2',
-			label: '차량 연결',
-		},
 		{
 			id: 'history',
 			label: '거주 히스토리',

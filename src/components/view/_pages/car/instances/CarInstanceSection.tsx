@@ -10,6 +10,7 @@ import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginat
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import { SimpleToggleSwitch } from '@/components/ui/ui-input/simple-input/SimpleToggleSwitch';
 import InstanceSearchSection, { InstanceSearchField } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
+import InstanceTransferModal, { TransferFromInfo, AdditionalFieldConfig } from '@/components/ui/ui-input/instance-transfer/InstanceTransferModal';
 
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
@@ -38,10 +39,14 @@ export default function CarInstanceSection({
   // 모달 상태
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [changeModalOpen, setChangeModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+
+  // 세대 변경 상태
+  const [changeFromInstance, setChangeFromInstance] = useState<CarInstanceResidentDetail | null>(null);
 
   // 폼 상태
   const [createFormData, setCreateFormData] = useState<CreateInstanceFormData>({
@@ -150,46 +155,22 @@ export default function CarInstanceSection({
     }
   };
 
-  const handleEdit = async () => {
-    if (!editTarget?.carInstance || !createFormData.selectedInstance || isSubmitting) return;
+  // 공유 설정 수정 핸들러
+  const handleUpdateSettings = async () => {
+    if (!editTarget?.carInstance || isSubmitting) return;
 
     setIsSubmitting(true);
 
     try {
-      // 세대가 변경된 경우: 기존 연결 삭제 후 새로 생성
-      if (editTarget.carInstance.instanceId !== createFormData.selectedInstance.id) {
-        // 1. 기존 연결 삭제
-        const deleteResult = await deleteCarInstance(editTarget.carInstance.id);
-        if (!deleteResult.success) {
-          throw new Error(`기존 연결 삭제 실패: ${deleteResult.errorMsg}`);
-        }
-
-        // 2. 새 연결 생성
-        const createData = {
-          carNumber: car.carNumber,
-          instanceId: createFormData.selectedInstance.id,
-          carShareOnoff: createFormData.carShareOnoff,
-        };
-        const createResult = await createCarInstance(createData);
-        if (!createResult.success) {
-          throw new Error(`새 연결 생성 실패: ${createResult.errorMsg}`);
-        }
-
-        const address = `${createFormData.selectedInstance.address1Depth} ${createFormData.selectedInstance.address2Depth} ${createFormData.selectedInstance.address3Depth || ''}`.trim();
-        setModalMessage(`${car.carNumber} 차량의 세대 연결이 ${address}로 성공적으로 변경되었습니다.`);
-      } else {
-        // 세대는 같고 공유 설정만 변경
-        const updateData = {
-          carShareOnoff: createFormData.carShareOnoff,
-        };
-        const result = await updateCarInstance(editTarget.carInstance.id, updateData);
-        if (!result.success) {
-          throw new Error(`연결 수정 실패: ${result.errorMsg}`);
-        }
-
-        setModalMessage('세대 연결 설정이 성공적으로 수정되었습니다.');
+      const updateData = {
+        carShareOnoff: createFormData.carShareOnoff,
+      };
+      const result = await updateCarInstance(editTarget.carInstance.id, updateData);
+      if (!result.success) {
+        throw new Error(`설정 수정 실패: ${result.errorMsg}`);
       }
 
+      setModalMessage('세대 연결 설정이 성공적으로 수정되었습니다.');
       setSuccessModalOpen(true);
       setEditModalOpen(false);
       setEditTarget(null);
@@ -197,8 +178,8 @@ export default function CarInstanceSection({
       await loadInstanceData();
       onDataChange();
     } catch (error) {
-      console.error('세대 연결 수정 중 오류:', error);
-      setModalMessage(error instanceof Error ? error.message : '세대 연결 수정 중 오류가 발생했습니다.');
+      console.error('설정 수정 중 오류:', error);
+      setModalMessage(error instanceof Error ? error.message : '설정 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -235,30 +216,11 @@ export default function CarInstanceSection({
 
   const handleEditClick = (instance: CarInstanceResidentDetail) => {
     setEditTarget(instance);
-    // 수정 시 현재 연결된 세대를 초기값으로 설정
-    if (instance.carInstance?.instanceId) {
-      // 현재 세대 정보를 찾기 위해 임시 Instance 객체 생성 (실제로는 서버에서 가져와야 함)
-      const currentInstance: Instance = {
-        id: instance.carInstance.instanceId,
-        parkinglotId: 1, // 임시값
-        address1Depth: '현재 세대', // 실제 구현에서는 서버에서 세대 정보를 가져와야 함
-        address2Depth: `ID: ${instance.carInstance.instanceId}`,
-        address3Depth: '',
-        instanceType: 'GENERAL',
-        name: '',
-        ownerName: '',
-        password: '', // 임시값
-        memo: '',
-        residentInstance: [],
-        carInstance: [],
-        createdAt: '',
-        updatedAt: ''
-      };
-      setCreateFormData({
-        selectedInstance: currentInstance,
-        carShareOnoff: instance.carInstance.carShareOnoff || false
-      });
-    }
+    // 설정 수정 시 현재 공유 설정을 초기값으로 설정
+    setCreateFormData({
+      selectedInstance: null,
+      carShareOnoff: instance.carInstance?.carShareOnoff || false
+    });
     setEditModalOpen(true);
   };
 
@@ -270,6 +232,65 @@ export default function CarInstanceSection({
   const handleInstanceDetailClick = (item: CarInstanceResidentDetail) => {
     if (item.carInstance?.instanceId) {
       router.push(`/parking/occupancy/instance/${item.carInstance.instanceId}`);
+    }
+  };
+
+  // 세대 변경 핸들러
+  const handleChangeInstanceClick = (instance: CarInstanceResidentDetail) => {
+    setChangeFromInstance(instance);
+    setCreateFormData({ selectedInstance: null, carShareOnoff: instance.carInstance?.carShareOnoff || false });
+    setChangeModalOpen(true);
+  };
+
+  const handleChangeSubmit = async () => {
+    if (!changeFromInstance?.carInstance || !createFormData.selectedInstance || isSubmitting) return;
+    if (changeFromInstance.carInstance.instanceId === createFormData.selectedInstance.id) return; // 같은 세대는 변경할 수 없음
+
+    setIsSubmitting(true);
+
+    try {
+      // 1단계: 기존 연결 삭제
+      const deleteResult = await deleteCarInstance(changeFromInstance.carInstance.id);
+      if (!deleteResult.success) {
+        throw new Error(`기존 연결 삭제 실패: ${deleteResult.errorMsg}`);
+      }
+
+      // 2단계: 새 연결 생성
+      const createData = {
+        carNumber: car.carNumber,
+        instanceId: createFormData.selectedInstance.id,
+        carShareOnoff: createFormData.carShareOnoff,
+      };
+      const createResult = await createCarInstance(createData);
+      if (!createResult.success) {
+        throw new Error(`새 연결 생성 실패: ${createResult.errorMsg}`);
+      }
+
+      // 성공 처리
+      const fromAddress = changeFromInstance.carInstance.instance ? 
+        `${changeFromInstance.carInstance.instance.address1Depth} ${changeFromInstance.carInstance.instance.address2Depth} ${changeFromInstance.carInstance.instance.address3Depth || ''}`.trim() 
+        : `세대 ID: ${changeFromInstance.carInstance.instanceId}`;
+      const toAddress = `${createFormData.selectedInstance.address1Depth} ${createFormData.selectedInstance.address2Depth} ${createFormData.selectedInstance.address3Depth || ''}`.trim();
+      
+      const successMessage = `${car.carNumber} 차량이 ${fromAddress}에서 ${toAddress}로 성공적으로 변경되었습니다.`;
+      
+      // 폼 초기화 및 모달 닫기
+      setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+      setChangeFromInstance(null);
+      setChangeModalOpen(false);
+      setModalMessage(successMessage);
+      setSuccessModalOpen(true);
+      
+      await loadInstanceData();
+      onDataChange();
+      
+    } catch (error) {
+      console.error('세대 변경 중 오류:', error);
+      const errorMessage = error instanceof Error ? error.message : '세대 변경 중 오류가 발생했습니다.';
+      setModalMessage(errorMessage);
+      setErrorModalOpen(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   // #endregion
@@ -460,11 +481,24 @@ export default function CarInstanceSection({
               e.stopPropagation();
               handleEditClick(item);
             }}
-            title="세대 연결 정보"
+            title="공유 설정 수정"
             className="flex gap-1 items-center px-2 py-1 text-xs"
           >
             <Edit size={12} />
-            연결정보
+            공유설정
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleChangeInstanceClick(item);
+            }}
+            title="다른 세대로 변경"
+            className="flex gap-1 items-center px-2 py-1 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+          >
+            <Home size={12} />
+            세대변경
           </Button>
           <Button
             variant="outline"
@@ -485,6 +519,57 @@ export default function CarInstanceSection({
       ),
     },
   ];
+  // #endregion
+
+  // #region 세대 변경 모달을 위한 데이터 변환
+  const changeFromInfo: TransferFromInfo | null = useMemo(() => {
+    if (!changeFromInstance?.carInstance) return null;
+    
+    return {
+      id: changeFromInstance.carInstance.id,
+      instanceId: changeFromInstance.carInstance.instanceId,
+      displayName: `세대 ID: ${changeFromInstance.carInstance.instanceId}`,
+      instanceType: changeFromInstance.carInstance.instance?.instanceType as string,
+      address: changeFromInstance.carInstance.instance ? {
+        address1Depth: changeFromInstance.carInstance.instance.address1Depth as string,
+        address2Depth: changeFromInstance.carInstance.instance.address2Depth as string,
+        address3Depth: changeFromInstance.carInstance.instance.address3Depth as string,
+      } : undefined,
+    };
+  }, [changeFromInstance]);
+
+  const changeAdditionalFields: AdditionalFieldConfig[] = useMemo(() => [
+    {
+      type: 'toggle',
+      key: 'carShareOnoff',
+      label: '공유 설정',
+      description: '같은 세대 주민의 차량 이용 허용',
+      value: createFormData.carShareOnoff,
+      onChange: (value: string | boolean) => setCreateFormData(prev => ({ ...prev, carShareOnoff: value as boolean })),
+      disabled: false,
+      size: 'md',
+    }
+  ], [createFormData.carShareOnoff]);
+
+  const handleChangeModalClose = useCallback(() => {
+    setChangeModalOpen(false);
+    setChangeFromInstance(null);
+    setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+  }, []);
+
+  const changeRowClassName = useCallback((instance: Instance) => {
+    const isSelected = createFormData.selectedInstance?.id === instance.id;
+    const isCurrentInstance = changeFromInstance && instance.id === changeFromInstance.carInstance?.instanceId;
+    const isAlreadyConnected = isInstanceAlreadyConnected(instance.id);
+    
+    if (isCurrentInstance) {
+      return 'cursor-not-allowed bg-orange-50 border-orange-200 opacity-50';
+    }
+    if (isAlreadyConnected) {
+      return 'bg-muted/30 opacity-75';
+    }
+    return isSelected ? 'cursor-pointer hover:bg-muted/50 bg-green-50 border-green-200' : 'cursor-pointer hover:bg-muted/50';
+  }, [createFormData.selectedInstance, changeFromInstance, isInstanceAlreadyConnected]);
   // #endregion
 
   return (
@@ -627,7 +712,7 @@ export default function CarInstanceSection({
         </div>
       </Modal>
 
-      {/* 세대 연결 정보 모달 */}
+      {/* 세대 연결 설정 수정 모달 */}
       <Modal
         isOpen={editModalOpen}
         onClose={() => {
@@ -635,85 +720,56 @@ export default function CarInstanceSection({
           setEditTarget(null);
           setCreateFormData({ selectedInstance: null, carShareOnoff: false });
         }}
-        title="세대 연결 정보"
-        size="xl"
+        title="세대 연결 설정 수정"
+        size="md"
       >
         <div className="space-y-6">
-          {/* 세대 검색 및 선택 */}
-          <div className="space-y-4">
-            <InstanceSearchSection
-              searchFields={searchFields}
-              tableType="base"
-              columns={instanceSearchColumns}
-              onRowClick={handleInstanceSelect}
-              getRowClassName={(instance: Instance) => {
-                const isAlreadyConnected = isInstanceAlreadyConnected(instance.id);
-                const isSelected = createFormData.selectedInstance?.id === instance.id;
-                let className = '';
-
-                if (isAlreadyConnected) {
-                  className += 'bg-muted/30 opacity-75';
-                } else {
-                  className += 'cursor-pointer hover:bg-muted/50';
-                  if (isSelected) {
-                    className += ' bg-blue-50 border-blue-200';
-                  }
-                }
-
-                return className;
-              }}
-              showSection={false}
-              searchMode="server"
-              excludeInstanceIds={existingInstanceIds.filter(id =>
-                id !== editTarget?.carInstance?.instanceId // 현재 편집 중인 세대는 제외 목록에서 제거
-              )}
-              pageSize={5}
-              minWidth="700px"
-              title="연결할 세대 검색"
-              subtitle="차량을 연결할 세대를 검색하고 선택하세요. 현재 연결된 세대를 유지하거나 다른 세대로 변경할 수 있습니다."
-            />
-          </div>
-
-          {/* 선택된 세대 정보 및 공유 설정 */}
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {/* 선택된 세대 */}
+          {/* 현재 연결 정보 표시 */}
+          {editTarget && (
             <div className="p-4 rounded-lg border bg-card">
               <div className="mb-2">
                 <span className="font-medium text-foreground">
-                  선택된 세대
+                  연결된 세대 정보
                 </span>
               </div>
-              {createFormData.selectedInstance ? (
-                <p className="text-sm text-foreground">
-                  {createFormData.selectedInstance.address1Depth} {createFormData.selectedInstance.address2Depth} {createFormData.selectedInstance.address3Depth || ''}
-                  <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
-                    {{
-                      GENERAL: '일반',
-                      TEMP: '임시',
-                      COMMERCIAL: '상업',
-                    }[createFormData.selectedInstance.instanceType] || createFormData.selectedInstance.instanceType}
-                  </span>
-                </p>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  위 목록에서 세대를 선택해주세요
-                </p>
-              )}
+              <p className="mb-2 text-sm text-foreground">
+                {editTarget.carInstance?.instance ? (
+                  <>
+                    {editTarget.carInstance.instance.address1Depth} {editTarget.carInstance.instance.address2Depth} {editTarget.carInstance.instance.address3Depth || ''}
+                    <span className="px-2 py-1 ml-2 text-xs rounded bg-muted">
+                      {(() => {
+                        const typeMap: Record<string, string> = {
+                          GENERAL: '일반',
+                          TEMP: '임시',
+                          COMMERCIAL: '상업',
+                        };
+                        const instanceType = String(editTarget.carInstance.instance.instanceType || '');
+                        return typeMap[instanceType] || instanceType;
+                      })()}
+                    </span>
+                  </>
+                ) : (
+                  `세대 ID: ${editTarget.carInstance?.instanceId}`
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                연결일: {editTarget.carInstance?.createdAt ? new Date(editTarget.carInstance.createdAt).toLocaleDateString() : '-'}
+              </p>
             </div>
+          )}
 
-            {/* 공유 설정 */}
-            <div className="p-4 rounded-lg border bg-card">
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-foreground">
-                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
-                </label>
-                <SimpleToggleSwitch
-                  checked={createFormData.carShareOnoff}
-                  onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
-                  disabled={isSubmitting}
-                  size="md"
-                />
-              </div>
+          {/* 공유 설정 수정 */}
+          <div className="p-4 rounded-lg border bg-card">
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-foreground">
+                공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
+              </label>
+              <SimpleToggleSwitch
+                checked={createFormData.carShareOnoff}
+                onChange={(checked) => setCreateFormData(prev => ({ ...prev, carShareOnoff: checked }))}
+                disabled={isSubmitting}
+                size="md"
+              />
             </div>
           </div>
 
@@ -731,14 +787,37 @@ export default function CarInstanceSection({
             </Button>
             <Button
               variant="primary"
-              onClick={handleEdit}
-              disabled={!createFormData.selectedInstance || isSubmitting}
+              onClick={handleUpdateSettings}
+              disabled={isSubmitting || 
+                       editTarget?.carInstance?.carShareOnoff === createFormData.carShareOnoff}
             >
-              {isSubmitting ? '수정 중...' : '연결 수정'}
+              {isSubmitting ? '수정 중...' : '설정 수정 완료'}
             </Button>
           </div>
         </div>
       </Modal>
+
+      {/* 세대 변경 모달 */}
+      <InstanceTransferModal
+        isOpen={changeModalOpen}
+        onClose={handleChangeModalClose}
+        title="세대 변경"
+        fromInfo={changeFromInfo}
+        fromLabel="변경 전 세대"
+        fromColorClass="orange"
+        selectedToInstance={createFormData.selectedInstance}
+        toLabel="변경 후 세대"
+        toColorClass="green"
+        searchFields={searchFields}
+        excludeInstanceIds={existingInstanceIds}
+        onInstanceSelect={handleInstanceSelect}
+        getRowClassName={changeRowClassName}
+        additionalFields={changeAdditionalFields}
+        onSubmit={handleChangeSubmit}
+        isSubmitting={isSubmitting}
+        submitButtonText="세대 변경 실행"
+        isSubmitDisabled={!createFormData.selectedInstance || changeFromInstance?.carInstance?.instanceId === createFormData.selectedInstance?.id}
+      />
 
       {/* 삭제 확인 모달 */}
       <Modal

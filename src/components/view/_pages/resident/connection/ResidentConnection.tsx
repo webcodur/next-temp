@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Link, Home } from 'lucide-react';
+import { Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -10,6 +10,7 @@ import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPan
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import ResidentInstanceTable from './ResidentInstanceTable';
 import InstanceSearchSection, { InstanceSearchField, DisabledInstance, ColumnConfiguration } from '@/components/ui/ui-input/instance-search/InstanceSearchSection';
+import InstanceTransferModal, { TransferFromInfo, AdditionalFieldConfig } from '@/components/ui/ui-input/instance-transfer/InstanceTransferModal';
 
 import { createResidentInstance } from '@/services/residents/residents_instances_POST';
 import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
@@ -276,6 +277,54 @@ export default function ResidentConnection({
   }), [selectedInstance, handleInstanceSelect, isSubmitting]);
   // #endregion
 
+  // #region 세대 이전 모달을 위한 데이터 변환
+  const moveFromInfo: TransferFromInfo | null = useMemo(() => {
+    if (!moveFromResidence) return null;
+    
+    return {
+      id: moveFromResidence.id,
+      instanceId: moveFromResidence.instanceId,
+      displayName: `세대 ID: ${moveFromResidence.instanceId}`,
+      instanceType: moveFromResidence.instance?.instanceType,
+      address: moveFromResidence.instance ? {
+        address1Depth: moveFromResidence.instance.address1Depth,
+        address2Depth: moveFromResidence.instance.address2Depth,
+        address3Depth: moveFromResidence.instance.address3Depth,
+      } : undefined,
+    };
+  }, [moveFromResidence]);
+
+  const moveAdditionalFields: AdditionalFieldConfig[] = useMemo(() => [
+    {
+      type: 'text',
+      key: 'memo',
+      label: '이전 사유',
+      placeholder: '이전 사유나 메모를 입력하세요',
+      description: '선택사항',
+      value: memo,
+      onChange: (value: string | boolean) => setMemo(value as string),
+      disabled: false,
+    }
+  ], [memo]);
+
+  const handleMoveModalClose = useCallback(() => {
+    setShowMoveModal(false);
+    setSelectedInstance(null);
+    setMemo('');
+    setMoveFromResidence(null);
+  }, []);
+
+  const moveRowClassName = useCallback((instance: Instance) => {
+    const isSelected = selectedInstance?.id === instance.id;
+    const isCurrentResidence = moveFromResidence && instance.id === moveFromResidence.instanceId;
+    return isSelected ? 'cursor-pointer hover:bg-muted/50 bg-green-50 border-green-200' : 
+          isCurrentResidence ? 'cursor-not-allowed bg-orange-50 border-orange-200 opacity-50' :
+          'cursor-pointer hover:bg-muted/50';
+  }, [selectedInstance, moveFromResidence]);
+
+
+  // #endregion
+
   return (
     <div className="space-y-6">
       <SectionPanel 
@@ -513,148 +562,26 @@ export default function ResidentConnection({
       </Modal>
 
       {/* 세대 이전 모달 */}
-      <Modal
+      <InstanceTransferModal
         isOpen={showMoveModal}
-        onClose={() => {
-          setShowMoveModal(false);
-          setSelectedInstance(null);
-          setMemo('');
-          setMoveFromResidence(null);
-        }}
+        onClose={handleMoveModalClose}
         title="세대 이전"
-        size="lg"
-      >
-        <div className="space-y-6">
-          {/* 이전 정보 */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* 출발 세대 */}
-            <div className="p-4 bg-orange-50 rounded-lg border">
-              <div className="flex gap-2 items-center mb-2">
-                <Home size={16} className="text-orange-600" />
-                <span className="font-medium text-orange-800">이전 출발지</span>
-              </div>
-              {moveFromResidence?.instance ? (
-                <p className="text-sm text-orange-700">
-                  {moveFromResidence.instance.address1Depth} {moveFromResidence.instance.address2Depth} {moveFromResidence.instance.address3Depth || ''}
-                  <span className="px-2 py-1 ml-2 text-xs text-orange-800 bg-orange-200 rounded">
-                    {{
-                      GENERAL: '일반',
-                      TEMP: '임시',
-                      COMMERCIAL: '상업',
-                    }[moveFromResidence.instance.instanceType] || moveFromResidence.instance.instanceType}
-                  </span>
-                </p>
-              ) : (
-                <p className="text-sm text-orange-600">출발지 정보 없음</p>
-              )}
-            </div>
-
-            {/* 도착 세대 */}
-            <div className="p-4 bg-green-50 rounded-lg border">
-              <div className="flex gap-2 items-center mb-2">
-                <Home size={16} className="text-green-600" />
-                <span className="font-medium text-green-800">이전 목적지</span>
-              </div>
-              {selectedInstance ? (
-                <p className="text-sm text-green-700">
-                  {selectedInstance.address1Depth} {selectedInstance.address2Depth} {selectedInstance.address3Depth || ''}
-                  <span className="px-2 py-1 ml-2 text-xs text-green-800 bg-green-200 rounded">
-                    {{
-                      GENERAL: '일반',
-                      TEMP: '임시',
-                      COMMERCIAL: '상업',
-                    }[selectedInstance.instanceType] || selectedInstance.instanceType}
-                  </span>
-                </p>
-              ) : (
-                <p className="text-sm text-green-600">아래에서 목적지를 선택해주세요</p>
-              )}
-            </div>
-          </div>
-
-          {/* 세대 검색 및 목록 */}
-          <InstanceSearchSection
-            searchFields={searchFields}
-            tableType="base"
-            columnConfig={columnConfig}
-            onRowClick={handleInstanceSelect}
-            getRowClassName={(instance: Instance) => {
-              const isSelected = selectedInstance?.id === instance.id;
-              const isCurrentResidence = moveFromResidence && instance.id === moveFromResidence.instanceId;
-              return isSelected ? 'cursor-pointer hover:bg-muted/50 bg-green-50 border-green-200' : 
-                    isCurrentResidence ? 'cursor-not-allowed bg-orange-50 border-orange-200 opacity-50' :
-                    'cursor-pointer hover:bg-muted/50';
-            }}
-            showSection={false}
-            searchMode="server"
-            excludeInstanceIds={[]}
-            disabledInstances={useMemo(() => {
-              if (!moveFromResidence) return [];
-              
-              return existingInstanceIds.map(instanceId => {
-                if (instanceId === moveFromResidence.instanceId) {
-                  return {
-                    instanceId,
-                    disabledText: '현재 거주지 (출발지)',
-                    disabledClassName: 'bg-orange-50',
-                  };
-                } else {
-                  return {
-                    instanceId,
-                    disabledText: '이미 연결됨',
-                    disabledClassName: '',
-                  };
-                }
-              });
-            }, [moveFromResidence, existingInstanceIds])}
-            pageSize={5}
-            minWidth="800px"
-            title="새 거주지 검색"
-            subtitle="이전할 목적지 세대를 검색하고 선택하세요"
-          />
-
-          {/* 이전 사유 입력 */}
-          <div className="p-4 rounded-lg border bg-card">
-            <div className="space-y-3">
-              <label htmlFor="moveMemo" className="block text-sm font-medium text-foreground">
-                이전 사유 <span className="text-xs text-muted-foreground">(선택사항)</span>
-              </label>
-              <input
-                id="moveMemo"
-                type="text"
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
-                placeholder="이전 사유나 메모를 입력하세요"
-                disabled={isSubmitting}
-                className="px-3 py-2 w-full text-sm rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          {/* 액션 버튼 */}
-          <div className="flex gap-3 justify-end pt-4 border-t">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setShowMoveModal(false);
-                setSelectedInstance(null);
-                setMemo('');
-                setMoveFromResidence(null);
-              }}
-              disabled={isSubmitting}
-            >
-              취소
-            </Button>
-            <Button
-              onClick={handleMoveSubmit}
-              disabled={!selectedInstance || isSubmitting}
-              className="min-w-[100px]"
-            >
-              {isSubmitting ? '이전 중...' : '세대 이전 실행'}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        fromInfo={moveFromInfo}
+        fromLabel="이전 출발지"
+        fromColorClass="orange"
+        selectedToInstance={selectedInstance}
+        toLabel="이전 목적지"
+        toColorClass="green"
+        searchFields={searchFields}
+        excludeInstanceIds={[]}
+        onInstanceSelect={handleInstanceSelect}
+        getRowClassName={moveRowClassName}
+        additionalFields={moveAdditionalFields}
+        onSubmit={handleMoveSubmit}
+        isSubmitting={isSubmitting}
+        submitButtonText="세대 이전 실행"
+        isSubmitDisabled={!selectedInstance}
+      />
     </div>
   );
 }

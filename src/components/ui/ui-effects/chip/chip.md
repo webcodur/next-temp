@@ -17,7 +17,7 @@ import { Chip } from '@/components/ui/ui-effects/chip/Chip';
 
 // 기본 사용
 <Chip
-  label="입주차량"
+  label="차량"
   active={isSelected}
   onToggle={() => setIsSelected(!isSelected)}
 />
@@ -106,7 +106,7 @@ const [allowedTypes, setAllowedTypes] = useState(['입주', '방문']);
 
 <ChipGroup
   options={[
-    { value: '입주', label: '입주차량' },
+    { value: '입주', label: '차량' },
     { value: '방문', label: '방문차량' },
     { value: '업무', label: '업무차량' },
     { value: '임대', label: '임대차량' },

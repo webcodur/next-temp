@@ -151,7 +151,7 @@ export default function InstancesListPage() {
     },
     {
       key: 'residentCount',
-      header: '거주민',
+      header: '주민',
       align: 'center',
       width: '7%',
       cell: (item: Instance) => `${item.residentCount ?? 0}명`,

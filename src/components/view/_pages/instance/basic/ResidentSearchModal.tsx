@@ -64,19 +64,19 @@ export default function ResidentSearchModal({
       });
 
       if (result.success && result.data) {
-        // 이미 연결된 거주민 제외 (해당 인스턴스에 연결되지 않은 거주민만 표시)
+        // 이미 연결된 주민 제외 (해당 인스턴스에 연결되지 않은 주민만 표시)
         const availableResidents = result.data.data.filter(resident => 
           !resident.residentInstance.some(ri => ri.instanceId === instanceId)
         );
         setResidentList(availableResidents);
       } else {
         setResidentList([]);
-        setErrorMessage(result.errorMsg || '거주민 목록 조회에 실패했습니다.');
+        setErrorMessage(result.errorMsg || '주민 목록 조회에 실패했습니다.');
       }
     } catch (error) {
-      console.error('거주민 목록 로드 중 오류:', error);
+      console.error('주민 목록 로드 중 오류:', error);
       setResidentList([]);
-      setErrorMessage('거주민 목록 로드 중 오류가 발생했습니다.');
+      setErrorMessage('주민 목록 로드 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -134,11 +134,11 @@ export default function ResidentSearchModal({
         onSuccess();
         handleClose();
       } else {
-        setErrorMessage(result.errorMsg || '거주민 연결에 실패했습니다.');
+        setErrorMessage(result.errorMsg || '주민 연결에 실패했습니다.');
       }
     } catch (error) {
-      console.error('거주민 연결 중 오류:', error);
-      setErrorMessage('거주민 연결 중 오류가 발생했습니다.');
+      console.error('주민 연결 중 오류:', error);
+      setErrorMessage('주민 연결 중 오류가 발생했습니다.');
     } finally {
       setIsConnecting(false);
     }
@@ -292,7 +292,7 @@ export default function ResidentSearchModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="거주민 검색 및 연결"
+      title="주민 검색 및 연결"
       size="xl"
     >
       <div className="space-y-4">
@@ -310,7 +310,7 @@ export default function ResidentSearchModal({
           </div>
         )}
 
-        {/* 거주민 목록 */}
+        {/* 주민 목록 */}
         {isLoading ? (
           <div className="flex justify-center items-center py-8">
             <div className="text-muted-foreground">검색 중...</div>
@@ -320,7 +320,7 @@ export default function ResidentSearchModal({
             <div>
               <User size={32} className="mx-auto mb-3 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                연결 가능한 거주민이 없습니다
+                연결 가능한 주민이 없습니다
               </p>
             </div>
           </div>
@@ -332,7 +332,7 @@ export default function ResidentSearchModal({
               onRowClick={(resident) => handleResidentSelect(resident as unknown as ResidentDetail)}
               pageSize={10}
               pageSizeOptions={[5, 10, 20]}
-              itemName="거주민"
+              itemName="주민"
               showPagination={false}
             />
           </div>

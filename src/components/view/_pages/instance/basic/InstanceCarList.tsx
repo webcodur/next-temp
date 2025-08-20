@@ -18,7 +18,9 @@ interface InstanceCarListProps {
   loading?: boolean;
   instanceId?: number;
   onDataChange?: () => void;
-  onManageResidents?: (carInstanceId: number, carNumber: string) => void;
+  onManageResidents?: (carInstanceId: number) => void;
+  residentManagementMode?: boolean;
+  managedCarInstanceId?: number | null;
 }
 
 export default function InstanceCarList({ 
@@ -26,7 +28,9 @@ export default function InstanceCarList({
   loading = false,
   instanceId,
   onDataChange,
-  onManageResidents
+  onManageResidents,
+  residentManagementMode = false,
+  managedCarInstanceId = null
 }: InstanceCarListProps) {
   const router = useRouter();
   const [confirmModal, setConfirmModal] = useState<{
@@ -131,9 +135,9 @@ export default function InstanceCarList({
     }
   };
 
-  const handleManageResidentsClick = (carInstanceId: number, carNumber: string) => {
+  const handleManageResidentsClick = (carInstanceId: number) => {
     if (onManageResidents) {
-      onManageResidents(carInstanceId, carNumber);
+      onManageResidents(carInstanceId);
     }
   };
 
@@ -290,12 +294,17 @@ export default function InstanceCarList({
                 </div>
               );
 
-              // 커스텀 액션 - 거주민 관리 버튼
+              // 커스텀 액션 - 관리 모드 버튼
+              const isCurrentlyManaged = residentManagementMode && managedCarInstanceId === carInstance.id;
               const customActions: CustomAction[] = onManageResidents ? [{
-                icon: <Users />,
-                onClick: () => handleManageResidentsClick(carInstance.id, carInstance.car.carNumber || '번호판 없음'),
-                title: '거주민 연결 관리',
-                hoverClass: 'hover:bg-purple-100 hover:text-purple-600'
+                icon: isCurrentlyManaged 
+                  ? <Users className="text-white" />
+                  : <Users className="text-gray-700" />,
+                onClick: () => handleManageResidentsClick(carInstance.id),
+                title: isCurrentlyManaged ? '관리 모드 종료' : '관리 모드',
+                hoverClass: isCurrentlyManaged 
+                  ? 'bg-red-500 text-white shadow-lg ring-2 ring-red-200 hover:bg-red-600'
+                  : 'bg-gray-100 text-gray-700 hover:bg-purple-100 hover:text-purple-600'
               }] : [];
 
               return (

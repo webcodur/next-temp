@@ -202,9 +202,6 @@ export default function ResidentInstanceTable({
             <p className="text-muted-foreground">
               이 작업은 되돌릴 수 없습니다. 주민-세대 관계가 영구적으로 해제됩니다.
               <br />
-              <span className="font-medium text-orange-600">
-                주의: 이사의 경우 해제보다는 &ldquo;세대 이전&rdquo; 기능을 사용하시기 바랍니다.
-              </span>
             </p>
           </div>
           

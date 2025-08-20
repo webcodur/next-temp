@@ -96,7 +96,7 @@ export interface UpdateInstanceVisitConfigRequest {
   visitRequestLimit?: number;
 }
 
-// 거주민 인스턴스 관계 (거주민 정보 포함)
+// 주민 인스턴스 관계 (주민 정보 포함)
 export interface ResidentInstanceWithResident {
   id: number;
   residentId: number;

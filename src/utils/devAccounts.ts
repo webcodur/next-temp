@@ -40,10 +40,13 @@ export function loadDevAccounts(): DevAccountSet[] {
 		accounts.push({ id: id3, password: password3, description: description3 });
 	}
 	
-	if (accounts.length === 0) {
-		console.warn('⚠️ 개발자 계정 환경변수가 설정되지 않음');
-	} else {
-		console.log(`✅ 개발자 계정 ${accounts.length}개 로드됨`);
+	// 빌드 시에는 로그 출력하지 않음
+	if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+		if (accounts.length === 0) {
+			console.warn('⚠️ 개발자 계정 환경변수가 설정되지 않음');
+		} else {
+			console.log(`✅ 개발자 계정 ${accounts.length}개 로드됨`);
+		}
 	}
 	
 	return accounts;

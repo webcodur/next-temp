@@ -16,6 +16,7 @@ import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 import { getCarResidents } from '@/services/cars/cars@carId_residents_GET';
+import { getCarInstanceResidentDetail } from '@/services/cars/cars_residents@id_GET';
 import { createCarInstanceResident } from '@/services/cars/cars_residents_POST';
 import { deleteCarInstanceResident } from '@/services/cars/cars_residents@id_DELETE';
 import { updateCarInstanceResident } from '@/services/cars/cars_residents@id_PATCH';
@@ -62,11 +63,24 @@ export default function InstanceDetailPage() {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  
+  // 차량 소유자 전환 확인 Modal 상태
+  const [primaryCarTransferModal, setPrimaryCarTransferModal] = useState<{
+    isOpen: boolean;
+    currentPrimaryResident: CarResidentWithDetails | null;
+    newPrimaryResidentId: number | null;
+    newPrimaryResidentName: string;
+  }>({
+    isOpen: false,
+    currentPrimaryResident: null,
+    newPrimaryResidentId: null,
+    newPrimaryResidentName: ''
+  });
 
-  // 거주민 관리 상태
+  // 주민 관리 상태
   const [residentManagementMode, setResidentManagementMode] = useState(false);
   const [selectedCarInstanceId, setSelectedCarInstanceId] = useState<number | null>(null);
-  const [selectedCarNumber, setSelectedCarNumber] = useState<string>('');
+
   const [carResidents, setCarResidents] = useState<CarResidentWithDetails[]>([]);
   const [loadingCarResidents, setLoadingCarResidents] = useState(false);
   // #endregion
@@ -123,6 +137,59 @@ export default function InstanceDetailPage() {
   useEffect(() => {
     loadInstanceData();
   }, [loadInstanceData]);
+
+  // 차량-주민 데이터 로딩 (실제 설정값 포함)
+  const loadCarResidentsWithDetails = useCallback(async (carId: number) => {
+    try {
+      // 1단계: 기본 주민 목록 조회
+      const basicResult = await getCarResidents(carId);
+      if (!basicResult.success || !basicResult.data) {
+        return [];
+      }
+
+      // 2단계: 각 주민의 실제 설정값 조회
+      const detailedResidents = await Promise.all(
+        basicResult.data.map(async (resident) => {
+          try {
+            const detailResult = await getCarInstanceResidentDetail(resident.carInstanceResidentId);
+            if (detailResult.success && detailResult.data) {
+              return {
+                ...resident,
+                isPrimary: detailResult.data.isPrimary,
+                carAlarm: detailResult.data.carAlarm
+              };
+            }
+          } catch (error) {
+            console.error(`주민 ${resident.name} 상세 정보 조회 중 오류:`, error);
+          }
+          return resident; // 실패시 기본값 유지
+        })
+      );
+
+      return detailedResidents;
+    } catch (error) {
+      console.error('차량-주민 데이터 로딩 중 오류:', error);
+      return [];
+    }
+  }, []);
+
+  // 주민 관리 모드용 차량-주민 데이터 새로고침
+  const refreshCarResidentsForManagement = useCallback(async () => {
+    if (!residentManagementMode || !selectedCarInstanceId) return;
+    
+    try {
+      const currentInstance = await getInstanceDetail(instanceId);
+      if (currentInstance.success && currentInstance.data) {
+        const carInstance = currentInstance.data.carInstance?.find(ci => ci.id === selectedCarInstanceId);
+        if (carInstance) {
+          const detailedResidents = await loadCarResidentsWithDetails(carInstance.carId);
+          setCarResidents(detailedResidents);
+        }
+      }
+    } catch (error) {
+      console.error('차량-주민 데이터 새로고침 중 오류:', error);
+    }
+  }, [instanceId, residentManagementMode, selectedCarInstanceId, loadCarResidentsWithDetails]);
   // #endregion
 
   // #region 변경 감지
@@ -244,33 +311,37 @@ export default function InstanceDetailPage() {
     }
   }, [instance, router]);
 
-  // 거주민 관리 핸들러들
-  const handleManageResidents = useCallback(async (carInstanceId: number, carNumber: string) => {
+  // 주민 관리 핸들러들
+  const handleManageResidents = useCallback(async (carInstanceId: number) => {
     if (!instance) return;
     
+    // 이미 같은 차량의 관리 모드가 활성화된 경우 종료
+    if (residentManagementMode && selectedCarInstanceId === carInstanceId) {
+      setResidentManagementMode(false);
+      setSelectedCarInstanceId(null);
+      setCarResidents([]);
+      return;
+    }
+    
     setSelectedCarInstanceId(carInstanceId);
-    setSelectedCarNumber(carNumber);
     setResidentManagementMode(true);
     
-    // 해당 차량에 연결된 거주민들을 가져오기
+    // 해당 차량에 연결된 주민들을 가져오기
     setLoadingCarResidents(true);
     try {
-      // carInstance에서 carId 찾기
       const carInstance = instance.carInstance?.find(ci => ci.id === carInstanceId);
       if (carInstance) {
-        const result = await getCarResidents(carInstance.carId);
-        if (result.success && result.data) {
-          setCarResidents(result.data);
-        }
+        const detailedResidents = await loadCarResidentsWithDetails(carInstance.carId);
+        setCarResidents(detailedResidents);
       }
     } catch (error) {
-      console.error('차량 거주민 조회 중 오류:', error);
+      console.error('차량 주민 조회 중 오류:', error);
     } finally {
       setLoadingCarResidents(false);
     }
-  }, [instance]);
+  }, [instance, loadCarResidentsWithDetails, residentManagementMode, selectedCarInstanceId]);
 
-  // 거주민 연결 추가
+  // 주민 연결 추가
   const handleConnectResident = useCallback(async (residentId: number) => {
     if (!selectedCarInstanceId) return;
     
@@ -283,40 +354,32 @@ export default function InstanceDetailPage() {
       });
       
       if (result.success) {
-        setModalMessage('거주민이 차량에 성공적으로 연결되었습니다.');
+        setModalMessage('주민이 차량에 성공적으로 연결되었습니다.');
         setSuccessModalOpen(true);
         
-        // 데이터 새로고침
+        // 연결 작업 후 데이터 새로고침
         await loadInstanceData();
         
-        // 차량 거주민 목록도 새로고침
-        if (instance) {
-          const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
-          if (carInstance) {
-            const refreshResult = await getCarResidents(carInstance.carId);
-            if (refreshResult.success && refreshResult.data) {
-              setCarResidents(refreshResult.data);
-            }
-          }
-        }
+        // 연결 작업 후 차량-주민 데이터 새로고침
+        await refreshCarResidentsForManagement();
       } else {
-        setModalMessage(`거주민 연결에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주민 연결 중 오류:', error);
-      setModalMessage('거주민 연결 중 오류가 발생했습니다.');
+      console.error('주민 연결 중 오류:', error);
+      setModalMessage('주민 연결 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     }
-  }, [selectedCarInstanceId, instance, loadInstanceData]);
+  }, [selectedCarInstanceId, loadInstanceData, refreshCarResidentsForManagement]);
 
-  // 거주민 연결 해지
+  // 주민 연결 해지
   const handleDisconnectResident = useCallback(async (residentId: number) => {
     try {
-      // carResidents에서 해당 거주민의 carInstanceResidentId 찾기
+      // carResidents에서 해당 주민의 carInstanceResidentId 찾기
       const carResident = carResidents.find(cr => cr.id === residentId);
       if (!carResident) {
-        setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
+        setModalMessage('해당 주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
         return;
       }
@@ -324,22 +387,14 @@ export default function InstanceDetailPage() {
       const result = await deleteCarInstanceResident(carResident.carInstanceResidentId);
       
       if (result.success) {
-        setModalMessage('거주민과 차량의 연결이 성공적으로 해지되었습니다.');
+        setModalMessage('주민과 차량의 연결이 성공적으로 해지되었습니다.');
         setSuccessModalOpen(true);
         
-        // 데이터 새로고침
+        // 연결 해지 작업 후 데이터 새로고침
         await loadInstanceData();
         
-        // 차량 거주민 목록도 새로고침
-        if (instance && selectedCarInstanceId) {
-          const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
-          if (carInstance) {
-            const refreshResult = await getCarResidents(carInstance.carId);
-            if (refreshResult.success && refreshResult.data) {
-              setCarResidents(refreshResult.data);
-            }
-          }
-        }
+        // 해지 작업 후 차량-주민 데이터 새로고침
+        await refreshCarResidentsForManagement();
       } else {
         setModalMessage(`연결 해지에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
@@ -349,86 +404,210 @@ export default function InstanceDetailPage() {
       setModalMessage('연결 해지 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     }
-  }, [carResidents, instance, selectedCarInstanceId, loadInstanceData]);
+  }, [carResidents, loadInstanceData, refreshCarResidentsForManagement]);
 
-  // 주차량 설정 토글
+  // 실제 차량 소유자 설정 변경을 수행하는 함수
+  const performPrimaryCarToggle = useCallback(async (
+    residentId: number, 
+    carResident: CarResidentWithDetails, 
+    newPrimaryState: boolean
+  ) => {
+    const updateResult = await updateCarInstanceResident(carResident.carInstanceResidentId, {
+      carAlarm: carResident.carAlarm || false,
+      isPrimary: newPrimaryState
+    });
+    
+    if (updateResult.success) {
+      setModalMessage(`차량 소유자 설정이 ${newPrimaryState ? '활성화' : '비활성화'}되었습니다.`);
+      setSuccessModalOpen(true);
+      
+      // 즉시 로컬 상태 업데이트 (낙관적 UI)
+      if (updateResult.data) {
+        const updatedCarResidents = carResidents.map(cr => {
+          if (cr.id === residentId) {
+            return {
+              ...cr,
+              isPrimary: updateResult.data.isPrimary,
+              carAlarm: updateResult.data.carAlarm
+            };
+          }
+          return cr;
+        });
+        setCarResidents(updatedCarResidents);
+      }
+    } else {
+      setModalMessage(`차량 소유자 설정 변경에 실패했습니다: ${updateResult.errorMsg}`);
+      setErrorModalOpen(true);
+    }
+  }, [carResidents]);
+
+  // 차량 소유자 설정 토글
   const handleTogglePrimary = useCallback(async (residentId: number) => {
     try {
-      // carResidents에서 해당 거주민의 carInstanceResidentId와 현재 설정 찾기
       const carResident = carResidents.find(cr => cr.id === residentId);
+      
       if (!carResident) {
-        setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
+        setModalMessage('해당 주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
         return;
       }
 
-      // 주차량 설정 토글
-      const updateResult = await updateCarInstanceResident(carResident.carInstanceResidentId, {
-        carAlarm: carResident.carAlarm || false, // 기존 알람 설정 유지 (기본값 false)
-        isPrimary: !(carResident.isPrimary || false) // 주차량 설정 토글 (기본값 false)
-      });
+      const currentPrimaryState = Boolean(carResident.isPrimary);
+      const newPrimaryState = !currentPrimaryState;
       
-      if (updateResult.success) {
-        setModalMessage(`주차량 설정이 ${!(carResident.isPrimary || false) ? '활성화' : '비활성화'}되었습니다.`);
-        setSuccessModalOpen(true);
+      // 차량 소유자 활성화를 시도하는 경우, 기존 차량 소유자 사용자가 있는지 확인
+      if (newPrimaryState) {
+        const existingPrimaryResident = carResidents.find(cr => 
+          cr.id !== residentId && Boolean(cr.isPrimary)
+        );
         
-        // 데이터 새로고침
-        await loadInstanceData();
-        
-        // 차량 거주민 목록도 새로고침
-        if (instance && selectedCarInstanceId) {
-          const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
-          if (carInstance) {
-            const refreshResult = await getCarResidents(carInstance.carId);
-            if (refreshResult.success && refreshResult.data) {
-              setCarResidents(refreshResult.data);
-            }
-          }
+        if (existingPrimaryResident) {
+          // 기존 차량 소유자 사용자가 있으면 전환 확인 Modal 표시
+          setPrimaryCarTransferModal({
+            isOpen: true,
+            currentPrimaryResident: existingPrimaryResident,
+            newPrimaryResidentId: residentId,
+            newPrimaryResidentName: carResident.name || '알 수 없는 주민'
+          });
+          return;
         }
-      } else {
-        setModalMessage(`주차량 설정 변경에 실패했습니다: ${updateResult.errorMsg}`);
-        setErrorModalOpen(true);
       }
+      
+      // 기존 차량 소유자 사용자가 없거나 비활성화하는 경우 바로 진행
+      await performPrimaryCarToggle(residentId, carResident, newPrimaryState);
     } catch (error) {
-      console.error('주차량 설정 변경 중 오류:', error);
-      setModalMessage('주차량 설정 변경 중 오류가 발생했습니다.');
+      console.error('차량 소유자 설정 변경 중 오류:', error);
+      setModalMessage('차량 소유자 설정 변경 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     }
-  }, [carResidents, instance, selectedCarInstanceId, loadInstanceData]);
+  }, [carResidents, performPrimaryCarToggle]);
+
+  // 차량 소유자 전환 확인 처리
+  const handleConfirmPrimaryCarTransfer = useCallback(async () => {
+    try {
+      const { currentPrimaryResident, newPrimaryResidentId } = primaryCarTransferModal;
+      
+      if (!currentPrimaryResident || !newPrimaryResidentId) {
+        setModalMessage('전환할 주민 정보를 찾을 수 없습니다.');
+        setErrorModalOpen(true);
+        return;
+      }
+
+      const newPrimaryResident = carResidents.find(cr => cr.id === newPrimaryResidentId);
+      if (!newPrimaryResident) {
+        setModalMessage('새로운 차량 소유자 사용자 정보를 찾을 수 없습니다.');
+        setErrorModalOpen(true);
+        return;
+      }
+
+      // 1단계: 기존 차량 소유자 사용자 비활성화
+      const deactivateResult = await updateCarInstanceResident(
+        currentPrimaryResident.carInstanceResidentId, 
+        {
+          carAlarm: currentPrimaryResident.carAlarm || false,
+          isPrimary: false
+        }
+      );
+
+      if (!deactivateResult.success) {
+        setModalMessage(`기존 차량 소유자 해제에 실패했습니다: ${deactivateResult.errorMsg}`);
+        setErrorModalOpen(true);
+        return;
+      }
+
+      // 2단계: 새로운 차량 소유자 사용자 활성화
+      const activateResult = await updateCarInstanceResident(
+        newPrimaryResident.carInstanceResidentId, 
+        {
+          carAlarm: newPrimaryResident.carAlarm || false,
+          isPrimary: true
+        }
+      );
+
+      if (!activateResult.success) {
+        setModalMessage(`새로운 차량 소유자 설정에 실패했습니다: ${activateResult.errorMsg}`);
+        setErrorModalOpen(true);
+        return;
+      }
+
+      // 성공적으로 전환 완료
+      setModalMessage(`차량 소유자이 ${newPrimaryResident.name}님으로 전환되었습니다.`);
+      setSuccessModalOpen(true);
+
+      // 로컬 상태 업데이트
+      const updatedCarResidents = carResidents.map(cr => {
+        if (cr.id === currentPrimaryResident.id) {
+          return { ...cr, isPrimary: false };
+        } else if (cr.id === newPrimaryResidentId) {
+          return { ...cr, isPrimary: true };
+        }
+        return cr;
+      });
+      setCarResidents(updatedCarResidents);
+
+      // Modal 닫기
+      setPrimaryCarTransferModal({
+        isOpen: false,
+        currentPrimaryResident: null,
+        newPrimaryResidentId: null,
+        newPrimaryResidentName: ''
+      });
+
+    } catch (error) {
+      console.error('차량 소유자 전환 중 오류:', error);
+      setModalMessage('차량 소유자 전환 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
+    }
+  }, [primaryCarTransferModal, carResidents]);
+
+  // 차량 소유자 전환 취소
+  const handleCancelPrimaryCarTransfer = useCallback(() => {
+    setPrimaryCarTransferModal({
+      isOpen: false,
+      currentPrimaryResident: null,
+      newPrimaryResidentId: null,
+      newPrimaryResidentName: ''
+    });
+  }, []);
 
   // 알람 설정 토글
   const handleToggleAlarm = useCallback(async (residentId: number) => {
     try {
-      // carResidents에서 해당 거주민의 carInstanceResidentId와 현재 설정 찾기
       const carResident = carResidents.find(cr => cr.id === residentId);
+      
       if (!carResident) {
-        setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
+        setModalMessage('해당 주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
         return;
       }
 
+      // 현재 상태와 새로운 상태 계산
+      const currentAlarmState = Boolean(carResident.carAlarm);
+      const newAlarmState = !currentAlarmState;
+      
       // 알람 설정 토글
       const updateResult = await updateCarInstanceResident(carResident.carInstanceResidentId, {
-        carAlarm: !(carResident.carAlarm || false), // 알람 설정 토글 (기본값 false)
-        isPrimary: carResident.isPrimary || false // 기존 주차량 설정 유지 (기본값 false)
+        carAlarm: newAlarmState,
+        isPrimary: carResident.isPrimary || false // 기존 차량 소유자 설정 유지 (기본값 false)
       });
       
       if (updateResult.success) {
-        setModalMessage(`알람 설정이 ${!(carResident.carAlarm || false) ? '활성화' : '비활성화'}되었습니다.`);
+        setModalMessage(`알람 설정이 ${newAlarmState ? '활성화' : '비활성화'}되었습니다.`);
         setSuccessModalOpen(true);
         
-        // 데이터 새로고침
-        await loadInstanceData();
-        
-        // 차량 거주민 목록도 새로고침
-        if (instance && selectedCarInstanceId) {
-          const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
-          if (carInstance) {
-            const refreshResult = await getCarResidents(carInstance.carId);
-            if (refreshResult.success && refreshResult.data) {
-              setCarResidents(refreshResult.data);
+        // 즉시 로컬 상태 업데이트 (낙관적 UI)
+        if (updateResult.data) {
+          const updatedCarResidents = carResidents.map(cr => {
+            if (cr.id === residentId) {
+              return {
+                ...cr,
+                isPrimary: updateResult.data.isPrimary,
+                carAlarm: updateResult.data.carAlarm
+              };
             }
-          }
+            return cr;
+          });
+          setCarResidents(updatedCarResidents);
         }
       } else {
         setModalMessage(`알람 설정 변경에 실패했습니다: ${updateResult.errorMsg}`);
@@ -439,12 +618,11 @@ export default function InstanceDetailPage() {
       setModalMessage('알람 설정 변경 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     }
-  }, [carResidents, instance, selectedCarInstanceId, loadInstanceData]);
+  }, [carResidents]);
 
   const handleCloseResidentManagement = useCallback(() => {
     setResidentManagementMode(false);
     setSelectedCarInstanceId(null);
-    setSelectedCarNumber('');
     setCarResidents([]);
   }, []);
   // #endregion
@@ -502,15 +680,15 @@ export default function InstanceDetailPage() {
                 isValid={isValid}
               />
               
-              {/* 연결된 거주민 | 차량 목록 */}
+              {/* 연결된 주민 | 차량 목록 */}
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <InstanceResidentList 
                   residentInstances={instance.residentInstance}
                   loading={loading}
                   instanceId={instance.id}
-                  onDataChange={loadInstanceData}
+                  onDataChange={residentManagementMode ? undefined : loadInstanceData} // 주민 관리 모드에서는 자동 새로고침 방지
                   residentManagementMode={residentManagementMode}
-                  selectedCarNumber={selectedCarNumber}
+
                   carResidents={carResidents}
                   loadingCarResidents={loadingCarResidents}
                   onCloseResidentManagement={handleCloseResidentManagement}
@@ -525,6 +703,8 @@ export default function InstanceDetailPage() {
                   instanceId={instance.id}
                   onDataChange={loadInstanceData}
                   onManageResidents={handleManageResidents}
+                  residentManagementMode={residentManagementMode}
+                  managedCarInstanceId={selectedCarInstanceId}
                 />
               </div>
             </div>
@@ -607,6 +787,42 @@ export default function InstanceDetailPage() {
           <div className="flex justify-center pt-4">
             <Button onClick={() => setErrorModalOpen(false)}>
               확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 차량 소유자 전환 확인 Modal */}
+      <Modal
+        isOpen={primaryCarTransferModal.isOpen}
+        onClose={handleCancelPrimaryCarTransfer}
+        title="차량 소유자 전환 확인"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>현재 <strong className="text-foreground">{primaryCarTransferModal.currentPrimaryResident?.name}님</strong>이 차량 소유자입니다.</p>
+              <p><strong className="text-foreground">{primaryCarTransferModal.newPrimaryResidentName}님</strong>으로 차량 소유자을 전환하시겠습니까?</p>
+              <div className="p-2 mt-3 text-sm text-orange-800 bg-orange-50 rounded-md border border-orange-200">
+                <p>⚠️ 기존 차량 소유자 설정이 해제되고, 새로운 주민에게 적용됩니다.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 justify-center pt-4">
+            <Button 
+              variant="outline" 
+              onClick={handleCancelPrimaryCarTransfer}
+              className="border-gray-300"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleConfirmPrimaryCarTransfer}
+              className="bg-orange-600 hover:bg-orange-700"
+            >
+              전환하기
             </Button>
           </div>
         </div>

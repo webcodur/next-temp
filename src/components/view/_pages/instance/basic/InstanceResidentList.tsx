@@ -1,7 +1,7 @@
 /* 
   파일명: /components/view/_pages/instance/basic/InstanceResidentList.tsx
-  기능: 세대에 연결된 거주민 목록 및 관리 컴포넌트
-  책임: 거주민 연결/해제, 차량 연결 관리, 상세보기 및 삭제 기능을 제공한다.
+  기능: 세대에 연결된 주민 목록 및 관리 컴포넌트
+  책임: 주민 연결/해제, 차량 연결 관리, 상세보기 및 삭제 기능을 제공한다.
 */ // ------------------------------
 
 'use client';
@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Users, User, Phone, Mail, Calendar, UserCheck, Link, Plus, Unplug, Car, X, CarFront, BellRing } from 'lucide-react';
+import { Users, User, Phone, Mail, Calendar, UserCheck, Link, Plus, Unplug, X, CarFront, BellRing } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
@@ -30,7 +30,7 @@ interface InstanceResidentListProps {
   instanceId?: number;
   onDataChange?: () => void;
   residentManagementMode?: boolean;
-  selectedCarNumber?: string;
+
   carResidents?: CarResidentWithDetails[];
   loadingCarResidents?: boolean;
   onCloseResidentManagement?: () => void;
@@ -47,7 +47,7 @@ export default function InstanceResidentList({
   instanceId,
   onDataChange,
   residentManagementMode = false,
-  selectedCarNumber = '',
+
   carResidents = [],
   loadingCarResidents = false,
   onCloseResidentManagement,
@@ -115,7 +115,7 @@ export default function InstanceResidentList({
           handleResidentClick(confirmModal.residentId);
           break;
         case 'exclude':
-          // 거주민-인스턴스 연결 해지
+          // 주민-인스턴스 연결 해지
           const residentInstance = residentInstances?.find(ri => ri.resident.id === confirmModal.residentId);
           if (residentInstance) {
             const result = await deleteResidentInstance(residentInstance.id);
@@ -130,7 +130,7 @@ export default function InstanceResidentList({
           }
           break;
         case 'delete':
-          // 거주민 완전 삭제
+          // 주민 완전 삭제
           const deleteResult = await deleteResident(confirmModal.residentId);
           if (deleteResult.success) {
             // 데이터 새로고침
@@ -138,7 +138,7 @@ export default function InstanceResidentList({
               onDataChange();
             }
           } else {
-            console.error('거주민 삭제 실패:', deleteResult.errorMsg);
+            console.error('주민 삭제 실패:', deleteResult.errorMsg);
           }
           break;
       }
@@ -167,17 +167,17 @@ export default function InstanceResidentList({
       case 'detail':
         return {
           title: '상세 화면 이동',
-          message: `${confirmModal.residentName} 거주민의 상세 화면으로 이동하시겠습니까?`
+          message: `${confirmModal.residentName} 주민의 상세 화면으로 이동하시겠습니까?`
         };
       case 'exclude':
         return {
           title: '세대 연결 해지',
-          message: `${confirmModal.residentName} 거주민과 세대의 연결을 해지하시겠습니까?`
+          message: `${confirmModal.residentName} 주민과 세대의 연결을 해지하시겠습니까?`
         };
       case 'delete':
         return {
-          title: '거주민 정보 삭제',
-          message: `${confirmModal.residentName} 거주민 정보를 전체 서비스에서 완전히 삭제하시겠습니까?`
+          title: '주민 정보 삭제',
+          message: `${confirmModal.residentName} 주민 정보를 전체 서비스에서 완전히 삭제하시겠습니까?`
         };
       default:
         return { title: '', message: '' };
@@ -187,8 +187,8 @@ export default function InstanceResidentList({
   if (loading) {
     return (
       <SectionPanel 
-        title="연결된 거주민" 
-        subtitle="세대에 등록된 거주민을 관리합니다."
+        title="연결된 주민" 
+        subtitle="세대에 등록된 주민을 관리합니다."
         icon={<Users size={18} />}
         headerActions={(
           <div className="flex gap-1 items-center">
@@ -196,7 +196,7 @@ export default function InstanceResidentList({
               variant="outline"
               size="sm"
               onClick={handleConnectClick}
-              title="거주민 연결"
+              title="주민 연결"
               icon={Link}
             />
           </div>
@@ -209,7 +209,7 @@ export default function InstanceResidentList({
     );
   }
 
-  // 거주민이 차량에 연결되어 있는지 확인
+  // 주민이 차량에 연결되어 있는지 확인
   const isResidentConnectedToCar = (residentId: number) => {
     return carResidents.some(carResident => carResident.id === residentId);
   };
@@ -221,7 +221,7 @@ export default function InstanceResidentList({
       <SectionPanel 
       title={
         <span className="flex gap-2 items-center">
-          연결된 거주민
+          연결된 주민
           <span className="text-sm text-muted-foreground">({residentInstances.length}명)</span>
         </span>
       }
@@ -229,24 +229,20 @@ export default function InstanceResidentList({
       headerActions={(
         <div className="flex gap-1 items-center">
           {residentManagementMode && (
-            <div className="flex gap-2 items-center mr-2">
-              <Car size={14} className="text-purple-600" />
-              <span className="text-sm font-medium text-purple-600">{selectedCarNumber}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onCloseResidentManagement}
-                title="관리 모드 종료"
-                icon={X}
-                className="w-6 h-6 min-w-6"
-              />
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onCloseResidentManagement}
+              title="관리 모드 종료"
+              icon={X}
+              className="w-6 h-6 min-w-6"
+            />
           )}
           <Button
             variant="outline"
             size="sm"
             onClick={handleConnectClick}
-            title="거주민 연결"
+            title="주민 연결"
             icon={Link}
           />
         </div>
@@ -257,10 +253,10 @@ export default function InstanceResidentList({
           <div className="flex flex-col justify-center items-center py-8 text-center">
             <User size={32} className="mb-3 text-muted-foreground" />
             <h4 className="mb-1 text-sm font-medium text-foreground">
-              등록된 거주민이 없습니다
+              등록된 주민이 없습니다
             </h4>
             <p className="text-xs text-muted-foreground">
-              이 세대에 거주민을 추가해보세요
+              이 세대에 주민을 추가해보세요
             </p>
           </div>
         ) : (
@@ -323,7 +319,7 @@ export default function InstanceResidentList({
                     onDelete={() => handleDeleteClick(residentInstance.resident.id, residentInstance.resident.name)}
                   />
                   
-                  {/* 거주민 관리 모드 overlay */}
+                  {/* 주민 관리 모드 overlay */}
                   {residentManagementMode && (
                     <div className="flex absolute right-0 bottom-0 left-0 top-16 z-10 justify-center items-center rounded-b-lg backdrop-blur-sm bg-black/10">
                       {loadingCarResidents ? (
@@ -350,29 +346,41 @@ export default function InstanceResidentList({
                                   <X size={8} className="absolute inset-0 m-auto text-white" />
                                 </div>
                               </div>
-                              {/* 주차량 설정 버튼 */}
+                              {/* 차량 소유자 설정 버튼 */}
                               <div className="relative group">
                                 <Button
                                   variant="outline"
                                   size="icon"
                                   onClick={() => onTogglePrimary && onTogglePrimary(residentInstance.resident.id)}
-                                  title={`주차량 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
+                                  title={`차량 소유자 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
                                   icon={CarFront}
-                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-none [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${
+                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${
                                     carResident?.isPrimary 
-                                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' 
-                                      : 'bg-blue-500 hover:bg-blue-600'
+                                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-blue-300 shadow-blue-200' 
+                                      : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
                                   }`}
                                 />
-                                {/* 설정 상태 표시 */}
-                                <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
+                                {/* 차량 소유자 활성화 표시 */}
+                                <div className={`absolute -top-1 -right-1 w-5 h-5 border-2 border-white rounded-full transition-all duration-200 shadow-md pointer-events-none ${
                                   carResident?.isPrimary 
-                                    ? 'bg-green-400 opacity-100' 
-                                    : 'bg-gray-300 opacity-0 group-hover:opacity-100'
+                                    ? 'bg-green-500 opacity-100 scale-100' 
+                                    : 'bg-red-400 opacity-80 scale-90'
                                 }`}>
-                                  {carResident?.isPrimary && (
+                                  {carResident?.isPrimary ? (
                                     <div className="w-full h-full bg-green-400 rounded-full animate-ping pointer-events-none"></div>
+                                  ) : (
+                                    <div className="absolute inset-0 m-auto w-2 h-2 bg-white rounded-full"></div>
                                   )}
+                                </div>
+                                {/* 기능 라벨 */}
+                                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                                  <div className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-sm ${
+                                    carResident?.isPrimary 
+                                      ? 'bg-blue-100 text-blue-700' 
+                                      : 'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    차량 소유자
+                                  </div>
                                 </div>
                               </div>
                               
@@ -384,21 +392,33 @@ export default function InstanceResidentList({
                                   onClick={() => onToggleAlarm && onToggleAlarm(residentInstance.resident.id)}
                                   title={`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}
                                   icon={BellRing}
-                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-none [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${carResident?.carAlarm ? '[&_svg]:animate-pulse' : ''} ${
+                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${carResident?.carAlarm ? '[&_svg]:animate-pulse' : ''} ${
                                     carResident?.carAlarm 
-                                      ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700' 
-                                      : 'bg-orange-500 hover:bg-orange-600'
+                                      ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border-orange-300 shadow-orange-200' 
+                                      : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
                                   }`}
                                 />
-                                {/* 설정 상태 표시 */}
-                                <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
+                                {/* 알람 활성화 표시 */}
+                                <div className={`absolute -top-1 -right-1 w-5 h-5 border-2 border-white rounded-full transition-all duration-200 shadow-md pointer-events-none ${
                                   carResident?.carAlarm 
-                                    ? 'bg-yellow-400 opacity-100' 
-                                    : 'bg-gray-300 opacity-0 group-hover:opacity-100'
+                                    ? 'bg-yellow-500 opacity-100 scale-100' 
+                                    : 'bg-gray-500 opacity-80 scale-90'
                                 }`}>
-                                  {carResident?.carAlarm && (
+                                  {carResident?.carAlarm ? (
                                     <div className="w-full h-full bg-yellow-400 rounded-full animate-ping pointer-events-none"></div>
+                                  ) : (
+                                    <div className="absolute inset-0 m-auto w-2 h-2 bg-white rounded-full"></div>
                                   )}
+                                </div>
+                                {/* 기능 라벨 */}
+                                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                                  <div className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-sm ${
+                                    carResident?.carAlarm 
+                                      ? 'bg-orange-100 text-orange-700' 
+                                      : 'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    알람
+                                  </div>
                                 </div>
                               </div>
                             </>
@@ -462,7 +482,7 @@ export default function InstanceResidentList({
         </div>
       </Modal>
 
-      {/* 거주민 검색 및 연결 모달 */}
+      {/* 주민 검색 및 연결 모달 */}
       {instanceId && (
         <ResidentSearchModal
           isOpen={connectModalOpen}

@@ -66,6 +66,15 @@ export default function CarResidentSection({
   const [detailData, setDetailData] = useState<CarInstanceResidentDetail | null>(null);
   const [selectedResidentInfo, setSelectedResidentInfo] = useState<CarResidentWithDetails | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  
+  // 차량 소유자 해제 확인 Modal 상태
+  const [primaryCarReleaseModal, setPrimaryCarReleaseModal] = useState<{
+    isOpen: boolean;
+    otherPrimaryResidents: CarResidentWithDetails[];
+  }>({
+    isOpen: false,
+    otherPrimaryResidents: []
+  });
 
   // 폼 상태
   const [createFormData, setCreateFormData] = useState<CreateResidentFormData>({
@@ -249,30 +258,54 @@ export default function CarResidentSection({
   }, []);
   // #endregion
 
+  // 차량-주민 데이터 로딩 (실제 설정값 포함)
+  const loadCarResidentsWithDetails = useCallback(async () => {
+    try {
+      // 1단계: 기본 주민 목록 조회
+      const basicResult = await getCarResidents(car.id);
+      if (!basicResult.success || !basicResult.data) {
+        return [];
+      }
+
+      // 2단계: 각 주민의 실제 설정값 조회
+      const detailedResidents = await Promise.all(
+        basicResult.data.map(async (resident) => {
+          try {
+            const detailResult = await getCarInstanceResidentDetail(resident.carInstanceResidentId);
+            if (detailResult.success && detailResult.data) {
+              return {
+                ...resident,
+                isPrimary: detailResult.data.isPrimary,
+                carAlarm: detailResult.data.carAlarm
+              };
+            }
+          } catch (error) {
+            console.error(`주민 ${resident.name} 상세 정보 조회 중 오류:`, error);
+          }
+          return resident; // 실패시 기본값 유지
+        })
+      );
+
+      return detailedResidents;
+    } catch (error) {
+      console.error('차량-주민 데이터 로딩 중 오류:', error);
+      return [];
+    }
+  }, [car.id]);
+
   // #region 데이터 로드
   const loadResidentData = useCallback(async () => {
     setLoading(true);
     try {
-      // 차량에 연결된 주민 목록 조회
-      const result = await getCarResidents(car.id);
-      if (result.success && result.data) {
-        console.log('차량-주민 데이터:', result.data);
-        // 연결 ID 확인을 위한 상세 로그
-        result.data.forEach((resident, index) => {
-          console.log(`주민 ${index + 1}: ID=${resident.id}, 연결ID=${resident.carInstanceResidentId}, 이름=${resident.name}`);
-        });
-        setCarResidents(result.data);
-      } else {
-        console.error('차량-주민 조회 실패:', result.errorMsg);
-        setCarResidents([]);
-      }
+      const detailedResidents = await loadCarResidentsWithDetails();
+      setCarResidents(detailedResidents);
     } catch (error) {
       console.error('차량-주민 조회 중 오류:', error);
       setCarResidents([]);
     } finally {
       setLoading(false);
     }
-  }, [car.id]);
+  }, [loadCarResidentsWithDetails]);
 
   useEffect(() => {
     loadResidentData();
@@ -365,8 +398,8 @@ export default function CarResidentSection({
     }
   };
 
-  // 수정 핸들러
-  const handleDetailUpdate = async () => {
+  // 실제 상세 정보 업데이트를 수행하는 함수
+  const performDetailUpdate = useCallback(async () => {
     if (!detailData || isSubmitting) return;
 
     setIsSubmitting(true);
@@ -397,7 +430,51 @@ export default function CarResidentSection({
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [detailData, detailFormData, isSubmitting, resetDetailModal, loadResidentData, onDataChange]);
+
+  // 수정 핸들러
+  const handleDetailUpdate = useCallback(async () => {
+    if (!detailData || isSubmitting) return;
+
+    // 차량 소유자 해제를 시도하는 경우 확인
+    const isReleasingPrimary = detailData.isPrimary && !detailFormData.isPrimary;
+    
+    if (isReleasingPrimary) {
+      // 다른 주민들 중 차량 소유자이 활성화된 사람이 있는지 확인
+      const otherPrimaryResidents = carResidents.filter(resident => 
+        resident.carInstanceResidentId !== detailData.id && Boolean(resident.isPrimary)
+      );
+      
+      if (otherPrimaryResidents.length > 0) {
+        // 다른 차량 소유자가 있으면 경고 모달 표시
+        setPrimaryCarReleaseModal({
+          isOpen: true,
+          otherPrimaryResidents
+        });
+        return;
+      }
+    }
+
+    // 직접 업데이트 실행
+    await performDetailUpdate();
+  }, [detailData, detailFormData, isSubmitting, carResidents, performDetailUpdate]);
+
+  // 차량 소유자 해제 확인 처리
+  const handleConfirmPrimaryCarRelease = useCallback(async () => {
+    setPrimaryCarReleaseModal({
+      isOpen: false,
+      otherPrimaryResidents: []
+    });
+    await performDetailUpdate();
+  }, [performDetailUpdate]);
+
+  // 차량 소유자 해제 취소
+  const handleCancelPrimaryCarRelease = useCallback(() => {
+    setPrimaryCarReleaseModal({
+      isOpen: false,
+      otherPrimaryResidents: []
+    });
+  }, []);
 
 
 
@@ -509,7 +586,12 @@ export default function CarResidentSection({
       cell: (item: ResidentInstanceWithResident) => {
         const isSelected = createFormData.selectedResident?.id === item.id;
         console.log('carResidents', carResidents)
-        const isAlreadyConnected = carResidents.some(carResident => carResident.id === item.resident.id);
+        // 현재 선택된 세대 + 주민 조합이 이미 연결되어 있는지 확인
+        const isAlreadyConnected = createFormData.selectedInstance && carResidents.some(carResident => 
+          carResident.id === item.resident.id && 
+          carResident.address1Depth === createFormData.selectedInstance!.address1Depth &&
+          carResident.address2Depth === createFormData.selectedInstance!.address2Depth
+        );
 
         if (isAlreadyConnected) {
           return (
@@ -518,7 +600,7 @@ export default function CarResidentSection({
               size="sm"
               disabled={true}
             >
-              이미 선택됨
+              이 세대에서 이미 연결됨
             </Button>
           );
         }
@@ -734,10 +816,10 @@ export default function CarResidentSection({
             <div className="space-y-4">
               <h4 className="text-lg font-medium">3단계: 연결 설정</h4>
               <div className="flex p-4 w-full rounded-lg border bg-card">
-                {/* 주차량 설정 */}
+                {/* 차량 소유자 설정 */}
                 <div className="flex gap-3 justify-center items-center w-[50%]">
                   <p className="text-sm font-medium text-foreground">
-                    주차량 설정
+                    차량 소유자 설정
                   </p>
                   <SimpleToggleSwitch
                     checked={createFormData.isPrimary}
@@ -861,6 +943,54 @@ export default function CarResidentSection({
         </div>
       </Modal>
 
+      {/* 차량 소유자 해제 확인 Modal */}
+      <Modal
+        isOpen={primaryCarReleaseModal.isOpen}
+        onClose={handleCancelPrimaryCarRelease}
+        title="차량 소유자 해제 확인"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="text-center">
+            <h3 className="mb-2 text-lg font-semibold text-orange-600">차량 소유자 해제</h3>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong className="text-foreground">{selectedResidentInfo?.name}님</strong>의 차량 소유자 설정을 해제하시겠습니까?</p>
+              {primaryCarReleaseModal.otherPrimaryResidents.length > 0 && (
+                <div className="p-3 mt-3 text-sm text-amber-800 bg-amber-50 rounded-md border border-amber-200">
+                  <p className="mb-2 font-medium">⚠️ 다른 차량 소유자가 있습니다:</p>
+                  <ul className="space-y-1">
+                    {primaryCarReleaseModal.otherPrimaryResidents.map((resident) => (
+                      <li key={resident.carInstanceResidentId}>
+                        • {resident.name} ({resident.address1Depth} {resident.address2Depth})
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 text-xs text-amber-700">
+                    해제 후에도 위 주민들은 차량 소유자으로 유지됩니다.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="flex gap-3 justify-center pt-4">
+            <Button 
+              variant="outline" 
+              onClick={handleCancelPrimaryCarRelease}
+              className="border-gray-300"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleConfirmPrimaryCarRelease}
+              className="bg-orange-600 hover:bg-orange-700"
+            >
+              해제하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
       {/* 상세 조회/수정 모달 */}
       <Modal
         isOpen={detailModalOpen}
@@ -925,10 +1055,10 @@ export default function CarResidentSection({
               <div className="space-y-4">
                 <h4 className="text-lg font-medium">설정 수정</h4>
                 <div className="flex p-4 w-full rounded-lg border bg-card">
-                  {/* 주차량 설정 */}
+                  {/* 차량 소유자 설정 */}
                   <div className="flex gap-3 justify-center items-center w-[50%]">
                     <p className="text-sm font-medium text-foreground">
-                      주차량 설정
+                      차량 소유자 설정
                     </p>
                     <SimpleToggleSwitch
                       checked={detailFormData.isPrimary}

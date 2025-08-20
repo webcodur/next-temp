@@ -206,7 +206,7 @@ export default function InstanceSearchSection({
       },
       residentCount: {
         key: 'residentCount',
-        header: '거주민',
+        header: '주민',
         width: '8%',
         align: 'center',
         cell: (item: Instance) => `${item.residentCount ?? 0}명`,
