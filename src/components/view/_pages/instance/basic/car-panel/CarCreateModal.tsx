@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import CarForm, { CarFormData } from '../../car/basic/CarForm';
+import CarForm, { CarFormData } from '../../../car/basic/CarForm';
 import { createCar } from '@/services/cars/cars_POST';
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
 

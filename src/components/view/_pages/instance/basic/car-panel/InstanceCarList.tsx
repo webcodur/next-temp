@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Car, CarFront, Calendar, Fuel, Tag, Plus, Link, Users } from 'lucide-react';
+import { Car, CarFront, Plus, Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CarInstanceWithCar } from '@/types/instance';
-import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge, CustomAction } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
+
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import CarCreateModal from './CarCreateModal';
 import CarSearchModal from './CarSearchModal';
+import CarCardItem from './CarCardItem';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
 import { deleteCar } from '@/services/cars/cars@id_DELETE';
 
@@ -135,11 +136,7 @@ export default function InstanceCarList({
     }
   };
 
-  const handleManageResidentsClick = (carInstanceId: number) => {
-    if (onManageResidents) {
-      onManageResidents(carInstanceId);
-    }
-  };
+
 
   const getModalContent = () => {
     switch (confirmModal.type) {
@@ -239,91 +236,18 @@ export default function InstanceCarList({
           </div>
         ) : (
           <div className="p-4 space-y-2">
-            {carInstances.map((carInstance) => {
-              // 배지 정보
-              const badges: InstanceItemCardBadge[] = [];
-              if (carInstance.carShareOnoff) {
-                badges.push({
-                  text: '공유차량',
-                  variant: 'info'
-                });
-              }
-
-              // 좌측 열 데이터
-              const leftColumn: InstanceItemCardField[] = [
-                {
-                  icon: <Fuel />,
-                  value: carInstance.car.fuel || '',
-                  show: !!carInstance.car.fuel
-                },
-                {
-                  icon: <Calendar />,
-                  value: carInstance.car.year ? `${carInstance.car.year}년` : '',
-                  show: !!carInstance.car.year
-                }
-              ];
-
-              // 우측 열 데이터
-              const rightColumn: InstanceItemCardField[] = [];
-
-              // 외부 스티커가 있으면 우측 열에 추가
-              if (carInstance.car.externalSticker) {
-                rightColumn.push({
-                  icon: <Tag />,
-                  value: carInstance.car.externalSticker,
-                  show: true
-                });
-              }
-
-              // 커스텀 제목 (번호판 + 브랜드/모델/차종)
-              const customTitle = (
-                <div className="flex flex-1 gap-2 items-center min-w-0">
-                  <span 
-                    className="text-lg font-bold tracking-wider text-foreground"
-                    style={{ fontFamily: 'HY헤드라인M, monospace' }}
-                  >
-                    {carInstance.car.carNumber || '번호판 없음'}
-                  </span>
-                  {(carInstance.car.brand || carInstance.car.model || carInstance.car.type) && (
-                    <span className="text-sm truncate text-muted-foreground">
-                      {[carInstance.car.brand, carInstance.car.model, carInstance.car.type]
-                        .filter(Boolean)
-                        .join(' ')}
-                    </span>
-                  )}
-                </div>
-              );
-
-              // 커스텀 액션 - 관리 모드 버튼
-              const isCurrentlyManaged = residentManagementMode && managedCarInstanceId === carInstance.id;
-              const customActions: CustomAction[] = onManageResidents ? [{
-                icon: isCurrentlyManaged 
-                  ? <Users className="text-white" />
-                  : <Users className="text-gray-700" />,
-                onClick: () => handleManageResidentsClick(carInstance.id),
-                title: isCurrentlyManaged ? '관리 모드 종료' : '관리 모드',
-                hoverClass: isCurrentlyManaged 
-                  ? 'bg-red-500 text-white shadow-lg ring-2 ring-red-200 hover:bg-red-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-purple-100 hover:text-purple-600'
-              }] : [];
-
-              return (
-                <InstanceItemCard
-                  key={carInstance.id}
-                  headerIcon={<CarFront />}
-                  title="" // customTitle을 사용하므로 빈 문자열
-                  customTitle={customTitle}
-                  badges={badges}
-                  leftColumn={leftColumn}
-                  rightColumn={rightColumn}
-                  memo={carInstance.car.outerText || undefined}
-                  customActions={customActions}
-                  onDetail={() => handleDetailClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
-                  onExclude={() => handleExcludeClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
-                  onDelete={() => handleDeleteClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
-                />
-              );
-            })}
+            {carInstances.map((carInstance) => (
+              <CarCardItem
+                key={carInstance.id}
+                carInstance={carInstance}
+                residentManagementMode={residentManagementMode}
+                managedCarInstanceId={managedCarInstanceId}
+                onDetailClick={handleDetailClick}
+                onExcludeClick={handleExcludeClick}
+                onDeleteClick={handleDeleteClick}
+                onManageResidents={onManageResidents}
+              />
+            ))}
           </div>
         )}
       </SectionPanel>

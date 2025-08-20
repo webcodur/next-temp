@@ -81,7 +81,7 @@ export default function InstanceItemCard({
 
   return (
     <div
-      className={`relative p-4 rounded-lg border transition-all duration-200  border-border neu-elevated group hover:shadow-md ${className}`}
+      className={`relative p-4 rounded-lg border transition-all duration-200 border-border neu-elevated group hover:shadow-md ${className}`}
     >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4">
@@ -136,7 +136,7 @@ export default function InstanceItemCard({
                 e.stopPropagation();
                 onDetail();
               }}
-              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
+              className="w-8 h-8 rounded-full border-none transition-colors min-w-8 neu-flat hover:neu-hover hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
               title="상세 보기"
               icon={Eye}
             />
@@ -149,7 +149,7 @@ export default function InstanceItemCard({
                 e.stopPropagation();
                 onExclude();
               }}
-              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
+              className="w-8 h-8 rounded-full border-none transition-colors min-w-8 neu-flat hover:neu-hover hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
               title="제외"
               icon={Unplug}
             />
@@ -162,7 +162,7 @@ export default function InstanceItemCard({
                 e.stopPropagation();
                 onDelete();
               }}
-              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-red-100 text-muted-foreground hover:text-red-600"
+              className="w-8 h-8 rounded-full border-none transition-colors min-w-8 neu-flat hover:neu-hover hover:bg-red-100 text-muted-foreground hover:text-red-600"
               title="삭제"
               icon={Trash2}
             />

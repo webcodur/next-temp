@@ -325,7 +325,7 @@ export default function ResidentSearchModal({
             </div>
           </div>
         ) : (
-          <div className="max-h-96 overflow-hidden">
+          <div className="overflow-hidden max-h-96">
             <PaginatedTable
               data={residentList as unknown as Record<string, unknown>[]}
               columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}
