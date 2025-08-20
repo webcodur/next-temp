@@ -12,7 +12,7 @@ import { Trim } from '../../decorators/trim.decorator';
 
 export class CreateResidentDto {
   @ApiProperty({
-    description: '거주자 이름',
+    description: '주민 이름',
     example: '김철수',
     maxLength: 50,
   })
@@ -81,7 +81,7 @@ export class CreateResidentDto {
 
   @ApiProperty({
     description: '메모',
-    example: '주거주자',
+    example: '주주민',
     required: false,
   })
   @IsOptional()

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Users, Plus } from 'lucide-react';
+import { Users, Link } from 'lucide-react';
 
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -57,6 +57,7 @@ export default function CarResidentSection({
   const [loadingInstances, setLoadingInstances] = useState(false);
 
   // 모달 상태
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -142,7 +143,7 @@ export default function CarResidentSection({
     }
   }, [car.carInstance]);
 
-  // 세대 거주자 목록 로드
+  // 세대 주민 목록 로드
   const loadInstanceResidents = useCallback(async (instanceId: number) => {
     setLoadingResidents(true);
     try {
@@ -150,11 +151,11 @@ export default function CarResidentSection({
       if (result.success && result.data) {
         setAvailableResidents(result.data.residentInstance || []);
       } else {
-        console.error('세대 거주자 조회 실패:', result.errorMsg);
+        console.error('세대 주민 조회 실패:', result.errorMsg);
         setAvailableResidents([]);
       }
     } catch (error) {
-      console.error('세대 거주자 조회 중 오류:', error);
+      console.error('세대 주민 조회 중 오류:', error);
       setAvailableResidents([]);
     } finally {
       setLoadingResidents(false);
@@ -184,14 +185,14 @@ export default function CarResidentSection({
     setCreateFormData(prev => ({
       ...prev,
       selectedInstance: instanceForForm,
-      selectedResident: null // 세대가 바뀌면 거주자 선택 초기화
+      selectedResident: null // 세대가 바뀌면 주민 선택 초기화
     }));
 
-    // 선택된 세대의 거주자 목록 로드
+    // 선택된 세대의 주민 목록 로드
     await loadInstanceResidents(connectedInstance.instanceId);
   }, [loadInstanceResidents]);
 
-  // 거주자 선택 핸들러
+  // 주민 선택 핸들러
   const handleResidentSelect = useCallback((resident: ResidentInstanceWithResident) => {
     setCreateFormData(prev => ({ ...prev, selectedResident: resident }));
   }, []);
@@ -252,16 +253,21 @@ export default function CarResidentSection({
   const loadResidentData = useCallback(async () => {
     setLoading(true);
     try {
-      // 차량에 연결된 거주자 목록 조회
+      // 차량에 연결된 주민 목록 조회
       const result = await getCarResidents(car.id);
       if (result.success && result.data) {
+        console.log('차량-주민 데이터:', result.data);
+        // 연결 ID 확인을 위한 상세 로그
+        result.data.forEach((resident, index) => {
+          console.log(`주민 ${index + 1}: ID=${resident.id}, 연결ID=${resident.carInstanceResidentId}, 이름=${resident.name}`);
+        });
         setCarResidents(result.data);
       } else {
-        console.error('차량-거주자 조회 실패:', result.errorMsg);
+        console.error('차량-주민 조회 실패:', result.errorMsg);
         setCarResidents([]);
       }
     } catch (error) {
-      console.error('차량-거주자 조회 중 오류:', error);
+      console.error('차량-주민 조회 중 오류:', error);
       setCarResidents([]);
     } finally {
       setLoading(false);
@@ -304,18 +310,19 @@ export default function CarResidentSection({
       if (result.success) {
         const instanceAddr = `${createFormData.selectedInstance.address1Depth} ${createFormData.selectedInstance.address2Depth}`;
         const residentName = createFormData.selectedResident.resident.name;
-        setModalMessage(`${instanceAddr} 세대의 ${residentName} 거주자가 성공적으로 연결되었습니다.`);
+        setModalMessage(`${instanceAddr} 세대의 ${residentName} 주민이 성공적으로 연결되었습니다.`);
         setSuccessModalOpen(true);
         resetModal();
+        setCreateModalOpen(false);
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`거주자 연결 생성에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결 생성에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주자 연결 생성 중 오류:', error);
-      setModalMessage('거주자 연결 생성 중 오류가 발생했습니다.');
+      console.error('주민 연결 생성 중 오류:', error);
+      setModalMessage('주민 연결 생성 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -330,20 +337,26 @@ export default function CarResidentSection({
     setIsSubmitting(true);
 
     try {
+      console.log('삭제 API 호출 시작:', {
+        deleteTargetId,
+        API_URL: `/cars/residents/${deleteTargetId}`,
+        method: 'DELETE'
+      });
       const result = await deleteCarInstanceResident(deleteTargetId);
+      console.log('삭제 API 응답:', result);
 
       if (result.success) {
-        setModalMessage('거주자 연결이 성공적으로 삭제되었습니다.');
+        setModalMessage('주민 연결이 성공적으로 삭제되었습니다.');
         setSuccessModalOpen(true);
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`거주자 연결 삭제에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주자 연결 삭제 중 오류:', error);
-      setModalMessage('거주자 연결 삭제 중 오류가 발생했습니다.');
+      console.error('주민 연결 삭제 중 오류:', error);
+      setModalMessage('주민 연결 삭제 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -367,19 +380,19 @@ export default function CarResidentSection({
       const result = await updateCarInstanceResident(detailData.id, updateData);
 
       if (result.success) {
-        setModalMessage('거주자 연결 정보가 성공적으로 수정되었습니다.');
+        setModalMessage('주민 연결 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
         setDetailModalOpen(false);
         resetDetailModal();
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`거주자 연결 수정에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결 수정에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주자 연결 수정 중 오류:', error);
-      setModalMessage('거주자 연결 수정 중 오류가 발생했습니다.');
+      console.error('주민 연결 수정 중 오류:', error);
+      setModalMessage('주민 연결 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -445,7 +458,7 @@ export default function CarResidentSection({
     },
   ];
 
-  // 거주자 선택 테이블 컬럼 정의
+  // 주민 선택 테이블 컬럼 정의
   const residentColumns: BaseTableColumn<ResidentInstanceWithResident>[] = [
     {
       key: 'id',
@@ -495,7 +508,8 @@ export default function CarResidentSection({
       align: 'center',
       cell: (item: ResidentInstanceWithResident) => {
         const isSelected = createFormData.selectedResident?.id === item.id;
-        const isAlreadyConnected = carResidents.some(carResident => carResident.resident.id === item.resident.id);
+        console.log('carResidents', carResidents)
+        const isAlreadyConnected = carResidents.some(carResident => carResident.id === item.resident.id);
 
         if (isAlreadyConnected) {
           return (
@@ -525,49 +539,49 @@ export default function CarResidentSection({
   // #endregion
 
   // #region 컬럼 정의
-  // 차량 연결 거주자 컬럼 정의
+  // 차량 연결 주민 컬럼 정의
   const carResidentColumns: BaseTableColumn<CarResidentWithDetails>[] = [
     {
-      key: 'id',
+      key: 'carInstanceResidentId',
       header: '연결 ID',
       width: '7%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => item.id,
+      cell: (item: CarResidentWithDetails) => item.carInstanceResidentId,
     },
     {
       key: 'residentId',
-      header: '거주자 ID',
+      header: '주민 ID',
       width: '7%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => item.resident.id,
+      cell: (item: CarResidentWithDetails) => item.id,
     },
     {
       key: 'name',
       header: '이름',
       width: '10%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => item.resident.name,
+      cell: (item: CarResidentWithDetails) => item.name,
     },
     {
       key: 'phone',
       header: '연락처',
       width: '13%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => item.resident.phone || '-',
+      cell: (item: CarResidentWithDetails) => item.phone || '-',
     },
     {
       key: 'email',
       header: '이메일',
       width: '18%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => item.resident.email || '-',
+      cell: (item: CarResidentWithDetails) => item.email || '-',
     },
     {
       key: 'address',
       header: '주소',
       width: '12%',
       align: 'center',
-      cell: (item: CarResidentWithDetails) => `${item.resident.address1Depth} ${item.resident.address2Depth}${item.resident.address3Depth ? ` ${item.resident.address3Depth}` : ''}`,
+      cell: (item: CarResidentWithDetails) => `${item.address1Depth} ${item.address2Depth}${item.address3Depth ? ` ${item.address3Depth}` : ''}`,
     },
     {
       key: 'createdAt',
@@ -585,7 +599,7 @@ export default function CarResidentSection({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleDetailView(item.id, item)}
+            onClick={() => handleDetailView(item.carInstanceResidentId, item)}
             disabled={detailLoading || isSubmitting}
           >
             상세보기
@@ -594,7 +608,13 @@ export default function CarResidentSection({
             variant="destructive"
             size="sm"
             onClick={() => {
-              setDeleteTargetId(item.id);
+              console.log('삭제 버튼 클릭:', {
+                주민이름: item.name,
+                주민ID: item.id,
+                연결ID: item.carInstanceResidentId,
+                삭제요청ID: item.carInstanceResidentId
+              });
+              setDeleteTargetId(item.carInstanceResidentId);
               setDeleteConfirmOpen(true);
             }}
             disabled={isSubmitting}
@@ -610,18 +630,29 @@ export default function CarResidentSection({
     <div className="space-y-6">
       {/* 목록 섹션 */}
       <SectionPanel
-        title="차량 연결 거주자 목록"
-        subtitle="현재 차량에 연결된 거주자들을 확인합니다."
+        title="[ 차량 - 주민 ] 연결 목록"
+        subtitle="현재 차량에 연결된 주민들을 확인합니다."
         icon={<Users size={18} />}
+        headerActions={
+          <Button
+            variant="outline"
+            size="default"
+            onClick={() => setCreateModalOpen(true)}
+            className="gap-1"
+          >
+            <Link size={14} />
+            주민 연결 추가
+          </Button>
+        }
       >
         {carResidents.length === 0 && !loading ? (
           <div className="flex flex-col justify-center items-center py-12 text-center">
             <Users size={48} className="mb-4 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-medium text-foreground">
-              연결된 거주자 없음
+              연결된 주민 없음
             </h3>
             <p className="max-w-md text-muted-foreground">
-              현재 이 차량에 연결된 거주자가 없습니다.
+              현재 이 차량에 연결된 주민이 없습니다.
             </p>
           </div>
         ) : (
@@ -630,17 +661,23 @@ export default function CarResidentSection({
             columns={carResidentColumns as unknown as BaseTableColumn<Record<string, unknown>>[]}
             pageSize={5}
             pageSizeOptions={[5, 10, 20]}
-            itemName="연결 거주자"
+            itemName="연결 주민"
             isFetching={loading}
           />
         )}
       </SectionPanel>
 
-      {/* 생성 섹션 */}
-      <SectionPanel
-        title="거주자 연결 추가"
-        subtitle="새로운 거주자를 차량에 연결합니다."
-        icon={<Plus size={18} />}
+
+
+      {/* 주민 연결 추가 모달 */}
+      <Modal
+        isOpen={createModalOpen}
+        onClose={() => {
+          setCreateModalOpen(false);
+          resetModal();
+        }}
+        title="주민 연결 추가"
+        size="xl"
       >
         <div className="space-y-6">
           {/* 1단계: 연결된 세대 선택 */}
@@ -665,18 +702,18 @@ export default function CarResidentSection({
               )}
           </div>
 
-          {/* 2단계: 거주자 선택 */}
+          {/* 2단계: 주민 선택 */}
           {createFormData.selectedInstance && (
             <div className="space-y-4">
-              <h4 className="text-lg font-medium">2단계: 거주자 선택</h4>
+              <h4 className="text-lg font-medium">2단계: 주민 선택</h4>
               <div className="p-4 rounded-lg border bg-card">
                 {loadingResidents ? (
                   <div className="py-8 text-center">
-                    <div className="text-muted-foreground">거주자 목록을 불러오는 중...</div>
+                    <div className="text-muted-foreground">주민 목록을 불러오는 중...</div>
                   </div>
                 ) : availableResidents.length === 0 ? (
                   <div className="py-8 text-center">
-                    <div className="text-muted-foreground">해당 세대에 등록된 활성 거주자가 없습니다.</div>
+                    <div className="text-muted-foreground">해당 세대에 등록된 활성 주민이 없습니다.</div>
                   </div>
                 ) : (
                   <PaginatedTable
@@ -684,7 +721,7 @@ export default function CarResidentSection({
                     columns={residentColumns as unknown as BaseTableColumn<Record<string, unknown>>[]}
                     pageSize={5}
                     pageSizeOptions={[5, 10]}
-                    itemName="거주자"
+                    itemName="주민"
                     isFetching={loadingResidents}
                   />
                 )}
@@ -729,38 +766,37 @@ export default function CarResidentSection({
           <div className="flex gap-3 justify-end pt-4 border-t">
             <Button
               variant="ghost"
-              onClick={resetModal}
+              onClick={() => {
+                setCreateModalOpen(false);
+                resetModal();
+              }}
               disabled={isSubmitting}
             >
-              초기화
+              취소
             </Button>
             <Button
               variant="primary"
               onClick={handleCreate}
               disabled={!createFormData.selectedInstance || !createFormData.selectedResident || isSubmitting}
             >
-              {isSubmitting ? '연결 생성 중...' : '거주자 연결 생성'}
+              {isSubmitting ? '연결 생성 중...' : '주민 연결 생성'}
             </Button>
           </div>
         </div>
-      </SectionPanel>
-
-
-
-
+      </Modal>
 
       {/* 삭제 확인 모달 */}
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="거주자 연결 삭제 확인"
+        title="주민 연결 삭제 확인"
         size="md"
       >
         <div className="space-y-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 거주자 연결이 영구적으로 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 주민 연결이 영구적으로 삭제됩니다.
             </p>
           </div>
 
@@ -832,7 +868,7 @@ export default function CarResidentSection({
           setDetailModalOpen(false);
           resetDetailModal();
         }}
-        title="차량 - 거주자 연결 상세 정보"
+        title="차량 - 주민 연결 상세 정보"
         size="md"
       >
         <div className="space-y-6">
@@ -856,24 +892,24 @@ export default function CarResidentSection({
                     <p className="text-foreground">{car.brand && car.model ? `${car.brand} ${car.model}` : car.brand || car.model || '-'}</p>
                   </div>
                   
-                  {/* 거주자 정보 */}
+                  {/* 주민 정보 */}
                   {selectedResidentInfo && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-muted-foreground">거주자 이름</label>
-                        <p className="text-foreground">{selectedResidentInfo.resident.name}</p>
+                        <label className="block text-sm font-medium text-muted-foreground">주민 이름</label>
+                        <p className="text-foreground">{selectedResidentInfo.name}</p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-muted-foreground">연락처</label>
-                        <p className="text-foreground">{selectedResidentInfo.resident.phone || '-'}</p>
+                        <p className="text-foreground">{selectedResidentInfo.phone || '-'}</p>
                       </div>
                       <div className="col-span-2">
                         <label className="block text-sm font-medium text-muted-foreground">이메일</label>
-                        <p className="text-foreground">{selectedResidentInfo.resident.email || '-'}</p>
+                        <p className="text-foreground">{selectedResidentInfo.email || '-'}</p>
                       </div>
                       <div className="col-span-2">
                         <label className="block text-sm font-medium text-muted-foreground">주소</label>
-                        <p className="text-foreground">{`${selectedResidentInfo.resident.address1Depth} ${selectedResidentInfo.resident.address2Depth}${selectedResidentInfo.resident.address3Depth ? ` ${selectedResidentInfo.resident.address3Depth}` : ''}`}</p>
+                        <p className="text-foreground">{`${selectedResidentInfo.address1Depth} ${selectedResidentInfo.address2Depth}${selectedResidentInfo.address3Depth ? ` ${selectedResidentInfo.address3Depth}` : ''}`}</p>
                       </div>
                     </>
                   )}

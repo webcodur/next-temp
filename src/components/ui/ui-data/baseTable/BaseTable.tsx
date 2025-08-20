@@ -181,6 +181,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 									hover:bg-primary-3/20 hover:scale-[1.02]
 									rounded px-1 py-0.5 transition-all duration-200
 									border border-transparent hover:border-primary-4/40
+									relative hover:z-10
 								"
 							>
 								{renderedContent}
@@ -211,7 +212,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 		return (
 			<td
 				className={`
-					px-6 py-4 text-sm text-foreground
+					px-4 py-2 text-foreground relative overflow-visible
 					${getAlignmentClass(column.align)}
 					${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
 					${column.cellClassName || cellClassName}
@@ -227,7 +228,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 
 	// #region 바디 렌더링
 	const renderBody = () => (
-		<tbody className="divide-y bg-background divide-border">
+		<tbody className="overflow-visible divide-y bg-background divide-border">
 			{isInitialLoading ? (
 				// 로딩 상태
 				Array.from({ length: Math.min(loadingRows, pageSize) }, (_, index) => (
@@ -278,6 +279,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 								${hoverClass}
 								${onRowClick ? 'cursor-pointer' : ''}
 								${computeRowClassName()}
+								overflow-visible
 							`}
 						>
 							{columns.map((column, colIndex) => (
@@ -310,7 +312,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 					className="w-full rounded-lg bg-background"
 					style={{ 
 						tableLayout: 'fixed', 
-						borderSpacing: 0, 
+						borderSpacing: '0 2px', 
 						borderCollapse: 'separate',
 						minWidth: minWidth 
 					}}

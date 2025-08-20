@@ -5,11 +5,11 @@ import { BaseIdEntityDto } from '../../common/dto/base.dto';
 /**
  * ResidentInstanceDto
  *
- * 거주자-인스턴스 관계 정보를 나타내는 DTO입니다.
+ * 주민-인스턴스 관계 정보를 나타내는 DTO입니다.
  */
 export class ResidentInstanceDto extends BaseIdEntityDto {
   @ApiProperty({
-    description: '거주자 ID',
+    description: '주민 ID',
     example: 1,
   })
   resident_id: number;
@@ -31,11 +31,11 @@ export class ResidentInstanceDto extends BaseIdEntityDto {
 /**
  * CreateResidentInstanceDto
  *
- * 거주자-인스턴스 관계 생성을 위한 DTO입니다.
+ * 주민-인스턴스 관계 생성을 위한 DTO입니다.
  */
 export class CreateResidentInstanceDto {
   @ApiProperty({
-    description: '거주자 ID',
+    description: '주민 ID',
     example: 1,
   })
   @IsInt({ message: 'resident_id는 정수여야 합니다.' })
@@ -61,7 +61,7 @@ export class CreateResidentInstanceDto {
 /**
  * UpdateResidentInstanceDto
  *
- * 거주자-인스턴스 관계 수정을 위한 DTO입니다.
+ * 주민-인스턴스 관계 수정을 위한 DTO입니다.
  */
 export class UpdateResidentInstanceDto {
   @ApiProperty({
@@ -77,11 +77,11 @@ export class UpdateResidentInstanceDto {
 /**
  * MoveResidentDto
  *
- * 거주자 인스턴스 이동을 위한 DTO입니다.
+ * 주민 인스턴스 이동을 위한 DTO입니다.
  */
 export class MoveResidentDto {
   @ApiProperty({
-    description: '이동할 거주자 ID',
+    description: '이동할 주민 ID',
     example: 123,
   })
   @IsInt({ message: 'resident_id는 정수여야 합니다.' })

@@ -5,7 +5,7 @@ import { Trim } from '../../decorators/trim.decorator';
 
 export class SearchResidentDto extends BaseSearchDto {
   @ApiProperty({
-    description: '거주자 이름',
+    description: '주민 이름',
     required: false,
   })
   @IsOptional()

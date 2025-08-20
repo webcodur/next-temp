@@ -1,4 +1,4 @@
-/* 메뉴 설명: 거주자 관리 목록 페이지 */
+/* 메뉴 설명: 주민 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -89,11 +89,11 @@ export default function ResidentsListPage() {
       if (result.success) {
         setResidentList(result.data?.data || []);
       } else {
-        console.error('거주자 목록 로드 실패:', result.errorMsg);
+        console.error('주민 목록 로드 실패:', result.errorMsg);
         setResidentList([]);
       }
     } catch (error) {
-      console.error('거주자 목록 로드 중 오류:', error);
+      console.error('주민 목록 로드 중 오류:', error);
       setResidentList([]);
     } finally {
       setIsLoading(false);
@@ -165,15 +165,15 @@ export default function ResidentsListPage() {
       
       if (result.success) {
         setResidentList((prev) => prev.filter((resident) => resident.id !== deleteTargetId));
-        setDialogMessage('거주자가 성공적으로 삭제되었습니다.');
+        setDialogMessage('주민이 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`거주자 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage(`주민 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorDialogOpen(true);
       }
     } catch (error) {
-      console.error('거주자 삭제 중 오류:', error);
-      setDialogMessage('거주자 삭제 중 오류가 발생했습니다.');
+      console.error('주민 삭제 중 오류:', error);
+      setDialogMessage('주민 삭제 중 오류가 발생했습니다.');
       setErrorDialogOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -342,10 +342,12 @@ export default function ResidentsListPage() {
       align: 'start',
       width: '20%',
       cell: (item: ResidentDetail) => {
-        const currentResident = item.residentInstance?.find(ri => ri.instance);
-        if (currentResident?.instance) {
-          const { address1Depth, address2Depth, address3Depth } = currentResident.instance;
-          return `${address1Depth} ${address2Depth} ${address3Depth || ''}`.trim();
+        const currentResidences = item.residentInstance?.filter(ri => ri.instance) || [];
+        if (currentResidences.length > 0) {
+          return currentResidences.map(residence => {
+            const { address1Depth, address2Depth, address3Depth } = residence.instance!;
+            return `${address1Depth} ${address2Depth} ${address3Depth || ''}`.trim();
+          }).join(', ');
         }
         return '거주지 없음';
       },
@@ -378,7 +380,7 @@ export default function ResidentsListPage() {
               e.stopPropagation();
               handleDeleteClick(item.id);
             }}
-            title="거주자 삭제"
+            title="주민 삭제"
           />
         </div>
       ),
@@ -390,8 +392,8 @@ export default function ResidentsListPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="거주자 관리" 
-        subtitle="거주자 등록, 수정, 삭제 및 세대 관계 관리"
+        title="주민 관리" 
+        subtitle="주민 등록, 수정, 삭제 및 세대 관계 관리"
       />
 
       {/* 고급 검색 */}
@@ -409,7 +411,7 @@ export default function ResidentsListPage() {
         onRowClick={handleRowClick as unknown as (item: Record<string, unknown>, index: number) => void}
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
-        itemName="거주자"
+        itemName="주민"
         isFetching={isLoading}
         minWidth="1100px"
       />
@@ -418,7 +420,7 @@ export default function ResidentsListPage() {
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="거주자 삭제 확인"
+        title="주민 삭제 확인"
         size="md"
         onConfirm={handleDeleteConfirm}
       >
@@ -426,7 +428,7 @@ export default function ResidentsListPage() {
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 거주자 정보가 영구적으로 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 주민 정보가 영구적으로 삭제됩니다.
             </p>
           </div>
           

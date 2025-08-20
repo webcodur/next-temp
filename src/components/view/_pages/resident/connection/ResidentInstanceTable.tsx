@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import {  Unplug } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Unplug, ArrowRightLeft, ExternalLink, Edit } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { BaseTable, BaseTableColumn } from '@/components/ui/ui-data/baseTable/BaseTable';
@@ -13,18 +14,30 @@ interface ResidentInstanceTableProps {
   residentInstances: ResidentInstanceWithInstance[];
   onCreateRelation: () => void;
   onDeleteComplete: (success: boolean, message: string) => void;
+  onMoveFromHere?: (residence: ResidentInstanceWithInstance) => void;
+  onEditConnection?: (residence: ResidentInstanceWithInstance) => void;
 }
 
 export default function ResidentInstanceTable({ 
   residentInstances, 
-  onDeleteComplete 
+  onDeleteComplete,
+  onMoveFromHere,
+  onEditConnection
 }: ResidentInstanceTableProps) {
+
   // #region 상태 관리
+  const router = useRouter();
   const [disconnectConfirmOpen, setDisconnectConfirmOpen] = useState(false);
   const [disconnectTargetId, setDisconnectTargetId] = useState<number | null>(null);
   // #endregion
 
   // #region 핸들러
+  const handleInstanceDetailClick = useCallback((item: ResidentInstanceWithInstance) => {
+    if (item.instanceId) {
+      router.push(`/parking/occupancy/instance/${item.instanceId}`);
+    }
+  }, [router]);
+
   const handleDisconnectInstanceRelation = useCallback((relationId: number) => {
     setDisconnectTargetId(relationId);
     setDisconnectConfirmOpen(true);
@@ -37,7 +50,7 @@ export default function ResidentInstanceTable({
       const result = await deleteResidentInstance(disconnectTargetId);
       
       if (result.success) {
-        const successMessage = '거주자-세대 관계가 성공적으로 해제되었습니다.';
+        const successMessage = '주민-세대 관계가 성공적으로 해제되었습니다.';
         onDeleteComplete(true, successMessage);
       } else {
         const errorMessage = `관계 해제에 실패했습니다: ${result.errorMsg}`;
@@ -56,18 +69,6 @@ export default function ResidentInstanceTable({
 
   // #region 컬럼 정의
   const columns: BaseTableColumn<ResidentInstanceWithInstance>[] = [
-    {
-      key: 'id',
-      header: '관계 ID',
-      width: '10%',
-      align: 'center',
-    },
-    {
-      key: 'instanceId',
-      header: '세대 ID',
-      width: '10%',
-      align: 'center',
-    },
     {
       key: 'address',
       header: '주소',
@@ -115,17 +116,58 @@ export default function ResidentInstanceTable({
     {
       header: '관리',
       align: 'center',
-      width: '10%',
+      width: '40%',
       cell: (item: ResidentInstanceWithInstance) => (
-        <div className="flex gap-1 justify-center">
+        <div className="flex gap-2 justify-center">
           <Button
-            variant="ghost"
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleInstanceDetailClick(item);
+            }}
+            title="세대 정보 보기"
+            className="flex gap-1 items-center px-2 py-1 text-xs"
+          >
+            <ExternalLink size={12} />
+            세대정보
+          </Button>
+          {onEditConnection && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditConnection(item);
+              }}
+              title="연결 정보 수정"
+              className="flex gap-1 items-center px-2 py-1 text-xs"
+            >
+              <Edit size={12} />
+              연결정보
+            </Button>
+          )}
+          {onMoveFromHere && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onMoveFromHere(item)}
+              title="이 세대에서 이사가기"
+              className="flex gap-1 items-center px-2 py-1 text-xs"
+            >
+              <ArrowRightLeft size={12} />
+              이사
+            </Button>
+          )}
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => handleDisconnectInstanceRelation(item.id)}
             title="관계 해제"
-            className="p-2 w-8 h-8 hover:bg-orange-50 hover:text-orange-600"
+            className="flex gap-1 items-center px-2 py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
           >
-            <Unplug size={16} />
+            <Unplug size={12} />
+            연결해제
           </Button>
         </div>
       ),
@@ -158,7 +200,7 @@ export default function ResidentInstanceTable({
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 해제하시겠습니까?</h3>
             <p className="text-muted-foreground">
-              이 작업은 되돌릴 수 없습니다. 거주자-세대 관계가 영구적으로 해제됩니다.
+              이 작업은 되돌릴 수 없습니다. 주민-세대 관계가 영구적으로 해제됩니다.
               <br />
               <span className="font-medium text-orange-600">
                 주의: 이사의 경우 해제보다는 &ldquo;세대 이전&rdquo; 기능을 사용하시기 바랍니다.

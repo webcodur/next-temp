@@ -48,30 +48,24 @@ export interface CarInstanceResidentDetail extends CarInstanceResident {
 }
 
 export interface CarResidentWithDetails {
-  id: number;
-  carInstanceId: number;
-  residentId: number;
-  carAlarm: boolean;
-  isPrimary: boolean;
+  id: number; // 주민 ID
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  birthDate?: string | null;
+  gender?: 'M' | 'F' | null;
+  emergencyContact?: string | null;
+  memo?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
-  resident: {
-    id: number;
-    name: string;
-    phone?: string | null;
-    email?: string | null;
-    birthDate?: string | null;
-    gender?: 'M' | 'F' | null;
-    emergencyContact?: string | null;
-    memo?: string | null;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt?: string | null;
-    address1Depth: string;
-    address2Depth: string;
-    address3Depth?: string | null;
-  };
+  carInstanceResidentId: number; // 주민-차량 관계 ID
+  address1Depth: string;
+  address2Depth: string;
+  address3Depth?: string | null;
+  // 관계 정보는 별도 API에서 제공되거나 기본값 사용
+  carAlarm?: boolean;
+  isPrimary?: boolean;
 }
 
 export interface CarWithInstance extends Car {

@@ -3,8 +3,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Settings, UserPlus } from 'lucide-react';
-
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
@@ -316,14 +314,14 @@ export default function InstanceDetailPage() {
   const handleDisconnectResident = useCallback(async (residentId: number) => {
     try {
       // carResidents에서 해당 거주민의 carInstanceResidentId 찾기
-      const carResident = carResidents.find(cr => cr.resident.id === residentId);
+      const carResident = carResidents.find(cr => cr.id === residentId);
       if (!carResident) {
         setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
         return;
       }
 
-      const result = await deleteCarInstanceResident(carResident.id);
+      const result = await deleteCarInstanceResident(carResident.carInstanceResidentId);
       
       if (result.success) {
         setModalMessage('거주민과 차량의 연결이 성공적으로 해지되었습니다.');
@@ -357,7 +355,7 @@ export default function InstanceDetailPage() {
   const handleTogglePrimary = useCallback(async (residentId: number) => {
     try {
       // carResidents에서 해당 거주민의 carInstanceResidentId와 현재 설정 찾기
-      const carResident = carResidents.find(cr => cr.resident.id === residentId);
+      const carResident = carResidents.find(cr => cr.id === residentId);
       if (!carResident) {
         setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
@@ -365,13 +363,13 @@ export default function InstanceDetailPage() {
       }
 
       // 주차량 설정 토글
-      const updateResult = await updateCarInstanceResident(carResident.id, {
-        carAlarm: carResident.carAlarm, // 기존 알람 설정 유지
-        isPrimary: !carResident.isPrimary // 주차량 설정 토글
+      const updateResult = await updateCarInstanceResident(carResident.carInstanceResidentId, {
+        carAlarm: carResident.carAlarm || false, // 기존 알람 설정 유지 (기본값 false)
+        isPrimary: !(carResident.isPrimary || false) // 주차량 설정 토글 (기본값 false)
       });
       
       if (updateResult.success) {
-        setModalMessage(`주차량 설정이 ${!carResident.isPrimary ? '활성화' : '비활성화'}되었습니다.`);
+        setModalMessage(`주차량 설정이 ${!(carResident.isPrimary || false) ? '활성화' : '비활성화'}되었습니다.`);
         setSuccessModalOpen(true);
         
         // 데이터 새로고침
@@ -402,7 +400,7 @@ export default function InstanceDetailPage() {
   const handleToggleAlarm = useCallback(async (residentId: number) => {
     try {
       // carResidents에서 해당 거주민의 carInstanceResidentId와 현재 설정 찾기
-      const carResident = carResidents.find(cr => cr.resident.id === residentId);
+      const carResident = carResidents.find(cr => cr.id === residentId);
       if (!carResident) {
         setModalMessage('해당 거주민의 연결 정보를 찾을 수 없습니다.');
         setErrorModalOpen(true);
@@ -410,13 +408,13 @@ export default function InstanceDetailPage() {
       }
 
       // 알람 설정 토글
-      const updateResult = await updateCarInstanceResident(carResident.id, {
-        carAlarm: !carResident.carAlarm, // 알람 설정 토글
-        isPrimary: carResident.isPrimary // 기존 주차량 설정 유지
+      const updateResult = await updateCarInstanceResident(carResident.carInstanceResidentId, {
+        carAlarm: !(carResident.carAlarm || false), // 알람 설정 토글 (기본값 false)
+        isPrimary: carResident.isPrimary || false // 기존 주차량 설정 유지 (기본값 false)
       });
       
       if (updateResult.success) {
-        setModalMessage(`알람 설정이 ${!carResident.carAlarm ? '활성화' : '비활성화'}되었습니다.`);
+        setModalMessage(`알람 설정이 ${!(carResident.carAlarm || false) ? '활성화' : '비활성화'}되었습니다.`);
         setSuccessModalOpen(true);
         
         // 데이터 새로고침
@@ -535,13 +533,6 @@ export default function InstanceDetailPage() {
           {/* 서비스 설정 탭 */}
           {activeTab === 'service' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Settings className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">서비스 설정</h3>
-                  <p className="text-sm text-muted-foreground">세대의 각종 서비스 설정을 관리합니다.</p>
-                </div>
-              </div>
               <InstanceServiceConfigSection 
                 instance={instance}
                 onDataChange={loadInstanceData}
@@ -552,13 +543,6 @@ export default function InstanceDetailPage() {
           {/* 방문 설정 탭 */}
           {activeTab === 'visit' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <UserPlus className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">방문 설정</h3>
-                  <p className="text-sm text-muted-foreground">세대의 방문자 관련 설정을 관리합니다.</p>
-                </div>
-              </div>
               <InstanceVisitConfigSection 
                 instance={instance}
                 onDataChange={loadInstanceData}

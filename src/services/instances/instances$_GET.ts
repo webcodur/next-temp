@@ -105,6 +105,8 @@ interface InstanceServerResponse {
   created_at: string;
   updated_at: string;
   deleted_at?: string | null;
+  resident_count?: number;
+  car_count?: number;
   instance_service_config?: InstanceServiceConfigServer | null;
   instance_visit_config?: InstanceVisitConfigServer | null;
   resident_instance?: ResidentInstanceServer[];
@@ -229,6 +231,8 @@ function serverToClient(server: InstanceServerResponse): Instance {
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
+    residentCount: server.resident_count,
+    carCount: server.car_count,
     instanceServiceConfig: server.instance_service_config ? convertInstanceServiceConfig(server.instance_service_config) : null,
     instanceVisitConfig: server.instance_visit_config ? convertInstanceVisitConfig(server.instance_visit_config) : null,
     residentInstance: server.resident_instance?.map(convertResidentInstance),

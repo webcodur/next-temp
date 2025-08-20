@@ -8,10 +8,10 @@ import { CarDto } from './car.dto';
 import { TransformBoolean } from 'src/decorators/transform-boolean.decorator';
 
 /**
- * 차량-인스턴스-거주자 관계 기본 DTO
+ * 차량-인스턴스-주민 관계 기본 DTO
  */
 export class CarInstanceResidentDto extends BaseEntityDto {
-  @ApiProperty({ description: '차량-거주자 관계 ID' })
+  @ApiProperty({ description: '차량-주민 관계 ID' })
   @IsInt()
   id: number;
 
@@ -19,7 +19,7 @@ export class CarInstanceResidentDto extends BaseEntityDto {
   @IsInt()
   car_instance_id: number;
 
-  @ApiProperty({ description: '거주자 ID' })
+  @ApiProperty({ description: '주민 ID' })
   @IsInt()
   resident_id: number;
 
@@ -35,14 +35,14 @@ export class CarInstanceResidentDto extends BaseEntityDto {
 }
 
 /**
- * 차량-인스턴스-거주자 관계 생성 DTO
+ * 차량-인스턴스-주민 관계 생성 DTO
  */
 export class CreateCarInstanceResidentDto {
   @ApiProperty({ description: '차량-인스턴스 연결 ID' })
   @IsInt()
   car_instance_id: number;
 
-  @ApiProperty({ description: '거주자 ID' })
+  @ApiProperty({ description: '주민 ID' })
   @IsInt()
   resident_id: number;
 
@@ -68,7 +68,7 @@ export class CreateCarInstanceResidentDto {
 }
 
 /**
- * 차량-인스턴스-거주자 관계 수정 DTO
+ * 차량-인스턴스-주민 관계 수정 DTO
  */
 export class UpdateCarInstanceResidentDto {
   @ApiProperty({
@@ -112,7 +112,7 @@ export class CarInstanceDto {
 }
 
 /**
- * 차량-인스턴스-거주자 관계 상세 정보 DTO
+ * 차량-인스턴스-주민 관계 상세 정보 DTO
  */
 export class CarInstanceResidentDetailDto extends CarInstanceResidentDto {
   @ApiProperty({
@@ -122,7 +122,7 @@ export class CarInstanceResidentDetailDto extends CarInstanceResidentDto {
   car_instance?: CarInstanceDto;
 
   @ApiProperty({
-    description: '거주자 정보',
+    description: '주민 정보',
     type: () => ResidentDto,
   })
   resident?: ResidentDto;

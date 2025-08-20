@@ -56,7 +56,7 @@ interface ResidentHistoryServerResponse {
 function serverToClient(server: ResidentHistoryServerResponse) {
   // 올바른 구조인지 확인
   if (!server || !server.resident || !Array.isArray(server.instanceHistory)) {
-    console.warn('거주자 이력 응답이 올바르지 않습니다:', server);
+    console.warn('주민 이력 응답이 올바르지 않습니다:', server);
     return {
       resident: null,
       instanceHistory: []
@@ -122,7 +122,7 @@ export async function getResidentHistory(id: number) {
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `거주자 인스턴스 이동 이력 조회 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `주민 인스턴스 이동 이력 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

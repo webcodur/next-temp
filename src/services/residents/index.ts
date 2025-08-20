@@ -1,4 +1,4 @@
-// 거주자 관리 API 서비스 내보내기
+// 주민 관리 API 서비스 내보내기
 export { searchResidents } from './residents$_GET';
 export { getResidentDetail } from './residents@id_GET';
 export { updateResident } from './residents@id_PATCH';

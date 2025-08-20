@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Hash, Plus, Minus } from 'lucide-react';
+import { Binary, Plus, Minus } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
@@ -222,9 +222,9 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 				validationStatus={getFeedbackType()}
 				onClick={handleContainerClick}>
 				
-				{/* 왼쪽 해시 아이콘 */}
+				{/* 왼쪽 이진수 아이콘 */}
 				{showIcon && (
-					<Hash className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<Binary className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
 				)}
 
 				{/* 중앙 입력 필드 */}

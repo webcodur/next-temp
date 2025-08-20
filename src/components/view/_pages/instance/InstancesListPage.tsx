@@ -149,7 +149,20 @@ export default function InstancesListPage() {
         return typeMap[item.instanceType] || item.instanceType;
       },
     },
-
+    {
+      key: 'residentCount',
+      header: '거주민',
+      align: 'center',
+      width: '7%',
+      cell: (item: Instance) => `${item.residentCount ?? 0}명`,
+    },
+    {
+      key: 'carCount',
+      header: '차량',
+      align: 'center',
+      width: '7%',
+      cell: (item: Instance) => `${item.carCount ?? 0}대`,
+    },
     {
       key: 'address3Depth',
       header: '기타주소',

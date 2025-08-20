@@ -3,6 +3,12 @@
   기능: 뉴모피즘 스타일의 재사용 가능한 버튼 컴포넌트
   책임: 상태별 인터랙션이 적용된 일관된 UI 경험을 제공하는 기본 버튼 컴포넌트
   
+  ⚡ 주요 기능:
+  - loading 상태 지원 (자동 스피너 아이콘, 비활성화, 접근성)
+  - icon 지원 (loading 시 스피너로 자동 교체)
+  - 완전한 접근성 (aria-disabled, aria-label)
+  - loadingText 지원 (로딩 중 텍스트 변경)
+  
   🎯 Variant 체계:
   - primary: 주요 액션 (저장, 생성, 로그인) - 브랜드 블루
   - secondary: 보조 액션 (취소, 뒤로가기) - 브랜드 퍼플  
@@ -39,10 +45,9 @@
 */
 
 import * as React from 'react';
-
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // #region 타입 및 스타일
@@ -93,22 +98,33 @@ export interface ButtonProps
 	asChild?: boolean;
 	icon?: React.ComponentType<{ className?: string }>;
 	loading?: boolean;
+	loadingText?: string;
 }
 // #endregion
 
 // #region 컴포넌트
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, icon: Icon, loading, children, disabled, ...props }, ref) => {
+	({ className, variant, size, asChild = false, icon: Icon, loading, loadingText, children, disabled, ...props }, ref) => {
 		const Comp = asChild ? Slot : 'button';
+		const isDisabled = disabled || loading;
+		
 		return (
 			<Comp
 				className={cn(buttonVariants({ variant, size, className }))}
 				ref={ref}
-				disabled={disabled || loading}
+				disabled={isDisabled}
+				aria-disabled={isDisabled}
+				aria-label={loading ? loadingText || '로딩 중...' : props['aria-label']}
 				{...props}
 			>
-				{Icon && <Icon className="w-4 h-4" />}
-				{children}
+				{/* 로딩 중일 때 스피너, 아닐 때 아이콘 */}
+				{loading ? (
+					<Loader2 className="w-4 h-4 animate-spin" />
+				) : (
+					Icon && <Icon className="w-4 h-4" />
+				)}
+				{/* 로딩 텍스트가 있으면 표시, 없으면 기본 children */}
+				{loading && loadingText ? loadingText : children}
 			</Comp>
 		);
 	}

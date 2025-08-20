@@ -59,7 +59,7 @@ export async function updateCarInstanceResident(carInstanceResidentId: number, d
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `차량-거주자 연결 수정 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `차량-주민 연결 수정 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

@@ -7,6 +7,7 @@ import { CarInstanceWithCar } from '@/types/instance';
 import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge, CustomAction } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { Button } from '@/components/ui/ui-input/button/Button';
 import CarCreateModal from './CarCreateModal';
 import CarSearchModal from './CarSearchModal';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
@@ -168,20 +169,20 @@ export default function InstanceCarList({
         icon={<Car size={18} />}
         headerActions={(
           <div className="flex gap-1 items-center">
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={handleCreateClick}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-green-100 text-muted-foreground hover:text-green-600"
               title="새 차량 생성"
-            >
-              <Plus size={16} />
-            </button>
-            <button
+              icon={Plus}
+            />
+            <Button
+              variant="outline"
+              size="icon"
               onClick={handleConnectClick}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
               title="차량 연결"
-            >
-              <Link size={16} />
-            </button>
+              icon={Link}
+            />
           </div>
         )}
       >
@@ -204,20 +205,20 @@ export default function InstanceCarList({
       icon={<Car size={18} />}
       headerActions={(
         <div className="flex gap-1 items-center">
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={handleCreateClick}
-            className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-green-100 text-muted-foreground hover:text-green-600"
             title="새 차량 생성"
-          >
-            <Plus size={16} />
-          </button>
-          <button
+            icon={Plus}
+          />
+          <Button
+            variant="outline"
+            size="icon"
             onClick={handleConnectClick}
-            className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
             title="차량 연결"
-          >
-            <Link size={16} />
-          </button>
+            icon={Link}
+          />
         </div>
       )}
     >

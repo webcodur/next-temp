@@ -1,4 +1,4 @@
-/* 거주자 관련 공통 타입 정의 */
+/* 주민 관련 공통 타입 정의 */
 
 export interface ResidentTab {
 	id: string;

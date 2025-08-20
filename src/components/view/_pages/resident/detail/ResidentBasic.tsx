@@ -9,7 +9,7 @@ import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDrop
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { ResidentDetail } from '@/types/resident';
+import { ResidentDetail, ResidentInstanceWithInstance } from '@/types/resident';
 import { ValidationRule } from '@/utils/validation';
 
 export interface ResidentFormData {
@@ -286,7 +286,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
   const editFields: GridFormFieldSchema[] = mode === 'edit' && resident ? [
     {
       id: 'residentId',
-      label: '거주자 ID',
+      label: '주민 ID',
       rules: '시스템 자동 생성',
       component: (
         <SimpleTextInput
@@ -334,15 +334,15 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
   const fields = [...baseFields, ...editFields];
 
   // #region 현재 거주지 정보
-  const currentResidence = resident?.residentInstance?.find(ri => ri.instance);
+  const currentResidences = resident?.residentInstance?.filter(ri => ri.instance) || [];
   
-  const currentResidenceFields: GridFormFieldSchema[] = currentResidence?.instance ? [
+  const createResidenceFields = (residence: ResidentInstanceWithInstance): GridFormFieldSchema[] => residence?.instance ? [
     {
       id: 'instanceId',
       label: '세대 ID',
       component: (
         <SimpleTextInput
-          value={`#${currentResidence.instance.id}`}
+          value={`#${residence.instance.id}`}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
@@ -355,7 +355,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '1차 주소',
       component: (
         <SimpleTextInput
-          value={currentResidence.instance.address1Depth}
+          value={residence.instance.address1Depth}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
@@ -368,7 +368,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '2차 주소',
       component: (
         <SimpleTextInput
-          value={currentResidence.instance.address2Depth}
+          value={residence.instance.address2Depth}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
@@ -381,7 +381,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '3차 주소',
       component: (
         <SimpleTextInput
-          value={currentResidence.instance.address3Depth || '-'}
+          value={residence.instance.address3Depth || '-'}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
@@ -400,7 +400,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
               TEMP: '임시',
               COMMERCIAL: '상업',
             };
-            return typeMap[currentResidence.instance.instanceType as keyof typeof typeMap] || currentResidence.instance.instanceType;
+            return typeMap[residence.instance.instanceType as keyof typeof typeMap] || residence.instance.instanceType;
           })()}
           onChange={() => {}}
           disabled={true}
@@ -414,20 +414,20 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '관계 ID',
       component: (
         <SimpleTextInput
-          value={`#${currentResidence.id}`}
+          value={`#${residence.id}`}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
         />
       ),
-      rules: '거주자-세대 관계 ID'
+      rules: '주민-세대 관계 ID'
     },
     {
       id: 'relationMemo',
       label: '관계 메모',
       component: (
         <SimpleTextInput
-          value={currentResidence.memo || '-'}
+          value={residence.memo || '-'}
           onChange={() => {}}
           disabled={true}
           validationRule={getValidationRule('readonly', false)}
@@ -440,7 +440,7 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
       label: '관계 생성일',
       component: (
         <SimpleDatePicker
-          value={currentResidence.createdAt}
+          value={residence.createdAt}
           onChange={() => {}}
           disabled={true}
           dateFormat="yyyy-MM-dd HH:mm"
@@ -458,8 +458,8 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
     <div className="space-y-6">
       {/* 기본 정보 */}
       <SectionPanel 
-        title="거주자 기본 정보"
-        subtitle="거주자의 개인 정보를 관리합니다."
+        title="주민 기본 정보"
+        subtitle="주민의 개인 정보를 관리합니다."
         icon={<User size={18} />}
       >
         <GridFormAuto 
@@ -472,16 +472,25 @@ const ResidentForm: React.FC<ResidentFormProps> = ({
 
       {/* 현재 거주지 정보 */}
       <SectionPanel 
-        title="현재 거주지 정보"
-        subtitle="거주자가 현재 거주하는 세대 정보입니다."
+        title={`현재 거주지 정보 (${currentResidences.length}개)`}
+        subtitle="주민이 현재 거주하는 세대 정보입니다."
         icon={<Building size={18} />}
       >
-        {currentResidence?.instance ? (
-          <GridFormAuto 
-            fields={currentResidenceFields}
-            gap="16px"
-            bottomRightActions={null}
-          />
+        {currentResidences.length > 0 ? (
+          <div className="space-y-6">
+            {currentResidences.map((residence, index) => (
+              <div key={residence.id} className="p-4 rounded-lg border bg-card">
+                <h4 className="mb-3 text-sm font-medium text-muted-foreground">
+                  거주지 #{index + 1}
+                </h4>
+                <GridFormAuto 
+                  fields={createResidenceFields(residence)}
+                  gap="16px"
+                  bottomRightActions={null}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="py-8 text-center text-muted-foreground">
             현재 연결된 거주지가 없습니다.

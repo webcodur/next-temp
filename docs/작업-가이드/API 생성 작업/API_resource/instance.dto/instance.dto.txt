@@ -62,7 +62,7 @@ export class InstanceDto extends BaseIdEntityDto {
  */
 export class InstanceDetailDto extends InstanceDto {
   @ApiProperty({
-    description: '거주자 목록',
+    description: '주민 목록',
     isArray: true,
   })
   resident_instance: any[];

@@ -1,17 +1,29 @@
+/* 
+  파일명: /components/view/_pages/instance/basic/InstanceResidentList.tsx
+  기능: 세대에 연결된 거주민 목록 및 관리 컴포넌트
+  책임: 거주민 연결/해제, 차량 연결 관리, 상세보기 및 삭제 기능을 제공한다.
+*/ // ------------------------------
+
 'use client';
 
 import React, { useState } from 'react';
-import { Users, User, Phone, Mail, Calendar, UserCheck, Link, Plus, Unplug, Car, X, CarFront, BellRing } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { ResidentInstanceWithResident } from '@/types/instance';
-import { CarResidentWithDetails } from '@/types/car';
-import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
-import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
-import ResidentSearchModal from './ResidentSearchModal';
-import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
-import { deleteResident } from '@/services/residents/residents@id_DELETE';
 
+import { Users, User, Phone, Mail, Calendar, UserCheck, Link, Plus, Unplug, Car, X, CarFront, BellRing } from 'lucide-react';
+
+import { Button } from '@/components/ui/ui-input/button/Button';
+import InstanceItemCard, { InstanceItemCardField, InstanceItemCardBadge } from '@/components/ui/ui-layout/info-card/InstanceItemCard';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import { deleteResident } from '@/services/residents/residents@id_DELETE';
+import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
+
+import ResidentSearchModal from './ResidentSearchModal';
+
+import type { CarResidentWithDetails } from '@/types/car';
+import type { ResidentInstanceWithResident } from '@/types/instance';
+
+// #region 타입 및 인터페이스
 interface InstanceResidentListProps {
   residentInstances?: ResidentInstanceWithResident[];
   loading?: boolean;
@@ -27,6 +39,7 @@ interface InstanceResidentListProps {
   onTogglePrimary?: (residentId: number) => void;
   onToggleAlarm?: (residentId: number) => void;
 }
+// #endregion
 
 export default function InstanceResidentList({ 
   residentInstances = [], 
@@ -43,7 +56,7 @@ export default function InstanceResidentList({
   onTogglePrimary,
   onToggleAlarm
 }: InstanceResidentListProps) {
-  const router = useRouter();
+  // #region 상태
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     type: 'detail' | 'exclude' | 'delete';
@@ -57,7 +70,13 @@ export default function InstanceResidentList({
   });
 
   const [connectModalOpen, setConnectModalOpen] = useState(false);
+  // #endregion
 
+  // #region 훅
+  const router = useRouter();
+  // #endregion
+
+  // #region 핸들러
   const handleResidentClick = (residentId: number) => {
     router.push(`/parking/occupancy/resident/${residentId}`);
   };
@@ -165,8 +184,6 @@ export default function InstanceResidentList({
     }
   };
 
-
-
   if (loading) {
     return (
       <SectionPanel 
@@ -175,13 +192,13 @@ export default function InstanceResidentList({
         icon={<Users size={18} />}
         headerActions={(
           <div className="flex gap-1 items-center">
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleConnectClick}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
               title="거주민 연결"
-            >
-              <Link size={16} />
-            </button>
+              icon={Link}
+            />
           </div>
         )}
       >
@@ -194,9 +211,11 @@ export default function InstanceResidentList({
 
   // 거주민이 차량에 연결되어 있는지 확인
   const isResidentConnectedToCar = (residentId: number) => {
-    return carResidents.some(carResident => carResident.resident.id === residentId);
+    return carResidents.some(carResident => carResident.id === residentId);
   };
+  // #endregion
 
+  // #region 렌더링
   return (
     <div className="relative">
       <SectionPanel 
@@ -213,22 +232,23 @@ export default function InstanceResidentList({
             <div className="flex gap-2 items-center mr-2">
               <Car size={14} className="text-purple-600" />
               <span className="text-sm font-medium text-purple-600">{selectedCarNumber}</span>
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={onCloseResidentManagement}
-                className="flex justify-center items-center w-6 h-6 rounded-full transition-colors hover:bg-red-100 text-muted-foreground hover:text-red-600"
                 title="관리 모드 종료"
-              >
-                <X size={12} />
-              </button>
+                icon={X}
+                className="w-6 h-6 min-w-6"
+              />
             </div>
           )}
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleConnectClick}
-            className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
             title="거주민 연결"
-          >
-            <Link size={16} />
-          </button>
+            icon={Link}
+          />
         </div>
       )}
     >
@@ -287,7 +307,7 @@ export default function InstanceResidentList({
               ];
 
               const isConnected = isResidentConnectedToCar(residentInstance.resident.id);
-              const carResident = carResidents.find(cr => cr.resident.id === residentInstance.resident.id);
+              const carResident = carResidents.find(cr => cr.id === residentInstance.resident.id);
 
               return (
                 <div key={residentInstance.id} className="relative">
@@ -317,13 +337,14 @@ export default function InstanceResidentList({
                             <>
                               {/* 연결 해지 버튼 */}
                               <div className="relative group">
-                                <button
+                                <Button
+                                  variant="outline"
+                                  size="icon"
                                   onClick={() => onDisconnectResident && onDisconnectResident(residentInstance.resident.id)}
-                                  className="flex justify-center items-center w-12 h-12 text-white bg-red-500 rounded-full shadow-lg transition-all duration-200 group hover:bg-red-600 hover:scale-110 hover:shadow-xl"
                                   title="차량 연결 해지"
-                                >
-                                  <Unplug size={20} className="transition-all duration-200 group-hover:scale-110 group-hover:rotate-90" />
-                                </button>
+                                  icon={Unplug}
+                                  className="w-12 h-12 min-w-12 text-white bg-red-500 rounded-full shadow-lg transition-all duration-200 hover:bg-red-600 hover:scale-110 hover:shadow-xl border-none [&_svg]:size-5 [&_svg]:transition-all [&_svg]:duration-200 [&_svg]:group-hover:scale-110 [&_svg]:group-hover:rotate-90"
+                                />
                                 {/* 경고 표시 */}
                                 <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full border-2 border-white shadow-sm opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-100">
                                   <X size={8} className="absolute inset-0 m-auto text-white" />
@@ -331,17 +352,18 @@ export default function InstanceResidentList({
                               </div>
                               {/* 주차량 설정 버튼 */}
                               <div className="relative group">
-                                <button
+                                <Button
+                                  variant="outline"
+                                  size="icon"
                                   onClick={() => onTogglePrimary && onTogglePrimary(residentInstance.resident.id)}
-                                  className={`group flex justify-center items-center w-12 h-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl ${
+                                  title={`주차량 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
+                                  icon={CarFront}
+                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-none [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${
                                     carResident?.isPrimary 
                                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' 
                                       : 'bg-blue-500 hover:bg-blue-600'
                                   }`}
-                                  title={`주차량 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
-                                >
-                                  <CarFront size={18} className="transition-transform duration-200 group-hover:scale-110" />
-                                </button>
+                                />
                                 {/* 설정 상태 표시 */}
                                 <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
                                   carResident?.isPrimary 
@@ -356,17 +378,18 @@ export default function InstanceResidentList({
                               
                               {/* 알람 설정 버튼 */}
                               <div className="relative group">
-                                <button
+                                <Button
+                                  variant="outline"
+                                  size="icon"
                                   onClick={() => onToggleAlarm && onToggleAlarm(residentInstance.resident.id)}
-                                  className={`group flex justify-center items-center w-12 h-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl ${
+                                  title={`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}
+                                  icon={BellRing}
+                                  className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-none [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${carResident?.carAlarm ? '[&_svg]:animate-pulse' : ''} ${
                                     carResident?.carAlarm 
                                       ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700' 
                                       : 'bg-orange-500 hover:bg-orange-600'
                                   }`}
-                                  title={`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}
-                                >
-                                  <BellRing size={18} className={`group-hover:scale-110 transition-transform duration-200 ${carResident?.carAlarm ? 'animate-pulse' : ''}`} />
-                                </button>
+                                />
                                 {/* 설정 상태 표시 */}
                                 <div className={`absolute -top-2 -right-2 w-4 h-4 border-2 border-white rounded-full transition-opacity duration-200 shadow-sm pointer-events-none ${
                                   carResident?.carAlarm 
@@ -383,13 +406,14 @@ export default function InstanceResidentList({
                             <>
                               {/* 연결 추가 버튼 */}
                               <div className="relative">
-                                <button
+                                <Button
+                                  variant="outline"
+                                  size="icon"
                                   onClick={() => onConnectResident && onConnectResident(residentInstance.resident.id)}
-                                  className="flex justify-center items-center w-16 h-16 text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg transition-all duration-300 animate-pulse group hover:from-green-600 hover:to-emerald-600 hover:scale-110 hover:shadow-xl hover:animate-none"
                                   title="차량과 연결"
-                                >
-                                  <Plus size={28} className="transition-all duration-300 group-hover:rotate-90" />
-                                </button>
+                                  icon={Plus}
+                                  className="w-16 h-16 min-w-16 text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg transition-all duration-300 animate-pulse hover:from-green-600 hover:to-emerald-600 hover:scale-110 hover:shadow-xl hover:animate-none border-none [&_svg]:size-7 [&_svg]:transition-all [&_svg]:duration-300 [&_svg]:group-hover:rotate-90"
+                                />
                                 {/* 펄스 효과 */}
                                 <div className="absolute inset-0 bg-green-400 rounded-full opacity-20 animate-ping pointer-events-none"></div>
                                 {/* 연결 아이콘 */}
@@ -449,4 +473,5 @@ export default function InstanceResidentList({
       )}
     </div>
   );
+  // #endregion
 }

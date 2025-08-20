@@ -8,7 +8,7 @@ export async function deleteResident(id: number) {
 
   if (!response.ok) {
     const result = await response.json();
-    const errorMsg = result.message || `거주자 삭제 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `주민 삭제 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

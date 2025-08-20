@@ -110,7 +110,7 @@ export default function MenuSearchDemo() {
           <div className="p-4 rounded-lg bg-counter-1">
             <h4 className="mb-2 font-medium text-foreground">추천 검색어</h4>
             <div className="flex flex-wrap gap-2">
-              {['주차', '관리', '설정', '규정', '위반', '블랙리스트', '세대', '입주자', '차량', '캐시', 'IP'].map((keyword) => (
+              {['주차', '관리', '설정', '규정', '위반', '블랙리스트', '세대', '주민', '차량', '캐시', 'IP'].map((keyword) => (
                 <span key={keyword} className="px-2 py-1 text-xs rounded border bg-background text-foreground">
                   {keyword}
                 </span>

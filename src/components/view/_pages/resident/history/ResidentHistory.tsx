@@ -1,4 +1,4 @@
-/* 거주자 이력 섹션 컴포넌트 */
+/* 주민 이력 섹션 컴포넌트 */
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';

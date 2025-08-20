@@ -100,7 +100,7 @@ export async function moveResident(data: MoveResidentRequest) {
     const result = await response.json();
     
     if (!response.ok) {
-      const errorMsg = result?.message || `거주자 인스턴스 이동 실패(코드): ${response.status}`;
+      const errorMsg = result?.message || `주민 인스턴스 이동 실패(코드): ${response.status}`;
       console.log(errorMsg);
       return { success: false, errorMsg };
     }

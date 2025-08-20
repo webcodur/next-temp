@@ -1,7 +1,7 @@
  "/residents/move": {
       "post": {
-        "description": "같은 현장 내에서 거주자를 다른 인스턴스로 이동시킵니다. (이력 보존)\n\nmemo는 선택값입니다.",
-        "operationId": "create거주자인스턴스이동",
+        "description": "같은 현장 내에서 주민를 다른 인스턴스로 이동시킵니다. (이력 보존)\n\nmemo는 선택값입니다.",
+        "operationId": "create주민인스턴스이동",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -25,7 +25,7 @@
         },
         "responses": {
           "201": {
-            "description": "거주자 인스턴스 이동 성공",
+            "description": "주민 인스턴스 이동 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -43,16 +43,16 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 인스턴스 이동",
+        "summary": "주민 인스턴스 이동",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },
     "/residents": {
       "get": {
-        "description": "거주자 목록을 조회합니다.",
-        "operationId": "search거주자목록조회",
+        "description": "주민 목록을 조회합니다.",
+        "operationId": "search주민목록조회",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -149,7 +149,7 @@
         ],
         "responses": {
           "200": {
-            "description": "거주자 목록 조회 성공",
+            "description": "주민 목록 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -181,16 +181,16 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 목록 조회",
+        "summary": "주민 목록 조회",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },
     "/residents/instances": {
       "post": {
-        "description": "거주자와 인스턴스 간의 관계를 생성합니다.\n\n거주자가 앱으로 인스턴스 연결을 하지 못하는 경우 강제로 연결하는 작업입니다.",
-        "operationId": "create거주자인스턴스관계생성",
+        "description": "주민과 인스턴스 간의 관계를 생성합니다.\n\n주민이 앱으로 인스턴스 연결을 하지 못하는 경우 강제로 연결하는 작업입니다.",
+        "operationId": "create주민인스턴스관계생성",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -214,7 +214,7 @@
         },
         "responses": {
           "201": {
-            "description": "거주자-인스턴스 관계 생성 성공",
+            "description": "주민-인스턴스 관계 생성 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -232,16 +232,16 @@
             "bearer": []
           }
         ],
-        "summary": "거주자-인스턴스 관계 생성",
+        "summary": "주민-인스턴스 관계 생성",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },
     "/residents/instances/{id}": {
       "patch": {
-        "description": "거주자와 인스턴스 간의 관계를 수정합니다.",
-        "operationId": "update거주자인스턴스관계수정",
+        "description": "주민과 인스턴스 간의 관계를 수정합니다.",
+        "operationId": "update주민인스턴스관계수정",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -274,7 +274,7 @@
         },
         "responses": {
           "200": {
-            "description": "거주자-인스턴스 관계 수정 성공",
+            "description": "주민-인스턴스 관계 수정 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -292,14 +292,14 @@
             "bearer": []
           }
         ],
-        "summary": "거주자-인스턴스 관계 수정",
+        "summary": "주민-인스턴스 관계 수정",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       },
       "delete": {
-        "description": "거주자와 인스턴스 간의 관계를 삭제합니다.\n\n인스턴스 이동(이사)이라면 삭제가 아닌 인스턴스 이동 API를 사용하는 것을 권장합니다.(이력 보존 목적)",
-        "operationId": "delete거주자인스턴스관계삭제",
+        "description": "주민과 인스턴스 간의 관계를 삭제합니다.\n\n인스턴스 이동(이사)이라면 삭제가 아닌 인스턴스 이동 API를 사용하는 것을 권장합니다.(이력 보존 목적)",
+        "operationId": "delete주민인스턴스관계삭제",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -322,7 +322,7 @@
         ],
         "responses": {
           "204": {
-            "description": "거주자-인스턴스 관계 삭제 성공",
+            "description": "주민-인스턴스 관계 삭제 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -340,16 +340,16 @@
             "bearer": []
           }
         ],
-        "summary": "거주자-인스턴스 관계 삭제",
+        "summary": "주민-인스턴스 관계 삭제",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },
     "/residents/{id}/history": {
       "get": {
-        "description": "거주자의 인스턴스 이동 이력을 시간순으로 조회합니다.\n\n삭제된 이력도 조회 가능합니다.",
-        "operationId": "get거주자인스턴스이동이력조회",
+        "description": "주민의 인스턴스 이동 이력을 시간순으로 조회합니다.\n\n삭제된 이력도 조회 가능합니다.",
+        "operationId": "get주민인스턴스이동이력조회",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -364,7 +364,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "거주자 ID",
+            "description": "주민 ID",
             "schema": {
               "type": "integer"
             }
@@ -383,16 +383,16 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 인스턴스 이동 이력 조회",
+        "summary": "주민 인스턴스 이동 이력 조회",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },
     "/residents/{id}": {
       "get": {
-        "description": "특정 거주자의 상세 정보를 조회합니다.",
-        "operationId": "get거주자상세조회",
+        "description": "특정 주민의 상세 정보를 조회합니다.",
+        "operationId": "get주민상세조회",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -407,7 +407,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "거주자 ID",
+            "description": "주민 ID",
             "schema": {
               "type": "integer"
             }
@@ -415,7 +415,7 @@
         ],
         "responses": {
           "200": {
-            "description": "거주자 상세 조회 성공",
+            "description": "주민 상세 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -433,14 +433,14 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 상세 조회",
+        "summary": "주민 상세 조회",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       },
       "patch": {
-        "description": "특정 거주자의 정보를 수정합니다.",
-        "operationId": "update거주자수정",
+        "description": "특정 주민의 정보를 수정합니다.",
+        "operationId": "update주민수정",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -455,7 +455,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "거주자 ID",
+            "description": "주민 ID",
             "schema": {
               "type": "integer"
             }
@@ -473,7 +473,7 @@
         },
         "responses": {
           "200": {
-            "description": "거주자 수정 성공",
+            "description": "주민 수정 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -491,14 +491,14 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 수정",
+        "summary": "주민 수정",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       },
       "delete": {
-        "description": "특정 거주자를 삭제합니다.\n\n허브에서도 사용 가능한 게 맞는지는 아직 미정",
-        "operationId": "delete거주자삭제",
+        "description": "특정 주민를 삭제합니다.\n\n허브에서도 사용 가능한 게 맞는지는 아직 미정",
+        "operationId": "delete주민삭제",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -513,7 +513,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "거주자 ID",
+            "description": "주민 ID",
             "schema": {
               "type": "integer"
             }
@@ -521,7 +521,7 @@
         ],
         "responses": {
           "204": {
-            "description": "거주자 삭제 성공",
+            "description": "주민 삭제 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -539,9 +539,9 @@
             "bearer": []
           }
         ],
-        "summary": "거주자 삭제",
+        "summary": "주민 삭제",
         "tags": [
-          "거주자 관리"
+          "주민 관리"
         ]
       }
     },

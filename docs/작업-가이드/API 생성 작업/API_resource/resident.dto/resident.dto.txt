@@ -4,7 +4,7 @@ import { ResidentInstanceDto } from 'src/resident/dto/resident-instance.dto';
 import { InstanceDto } from 'src/instance/dto/instance.dto';
 /**
  * ResidentDto
- * 거주자 기본 정보를 담는 DTO
+ * 주민 기본 정보를 담는 DTO
  */
 export class ResidentDto extends BaseIdEntityDto {
   @ApiProperty({
@@ -69,7 +69,7 @@ export class ResidentInstanceWithInstanceDto extends ResidentInstanceDto {
 // 4. 최종 Resident DTO
 export class ResidentDetailDto extends ResidentDto {
   @ApiProperty({
-    description: '거주자-인스턴스 관계 정보 배열',
+    description: '주민-인스턴스 관계 정보 배열',
     type: () => [ResidentInstanceWithInstanceDto],
     isArray: true,
   })

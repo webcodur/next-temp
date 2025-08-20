@@ -1,10 +1,10 @@
-/* 거주자 페이지 공통 탭 구성 */
+/* 주민 페이지 공통 탭 구성 */
 
 import { ResidentTab } from './residentTypes';
 
 /**
- * 거주자 상세 페이지들의 공통 탭 구성을 생성한다
- * @param residentId 거주자 ID (CSR 방식으로 변경되어 사용하지 않음)
+ * 주민 상세 페이지들의 공통 탭 구성을 생성한다
+ * @param residentId 주민 ID (CSR 방식으로 변경되어 사용하지 않음)
  * @returns 탭 구성 배열
  */
 export function createResidentTabs(): ResidentTab[] {
@@ -17,9 +17,13 @@ export function createResidentTabs(): ResidentTab[] {
 			id: 'connection',
 			label: '세대 연결',
 		},
+    {
+			id: 'connection2',
+			label: '차량 연결',
+		},
 		{
-			id: 'movement',
-			label: '세대 이전',
+			id: 'history',
+			label: '거주 히스토리',
 		},
 	];
 }

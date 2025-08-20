@@ -14,7 +14,7 @@ export class InstanceServiceConfigDto extends BaseIdEntityDto {
   instance_id: number;
 
   @ApiProperty({
-    description: '새 거주자 추가 가능 여부',
+    description: '새 주민 추가 가능 여부',
     example: true,
   })
   can_add_new_resident: boolean;
@@ -44,7 +44,7 @@ export class InstanceServiceConfigDto extends BaseIdEntityDto {
  */
 export class UpdateInstanceServiceConfigDto {
   @ApiProperty({
-    description: '새 거주자 추가 가능 여부',
+    description: '새 주민 추가 가능 여부',
     example: true,
     required: false,
   })

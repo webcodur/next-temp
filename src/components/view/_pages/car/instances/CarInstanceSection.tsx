@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, ExternalLink, Link, Unplug, Plus } from 'lucide-react';
+import { Home, ExternalLink, Link, Unplug, Edit } from 'lucide-react';
 
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -36,6 +36,7 @@ export default function CarInstanceSection({
   const [loading, setLoading] = useState(false);
 
   // 모달 상태
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -133,6 +134,7 @@ export default function CarInstanceSection({
         setModalMessage(`${car.carNumber} 차량이 ${address} 세대에 성공적으로 연결되었습니다.`);
         setSuccessModalOpen(true);
         setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+        setCreateModalOpen(false);
         await loadInstanceData();
         onDataChange();
       } else {
@@ -461,7 +463,7 @@ export default function CarInstanceSection({
             title="세대 연결 정보"
             className="flex gap-1 items-center px-2 py-1 text-xs"
           >
-            <Link size={12} />
+            <Edit size={12} />
             연결정보
           </Button>
           <Button
@@ -489,9 +491,20 @@ export default function CarInstanceSection({
     <div className="space-y-6">
       {/* 세대 연결 목록 */}
       <SectionPanel
-        title="세대 연결 목록"
+        title="[ 차량 - 세대 ] 연결 목록"
         subtitle="차량이 연결된 세대 목록을 확인합니다."
         icon={<Home size={18} />}
+        headerActions={
+          <Button
+            variant="outline"
+            size="default"
+            onClick={() => setCreateModalOpen(true)}
+            className="gap-1"
+          >
+            <Link size={14} />
+            세대 연결 추가
+          </Button>
+        }
       >
         <div className="space-y-4">
           <PaginatedTable
@@ -505,11 +518,15 @@ export default function CarInstanceSection({
         </div>
       </SectionPanel>
 
-      {/* 세대 연결 추가 */}
-      <SectionPanel
+      {/* 세대 연결 추가 모달 */}
+      <Modal
+        isOpen={createModalOpen}
+        onClose={() => {
+          setCreateModalOpen(false);
+          setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+        }}
         title="세대 연결 추가"
-        subtitle="새로운 세대와 차량을 연결합니다."
-        icon={<Plus size={18} />}
+        size="xl"
       >
         <div className="space-y-6">
           {/* 세대 검색 및 선택 */}
@@ -576,7 +593,7 @@ export default function CarInstanceSection({
             <div className="p-4 rounded-lg border bg-card">
               <div className="space-y-3">
                 <label className="block text-sm font-medium text-foreground">
-                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 거주자의 차량 이용 허용)</span>
+                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
                 </label>
                 <SimpleToggleSwitch
                   checked={createFormData.carShareOnoff}
@@ -591,10 +608,13 @@ export default function CarInstanceSection({
           <div className="flex gap-3 justify-end pt-4 border-t">
             <Button
               variant="ghost"
-              onClick={() => setCreateFormData({ selectedInstance: null, carShareOnoff: false })}
+              onClick={() => {
+                setCreateModalOpen(false);
+                setCreateFormData({ selectedInstance: null, carShareOnoff: false });
+              }}
               disabled={isSubmitting}
             >
-              초기화
+              취소
             </Button>
             <Button
               variant="primary"
@@ -605,9 +625,7 @@ export default function CarInstanceSection({
             </Button>
           </div>
         </div>
-      </SectionPanel>
-
-
+      </Modal>
 
       {/* 세대 연결 정보 모달 */}
       <Modal
@@ -687,7 +705,7 @@ export default function CarInstanceSection({
             <div className="p-4 rounded-lg border bg-card">
               <div className="space-y-3">
                 <label className="block text-sm font-medium text-foreground">
-                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 거주자의 차량 이용 허용)</span>
+                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
                 </label>
                 <SimpleToggleSwitch
                   checked={createFormData.carShareOnoff}

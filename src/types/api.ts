@@ -237,7 +237,7 @@ export interface AssignAdminToParkingLotRequest {
 }
 // #endregion
 
-// #region 거주자 관련 타입
+// #region 주민 관련 타입
 export interface Resident {
   id: number;
   name: string;

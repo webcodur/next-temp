@@ -83,7 +83,7 @@ export interface HouseholdInstance {
   deletedAt?: string;
   // 관련 정보 (백엔드 InstanceDetailDto 기준)
   household?: Household;
-  residentHouseholds?: unknown[]; // 거주자 목록
+  residentHouseholds?: unknown[]; // 주민 목록
   serviceConfig?: HouseholdServiceConfig;
   visitConfig?: HouseholdVisitConfig;
 }

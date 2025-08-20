@@ -99,7 +99,7 @@ export class SearchCarDto extends BaseSearchDto {
   instance_id?: number;
 
   @ApiProperty({
-    description: '거주자 ID',
+    description: '주민 ID',
     required: false,
   })
   @IsOptional()

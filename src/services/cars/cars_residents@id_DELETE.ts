@@ -15,7 +15,7 @@ export async function deleteCarInstanceResident(carInstanceResidentId: number, p
 
   if (!response.ok) {
     const result = await response.json();
-    const errorMsg = result.message || `차량-거주자 연결 삭제 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `차량-주민 연결 삭제 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

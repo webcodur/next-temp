@@ -709,7 +709,7 @@ components:
       properties:
         resident_id:
           type: number
-          description: 이동할 거주자 ID
+          description: 이동할 주민 ID
           example: 123
         target_household_instance_id:
           type: number
@@ -884,11 +884,11 @@ components:
       properties:
         id:
           type: number
-          description: 거주자-세대 관계 ID
+          description: 주민-세대 관계 ID
           example: 1
         resident_id:
           type: number
-          description: 거주자 ID
+          description: 주민 ID
           example: 1
         household_instance_id:
           type: number
@@ -988,7 +988,7 @@ components:
       properties:
         id:
           type: number
-          description: 거주자 ID
+          description: 주민 ID
           example: 1
         name:
           type: string
@@ -1033,7 +1033,7 @@ components:
           example: '2025-01-01T00:00:00.000Z'
           format: date-time
         resident_households:
-          description: 거주자-세대 관계 목록
+          description: 주민-세대 관계 목록
           type: array
           items:
             $ref: '#/components/schemas/HouseholdDto'
@@ -1047,7 +1047,7 @@ components:
       properties:
         resident_id:
           type: number
-          description: 거주자 ID
+          description: 주민 ID
           example: 1
         household_instance_id:
           type: number
@@ -1095,7 +1095,7 @@ components:
       properties:
         id:
           type: number
-          description: 거주자 ID
+          description: 주민 ID
           example: 2
         name:
           type: string
@@ -1140,7 +1140,7 @@ components:
           example: '2025-07-24T03:07:53.000Z'
           format: date-time
         resident_households:
-          description: 거주자-세대 관계 목록
+          description: 주민-세대 관계 목록
           example:
             - id: 7
               resident_id: 2
@@ -1190,7 +1190,7 @@ components:
       properties:
         name:
           type: string
-          description: 거주자 이름
+          description: 주민 이름
           example: 김철수
           maxLength: 50
         phone:
@@ -1222,7 +1222,7 @@ components:
         memo:
           type: string
           description: 메모
-          example: 주거주자
+          example: 주주민
     CreateHouseholdDto:
       type: object
       properties:
@@ -1488,7 +1488,7 @@ components:
           example: 1
         can_add_new_resident:
           type: boolean
-          description: 새 거주자 추가 가능 여부
+          description: 새 주민 추가 가능 여부
           example: true
         is_common_entrance_subscribed:
           type: boolean
@@ -1610,7 +1610,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/HouseholdWithParkinglotDto'
         resident_households:
-          description: 거주자 목록
+          description: 주민 목록
           items:
             type: array
           type: array
@@ -1662,7 +1662,7 @@ components:
           example: 1
         can_add_new_resident:
           type: boolean
-          description: 신규 거주자 추가 가능 여부
+          description: 신규 주민 추가 가능 여부
           example: false
         is_common_entrance_subscribed:
           type: boolean

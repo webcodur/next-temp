@@ -4,61 +4,45 @@ import { CarResidentWithDetails } from '@/types/car';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarResidentServerResponse {
-  id: number;
-  car_instance_id: number;
-  resident_id: number;
-  car_alarm: boolean;
-  is_primary: boolean;
+  id: number; // 주민 ID
+  name: string;
+  phone: string | null;
+  email: string | null;
+  birth_date: string | null;
+  gender: 'M' | 'F' | null;
+  emergency_contact: string | null;
+  memo: string | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  resident: {
-    id: number;
-    name: string;
-    phone: string | null;
-    email: string | null;
-    birth_date: string | null;
-    gender: 'M' | 'F' | null;
-    emergency_contact: string | null;
-    memo: string | null;
-    created_at: string;
-    updated_at: string;
-    deleted_at: string | null;
-    address_1depth: string;
-    address_2depth: string;
-    address_3depth: string | null;
-  };
-  car_instance?: unknown; // 사용하지 않으므로 unknown으로 처리
+  car_instance_resident_id: number; // 주민-차량 관계 ID
+  address_1depth: string;
+  address_2depth: string;
+  address_3depth: string | null;
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
 function serverToClient(server: CarResidentServerResponse): CarResidentWithDetails {
   return {
-    id: server.id,
-    carInstanceId: server.car_instance_id,
-    residentId: server.resident_id,
-    carAlarm: server.car_alarm,
-    isPrimary: server.is_primary,
+    id: server.id, // 주민 ID
+    name: server.name,
+    phone: server.phone,
+    email: server.email,
+    birthDate: server.birth_date,
+    gender: server.gender,
+    emergencyContact: server.emergency_contact,
+    memo: server.memo,
     createdAt: server.created_at,
     updatedAt: server.updated_at,
     deletedAt: server.deleted_at,
-    resident: {
-      id: server.resident.id,
-      name: server.resident.name,
-      phone: server.resident.phone,
-      email: server.resident.email,
-      birthDate: server.resident.birth_date,
-      gender: server.resident.gender,
-      emergencyContact: server.resident.emergency_contact,
-      memo: server.resident.memo,
-      createdAt: server.resident.created_at,
-      updatedAt: server.resident.updated_at,
-      deletedAt: server.resident.deleted_at,
-      address1Depth: server.resident.address_1depth,
-      address2Depth: server.resident.address_2depth,
-      address3Depth: server.resident.address_3depth,
-    },
+    carInstanceResidentId: server.car_instance_resident_id, // 주민-차량 관계 ID
+    address1Depth: server.address_1depth,
+    address2Depth: server.address_2depth,
+    address3Depth: server.address_3depth,
+    // 관계 정보는 기본값 사용 (별도 API에서 제공되지 않음)
+    carAlarm: false,
+    isPrimary: false,
   };
 }
 // #endregion
@@ -77,7 +61,7 @@ export async function getCarResidents(carId: number, parkinglotId?: string) {
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `차량-거주자 관계 조회 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `차량-주민 관계 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

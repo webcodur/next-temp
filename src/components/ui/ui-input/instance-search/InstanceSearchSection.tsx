@@ -209,14 +209,14 @@ export default function InstanceSearchSection({
         header: '거주민',
         width: '8%',
         align: 'center',
-        cell: (item: Instance) => `${item.residentInstance?.length || 0}명`,
+        cell: (item: Instance) => `${item.residentCount ?? 0}명`,
       },
       carCount: {
         key: 'carCount',
         header: '차량',
         width: '8%',
         align: 'center',
-        cell: (item: Instance) => `${item.carInstance?.length || 0}대`,
+        cell: (item: Instance) => `${item.carCount ?? 0}대`,
       },
       memo: {
         key: 'memo',

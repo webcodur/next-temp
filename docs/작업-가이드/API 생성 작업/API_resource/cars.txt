@@ -548,7 +548,7 @@
         ]
       },
       "delete": {
-        "description": "차량과 인스턴스 간의 연결을 삭제합니다. 연결된 모든 거주자 관계도 함께 삭제됩니다. (소프트 삭제)",
+        "description": "차량과 인스턴스 간의 연결을 삭제합니다. 연결된 모든 주민 관계도 함께 삭제됩니다. (소프트 삭제)",
         "operationId": "delete차량인스턴스연결삭제",
         "parameters": [
           {
@@ -598,8 +598,8 @@
     },
     "/cars/residents": {
       "post": {
-        "description": "차량과 거주자 간의 연결 관계를 생성합니다.",
-        "operationId": "create차량거주자연결생성",
+        "description": "차량과 주민 간의 연결 관계를 생성합니다.",
+        "operationId": "create차량주민연결생성",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -634,7 +634,7 @@
             "bearer": []
           }
         ],
-        "summary": "차량-거주자 연결 생성",
+        "summary": "차량-주민 연결 생성",
         "tags": [
           "차량 관리"
         ]
@@ -642,8 +642,8 @@
     },
     "/cars/residents/{id}": {
       "get": {
-        "description": "특정 차량-거주자 연결의 상세 정보를 조회합니다.",
-        "operationId": "get차량거주자연결상세조회",
+        "description": "특정 차량-주민 연결의 상세 정보를 조회합니다.",
+        "operationId": "get차량주민연결상세조회",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -658,7 +658,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "description": "차량-주민 연결 ID (car_instance_resident.id)",
             "schema": {
               "type": "number"
             }
@@ -666,7 +666,7 @@
         ],
         "responses": {
           "200": {
-            "description": "차량-거주자 연결 상세 조회 성공",
+            "description": "차량-주민 연결 상세 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -684,14 +684,14 @@
             "bearer": []
           }
         ],
-        "summary": "차량-거주자 연결 상세 조회",
+        "summary": "차량-주민 연결 상세 조회",
         "tags": [
           "차량 관리"
         ]
       },
       "patch": {
-        "description": "차량과 거주자 간의 연결 관계를 수정합니다.",
-        "operationId": "update차량거주자연결수정",
+        "description": "차량과 주민 간의 연결 관계를 수정합니다.",
+        "operationId": "update차량주민연결수정",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -706,7 +706,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "description": "차량-주민 연결 ID (car_instance_resident.id)",
             "schema": {
               "type": "number"
             }
@@ -724,7 +724,7 @@
         },
         "responses": {
           "200": {
-            "description": "차량-거주자 연결 수정 성공",
+            "description": "차량-주민 연결 수정 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -742,14 +742,14 @@
             "bearer": []
           }
         ],
-        "summary": "차량-거주자 연결 수정",
+        "summary": "차량-주민 연결 수정",
         "tags": [
           "차량 관리"
         ]
       },
       "delete": {
-        "description": "차량과 거주자 간의 연결 관계를 제거합니다. (소프트 삭제)",
-        "operationId": "delete차량거주자연결제거",
+        "description": "차량과 주민 간의 연결 관계를 제거합니다. (소프트 삭제)",
+        "operationId": "delete차량주민연결제거",
         "parameters": [
           {
             "name": "x-parkinglot-id",
@@ -764,7 +764,7 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "description": "차량-거주자 연결 ID (car_instance_resident.id)",
+            "description": "차량-주민 연결 ID (car_instance_resident.id)",
             "schema": {
               "type": "number"
             }
@@ -772,7 +772,7 @@
         ],
         "responses": {
           "204": {
-            "description": "차량-거주자 연결 제거 성공",
+            "description": "차량-주민 연결 제거 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -790,7 +790,7 @@
             "bearer": []
           }
         ],
-        "summary": "차량-거주자 연결 제거",
+        "summary": "차량-주민 연결 제거",
         "tags": [
           "차량 관리"
         ]

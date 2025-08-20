@@ -100,7 +100,7 @@ export async function createResidentInstance(data: CreateResidentInstanceRequest
   const result = await response.json();
   
   if (!response.ok) {
-    const errorMsg = result.message || `거주자-인스턴스 관계 생성 실패(코드): ${response.status}`;
+    const errorMsg = result.message || `주민-인스턴스 관계 생성 실패(코드): ${response.status}`;
     console.log(errorMsg);
     return { success: false, errorMsg };
   }

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { MessageSquare, Eye, Unplug, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/ui-input/button/Button';
 
 // 필드 정보 타입
 export interface InstanceItemCardField {
@@ -113,53 +114,58 @@ export default function InstanceItemCard({
         {/* 액션 버튼들 */}
         <div className="flex gap-1 items-center">
           {customActions.map((action, index) => (
-            <button
+            <Button
               key={index}
+              variant="outline"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation();
                 action.onClick();
               }}
-              className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors text-muted-foreground ${action.hoverClass}`}
+              className={`w-8 h-8 min-w-8 rounded-full transition-colors text-muted-foreground border-none neu-flat hover:neu-hover ${action.hoverClass}`}
               title={action.title}
             >
               {React.cloneElement(action.icon, { size: 14 })}
-            </button>
+            </Button>
           ))}
           {onDetail && (
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation();
                 onDetail();
               }}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
+              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-blue-100 text-muted-foreground hover:text-blue-600"
               title="상세 보기"
-            >
-              <Eye size={14} />
-            </button>
+              icon={Eye}
+            />
           )}
           {onExclude && (
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation();
                 onExclude();
               }}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
+              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-orange-100 text-muted-foreground hover:text-orange-600"
               title="제외"
-            >
-              <Unplug size={14} />
-            </button>
+              icon={Unplug}
+            />
           )}
           {onDelete && (
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete();
               }}
-              className="flex justify-center items-center w-8 h-8 rounded-full transition-colors hover:bg-red-100 text-muted-foreground hover:text-red-600"
+              className="w-8 h-8 min-w-8 rounded-full transition-colors border-none neu-flat hover:neu-hover hover:bg-red-100 text-muted-foreground hover:text-red-600"
               title="삭제"
-            >
-              <Trash2 size={14} />
-            </button>
+              icon={Trash2}
+            />
           )}
         </div>
       </div>

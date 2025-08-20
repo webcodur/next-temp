@@ -16,6 +16,8 @@ export interface Instance {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  residentCount?: number;
+  carCount?: number;
   instanceServiceConfig?: InstanceServiceConfig | null;
   instanceVisitConfig?: InstanceVisitConfig | null;
   residentInstance?: ResidentInstanceWithResident[];

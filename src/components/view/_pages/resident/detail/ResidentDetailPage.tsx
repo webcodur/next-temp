@@ -1,9 +1,8 @@
-/* 메뉴 설명: 거주자 상세 페이지 */
+/* 메뉴 설명: 주민 상세 페이지 */
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Building2, Truck } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -11,7 +10,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import ResidentForm, { ResidentFormData } from './ResidentBasic';
 import ResidentConnection from '../connection/ResidentConnection';
-import ResidentMovement from '../movement/ResidentMovement';
+import ResidentHistoryPage from '../history/ResidentHistoryPage';
 import { createResidentTabs } from '../_shared/residentTabs';
 import { getResidentDetail } from '@/services/residents/residents@id_GET';
 import { updateResident } from '@/services/residents/residents@id_PATCH';
@@ -86,16 +85,16 @@ export default function ResidentDetailPage() {
         setFormData(initialData);
         setOriginalData(initialData);
       } else {
-        console.error('거주자 조회 실패:', result.errorMsg);
-        setModalMessage(`거주자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        console.error('주민 조회 실패:', result.errorMsg);
+        setModalMessage(`주민 정보를 불러올 수 없습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
         setTimeout(() => {
           router.push('/parking/occupancy/resident');
         }, 2000);
       }
     } catch (error) {
-      console.error('거주자 조회 중 오류:', error);
-      setModalMessage('거주자 정보를 불러오는 중 오류가 발생했습니다.');
+      console.error('주민 조회 중 오류:', error);
+      setModalMessage('주민 정보를 불러오는 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
       setTimeout(() => {
         router.push('/parking/occupancy/resident');
@@ -177,16 +176,16 @@ export default function ResidentDetailPage() {
         // 데이터 다시 로드
         await loadResidentData();
         
-        setModalMessage('거주자 정보가 성공적으로 수정되었습니다.');
+        setModalMessage('주민 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
       } else {
-        console.error('거주자 수정 실패:', result.errorMsg);
-        setModalMessage(`거주자 수정에 실패했습니다: ${result.errorMsg}`);
+        console.error('주민 수정 실패:', result.errorMsg);
+        setModalMessage(`주민 수정에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주자 수정 중 오류:', error);
-      setModalMessage('거주자 수정 중 오류가 발생했습니다.');
+      console.error('주민 수정 중 오류:', error);
+      setModalMessage('주민 수정 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -202,18 +201,18 @@ export default function ResidentDetailPage() {
     try {
       const result = await deleteResident(resident.id);
       if (result.success) {
-        setModalMessage('거주자가 성공적으로 삭제되었습니다.');
+        setModalMessage('주민이 성공적으로 삭제되었습니다.');
         setSuccessModalOpen(true);
         setTimeout(() => {
           router.push('/parking/occupancy/resident');
         }, 1500);
       } else {
-        setModalMessage(`거주자 삭제에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 삭제에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('거주자 삭제 중 오류:', error);
-      setModalMessage('거주자 삭제 중 오류가 발생했습니다.');
+      console.error('주민 삭제 중 오류:', error);
+      setModalMessage('주민 삭제 중 오류가 발생했습니다.');
       setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
@@ -234,7 +233,7 @@ export default function ResidentDetailPage() {
   if (!resident) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">거주자 정보를 찾을 수 없습니다.</div>
+        <div className="text-muted-foreground">주민 정보를 찾을 수 없습니다.</div>
       </div>
     );
   }
@@ -243,7 +242,7 @@ export default function ResidentDetailPage() {
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
       <PageHeader 
-        title="거주자 상세 정보"
+        title="주민 상세 정보"
         subtitle={`${resident.name} - ${resident.phone || '전화번호 없음'}`}
         hasChanges={hasChanges}
       />
@@ -278,13 +277,6 @@ export default function ResidentDetailPage() {
           {/* 세대 연결 탭 */}
           {activeTab === 'connection' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Building2 className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">세대 연결</h3>
-                  <p className="text-sm text-muted-foreground">거주자의 세대 연결 현황을 관리합니다.</p>
-                </div>
-              </div>
               <ResidentConnection
                 resident={resident}
                 onDataChange={loadResidentData}
@@ -300,27 +292,11 @@ export default function ResidentDetailPage() {
             </div>
           )}
 
-          {/* 세대 이전 탭 */}
-          {activeTab === 'movement' && (
+          {/* 거주 히스토리 탭 */}
+          {activeTab === 'history' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Truck className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">세대 이전</h3>
-                  <p className="text-sm text-muted-foreground">거주자의 세대 이전 이력을 관리합니다.</p>
-                </div>
-              </div>
-              <ResidentMovement
+              <ResidentHistoryPage
                 resident={resident}
-                onDataChange={loadResidentData}
-                onOperationComplete={(success, message) => {
-                  setModalMessage(message);
-                  if (success) {
-                    setSuccessModalOpen(true);
-                  } else {
-                    setErrorModalOpen(true);
-                  }
-                }}
               />
             </div>
           )}
@@ -354,14 +330,14 @@ export default function ResidentDetailPage() {
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title="거주자 삭제 확인"
+        title="주민 삭제 확인"
         size="md"
         onConfirm={handleDeleteConfirm}
       >
         <div className="space-y-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">정말로 삭제하시겠습니까?</h3>
-            <p className="text-muted-foreground">이 작업은 되돌릴 수 없습니다. 거주자 정보가 영구적으로 삭제됩니다.</p>
+            <p className="text-muted-foreground">이 작업은 되돌릴 수 없습니다. 주민 정보가 영구적으로 삭제됩니다.</p>
           </div>
           <div className="flex gap-3 justify-end pt-4">
             <Button variant="ghost" onClick={() => setDeleteConfirmOpen(false)}>취소</Button>

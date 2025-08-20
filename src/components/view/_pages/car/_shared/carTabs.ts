@@ -19,7 +19,7 @@ export function createCarTabs(): CarTab[] {
 		},
 		{
 			id: 'residents',
-			label: '거주자 연결',
+			label: '주민 연결',
 		},
 	];
 }

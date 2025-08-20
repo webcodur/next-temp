@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Users, Building2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -317,13 +316,6 @@ export default function CarDetailPage() {
           {/* 세대 연결 탭 */}
           {activeTab === 'instances' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Building2 className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">세대 연결</h3>
-                  <p className="text-sm text-muted-foreground">차량과 연결된 세대 목록을 관리합니다.</p>
-                </div>
-              </div>
               <CarInstanceSection
                 car={car}
                 onDataChange={loadCarData}
@@ -331,16 +323,9 @@ export default function CarDetailPage() {
             </div>
           )}
 
-          {/* 거주자 연결 탭 */}
+          {/* 주민 연결 탭 */}
           {activeTab === 'residents' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-primary" />
-                <div>
-                  <h3 className="text-lg font-semibold">거주자 연결</h3>
-                  <p className="text-sm text-muted-foreground">차량과 연결된 거주자 목록을 관리합니다.</p>
-                </div>
-              </div>
               <CarResidentSection
                 car={car}
                 onDataChange={loadCarData}
@@ -360,7 +345,7 @@ export default function CarDetailPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
@@ -401,7 +386,7 @@ export default function CarDetailPage() {
       >
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
             <p className="text-muted-foreground">{modalMessage}</p>
           </div>
           
