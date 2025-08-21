@@ -1,0 +1,12 @@
+
+# 디자인
+
+- 프라이머리/세컨더리를 브랜드 색상으로 활용 중.
+- src/styles 디렉토리 및 파일 참고
+- src/styles/system/neumorphism => 그림자 형태
+ㄴ font: 폰트 
+ㄴ variable: 전역 상수 (색상)
+
+# 인터페이스
+
+# 

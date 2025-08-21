@@ -8,6 +8,7 @@ import { CarInstanceWithCar } from '@/types/instance';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import CarCreateModal from './CarCreateModal';
 import CarSearchModal from './CarSearchModal';
 import CarCardItem from './CarCardItem';
@@ -87,17 +88,48 @@ export default function InstanceCarList({
           handleCarClick(confirmModal.carId);
           break;
         case 'exclude':
-          // 차량-인스턴스 연결 해지
-          const carInstance = carInstances?.find(ci => ci.car.id === confirmModal.carId);
+          // 차량-인스턴스 연결 해지 전 관련 차량-주민 연결 정리
+          const carInstance = carInstances?.find(ci => ci.car?.id === confirmModal.carId);
           if (carInstance && instanceId) {
-            const result = await deleteCarInstance(carInstance.id);
-            if (result.success) {
-              // 데이터 새로고침
-              if (onDataChange) {
-                onDataChange();
+            try {
+              // 1단계: 해당 차량에 연결된 모든 주민 연결 정보 조회
+              const { getCarResidents } = await import('@/services/cars/cars@carId_residents_GET');
+              const carResidentsResult = await getCarResidents(confirmModal.carId, instanceId);
+              
+              if (carResidentsResult.success && carResidentsResult.data) {
+                // 2단계: 모든 차량-주민 연결 제거
+                const { deleteCarInstanceResident } = await import('@/services/cars/cars_residents@id_DELETE');
+                const deletePromises = carResidentsResult.data.map(resident => 
+                  deleteCarInstanceResident(resident.carInstanceResidentId)
+                );
+                
+                // 모든 차량-주민 연결 삭제 (실패해도 계속 진행)
+                await Promise.allSettled(deletePromises);
               }
-            } else {
-              console.error('연결 해지 실패:', result.errorMsg);
+              
+              // 3단계: 차량-세대 연결 해지
+              const result = await deleteCarInstance(carInstance.id);
+              if (result.success) {
+                toast.success('차량-세대 연결이 성공적으로 해지되었습니다.');
+                // 데이터 새로고침
+                if (onDataChange) {
+                  onDataChange();
+                }
+              } else {
+                console.error('차량-세대 연결 해지 실패:', result.errorMsg);
+                toast.error(`차량-세대 연결 해지에 실패했습니다: ${result.errorMsg}`);
+              }
+            } catch (error) {
+              console.error('차량-세대 연결 해지 과정에서 오류:', error);
+              toast.error('차량-세대 연결 해지 중 오류가 발생했습니다.');
+              // 에러가 발생해도 차량-세대 연결 해지는 시도
+              const result = await deleteCarInstance(carInstance.id);
+              if (result.success) {
+                toast.success('차량-세대 연결이 해지되었습니다.');
+                if (onDataChange) {
+                  onDataChange();
+                }
+              }
             }
           }
           break;
@@ -105,17 +137,20 @@ export default function InstanceCarList({
           // 차량 완전 삭제
           const deleteResult = await deleteCar(confirmModal.carId);
           if (deleteResult.success) {
+            toast.success('차량이 성공적으로 삭제되었습니다.');
             // 데이터 새로고침
             if (onDataChange) {
               onDataChange();
             }
           } else {
             console.error('차량 삭제 실패:', deleteResult.errorMsg);
+            toast.error(`차량 삭제에 실패했습니다: ${deleteResult.errorMsg}`);
           }
           break;
       }
     } catch (error) {
       console.error('작업 중 오류 발생:', error);
+      toast.error('작업 중 오류가 발생했습니다.');
     } finally {
       setConfirmModal(prev => ({ ...prev, isOpen: false }));
     }
@@ -130,7 +165,8 @@ export default function InstanceCarList({
   };
 
   const handleModalSuccess = () => {
-    // 데이터 새로고침
+    // 차량 생성/연결 성공 시 데이터 새로고침
+    toast.success('차량 연결이 완료되었습니다.');
     if (onDataChange) {
       onDataChange();
     }
@@ -205,7 +241,7 @@ export default function InstanceCarList({
       }
       icon={<Car size={18} />}
       headerActions={(
-        <div className="flex gap-1 items-center">
+        <div className="flex gap-2 items-center">
           <Button
             variant="outline"
             size="icon"
@@ -242,9 +278,9 @@ export default function InstanceCarList({
                 carInstance={carInstance}
                 residentManagementMode={residentManagementMode}
                 managedCarInstanceId={managedCarInstanceId}
-                onDetailClick={handleDetailClick}
-                onExcludeClick={handleExcludeClick}
-                onDeleteClick={handleDeleteClick}
+                onDetailClick={() => handleDetailClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
+                onExcludeClick={() => handleExcludeClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
+                onDeleteClick={() => handleDeleteClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
                 onManageResidents={onManageResidents}
               />
             ))}

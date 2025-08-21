@@ -84,11 +84,11 @@ export default function CarSearchModal({
       if (result.success && result.data) {
         // 이미 연결된 차량 제외 (인스턴스가 없는 차량만 표시)
         const availableCars = result.data.data.filter(car => 
-          car.carInstance.length === 0 || 
-          !car.carInstance.some(instance => instance.instanceId === instanceId)
+          car.carInstance.length === 0 || !car.carInstance.some(instance => instance.instanceId === instanceId)
         );
         setCarList(availableCars);
-      } else {
+      } 
+      else {
         setCarList([]);
         setErrorMessage(result.errorMsg || '차량 목록 조회에 실패했습니다.');
       }
@@ -357,7 +357,7 @@ export default function CarSearchModal({
             </div>
           </div>
         ) : (
-          <div className="max-h-96 overflow-hidden">
+          <div className="overflow-hidden max-h-96">
             <PaginatedTable
               data={carList as unknown as Record<string, unknown>[]}
               columns={columns as unknown as BaseTableColumn<Record<string, unknown>>[]}

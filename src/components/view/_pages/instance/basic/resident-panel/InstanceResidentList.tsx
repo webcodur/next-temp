@@ -9,11 +9,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Users, User, Link, X } from 'lucide-react';
+import { Users, User, Link } from 'lucide-react';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
+import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import { deleteResident } from '@/services/residents/residents@id_DELETE';
 import { deleteResidentInstance } from '@/services/residents/residents_instances@id_DELETE';
 
@@ -33,11 +34,13 @@ interface InstanceResidentListProps {
 
   carResidents?: CarResidentWithDetails[];
   loadingCarResidents?: boolean;
-  onCloseResidentManagement?: () => void;
   onConnectResident?: (residentId: number) => void;
   onDisconnectResident?: (residentId: number) => void;
   onTogglePrimary?: (residentId: number) => void;
   onToggleAlarm?: (residentId: number) => void;
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar?: (residentId: number) => boolean;
 }
 // #endregion
 
@@ -50,11 +53,13 @@ export default function InstanceResidentList({
 
   carResidents = [],
   loadingCarResidents = false,
-  onCloseResidentManagement,
   onConnectResident,
   onDisconnectResident,
   onTogglePrimary,
-  onToggleAlarm
+  onToggleAlarm,
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar
 }: InstanceResidentListProps) {
   // #region 상태
   const [confirmModal, setConfirmModal] = useState<{
@@ -115,17 +120,19 @@ export default function InstanceResidentList({
           handleResidentClick(confirmModal.residentId);
           break;
         case 'exclude':
-          // 주민-인스턴스 연결 해지
+          // 주민-세대 연결 해지 (서버에서 관련 차량-주민 연결도 함께 정리됨)
           const residentInstance = residentInstances?.find(ri => ri.resident.id === confirmModal.residentId);
           if (residentInstance) {
             const result = await deleteResidentInstance(residentInstance.id);
             if (result.success) {
+              toast.success('주민-세대 연결이 성공적으로 해지되었습니다.');
               // 데이터 새로고침
               if (onDataChange) {
                 onDataChange();
               }
             } else {
-              console.error('연결 해지 실패:', result.errorMsg);
+              console.error('주민-세대 연결 해지 실패:', result.errorMsg);
+              toast.error(`주민-세대 연결 해지에 실패했습니다: ${result.errorMsg}`);
             }
           }
           break;
@@ -133,17 +140,20 @@ export default function InstanceResidentList({
           // 주민 완전 삭제
           const deleteResult = await deleteResident(confirmModal.residentId);
           if (deleteResult.success) {
+            toast.success('주민이 성공적으로 삭제되었습니다.');
             // 데이터 새로고침
             if (onDataChange) {
               onDataChange();
             }
           } else {
             console.error('주민 삭제 실패:', deleteResult.errorMsg);
+            toast.error(`주민 삭제에 실패했습니다: ${deleteResult.errorMsg}`);
           }
           break;
       }
     } catch (error) {
       console.error('작업 중 오류 발생:', error);
+      toast.error('작업 중 오류가 발생했습니다.');
     } finally {
       setConfirmModal(prev => ({ ...prev, isOpen: false }));
     }
@@ -156,7 +166,8 @@ export default function InstanceResidentList({
   };
 
   const handleModalSuccess = () => {
-    // 데이터 새로고침
+    // 주민 연결 성공 시 데이터 새로고침
+    toast.success('주민 연결이 완료되었습니다.');
     if (onDataChange) {
       onDataChange();
     }
@@ -224,16 +235,6 @@ export default function InstanceResidentList({
       icon={<Users size={18} />}
       headerActions={(
         <div className="flex gap-1 items-center">
-          {residentManagementMode && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onCloseResidentManagement}
-              title="관리 모드 종료"
-              icon={X}
-              className="w-6 h-6 min-w-6"
-            />
-          )}
           <Button
             variant="outline"
             size="sm"
@@ -271,6 +272,7 @@ export default function InstanceResidentList({
                 onDisconnectResident={onDisconnectResident}
                 onTogglePrimary={onTogglePrimary}
                 onToggleAlarm={onToggleAlarm}
+                isResidentConnectedToSelectedCar={isResidentConnectedToSelectedCar}
               />
             ))}
           </div>

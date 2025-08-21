@@ -10,7 +10,6 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import CarForm, { CarFormData } from './CarForm';
 import CarInstanceSection from '../instances/CarInstanceSection';
-import CarResidentSection from '../residents/CarResidentSection';
 import { searchCars } from '@/services/cars/cars$_GET';
 import { updateCar } from '@/services/cars/cars@id_PATCH';
 import { deleteCar } from '@/services/cars/cars@id_DELETE';
@@ -317,16 +316,6 @@ export default function CarDetailPage() {
           {activeTab === 'instances' && (
             <div className="space-y-6">
               <CarInstanceSection
-                car={car}
-                onDataChange={loadCarData}
-              />
-            </div>
-          )}
-
-          {/* 주민 연결 탭 */}
-          {activeTab === 'residents' && (
-            <div className="space-y-6">
-              <CarResidentSection
                 car={car}
                 onDataChange={loadCarData}
               />

@@ -14,10 +14,16 @@ export async function deleteCarInstanceResident(carInstanceResidentId: number, p
   });
 
   if (!response.ok) {
-    const result = await response.json();
-    const errorMsg = result.message || `차량-주민 연결 삭제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
-    return { success: false, errorMsg };
+    try {
+      const result = await response.json();
+      const errorMsg = result.message || `차량-주민 연결 삭제 실패(코드): ${response.status}`;
+      console.error('차량-주민 연결 삭제 실패:', result);
+      return { success: false, errorMsg };
+    } catch (parseError) {
+      const errorMsg = `차량-주민 연결 삭제 실패(코드): ${response.status}`;
+      console.error('차량-주민 연결 삭제 파싱 오류:', parseError);
+      return { success: false, errorMsg };
+    }
   }
   
   // DELETE 요청의 경우 204 No Content 또는 빈 응답 처리

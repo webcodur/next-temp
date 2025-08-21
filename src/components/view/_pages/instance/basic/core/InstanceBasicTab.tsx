@@ -34,7 +34,6 @@ interface InstanceBasicTabProps {
   selectedCarInstanceId: number | null;
   carResidents: CarResidentWithDetails[];
   loadingCarResidents: boolean;
-  onCloseResidentManagement: () => void;
   onConnectResident: (residentId: number) => void;
   onDisconnectResident: (residentId: number) => void;
   onTogglePrimary: (residentId: number) => void;
@@ -43,6 +42,9 @@ interface InstanceBasicTabProps {
   // 데이터 새로고침
   onDataChange: () => void;
   onManageResidents: (carInstanceId: number) => void;
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar: (residentId: number) => boolean;
 }
 // #endregion
 
@@ -65,7 +67,6 @@ export default function InstanceBasicTab({
   selectedCarInstanceId,
   carResidents,
   loadingCarResidents,
-  onCloseResidentManagement,
   onConnectResident,
   onDisconnectResident,
   onTogglePrimary,
@@ -73,7 +74,10 @@ export default function InstanceBasicTab({
   
   // 데이터 새로고침
   onDataChange,
-  onManageResidents
+  onManageResidents,
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar
 }: InstanceBasicTabProps) {
 
   return (
@@ -99,15 +103,15 @@ export default function InstanceBasicTab({
           residentInstances={instance.residentInstance}
           loading={loading}
           instanceId={instance.id}
-          onDataChange={residentManagementMode ? undefined : onDataChange} // 주민 관리 모드에서는 자동 새로고침 방지
+          onDataChange={onDataChange} // 주민-세대 연결 해지를 위해 항상 활성화
           residentManagementMode={residentManagementMode}
           carResidents={carResidents}
           loadingCarResidents={loadingCarResidents}
-          onCloseResidentManagement={onCloseResidentManagement}
           onConnectResident={onConnectResident}
           onDisconnectResident={onDisconnectResident}
           onTogglePrimary={onTogglePrimary}
           onToggleAlarm={onToggleAlarm}
+          isResidentConnectedToSelectedCar={isResidentConnectedToSelectedCar}
         />
         <InstanceCarList 
           carInstances={instance.carInstance}

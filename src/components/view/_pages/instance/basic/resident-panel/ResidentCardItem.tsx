@@ -30,6 +30,9 @@ interface ResidentCardItemProps {
   onDisconnectResident?: (residentId: number) => void;
   onTogglePrimary?: (residentId: number) => void;
   onToggleAlarm?: (residentId: number) => void;
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar?: (residentId: number) => boolean;
 }
 // #endregion
 
@@ -44,7 +47,10 @@ export default function ResidentCardItem({
   onConnectResident,
   onDisconnectResident,
   onTogglePrimary,
-  onToggleAlarm
+  onToggleAlarm,
+  
+  // 연결 상태 확인 헬퍼
+  isResidentConnectedToSelectedCar
 }: ResidentCardItemProps) {
 
   // #region 데이터 처리
@@ -88,8 +94,10 @@ export default function ResidentCardItem({
     }
   ];
 
-  // 차량 연결 상태 확인
-  const isConnected = carResidents.some(carResident => carResident.id === residentInstance.resident.id);
+  // 차량 연결 상태 확인 - 헬퍼 함수 우선 사용, 없으면 기본 로직
+  const isConnected = isResidentConnectedToSelectedCar 
+    ? isResidentConnectedToSelectedCar(residentInstance.resident.id)
+    : carResidents.some(carResident => carResident.id === residentInstance.resident.id);
   const carResident = carResidents.find(cr => cr.id === residentInstance.resident.id);
   // #endregion
 

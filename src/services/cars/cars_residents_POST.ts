@@ -42,11 +42,13 @@ export async function createCarInstanceResident(data: CreateCarInstanceResidentR
     try {
       const result = await response.json();
       const errorMsg = result.message || `차량-주민 연결 생성 실패(코드): ${response.status}`;
-      console.log(errorMsg);
+      console.error('차량-주민 연결 생성 실패:', result);
       return { success: false, errorMsg };
-    } catch {
+    } catch (parseError) {
       // JSON 파싱 실패 시 기본 에러 메시지
-      return { success: false, errorMsg: `차량-주민 연결 생성 실패(코드): ${response.status}` };
+      const errorMsg = `차량-주민 연결 생성 실패(코드): ${response.status}`;
+      console.error('차량-주민 연결 생성 파싱 오류:', parseError);
+      return { success: false, errorMsg };
     }
   }
   

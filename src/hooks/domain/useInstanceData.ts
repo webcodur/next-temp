@@ -4,10 +4,11 @@
   책임: 인스턴스 정보 조회, 차량-주민 데이터 새로고침을 관리한다.
 */ // ------------------------------
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import type { InstanceDetail } from '@/types/instance';
+import type { CarResidentWithDetails } from '@/types/car';
 import type { InstanceFormData } from '@/hooks/ui-hooks/useInstanceForm';
 
 export function useInstanceData(
@@ -17,6 +18,14 @@ export function useInstanceData(
 ) {
   const router = useRouter();
   
+  // ref를 사용하여 항상 최신 함수를 참조
+  const showErrorModalRef = useRef(showErrorModal);
+  const initializeFormRef = useRef(initializeForm);
+  
+  // ref 업데이트
+  showErrorModalRef.current = showErrorModal;
+  initializeFormRef.current = initializeForm;
+  
   // #region 상태
   const [instance, setInstance] = useState<InstanceDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,13 +33,18 @@ export function useInstanceData(
 
   // #region 데이터 로드
   const loadInstanceData = useCallback(async () => {
+    console.log('useInstanceData - loadInstanceData called with instanceId:', instanceId);
+    
     if (!instanceId || isNaN(instanceId)) {
+      console.log('useInstanceData - Invalid instanceId:', instanceId);
       return;
     }
     
     setLoading(true);
     try {
+      console.log('useInstanceData - Calling getInstanceDetail with instanceId:', instanceId);
       const result = await getInstanceDetail(instanceId);
+      console.log('useInstanceData - getInstanceDetail result:', result);
       
       if (result.success && result.data) {
         setInstance(result.data);
@@ -45,38 +59,39 @@ export function useInstanceData(
           password: result.data.password,
           memo: result.data.memo || '',
         };
-        initializeForm(initialData);
+        initializeFormRef.current(initialData);
       } else {
         console.error('인스턴스 조회 실패:', result.errorMsg);
-        showErrorModal(`세대 정보를 불러올 수 없습니다: ${result.errorMsg}`);
+        showErrorModalRef.current(`세대 정보를 불러올 수 없습니다: ${result.errorMsg}`);
         setTimeout(() => {
           router.push('/parking/occupancy/instance');
         }, 2000);
       }
     } catch (error) {
       console.error('인스턴스 조회 중 오류:', error);
-      showErrorModal('세대 정보를 불러오는 중 오류가 발생했습니다.');
+      showErrorModalRef.current('세대 정보를 불러오는 중 오류가 발생했습니다.');
       setTimeout(() => {
         router.push('/parking/occupancy/instance');
       }, 2000);
     } finally {
       setLoading(false);
     }
-  }, [instanceId, router, showErrorModal, initializeForm]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instanceId]);
 
   // 차량-주민 데이터 새로고침을 위한 헬퍼 함수
   const createRefreshCarResidentsFunction = useCallback((
     selectedCarInstanceId: number | null,
-    refreshCarResidents: (loader: () => Promise<any[]>) => Promise<void>,
-    loadCarResidentsWithDetails: (carId: number) => Promise<any[]>
+    refreshCarResidents: (loader: () => Promise<CarResidentWithDetails[]>) => Promise<void>,
+    loadCarResidentsWithDetails: (carId: number) => Promise<CarResidentWithDetails[]>
   ) => {
     return async () => {
       await refreshCarResidents(async () => {
         const currentInstance = await getInstanceDetail(instanceId);
         if (currentInstance.success && currentInstance.data) {
           const carInstance = currentInstance.data.carInstance?.find(ci => ci.id === selectedCarInstanceId);
-          if (carInstance) {
-            return await loadCarResidentsWithDetails(carInstance.carId);
+          if (carInstance && carInstance.car) {
+            return await loadCarResidentsWithDetails(carInstance.car.id);
           }
         }
         return [];

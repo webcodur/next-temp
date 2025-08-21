@@ -60,7 +60,7 @@ export default function ResidentSearchModal({
         name: filters.name || undefined,
         phone: filters.phone || undefined,
         email: filters.email || undefined,
-        gender: (filters.gender as 'M' | 'F') || undefined,
+        gender: (filters.gender && (filters.gender === 'M' || filters.gender === 'F')) ? filters.gender as 'M' | 'F' : undefined,
       });
 
       if (result.success && result.data) {

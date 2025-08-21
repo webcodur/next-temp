@@ -7,7 +7,7 @@ API 생성 작업 시 다음 방식으로 프롬프트를 작성하세요
 ㄴ DTO 파일들 드래그 드랍
 
 - 경로 첨부
-ㄴ http://localhost:3003/api-json
+ㄴ http://localhost:3003/api-json 에서 API JSON 파일 가져오기
 
 프롬프트:
-위의 파일과 경로를 참고하여 API 파일을 생성하라.
+ㄴ 위 파일과 경로를 참고하여 API 파일을 생성하라.

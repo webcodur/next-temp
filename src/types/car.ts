@@ -60,12 +60,14 @@ export interface CarResidentWithDetails {
   updatedAt: string;
   deletedAt?: string | null;
   carInstanceResidentId: number; // 주민-차량 관계 ID
+  instanceId: number; // 세대 ID
   address1Depth: string;
   address2Depth: string;
   address3Depth?: string | null;
   // 관계 정보는 별도 API에서 제공되거나 기본값 사용
   carAlarm?: boolean;
   isPrimary?: boolean;
+  carShareOnoff?: boolean;
 }
 
 export interface CarWithInstance extends Car {

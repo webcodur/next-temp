@@ -1,343 +1,283 @@
-/* 메뉴 설명: 인스턴스 상세 페이지 */
+/* 
+  파일명: /components/view/_pages/instance/basic/core/InstanceDetailPage.tsx
+  기능: 세대 상세 정보 페이지 메인 컴포넌트
+  책임: 세대 정보, 차량, 주민 관리의 통합 UI를 제공한다.
+*/ // ------------------------------
+
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import InstanceBasicTab from './InstanceBasicTab';
 import InstanceServiceConfigSection from '../../service/InstanceServiceConfigSection';
 import InstanceVisitConfigSection from '../../visit/InstanceVisitConfigSection';
 import InstanceModals from '../shared/InstanceModals';
+import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 
 import { InstanceType } from '@/types/instance';
 import { createInstanceTabs } from '../../_shared/instanceTabs';
-import { useInstanceModals } from '@/hooks/ui-hooks/useInstanceModals';
 import { useInstanceForm } from '@/hooks/ui-hooks/useInstanceForm';
-import { useCarResidentManagement } from '@/hooks/domain/useCarResidentManagement';
+import { useCarResidentManager } from '@/hooks/domain/useCarResidentManager';
 import { useInstanceData } from '@/hooks/domain/useInstanceData';
 
 export default function InstanceDetailPage() {  
   const router = useRouter();
   const params = useParams();
-  const instanceId = Number(params.id);
-  
-  // #region 상태 관리
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // 탭 상태 관리
-  const [activeTab, setActiveTab] = useState('basic');
-  
-  // 폼 상태 관리 훅
+  const instanceId = Number(params?.id);
+
+  // #region 모달 상태
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [primaryCarTransferModal, setPrimaryCarTransferModal] = useState({
+    isOpen: false,
+    currentPrimaryResident: null,
+    newPrimaryResidentId: null as number | null,
+    newPrimaryResidentName: ''
+  });
+  // #endregion
+
+  // #region 폼 관리 훅
   const {
     formData,
     hasChanges,
     isValid,
     handleFormChange,
     handleReset,
-    initializeForm,
-    updateOriginalData,
-    getChangedFields
+    initializeForm
   } = useInstanceForm();
-  
-  // 모달 상태 관리 훅
-  const {
-    successModalOpen,
-    errorModalOpen,
-    modalMessage,
-    deleteConfirmOpen,
-    primaryCarTransferModal,
-    showSuccessModal,
-    showErrorModal,
-    closeSuccessModal,
-    closeErrorModal,
-    showDeleteConfirm,
-    closeDeleteConfirm,
-    showPrimaryCarTransferModal,
-    closePrimaryCarTransferModal
-  } = useInstanceModals();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // #endregion
 
-  // 차량-주민 관리 훅
+  // #region 인스턴스 데이터 훅
+  const showErrorModal = (message: string) => {
+    setModalMessage(message);
+    setErrorModalOpen(true);
+  };
+
+  const { instance, loading, loadInstanceData } = useInstanceData(
+    instanceId,
+    showErrorModal,
+    initializeForm
+  );
+  // #endregion
+
+  // #region 차량-주민 관리 훅
   const {
     residentManagementMode,
     selectedCarInstanceId,
     carResidents,
     loadingCarResidents,
     loadCarResidentsWithDetails,
-    refreshCarResidents,
     handleManageResidents,
-    closeResidentManagement,
     connectResident,
     disconnectResident,
     togglePrimary,
-    confirmPrimaryCarTransfer,
     toggleAlarm
-  } = useCarResidentManagement();
-
-  // 인스턴스 데이터 관리 훅
-  const {
-    instance,
-    loading,
-    loadInstanceData,
-    createRefreshCarResidentsFunction
-  } = useInstanceData(instanceId, showErrorModal, initializeForm);
+  } = useCarResidentManager();
   // #endregion
 
-  // #region 탭 설정
-  const tabs = createInstanceTabs();
+  // #region 탭 관리
+  const tabs = useMemo(() => createInstanceTabs(), []);
+  const [activeTab, setActiveTab] = useState('basic');
   // #endregion
 
-  // #region 데이터 로드
+  // #region 초기 로드
   useEffect(() => {
-    loadInstanceData();
-  }, [loadInstanceData]);
-
-
-
-  // 주민 관리 모드용 차량-주민 데이터 새로고침
-  const refreshCarResidentsForManagement = useCallback(async () => {
-    const refreshFn = createRefreshCarResidentsFunction(selectedCarInstanceId, refreshCarResidents, loadCarResidentsWithDetails);
-    await refreshFn();
-  }, [createRefreshCarResidentsFunction, selectedCarInstanceId, refreshCarResidents, loadCarResidentsWithDetails]);
+    if (instanceId && !isNaN(instanceId)) {
+      loadInstanceData();
+    }
+  }, [instanceId, loadInstanceData]);
   // #endregion
 
+  // #region 이벤트 핸들러
+  const handleSubmit = async () => {
+    if (!isValid || !instance || isSubmitting) return;
 
-
-  // #region 핸들러
-
-  const handleSubmit = useCallback(async () => {
-    if (!instance || !isValid || isSubmitting) return;
-    
     setIsSubmitting(true);
     
     try {
-      const updateData = getChangedFields() as {
-        name?: string;
-        ownerName?: string;
-        address1Depth?: string;
-        address2Depth?: string;
-        address3Depth?: string;
-        instanceType?: InstanceType;
-        password?: string;
-        memo?: string;
+      const updateData = {
+        name: formData.name,
+        ownerName: formData.ownerName || undefined,
+        address1Depth: formData.address1Depth,
+        address2Depth: formData.address2Depth,
+        address3Depth: formData.address3Depth || undefined,
+        instanceType: formData.instanceType as InstanceType,
+        password: formData.password,
+        memo: formData.memo || undefined,
       };
 
       const result = await updateInstance(instance.id, updateData);
 
       if (result.success) {
-        // 성공 시 원본 데이터 업데이트
-        updateOriginalData(formData);
-        
-        // 데이터 다시 로드
+        toast.success('세대 정보가 성공적으로 수정되었습니다.');
+        handleReset();
+        // 데이터 새로고침
         await loadInstanceData();
-        
-        showSuccessModal('세대 정보가 성공적으로 수정되었습니다.');
       } else {
-        console.error('인스턴스 수정 실패:', result.errorMsg);
-        showErrorModal(`세대 수정에 실패했습니다: ${result.errorMsg}`);
+        console.error('세대 정보 수정 실패:', result.errorMsg);
+        setModalMessage(`세대 정보 수정에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('인스턴스 수정 중 오류:', error);
-      showErrorModal('세대 수정 중 오류가 발생했습니다.');
+      console.error('세대 정보 수정 중 오류:', error);
+      setModalMessage('세대 정보 수정 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
-  }, [instance, isValid, isSubmitting, formData, loadInstanceData, showSuccessModal, showErrorModal, getChangedFields, updateOriginalData]);
+  };
 
-  const handleDelete = useCallback(() => {
-    showDeleteConfirm();
-  }, [showDeleteConfirm]);
+  const handleDelete = () => {
+    setDeleteConfirmOpen(true);
+  };
 
-  const handleDeleteConfirm = useCallback(async () => {
-    if (!instance) return;
+  const handleConfirmDelete = async () => {
+    if (!instance || isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       const result = await deleteInstance(instance.id);
+
       if (result.success) {
-        showSuccessModal('세대이 성공적으로 삭제되었습니다.');
+        toast.success('세대가 성공적으로 삭제되었습니다.');
         setTimeout(() => {
           router.push('/parking/occupancy/instance');
         }, 1500);
       } else {
-        showErrorModal(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
+        console.error('세대 삭제 실패:', result.errorMsg);
+        setModalMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('세대 삭제 중 오류:', error);
-      showErrorModal('세대 삭제 중 오류가 발생했습니다.');
+      setModalMessage('세대 삭제 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     } finally {
-      closeDeleteConfirm();
+      setDeleteConfirmOpen(false);
+      setIsSubmitting(false);
     }
-  }, [instance, router, showSuccessModal, showErrorModal, closeDeleteConfirm]);
+  };
 
-  // 주민 관리 핸들러들 (훅에서 제공하는 함수를 래핑)
-  const handleManageResidentsClick = useCallback(async (carInstanceId: number) => {
-    if (!instance) return;
-    
-    const carInstances = instance.carInstance || [];
-    await handleManageResidents(carInstanceId, carInstances, async () => {
-      const carInstance = carInstances.find(ci => ci.id === carInstanceId);
-      if (carInstance) {
-        return await loadCarResidentsWithDetails(carInstance.carId);
-      }
-      return [];
-    });
-  }, [instance, handleManageResidents, loadCarResidentsWithDetails]);
+  const handleDataChange = () => {
+    // 세대 데이터 새로고침
+    loadInstanceData();
+  };
 
-  // 주민 연결 추가
-  const handleConnectResident = useCallback(async (residentId: number) => {
+  // 차량 관리 핸들러
+  const handleManageResidentsClick = async (carInstanceId: number) => {
+    if (!instance || !instance.carInstance) return;
+
+    // 선택된 차량의 ID를 찾기
+    const carInstance = instance.carInstance.find(ci => ci.id === carInstanceId);
+    if (!carInstance?.car) return;
+
+    await handleManageResidents(
+      carInstanceId,
+      instance.carInstance,
+      () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+    );
+  };
+
+  // 주민 연결 관련 핸들러
+  const handleConnectResident = async (residentId: number) => {
     if (!selectedCarInstanceId) return;
     
     try {
       const result = await connectResident(selectedCarInstanceId, residentId);
-      
       if (result.success) {
-        showSuccessModal('주민이 차량에 성공적으로 연결되었습니다.');
-        
-        // 연결 작업 후 데이터 새로고침
-        await loadInstanceData();
-        
-        // 연결 작업 후 차량-주민 데이터 새로고침
-        await refreshCarResidentsForManagement();
+        toast.success('주민이 성공적으로 연결되었습니다.');
+        await handleDataChange();
       } else {
-        showErrorModal(`주민 연결에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('주민 연결 중 오류:', error);
-      showErrorModal('주민 연결 중 오류가 발생했습니다.');
+      setModalMessage('주민 연결 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     }
-  }, [selectedCarInstanceId, connectResident, loadInstanceData, refreshCarResidentsForManagement, showSuccessModal, showErrorModal]);
+  };
 
-  // 주민 연결 해지
-  const handleDisconnectResident = useCallback(async (residentId: number) => {
+  const handleDisconnectResident = async (residentId: number) => {
     try {
       const result = await disconnectResident(residentId);
-      
       if (result.success) {
-        showSuccessModal('주민과 차량의 연결이 성공적으로 해지되었습니다.');
-        
-        // 연결 해지 작업 후 데이터 새로고침
-        await loadInstanceData();
-        
-        // 해지 작업 후 차량-주민 데이터 새로고침
-        await refreshCarResidentsForManagement();
+        toast.success('주민 연결이 성공적으로 해제되었습니다.');
+        await handleDataChange();
       } else {
-        showErrorModal(`연결 해지에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`주민 연결 해제에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
-      console.error('연결 해지 중 오류:', error);
-      if (error instanceof Error) {
-        showErrorModal(error.message);
-      } else {
-        showErrorModal('연결 해지 중 오류가 발생했습니다.');
-      }
+      console.error('주민 연결 해제 중 오류:', error);
+      setModalMessage('주민 연결 해제 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     }
-  }, [disconnectResident, loadInstanceData, refreshCarResidentsForManagement, showSuccessModal, showErrorModal]);
+  };
 
-
-
-  // 차량 소유자 설정 토글
-  const handleTogglePrimary = useCallback(async (residentId: number) => {
+  const handleTogglePrimary = async (residentId: number) => {
     try {
       const result = await togglePrimary(residentId);
-      
       if (result.success) {
-        const newPrimaryState = !Boolean(carResidents.find(cr => cr.id === residentId)?.isPrimary);
-        showSuccessModal(`차량 소유자 설정이 ${newPrimaryState ? '활성화' : '비활성화'}되었습니다.`);
-      } else if (result.needsTransfer && result.existingPrimaryResident) {
-        // 기존 차량 소유자 사용자가 있으면 전환 확인 Modal 표시
-        showPrimaryCarTransferModal(
-          result.existingPrimaryResident,
-          result.newPrimaryResidentId,
-          result.newPrimaryResidentName
-        );
+        toast.success('차량 소유자 설정이 성공적으로 변경되었습니다.');
+        await handleDataChange();
       } else {
-        showErrorModal(`차량 소유자 설정 변경에 실패했습니다: ${'errorMsg' in result ? result.errorMsg : '알 수 없는 오류'}`);
+        setModalMessage(`차량 소유자 설정 변경에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('차량 소유자 설정 변경 중 오류:', error);
-      if (error instanceof Error) {
-        showErrorModal(error.message);
-      } else {
-        showErrorModal('차량 소유자 설정 변경 중 오류가 발생했습니다.');
-      }
+      setModalMessage('차량 소유자 설정 변경 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     }
-  }, [togglePrimary, carResidents, showSuccessModal, showErrorModal, showPrimaryCarTransferModal]);
+  };
 
-  // 차량 소유자 전환 확인 처리
-  const handleConfirmPrimaryCarTransfer = useCallback(async () => {
+  const handleToggleAlarm = async (residentId: number) => {
     try {
-      const { currentPrimaryResident, newPrimaryResidentId } = primaryCarTransferModal;
-      
-      if (!currentPrimaryResident || !newPrimaryResidentId) {
-        showErrorModal('전환할 주민 정보를 찾을 수 없습니다.');
-        return;
-      }
-
-      const result = await confirmPrimaryCarTransfer(currentPrimaryResident, newPrimaryResidentId);
-      
-      if (result.success) {
-        showSuccessModal(`차량 소유자이 ${result.newPrimaryResidentName}님으로 전환되었습니다.`);
-        // Modal 닫기
-        closePrimaryCarTransferModal();
-      } else {
-        showErrorModal('차량 소유자 전환에 실패했습니다.');
-      }
-    } catch (error) {
-      console.error('차량 소유자 전환 중 오류:', error);
-      if (error instanceof Error) {
-        showErrorModal(error.message);
-      } else {
-        showErrorModal('차량 소유자 전환 중 오류가 발생했습니다.');
-      }
-    }
-  }, [primaryCarTransferModal, confirmPrimaryCarTransfer, showErrorModal, showSuccessModal, closePrimaryCarTransferModal]);
-
-  // 차량 소유자 전환 취소
-  const handleCancelPrimaryCarTransfer = useCallback(() => {
-    closePrimaryCarTransferModal();
-  }, [closePrimaryCarTransferModal]);
-
-  // 알람 설정 토글
-  const handleToggleAlarm = useCallback(async (residentId: number) => {
-    try {
-      const currentAlarmState = Boolean(carResidents.find(cr => cr.id === residentId)?.carAlarm);
-      const newAlarmState = !currentAlarmState;
-      
       const result = await toggleAlarm(residentId);
-      
       if (result.success) {
-        showSuccessModal(`알람 설정이 ${newAlarmState ? '활성화' : '비활성화'}되었습니다.`);
+        toast.success('알람 설정이 성공적으로 변경되었습니다.');
+        await handleDataChange();
       } else {
-        showErrorModal(`알람 설정 변경에 실패했습니다: ${result.errorMsg}`);
+        setModalMessage(`알람 설정 변경에 실패했습니다: ${result.errorMsg}`);
+        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('알람 설정 변경 중 오류:', error);
-      if (error instanceof Error) {
-        showErrorModal(error.message);
-      } else {
-        showErrorModal('알람 설정 변경 중 오류가 발생했습니다.');
-      }
+      setModalMessage('알람 설정 변경 중 오류가 발생했습니다.');
+      setErrorModalOpen(true);
     }
-  }, [carResidents, toggleAlarm, showSuccessModal, showErrorModal]);
+  };
 
-  const handleCloseResidentManagement = useCallback(() => {
-    closeResidentManagement();
-  }, [closeResidentManagement]);
+  // 연결 상태 확인 헬퍼
+  const isResidentConnectedToSelectedCar = (residentId: number) => {
+    return carResidents.some(cr => cr.id === residentId);
+  };
+
+  // 모달 핸들러
+  const onConfirmPrimaryCarTransfer = () => {
+    // 차량 소유자 전환 확인 로직 (필요시 구현)
+    setPrimaryCarTransferModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const onCancelPrimaryCarTransfer = () => {
+    setPrimaryCarTransferModal(prev => ({ ...prev, isOpen: false }));
+  };
   // #endregion
 
-  if (loading) {
+  // #region 렌더링
+  if (!instanceId || isNaN(instanceId)) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">로딩 중...</div>
-      </div>
-    );
-  }
-
-  if (!instance) {
-    return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-muted-foreground">세대 정보를 찾을 수 없습니다.</div>
+      <div className="flex justify-center items-center py-20">
+        <div className="text-muted-foreground">잘못된 세대 ID입니다.</div>
       </div>
     );
   }
@@ -346,12 +286,11 @@ export default function InstanceDetailPage() {
     <div className="flex flex-col gap-6">
       {/* 헤더 */}
       <PageHeader 
-        title="세대 상세 정보"
-        subtitle={`${instance.name} - ${instance.address1Depth} ${instance.address2Depth} ${instance.address3Depth || ''}`}
-        hasChanges={hasChanges}
+        title={instance ? `세대 정보: ${instance.address1Depth} ${instance.address2Depth}` : '세대 정보'}
+        subtitle="세대의 상세 정보를 조회하고 관리합니다."
       />
 
-      {/* 탭과 콘텐츠 */}
+      {/* 탭 */}
       <div className="flex flex-col">
         <Tabs
           tabs={tabs}
@@ -361,12 +300,13 @@ export default function InstanceDetailPage() {
 
         {/* 콘텐츠 영역 */}
         <div className="p-6 rounded-b-lg border-b-2 border-s-2 border-e-2 border-border bg-background">
-          {/* 기본 정보 탭 */}
-          {activeTab === 'basic' && (
+          {activeTab === 'basic' && instance && (
             <InstanceBasicTab
               instance={instance}
               loading={loading}
               isSubmitting={isSubmitting}
+              
+              // 폼 관련
               formData={formData}
               hasChanges={hasChanges}
               isValid={isValid}
@@ -374,56 +314,53 @@ export default function InstanceDetailPage() {
               onReset={handleReset}
               onSubmit={handleSubmit}
               onDelete={handleDelete}
+              
+              // 차량-주민 관리 관련
               residentManagementMode={residentManagementMode}
               selectedCarInstanceId={selectedCarInstanceId}
               carResidents={carResidents}
               loadingCarResidents={loadingCarResidents}
-              onCloseResidentManagement={handleCloseResidentManagement}
               onConnectResident={handleConnectResident}
               onDisconnectResident={handleDisconnectResident}
               onTogglePrimary={handleTogglePrimary}
               onToggleAlarm={handleToggleAlarm}
-              onDataChange={loadInstanceData}
+              
+              // 데이터 새로고침
+              onDataChange={handleDataChange}
               onManageResidents={handleManageResidentsClick}
+              
+              // 연결 상태 확인 헬퍼
+              isResidentConnectedToSelectedCar={isResidentConnectedToSelectedCar}
             />
           )}
-
-          {/* 서비스 설정 탭 */}
-          {activeTab === 'service' && (
-            <div className="space-y-6">
-              <InstanceServiceConfigSection 
-                instance={instance}
-                onDataChange={loadInstanceData}
-              />
-            </div>
+          {activeTab === 'service' && instance && (
+            <InstanceServiceConfigSection
+              instance={instance}
+              onDataChange={handleDataChange}
+            />
           )}
-
-          {/* 방문 설정 탭 */}
-          {activeTab === 'visit' && (
-            <div className="space-y-6">
-              <InstanceVisitConfigSection 
-                instance={instance}
-                onDataChange={loadInstanceData}
-              />
-            </div>
+          {activeTab === 'visit' && instance && (
+            <InstanceVisitConfigSection
+              instance={instance}
+              onDataChange={handleDataChange}
+            />
           )}
         </div>
       </div>
 
+      {/* 모달들 */}
       <InstanceModals
-        successModalOpen={successModalOpen}
-        onCloseSuccessModal={closeSuccessModal}
         errorModalOpen={errorModalOpen}
-        onCloseErrorModal={closeErrorModal}
+        onCloseErrorModal={() => setErrorModalOpen(false)}
         modalMessage={modalMessage}
         deleteConfirmOpen={deleteConfirmOpen}
-        onCloseDeleteConfirm={closeDeleteConfirm}
-        onConfirmDelete={handleDeleteConfirm}
+        onCloseDeleteConfirm={() => setDeleteConfirmOpen(false)}
+        onConfirmDelete={handleConfirmDelete}
         primaryCarTransferModal={primaryCarTransferModal}
-        onConfirmPrimaryCarTransfer={handleConfirmPrimaryCarTransfer}
-        onCancelPrimaryCarTransfer={handleCancelPrimaryCarTransfer}
+        onConfirmPrimaryCarTransfer={onConfirmPrimaryCarTransfer}
+        onCancelPrimaryCarTransfer={onCancelPrimaryCarTransfer}
       />
     </div>
   );
+  // #endregion
 }
-

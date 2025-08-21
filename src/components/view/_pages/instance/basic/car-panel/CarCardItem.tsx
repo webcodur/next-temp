@@ -59,13 +59,13 @@ export default function CarCardItem({
   const leftColumn: InstanceItemCardField[] = [
     {
       icon: <Fuel />,
-      value: carInstance.car.fuel || '',
-      show: !!carInstance.car.fuel
+      value: carInstance.car?.fuel || '',
+      show: !!carInstance.car?.fuel
     },
     {
       icon: <Calendar />,
-      value: carInstance.car.year ? `${carInstance.car.year}년` : '',
-      show: !!carInstance.car.year
+      value: carInstance.car?.year ? `${carInstance.car.year}년` : '',
+      show: !!carInstance.car?.year
     }
   ];
 
@@ -73,7 +73,7 @@ export default function CarCardItem({
   const rightColumn: InstanceItemCardField[] = [];
 
   // 외부 스티커가 있으면 우측 열에 추가
-  if (carInstance.car.externalSticker) {
+  if (carInstance.car?.externalSticker) {
     rightColumn.push({
       icon: <Tag />,
       value: carInstance.car.externalSticker,
@@ -88,11 +88,11 @@ export default function CarCardItem({
         className="text-lg font-bold tracking-wider text-foreground"
         style={{ fontFamily: 'HY헤드라인M, monospace' }}
       >
-        {carInstance.car.carNumber || '번호판 없음'}
+        {carInstance.car?.carNumber || '번호판 없음'}
       </span>
-      {(carInstance.car.brand || carInstance.car.model || carInstance.car.type) && (
+      {(carInstance.car?.brand || carInstance.car?.model || carInstance.car?.type) && (
         <span className="text-sm truncate text-muted-foreground">
-          {[carInstance.car.brand, carInstance.car.model, carInstance.car.type]
+          {[carInstance.car?.brand, carInstance.car?.model, carInstance.car?.type]
             .filter(Boolean)
             .join(' ')}
         </span>
@@ -123,11 +123,11 @@ export default function CarCardItem({
       badges={badges}
       leftColumn={leftColumn}
       rightColumn={rightColumn}
-      memo={carInstance.car.outerText || undefined}
+      memo={carInstance.car?.outerText || undefined}
       customActions={customActions}
-      onDetail={() => onDetailClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
-      onExclude={() => onExcludeClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
-      onDelete={() => onDeleteClick(carInstance.car.id, carInstance.car.carNumber || '번호판 없음')}
+      onDetail={() => onDetailClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '번호판 없음')}
+      onExclude={() => onExcludeClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '번호판 없음')}
+      onDelete={() => onDeleteClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '번호판 없음')}
     />
   );
 }

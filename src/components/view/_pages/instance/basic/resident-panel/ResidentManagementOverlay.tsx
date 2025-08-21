@@ -9,6 +9,7 @@
 import React from 'react';
 import { Plus, Unplug, X, CarFront, BellRing, Link } from 'lucide-react';
 import { Button } from '@/components/ui/ui-input/button/Button';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/ui-effects/tooltip/Tooltip';
 import type { CarResidentWithDetails } from '@/types/car';
 
 // #region 타입 및 인터페이스
@@ -47,20 +48,27 @@ export default function ResidentManagementOverlay({
   }
 
   return (
-    <div className="flex absolute right-0 bottom-0 left-0 top-16 z-10 justify-center items-center rounded-b-lg backdrop-blur-sm bg-black/10">
-      <div className="flex gap-3 items-center">
+    <TooltipProvider>
+      <div className="flex absolute right-0 bottom-0 left-0 top-16 z-10 justify-center items-center rounded-b-lg backdrop-blur-sm bg-black/10">
+        <div className="flex gap-3 items-center">
         {isConnected ? (
           <>
             {/* 연결 해지 버튼 */}
             <div className="relative group">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onDisconnectResident(residentId)}
-                title="차량 연결 해지"
-                icon={Unplug}
-                className="w-12 h-12 min-w-12 text-white bg-red-500 rounded-full shadow-lg transition-all duration-200 hover:bg-red-600 hover:scale-110 hover:shadow-xl border-none [&_svg]:size-5 [&_svg]:transition-all [&_svg]:duration-200 [&_svg]:group-hover:scale-110 [&_svg]:group-hover:rotate-90"
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onDisconnectResident(residentId)}
+                    icon={Unplug}
+                    className="w-12 h-12 min-w-12 text-white bg-red-500 rounded-full shadow-lg transition-all duration-200 hover:bg-red-600 hover:scale-110 hover:shadow-xl border-none [&_svg]:size-5 [&_svg]:transition-all [&_svg]:duration-200 [&_svg]:group-hover:scale-110 [&_svg]:group-hover:rotate-90"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>차량 연결 해지</p>
+                </TooltipContent>
+              </Tooltip>
               {/* 경고 표시 */}
               <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full border-2 border-white shadow-sm opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-100">
                 <X size={8} className="absolute inset-0 m-auto text-white" />
@@ -69,18 +77,24 @@ export default function ResidentManagementOverlay({
 
             {/* 차량 소유자 설정 버튼 */}
             <div className="relative group">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onTogglePrimary(residentId)}
-                title={`차량 소유자 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}
-                icon={CarFront}
-                className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${
-                  carResident?.isPrimary 
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-blue-300 shadow-blue-200' 
-                    : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
-                }`}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onTogglePrimary(residentId)}
+                    icon={CarFront}
+                    className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${
+                      carResident?.isPrimary 
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-blue-300 shadow-blue-200' 
+                        : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
+                    }`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{`차량 소유자 설정 ${carResident?.isPrimary ? '(활성)' : '(비활성)'}`}</p>
+                </TooltipContent>
+              </Tooltip>
               {/* 차량 소유자 활성화 표시 */}
               <div className={`absolute -top-1 -right-1 w-5 h-5 border-2 border-white rounded-full transition-all duration-200 shadow-md pointer-events-none ${
                 carResident?.isPrimary 
@@ -94,7 +108,7 @@ export default function ResidentManagementOverlay({
                 )}
               </div>
               {/* 기능 라벨 */}
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              <div className="absolute -bottom-8 left-1/2 opacity-0 transition-opacity duration-200 transform -translate-x-1/2 pointer-events-none group-hover:opacity-100">
                 <div className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-sm ${
                   carResident?.isPrimary 
                     ? 'bg-blue-100 text-blue-700' 
@@ -107,18 +121,24 @@ export default function ResidentManagementOverlay({
             
             {/* 알람 설정 버튼 */}
             <div className="relative group">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onToggleAlarm(residentId)}
-                title={`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}
-                icon={BellRing}
-                className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${carResident?.carAlarm ? '[&_svg]:animate-pulse' : ''} ${
-                  carResident?.carAlarm 
-                    ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border-orange-300 shadow-orange-200' 
-                    : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
-                }`}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onToggleAlarm(residentId)}
+                    icon={BellRing}
+                    className={`w-12 h-12 min-w-12 text-white rounded-full transition-all duration-200 hover:scale-110 shadow-lg hover:shadow-xl border-2 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:group-hover:scale-110 ${carResident?.carAlarm ? '[&_svg]:animate-pulse' : ''} ${
+                      carResident?.carAlarm 
+                        ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 border-orange-300 shadow-orange-200' 
+                        : 'bg-gray-400 hover:bg-gray-500 border-gray-300'
+                    }`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{`알람 설정 ${carResident?.carAlarm ? '(활성)' : '(비활성)'}`}</p>
+                </TooltipContent>
+              </Tooltip>
               {/* 알람 활성화 표시 */}
               <div className={`absolute -top-1 -right-1 w-5 h-5 border-2 border-white rounded-full transition-all duration-200 shadow-md pointer-events-none ${
                 carResident?.carAlarm 
@@ -132,7 +152,7 @@ export default function ResidentManagementOverlay({
                 )}
               </div>
               {/* 기능 라벨 */}
-              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              <div className="absolute -bottom-8 left-1/2 opacity-0 transition-opacity duration-200 transform -translate-x-1/2 pointer-events-none group-hover:opacity-100">
                 <div className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-sm ${
                   carResident?.carAlarm 
                     ? 'bg-orange-100 text-orange-700' 
@@ -147,14 +167,20 @@ export default function ResidentManagementOverlay({
           <>
             {/* 연결 추가 버튼 */}
             <div className="relative">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onConnectResident(residentId)}
-                title="차량과 연결"
-                icon={Plus}
-                className="w-16 h-16 min-w-16 text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg transition-all duration-300 animate-pulse hover:from-green-600 hover:to-emerald-600 hover:scale-110 hover:shadow-xl hover:animate-none border-none [&_svg]:size-7 [&_svg]:transition-all [&_svg]:duration-300 [&_svg]:group-hover:rotate-90"
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onConnectResident(residentId)}
+                    icon={Plus}
+                    className="w-16 h-16 min-w-16 text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg transition-all duration-300 animate-pulse hover:from-green-600 hover:to-emerald-600 hover:scale-110 hover:shadow-xl hover:animate-none border-none [&_svg]:size-7 [&_svg]:transition-all [&_svg]:duration-300 [&_svg]:group-hover:rotate-90"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>차량과 연결</p>
+                </TooltipContent>
+              </Tooltip>
               {/* 펄스 효과 */}
               <div className="absolute inset-0 bg-green-400 rounded-full opacity-20 animate-ping pointer-events-none"></div>
               {/* 연결 아이콘 */}
@@ -164,7 +190,8 @@ export default function ResidentManagementOverlay({
             </div>
           </>
         )}
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

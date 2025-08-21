@@ -262,7 +262,8 @@ export default function CarResidentSection({
   const loadCarResidentsWithDetails = useCallback(async () => {
     try {
       // 1단계: 기본 주민 목록 조회
-      const basicResult = await getCarResidents(car.id);
+      console.log('car~~~', car)
+      const basicResult = await getCarResidents(car.id, car.carInstance[0]?.instanceId || 0);
       if (!basicResult.success || !basicResult.data) {
         return [];
       }
@@ -291,7 +292,7 @@ export default function CarResidentSection({
       console.error('차량-주민 데이터 로딩 중 오류:', error);
       return [];
     }
-  }, [car.id]);
+  }, [car.id, car.carInstance]);
 
   // #region 데이터 로드
   const loadResidentData = useCallback(async () => {
@@ -585,12 +586,10 @@ export default function CarResidentSection({
       align: 'center',
       cell: (item: ResidentInstanceWithResident) => {
         const isSelected = createFormData.selectedResident?.id === item.id;
-        console.log('carResidents', carResidents)
-        // 현재 선택된 세대 + 주민 조합이 이미 연결되어 있는지 확인
+        // 현재 선택된 세대 + 주민 조합이 이미 연결되어 있는지 확인 (세대 ID로 비교)
         const isAlreadyConnected = createFormData.selectedInstance && carResidents.some(carResident => 
           carResident.id === item.resident.id && 
-          carResident.address1Depth === createFormData.selectedInstance!.address1Depth &&
-          carResident.address2Depth === createFormData.selectedInstance!.address2Depth
+          carResident.instanceId === createFormData.selectedInstance!.id
         );
 
         if (isAlreadyConnected) {

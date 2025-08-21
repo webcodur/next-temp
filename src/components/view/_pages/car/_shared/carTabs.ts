@@ -17,9 +17,5 @@ export function createCarTabs(): CarTab[] {
 			id: 'instances',
 			label: '세대 연결',
 		},
-		{
-			id: 'residents',
-			label: '주민 연결',
-		},
 	];
 }

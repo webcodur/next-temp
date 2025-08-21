@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import InstanceForm, { InstanceFormData } from './basic/InstanceForm';
+import InstanceForm, { InstanceFormData } from './basic/core/InstanceForm';
 import { createInstance } from '@/services/instances/instances_POST';
 import { InstanceType } from '@/types/instance';
 

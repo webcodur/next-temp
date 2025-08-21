@@ -20,10 +20,6 @@ interface PrimaryCarTransferModal {
 }
 
 interface InstanceModalsProps {
-  // 성공 모달
-  successModalOpen: boolean;
-  onCloseSuccessModal: () => void;
-  
   // 오류 모달
   errorModalOpen: boolean;
   onCloseErrorModal: () => void;
@@ -44,8 +40,6 @@ interface InstanceModalsProps {
 // #endregion
 
 export default function InstanceModals({
-  successModalOpen,
-  onCloseSuccessModal,
   errorModalOpen,
   onCloseErrorModal,
   modalMessage,
@@ -59,27 +53,6 @@ export default function InstanceModals({
 
   return (
     <>
-      {/* 성공 모달 */}
-      <Modal
-        isOpen={successModalOpen}
-        onClose={onCloseSuccessModal}
-        title="작업 완료"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={onCloseSuccessModal}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
       {/* 오류 모달 */}
       <Modal
         isOpen={errorModalOpen}
