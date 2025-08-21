@@ -158,9 +158,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 								<Footer />
 							</div>
 						</main>   
-
-
-
 					</div>
 				</div>
 

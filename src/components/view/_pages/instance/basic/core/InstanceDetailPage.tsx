@@ -74,11 +74,13 @@ export default function InstanceDetailPage() {
     carResidents,
     loadingCarResidents,
     loadCarResidentsWithDetails,
+    refreshCarResidents,
     handleManageResidents,
     connectResident,
     disconnectResident,
     togglePrimary,
-    toggleAlarm
+    toggleAlarm,
+    closeResidentManagement
   } = useCarResidentManager();
   // #endregion
 
@@ -93,6 +95,25 @@ export default function InstanceDetailPage() {
       loadInstanceData();
     }
   }, [instanceId, loadInstanceData]);
+  // #endregion
+
+  // #region 차량-세대 연결 해제 감지 및 관리모드 자동 해제
+  useEffect(() => {
+    // 관리모드가 활성화되어 있고 선택된 차량이 있는 경우에만 체크
+    if (residentManagementMode && selectedCarInstanceId && instance?.carInstance) {
+      // 현재 선택된 차량이 세대의 차량 목록에 여전히 존재하는지 확인
+      const selectedCarExists = instance.carInstance.some(
+        carInstance => carInstance.id === selectedCarInstanceId
+      );
+
+      // 선택된 차량이 더 이상 존재하지 않으면 관리모드 해제
+      if (!selectedCarExists) {
+        console.log(`차량 ID ${selectedCarInstanceId}이 세대에서 제거되어 관리모드를 해제합니다.`);
+        closeResidentManagement();
+        toast.info('관리 중이던 차량이 세대에서 제거되어 관리모드가 해제되었습니다.');
+      }
+    }
+  }, [instance?.carInstance, residentManagementMode, selectedCarInstanceId, closeResidentManagement]);
   // #endregion
 
   // #region 이벤트 핸들러
@@ -188,13 +209,20 @@ export default function InstanceDetailPage() {
 
   // 주민 연결 관련 핸들러
   const handleConnectResident = async (residentId: number) => {
-    if (!selectedCarInstanceId) return;
+    if (!selectedCarInstanceId || !instance) return;
     
     try {
       const result = await connectResident(selectedCarInstanceId, residentId);
       if (result.success) {
         toast.success('주민이 성공적으로 연결되었습니다.');
-        await handleDataChange();
+        
+        // 연결모드 유지하면서 차량-주민 데이터만 새로고침
+        const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
+        if (carInstance?.car) {
+          await refreshCarResidents(
+            () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+          );
+        }
       } else {
         setModalMessage(`주민 연결에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
@@ -211,7 +239,16 @@ export default function InstanceDetailPage() {
       const result = await disconnectResident(residentId);
       if (result.success) {
         toast.success('주민 연결이 성공적으로 해제되었습니다.');
-        await handleDataChange();
+        
+        // 연결모드 유지하면서 차량-주민 데이터만 새로고침
+        if (selectedCarInstanceId && instance) {
+          const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
+          if (carInstance?.car) {
+            await refreshCarResidents(
+              () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+            );
+          }
+        }
       } else {
         setModalMessage(`주민 연결 해제에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
@@ -228,7 +265,7 @@ export default function InstanceDetailPage() {
       const result = await togglePrimary(residentId);
       if (result.success) {
         toast.success('차량 소유자 설정이 성공적으로 변경되었습니다.');
-        await handleDataChange();
+        // 소유자 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
       } else {
         setModalMessage(`차량 소유자 설정 변경에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);
@@ -245,7 +282,7 @@ export default function InstanceDetailPage() {
       const result = await toggleAlarm(residentId);
       if (result.success) {
         toast.success('알람 설정이 성공적으로 변경되었습니다.');
-        await handleDataChange();
+        // 알람 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
       } else {
         setModalMessage(`알람 설정 변경에 실패했습니다: ${result.errorMsg}`);
         setErrorModalOpen(true);

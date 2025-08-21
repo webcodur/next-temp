@@ -32,6 +32,7 @@ alwaysApply: true
 - 상대경로: 소규모 내부 컴포넌트 임포트 시 사용
 - hook: 훅스 생성 시 전역 hooks 디렉토리에 배치
 - type: any, Record<string, unknown> 등 임시방편 방식의 타입 사용 금지
+- 테이블 생성 시 ID값과 관련된 것은 무조건 보여지도록 한다 (ID 값 출력여부는 별도 로직이 처리함)
 
 ## 주석
 
@@ -42,7 +43,6 @@ alwaysApply: true
 
 ## 컴포넌트
 
-- 컴포넌트 랜더링 시 삼항연산저 없이 && 만으로 처리
 - left right 이 아닌 start end 처리
 - 컴포넌트 랜더링에 삼항연산자 사용 금지, && 사용
 - 이모지 사용 금지 => lucide icons

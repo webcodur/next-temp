@@ -93,8 +93,6 @@ export default function ParkingLotSelection({
     : null;
   // #endregion
 
-
-
   // #region 설정 객체들
   const headerConfig: HeaderConfig = useMemo(() => ({
     title: '현장 선택',

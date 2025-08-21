@@ -11,6 +11,7 @@ import { useLocale } from '@/hooks/ui-hooks/useI18n';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import timezone from '@/utils/timezone';
+import { shouldShowIdColumns, isIdColumn } from '@/utils/idDisplayMode';
 
 import { BaseTableProps } from './types';
 import { 
@@ -44,6 +45,15 @@ const BaseTable = <T extends Record<string, unknown>>({
 		title: ''
 	});
 
+	// ID 컬럼 필터링
+	const filteredColumns = shouldShowIdColumns() 
+		? columns 
+		: columns.filter(column => !isIdColumn({
+			key: String(column.key),
+			header: column.header,
+			type: column.type
+		}));
+
 	// 계산된 값
 	const isInitialLoading = data === null;
 	const displayData = data ?? [];
@@ -53,7 +63,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 	const renderHeader = () => (
 		<thead className={`border-b bg-serial-4 border-primary-4/30 ${headerClassName}`}>
 			<tr>
-				{columns.map((column, colIndex) => {
+				{filteredColumns.map((column, colIndex) => {
 					const columnKey = column.key ? String(column.key) : `col-${colIndex}`;
 
 					return (
@@ -62,10 +72,10 @@ const BaseTable = <T extends Record<string, unknown>>({
 							className={`
 								relative px-2 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
 								text-center
-								${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+								${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
 								${column.headerClassName || ''}
 								${colIndex === 0 ? 'rounded-tl-lg' : ''}
-								${colIndex === columns.length - 1 ? 'rounded-tr-lg' : ''}
+								${colIndex === filteredColumns.length - 1 ? 'rounded-tr-lg' : ''}
 							`}
 							style={{ width: column.width }}
 						>
@@ -89,7 +99,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 		colIndex 
 	}: {
 		item: T;
-		column: typeof columns[0];
+		column: typeof filteredColumns[0];
 		index: number;
 		colIndex: number;
 	}) => {
@@ -214,11 +224,12 @@ const BaseTable = <T extends Record<string, unknown>>({
 				className={`
 					px-4 py-2 text-foreground relative overflow-visible
 					${getAlignmentClass(column.align)}
-					${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+					${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
 					${column.cellClassName || cellClassName}
 					${index === displayData.length - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
-					${index === displayData.length - 1 && colIndex === columns.length - 1 ? 'rounded-br-lg' : ''}
+					${index === displayData.length - 1 && colIndex === filteredColumns.length - 1 ? 'rounded-br-lg' : ''}
 				`}
+				style={{ width: column.width }}
 			>
 				{renderCellContent()}
 			</td>
@@ -233,14 +244,15 @@ const BaseTable = <T extends Record<string, unknown>>({
 				// 로딩 상태
 				Array.from({ length: Math.min(loadingRows, pageSize) }, (_, index) => (
 					<tr key={`loading-${index}`} className="animate-pulse">
-						{columns.map((column, colIndex) => (
+						{filteredColumns.map((column, colIndex) => (
 							<td
 								key={`loading-${index}-${String(column.key)}`}
 								className={`
 									px-6 py-4 
-									${colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : ''}
+									${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
 									${cellClassName}
 								`}
+								style={{ width: column.width }}
 							>
 								<div className="h-5 rounded bg-muted neu-flat"></div>
 							</td>
@@ -251,7 +263,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 				// 빈 데이터 상태
 				<tr>
 					<td
-						colSpan={columns.length}
+						colSpan={filteredColumns.length}
 						className={`px-6 py-12 text-center text-muted-foreground ${cellClassName}`}
 					>
 						표시할 데이터가 없습니다.
@@ -282,7 +294,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 								overflow-visible
 							`}
 						>
-							{columns.map((column, colIndex) => (
+							{filteredColumns.map((column, colIndex) => (
 								<TableCell
 									key={`${index}-${column.key ? String(column.key) : colIndex}`}
 									item={item}

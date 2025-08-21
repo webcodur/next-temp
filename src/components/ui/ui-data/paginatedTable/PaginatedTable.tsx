@@ -23,6 +23,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	groupSize = 5,
 	itemName = '항목',
 	showPagination = true,
+	showRowNumber = true,
 	isFetching = false,
 
 	// BaseTable props
@@ -54,13 +55,35 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	});
 	// #endregion
 
+	// #region 순번 컬럼 생성
+	const columnsWithRowNumber = showRowNumber ? [
+		{
+			header: '순번',
+			width: '60px',
+			align: 'center' as const,
+			type: 'text' as const,
+			headerClassName: '!w-[60px]',
+			cellClassName: '!w-[60px] !px-2',
+			cell: (_: T, index: number) => {
+				const rowNumber = (paginationState.currentPage - 1) * paginationState.pageSize + index + 1;
+				return (
+					<span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+						{rowNumber}
+					</span>
+				);
+			},
+		},
+		...columns,
+	] : columns;
+	// #endregion
+
 	// #region 렌더링
 	return (
 		<div className="p-4 space-y-6 rounded-lg border bg-card">
 			{/* BaseTable 렌더링 */}
 			<BaseTable
 				data={paginationData.isInitialLoading ? null : paginationData.paginatedData}
-				columns={columns}
+				columns={columnsWithRowNumber}
 				className={className}
 				headerClassName={headerClassName}
 				getRowClassName={getRowClassName}

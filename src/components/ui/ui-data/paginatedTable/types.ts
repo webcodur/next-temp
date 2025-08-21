@@ -22,6 +22,7 @@ export interface PaginatedTableProps<T> extends BaseTableProps<T> {
 	groupSize?: number;
 	itemName?: string;
 	showPagination?: boolean;
+	showRowNumber?: boolean;
 	isFetching?: boolean;
 }
 // #endregion
