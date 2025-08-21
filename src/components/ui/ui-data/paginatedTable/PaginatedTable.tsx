@@ -59,15 +59,15 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	const columnsWithRowNumber = showRowNumber ? [
 		{
 			header: '순번',
-			width: '60px',
+			width: '70px',
 			align: 'center' as const,
 			type: 'text' as const,
-			headerClassName: '!w-[60px]',
-			cellClassName: '!w-[60px] !px-2',
+			headerClassName: 'w-[70px] min-w-[70px] max-w-[70px]',
+			cellClassName: 'px-2 w-[70px] min-w-[70px] max-w-[70px]',
 			cell: (_: T, index: number) => {
 				const rowNumber = (paginationState.currentPage - 1) * paginationState.pageSize + index + 1;
 				return (
-					<span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+					<span className="text-sm font-medium whitespace-nowrap text-muted-foreground">
 						{rowNumber}
 					</span>
 				);

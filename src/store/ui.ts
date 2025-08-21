@@ -43,6 +43,38 @@ export const menuSearchQueryAtom = atom<string>('');
 export const menuSearchActiveAtom = atom<boolean>(false);
 // #endregion
 
+//#region 에러 상태
+export interface GlobalError {
+  id: string;
+  errorCode: string;
+  message: string;
+  statusCode: number;
+  timestamp: number;
+}
+
+// 에러 히스토리 (최근 10개까지)
+export const errorHistoryAtom = atom<GlobalError[]>([]);
+
+// 새로운 에러 추가
+export const addErrorAtom = atom(null, (get, set, error: Omit<GlobalError, 'id' | 'timestamp'>) => {
+  const history = get(errorHistoryAtom);
+  const newError: GlobalError = {
+    ...error,
+    id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    timestamp: Date.now(),
+  };
+  
+  // 최근 10개까지만 유지
+  const updatedHistory = [newError, ...history.slice(0, 9)];
+  set(errorHistoryAtom, updatedHistory);
+});
+
+// 에러 히스토리 초기화
+export const clearErrorHistoryAtom = atom(null, (get, set) => {
+  set(errorHistoryAtom, []);
+});
+//#endregion
+
 // #region 색상 상태 (간소화)
 // 프라이머리 색상
 export const primaryColorAtom = atomWithStorage<string>('primary-color', '220 90% 55%');

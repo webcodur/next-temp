@@ -66,19 +66,26 @@ const BaseTable = <T extends Record<string, unknown>>({
 				{filteredColumns.map((column, colIndex) => {
 					const columnKey = column.key ? String(column.key) : `col-${colIndex}`;
 
+										const isPixelWidth = column.width?.endsWith('px');
+					
 					return (
 						<th
-							key={columnKey}
-							className={`
-								relative px-2 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
-								text-center
-								${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
-								${column.headerClassName || ''}
-								${colIndex === 0 ? 'rounded-tl-lg' : ''}
-								${colIndex === filteredColumns.length - 1 ? 'rounded-tr-lg' : ''}
-							`}
-							style={{ width: column.width }}
-						>
+						key={columnKey}
+						className={`
+							relative px-2 py-3 text-xs font-medium text-primary-8 uppercase tracking-wider
+							text-center
+							${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
+							${column.headerClassName || ''}
+							${colIndex === 0 ? 'rounded-tl-lg' : ''}
+							${colIndex === filteredColumns.length - 1 ? 'rounded-tr-lg' : ''}
+							${isPixelWidth ? 'shrink-0' : ''}
+						`}
+						style={{ 
+							width: column.width,
+							minWidth: column.width,
+							maxWidth: column.width
+						}}
+					>
 							{/* 헤더 타이틀 */}
 							<span className="block text-base truncate font-multilang">
 								{column.header}
@@ -219,6 +226,8 @@ const BaseTable = <T extends Record<string, unknown>>({
 			);
 		};
 
+		const isPixelWidth = column.width?.endsWith('px');
+
 		return (
 			<td
 				className={`
@@ -228,8 +237,13 @@ const BaseTable = <T extends Record<string, unknown>>({
 					${column.cellClassName || cellClassName}
 					${index === displayData.length - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
 					${index === displayData.length - 1 && colIndex === filteredColumns.length - 1 ? 'rounded-br-lg' : ''}
+					${isPixelWidth ? 'shrink-0' : ''}
 				`}
-				style={{ width: column.width }}
+				style={{ 
+					width: column.width,
+					minWidth: column.width,
+					maxWidth: column.width 
+				}}
 			>
 				{renderCellContent()}
 			</td>
@@ -244,19 +258,28 @@ const BaseTable = <T extends Record<string, unknown>>({
 				// 로딩 상태
 				Array.from({ length: Math.min(loadingRows, pageSize) }, (_, index) => (
 					<tr key={`loading-${index}`} className="animate-pulse">
-						{filteredColumns.map((column, colIndex) => (
-							<td
-								key={`loading-${index}-${String(column.key)}`}
-								className={`
-									px-6 py-4 
-									${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
-									${cellClassName}
-								`}
-								style={{ width: column.width }}
-							>
-								<div className="h-5 rounded bg-muted neu-flat"></div>
-							</td>
-						))}
+						{filteredColumns.map((column, colIndex) => {
+							const isPixelWidth = column.width?.endsWith('px');
+							
+							return (
+								<td
+									key={`loading-${index}-${String(column.key)}`}
+									className={`
+										px-6 py-4 
+										${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
+										${cellClassName}
+										${isPixelWidth ? 'shrink-0' : ''}
+									`}
+									style={{ 
+										width: column.width,
+										minWidth: column.width,
+										maxWidth: column.width 
+									}}
+								>
+									<div className="h-5 rounded bg-muted neu-flat"></div>
+								</td>
+							);
+						})}
 					</tr>
 				))
 			) : displayData.length === 0 ? (
@@ -323,7 +346,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 				<table
 					className="w-full rounded-lg bg-background"
 					style={{ 
-						tableLayout: 'fixed', 
+						tableLayout: 'auto', 
 						borderSpacing: '0 2px', 
 						borderCollapse: 'separate',
 						minWidth: minWidth 

@@ -40,6 +40,14 @@ export const menuData: MenuData = {
 					},
 				],
 			},
+			'에러 테스트': {
+				botItems: [
+					{
+						key: '에러 테스트',
+						href: '/system/error-test',
+					},
+				],
+			},
 		},
 	},
 	'종합 정보': {

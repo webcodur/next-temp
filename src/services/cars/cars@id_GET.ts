@@ -56,7 +56,7 @@ export async function getCarsByInstance(instanceId: number, parkinglotId?: strin
   });
 
   const result = await response.json();
-  
+
   if (!response.ok) {
     const errorMsg = result.message || `차량 목록 조회 실패(코드): ${response.status}`;
     console.log(errorMsg);

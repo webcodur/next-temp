@@ -78,6 +78,7 @@ export async function getConfigById(id: number, parkinglotId?: string) {
   });
 
   const result = await response.json();
+  console.log('result 테스트', result)
   
   if (!response.ok) {
     const errorMsg = result.message || `특정 설정값 조회 실패(코드): ${response.status}`;

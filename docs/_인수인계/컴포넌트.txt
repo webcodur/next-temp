@@ -9,5 +9,4 @@
 
 폼 생성
 - GridFormAuto 활용
-
-
+- adminListPage > 상세 페이지들 참고하게끔 하면 됩니다.
