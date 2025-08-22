@@ -4,75 +4,85 @@ import { CreateCarInstanceRequest } from '@/types/car';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateCarInstanceServerRequest {
-  car_number: string;
-  instance_id: number;
-  car_share_onoff?: boolean;
+	car_number: string;
+	instance_id: number;
+	car_share_onoff?: boolean;
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function clientToServer(client: CreateCarInstanceRequest): CreateCarInstanceServerRequest {
-  return {
-    car_number: client.carNumber,
-    instance_id: client.instanceId,
-    car_share_onoff: client.carShareOnoff,
-  };
+function clientToServer(
+	client: CreateCarInstanceRequest
+): CreateCarInstanceServerRequest {
+	return {
+		car_number: client.carNumber,
+		instance_id: client.instanceId,
+		car_share_onoff: client.carShareOnoff,
+	};
 }
 // #endregion
 
-export async function createCarInstance(data: CreateCarInstanceRequest, parkinglotId?: string) {
-  const serverRequest = clientToServer(data);
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  
-  if (parkinglotId) {
-    headers['x-parkinglot-id'] = parkinglotId;
-  }
+export async function createCarInstance(
+	data: CreateCarInstanceRequest,
+	parkinglotId?: string
+) {
+	const serverRequest = clientToServer(data);
+	const headers: Record<string, string> = {
+		'Content-Type': 'application/json',
+	};
 
-  const response = await fetchDefault('/cars/instances', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(serverRequest),
-  });
+	if (parkinglotId) {
+		headers['x-parkinglot-id'] = parkinglotId;
+	}
 
-  if (!response.ok) {
-    try {
-      const result = await response.json();
-      const errorMsg = result.message || `차량-인스턴스 연결 실패(코드): ${response.status}`;
-      // console.log(errorMsg);
-      return { success: false, errorMsg };
-    } catch {
-      // JSON 파싱 실패 시 기본 에러 메시지
-      return { success: false, errorMsg: `차량-인스턴스 연결 실패(코드): ${response.status}` };
-    }
-  }
-  
-  // 성공 응답 처리 - 201 Created 또는 200 OK
-  if (response.status === 201 || response.status === 200) {
-    // 응답 내용이 있는지 확인
-    const contentType = response.headers.get('content-type');
-    const hasJsonContent = contentType && contentType.includes('application/json');
-    
-    // 응답 텍스트를 먼저 가져와서 빈 내용인지 확인
-    const responseText = await response.text();
-    
-    if (!responseText.trim() || !hasJsonContent) {
-      // 빈 응답이거나 JSON이 아닌 경우
-      return { success: true, data: { message: '연결 완료' } };
-    }
-    
-    try {
-      const result = JSON.parse(responseText);
-      return {
-        success: true,
-        data: result,
-      };
-    } catch {
-      // JSON 파싱 실패 시에도 성공으로 처리 (POST 요청이 성공했으므로)
-      return { success: true, data: { message: '연결 완료' } };
-    }
-  }
-  
-  return { success: true, data: { message: '연결 완료' } };
+	const response = await fetchDefault('/cars/instances', {
+		method: 'POST',
+		headers,
+		body: JSON.stringify(serverRequest),
+	});
+
+	if (!response.ok) {
+		try {
+			const result = await response.json();
+			const errorMsg =
+				result.message || `차량-인스턴스 연결 실패(코드): ${response.status}`;
+
+			return { success: false, errorMsg };
+		} catch {
+			// JSON 파싱 실패 시 기본 에러 메시지
+			return {
+				success: false,
+				errorMsg: `차량-인스턴스 연결 실패(코드): ${response.status}`,
+			};
+		}
+	}
+
+	// 성공 응답 처리 - 201 Created 또는 200 OK
+	if (response.status === 201 || response.status === 200) {
+		// 응답 내용이 있는지 확인
+		const contentType = response.headers.get('content-type');
+		const hasJsonContent =
+			contentType && contentType.includes('application/json');
+
+		// 응답 텍스트를 먼저 가져와서 빈 내용인지 확인
+		const responseText = await response.text();
+
+		if (!responseText.trim() || !hasJsonContent) {
+			// 빈 응답이거나 JSON이 아닌 경우
+			return { success: true, data: { message: '연결 완료' } };
+		}
+
+		try {
+			const result = JSON.parse(responseText);
+			return {
+				success: true,
+				data: result,
+			};
+		} catch {
+			// JSON 파싱 실패 시에도 성공으로 처리 (POST 요청이 성공했으므로)
+			return { success: true, data: { message: '연결 완료' } };
+		}
+	}
+
+	return { success: true, data: { message: '연결 완료' } };
 }

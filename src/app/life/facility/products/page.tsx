@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/FlatContainer';
+import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/Container-Flat';
 // import { BaseTable } from '@/components/ui/ui-data/baseTable/BaseTable';
 
 export default function ProductsPage() {

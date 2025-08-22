@@ -4,39 +4,46 @@ import { UpdateInstanceVisitConfigRequest } from '@/types/instance';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateInstanceVisitConfigServerRequest {
-  available_visit_time?: number;
-  purchased_visit_time?: number;
-  visit_request_limit?: number;
+	available_visit_time?: number;
+	purchased_visit_time?: number;
+	visit_request_limit?: number;
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function clientToServer(client: UpdateInstanceVisitConfigRequest): UpdateInstanceVisitConfigServerRequest {
-  return {
-    available_visit_time: client.availableVisitTime,
-    purchased_visit_time: client.purchasedVisitTime,
-    visit_request_limit: client.visitRequestLimit,
-  };
+function clientToServer(
+	client: UpdateInstanceVisitConfigRequest
+): UpdateInstanceVisitConfigServerRequest {
+	return {
+		available_visit_time: client.availableVisitTime,
+		purchased_visit_time: client.purchasedVisitTime,
+		visit_request_limit: client.visitRequestLimit,
+	};
 }
 // #endregion
 
-export async function updateInstanceVisitConfig(id: number, data: UpdateInstanceVisitConfigRequest) {
-  const serverRequest = clientToServer(data);
-  const response = await fetchDefault(`/instances/${id}/visit-config`, {
-    method: 'PUT',
-    body: JSON.stringify(serverRequest),
-  });
+export async function updateInstanceVisitConfig(
+	id: number,
+	data: UpdateInstanceVisitConfigRequest
+) {
+	const serverRequest = clientToServer(data);
+	const response = await fetchDefault(`/instances/${id}/visit-config`, {
+		method: 'PUT',
+		body: JSON.stringify(serverRequest),
+	});
 
-  const result = await response.json();
-  
-  if (!response.ok) {
-    const errorMsg = result.message || `인스턴스 방문 설정 수정 실패(코드): ${response.status}`;
-    // console.log(errorMsg);
-    return { success: false, errorMsg };
-  }
-  
-  return {
-    success: true,
-    data: result,
-  };
+	const result = await response.json();
+
+	if (!response.ok) {
+		const errorMsg =
+			result.message ||
+			`인스턴스 방문 설정 수정 실패(코드): ${response.status}`;
+
+		return { success: false, errorMsg };
+	}
+
+	return {
+		success: true,
+		data: result,
+	};
 }

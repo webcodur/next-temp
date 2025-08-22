@@ -148,7 +148,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 						{/* 페이지 */}   
 						<main className="overflow-y-auto flex-1 transition-all duration-100 ease-in-out scrollbar-gutter-stable bg-serial-5">
               {/* 콘텐츠 */}
-              <div className="px-[92px] mx-auto mt-12 max-w-[1656px] rounded-lg">
+              <div className="px-[92px] mx-auto mt-12 rounded-lg">
                 {children}
               </div>  
               {/* 푸터 */}

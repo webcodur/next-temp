@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, ExternalLink, Link, Unplug, Edit } from 'lucide-react';
+import { Home, ExternalLink, Link, Unplug, Edit, ArrowRightLeft } from 'lucide-react';
 
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -155,7 +155,7 @@ export default function CarInstanceSection({
     }
   };
 
-  // 공유 설정 수정 핸들러
+  // 공유 여부 수정 핸들러
   const handleUpdateSettings = async () => {
     if (!editTarget?.carInstance || isSubmitting) return;
 
@@ -216,7 +216,7 @@ export default function CarInstanceSection({
 
   const handleEditClick = (instance: CarInstanceResidentDetail) => {
     setEditTarget(instance);
-    // 설정 수정 시 현재 공유 설정을 초기값으로 설정
+    // 설정 수정 시 현재 공유 여부을 초기값으로 설정
     setCreateFormData({
       selectedInstance: null,
       carShareOnoff: instance.carInstance?.carShareOnoff || false
@@ -432,7 +432,7 @@ export default function CarInstanceSection({
     },
     {
       key: 'carShareOnoff',
-      header: '공유 설정',
+      header: '공유 여부',
       align: 'center',
       width: '12%',
       cell: (item: CarInstanceResidentDetail) => (
@@ -481,11 +481,11 @@ export default function CarInstanceSection({
               e.stopPropagation();
               handleEditClick(item);
             }}
-            title="공유 설정 수정"
+            title="공유 여부 수정"
             className="flex gap-1 items-center px-2 py-1 text-xs"
           >
             <Edit size={12} />
-            공유설정
+            관계정보
           </Button>
           <Button
             variant="outline"
@@ -495,9 +495,9 @@ export default function CarInstanceSection({
               handleChangeInstanceClick(item);
             }}
             title="다른 세대로 변경"
-            className="flex gap-1 items-center px-2 py-1 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            className="flex gap-1 items-center px-2 py-1 text-xs hover:bg-blue-50"
           >
-            <Home size={12} />
+            <ArrowRightLeft size={12} />
             세대변경
           </Button>
           <Button
@@ -542,7 +542,7 @@ export default function CarInstanceSection({
     {
       type: 'toggle',
       key: 'carShareOnoff',
-      label: '공유 설정',
+      label: '공유 여부',
       description: '같은 세대 주민의 차량 이용 허용',
       value: createFormData.carShareOnoff,
       onChange: (value: string | boolean) => setCreateFormData(prev => ({ ...prev, carShareOnoff: value as boolean })),
@@ -647,7 +647,7 @@ export default function CarInstanceSection({
             />
           </div>
 
-          {/* 선택된 세대 정보 및 공유 설정 */}
+          {/* 선택된 세대 정보 및 공유 여부 */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {/* 선택된 세대 */}
             <div className="p-4 rounded-lg border bg-card">
@@ -674,11 +674,11 @@ export default function CarInstanceSection({
               )}
             </div>
 
-            {/* 공유 설정 */}
+            {/* 공유 여부 */}
             <div className="p-4 rounded-lg border bg-card">
               <div className="space-y-3">
                 <label className="block text-sm font-medium text-foreground">
-                  공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
+                  공유 여부 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
                 </label>
                 <SimpleToggleSwitch
                   checked={createFormData.carShareOnoff}
@@ -758,11 +758,11 @@ export default function CarInstanceSection({
             </div>
           )}
 
-          {/* 공유 설정 수정 */}
+          {/* 공유 여부 수정 */}
           <div className="p-4 rounded-lg border bg-card">
             <div className="space-y-3">
               <label className="block text-sm font-medium text-foreground">
-                공유 설정 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
+                공유 여부 <span className="text-xs text-muted-foreground">(같은 세대 주민의 차량 이용 허용)</span>
               </label>
               <SimpleToggleSwitch
                 checked={createFormData.carShareOnoff}

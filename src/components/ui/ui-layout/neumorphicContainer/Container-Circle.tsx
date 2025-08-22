@@ -42,4 +42,4 @@ export const CircleContainer: React.FC<CircleContainerProps> = ({
       <div className="z-10">{children}</div>
     </div>
   );
-}; 
+};

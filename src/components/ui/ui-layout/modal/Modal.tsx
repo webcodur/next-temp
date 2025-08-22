@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import ModalContainer from './unit/ModalContainer';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -29,6 +29,36 @@ const Modal: React.FC<ModalProps> = ({
 	closeOnBackdropClick = true,
 	onConfirm,
 }) => {
+	const modalRef = useRef<HTMLDivElement>(null);
+
+	// 모달이 열릴 때 포커스 이동
+	useEffect(() => {
+		if (isOpen) {
+			const focusModal = () => {
+				if (modalRef.current) {
+					// 첫 번째 focusable 요소를 찾아서 포커스
+					const focusableElements = modalRef.current.querySelectorAll(
+						'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+					);
+					
+					const firstFocusableElement = focusableElements[0] as HTMLElement;
+					if (firstFocusableElement) {
+						firstFocusableElement.focus();
+					} else {
+						// focusable 요소가 없으면 모달 자체에 포커스
+						modalRef.current.focus();
+					}
+				}
+			};
+
+			const timeoutId = setTimeout(() => {
+				requestAnimationFrame(focusModal);
+			}, 100);
+
+			return () => clearTimeout(timeoutId);
+		}
+	}, [isOpen]);
+
 	// space키로 confirm 기능 처리
 	useEffect(() => {
 		if (!isOpen || !onConfirm) return;
@@ -57,15 +87,17 @@ const Modal: React.FC<ModalProps> = ({
 
 	return (
 		<ModalContainer
+			ref={modalRef}
 			isOpen={isOpen}
 			onClose={onClose}
 			closeOnBackdropClick={closeOnBackdropClick}
+			tabIndex={0}
 			className={cn(
-				'mx-4 w-full rounded-lg shadow-xl bg-background',
+				'mx-4 w-full rounded-lg shadow-xl bg-background focus:outline-none',
 				sizeClasses[size],
 				className
 			)}
-		>
+		> 
 			{/* 닫기 버튼 */}
 			{showCloseButton && (
 				<button

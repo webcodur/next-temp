@@ -496,7 +496,7 @@ export default function CarResidentSection({
     },
     {
       key: 'carShareOnoff',
-      header: '공유 설정',
+      header: '공유 여부',
       width: '15%',
       align: 'center',
       cell: (item: typeof connectedInstances[0]) => (

@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/FlatContainer';
+import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/Container-Flat';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 

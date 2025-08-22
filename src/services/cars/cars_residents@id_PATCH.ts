@@ -1,72 +1,87 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
-import { UpdateCarInstanceResidentRequest, CarInstanceResident } from '@/types/car';
+import {
+	UpdateCarInstanceResidentRequest,
+	CarInstanceResident,
+} from '@/types/car';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarInstanceResidentServerResponse {
-  id: number;
-  car_instance_id: number;
-  resident_id: number;
-  car_alarm: boolean;
-  is_primary: boolean;
-  created_at: string;
-  updated_at: string;
+	id: number;
+	car_instance_id: number;
+	resident_id: number;
+	car_alarm: boolean;
+	is_primary: boolean;
+	created_at: string;
+	updated_at: string;
 }
 
 interface UpdateCarInstanceResidentServerRequest {
-  car_alarm?: boolean;
-  is_primary?: boolean;
+	car_alarm?: boolean;
+	is_primary?: boolean;
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function serverToClient(server: CarInstanceResidentServerResponse): CarInstanceResident {
-  return {
-    id: server.id,
-    carInstanceId: server.car_instance_id,
-    residentId: server.resident_id,
-    carAlarm: server.car_alarm,
-    isPrimary: server.is_primary,
-    createdAt: server.created_at,
-    updatedAt: server.updated_at,
-  };
+function serverToClient(
+	server: CarInstanceResidentServerResponse
+): CarInstanceResident {
+	return {
+		id: server.id,
+		carInstanceId: server.car_instance_id,
+		residentId: server.resident_id,
+		carAlarm: server.car_alarm,
+		isPrimary: server.is_primary,
+		createdAt: server.created_at,
+		updatedAt: server.updated_at,
+	};
 }
 
-function clientToServer(client: UpdateCarInstanceResidentRequest): UpdateCarInstanceResidentServerRequest {
-  return {
-    car_alarm: client.carAlarm,
-    is_primary: client.isPrimary,
-  };
+function clientToServer(
+	client: UpdateCarInstanceResidentRequest
+): UpdateCarInstanceResidentServerRequest {
+	return {
+		car_alarm: client.carAlarm,
+		is_primary: client.isPrimary,
+	};
 }
 // #endregion
 
-export async function updateCarInstanceResident(carInstanceResidentId: number, data: UpdateCarInstanceResidentRequest, parkinglotId?: string) {
-  const serverRequest = clientToServer(data);
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  
-  if (parkinglotId) {
-    headers['x-parkinglot-id'] = parkinglotId;
-  }
+export async function updateCarInstanceResident(
+	carInstanceResidentId: number,
+	data: UpdateCarInstanceResidentRequest,
+	parkinglotId?: string
+) {
+	const serverRequest = clientToServer(data);
+	const headers: Record<string, string> = {
+		'Content-Type': 'application/json',
+	};
 
-  const response = await fetchDefault(`/cars/residents/${carInstanceResidentId}`, {
-    method: 'PATCH',
-    headers,
-    body: JSON.stringify(serverRequest),
-  });
+	if (parkinglotId) {
+		headers['x-parkinglot-id'] = parkinglotId;
+	}
 
-  const result = await response.json();
-  
-  if (!response.ok) {
-    const errorMsg = result.message || `차량-주민 연결 수정 실패(코드): ${response.status}`;
-    // console.log(errorMsg);
-    return { success: false, errorMsg };
-  }
-  
-  const serverResponse = result as CarInstanceResidentServerResponse;
-  return {
-    success: true,
-    data: serverToClient(serverResponse),
-  };
+	const response = await fetchDefault(
+		`/cars/residents/${carInstanceResidentId}`,
+		{
+			method: 'PATCH',
+			headers,
+			body: JSON.stringify(serverRequest),
+		}
+	);
+
+	const result = await response.json();
+
+	if (!response.ok) {
+		const errorMsg =
+			result.message || `차량-주민 연결 수정 실패(코드): ${response.status}`;
+
+		return { success: false, errorMsg };
+	}
+
+	const serverResponse = result as CarInstanceResidentServerResponse;
+	return {
+		success: true,
+		data: serverToClient(serverResponse),
+	};
 }

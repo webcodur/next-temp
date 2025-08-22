@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { RaisedContainer } from './RaisedContainer';
-import { InsetContainer } from './InsetContainer';
-import { FlatContainer } from './FlatContainer';
-import { CircleContainer } from './CircleContainer';
+import { RaisedContainer } from './Container-Raised';
+import { InsetContainer } from './Container-Inset';
+import { FlatContainer } from './Container-Flat';
+import { CircleContainer } from './Container-Circle';
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function ContainerExample() {
@@ -123,4 +123,4 @@ export default function ContainerExample() {
 			</div>
 		</div>
 	);
-} 
+}

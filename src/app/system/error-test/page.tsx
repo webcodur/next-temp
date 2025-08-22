@@ -5,7 +5,7 @@ import { AlertTriangle, Bug, Database, Globe, Server, Users, Car, Settings, File
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
-import { RaisedContainer } from '@/components/ui/ui-layout/neumorphicContainer/RaisedContainer';
+import { RaisedContainer } from '@/components/ui/ui-layout/neumorphicContainer/Container-Raised';
 
 // API 서비스 임포트
 import { getAdminDetail } from '@/services/admin/admin@id_GET';

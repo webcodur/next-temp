@@ -29,4 +29,4 @@ export const InsetContainer: React.FC<InsetContainerProps> = ({
       {children}
     </div>
   );
-}; 
+};

@@ -61,8 +61,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     
     try {
       await navigator.clipboard.writeText(errorText);
-      // 복사 성공 피드백 (선택사항)
-      console.log('에러 정보가 클립보드에 복사되었습니다.');
     } catch (err) {
       console.error('클립보드 복사 실패:', err);
     }

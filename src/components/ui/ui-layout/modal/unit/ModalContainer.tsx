@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 
@@ -11,16 +11,18 @@ interface ModalContainerProps {
 	children: ReactNode;
 	className?: string;
 	closeOnBackdropClick?: boolean;
+	tabIndex?: number;
 }
 // #endregion
 
-const ModalContainer: React.FC<ModalContainerProps> = ({
+const ModalContainer = forwardRef<HTMLDivElement, ModalContainerProps>(({
 	isOpen,
 	onClose,
 	children,
 	className = '',
 	closeOnBackdropClick = true,
-}) => {
+	tabIndex,
+}, ref) => {
 	// #region 상태
 	// 클라이언트 마운트 여부 확인 (Hydration mismatch 방지)
 	const [mounted, setMounted] = useState(false);
@@ -72,7 +74,11 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 			className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-sm bg-background/40"
 			onClick={handleBackdropClick}
 		>
-			<div className={cn('relative rounded-lg shadow-lg bg-background neu-elevated', className)}>
+			<div 
+				ref={ref}
+				tabIndex={tabIndex}
+				className={cn('relative rounded-lg shadow-lg bg-background neu-elevated', className)}
+			>
 				{children}
 			</div>
 		</div>
@@ -82,6 +88,8 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
 	if (typeof window !== 'undefined') return createPortal(modalContent, document.body);
 	return null;
 	// #endregion
-};
+});
+
+ModalContainer.displayName = 'ModalContainer';
 
 export default ModalContainer; 

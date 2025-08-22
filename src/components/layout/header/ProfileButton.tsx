@@ -49,8 +49,6 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 		try {
 			logout();
 			setIsOpen(false);
-			console.log('로그아웃 성공');
-			// router.push('/login') 제거 - MainLayout의 조건부 렌더링이 자동으로 Login 컴포넌트 표시
 		} catch (error) {
 			console.error('로그아웃 처리 중 오류:', error);
 			alert('로그아웃 처리 중 오류가 발생했습니다.');

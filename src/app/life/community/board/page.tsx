@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/FlatContainer';
+import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/Container-Flat';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 
 export default function CommunityBoardPage() {

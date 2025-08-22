@@ -35,4 +35,4 @@ export const FlatContainer: React.FC<FlatContainerProps> = ({
       {children}
     </div>
   );
-}; 
+};

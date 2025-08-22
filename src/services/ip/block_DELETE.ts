@@ -3,15 +3,15 @@ import { fetchDefault } from '@/services/fetchClient';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface DeleteAllBlockedIpServerResponse {
-  message?: string;
+	message?: string;
 }
 //#endregion
 
 //#region 변환 함수 (파일 내부 사용)
 function serverToClient(server: DeleteAllBlockedIpServerResponse) {
-  return {
-    message: server.message,
-  };
+	return {
+		message: server.message,
+	};
 }
 //#endregion
 
@@ -20,34 +20,35 @@ function serverToClient(server: DeleteAllBlockedIpServerResponse) {
  * @returns 모든 IP 차단 해제 결과
  */
 export async function deleteAllBlockedIp() {
-  const response = await fetchDefault('/ip/block', {
-    method: 'DELETE',
-  });
+	const response = await fetchDefault('/ip/block', {
+		method: 'DELETE',
+	});
 
-  // 204 No Content 응답의 경우 JSON 파싱하지 않음
-  if (response.status === 204) {
-    return {
-      success: true,
-      data: { message: '모든 IP 차단이 성공적으로 해제되었습니다.' },
-    };
-  }
+	// 204 No Content 응답의 경우 JSON 파싱하지 않음
+	if (response.status === 204) {
+		return {
+			success: true,
+			data: { message: '모든 IP 차단이 성공적으로 해제되었습니다.' },
+		};
+	}
 
-  const result = await response.json();
-  
-  if (!response.ok) {
-    const errorMsg = result.message || `모든 IP 차단 해제 실패(코드): ${response.status}`;
-    // console.log(errorMsg);
-    return {
-      success: false,
-      errorMsg: errorMsg,
-    };
-  }
+	const result = await response.json();
 
-  const serverResponse = result as DeleteAllBlockedIpServerResponse;
-  const clientData = serverToClient(serverResponse);
-  
-  return {
-    success: true,
-    data: clientData,
-  };
-} 
+	if (!response.ok) {
+		const errorMsg =
+			result.message || `모든 IP 차단 해제 실패(코드): ${response.status}`;
+
+		return {
+			success: false,
+			errorMsg: errorMsg,
+		};
+	}
+
+	const serverResponse = result as DeleteAllBlockedIpServerResponse;
+	const clientData = serverToClient(serverResponse);
+
+	return {
+		success: true,
+		data: clientData,
+	};
+}

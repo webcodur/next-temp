@@ -144,7 +144,7 @@ export default function ResidentInstanceTable({
               className="flex gap-1 items-center px-2 py-1 text-xs"
             >
               <Edit size={12} />
-              연결정보
+              관계정보
             </Button>
           )}
           {onMoveFromHere && (

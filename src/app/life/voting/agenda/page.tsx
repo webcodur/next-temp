@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/FlatContainer';
+import { FlatContainer } from '@/components/ui/ui-layout/neumorphicContainer/Container-Flat';
 
 export default function AgendaPage() {
 	return (
