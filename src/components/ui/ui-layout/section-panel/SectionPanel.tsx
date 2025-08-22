@@ -1,5 +1,4 @@
-import React, { ReactNode, useRef, useEffect, useId } from 'react';
-import { useSectionNavigation } from '@/contexts/SectionNavigationContext';
+import React, { ReactNode, useRef, useId } from 'react';
 
 // #region 상수 정의
 const STYLES = {
@@ -52,30 +51,11 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
 	headerHeight = "h-12", // 기본값 설정
 	titleAlign = "left", // 기본값 설정
 	contentPadding = "p-4", // 기본값 설정
-	level = 0, // 기본값 설정
-	navigationTitle, // 네비게이션용 제목
 }) => {
 	const hasHeader = title || headerActions || icon;
 	const sectionId = useId();
 	const sectionRef = useRef<HTMLDivElement>(null);
 	
-	// 섹션 네비게이션 컨텍스트 사용 (항상 안전한 값 반환)
-	const sectionNav = useSectionNavigation();
-	const { registerSection, unregisterSection } = sectionNav;
-
-	// 섹션 등록/해제
-	useEffect(() => {
-		if (title && sectionRef.current) {
-			// navigationTitle이 있으면 우선 사용, 없으면 기존 로직
-			const titleText = navigationTitle || (typeof title === 'string' ? title : 'Section');
-			registerSection(sectionId, titleText, sectionRef.current, level);
-			
-			return () => {
-				unregisterSection(sectionId);
-			};
-		}
-	}, [sectionId, title, navigationTitle, level, registerSection, unregisterSection]);
-
 	// 타이틀 정렬 클래스 매핑
 	const justifyClasses = {
 		left: 'justify-start',

@@ -87,7 +87,7 @@ export async function createAdmin(data: CreateAdminRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `관리자 생성 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

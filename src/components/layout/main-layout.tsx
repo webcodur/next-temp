@@ -22,7 +22,6 @@ import Footer from '@/components/layout/footer/Footer';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import SecondaryPanel from '@/components/layout/sidebar/unit/SecondaryPanel/SecondaryPanel';
 import { ToastProvider } from '@/components/ui/ui-effects/toast/Toast';
-import { SectionNavigationProvider } from '@/contexts/SectionNavigationContext';
 
 // #region 타입
 interface MainLayoutProps {
@@ -117,7 +116,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
 	// #region 렌더링
 	return (
-		<SectionNavigationProvider>
 			<ToastProvider>
 			<div className="flex flex-col h-screen" dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
 				<Header />
@@ -165,7 +163,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
 			<ParkingLotSelectionModal />
 		</div>
 			</ToastProvider>
-		</SectionNavigationProvider>
 	);
 	// #endregion
 }
