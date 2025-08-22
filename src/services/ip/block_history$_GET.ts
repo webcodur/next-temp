@@ -94,7 +94,7 @@ export async function searchBlockHistory(params?: SearchIpBlockHistoryRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차단 내역 검색 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

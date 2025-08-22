@@ -118,7 +118,7 @@ export async function searchBlacklists(params?: SearchBlacklistRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `블랙리스트 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

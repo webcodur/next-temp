@@ -133,7 +133,7 @@ export async function createViolation(data: CreateCarViolationRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차량 위반 기록 생성 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

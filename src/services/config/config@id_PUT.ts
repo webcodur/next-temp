@@ -104,7 +104,7 @@ export async function updateConfigById(id: number, data: UpdateSystemConfigReque
   
   if (!response.ok) {
     const errorMsg = result.message || `설정값 업데이트 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

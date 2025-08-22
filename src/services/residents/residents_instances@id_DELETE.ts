@@ -9,7 +9,7 @@ export async function deleteResidentInstance(id: number) {
   if (!response.ok) {
     const result = await response.json();
     const errorMsg = result.message || `주민-인스턴스 관계 삭제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

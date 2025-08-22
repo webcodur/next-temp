@@ -99,7 +99,7 @@ export async function updateBlacklist(id: number, data: UpdateBlacklistRequest) 
   
   if (!response.ok) {
     const errorMsg = result.message || `블랙리스트 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

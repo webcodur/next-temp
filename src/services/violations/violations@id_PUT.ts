@@ -123,7 +123,7 @@ export async function updateViolation(id: number, data: UpdateCarViolationReques
   
   if (!response.ok) {
     const errorMsg = result.message || `위반 기록 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

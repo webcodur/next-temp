@@ -66,7 +66,7 @@ export async function getBlockedIpList(page?: number, limit?: number) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차단된 IP 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

@@ -126,7 +126,7 @@ export async function searchCarInstances(params?: SearchCarInstanceParams, parki
   
   if (!response.ok) {
     const errorMsg = result.message || `차량-인스턴스 연결 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

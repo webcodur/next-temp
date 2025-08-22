@@ -9,7 +9,7 @@ export async function deleteInstance(id: number) {
   if (!response.ok) {
     const result = await response.json();
     const errorMsg = result.message || `인스턴스 삭제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

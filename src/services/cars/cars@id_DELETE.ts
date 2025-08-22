@@ -16,7 +16,7 @@ export async function deleteCar(carId: number, parkinglotId?: string) {
   if (!response.ok) {
     const result = await response.json();
     const errorMsg = result.message || `차량 삭제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

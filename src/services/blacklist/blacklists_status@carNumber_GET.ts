@@ -86,7 +86,7 @@ export async function getBlacklistStatus(carNumber: string) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차량 블랙리스트 상태 확인 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

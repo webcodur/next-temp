@@ -71,7 +71,7 @@ export async function getParkingDeviceDetail(id: number) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 상세 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

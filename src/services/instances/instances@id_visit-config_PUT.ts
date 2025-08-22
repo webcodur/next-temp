@@ -31,7 +31,7 @@ export async function updateInstanceVisitConfig(id: number, data: UpdateInstance
   
   if (!response.ok) {
     const errorMsg = result.message || `인스턴스 방문 설정 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

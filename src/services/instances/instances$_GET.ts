@@ -274,7 +274,7 @@ export async function searchInstances(params?: SearchInstanceParams) {
   
   if (!response.ok) {
     const errorMsg = result.message || `인스턴스 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

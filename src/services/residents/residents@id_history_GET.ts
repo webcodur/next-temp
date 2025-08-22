@@ -123,7 +123,7 @@ export async function getResidentHistory(id: number) {
   
   if (!response.ok) {
     const errorMsg = result.message || `주민 인스턴스 이동 이력 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

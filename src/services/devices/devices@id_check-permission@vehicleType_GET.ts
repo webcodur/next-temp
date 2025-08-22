@@ -31,7 +31,7 @@ export async function checkVehiclePermission(id: number, vehicleType: VehicleTyp
   
   if (!response.ok) {
     const errorMsg = result.message || `차량 유형별 출입 허가 확인 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

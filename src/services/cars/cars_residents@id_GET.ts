@@ -112,7 +112,7 @@ export async function getCarInstanceResidentDetail(carInstanceResidentId: number
   
   if (!response.ok) {
     const errorMsg = result.message || `차량-주민 연결 상세 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

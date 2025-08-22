@@ -112,7 +112,7 @@ export async function searchResidents(params?: SearchResidentParams) {
   
   if (!response.ok) {
     const errorMsg = result.message || `주민 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

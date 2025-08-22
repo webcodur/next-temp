@@ -87,7 +87,7 @@ export async function updateParkingDeviceNetwork(id: number, data: UpdateParking
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 네트워크 설정 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

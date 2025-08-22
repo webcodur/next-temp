@@ -101,7 +101,7 @@ export async function searchParkingDevices(params?: SearchParkingDeviceRequest) 
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

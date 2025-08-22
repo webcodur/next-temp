@@ -36,7 +36,7 @@ export async function deleteAllBlockedIp() {
   
   if (!response.ok) {
     const errorMsg = result.message || `모든 IP 차단 해제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

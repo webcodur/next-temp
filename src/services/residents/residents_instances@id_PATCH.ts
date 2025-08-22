@@ -95,7 +95,7 @@ export async function updateResidentInstance(id: number, data: UpdateResidentIns
   
   if (!response.ok) {
     const errorMsg = result.message || `주민-인스턴스 관계 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

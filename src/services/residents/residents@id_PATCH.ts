@@ -107,7 +107,7 @@ export async function updateResident(id: number, data: UpdateResidentRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `주민 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

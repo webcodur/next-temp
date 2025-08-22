@@ -89,7 +89,7 @@ export async function updateParkingDeviceBasicInfo(id: number, data: UpdateParki
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 기본 정보 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

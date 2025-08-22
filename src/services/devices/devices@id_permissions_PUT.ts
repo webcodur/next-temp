@@ -99,7 +99,7 @@ export async function updateParkingDevicePermissions(id: number, data: UpdatePar
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 출입 권한 설정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

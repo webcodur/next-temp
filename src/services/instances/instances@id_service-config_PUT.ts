@@ -33,7 +33,7 @@ export async function updateInstanceServiceConfig(id: number, data: UpdateInstan
   
   if (!response.ok) {
     const errorMsg = result.message || `인스턴스 서비스 설정 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

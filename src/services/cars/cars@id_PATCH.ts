@@ -94,7 +94,7 @@ export async function updateCar(carId: number, data: UpdateCarRequest, parkinglo
   
   if (!response.ok) {
     const errorMsg = result.message || `차량 정보 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

@@ -66,7 +66,7 @@ export async function searchParkingDeviceCommandLogs(id: number, params?: Search
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 명령 로그 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

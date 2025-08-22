@@ -80,7 +80,7 @@ export async function updateAdmin(data: UpdateAdminRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `관리자 계정 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

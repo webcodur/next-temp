@@ -93,7 +93,7 @@ export async function unblockBlacklist(id: number, data: UnblockBlacklistRequest
   
   if (!response.ok) {
     const errorMsg = result.message || `블랙리스트 해제 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

@@ -115,7 +115,7 @@ export async function processViolation(id: number, data: ProcessCarViolationRequ
   
   if (!response.ok) {
     const errorMsg = result.message || `위반 기록 처리 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

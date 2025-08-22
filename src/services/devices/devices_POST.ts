@@ -121,7 +121,7 @@ export async function createParkingDevice(data: CreateParkingDeviceRequest) {
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 생성 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

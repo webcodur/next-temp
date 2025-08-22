@@ -121,7 +121,7 @@ export async function updateParkingDevice(id: number, data: UpdateParkingDeviceR
   
   if (!response.ok) {
     const errorMsg = result.message || `차단기 수정 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

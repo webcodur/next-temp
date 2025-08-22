@@ -179,7 +179,7 @@ export async function searchCars(params?: SearchCarParams, parkinglotId?: string
   
   if (!response.ok) {
     const errorMsg = result.message || `차량 목록 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

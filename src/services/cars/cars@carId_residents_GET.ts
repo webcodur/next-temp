@@ -74,7 +74,7 @@ export async function getCarResidents(carId: number, instanceId: number, parking
   
   if (!response.ok) {
     const errorMsg = result.message || `차량-주민 관계 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return { success: false, errorMsg };
   }
   

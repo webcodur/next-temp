@@ -59,7 +59,7 @@ export async function getAdminDetail({ id }: { id: number }) {
   
   if (!response.ok) {
     const errorMsg = result.message || `관리자 상세 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
+    // console.log(errorMsg);
     return {
       success: false,
       errorMsg: errorMsg,

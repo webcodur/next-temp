@@ -66,7 +66,7 @@ export async function updateCarInstance(carInstanceId: number, data: UpdateCarIn
     try {
       const result = await response.json();
       const errorMsg = result.message || `차량-인스턴스 연결 수정 실패(코드): ${response.status}`;
-      console.log(errorMsg);
+      // console.log(errorMsg);
       return { success: false, errorMsg };
     } catch {
       return { success: false, errorMsg: `차량-인스턴스 연결 수정 실패(코드): ${response.status}` };
