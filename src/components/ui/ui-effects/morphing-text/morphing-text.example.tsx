@@ -172,7 +172,7 @@ export default function MorphingTextExample() {
 <MorphingText 
   texts={["안녕하세요", "Hello", "مرحبا"]}
   autoPlay={true}
-  onTextChange={(index) => console.log('변경:', index)}
+  onTextChange={() => {/* 변경된 인덱스 */}}
 />
 
 // 수동 제어

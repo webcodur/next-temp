@@ -4,21 +4,23 @@ import { CacheNamespaceStats } from '@/types/api';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CacheNamespaceStatsServerResponse {
-  namespace: string;
-  keys: number;
-  memory: number;
-  key_list: string[];
+	namespace: string;
+	keys: number;
+	memory: number;
+	key_list: string[];
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
-function serverToClient(server: CacheNamespaceStatsServerResponse): CacheNamespaceStats {
-  return {
-    namespace: server.namespace,
-    keys: server.keys,
-    memory: server.memory,
-    keyList: server.key_list,
-  };
+function serverToClient(
+	server: CacheNamespaceStatsServerResponse
+): CacheNamespaceStats {
+	return {
+		namespace: server.namespace,
+		keys: server.keys,
+		memory: server.memory,
+		keyList: server.key_list,
+	};
 }
 // #endregion
 
@@ -28,24 +30,26 @@ function serverToClient(server: CacheNamespaceStatsServerResponse): CacheNamespa
  * @returns 네임스페이스별 캐시 통계 정보 (CacheNamespaceStats)
  */
 export async function getCacheStatsByNamespace(namespace: string) {
-  const response = await fetchDefault(`/cache/namespace/${namespace}/stats`, {
-    method: 'GET',
-  });
+	const response = await fetchDefault(`/cache/namespace/${namespace}/stats`, {
+		method: 'GET',
+	});
 
-  const result = await response.json();
-  
-  if (!response.ok) {
-    const errorMsg = result.message || `네임스페이스별 캐시 통계 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
-    return {
-      success: false,
-      errorMsg: errorMsg,
-    };
-  }
-  
-  const serverResponse = result as CacheNamespaceStatsServerResponse;
-  return {
-    success: true,
-    data: serverToClient(serverResponse),
-  };
-} 
+	const result = await response.json();
+
+	if (!response.ok) {
+		const errorMsg =
+			result.message ||
+			`네임스페이스별 캐시 통계 조회 실패(코드): ${response.status}`;
+		console.error(errorMsg);
+		return {
+			success: false,
+			errorMsg: errorMsg,
+		};
+	}
+
+	const serverResponse = result as CacheNamespaceStatsServerResponse;
+	return {
+		success: true,
+		data: serverToClient(serverResponse),
+	};
+}

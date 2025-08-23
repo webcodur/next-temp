@@ -79,7 +79,7 @@ export default function CacheManagePage() {
       const result = await getCacheStats();
       
       if (result.success) {
-        console.log('캐시 관리 API 응답:', result.data); // 디버깅용
+        // 캐시 관리 API 응답 처리
         const namespaces = result.data?.namespaces ?? {};
         let filteredData = Object.entries(namespaces).map(([namespace, stats]) => ({
           namespace,

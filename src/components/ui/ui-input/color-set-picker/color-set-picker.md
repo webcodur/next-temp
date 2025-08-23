@@ -20,12 +20,12 @@
 import { ColorSetPicker } from '@/components/ui/ui-input/color-set-picker/ColorSetPicker';
 
 function SettingsPage() {
-  return (
-    <div>
-      <h2>테마 설정</h2>
-      <ColorSetPicker />
-    </div>
-  );
+	return (
+		<div>
+			<h2>테마 설정</h2>
+			<ColorSetPicker />
+		</div>
+	);
 }
 ```
 
@@ -35,48 +35,53 @@ function SettingsPage() {
 import { ColorSetPicker } from '@/components/ui/ui-input/color-set-picker/ColorSetPicker';
 
 function ThemeSelector() {
-  const handleColorSetChange = (colorSet) => {
-    console.log('색상 테마 변경:', colorSet);
-    // 추가 로직 수행
-  };
+	const handleColorSetChange = (colorSet) => {
+		// 색상 테마 변경됨
+		// 추가 로직 수행
+	};
 
-  return (
-    <ColorSetPicker 
-      onSetChange={handleColorSetChange}
-      showLabels={true}
-      className="max-w-md"
-    />
-  );
+	return (
+		<ColorSetPicker
+			onSetChange={handleColorSetChange}
+			showLabels={true}
+			className="max-w-md"
+		/>
+	);
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | `''` | 추가 CSS 클래스 |
-| `onSetChange` | `(colorSet: ColorSetKey) => void` | - | 색상 세트 변경 시 콜백 |
-| `showLabels` | `boolean` | `true` | 레이블 표시 여부 |
+| Prop          | Type                              | Default | Description            |
+| ------------- | --------------------------------- | ------- | ---------------------- |
+| `className`   | `string`                          | `''`    | 추가 CSS 클래스        |
+| `onSetChange` | `(colorSet: ColorSetKey) => void` | -       | 색상 세트 변경 시 콜백 |
+| `showLabels`  | `boolean`                         | `true`  | 레이블 표시 여부       |
 
 ## 색상 세트 목록
 
 1. **로맨틱 핑크** (`pink-purple`)
+
    - Primary: `320 85% 65%` (핑크)
    - Secondary: `280 80% 70%` (퍼플)
 
 2. **에너제틱 코랄** (`coral-orange`)
+
    - Primary: `15 85% 65%` (코랄)
    - Secondary: `55 80% 70%` (오렌지)
 
 3. **프로페셔널 인디고** (`indigo-violet`)
+
    - Primary: `220 85% 65%` (인디고)
    - Secondary: `260 80% 70%` (바이올렛)
 
 4. **모던 틸** (`teal-cyan`)
+
    - Primary: `180 85% 65%` (틸)
    - Secondary: `220 80% 70%` (시안)
 
 5. **프레시 라임** (`lime-green`)
+
    - Primary: `90 85% 65%` (라임)
    - Secondary: `130 80% 70%` (그린)
 
@@ -106,7 +111,7 @@ const [currentColorSet] = useAtom(colorSetAtom);
 ## 연관 컴포넌트
 
 - `Button` - secondary variant 지원
-- `Badge` - outline-secondary variant 지원  
+- `Badge` - outline-secondary variant 지원
 - `SimpleTextInput` - colorVariant prop 지원
 - `SimpleCheckbox` - colorVariant prop 지원
 - `SimpleToggleButton` - colorVariant prop 지원
@@ -128,4 +133,4 @@ const [currentColorSet] = useAtom(colorSetAtom);
 │ P: 90 85% 65%   │ P: 350 85% 65%  │
 │ S: 130 80% 70%  │ S: 30 80% 70%   │
 └─────────────────┴─────────────────┘
-``` 
+```

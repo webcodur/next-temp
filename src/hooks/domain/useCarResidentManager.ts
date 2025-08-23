@@ -33,19 +33,13 @@ export function useCarResidentManager() {
 			try {
 				// 한 번의 호출로 모든 정보 조회 (알람/소유자 설정 포함)
 
-				console.log('점검: instanceId', instanceId);
-				console.log('점검: carId', carId);
-
 				const result = await getCarResidents(carId, instanceId || 0);
-
-				console.log('차량-주민 목록 조회 결과:', result);
 
 				if (!result.success || !result.data) {
 					return [];
 				}
 
 				// 서버에서 이미 instanceId로 필터링된 데이터 반환
-				console.log('최종 차량-주민 목록:', result.data);
 				return result.data;
 			} catch (error) {
 				console.error('차량-주민 데이터 로딩 중 오류:', error);
@@ -105,11 +99,7 @@ export function useCarResidentManager() {
 				isPrimary: false, // 기본값
 			};
 
-			console.log('차량-주민 연결 요청 데이터:', requestData);
-
 			const result = await createCarInstanceResident(requestData);
-
-			console.log('차량-주민 연결 응답 결과:', result);
 
 			return result;
 		},

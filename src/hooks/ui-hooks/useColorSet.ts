@@ -69,7 +69,6 @@ export function useColorSet() {
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const observer = new MutationObserver(() => {
-			console.log('🌓 테마 변경 감지 - 색상 업데이트');
 			updateColorScale(colorSet);
 		});
 		observer.observe(document.documentElement, {
@@ -84,17 +83,13 @@ export function useColorSet() {
 	// 색상 변경 함수 - atomWithStorage가 자동으로 localStorage 처리
 	const setColorSet = useCallback(
 		(newColorSet: ColorSetKey) => {
-			console.log(`🎨 색상 변경: ${colorSet} → ${newColorSet}`);
-
 			// 1. 상태 업데이트 (localStorage 자동 저장됨)
 			setColorSetState(newColorSet);
 
 			// 2. 색상 적용
 			updateColorScale(newColorSet);
-
-			console.log(`✅ 색상 변경 완료: ${newColorSet}`);
 		},
-		[colorSet, setColorSetState]
+		[setColorSetState]
 	);
 
 	return {

@@ -262,7 +262,6 @@ export default function CarResidentSection({
   const loadCarResidentsWithDetails = useCallback(async () => {
     try {
       // 1단계: 기본 주민 목록 조회
-      console.log('car~~~', car)
       const basicResult = await getCarResidents(car.id, car.carInstance[0]?.instanceId || 0);
       if (!basicResult.success || !basicResult.data) {
         return [];
@@ -371,13 +370,7 @@ export default function CarResidentSection({
     setIsSubmitting(true);
 
     try {
-      console.log('삭제 API 호출 시작:', {
-        deleteTargetId,
-        API_URL: `/cars/residents/${deleteTargetId}`,
-        method: 'DELETE'
-      });
       const result = await deleteCarInstanceResident(deleteTargetId);
-      console.log('삭제 API 응답:', result);
 
       if (result.success) {
         setModalMessage('주민 연결이 성공적으로 삭제되었습니다.');
@@ -689,12 +682,6 @@ export default function CarResidentSection({
             variant="destructive"
             size="sm"
             onClick={() => {
-              console.log('삭제 버튼 클릭:', {
-                주민이름: item.name,
-                주민ID: item.id,
-                연결ID: item.carInstanceResidentId,
-                삭제요청ID: item.carInstanceResidentId
-              });
               setDeleteTargetId(item.carInstanceResidentId);
               setDeleteConfirmOpen(true);
             }}

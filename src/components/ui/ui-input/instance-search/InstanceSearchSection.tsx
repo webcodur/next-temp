@@ -362,7 +362,7 @@ export default function InstanceSearchSection({
         
         if (result.success && mounted) {
           const instanceData = result.data?.data || [];
-          console.log('instanceData', instanceData)
+
           setInstances(instanceData);
         } else if (mounted) {
           setInstances([]);

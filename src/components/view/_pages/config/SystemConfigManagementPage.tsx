@@ -243,11 +243,7 @@ export default function SystemConfigManagementPage() {
 
   const handleRowClick = useCallback((config: SystemConfig) => {
     const url = `/system/config/settings/edit?id=${config.id}`;
-    console.log('설정 편집 네비게이션:', { 
-      configId: config.id,
-      configKey: config.key,
-      url 
-    });
+    // 설정 편집 네비게이션 완료
     router.push(url);
   }, [router]);
 

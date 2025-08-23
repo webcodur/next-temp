@@ -41,7 +41,7 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 	}, []);
 
 	const handleSetChange = (newSet: ColorSetKey) => {
-		console.log(`🎨 ColorSetDropdown: ${currentSet} → ${newSet}`);
+
 		setColorSet(newSet);
 		onSetChange?.(newSet);
 		setIsOpen(false);

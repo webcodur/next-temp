@@ -278,7 +278,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         setViolation(result.data);
         setOriginalData(result.data);
         setEditForm(violationToEditForm(result.data));
-        console.log('위반 기록이 성공적으로 저장되었습니다');
+
       } else {
         console.error('위반 기록 저장 실패:', result.errorMsg);
       }
@@ -307,7 +307,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         setOriginalData(result.data);
         setProcessForm(violationToProcessForm(result.data));
         setEditForm(violationToEditForm(result.data));
-        console.log('위반 기록 처리가 완료되었습니다');
+
       } else {
         console.error('위반 기록 처리 실패:', result.errorMsg);
       }

@@ -33,7 +33,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 	};
 
 	const handleSetChange = (newSet: ColorSetKey) => {
-		console.log(`🎨 ColorSetSelector: ${currentSet} → ${newSet}`);
+
 		setColorSet(newSet);
 		onSetChange?.(newSet);
 	};

@@ -24,13 +24,6 @@ export default function AdminDetailPage() {
   const routerRef = useRef(router);
   routerRef.current = router;
 
-  
-  console.log('AdminDetailPage 렌더링, params:', params, 'adminId:', adminId);
-  
-
-  
-  
-
   // #region 상태 관리
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,20 +56,15 @@ export default function AdminDetailPage() {
 
   // #region 데이터 로드
   const loadAdminData = useCallback(async () => {
-    console.log('loadAdminData 호출, adminId:', adminId);
     if (!adminId || isNaN(adminId)) {
-      console.log('adminId가 유효하지 않음:', adminId);
       return;
     }
     
     setLoading(true);
     try {
-      console.log('getAdminDetail API 호출 시작');
       const result = await getAdminDetail({ id: adminId });
-      console.log('getAdminDetail API 결과:', result);
       
       if (result.success && result.data) {
-        console.log('관리자 데이터 설정:', result.data);
         setAdmin(result.data);
         
         const initialData = {
@@ -88,7 +76,6 @@ export default function AdminDetailPage() {
           password: '',
           confirm: '',
         };
-        console.log('초기 폼 데이터:', initialData);
         setFormData(initialData);
         setOriginalData(initialData);
       } else {
@@ -108,12 +95,10 @@ export default function AdminDetailPage() {
       }, 2000);
     } finally {
       setLoading(false);
-      console.log('loadAdminData 완료');
     }
   }, [adminId]);
 
   useEffect(() => {
-    console.log('useEffect 실행, loadAdminData 호출');
     loadAdminData();
   }, [loadAdminData]);
   // #endregion
@@ -212,8 +197,6 @@ export default function AdminDetailPage() {
     setInfoModalOpen(true);
   }, [admin]);
   // #endregion
-
-  console.log('렌더링 상태:', { loading, admin, formData });
 
   if (loading) {
     return (

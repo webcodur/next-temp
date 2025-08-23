@@ -28,7 +28,7 @@ export default function CacheStatsPage() {
       const result = await getCacheStats();
       
       if (result.success) {
-        console.log('캐시 통계 API 응답:', result.data); // 디버깅용
+        // 캐시 통계 API 응답 처리
         setCacheStats(result.data || null);
         setLastUpdated(new Date());
       } else {

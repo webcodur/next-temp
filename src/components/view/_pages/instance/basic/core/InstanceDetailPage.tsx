@@ -108,7 +108,7 @@ export default function InstanceDetailPage() {
 
       // 선택된 차량이 더 이상 존재하지 않으면 관리모드 해제
       if (!selectedCarExists) {
-        console.log(`차량 ID ${selectedCarInstanceId}이 세대에서 제거되어 관리모드를 해제합니다.`);
+
         closeResidentManagement();
         toast.info('관리 중이던 차량이 세대에서 제거되어 관리모드가 해제되었습니다.');
       }

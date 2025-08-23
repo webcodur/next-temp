@@ -18,7 +18,7 @@ export default function TimeRangeSelectorExample() {
 
 	const handleTimeRangeChange = (startHour: number, startMinute: number, endHour: number, endMinute: number) => {
 		setSelectedTime({ startHour, startMinute, endHour, endMinute });
-		console.log(`시간 변경: ${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')} ~ ${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`);
+		// 시간 범위 변경됨
 	};
 
 	return (
@@ -91,8 +91,8 @@ export default function TimeRangeSelectorExample() {
 								startMinute={15}
 								endHour={22}
 								endMinute={45}
-								onStartTimeChange={(hour, minute) => console.log('시작시간:', hour, minute)}
-								onEndTimeChange={(hour, minute) => console.log('종료시간:', hour, minute)}
+								onStartTimeChange={() => {/* 시작시간 변경 */}}
+								onEndTimeChange={() => {/* 종료시간 변경 */}}
 							/>
 						</div>
 

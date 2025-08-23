@@ -104,12 +104,6 @@ export async function searchConfigs(
 
 	const result = await response.json();
 
-	console.log('Config API 응답:', {
-		status: response.status,
-		ok: response.ok,
-		result,
-	});
-
 	if (!response.ok) {
 		const errorMsg =
 			result.message || `설정값 조회 실패(코드): ${response.status}`;

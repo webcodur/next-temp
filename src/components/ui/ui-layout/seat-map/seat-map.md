@@ -40,7 +40,9 @@ const facility = {
 
 <SeatMap
 	layout={facility}
-	onSeatSelect={(seatId) => console.log('Selected:', seatId)}
+	onSeatSelect={(seatId) => {
+		/* 좌석 선택됨 */
+	}}
 />;
 ```
 

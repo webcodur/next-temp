@@ -176,15 +176,7 @@ export const useAccessControl = ({
 	};
 
 	const handleSaveChanges = () => {
-		// 변경사항 저장 로직
-		console.log('변경사항 저장:', {
-			barriers,
-			barrierPolicies,
-			barrierOrder,
-			entryPolicy,
-			returnHourEnabled,
-			warningCount,
-		});
+		// 변경사항 저장 로직 처리
 
 		// 편집모드 종료 -> 잠금상태로 변경
 		setIsLocked(true);

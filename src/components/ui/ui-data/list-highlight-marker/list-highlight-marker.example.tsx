@@ -48,7 +48,7 @@ export default function ListHighlightMarkerExample() {
 			? selectedList.filter(selectedId => selectedId !== id)
 			: [...selectedList, id];
 		setSelectedList(newSelectedIds);
-		console.log('Selected items:', newSelectedIds);
+		// Selected items 처리
 	};
 	// #endregion
 

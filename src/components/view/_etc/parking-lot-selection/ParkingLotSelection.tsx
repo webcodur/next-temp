@@ -57,7 +57,7 @@ export default function ParkingLotSelection({
       // 현장 선택 실행 - Jotai 상태가 즉시 업데이트됨
       selectParkingLot(selectedId);
       
-      console.log('현장 선택됨:', selectedId);
+
       
       if (isModal) {
         // 모달 모드: 모달 닫기

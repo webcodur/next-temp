@@ -22,7 +22,7 @@ export const ColorSetModal: React.FC<ColorSetModalProps> = ({
 	const { colorSet: currentSet, setColorSet } = useColorSet();
 
 	const handleSetChange = (newSet: ColorSetKey) => {
-		console.log(`🎨 ColorSetModal: ${currentSet} → ${newSet}`);
+
 		setColorSet(newSet);
 		onSetChange?.(newSet);
 		onClose();

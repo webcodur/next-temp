@@ -251,12 +251,12 @@ const PhoneField = () => (
 	];
 
 	const handleSearch = () => {
-		console.log('검색 실행', { name, email, date, status, role, phone });
+		// 검색 실행
 		// 검색 로직 구현
 	};
 
 	const handleReset = () => {
-		console.log('리셋 실행');
+		// 리셋 실행
 		// 리셋 로직 구현
 		setName('');
 		setEmail('');
@@ -267,12 +267,12 @@ const PhoneField = () => (
 	};
 
 	const handleSearch2 = () => {
-		console.log('두 번째 검색 실행', { username, userEmail, department, sortBy, sortDirection, joinDate, workTime });
+		// 두 번째 검색 실행
 		// 두 번째 검색 로직 구현
 	};
 
 	const handleReset2 = () => {
-		console.log('두 번째 리셋 실행');
+		// 두 번째 리셋 실행
 		// 두 번째 리셋 로직 구현
 		setUsername('');
 		setUserEmail('');

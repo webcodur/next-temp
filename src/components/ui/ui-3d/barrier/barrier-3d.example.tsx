@@ -51,13 +51,11 @@ export default function Barrier3DExample() {
 		viewAngle: ViewAngle,
 		mode: OperationMode
 	) => {
-		console.log('부모에서 운행 모드 변경:', viewAngle, mode);
 		setOperationModes((prev) => {
 			const newModes = {
 				...prev,
 				[viewAngle]: mode,
 			};
-			console.log('새로운 운행 모드 상태:', newModes);
 			return newModes;
 		});
 	};

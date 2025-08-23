@@ -87,10 +87,10 @@ export default function ConfigEdit({
 
     setLoading(true);
     try {
-      console.log('설정 로드 시도:', configId);
+
       
       const result = await getConfigById(configId);
-      console.log('설정 로드 결과:', result);
+
       
       if (result.success && result.data) {
         const config = result.data;

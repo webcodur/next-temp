@@ -59,7 +59,7 @@ const VehicleManagementTab: React.FC = () => {
 	};
 
 	const handleSearch = () => {
-		console.log('검색 실행:', filters);
+
 	};
 
 	const handleVehicleSelect = (vehicle: VehicleEntry) => {

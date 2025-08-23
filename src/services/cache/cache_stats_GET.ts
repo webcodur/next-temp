@@ -4,28 +4,28 @@ import { CacheStats } from '@/types/api';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CacheStatsServerResponse {
-  total_keys: number;
-  total_memory: number;
-  hit_rate: number;
-  miss_rate: number;
-  namespaces: {
-    [namespace: string]: {
-      keys: number;
-      memory: number;
-    };
-  };
+	total_keys: number;
+	total_memory: number;
+	hit_rate: number;
+	miss_rate: number;
+	namespaces: {
+		[namespace: string]: {
+			keys: number;
+			memory: number;
+		};
+	};
 }
 // #endregion
 
 // #region 변환 함수 (내부 사용)
 function serverToClient(server: CacheStatsServerResponse): CacheStats {
-  return {
-    totalKeys: server.total_keys,
-    totalMemory: server.total_memory,
-    hitRate: server.hit_rate,
-    missRate: server.miss_rate,
-    namespaces: server.namespaces,
-  };
+	return {
+		totalKeys: server.total_keys,
+		totalMemory: server.total_memory,
+		hitRate: server.hit_rate,
+		missRate: server.miss_rate,
+		namespaces: server.namespaces,
+	};
 }
 // #endregion
 
@@ -34,24 +34,25 @@ function serverToClient(server: CacheStatsServerResponse): CacheStats {
  * @returns 캐시 통계 정보 (CacheStats)
  */
 export async function getCacheStats() {
-  const response = await fetchDefault('/cache/stats', {
-    method: 'GET',
-  });
+	const response = await fetchDefault('/cache/stats', {
+		method: 'GET',
+	});
 
-  const result = await response.json();
-  
-  if (!response.ok) {
-    const errorMsg = result.message || `캐시 통계 조회 실패(코드): ${response.status}`;
-    console.log(errorMsg);
-    return {
-      success: false,
-      errorMsg: errorMsg,
-    };
-  }
-  
-  const serverResponse = result as CacheStatsServerResponse;
-  return {
-    success: true,
-    data: serverToClient(serverResponse),
-  };
-} 
+	const result = await response.json();
+
+	if (!response.ok) {
+		const errorMsg =
+			result.message || `캐시 통계 조회 실패(코드): ${response.status}`;
+		console.error(errorMsg);
+		return {
+			success: false,
+			errorMsg: errorMsg,
+		};
+	}
+
+	const serverResponse = result as CacheStatsServerResponse;
+	return {
+		success: true,
+		data: serverToClient(serverResponse),
+	};
+}

@@ -78,7 +78,6 @@ export async function getConfigById(id: number, parkinglotId?: string) {
 	});
 
 	const result = await response.json();
-	console.log('result 테스트', result);
 
 	if (!response.ok) {
 		const errorMsg =

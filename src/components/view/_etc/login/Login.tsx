@@ -63,7 +63,7 @@ export default function LoginPage() {
 
 	// #region 핸들러
 	const handleLogin = async (data: LoginFormData) => {
-		console.log('🔑 로그인 폼 제출:', data.username);
+
 		
 		setIsLoginLoading(true);
 		setErrorMessage('');
@@ -73,9 +73,7 @@ export default function LoginPage() {
 			
 			if (!result.success) {
 				setErrorMessage(result.error || '로그인에 실패했습니다.');
-				console.log('❌ 로그인 실패:', result.error);
 			} else {
-				console.log('✅ 로그인 성공, 리다이렉트 대기 중...');
 			}
 		} catch (error) {
 			const errorMsg = `로그인 중 오류가 발생했습니다. API 서버: ${process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? 'hubtest-api.7meerkat.com' : 'localhost:3003'}`;

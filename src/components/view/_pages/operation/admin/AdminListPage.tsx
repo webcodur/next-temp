@@ -141,8 +141,7 @@ export default function AdminListPage() {
   }, [router]);
 
   const handleRowClick = useCallback((admin: Admin, _index: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-    console.log('handleRowClick 호출, admin:', admin, 'adminId:', admin.id);
-    console.log('이동할 경로:', `/parking/lot/admin/${admin.id}`);
+
     router.push(`/parking/lot/admin/${admin.id}`);
   }, [router]);
 

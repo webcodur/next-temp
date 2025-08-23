@@ -59,14 +59,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   const canReset = canResetPassword(currentUserRoleId, targetUserRoleId);
   const isSelfManagement = currentUserRoleId === targetUserRoleId;
   
-  console.log('AdminPasswordSection 권한 검증:', {
-    currentUserRoleId,
-    targetUserRoleId,
-    canManage,
-    canReset,
-    isSelfManagement,
-    adminAccount: admin.account
-  });
+  // AdminPasswordSection 권한 검증 완료
   // #endregion
 
   // #region 검증
@@ -169,7 +162,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
 
   // 권한이 없으면 렌더링하지 않음
   if (!canManage && !canReset) {
-    console.log('비밀번호 섹션 권한 없음:', { canManage, canReset });
+
     return null;
   }
 

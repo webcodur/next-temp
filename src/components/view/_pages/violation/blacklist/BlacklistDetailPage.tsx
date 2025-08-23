@@ -110,7 +110,7 @@ export default function BlacklistDetailPage() {
   });
 
   const handleFormChange = useCallback((field: string, value: string | Date | null) => {
-    console.log(`Field: ${field}, Value:`, value, `Type:`, typeof value);
+
     
     // blockedUntil 필드인 경우 Date 객체 변환 시도
     if (field === 'blockedUntil' && value && !(value instanceof Date)) {

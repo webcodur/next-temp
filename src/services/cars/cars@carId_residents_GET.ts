@@ -79,7 +79,6 @@ export async function getCarResidents(
 	);
 
 	const result = await response.json();
-	console.log('차량-주민 관계 조회', result);
 
 	if (!response.ok) {
 		const errorMsg =

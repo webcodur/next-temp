@@ -171,7 +171,7 @@ const BarrierCard: React.FC<BarrierCardProps> = ({
 
   const handleSaveName = () => {
     // TODO: 실제 이름 변경 API 호출
-    console.log('차단기 이름 변경:', editedName);
+
     toast.success(`차단기 이름이 "${editedName}"(으)로 변경되었습니다.`);
     setIsEditingName(false);
     setShowNameChangeConfirmModal(false);

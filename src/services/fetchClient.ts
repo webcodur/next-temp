@@ -6,11 +6,15 @@ import {
 } from '@/utils/tokenUtils';
 
 // 동적 import로 토스트 사용 (SSR 문제 방지)
-let toastInstance: typeof import('@/components/ui/ui-effects/toast/Toast').customToast | null = null;
+let toastInstance:
+	| typeof import('@/components/ui/ui-effects/toast/Toast').customToast
+	| null = null;
 
 const loadToast = async () => {
 	if (!toastInstance && typeof window !== 'undefined') {
-		const { customToast } = await import('@/components/ui/ui-effects/toast/Toast');
+		const { customToast } = await import(
+			'@/components/ui/ui-effects/toast/Toast'
+		);
 		toastInstance = customToast;
 	}
 	return toastInstance;
@@ -68,7 +72,6 @@ const getEffectiveParkingLotId = (): number | null => {
 
 //#region 전역 에러 처리
 
-
 /**
  * 에러 데이터 타입 정의
  */
@@ -82,66 +85,70 @@ interface ErrorData {
 /**
  * 전역 에러 처리 함수
  */
-const handleGlobalError = async (errorData: ErrorData, statusCode: number): Promise<void> => {
+const handleGlobalError = async (
+	errorData: ErrorData,
+	statusCode: number
+): Promise<void> => {
 	const toast = await loadToast();
 	if (!toast) return;
 
 	// 에러 코드 추출
 	const errorCode = errorData.errorCode || errorData.code;
-	
+
 	// 서버 메시지를 그대로 사용 (매핑하지 않음)
 	const userMessage = errorData.message || '오류가 발생했습니다';
-	
-	// 개발 환경에서는 콘솔에 상세 정보 로깅
-	if (process.env.NODE_ENV === 'development') {
-		console.group('🚨 Global Error Handler - Developer Info');
-		if (errorCode) {
-			console.log('🔍 Server Error Code:', errorCode);
-		}
-		console.log('📊 HTTP Status:', statusCode);
-		console.log('📝 Server Message:', userMessage);
-		console.log('📦 Full Error Data:', errorData);
-		console.groupEnd();
-	}
-	
+
 	// 에러 코드가 있으면 뱃지 형태로 함께 표시
 	if (errorCode) {
 		// React.createElement를 사용한 뱃지 형태 토스트
 		const React = await import('react');
-		
-		toast.custom(() => 
-			React.createElement('div', {
-				style: {
-					display: 'flex',
-					alignItems: 'center',
-					gap: '8px',
-					fontFamily: 'var(--font-multilang)',
-					fontSize: '16px',
-					fontWeight: '700',
-					color: 'hsl(var(--destructive-foreground))'
-				}
-			}, [
-				React.createElement('span', {
-					key: 'badge',
-					style: {
-						display: 'inline-block',
-						padding: '3px 8px',
-						fontSize: '12px',
-						fontWeight: '700',
-						letterSpacing: '0.5px',
-						backgroundColor: 'rgba(255, 255, 255, 0.9)',
-						color: 'rgb(185, 28, 28)',
-						border: '1px solid rgba(185, 28, 28, 0.3)',
-						borderRadius: '6px',
-						textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
-					}
-				}, errorCode),
-				React.createElement('span', { 
-					key: 'message',
-					style: { fontWeight: '700' }
-				}, userMessage)
-			]), 
-			{ 
+
+		toast.custom(
+			() =>
+				React.createElement(
+					'div',
+					{
+						style: {
+							display: 'flex',
+							alignItems: 'center',
+							gap: '8px',
+							fontFamily: 'var(--font-multilang)',
+							fontSize: '16px',
+							fontWeight: '700',
+							color: 'hsl(var(--destructive-foreground))',
+						},
+					},
+					[
+						React.createElement(
+							'span',
+							{
+								key: 'badge',
+								style: {
+									display: 'inline-block',
+									padding: '3px 8px',
+									fontSize: '12px',
+									fontWeight: '700',
+									letterSpacing: '0.5px',
+									backgroundColor: 'rgba(255, 255, 255, 0.9)',
+									color: 'rgb(185, 28, 28)',
+									border: '1px solid rgba(185, 28, 28, 0.3)',
+									borderRadius: '6px',
+									textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+								},
+							},
+							errorCode
+						),
+						React.createElement(
+							'span',
+							{
+								key: 'message',
+								style: { fontWeight: '700' },
+							},
+							userMessage
+						),
+					]
+				),
+			{
 				duration: 5000,
 				style: {
 					background: 'hsl(var(--destructive))',
@@ -149,15 +156,15 @@ const handleGlobalError = async (errorData: ErrorData, statusCode: number): Prom
 					color: 'hsl(var(--destructive-foreground))',
 					fontFamily: 'var(--font-multilang)',
 					fontSize: '16px',
-					fontWeight: '700'
-				}
+					fontWeight: '700',
+				},
 			}
 		);
 	} else {
 		// 에러 코드가 없으면 일반 메시지만
 		toast.error(userMessage);
 	}
-	
+
 	// 토큰 만료 처리 (401 상태코드 기준)
 	if (statusCode === 401) {
 		// 토큰 만료 시 로그아웃 처리 (필요시)
@@ -198,11 +205,14 @@ export const fetchDefault = returnFetch({
 					}
 				} catch {
 					// JSON 파싱 실패 시 기본 에러 처리
-					handleGlobalError({
-						errorCode: `HTTP_${response.status}`,
-						message: response.statusText || '알 수 없는 오류가 발생했습니다',
-						statusCode: response.status
-					}, response.status);
+					handleGlobalError(
+						{
+							errorCode: `HTTP_${response.status}`,
+							message: response.statusText || '알 수 없는 오류가 발생했습니다',
+							statusCode: response.status,
+						},
+						response.status
+					);
 				}
 			}
 			return response;
@@ -237,11 +247,14 @@ export const fetchForm = returnFetch({
 					}
 				} catch {
 					// JSON 파싱 실패 시 기본 에러 처리
-					handleGlobalError({
-						errorCode: `HTTP_${response.status}`,
-						message: response.statusText || '알 수 없는 오류가 발생했습니다',
-						statusCode: response.status
-					}, response.status);
+					handleGlobalError(
+						{
+							errorCode: `HTTP_${response.status}`,
+							message: response.statusText || '알 수 없는 오류가 발생했습니다',
+							statusCode: response.status,
+						},
+						response.status
+					);
 				}
 			}
 			return response;

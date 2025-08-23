@@ -19,7 +19,7 @@ export const ColorSetPicker: React.FC<ColorSetPickerProps> = ({
 	const { colorSet: currentSet, setColorSet } = useColorSet();
 
 	const handleSetChange = (newSet: ColorSetKey) => {
-		console.log(`🎨 ColorSetPicker: ${currentSet} → ${newSet}`);
+
 		setColorSet(newSet);
 		onSetChange?.(newSet);
 	};

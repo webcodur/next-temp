@@ -15,7 +15,7 @@ export interface DevAccountSet {
 // #region 환경변수 로더
 export function loadDevAccounts(): DevAccountSet[] {
 	const accounts: DevAccountSet[] = [];
-	
+
 	// 계정 1
 	const id1 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_1_ID;
 	const password1 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_1_PASSWORD;
@@ -23,7 +23,7 @@ export function loadDevAccounts(): DevAccountSet[] {
 	if (id1 && password1 && description1) {
 		accounts.push({ id: id1, password: password1, description: description1 });
 	}
-	
+
 	// 계정 2
 	const id2 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_2_ID;
 	const password2 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_2_PASSWORD;
@@ -31,7 +31,7 @@ export function loadDevAccounts(): DevAccountSet[] {
 	if (id2 && password2 && description2) {
 		accounts.push({ id: id2, password: password2, description: description2 });
 	}
-	
+
 	// 계정 3
 	const id3 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_3_ID;
 	const password3 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_3_PASSWORD;
@@ -39,15 +39,14 @@ export function loadDevAccounts(): DevAccountSet[] {
 	if (id3 && password3 && description3) {
 		accounts.push({ id: id3, password: password3, description: description3 });
 	}
-	
+
 	// 빌드 시에는 로그 출력하지 않음
 	if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
 		if (accounts.length === 0) {
 			console.warn('⚠️ 개발자 계정 환경변수가 설정되지 않음');
 		} else {
-			console.log(`✅ 개발자 계정 ${accounts.length}개 로드됨`);
 		}
 	}
-	
+
 	return accounts;
 }

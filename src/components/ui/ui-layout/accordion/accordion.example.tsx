@@ -35,7 +35,7 @@ const AccordionExample = () => {
 							title={t('아코디언_설정옵션')} 
 							statusText={t('아코디언_3개항목')} 
 							defaultOpen={false}
-							onToggle={(isOpen) => console.log('Accordion toggled:', isOpen)}
+							onToggle={() => {/* Accordion toggled */}}
 						>
 							<div className="space-y-3">
 								<div className="flex gap-3 items-center">

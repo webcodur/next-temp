@@ -66,8 +66,8 @@ export default function InfiniteTableExample() {
 	];
 	// #endregion
 
-	const handleRowClick = (user: User, index: number) => {
-		console.log(`행 클릭됨:`, user, index);
+	const handleRowClick = () => {
+		// 행 클릭됨
 	};
 
 	return (

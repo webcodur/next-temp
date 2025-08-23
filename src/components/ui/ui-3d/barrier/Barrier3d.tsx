@@ -171,7 +171,6 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 			});
 
 			renderer.domElement.addEventListener('webglcontextrestored', () => {
-				console.log('WebGL context restored. Reinitializing Barrier3D.');
 				// 컨텍스트 복구 시 재초기화
 				isInitializedRef.current = false;
 			});
@@ -310,12 +309,11 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 	// 운행 모드 변경 핸들러
 	const handleOperationModeChange = useCallback(
 		(mode: OperationMode) => {
-			console.log('운행 모드 변경:', mode, '현재:', operationMode);
 			if (onOperationModeChange) {
 				onOperationModeChange(mode);
 			}
 		},
-		[onOperationModeChange, operationMode]
+		[onOperationModeChange]
 	);
 
 	// 드롭다운 외부 클릭 감지
@@ -420,7 +418,6 @@ const ParkingBarrier3D: React.FC<ParkingBarrier3DProps> = ({
 												key={mode}
 												onClick={(e) => {
 													e.stopPropagation();
-													console.log('드롭다운 아이템 클릭:', mode);
 													handleOperationModeChange(mode);
 													setIsDropdownOpen(false);
 												}}
