@@ -4,12 +4,12 @@ export interface Position {
 	y: number;
 }
 
-export type CellType = 'empty' | 'seat' | 'object';
+export type ENUM_CellType = 'empty' | 'seat' | 'object';
 
 export interface GridCell {
 	x: number;
 	y: number;
-	type: CellType;
+	type: ENUM_CellType;
 	name: string;
 }
 // #endregion
@@ -27,7 +27,7 @@ export interface FacilityLayout {
 
 // #region 에디터 상태
 export interface EditorState {
-	selectedTool: CellType;
+	selectedTool: ENUM_CellType;
 	selectedCells: Position[];
 	lastSelectedCell: Position | null;
 	isDragging: boolean;
@@ -40,8 +40,8 @@ export interface EditorState {
 
 // #region 유틸리티 함수 타입
 export interface EditorActions {
-	setCellType: (position: Position, type: CellType) => void;
-	setCellsType: (positions: Position[], type: CellType) => void;
+	setCellType: (position: Position, type: ENUM_CellType) => void;
+	setCellsType: (positions: Position[], type: ENUM_CellType) => void;
 	setCellName: (position: Position, name: string) => void;
 	selectCell: (
 		position: Position,

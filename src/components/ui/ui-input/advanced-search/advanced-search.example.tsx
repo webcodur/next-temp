@@ -6,7 +6,7 @@ import FieldSelect from '../field/select/FieldSelect';
 import { FieldSortSelect } from '../field/select/FieldSortSelect';
 import FieldDatePicker from '../field/datepicker/FieldDatePicker';
 import FieldTimePicker from '../field/time/FieldTimePicker';
-import { SortDirection } from '../field/core/types';
+import { ENUM_SortDirection } from '../field/core/types';
 
 export default function AdvancedSearchExample() {
 	// 기본 HTML 요소용 state들 (추가)
@@ -22,7 +22,7 @@ export default function AdvancedSearchExample() {
 	const [userEmail, setUserEmail] = useState('');
 	const [department, setDepartment] = useState('');
 	const [sortBy, setSortBy] = useState('');
-	const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+	const [sortDirection, setSortDirection] = useState<ENUM_SortDirection>('asc');
 	const [joinDate, setJoinDate] = useState<Date | null>(null);
 	const [workTime, setWorkTime] = useState('');
 

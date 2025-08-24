@@ -1,8 +1,8 @@
 import React from 'react';
-import { SortDirection } from '../core/types';
+import { ENUM_SortDirection } from '../core/types';
 
 interface SortIndicatorProps {
-	sortDirection: SortDirection;
+	sortDirection: ENUM_SortDirection;
 }
 
 export const SortIndicator: React.FC<SortIndicatorProps> = ({

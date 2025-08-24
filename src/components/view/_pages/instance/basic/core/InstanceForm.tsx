@@ -9,7 +9,7 @@ import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDrop
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
-import { InstanceDetail, InstanceType } from '@/types/instance';
+import { InstanceDetail, ENUM_InstanceType } from '@/types/instance';
 import { ValidationRule } from '@/utils/validation';
 
 export interface InstanceFormData {
@@ -18,7 +18,7 @@ export interface InstanceFormData {
   address1Depth: string;
   address2Depth: string;
   address3Depth: string;
-  instanceType: InstanceType | '';
+  instanceType: ENUM_InstanceType | '';
   password: string;
   memo: string;
 }

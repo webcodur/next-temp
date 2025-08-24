@@ -1,10 +1,10 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
-export type Theme = 'light' | 'dark';
+export type ENUM_Theme = 'light' | 'dark';
 
 // 테마 상태 (localStorage 저장)
-export const themeAtom = atomWithStorage<Theme>('theme', 'light');
+export const themeAtom = atomWithStorage<ENUM_Theme>('theme', 'light');
 
 // 테마 토글
 export const toggleThemeAtom = atom(null, (get, set) => {
@@ -17,13 +17,13 @@ export const toggleThemeAtom = atom(null, (get, set) => {
 export const initTheme = () => {
   if (typeof window !== 'undefined') {
     const storedTheme = localStorage.getItem('theme');
-    const theme: Theme = storedTheme === 'dark' ? 'dark' : 'light';
+    const theme: ENUM_Theme = storedTheme === 'dark' ? 'dark' : 'light';
     setTheme(theme);
   }
 };
 
 // 테마 적용
-const setTheme = (theme: Theme) => {
+const setTheme = (theme: ENUM_Theme) => {
 	if (typeof window !== 'undefined') {
 		document.documentElement.classList.toggle('dark', theme === 'dark');
 		document.documentElement.setAttribute('data-theme', theme);

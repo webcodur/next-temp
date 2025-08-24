@@ -7,7 +7,7 @@ export interface Notice {
   id: number;
   title: string;
   content: string;
-  category: NoticeCategory;
+  category: ENUM_NoticeCategory;
   isImportant: boolean;
   isPinned: boolean;
   viewCount: number;
@@ -20,7 +20,7 @@ export interface Notice {
   updatedAt: string;
 }
 
-export type NoticeCategory = 'general' | 'update' | 'maintenance' | 'event' | 'emergency';
+export type ENUM_NoticeCategory = 'general' | 'update' | 'maintenance' | 'event' | 'emergency';
 
 export interface NoticeAttachment {
   id: number;
@@ -35,7 +35,7 @@ export interface NoticeSearchParams {
   limit?: number;
   title?: string;
   content?: string;
-  category?: NoticeCategory;
+  category?: ENUM_NoticeCategory;
   isImportant?: boolean;
   isPinned?: boolean;
   author?: string;
@@ -49,7 +49,7 @@ export interface NoticeSearchParams {
 export interface NoticeCreateDto {
   title: string;
   content: string;
-  category: NoticeCategory;
+  category: ENUM_NoticeCategory;
   isImportant?: boolean;
   isPinned?: boolean;
   tags?: string[];

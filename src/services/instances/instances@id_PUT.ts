@@ -3,7 +3,7 @@ import { fetchDefault } from '@/services/fetchClient';
 import {
 	UpdateInstanceRequest,
 	Instance,
-	InstanceType,
+	ENUM_InstanceType,
 } from '@/types/instance';
 
 // #region 서버 타입 정의 (내부 사용)
@@ -40,7 +40,7 @@ function serverToClient(server: InstanceServerResponse): Instance {
 		address1Depth: server.address_1depth,
 		address2Depth: server.address_2depth,
 		address3Depth: server.address_3depth,
-		instanceType: server.instance_type as InstanceType,
+		instanceType: server.instance_type as ENUM_InstanceType,
 		password: server.password,
 		memo: server.memo,
 		createdAt: server.created_at,

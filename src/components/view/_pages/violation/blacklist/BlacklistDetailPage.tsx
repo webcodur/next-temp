@@ -21,7 +21,7 @@ import { updateBlacklist } from '@/services/blacklist/blacklists@id_PUT';
 import { unblockBlacklist } from '@/services/blacklist/blacklists@id_unblock_PATCH';
 
 // 타입 정의
-import { BlacklistResponse, BlacklistRegistrationReason } from '@/types/blacklist';
+import { BlacklistResponse, ENUM_BlacklistRegistrationReason } from '@/types/blacklist';
 
 
 // (상수 불필요 — 폼 컴포넌트 내부로 이동)
@@ -155,7 +155,7 @@ export default function BlacklistDetailPage() {
       }
 
       const updateData = {
-        registrationReason: formData.registrationReason as BlacklistRegistrationReason,
+        registrationReason: formData.registrationReason as ENUM_BlacklistRegistrationReason,
         blockedUntil: blockedUntilDate.toISOString(),
         ...(formData.blockReason.trim() && { 
           blockReason: formData.blockReason.trim() 

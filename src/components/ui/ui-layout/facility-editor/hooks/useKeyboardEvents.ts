@@ -1,10 +1,10 @@
 // 키보드 이벤트 처리 커스텀 훅
 
 import { useEffect } from 'react';
-import { EditorState, ObjectType } from '@/types/facility';
+import { EditorState, ENUM_ObjectType } from '@/types/facility';
 
 interface KeyboardEventHandlers {
-	onPlaceObject: (type: ObjectType) => void;
+	onPlaceObject: (type: ENUM_ObjectType) => void;
 	onDeleteObject: () => void;
 	onUndo: () => void;
 	onRedo: () => void;

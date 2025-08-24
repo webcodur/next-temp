@@ -1,10 +1,10 @@
 // 블랙리스트 관련 타입 정의
 
 // 블랙리스트 유형
-export type BlacklistType = 'AUTO' | 'MANUAL';
+export type ENUM_BlacklistType = 'AUTO' | 'MANUAL';
 
 // 블랙리스트 등록 사유
-export type BlacklistRegistrationReason = 
+export type ENUM_BlacklistRegistrationReason = 
   | 'VIOLATION_ACCUMULATION'
   | 'SERIOUS_VIOLATION'
   | 'REPEATED_OFFENDER'
@@ -17,7 +17,7 @@ export type BlacklistRegistrationReason =
 // 수동 블랙리스트 등록 요청
 export interface CreateManualBlacklistRequest {
   carNumber: string;
-  registrationReason: BlacklistRegistrationReason;
+  registrationReason: ENUM_BlacklistRegistrationReason;
   blockReason: string;
   blockDays: number;
 }
@@ -27,8 +27,8 @@ export interface BlacklistResponse {
   id: number;
   carId?: number | null;
   carNumber: string;
-  blacklistType: BlacklistType;
-  registrationReason: BlacklistRegistrationReason;
+  blacklistType: ENUM_BlacklistType;
+  registrationReason: ENUM_BlacklistRegistrationReason;
   totalViolations: number;
   totalPenaltyPoints: number;
   blockedAt: string | null;
@@ -63,7 +63,7 @@ export interface BlacklistResponse {
 
 // 블랙리스트 수정 요청
 export interface UpdateBlacklistRequest {
-  registrationReason: BlacklistRegistrationReason;
+  registrationReason: ENUM_BlacklistRegistrationReason;
   blockedUntil?: string | null; // ISO 8601 형식
   blockReason?: string | null;
   unblockReason?: string | null;
@@ -83,8 +83,8 @@ export interface BlacklistStatusResponse {
 // 블랙리스트 목록 검색 요청
 export interface SearchBlacklistRequest {
   carNumber?: string;
-  blacklistType?: BlacklistType;
-  registrationReason?: BlacklistRegistrationReason;
+  blacklistType?: ENUM_BlacklistType;
+  registrationReason?: ENUM_BlacklistRegistrationReason;
   isActive?: boolean;
   page?: number;
   limit?: number;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Position, CellType } from '@/types/facility-editor';
+import { Position, ENUM_CellType } from '@/types/facility-editor';
 import { X, Save } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 interface NameEditModalProps {
   isOpen: boolean;
   position: Position | null;
-  cellType: CellType;
+  cellType: ENUM_CellType;
   currentName: string;
   onSave: (name: string) => void;
   onCancel: () => void;
@@ -15,7 +15,7 @@ interface NameEditModalProps {
 // #endregion
 
 // #region 유틸리티 함수
-const getTypeLabel = (type: CellType): string => {
+const getTypeLabel = (type: ENUM_CellType): string => {
   switch (type) {
     case 'seat':
       return '좌석';
@@ -26,7 +26,7 @@ const getTypeLabel = (type: CellType): string => {
   }
 };
 
-const getTypeColor = (type: CellType): string => {
+const getTypeColor = (type: ENUM_CellType): string => {
   switch (type) {
     case 'seat':
       return 'text-green-600';

@@ -15,7 +15,7 @@ import FieldSelect from '@/components/ui/ui-input/field/select/FieldSelect';
 
 // API & 타입
 import { searchInstances } from '@/services/instances/instances$_GET';
-import { Instance, InstanceType } from '@/types/instance';
+import { Instance, ENUM_InstanceType } from '@/types/instance';
 import { Option } from '@/components/ui/ui-input/field/core/types';
 import { Button } from '@/components/ui/ui-input/button/Button';
 
@@ -320,7 +320,7 @@ export default function InstanceSearchSection({
         limit: 100,
         ...(filters?.address1Depth && { address1Depth: filters.address1Depth }),
         ...(filters?.address2Depth && { address2Depth: filters.address2Depth }),
-        ...(filters?.instanceType && { instanceType: filters.instanceType as InstanceType }),
+        ...(filters?.instanceType && { instanceType: filters.instanceType as ENUM_InstanceType }),
         ...(filters?.instanceName && { instanceName: filters.instanceName }),
       };
 

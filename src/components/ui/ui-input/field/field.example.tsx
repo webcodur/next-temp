@@ -9,7 +9,7 @@ import { FieldSortSelect } from './select/FieldSortSelect';
 import FieldDatePicker from './datepicker/FieldDatePicker';
 import FieldTimePicker from './time/FieldTimePicker';
 import TimeRangePicker from './time/unit/TimeRangePicker';
-import { Option, SortDirection } from './core/types';
+import { Option, ENUM_SortDirection } from './core/types';
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function FieldExample() {
@@ -21,7 +21,7 @@ export default function FieldExample() {
 	const [sortValue, setSortValue] = useState('');
 
 	// 정렬 방향 상태 추가
-	const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+	const [sortDirection, setSortDirection] = useState<ENUM_SortDirection>('asc');
 
 	// #region DatePicker 상태들
 	const [singleDate, setSingleDate] = useState<Date | null>(null);

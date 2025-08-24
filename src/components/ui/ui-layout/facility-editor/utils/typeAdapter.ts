@@ -5,7 +5,7 @@ import {
 import {
 	FacilityLayout as NewFacilityLayout,
 	GridCell,
-	CellType,
+	ENUM_CellType,
 } from '@/types/facility-editor';
 
 // #region 타입 변환 함수
@@ -18,7 +18,7 @@ export const convertOldToNew = (
 	const cells: GridCell[] = [];
 
 	oldLayout.objects.forEach((obj: GridObject) => {
-		const cellType: CellType =
+		const cellType: ENUM_CellType =
 			obj.type === 'seat' ? 'seat' : obj.type === 'object' ? 'object' : 'empty';
 
 		// 객체 크기에 따라 여러 셀 생성 (현재는 1x1만 지원)

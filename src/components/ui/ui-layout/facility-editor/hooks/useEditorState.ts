@@ -1,7 +1,7 @@
 // 에디터 상태 관리 커스텀 훅
 
 import { useState } from 'react';
-import { FacilityLayout, EditorState, ObjectType } from '@/types/facility';
+import { FacilityLayout, EditorState, ENUM_ObjectType } from '@/types/facility';
 
 export const useEditorState = (layout: FacilityLayout) => {
 	const [editorState, setEditorState] = useState<EditorState>({
@@ -44,7 +44,7 @@ export const useEditorState = (layout: FacilityLayout) => {
 	};
 
 	const cycleObjectType = () => {
-		const types: ObjectType[] = ['seat', 'space', 'object'];
+		const types: ENUM_ObjectType[] = ['seat', 'space', 'object'];
 		const currentIndex = types.indexOf(editorState.currentObjectType);
 		const nextIndex = (currentIndex + 1) % types.length;
 

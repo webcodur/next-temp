@@ -1,6 +1,6 @@
 // 그리드 관련 유틸리티 함수
 
-import { GridObject, FacilityLayout, ObjectType } from '@/types/facility';
+import { GridObject, FacilityLayout, ENUM_ObjectType } from '@/types/facility';
 
 export const getObjectAt = (
 	layout: FacilityLayout,
@@ -24,7 +24,7 @@ export const isPositionValid = (
 
 export const getObjectsOfType = (
 	layout: FacilityLayout,
-	type: ObjectType
+	type: ENUM_ObjectType
 ): GridObject[] => {
 	return layout.objects.filter((obj) => obj.type === type);
 };
@@ -34,7 +34,7 @@ export const getAllSeatObjects = (layout: FacilityLayout) => {
 };
 
 export const getDefaultObjectName = (
-	type: ObjectType,
+	type: ENUM_ObjectType,
 	index: number
 ): string => {
 	switch (type) {

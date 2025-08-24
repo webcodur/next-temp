@@ -7,7 +7,7 @@
 import { useState, useCallback, useMemo } from 'react';
 
 // #region 타입 정의
-import { InstanceType } from '@/types/instance';
+import { ENUM_InstanceType } from '@/types/instance';
 
 export interface InstanceFormData {
   name: string;
@@ -15,7 +15,7 @@ export interface InstanceFormData {
   address1Depth: string;
   address2Depth: string;
   address3Depth: string;
-  instanceType: InstanceType | '';
+  instanceType: ENUM_InstanceType | '';
   password: string;
   memo: string;
 }

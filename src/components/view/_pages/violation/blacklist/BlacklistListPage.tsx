@@ -27,7 +27,7 @@ import { unblockBlacklist } from '@/services/blacklist/blacklists@id_unblock_PAT
 import { createManualBlacklist } from '@/services/blacklist/blacklists_manual_POST';
 
 // 타입 정의
-import { BlacklistResponse, BlacklistType, BlacklistRegistrationReason } from '@/types/blacklist';
+import { BlacklistResponse, ENUM_BlacklistType, ENUM_BlacklistRegistrationReason } from '@/types/blacklist';
 import { Option } from '@/components/ui/ui-input/field/core/types';
 
 // #region 검색 필터 인터페이스
@@ -106,8 +106,8 @@ export default function BlacklistListPage() {
         page: 1,
         limit: 100, // 임시로 큰 수치 설정
         ...(filters?.carNumber && { carNumber: filters.carNumber }),
-        ...(filters?.blacklistType && { blacklistType: filters.blacklistType as BlacklistType }),
-        ...(filters?.registrationReason && { registrationReason: filters.registrationReason as BlacklistRegistrationReason }),
+        ...(filters?.blacklistType && { blacklistType: filters.blacklistType as ENUM_BlacklistType }),
+        ...(filters?.registrationReason && { registrationReason: filters.registrationReason as ENUM_BlacklistRegistrationReason }),
         ...(filters?.isActive && { isActive: filters.isActive === 'true' }),
       };
 
@@ -223,7 +223,7 @@ export default function BlacklistListPage() {
     try {
       const createData = {
         carNumber: createFormData.carNumber.trim(),
-        registrationReason: createFormData.registrationReason as BlacklistRegistrationReason,
+        registrationReason: createFormData.registrationReason as ENUM_BlacklistRegistrationReason,
         blockDays: parseInt(createFormData.blockDays.trim()) || 30,
         blockReason: createFormData.blockReason.trim(),
       };

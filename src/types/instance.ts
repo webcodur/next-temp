@@ -1,5 +1,5 @@
 // 인스턴스 관리 타입 정의
-export type InstanceType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
+export type ENUM_InstanceType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
 
 // 기본 인스턴스 정보
 export interface Instance {
@@ -10,7 +10,7 @@ export interface Instance {
   address1Depth: string;
   address2Depth: string;
   address3Depth?: string | null;
-  instanceType: InstanceType;
+  instanceType: ENUM_InstanceType;
   password: string;
   memo?: string | null;
   createdAt: string;
@@ -29,7 +29,7 @@ export interface CreateInstanceRequest {
   address1Depth: string;
   address2Depth: string;
   address3Depth?: string;
-  instanceType: InstanceType;
+  instanceType: ENUM_InstanceType;
   password: string;
   memo?: string;
 }
@@ -39,7 +39,7 @@ export interface UpdateInstanceRequest {
   address1Depth?: string;
   address2Depth?: string;
   address3Depth?: string;
-  instanceType?: InstanceType;
+  instanceType?: ENUM_InstanceType;
   password?: string;
   memo?: string;
 }
@@ -48,7 +48,7 @@ export interface UpdateInstanceRequest {
 export interface SearchInstanceParams {
   page?: number;
   limit?: number;
-  instanceType?: InstanceType;
+  instanceType?: ENUM_InstanceType;
   address1Depth?: string;
   address2Depth?: string;
   address3Depth?: string;

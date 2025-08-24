@@ -20,10 +20,10 @@ import * as React from 'react';
 import { Plus, SquarePen, Trash2, Copy, Save } from 'lucide-react';
 
 import { Button } from '../button/Button';
-import { CrudButtonProps, ActionConfig, CrudAction } from './types';
+import { CrudButtonProps, ActionConfig, ENUM_CrudAction } from './types';
 
 // #region 액션 설정 매핑
-const ACTION_CONFIG: Record<CrudAction, ActionConfig> = {
+const ACTION_CONFIG: Record<ENUM_CrudAction, ActionConfig> = {
   create: {
     icon: Plus,
     text: '추가',
@@ -76,4 +76,4 @@ CrudButton.displayName = 'CrudButton';
 // #endregion
 
 export { CrudButton, ACTION_CONFIG };
-export type { CrudButtonProps, CrudAction };
+export type { CrudButtonProps, ENUM_CrudAction };

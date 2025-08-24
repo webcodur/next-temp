@@ -1,4 +1,4 @@
-import { FacilityLayout, Position, CellType } from '@/types/facility-editor';
+import { FacilityLayout, Position, ENUM_CellType } from '@/types/facility-editor';
 import { clsx } from 'clsx';
 import { useEffect, useRef } from 'react';
 
@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 interface EditorGridProps {
   layout: FacilityLayout;
   selectedCells: Position[];
-  selectedTool: CellType;
+  selectedTool: ENUM_CellType;
   isDragging: boolean;
   dragStart: Position | null;
   dragEnd: Position | null;
@@ -24,12 +24,12 @@ const getCellByPosition = (layout: FacilityLayout, position: Position) => {
   return layout.cells.find(cell => cell.x === position.x && cell.y === position.y);
 };
 
-const getCellDisplayName = (cell: { type: CellType; name: string }) => {
+const getCellDisplayName = (cell: { type: ENUM_CellType; name: string }) => {
   if (cell.type === 'empty') return '';
   if (cell.name.trim()) return cell.name;
   
   // 기본 이름 생성
-  const defaultNames: Record<CellType, string> = {
+  const defaultNames: Record<ENUM_CellType, string> = {
     empty: '',
     seat: '좌석',
     object: '사물'
@@ -38,8 +38,8 @@ const getCellDisplayName = (cell: { type: CellType; name: string }) => {
   return defaultNames[cell.type];
 };
 
-const getCellBackgroundColor = (type: CellType) => {
-  const colorMap: Record<CellType, string> = {
+const getCellBackgroundColor = (type: ENUM_CellType) => {
+  const colorMap: Record<ENUM_CellType, string> = {
     		empty: 'bg-serial-0',
     seat: 'bg-green-100 dark:bg-green-900',
     object: 'bg-yellow-100 dark:bg-yellow-900'
@@ -48,8 +48,8 @@ const getCellBackgroundColor = (type: CellType) => {
   return colorMap[type];
 };
 
-const getCellBorderColor = (type: CellType) => {
-  const colorMap: Record<CellType, string> = {
+const getCellBorderColor = (type: ENUM_CellType) => {
+  const colorMap: Record<ENUM_CellType, string> = {
     empty: 'border-gray-300 dark:border-gray-600',
     seat: 'border-green-300 dark:border-green-700',
     object: 'border-yellow-300 dark:border-yellow-700'
@@ -58,8 +58,8 @@ const getCellBorderColor = (type: CellType) => {
   return colorMap[type];
 };
 
-const getCellTextColor = (type: CellType) => {
-  const colorMap: Record<CellType, string> = {
+const getCellTextColor = (type: ENUM_CellType) => {
+  const colorMap: Record<ENUM_CellType, string> = {
     empty: 'text-gray-500',
     seat: 'text-green-800 dark:text-green-100',
     object: 'text-yellow-800 dark:text-yellow-100'
@@ -169,7 +169,7 @@ export const EditorGrid = ({
             const cell = getCellByPosition(layout, position) || {
               x,
               y,
-              type: 'empty' as CellType,
+              type: 'empty' as ENUM_CellType,
               name: ''
             };
             

@@ -5,7 +5,7 @@ import { Building, Users, Calendar, Settings, ArrowLeft } from 'lucide-react';
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { SeatReservation } from '@/components/ui/ui-layout/seat-reservation/SeatReservation';
 import { FacilityEditor } from '@/components/ui/ui-layout/facility-editor/FacilityEditor';
-import { FacilityLayout, ReservationData, createFilledLayout, SeatStatus } from '@/types/facility';
+import { FacilityLayout, ReservationData, createFilledLayout, ENUM_SeatStatus } from '@/types/facility';
 import { convertOldToNew, convertNewToOld } from '@/components/ui/ui-layout/facility-editor/utils/typeAdapter';
 
 // 샘플 시설 데이터 - 빈 셀 없이 전부 빈공간으로 시작
@@ -42,7 +42,7 @@ const createSampleFacilities = (): FacilityLayout[] => {
       type: 'seat',
       name: seat.name,
       size: { width: 1, height: 1 },
-      status: seat.status as SeatStatus,
+      status: seat.status as ENUM_SeatStatus,
       reservable: true,
       position: { x: seat.x, y: seat.y },
     });
@@ -92,7 +92,7 @@ const createSampleFacilities = (): FacilityLayout[] => {
         type: 'seat',
         name: obj.name,
         size: { width: obj.width, height: obj.height },
-        status: obj.status as SeatStatus,
+        status: obj.status as ENUM_SeatStatus,
         reservable: true,
         position: { x: obj.x, y: obj.y },
       });
@@ -133,7 +133,7 @@ export default function FacilityReservationExample() {
     if (selectedFacility) {
       const updatedObjects = selectedFacility.objects.map(obj => 
         obj.type === 'seat' && obj.id === reservation.seatId
-          ? { ...obj, status: 'reserved' as SeatStatus }
+          ? { ...obj, status: 'reserved' as ENUM_SeatStatus }
           : obj
       );
       

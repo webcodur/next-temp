@@ -6,7 +6,7 @@
 /**
  * 세대 타입 ENUM (백엔드 household_type enum과 일치)
  */
-export type HouseholdType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
+export type ENUM_HouseholdType = 'GENERAL' | 'TEMP' | 'COMMERCIAL';
 
 /**
  * 세대 기본 정보 타입 (백엔드 HouseholdDto 기준)
@@ -17,7 +17,7 @@ export interface Household {
   address1Depth: string;
   address2Depth: string;
   address3Depth?: string;
-  householdType: HouseholdType;
+  householdType: ENUM_HouseholdType;
   memo?: string;
   createdAt: string;
   updatedAt: string;
@@ -38,7 +38,7 @@ export interface CreateHouseholdRequest {
   address1Depth: string;      // address_1depth
   address2Depth: string;      // address_2depth  
   address3Depth?: string;     // address_3depth
-  householdType: HouseholdType; // household_type
+  householdType: ENUM_HouseholdType; // household_type
   memo?: string;              // memo
 }
 
@@ -49,7 +49,7 @@ export interface UpdateHouseholdRequest {
   address1Depth?: string;
   address2Depth?: string;
   address3Depth?: string;
-  householdType?: HouseholdType;
+  householdType?: ENUM_HouseholdType;
   memo?: string;
 }
 
@@ -59,7 +59,7 @@ export interface UpdateHouseholdRequest {
 export interface SearchHouseholdRequest {
   page?: number;
   limit?: number;
-  householdType?: HouseholdType;  // household_type
+  householdType?: ENUM_HouseholdType;  // household_type
   address1Depth?: string;         // address_1depth
   address2Depth?: string;         // address_2depth
   address3Depth?: string;         // address_3depth

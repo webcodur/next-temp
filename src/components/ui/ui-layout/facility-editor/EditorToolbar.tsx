@@ -1,4 +1,4 @@
-import { CellType, FacilityLayout, MIN_CELL_SIZE, MAX_CELL_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE } from '@/types/facility-editor';
+import { ENUM_CellType, FacilityLayout, MIN_CELL_SIZE, MAX_CELL_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE } from '@/types/facility-editor';
 import { Undo, Redo, Square, Armchair, Package, Grid, Maximize2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleNumberInput';
@@ -6,11 +6,11 @@ import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleN
 // #region 타입 정의
 interface EditorToolbarProps {
   layout: FacilityLayout;
-  selectedTool: CellType;
+  selectedTool: ENUM_CellType;
   selectedCount: number;
   canUndo: boolean;
   canRedo: boolean;
-  onToolSelect: (tool: CellType) => void;
+  onToolSelect: (tool: ENUM_CellType) => void;
   onUndo: () => void;
   onRedo: () => void;
   onCellSizeChange: (size: number) => void;
@@ -41,7 +41,7 @@ const TOOL_CONFIG = {
 } as const;
 
 // 도구 순서 정의
-const TOOL_ORDER: CellType[] = ['seat', 'object', 'empty'];
+const TOOL_ORDER: ENUM_CellType[] = ['seat', 'object', 'empty'];
 // #endregion
 
 // #region 메인 컴포넌트
@@ -83,7 +83,7 @@ export const EditorToolbar = ({
               return (
                 <button
                   key={tool}
-                  onClick={() => onToolSelect(tool as CellType)}
+                  onClick={() => onToolSelect(tool as ENUM_CellType)}
                   className={clsx(
                     'p-2 rounded-lg transition-all duration-150 flex items-center gap-2',
                     isSelected

@@ -4,4 +4,4 @@
 */
 
 export { CrudButton, ACTION_CONFIG } from './CrudButton';
-export type { CrudButtonProps, CrudAction, ActionConfig } from './types';
+export type { CrudButtonProps, ENUM_CrudAction, ActionConfig } from './types';

@@ -20,7 +20,7 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { SimpleTextArea } from '@/components/ui/ui-input/simple-input/SimpleTextArea';
 
 // 타입
-import { NoticeCreateDto, NoticeCategory } from '@/types/notice';
+import { NoticeCreateDto, ENUM_NoticeCategory } from '@/types/notice';
 
 // #region 카테고리 옵션
 const categoryOptions = [
@@ -132,7 +132,7 @@ export default function HubNoticeCreatePage() {
                 <select
                   id="category"
                   value={formData.category}
-                  onChange={(e) => handleFieldChange('category', e.target.value as NoticeCategory)}
+                  onChange={(e) => handleFieldChange('category', e.target.value as ENUM_NoticeCategory)}
                   className="p-2 w-full rounded-md border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {categoryOptions.map((option) => (

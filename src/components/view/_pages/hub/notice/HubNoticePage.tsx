@@ -138,7 +138,7 @@ export default function HubNoticePage() {
       //   limit: 100,
       //   ...(filters?.title && { title: filters.title }),
       //   ...(filters?.content && { content: filters.content }),
-      //   ...(filters?.category && { category: filters.category as NoticeCategory }),
+      //   ...(filters?.category && { category: filters.category as ENUM_NoticeCategory }),
       //   ...(filters?.isImportant && { isImportant: filters.isImportant === 'true' }),
       //   ...(filters?.author && { author: filters.author }),
       //   ...(filters?.startDate && { startDate: format(filters.startDate, 'yyyy-MM-dd') }),

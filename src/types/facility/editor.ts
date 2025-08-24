@@ -1,12 +1,12 @@
 // 시설별 좌석 예약 시스템 에디터 관련 타입
 
-import { FacilityLayout, GridCell, ObjectType } from './core';
+import { FacilityLayout, GridCell, ENUM_ObjectType } from './core';
 
 export interface EditorState {
 	mode: 'sector' | 'naming';
 	selectedCells: GridCell[];
 	currentPosition: { x: number; y: number };
-	currentObjectType: ObjectType;
+	currentObjectType: ENUM_ObjectType;
 	history: FacilityLayout[];
 	historyIndex: number;
 	isLocked: boolean;
@@ -19,7 +19,7 @@ export interface AdminEditorProps {
 }
 
 export interface KeyboardHandlers {
-	onPlaceObject: (type: ObjectType, position: { x: number; y: number }) => void;
+	onPlaceObject: (type: ENUM_ObjectType, position: { x: number; y: number }) => void;
 	onDeleteObject: (position: { x: number; y: number }) => void;
 	onUndo: () => void;
 	onRedo: () => void;

@@ -3,7 +3,7 @@ import { fetchDefault } from '@/services/fetchClient';
 import {
 	UnblockBlacklistRequest,
 	BlacklistResponse,
-	BlacklistRegistrationReason,
+	ENUM_BlacklistRegistrationReason,
 } from '@/types/blacklist';
 
 // #region 서버 타입 정의 (내부 사용)
@@ -66,7 +66,7 @@ function serverToClient(server: BlacklistServerResponse): BlacklistResponse {
 		carNumber: server.car_number,
 		blacklistType: server.blacklist_type as 'AUTO' | 'MANUAL',
 		registrationReason:
-			server.registration_reason as BlacklistRegistrationReason,
+			server.registration_reason as ENUM_BlacklistRegistrationReason,
 		totalViolations: server.total_violations,
 		totalPenaltyPoints: server.total_penalty_points,
 		blockedAt: server.blocked_at,

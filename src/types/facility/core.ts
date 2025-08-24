@@ -1,15 +1,15 @@
 // 시설별 좌석 예약 시스템 핵심 데이터 타입
 
-export type SeatStatus = 'available' | 'occupied' | 'reserved' | 'disabled';
+export type ENUM_SeatStatus = 'available' | 'occupied' | 'reserved' | 'disabled';
 
-export type ObjectType = 'seat' | 'space' | 'object';
+export type ENUM_ObjectType = 'seat' | 'space' | 'object';
 
 export interface SeatData {
 	type: 'seat';
 	id: string;
 	name: string;
 	size: { width: number; height: number };
-	status: SeatStatus;
+	status: ENUM_SeatStatus;
 	reservable: boolean;
 	position: { x: number; y: number };
 }

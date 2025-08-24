@@ -16,7 +16,7 @@ import {
 	FacilityLayout,
 	EditorState,
 	Position,
-	CellType,
+	ENUM_CellType,
 	EditorActions,
 	DEFAULT_GRID_SIZE,
 	DEFAULT_CELL_SIZE,
@@ -47,7 +47,7 @@ const createInitialEditorState = (): EditorState => ({
 // #endregion
 
 // #region 유틸리티 함수
-const generateDefaultName = (type: CellType, position: Position): string => {
+const generateDefaultName = (type: ENUM_CellType, position: Position): string => {
 	switch (type) {
 		case 'seat':
 			return `${String.fromCharCode(65 + position.y)}${position.x + 1}`;
@@ -84,9 +84,9 @@ const isPositionInArray = (
 
 // 그리드 크기 변경 시 범위 밖 셀 제거
 const filterCellsInBounds = (
-	cells: Array<{ x: number; y: number; type: CellType; name: string }>,
+	cells: Array<{ x: number; y: number; type: ENUM_CellType; name: string }>,
 	gridSize: { width: number; height: number }
-): Array<{ x: number; y: number; type: CellType; name: string }> => {
+): Array<{ x: number; y: number; type: ENUM_CellType; name: string }> => {
 	return cells.filter(
 		(cell) =>
 			cell.x >= 0 &&
@@ -112,7 +112,7 @@ export const useFacilityEditor = (initialLayout?: FacilityLayout) => {
 
 	// 단일 셀 타입 설정
 	const setCellType = useCallback(
-		(position: Position, type: CellType) => {
+		(position: Position, type: ENUM_CellType) => {
 			const newLayout = { ...layout };
 			const existingCellIndex = newLayout.cells.findIndex((cell) =>
 				positionsEqual(cell, position)
@@ -155,7 +155,7 @@ export const useFacilityEditor = (initialLayout?: FacilityLayout) => {
 
 	// 다중 셀 타입 설정
 	const setCellsType = useCallback(
-		(positions: Position[], type: CellType) => {
+		(positions: Position[], type: ENUM_CellType) => {
 			const newLayout = { ...layout };
 
 			positions.forEach((position) => {
@@ -404,7 +404,7 @@ export const useFacilityEditor = (initialLayout?: FacilityLayout) => {
 	}, [canRedo, editorState.history, editorState.historyIndex]);
 
 	// 도구 선택
-	const setSelectedTool = useCallback((tool: CellType) => {
+	const setSelectedTool = useCallback((tool: ENUM_CellType) => {
 		setEditorState((prev) => ({
 			...prev,
 			selectedTool: tool,

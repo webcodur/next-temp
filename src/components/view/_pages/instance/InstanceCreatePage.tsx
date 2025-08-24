@@ -9,7 +9,7 @@ import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import InstanceForm, { InstanceFormData } from './basic/core/InstanceForm';
 import { createInstance } from '@/services/instances/instances_POST';
-import { InstanceType } from '@/types/instance';
+import { ENUM_InstanceType } from '@/types/instance';
 
 export default function InstanceCreatePage() {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function InstanceCreatePage() {
         address1Depth: formData.address1Depth,
         address2Depth: formData.address2Depth,
         address3Depth: formData.address3Depth || undefined,
-        instanceType: formData.instanceType as InstanceType,
+        instanceType: formData.instanceType as ENUM_InstanceType,
         password: formData.password,
         memo: formData.memo || undefined,
       };

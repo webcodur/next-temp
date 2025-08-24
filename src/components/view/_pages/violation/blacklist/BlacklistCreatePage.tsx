@@ -21,7 +21,7 @@ import { SimpleNumberInput } from '@/components/ui/ui-input/simple-input/SimpleN
 import { createManualBlacklist } from '@/services/blacklist/blacklists_manual_POST';
 
 // 타입 정의
-import { BlacklistRegistrationReason } from '@/types/blacklist';
+import { ENUM_BlacklistRegistrationReason } from '@/types/blacklist';
 
 // #region 상수 정의
 const REGISTRATION_REASON_OPTIONS = [
@@ -76,7 +76,7 @@ export default function BlacklistCreatePage() {
     try {
       const createData = {
         carNumber: formData.carNumber.trim(),
-        registrationReason: formData.registrationReason as BlacklistRegistrationReason,
+        registrationReason: formData.registrationReason as ENUM_BlacklistRegistrationReason,
         blockDays: parseInt(formData.blockDays.trim()) || 30,
         blockReason: formData.blockReason.trim(),
       };

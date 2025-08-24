@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { FacilityLayout, CellType } from '@/types/facility-editor';
+import { FacilityLayout, ENUM_CellType } from '@/types/facility-editor';
 import { useFacilityEditor } from '@/hooks/domain/useFacilityEditor';
 import { EditorGrid } from './EditorGrid';
 import { EditorToolbar } from './EditorToolbar';
@@ -42,7 +42,7 @@ export const FacilityEditor = ({
   const [modalState, setModalState] = useState({
     isOpen: false,
     position: null as { x: number; y: number } | null,
-    cellType: 'seat' as CellType,
+    cellType: 'seat' as ENUM_CellType,
     currentName: '',
   });
 
@@ -81,7 +81,7 @@ export const FacilityEditor = ({
       setModalState({
         isOpen: false,
         position: null,
-        cellType: 'seat',
+        cellType: 'seat' as ENUM_CellType,
         currentName: '',
       });
     },
@@ -93,7 +93,7 @@ export const FacilityEditor = ({
     setModalState({
       isOpen: false,
       position: null,
-      cellType: 'seat',
+      cellType: 'seat' as ENUM_CellType,
       currentName: '',
     });
   }, []);
@@ -106,7 +106,7 @@ export const FacilityEditor = ({
   // }, [editorState.selectedCells, actions]);
 
   // 선택된 셀들 타입 변경 처리
-  // const handleSetSelectedCellsType = useCallback((type: CellType) => {
+  // const handleSetSelectedCellsType = useCallback((type: ENUM_CellType) => {
   //   if (editorState.selectedCells.length > 0) {
   //     actions.setCellsType(editorState.selectedCells, type);
   //   }

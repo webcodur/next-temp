@@ -19,7 +19,7 @@ import { toast } from '@/components/ui/ui-effects/toast/Toast';
 import { updateInstance } from '@/services/instances/instances@id_PUT';
 import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 
-import { InstanceType } from '@/types/instance';
+import { ENUM_InstanceType } from '@/types/instance';
 import { createInstanceTabs } from '../../_shared/instanceTabs';
 import { useInstanceForm } from '@/hooks/ui-hooks/useInstanceForm';
 import { useCarResidentManager } from '@/hooks/domain/useCarResidentManager';
@@ -129,7 +129,7 @@ export default function InstanceDetailPage() {
         address1Depth: formData.address1Depth,
         address2Depth: formData.address2Depth,
         address3Depth: formData.address3Depth || undefined,
-        instanceType: formData.instanceType as InstanceType,
+        instanceType: formData.instanceType as ENUM_InstanceType,
         password: formData.password,
         memo: formData.memo || undefined,
       };

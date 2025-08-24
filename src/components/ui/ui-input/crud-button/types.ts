@@ -7,10 +7,10 @@
 import { ButtonProps } from '../button/Button';
 
 // #region 기본 타입
-export type CrudAction = 'create' | 'edit' | 'delete' | 'copy' | 'save';
+export type ENUM_CrudAction = 'create' | 'edit' | 'delete' | 'copy' | 'save';
 
 export interface CrudButtonProps extends Omit<ButtonProps, 'variant' | 'icon'> {
-  action: CrudAction;
+  action: ENUM_CrudAction;
   iconOnly?: boolean;
 }
 // #endregion

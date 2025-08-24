@@ -1,6 +1,6 @@
 // 객체 배치 관련 커스텀 훅
 
-import { FacilityLayout, ObjectType, GridObject } from '@/types/facility';
+import { FacilityLayout, ENUM_ObjectType, GridObject } from '@/types/facility';
 import { getDefaultObjectName } from '../utils/gridUtils';
 
 export const useObjectPlacement = (
@@ -10,7 +10,7 @@ export const useObjectPlacement = (
 	selectedCells: Array<{ x: number; y: number }>,
 	currentPosition: { x: number; y: number }
 ) => {
-	const placeObject = (type: ObjectType) => {
+	const placeObject = (type: ENUM_ObjectType) => {
 		const newObjects = [...layout.objects];
 		const cellsToPlace =
 			selectedCells.length > 0

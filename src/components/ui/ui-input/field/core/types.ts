@@ -4,14 +4,14 @@ export interface Option {
 	disabled?: boolean;
 }
 
-export type SortDirection = 'asc' | 'desc';
+export type ENUM_SortDirection = 'asc' | 'desc';
 
 // #region Datepicker Types
-export type DatePickerType = 'single' | 'range' | 'datetime' | 'dateTime' | 'time' | 'month';
+export type ENUM_DatePickerType = 'single' | 'range' | 'datetime' | 'dateTime' | 'time' | 'month';
 
 export interface FieldDatePickerComponentProps extends FieldBaseProps {
 	placeholder?: string;
-	datePickerType: DatePickerType;
+	datePickerType: ENUM_DatePickerType;
 	// 단일 날짜용
 	value?: Date | null;
 	onChange?: (value: Date | null) => void;
@@ -89,8 +89,8 @@ export interface FieldSortSelectComponentProps extends FieldBaseProps {
 	onChange?: (value: string) => void;
 	options: Option[];
 	maxHeight?: number;
-	sortDirection?: SortDirection;
-	onSortDirectionChange?: (direction: SortDirection) => void;
+	sortDirection?: ENUM_SortDirection;
+	onSortDirectionChange?: (direction: ENUM_SortDirection) => void;
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
@@ -129,8 +129,8 @@ export interface FieldSortSelectProps extends FieldBaseProps {
 	onChange?: (value: string) => void;
 	options: Option[];
 	maxHeight?: number;
-	sortDirection?: SortDirection;
-	onSortDirectionChange?: (direction: SortDirection) => void;
+	sortDirection?: ENUM_SortDirection;
+	onSortDirectionChange?: (direction: ENUM_SortDirection) => void;
 	categoryName?: string;
 	showAllOption?: boolean;
 	allOptionLabel?: string;
@@ -166,7 +166,7 @@ export interface FieldEmailProps extends FieldBaseProps {
 export interface FieldDatePickerProps extends FieldBaseProps {
 	type: 'datepicker';
 	placeholder?: string;
-	datePickerType: DatePickerType;
+	datePickerType: ENUM_DatePickerType;
 	// 단일 날짜용
 	value?: Date | null;
 	onChange?: (value: Date | null) => void;

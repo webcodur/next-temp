@@ -4,7 +4,7 @@ import {
 	InstanceDetail,
 	InstanceServiceConfig,
 	InstanceVisitConfig,
-	InstanceType,
+	ENUM_InstanceType,
 	CarInstanceWithCar,
 	ResidentInstanceWithResident,
 } from '@/types/instance';
@@ -215,7 +215,7 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
 		address1Depth: server.address_1depth,
 		address2Depth: server.address_2depth,
 		address3Depth: server.address_3depth,
-		instanceType: server.instance_type as InstanceType,
+		instanceType: server.instance_type as ENUM_InstanceType,
 		password: server.password,
 		memo: server.memo,
 		createdAt: server.created_at,

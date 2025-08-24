@@ -356,8 +356,8 @@ interface Option {
 	disabled?: boolean;
 }
 
-type SortDirection = 'asc' | 'desc';
-type DatePickerType = 'single' | 'range' | 'datetime' | 'month';
+type ENUM_SortDirection = 'asc' | 'desc';
+type ENUM_DatePickerType = 'single' | 'range' | 'datetime' | 'month';
 ```
 
 ### 컴포넌트별 Props
