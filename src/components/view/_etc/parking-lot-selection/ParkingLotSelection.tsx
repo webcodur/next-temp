@@ -57,8 +57,6 @@ export default function ParkingLotSelection({
       // 현장 선택 실행 - Jotai 상태가 즉시 업데이트됨
       selectParkingLot(selectedId);
       
-
-      
       if (isModal) {
         // 모달 모드: 모달 닫기
         setIsModalOpen(false);
@@ -133,7 +131,7 @@ export default function ParkingLotSelection({
       align: 'center',
       width: '80px',
       cell: (item) => (
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-none ${
           selectedId === item.id
             ? 'border-primary bg-primary'
             : 'border-border bg-card hover:border-primary hover:border-opacity-60'

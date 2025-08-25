@@ -170,7 +170,7 @@ export default function MenuSearch({
       align: 'center',
       width: '80px',
       cell: (item) => (
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-none ${
           selectedResult?.id === item.id
             ? 'border-primary bg-primary'
             : 'border-border bg-card hover:border-primary hover:border-opacity-60'
@@ -196,7 +196,7 @@ export default function MenuSearch({
         value={searchQuery}
         onChange={handleSearchChange}
         placeholder={selectedResult ? `선택됨: ${selectedResult.botLabel}` : "메뉴명을 입력해주세요..."}
-        className="block h-full py-3 pr-10 pl-11 w-full rounded-lg border transition-all border-primary-2 bg-primary-0 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+        className="block py-3 pr-10 pl-11 w-full h-full rounded-lg border border-primary-2 bg-primary-0 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
       />
       {searchQuery && (
         <button

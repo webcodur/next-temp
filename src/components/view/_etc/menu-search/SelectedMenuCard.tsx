@@ -13,7 +13,7 @@ export function SelectedMenuCard({ selectedResult }: SelectedMenuCardProps) {
   // #region 렌더링
   return (
     <div className="mb-6">
-      <div className={`p-5 border rounded-lg transition-all ${
+      <div className={`p-5 border rounded-lg ${
         selectedResult 
           ? 'border-primary bg-primary-0' 
           : 'border-border bg-counter-2'
@@ -66,7 +66,7 @@ export function SelectedMenuCard({ selectedResult }: SelectedMenuCardProps) {
           
           {/* 상태 아이콘 */}
           <div className="relative">
-            <div className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
+            <div className={`flex items-center justify-center w-12 h-12 rounded-full ${
               selectedResult 
                 ? 'bg-primary-1 text-primary' 
                 : 'bg-counter-3 text-muted-foreground'

@@ -196,7 +196,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 								className="
 									truncate cursor-pointer whitespace-pre-line
 									hover:bg-primary-3/20 hover:scale-[1.02]
-									rounded px-1 py-0.5 transition-all duration-200
+									rounded px-1 py-0.5 
 									border border-transparent hover:border-primary-4/40
 									relative hover:z-10
 								"
@@ -276,7 +276,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 										maxWidth: column.width 
 									}}
 								>
-									<div className="h-5 rounded bg-muted neu-flat"></div>
+									<div className="h-5 rounded bg-muted"></div>
 								</td>
 							);
 						})}
@@ -303,7 +303,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 						return getRowClassName;
 					};
 
-					const hoverClass = 'hover:bg-primary-2/[0.6]';
+					const hoverClass = 'hover:bg-primary-2/[0.6] transition-none';
 
 					return (
 						<tr
@@ -339,7 +339,7 @@ const BaseTable = <T extends Record<string, unknown>>({
 		<TooltipProvider>
 			<div
 				className={cn(
-					'overflow-auto rounded-lg neu-flat-primary scrollbar-gutter-stable',
+					'overflow-auto rounded-lg scrollbar-gutter-stable',
 					className,
 				)}
 			>

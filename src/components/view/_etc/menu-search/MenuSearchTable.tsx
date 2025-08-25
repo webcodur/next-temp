@@ -62,7 +62,7 @@ export function MenuSearchTable({
       align: 'center',
       width: '80px',
       cell: (item) => (
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-all ${
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-none ${
           selectedResult?.id === item.id
             ? 'border-primary bg-primary'
             : 'border-border bg-card hover:border-primary hover:border-opacity-60'
@@ -77,7 +77,7 @@ export function MenuSearchTable({
 
   // 행 클래스명 메모이제이션
   const getRowClassName = useCallback((item: MenuSearchResult) => {
-    return `cursor-pointer transition-all ${
+    return `cursor-pointer ${
       selectedResult?.id === item.id
         ? 'bg-primary-0 border-l-4 border-l-primary'
         : 'hover:bg-counter-1'
