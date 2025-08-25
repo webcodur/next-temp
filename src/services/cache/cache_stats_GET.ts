@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CacheStats } from '@/types/api';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CacheStatsServerResponse {
@@ -41,13 +42,10 @@ export async function getCacheStats() {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `캐시 통계 조회 실패(코드): ${response.status}`;
-		console.error(errorMsg);
-		return {
-			success: false,
-			errorMsg: errorMsg,
-		};
+			return {
+		success: false,
+		errorMsg: getApiErrorMessage('cache_stats', result, response.status),
+	};
 	}
 
 	const serverResponse = result as CacheStatsServerResponse;

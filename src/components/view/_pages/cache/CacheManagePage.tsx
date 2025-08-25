@@ -7,7 +7,7 @@ import { Database, RefreshCw, Search } from 'lucide-react'; // Trash2 아이콘�
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 
@@ -97,7 +97,7 @@ export default function CacheManagePage() {
         setNamespaceList(filteredData);
         setLastUpdated(new Date());
       } else {
-        console.error('캐시 데이터 로드 실패:', result.errorMsg);
+        console.error('캐시 데이터 로드 실패:', '데이터 로드에 실패했습니다.');
         setNamespaceList([]);
       }
     } catch (error) {
@@ -151,7 +151,7 @@ export default function CacheManagePage() {
       if (result.success) {
         setSelectedNamespace(result.data || null);
       } else {
-        console.error('네임스페이스 상세 정보 로드 실패:', result.errorMsg);
+        console.error('네임스페이스 상세 정보 로드 실패:', '데이터 로드에 실패했습니다.');
         setSelectedNamespace(null);
       }
     } catch (error) {
@@ -180,7 +180,7 @@ export default function CacheManagePage() {
         setDialogMessage('네임스페이스 캐시가 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`네임스페이스 캐시 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('네임스페이스 캐시 삭제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -322,149 +322,154 @@ export default function CacheManagePage() {
       />
 
       {/* 상세 정보 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={detailDialogOpen}
         onClose={() => setDetailDialogOpen(false)}
-        variant="default"
         title="네임스페이스 상세 정보"
+        size="lg"
       >
-        <DialogHeader>
-          <DialogTitle>
-            {selectedNamespace?.namespace || '로딩 중...'}
-          </DialogTitle>
-          <DialogDescription>
-            네임스페이스별 상세 캐시 정보
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="py-4">
-          {detailLoading && (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-muted-foreground">로딩 중...</div>
-            </div>
-          )}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground">
+              {selectedNamespace?.namespace || '로딩 중...'}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              네임스페이스별 상세 캐시 정보
+            </p>
+          </div>
           
-          {!detailLoading && selectedNamespace && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-muted">
-                  <p className="text-sm font-medium text-muted-foreground">키 개수</p>
-                  <p className="text-xl font-bold">{(selectedNamespace.keys ?? 0).toLocaleString()}</p>
-                </div>
-                <div className="p-4 rounded-lg bg-muted">
-                  <p className="text-sm font-medium text-muted-foreground">메모리 사용량</p>
-                  <p className="text-xl font-bold">{formatBytes(selectedNamespace.memory ?? 0)}</p>
-                </div>
+          <div className="py-4">
+            {detailLoading && (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-muted-foreground">로딩 중...</div>
               </div>
-              
-              {selectedNamespace.keyList && selectedNamespace.keyList.length > 0 && (
-                <div>
-                  <p className="mb-2 text-sm font-medium text-foreground">
-                    키 목록 (최대 10개)
-                  </p>
-                  <div className="overflow-y-auto p-4 max-h-48 rounded-lg bg-muted">
-                    {selectedNamespace.keyList.slice(0, 10).map((key, index) => (
-                      <div key={index} className="py-1 font-mono text-xs border-b border-border last:border-b-0">
-                        {key}
-                      </div>
-                    ))}
-                    {selectedNamespace.keyList.length > 10 && (
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        ... 외 {selectedNamespace.keyList.length - 10}개
-                      </div>
-                    )}
+            )}
+            
+            {!detailLoading && selectedNamespace && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg bg-muted">
+                    <p className="text-sm font-medium text-muted-foreground">키 개수</p>
+                    <p className="text-xl font-bold">{(selectedNamespace.keys ?? 0).toLocaleString()}</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-muted">
+                    <p className="text-sm font-medium text-muted-foreground">메모리 사용량</p>
+                    <p className="text-xl font-bold">{formatBytes(selectedNamespace.memory ?? 0)}</p>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
-          
-          {!detailLoading && !selectedNamespace && (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-muted-foreground">상세 정보를 불러올 수 없습니다.</div>
-            </div>
-          )}
-        </div>
+                
+                {selectedNamespace.keyList && selectedNamespace.keyList.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-sm font-medium text-foreground">
+                      키 목록 (최대 10개)
+                    </p>
+                    <div className="overflow-y-auto p-4 max-h-48 rounded-lg bg-muted">
+                      {selectedNamespace.keyList.slice(0, 10).map((key, index) => (
+                        <div key={index} className="py-1 font-mono text-xs border-b border-border last:border-b-0">
+                          {key}
+                        </div>
+                      ))}
+                      {selectedNamespace.keyList.length > 10 && (
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          ... 외 {selectedNamespace.keyList.length - 10}개
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {!detailLoading && !selectedNamespace && (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-muted-foreground">상세 정보를 불러올 수 없습니다.</div>
+              </div>
+            )}
+          </div>
 
-        <DialogFooter>
-          <Button onClick={() => setDetailDialogOpen(false)}>
-            닫기
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setDetailDialogOpen(false)}>
+              닫기
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 삭제 확인 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        variant="warning"
         title="네임스페이스 캐시 삭제 확인"
       >
-        <DialogHeader>
-          <DialogTitle>정말로 삭제하시겠습니까?</DialogTitle>
-          <DialogDescription>
-            &quot;{deleteTargetNamespace}&quot; 네임스페이스의 모든 캐시가 영구적으로 삭제됩니다. 
-            이 작업은 되돌릴 수 없습니다.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button 
-            variant="ghost" 
-            onClick={() => setDeleteConfirmOpen(false)}
-          >
-            취소
-          </Button>
-          <Button 
-            variant="destructive" 
-            onClick={handleDeleteConfirm}
-          >
-            삭제
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">정말로 삭제하시겠습니까?</h3>
+            <p className="text-sm text-muted-foreground">
+              &quot;{deleteTargetNamespace}&quot; 네임스페이스의 모든 캐시가 영구적으로 삭제됩니다. 
+              이 작업은 되돌릴 수 없습니다.
+            </p>
+          </div>
+          
+          <div className="flex space-x-3 justify-end pt-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              취소
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteConfirm}
+            >
+              삭제
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 성공 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
         title="작업 완료"
       >
-        <DialogHeader>
-          <DialogTitle>성공</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setSuccessDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">성공</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
+          
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setSuccessDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
         title="오류 발생"
       >
-        <DialogHeader>
-          <DialogTitle>오류</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setErrorDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">오류</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
+          
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setErrorDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 빈 상태 */}
       {!loading && namespaceList.length === 0 && (

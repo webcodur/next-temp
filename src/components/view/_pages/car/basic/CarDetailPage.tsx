@@ -60,7 +60,6 @@ export default function CarDetailPage() {
   
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   // #endregion
@@ -106,15 +105,13 @@ export default function CarDetailPage() {
         } else {
           console.error('차량을 찾을 수 없음');
           setModalMessage(`차량 정보를 찾을 수 없습니다.`);
-          setErrorModalOpen(true);
           setTimeout(() => {
             router.push('/parking/occupancy/car');
           }, 2000);
         }
       } else {
-        console.error('차량 조회 실패:', result.errorMsg);
-        setModalMessage(`차량 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('차량 조회 실패:', '데이터 조회에 실패했습니다.');
+        setModalMessage('차량 정보를 불러올 수 없습니다.');
         setTimeout(() => {
           router.push('/parking/occupancy/car');
         }, 2000);
@@ -122,7 +119,6 @@ export default function CarDetailPage() {
     } catch (error) {
       console.error('차량 조회 중 오류:', error);
       setModalMessage('차량 정보를 불러오는 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
       setTimeout(() => {
         router.push('/parking/occupancy/car');
       }, 2000);
@@ -219,14 +215,12 @@ export default function CarDetailPage() {
         setModalMessage('차량 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
       } else {
-        console.error('차량 수정 실패:', result.errorMsg);
-        setModalMessage(`차량 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('차량 수정 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('차량 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('차량 수정 중 오류:', error);
       setModalMessage('차량 수정 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -247,13 +241,11 @@ export default function CarDetailPage() {
           router.push('/parking/occupancy/car');
         }, 1500);
       } else {
-        setModalMessage(`차량 삭제에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('차량 삭제에 실패했습니다.');
       }
     } catch (error) {
       console.error('차량 삭제 중 오류:', error);
       setModalMessage('차량 삭제 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
     }
@@ -363,26 +355,6 @@ export default function CarDetailPage() {
           <div className="flex gap-3 justify-end pt-4">
             <Button variant="ghost" onClick={() => setDeleteConfirmOpen(false)}>취소</Button>
             <Button variant="destructive" onClick={handleDeleteConfirm}>삭제</Button>
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
           </div>
         </div>
       </Modal>

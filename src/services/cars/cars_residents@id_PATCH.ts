@@ -4,6 +4,7 @@ import {
 	UpdateCarInstanceResidentRequest,
 	CarInstanceResident,
 } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarInstanceResidentServerResponse {
@@ -73,10 +74,10 @@ export async function updateCarInstanceResident(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량-주민 연결 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_residents_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarInstanceResidentServerResponse;

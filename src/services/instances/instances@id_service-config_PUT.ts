@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { UpdateInstanceServiceConfigRequest } from '@/types/instance';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateInstanceServiceConfigServerRequest {
@@ -37,11 +38,10 @@ export async function updateInstanceServiceConfig(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`인스턴스 서비스 설정 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('instances_service_config_update', result, response.status),
+		};
 	}
 
 	return {

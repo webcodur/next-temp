@@ -250,7 +250,7 @@ export interface Resident {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  residentHouseholds?: unknown[];
+  // residentHouseholds?: unknown[];
 }
 
 export interface CreateResidentRequest {
@@ -286,50 +286,3 @@ export interface SearchResidentRequest {
   limit?: number;
 }
 // #endregion
-
-// #region 세대 관련 타입
-export interface Household {
-  id: number;
-  dong: string;
-  ho: string;
-  householderName?: string;
-  phone?: string;
-  email?: string;
-  moveInDate?: string;
-  moveOutDate?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CreateHouseholdRequest {
-  dong: string;
-  ho: string;
-  householderName?: string;
-  phone?: string;
-  email?: string;
-  moveInDate?: string;
-}
-
-export interface UpdateHouseholdRequest {
-  dong?: string;
-  ho?: string;
-  householderName?: string;
-  phone?: string;
-  email?: string;
-  moveInDate?: string;
-  moveOutDate?: string;
-  isActive?: boolean;
-}
-
-export interface SearchHouseholdRequest {
-  dong?: string;
-  ho?: string;
-  householderName?: string;
-  phone?: string;
-  email?: string;
-  isActive?: boolean;
-  page?: number;
-  limit?: number;
-}
-// #endregion 

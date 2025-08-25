@@ -2,6 +2,7 @@
 
 import { fetchDefault } from '@/services/fetchClient';
 import { ApiMessageResponse } from '@/types/auth';
+import { getApiErrorMessage, getNetworkErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface ApiMessageServerResponse {
@@ -28,7 +29,7 @@ export async function logout() {
       const errorData = await response.json();
       return {
         success: false,
-        errorMsg: errorData.message || '로그아웃 실패',
+        errorMsg: getApiErrorMessage('auth_logout', errorData, response.status),
       };
     }
 
@@ -41,7 +42,7 @@ export async function logout() {
   } catch {
     return {
       success: false,
-      errorMsg: '네트워크 오류',
+      errorMsg: getNetworkErrorMessage(),
     };
   }
 } 

@@ -134,7 +134,7 @@ export default function ViolationCreatePage() {
           router.push('/parking/violation/history');
         }
       } else {
-        console.error('위반 기록 생성 실패:', result.errorMsg);
+        console.error('위반 기록 생성 실패:', '대상 작업에 실패했습니다.');
       }
     } catch (error) {
       console.error('위반 기록 생성 중 오류:', error);

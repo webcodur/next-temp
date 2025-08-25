@@ -117,7 +117,7 @@ export default function ViolationsPage() {
         const transformedData = transformToTableData(result.data.data);
         setViolations(transformedData);
       } else {
-        console.error('위반 기록 로딩 실패:', result.errorMsg);
+        console.error('위반 기록 로딩 실패:', '데이터 조회에 실패했습니다.');
         setViolations([]);
       }
     } catch (error) {

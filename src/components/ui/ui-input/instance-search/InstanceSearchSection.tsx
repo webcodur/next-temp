@@ -336,7 +336,7 @@ export default function InstanceSearchSection({
         setInstances(filteredInstances);
         onSearchCompleteRef.current?.(filteredInstances);
       } else {
-        console.error('인스턴스 검색 실패:', result.errorMsg);
+        console.error('인스턴스 검색 실패:', '데이터 조회에 실패했습니다.');
         setInstances([]);
         onSearchCompleteRef.current?.([]);
       }

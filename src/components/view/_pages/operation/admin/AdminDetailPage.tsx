@@ -49,7 +49,6 @@ export default function AdminDetailPage() {
   
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   // #endregion
@@ -79,9 +78,8 @@ export default function AdminDetailPage() {
         setFormData(initialData);
         setOriginalData(initialData);
       } else {
-        console.error('관리자 조회 실패:', result.errorMsg);
-        setModalMessage(`관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('관리자 조회 실패:', '데이터 조회에 실패했습니다.');
+        setModalMessage('관리자 정보를 불러올 수 없습니다.');
         setTimeout(() => {
           routerRef.current.push('/parking/lot/admin');
         }, 2000);
@@ -89,7 +87,6 @@ export default function AdminDetailPage() {
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
       setModalMessage('관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
       setTimeout(() => {
         routerRef.current.push('/parking/lot/admin');
       }, 2000);
@@ -173,14 +170,12 @@ export default function AdminDetailPage() {
         setModalMessage('관리자 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
       } else {
-        console.error('관리자 수정 실패:', result.errorMsg);
-        setModalMessage(`관리자 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('관리자 수정 실패:', '데이터 수정에 실패했습니다.');
+        setModalMessage('관리자 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('관리자 수정 중 오류:', error);
       setModalMessage('관리자 수정 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -277,27 +272,7 @@ export default function AdminDetailPage() {
         </div>
       </Modal>
 
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
 
       {/* 정보 모달 */}
       <Modal

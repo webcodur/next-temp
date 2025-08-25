@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CreateParkingDeviceRequest, ParkingDevice } from '@/types/device';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateParkingDeviceServerRequest {
@@ -122,10 +123,10 @@ export async function createParkingDevice(data: CreateParkingDeviceRequest) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 생성 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_create', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceServerResponse;

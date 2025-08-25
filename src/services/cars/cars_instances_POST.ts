@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CreateCarInstanceRequest } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateCarInstanceServerRequest {
@@ -44,15 +45,15 @@ export async function createCarInstance(
 	if (!response.ok) {
 		try {
 			const result = await response.json();
-			const errorMsg =
-				result.message || `차량-인스턴스 연결 실패(코드): ${response.status}`;
-
-			return { success: false, errorMsg };
+			return { 
+				success: false, 
+				errorMsg: getApiErrorMessage('cars_instances_create', result, response.status),
+			};
 		} catch {
 			// JSON 파싱 실패 시 기본 에러 메시지
 			return {
 				success: false,
-				errorMsg: `차량-인스턴스 연결 실패(코드): ${response.status}`,
+				errorMsg: `차량-인스턴스 연결 실패: ${response.status}`,
 			};
 		}
 	}

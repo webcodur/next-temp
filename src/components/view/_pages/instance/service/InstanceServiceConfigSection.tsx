@@ -45,7 +45,6 @@ export default function InstanceServiceConfigSection({
   
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   // #endregion
 
@@ -93,14 +92,12 @@ export default function InstanceServiceConfigSection({
         // 상위 컴포넌트에 데이터 변경 알림
         onDataChange();
       } else {
-        console.error('서비스 설정 저장 실패:', result.errorMsg);
-        setModalMessage(`서비스 설정 저장에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('서비스 설정 저장 실패:', '대상 작업에 실패했습니다.');
+        // 에러 처리는 통합 모듈에서 담당
       }
     } catch (error) {
       console.error('서비스 설정 저장 중 오류:', error);
-      setModalMessage('서비스 설정 저장 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
+      // 에러 처리는 통합 모듈에서 담당
     } finally {
       setIsSubmitting(false);
     }
@@ -229,26 +226,7 @@ export default function InstanceServiceConfigSection({
         </div>
       </Modal>
 
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
     </div>
   );
 }

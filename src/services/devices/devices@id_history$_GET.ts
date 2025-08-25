@@ -5,6 +5,7 @@ import {
 	ParkingDeviceHistoryListResponse,
 	ParkingDeviceHistory,
 } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface ParkingDeviceHistoryServerResponse {
@@ -93,10 +94,10 @@ export async function searchParkingDeviceHistory(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 변경 이력 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_history', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceHistoryListServerResponse;

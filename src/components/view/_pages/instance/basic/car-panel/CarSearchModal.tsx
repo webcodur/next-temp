@@ -65,7 +65,6 @@ export default function CarSearchModal({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarWithInstance | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   // 검색 수행
   const loadCarData = useCallback(async (filters: SearchFilters) => {
@@ -90,12 +89,10 @@ export default function CarSearchModal({
       } 
       else {
         setCarList([]);
-        setErrorMessage(result.errorMsg || '차량 목록 조회에 실패했습니다.');
       }
     } catch (error) {
       console.error('차량 목록 로드 중 오류:', error);
       setCarList([]);
-      setErrorMessage('차량 목록 로드 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -135,14 +132,12 @@ export default function CarSearchModal({
 
   const handleCarSelect = (car: CarWithInstance) => {
     setSelectedCar(car);
-    setErrorMessage('');
   };
 
   const handleConnect = async () => {
     if (!selectedCar) return;
 
     setIsConnecting(true);
-    setErrorMessage('');
 
     try {
       const result = await createCarInstance({
@@ -154,12 +149,9 @@ export default function CarSearchModal({
       if (result.success) {
         onSuccess();
         handleClose();
-      } else {
-        setErrorMessage(result.errorMsg || '차량 연결에 실패했습니다.');
-      }
+      } 
     } catch (error) {
       console.error('차량 연결 중 오류:', error);
-      setErrorMessage('차량 연결 중 오류가 발생했습니다.');
     } finally {
       setIsConnecting(false);
     }
@@ -168,7 +160,6 @@ export default function CarSearchModal({
   const handleClose = () => {
     if (!isConnecting) {
       setSelectedCar(null);
-      setErrorMessage('');
       onClose();
     }
   };
@@ -334,13 +325,6 @@ export default function CarSearchModal({
           onSearch={handleSearch}
           onReset={handleReset}
         />
-
-        {/* 에러 메시지 */}
-        {errorMessage && (
-          <div className="p-4 bg-red-50 rounded-md border border-red-200">
-            <p className="text-sm text-red-800">{errorMessage}</p>
-          </div>
-        )}
 
         {/* 차량 목록 */}
         {isLoading ? (

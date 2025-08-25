@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { SearchCarParams, CarListResponse, CarWithInstance } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // 클라이언트 Instance 타입 정의 (CarInstance와 호환)
 interface Instance {
@@ -186,10 +187,10 @@ export async function searchCars(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량 목록 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_search', result, response.status),
+		};
 	}
 
 	const serverResponse = result as PaginatedServerResponse;

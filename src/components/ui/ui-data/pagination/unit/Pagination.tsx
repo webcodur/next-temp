@@ -123,7 +123,7 @@ const Pagination: React.FC<PaginationProps> = ({
 	return (
 		<div className={`flex justify-between items-center ${className}`}>
 			{/* 왼쪽: 총 항목 수 표시 */}
-			<div className="flex-1">
+			<div className="flex-1 text-start">
 				{typeof totalItems === 'number' && (
 					totalItems > 0 ? (
 						<div className="text-sm text-muted-foreground font-multilang">

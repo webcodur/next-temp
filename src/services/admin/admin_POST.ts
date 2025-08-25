@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CreateAdminRequest, Admin } from '@/types/admin';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface CreateAdminServerRequest {
@@ -79,12 +80,9 @@ export async function createAdmin(data: CreateAdminRequest) {
 	});
 	const result = await response.json();
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `관리자 계정 생성 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('admin_create', result, response.status),
 		};
 	}
 

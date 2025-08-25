@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { IpBlock } from '@/types/api';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface IpBlockServerResponse {
@@ -65,12 +66,9 @@ export async function getBlockedIpList(page?: number, limit?: number) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단된 IP 목록 조회 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('ip_block_list', result, response.status),
 		};
 	}
 

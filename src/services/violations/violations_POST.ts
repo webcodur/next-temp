@@ -7,6 +7,7 @@ import {
 	ViolationReporterType,
 	ViolationStatus,
 } from '@/types/carViolation';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateCarViolationServerRequest {
@@ -146,10 +147,10 @@ export async function createViolation(data: CreateCarViolationRequest) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량 위반 기록 생성 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('violations_create', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarViolationServerResponse;

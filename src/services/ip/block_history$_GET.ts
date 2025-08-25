@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { SearchIpBlockHistoryRequest, IpBlockHistory } from '@/types/api';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface IpBlockHistoryServerResponse {
@@ -97,12 +98,9 @@ export async function searchBlockHistory(params?: SearchIpBlockHistoryRequest) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단 내역 검색 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('ip_block_history_search', result, response.status),
 		};
 	}
 

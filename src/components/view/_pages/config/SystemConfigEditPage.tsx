@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layout/grid-form';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // Input 컴포넌트들
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -99,7 +99,7 @@ export default function SystemConfigEditPage() {
         setFormData(configFormData);
         setOriginalData(configFormData);
       } else {
-        setDialogMessage(`설정을 찾을 수 없습니다: ${result.errorMsg}`);
+        setDialogMessage('설정을 찾을 수 없습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -207,7 +207,7 @@ export default function SystemConfigEditPage() {
         // 데이터 다시 로드
         await loadConfigData();
       } else {
-        setDialogMessage(`설정 수정에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('설정 수정에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -420,46 +420,48 @@ export default function SystemConfigEditPage() {
       </div>
 
       {/* 성공 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
         title="작업 완료"
       >
-        <DialogHeader>
-          <DialogTitle>성공</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setSuccessDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">성공</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
+          
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setSuccessDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
         title="오류 발생"
       >
-        <DialogHeader>
-          <DialogTitle>오류</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <DialogFooter>
-          <Button onClick={() => setErrorDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">오류</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
+          
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setErrorDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

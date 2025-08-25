@@ -131,8 +131,8 @@ export default function InstanceResidentList({
                 onDataChange();
               }
             } else {
-              console.error('주민-세대 연결 해지 실패:', result.errorMsg);
-              toast.error(`주민-세대 연결 해지에 실패했습니다: ${result.errorMsg}`);
+              console.error('주민-세대 연결 해지 실패:', '대상 작업에 실패했습니다.');
+              toast.error('주민-세대 연결 해지에 실패했습니다.');
             }
           }
           break;

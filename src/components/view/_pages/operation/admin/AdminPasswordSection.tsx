@@ -34,7 +34,6 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   // #endregion
@@ -106,14 +105,12 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
           confirmPassword: '',
         });
       } else {
-        console.error('비밀번호 변경 실패:', result.errorMsg);
-        setModalMessage(`비밀번호 변경에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('비밀번호 변경 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('비밀번호 변경에 실패했습니다.');
       }
     } catch (error) {
       console.error('비밀번호 변경 중 오류:', error);
       setModalMessage('비밀번호 변경 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -146,14 +143,12 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
       //   setModalMessage('비밀번호가 0000으로 초기화되었습니다.');
       //   setSuccessModalOpen(true);
       // } else {
-      //   console.error('비밀번호 초기화 실패:', result.errorMsg);
-      //   setModalMessage(`비밀번호 초기화에 실패했습니다: ${result.errorMsg}`);
-      //   setErrorModalOpen(true);
+      //   console.error('비밀번호 초기화 실패:', '대상 작업에 실패했습니다.');
+      //   setModalMessage('비밀번호 초기화에 실패했습니다.');
       // }
     } catch (error) {
       console.error('비밀번호 초기화 중 오류:', error);
       setModalMessage('비밀번호 초기화 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsResetting(false);
     }
@@ -314,27 +309,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
         </div>
       </Modal>
 
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
 
       {/* 정보 모달 */}
       <Modal

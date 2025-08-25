@@ -5,6 +5,7 @@ import {
 	Instance,
 	ENUM_InstanceType,
 } from '@/types/instance';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface InstanceServerResponse {
@@ -73,10 +74,10 @@ export async function updateInstance(id: number, data: UpdateInstanceRequest) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `인스턴스 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('instances_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as InstanceServerResponse;

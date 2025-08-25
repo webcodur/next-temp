@@ -119,9 +119,9 @@ export default function DevicesListPage() {
       if (result.success) {
         setAllDevices(result.data?.data || []);
       } else {
-        console.error('차단기 목록 로드 실패:', result.errorMsg);
+        console.error('차단기 목록 로드 실패:', '데이터 로드에 실패했습니다.');
         setAllDevices([]);
-        setDialogMessage(`차단기 목록을 불러올 수 없습니다: ${result.errorMsg}`);
+        setDialogMessage('차단기 목록을 불러올 수 없습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -212,7 +212,7 @@ export default function DevicesListPage() {
         setAllDevices((prev) => prev.filter((device) => device.id !== deleteTargetId));
         // 성공 시 별도 모달 없이 조용히 처리
       } else {
-        setDialogMessage(`차단기 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('차단기 삭제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

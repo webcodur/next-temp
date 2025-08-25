@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { GridForm } from '@/components/ui/ui-layout/grid-form';
 import DeviceForm, { DeviceFormData } from './basic/DeviceForm';
 import DevicePermissionConfigSection, { DevicePermissionConfigSectionRef } from './permissions/DevicePermissionConfigSection';
@@ -59,9 +58,7 @@ export default function DeviceCreatePage() {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // 모달 상태
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // 에러 모달 제거됨
   // #endregion
 
   // #region 검증
@@ -115,14 +112,11 @@ export default function DeviceCreatePage() {
         router.push('/parking/lot/device');
       } else {
         // 에러 처리
-        console.error('차단기 생성 실패:', result.errorMsg);
-        setErrorMessage(`차단기 생성에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('차단기 생성 실패:', '대상 작업에 실패했습니다.');
       }
     } catch (error) {
       console.error('차단기 생성 중 오류:', error);
-      setErrorMessage('차단기 생성 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
+      // 에러 처리는 통합 모듈에서 담당
     } finally {
       setIsSubmitting(false);
     }
@@ -220,27 +214,7 @@ export default function DeviceCreatePage() {
         </div>
       </div>
 
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{errorMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
     </div>
   );
 }

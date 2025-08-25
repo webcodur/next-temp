@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 export async function deleteCarInstanceResident(carInstanceResidentId: number, parkinglotId?: string) {
   const headers: Record<string, string> = {};
@@ -16,11 +17,11 @@ export async function deleteCarInstanceResident(carInstanceResidentId: number, p
   if (!response.ok) {
     try {
       const result = await response.json();
-      const errorMsg = result.message || `차량-주민 연결 삭제 실패(코드): ${response.status}`;
+      const errorMsg = getApiErrorMessage('cars_residents_delete', result, response.status);
       console.error('차량-주민 연결 삭제 실패:', result);
       return { success: false, errorMsg };
     } catch (parseError) {
-      const errorMsg = `차량-주민 연결 삭제 실패(코드): ${response.status}`;
+      const errorMsg = getApiErrorMessage('cars_residents_delete', {}, response.status);
       console.error('차량-주민 연결 삭제 파싱 오류:', parseError);
       return { success: false, errorMsg };
     }

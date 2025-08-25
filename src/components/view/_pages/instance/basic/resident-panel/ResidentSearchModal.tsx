@@ -71,7 +71,7 @@ export default function ResidentSearchModal({
         setResidentList(availableResidents);
       } else {
         setResidentList([]);
-        setErrorMessage(result.errorMsg || '주민 목록 조회에 실패했습니다.');
+        setErrorMessage('주민 목록 조회에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 목록 로드 중 오류:', error);
@@ -134,7 +134,7 @@ export default function ResidentSearchModal({
         onSuccess();
         handleClose();
       } else {
-        setErrorMessage(result.errorMsg || '주민 연결에 실패했습니다.');
+        setErrorMessage('주민 연결에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 중 오류:', error);

@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { UpdateCarInstanceRequest, CarInstance, Car } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // Instance 타입 정의
 interface Instance {
@@ -71,15 +72,14 @@ export async function updateCarInstance(
 	if (!response.ok) {
 		try {
 			const result = await response.json();
-			const errorMsg =
-				result.message ||
-				`차량-인스턴스 연결 수정 실패(코드): ${response.status}`;
-
-			return { success: false, errorMsg };
+			return { 
+				success: false, 
+				errorMsg: getApiErrorMessage('cars_instances_update', result, response.status),
+			};
 		} catch {
 			return {
 				success: false,
-				errorMsg: `차량-인스턴스 연결 수정 실패(코드): ${response.status}`,
+				errorMsg: `차량-인스턴스 연결 수정 실패: ${response.status}`,
 			};
 		}
 	}

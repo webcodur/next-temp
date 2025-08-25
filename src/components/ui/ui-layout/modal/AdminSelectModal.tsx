@@ -90,7 +90,7 @@ export default function AdminSelectModal({
       if (result.success) {
         setAdminList(result.data?.data || []);
       } else {
-        console.error('관리자 목록 로드 실패:', result.errorMsg);
+        console.error('관리자 목록 로드 실패:', '데이터 로드에 실패했습니다.');
         setAdminList([]);
       }
     } catch (error) {

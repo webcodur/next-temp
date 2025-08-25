@@ -4,6 +4,7 @@ import {
 	UpdateResidentInstanceRequest,
 	ResidentDetail,
 } from '@/types/resident';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateResidentInstanceServerRequest {
@@ -104,11 +105,10 @@ export async function updateResidentInstance(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`주민-인스턴스 관계 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('residents_instances_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ResidentDetailServerResponse;

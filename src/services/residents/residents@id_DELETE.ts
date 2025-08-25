@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 export async function deleteResident(id: number) {
 	const response = await fetchDefault(`/residents/${id}`, {
@@ -8,10 +9,10 @@ export async function deleteResident(id: number) {
 
 	if (!response.ok) {
 		const result = await response.json();
-		const errorMsg =
-			result.message || `주민 삭제 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('residents_delete', result, response.status),
+		};
 	}
 
 	// DELETE 요청의 경우 204 No Content 또는 빈 응답 처리

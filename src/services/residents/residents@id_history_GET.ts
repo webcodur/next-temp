@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface ResidentHistoryServerResponse {
@@ -124,11 +125,10 @@ export async function getResidentHistory(id: number) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`주민 인스턴스 이동 이력 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('residents_history', result, response.status),
+		};
 	}
 
 	// 응답 데이터가 없거나 null인 경우 기본 구조로 처리

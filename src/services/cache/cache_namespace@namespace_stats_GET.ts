@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CacheNamespaceStats } from '@/types/api';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CacheNamespaceStatsServerResponse {
@@ -37,14 +38,10 @@ export async function getCacheStatsByNamespace(namespace: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`네임스페이스별 캐시 통계 조회 실패(코드): ${response.status}`;
-		console.error(errorMsg);
-		return {
-			success: false,
-			errorMsg: errorMsg,
-		};
+			return {
+		success: false,
+		errorMsg: getApiErrorMessage('cache_namespace_stats', result, response.status),
+	};
 	}
 
 	const serverResponse = result as CacheNamespaceStatsServerResponse;

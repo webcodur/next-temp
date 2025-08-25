@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 export async function deleteResidentInstance(id: number) {
 	const response = await fetchDefault(`/residents/instances/${id}`, {
@@ -8,11 +9,10 @@ export async function deleteResidentInstance(id: number) {
 
 	if (!response.ok) {
 		const result = await response.json();
-		const errorMsg =
-			result.message ||
-			`주민-인스턴스 관계 삭제 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('residents_instances_delete', result, response.status),
+		};
 	}
 
 	// DELETE 요청의 경우 204 No Content 또는 빈 응답 처리

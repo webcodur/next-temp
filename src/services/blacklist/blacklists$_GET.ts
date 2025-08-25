@@ -6,6 +6,7 @@ import {
 	PageResponse,
 	ENUM_BlacklistRegistrationReason,
 } from '@/types/blacklist';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface BlacklistServerResponse {
@@ -128,10 +129,10 @@ export async function searchBlacklists(params?: SearchBlacklistRequest) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `블랙리스트 목록 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('blacklists_search', result, response.status),
+		};
 	}
 
 	const serverResponse = result as PageServerResponse;

@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CarInstanceResidentDetail } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // Instance와 Resident 타입 정의
 interface Instance {
@@ -120,11 +121,10 @@ export async function getCarInstanceDetail(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`인스턴스 차량 상세 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_instances_detail', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarInstanceResidentDetailServerResponse;

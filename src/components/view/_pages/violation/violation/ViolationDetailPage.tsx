@@ -185,7 +185,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         setProcessForm(violationToProcessForm(result.data));
         setEditForm(violationToEditForm(result.data));
       } else {
-        console.error('위반 기록 로딩 실패:', result.errorMsg);
+        console.error('위반 기록 로딩 실패:', '데이터 조회에 실패했습니다.');
       }
     } catch (error) {
       console.error('위반 기록 로딩 중 오류:', error);
@@ -280,7 +280,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         setEditForm(violationToEditForm(result.data));
 
       } else {
-        console.error('위반 기록 저장 실패:', result.errorMsg);
+        console.error('위반 기록 저장 실패:', '데이터 저장에 실패했습니다.');
       }
     } catch (error) {
       console.error('위반 기록 저장 중 오류:', error);
@@ -309,7 +309,7 @@ export default function ViolationDetailPage({ id }: ViolationDetailPageProps) {
         setEditForm(violationToEditForm(result.data));
 
       } else {
-        console.error('위반 기록 처리 실패:', result.errorMsg);
+        console.error('위반 기록 처리 실패:', '데이터 처리에 실패했습니다.');
       }
     } catch (error) {
       console.error('위반 기록 처리 중 오류:', error);

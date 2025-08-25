@@ -5,9 +5,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Info } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
@@ -74,14 +72,10 @@ export default function AdminCreatePage() {
         
         setCopyInfoMessage(`${admin.name || admin.account}(${roleName}) 정보를 복사하여 신규 데이터를 등록합니다. 계정명과 비밀번호는 새로 입력해주세요.`);
       } else {
-        console.error('관리자 조회 실패:', result.errorMsg);
-        setErrorMessage(`복사할 관리자 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('관리자 조회 실패:', '데이터 조회에 실패했습니다.');
       }
     } catch (error) {
       console.error('관리자 조회 중 오류:', error);
-      setErrorMessage('복사할 관리자 정보를 불러오는 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setCopyLoading(false);
     }
@@ -113,9 +107,7 @@ export default function AdminCreatePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copyLoading, setCopyLoading] = useState(false);
   
-  // 모달 상태
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // 모달 상태 제거됨
   const [copyInfoMessage, setCopyInfoMessage] = useState('');
   // #endregion
 
@@ -168,14 +160,10 @@ export default function AdminCreatePage() {
         router.push('/parking/lot/admin');
       } else {
         // 에러 처리
-        console.error('관리자 생성 실패:', result.errorMsg);
-        setErrorMessage(`관리자 생성에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('관리자 생성 실패:', '대상 작업에 실패했습니다.');
       }
     } catch (error) {
       console.error('관리자 생성 중 오류:', error);
-      setErrorMessage('관리자 생성 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -233,27 +221,7 @@ export default function AdminCreatePage() {
         )}
       </div>
 
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{errorMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
     </div>
   );
 } 

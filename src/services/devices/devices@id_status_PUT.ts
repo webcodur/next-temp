@@ -4,6 +4,7 @@ import {
 	UpdateParkingDeviceStatusRequest,
 	ParkingDevice,
 } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateParkingDeviceStatusServerRequest {
@@ -90,10 +91,10 @@ export async function updateParkingDeviceStatus(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 상태 변경 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_status_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceServerResponse;

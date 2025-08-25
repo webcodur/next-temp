@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CarResidentWithDetails } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarResidentServerResponse {
@@ -81,10 +82,10 @@ export async function getCarResidents(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량-주민 관계 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_residents', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarResidentServerResponse[];

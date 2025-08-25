@@ -5,6 +5,7 @@ import {
 	CarInstanceListResponse,
 	CarInstanceResidentDetail,
 } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // Instance와 Resident 타입 정의
 interface Instance {
@@ -138,11 +139,10 @@ export async function searchCarInstances(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`차량-인스턴스 연결 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_instances_search', result, response.status),
+		};
 	}
 
 	const serverResponse = result as PaginatedServerResponse;

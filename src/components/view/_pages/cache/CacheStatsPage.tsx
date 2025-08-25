@@ -32,7 +32,7 @@ export default function CacheStatsPage() {
         setCacheStats(result.data || null);
         setLastUpdated(new Date());
       } else {
-        console.error('캐시 통계 로드 실패:', result.errorMsg);
+        console.error('캐시 통계 로드 실패:', '데이터 로드에 실패했습니다.');
         setCacheStats(null);
       }
     } catch (error) {

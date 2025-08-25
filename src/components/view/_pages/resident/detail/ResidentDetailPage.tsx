@@ -51,7 +51,6 @@ export default function ResidentDetailPage() {
   
   // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   // #endregion
@@ -85,9 +84,8 @@ export default function ResidentDetailPage() {
         setFormData(initialData);
         setOriginalData(initialData);
       } else {
-        console.error('주민 조회 실패:', result.errorMsg);
-        setModalMessage(`주민 정보를 불러올 수 없습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('주민 조회 실패:', '데이터 조회에 실패했습니다.');
+        setModalMessage('주민 정보를 불러올 수 없습니다.');
         setTimeout(() => {
           router.push('/parking/occupancy/resident');
         }, 2000);
@@ -95,7 +93,6 @@ export default function ResidentDetailPage() {
     } catch (error) {
       console.error('주민 조회 중 오류:', error);
       setModalMessage('주민 정보를 불러오는 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
       setTimeout(() => {
         router.push('/parking/occupancy/resident');
       }, 2000);
@@ -179,14 +176,12 @@ export default function ResidentDetailPage() {
         setModalMessage('주민 정보가 성공적으로 수정되었습니다.');
         setSuccessModalOpen(true);
       } else {
-        console.error('주민 수정 실패:', result.errorMsg);
-        setModalMessage(`주민 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('주민 수정 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('주민 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 수정 중 오류:', error);
       setModalMessage('주민 수정 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -207,13 +202,11 @@ export default function ResidentDetailPage() {
           router.push('/parking/occupancy/resident');
         }, 1500);
       } else {
-        setModalMessage(`주민 삭제에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 삭제에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 삭제 중 오류:', error);
       setModalMessage('주민 삭제 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
     }
@@ -284,8 +277,6 @@ export default function ResidentDetailPage() {
                   setModalMessage(message);
                   if (success) {
                     setSuccessModalOpen(true);
-                  } else {
-                    setErrorModalOpen(true);
                   }
                 }}
               />
@@ -325,7 +316,7 @@ export default function ResidentDetailPage() {
         </div>
       </Modal>
 
-      {/* 오류 모달 */}
+      
       {/* 삭제 확인 모달 */}
       <Modal
         isOpen={deleteConfirmOpen}
@@ -345,28 +336,6 @@ export default function ResidentDetailPage() {
           </div>
         </div>
       </Modal>
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-
     </div>
   );
 }

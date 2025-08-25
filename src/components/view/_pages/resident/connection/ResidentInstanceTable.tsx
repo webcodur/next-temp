@@ -53,7 +53,7 @@ export default function ResidentInstanceTable({
         const successMessage = '주민-세대 관계가 성공적으로 해제되었습니다.';
         onDeleteComplete(true, successMessage);
       } else {
-        const errorMessage = `관계 해제에 실패했습니다: ${result.errorMsg}`;
+        const errorMessage = '관계 해제에 실패했습니다.';
         onDeleteComplete(false, errorMessage);
       }
     } catch (error) {

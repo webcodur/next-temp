@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { Admin } from '@/types/admin';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface AdminServerResponse {
@@ -57,12 +58,9 @@ export async function getAdminDetail({ id }: { id: number }) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `관리자 상세 조회 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('admin_detail', result, response.status),
 		};
 	}
 

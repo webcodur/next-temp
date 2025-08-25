@@ -134,7 +134,7 @@ export default function ResidentConnection({
         setMemo('');
         setShowEditConnectionModal(false);
       } else {
-        onOperationComplete(false, `연결 정보 수정에 실패했습니다: ${result.errorMsg}`);
+        onOperationComplete(false, '연결 정보 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('연결 정보 수정 중 오류:', error);
@@ -177,7 +177,7 @@ export default function ResidentConnection({
         setMemo('');
         setShowCreateConnectionModal(false);
       } else {
-        onOperationComplete(false, `관계 생성에 실패했습니다: ${result.errorMsg}`);
+        onOperationComplete(false, '관계 생성에 실패했습니다.');
       }
     } catch (error) {
       console.error('관계 생성 중 오류:', error);

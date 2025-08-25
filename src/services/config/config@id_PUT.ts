@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { UpdateSystemConfigRequest, SystemConfig } from '@/types/api';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface UpdateSystemConfigServerRequest {
@@ -109,12 +110,9 @@ export async function updateConfigById(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `설정값 업데이트 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('config_update', result, response.status),
 		};
 	}
 

@@ -89,7 +89,7 @@ export default function ResidentsListPage() {
       if (result.success) {
         setResidentList(result.data?.data || []);
       } else {
-        console.error('주민 목록 로드 실패:', result.errorMsg);
+        console.error('주민 목록 로드 실패:', '데이터 로드에 실패했습니다.');
         setResidentList([]);
       }
     } catch (error) {
@@ -168,7 +168,7 @@ export default function ResidentsListPage() {
         setDialogMessage('주민이 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`주민 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('주민 삭제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

@@ -179,7 +179,7 @@ export function useAuth() {
 				const result = await signInWithCredentials(account, password);
 
 				if (!result.success || !result.data) {
-					return { success: false, error: result.errorMsg || '로그인 실패' };
+					return { success: false, error: '로그인 실패' };
 				}
 
 				// 1. 토큰 저장

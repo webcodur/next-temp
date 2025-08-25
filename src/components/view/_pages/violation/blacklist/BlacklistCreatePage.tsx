@@ -87,7 +87,7 @@ export default function BlacklistCreatePage() {
         setDialogMessage('블랙리스트가 성공적으로 등록되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`블랙리스트 등록에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('블랙리스트 등록에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

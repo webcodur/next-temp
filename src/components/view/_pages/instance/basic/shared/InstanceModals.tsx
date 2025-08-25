@@ -20,10 +20,6 @@ interface PrimaryCarTransferModal {
 }
 
 interface InstanceModalsProps {
-  // 오류 모달
-  errorModalOpen: boolean;
-  onCloseErrorModal: () => void;
-  
   // 공통 메시지
   modalMessage: string;
   
@@ -40,9 +36,6 @@ interface InstanceModalsProps {
 // #endregion
 
 export default function InstanceModals({
-  errorModalOpen,
-  onCloseErrorModal,
-  modalMessage,
   deleteConfirmOpen,
   onCloseDeleteConfirm,
   onConfirmDelete,
@@ -53,26 +46,6 @@ export default function InstanceModals({
 
   return (
     <>
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={onCloseErrorModal}
-        title="오류 발생"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={onCloseErrorModal}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
 
       {/* 삭제 확인 모달 */}
       <Modal

@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CreateCarInstanceResidentRequest } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateCarInstanceResidentServerRequest {
@@ -41,12 +42,12 @@ export async function createCarInstanceResident(data: CreateCarInstanceResidentR
   if (!response.ok) {
     try {
       const result = await response.json();
-      const errorMsg = result.message || `차량-주민 연결 생성 실패(코드): ${response.status}`;
+      const errorMsg = getApiErrorMessage('cars_residents_create', result, response.status);
       console.error('차량-주민 연결 생성 실패:', result);
       return { success: false, errorMsg };
     } catch (parseError) {
       // JSON 파싱 실패 시 기본 에러 메시지
-      const errorMsg = `차량-주민 연결 생성 실패(코드): ${response.status}`;
+      const errorMsg = getApiErrorMessage('cars_residents_create', {}, response.status);
       console.error('차량-주민 연결 생성 파싱 오류:', parseError);
       return { success: false, errorMsg };
     }

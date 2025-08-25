@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { VehicleType, VehicleAccessResponse } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface VehicleAccessServerResponse {
@@ -38,11 +39,10 @@ export async function checkVehiclePermission(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`차량 유형별 출입 허가 확인 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_check_permission', result, response.status),
+		};
 	}
 
 	const serverResponse = result as VehicleAccessServerResponse;

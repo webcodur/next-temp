@@ -4,6 +4,7 @@ import {
 	UpdateParkingDeviceBasicInfoRequest,
 	ParkingDevice,
 } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateParkingDeviceBasicInfoServerRequest {
@@ -96,10 +97,10 @@ export async function updateParkingDeviceBasicInfo(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 기본 정보 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_basic_info_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceServerResponse;

@@ -116,7 +116,7 @@ export default function BlacklistListPage() {
       if (result.success) {
         setBlacklistList(result.data?.data || []);
       } else {
-        console.error('블랙리스트 목록 로드 실패:', result.errorMsg);
+        console.error('블랙리스트 목록 로드 실패:', '데이터 로드에 실패했습니다.');
         setBlacklistList([]);
       }
     } catch (error) {
@@ -199,7 +199,7 @@ export default function BlacklistListPage() {
         setDialogMessage('블랙리스트가 성공적으로 해제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`블랙리스트 해제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('블랙리스트 해제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -236,7 +236,7 @@ export default function BlacklistListPage() {
         setCreateModalOpen(false);
         loadBlacklistData(); // 목록 새로고침
       } else {
-        setDialogMessage(`블랙리스트 등록에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('블랙리스트 등록에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

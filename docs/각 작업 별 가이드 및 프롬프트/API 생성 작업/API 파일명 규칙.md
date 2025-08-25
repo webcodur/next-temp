@@ -18,7 +18,6 @@ src/services/
 - `admin@id_GET.ts` (상세 조회)
 - `admin@id_PUT.ts` (수정)
 - `admin@id_DELETE.ts` (삭제)
-- `household@id_instance_POST.ts` (중첩 리소스)
 
 ## 함수명 규칙
 

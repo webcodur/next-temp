@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 /**
  * 특정 네임스페이스의 모든 캐시를 삭제한다
@@ -22,13 +23,10 @@ export async function deleteCacheNamespace(namespace: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `네임스페이스 캐시 삭제 실패(코드): ${response.status}`;
-		console.error(errorMsg);
-		return {
-			success: false,
-			errorMsg: errorMsg,
-		};
+			return {
+		success: false,
+		errorMsg: getApiErrorMessage('cache_namespace_delete', result, response.status),
+	};
 	}
 
 	return {

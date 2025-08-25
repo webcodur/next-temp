@@ -31,7 +31,6 @@ export default function InstanceDetailPage() {
   const instanceId = Number(params?.id);
 
   // #region 모달 상태
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [primaryCarTransferModal, setPrimaryCarTransferModal] = useState({
@@ -57,7 +56,6 @@ export default function InstanceDetailPage() {
   // #region 인스턴스 데이터 훅
   const showErrorModal = (message: string) => {
     setModalMessage(message);
-    setErrorModalOpen(true);
   };
 
   const { instance, loading, loadInstanceData } = useInstanceData(
@@ -142,14 +140,12 @@ export default function InstanceDetailPage() {
         // 데이터 새로고침
         await loadInstanceData();
       } else {
-        console.error('세대 정보 수정 실패:', result.errorMsg);
-        setModalMessage(`세대 정보 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('세대 정보 수정 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('세대 정보 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('세대 정보 수정 중 오류:', error);
       setModalMessage('세대 정보 수정 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -173,14 +169,12 @@ export default function InstanceDetailPage() {
           router.push('/parking/occupancy/instance');
         }, 1500);
       } else {
-        console.error('세대 삭제 실패:', result.errorMsg);
-        setModalMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('세대 삭제 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('세대 삭제에 실패했습니다.');
       }
     } catch (error) {
       console.error('세대 삭제 중 오류:', error);
       setModalMessage('세대 삭제 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
       setIsSubmitting(false);
@@ -224,13 +218,11 @@ export default function InstanceDetailPage() {
           );
         }
       } else {
-        setModalMessage(`주민 연결에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 연결에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 중 오류:', error);
       setModalMessage('주민 연결 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     }
   };
 
@@ -250,13 +242,11 @@ export default function InstanceDetailPage() {
           }
         }
       } else {
-        setModalMessage(`주민 연결 해제에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 연결 해제에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 해제 중 오류:', error);
       setModalMessage('주민 연결 해제 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     }
   };
 
@@ -267,13 +257,11 @@ export default function InstanceDetailPage() {
         toast.success('차량 소유자 설정이 성공적으로 변경되었습니다.');
         // 소유자 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
       } else {
-        setModalMessage(`차량 소유자 설정 변경에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('차량 소유자 설정 변경에 실패했습니다.');
       }
     } catch (error) {
       console.error('차량 소유자 설정 변경 중 오류:', error);
       setModalMessage('차량 소유자 설정 변경 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     }
   };
 
@@ -284,13 +272,11 @@ export default function InstanceDetailPage() {
         toast.success('알람 설정이 성공적으로 변경되었습니다.');
         // 알람 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
       } else {
-        setModalMessage(`알람 설정 변경에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('알람 설정 변경에 실패했습니다.');
       }
     } catch (error) {
       console.error('알람 설정 변경 중 오류:', error);
       setModalMessage('알람 설정 변경 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     }
   };
 
@@ -387,8 +373,6 @@ export default function InstanceDetailPage() {
 
       {/* 모달들 */}
       <InstanceModals
-        errorModalOpen={errorModalOpen}
-        onCloseErrorModal={() => setErrorModalOpen(false)}
         modalMessage={modalMessage}
         deleteConfirmOpen={deleteConfirmOpen}
         onCloseDeleteConfirm={() => setDeleteConfirmOpen(false)}

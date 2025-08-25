@@ -4,6 +4,7 @@ import {
 	UpdateParkingDeviceNetworkRequest,
 	ParkingDevice,
 } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateParkingDeviceNetworkServerRequest {
@@ -94,11 +95,10 @@ export async function updateParkingDeviceNetwork(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`차단기 네트워크 설정 수정 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_network_update', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceServerResponse;

@@ -1,5 +1,6 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 export async function deleteParkingDevice(id: number) {
 	const response = await fetchDefault(`/devices/${id}`, {
@@ -9,10 +10,10 @@ export async function deleteParkingDevice(id: number) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 삭제 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_delete', result, response.status),
+		};
 	}
 
 	// DELETE 요청의 경우 204 처리

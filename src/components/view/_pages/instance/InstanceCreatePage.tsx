@@ -5,8 +5,6 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
-import Modal from '@/components/ui/ui-layout/modal/Modal';
-import { Button } from '@/components/ui/ui-input/button/Button';
 import InstanceForm, { InstanceFormData } from './basic/core/InstanceForm';
 import { createInstance } from '@/services/instances/instances_POST';
 import { ENUM_InstanceType } from '@/types/instance';
@@ -26,10 +24,6 @@ export default function InstanceCreatePage() {
     memo: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // 모달 상태
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   // #endregion
 
   // #region 검증
@@ -67,16 +61,9 @@ export default function InstanceCreatePage() {
       if (result.success) {
         // 성공 시 목록 페이지로 이동
         router.push('/parking/occupancy/instance');
-      } else {
-        // 에러 처리
-        console.error('인스턴스 생성 실패:', result.errorMsg);
-        setErrorMessage(`세대 생성에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
       }
     } catch (error) {
       console.error('인스턴스 생성 중 오류:', error);
-      setErrorMessage('세대 생성 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -109,28 +96,6 @@ export default function InstanceCreatePage() {
         onSubmit={handleSubmit}
         isValid={isValid}
       />
-
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-        onConfirm={() => setErrorModalOpen(false)}
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{errorMessage}</p>
-          </div>
-          
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { SystemConfig } from '@/types/api';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface SystemConfigServerResponse {
@@ -80,12 +81,9 @@ export async function getConfigById(id: number, parkinglotId?: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `특정 설정값 조회 실패(코드): ${response.status}`;
-
 		return {
 			success: false,
-			errorMsg: errorMsg,
+			errorMsg: getApiErrorMessage('config_detail', result, response.status),
 		};
 	}
 

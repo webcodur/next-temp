@@ -39,7 +39,7 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
         // setTotalCount(result.data.total || 0);
         setCurrentPage(result.data.page || 1);
       } else {
-        console.error('명령 로그 조회 실패:', result.errorMsg);
+        console.error('명령 로그 조회 실패:', '데이터 조회에 실패했습니다.');
         setCommandLogs([]);
         // setTotalCount(0);
       }

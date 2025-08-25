@@ -160,7 +160,7 @@ export async function searchViolations(params?: SearchCarViolationRequest) {
 	if (!response.ok) {
 		const errorMsg =
 			result.message ||
-			`차량 위반 기록 목록 조회 실패(코드): ${response.status}`;
+			`차량 위반 기록 목록 조회 실패: ${response.status}`;
 
 		return { success: false, errorMsg };
 	}

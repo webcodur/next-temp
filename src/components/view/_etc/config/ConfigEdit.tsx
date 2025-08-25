@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 
 // Input 컴포넌트들
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
@@ -126,7 +126,7 @@ export default function ConfigEdit({
         setFormData(configFormData);
         setOriginalData(configFormData);
       } else {
-        setDialogMessage(`설정을 찾을 수 없습니다: ${result.errorMsg}`);
+        setDialogMessage('설정을 찾을 수 없습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -233,7 +233,7 @@ export default function ConfigEdit({
         // 데이터 다시 로드
         await loadConfigData();
       } else {
-        setDialogMessage(`설정 수정에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('설정 수정에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -396,33 +396,31 @@ export default function ConfigEdit({
       </div>
 
       {/* 성공 다이얼로그 */}
-      <Dialog isOpen={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
-        <DialogHeader>
-          <DialogTitle>저장 완료</DialogTitle>
-          <DialogDescription>{dialogMessage}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button onClick={() => {
-            setSuccessDialogOpen(false);
-            router.push(backRoute);
-          }}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      <Modal isOpen={successDialogOpen} onClose={() => setSuccessDialogOpen(false)} title="저장 완료">
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">{dialogMessage}</p>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => {
+              setSuccessDialogOpen(false);
+              router.push(backRoute);
+            }}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Dialog isOpen={errorDialogOpen} onClose={() => setErrorDialogOpen(false)}>
-        <DialogHeader>
-          <DialogTitle>오류</DialogTitle>
-          <DialogDescription>{dialogMessage}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button onClick={() => setErrorDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      <Modal isOpen={errorDialogOpen} onClose={() => setErrorDialogOpen(false)} title="오류">
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">{dialogMessage}</p>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setErrorDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
   // #endregion

@@ -5,6 +5,7 @@ import {
 	ParkingDeviceCommandLogListResponse,
 	ParkingDeviceCommandLog,
 } from '@/types/device';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface ParkingDeviceCommandLogServerResponse {
@@ -76,10 +77,10 @@ export async function searchParkingDeviceCommandLogs(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차단기 명령 로그 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('devices_command_logs', result, response.status),
+		};
 	}
 
 	const serverResponse = result as ParkingDeviceCommandLogListServerResponse;

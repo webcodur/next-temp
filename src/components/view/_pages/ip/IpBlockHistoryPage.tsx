@@ -92,7 +92,7 @@ export default function IpBlockHistoryPage() {
       if (result.success) {
         setHistoryList(result.data?.data || []);
       } else {
-        console.error('IP 차단 내역 로드 실패:', result.errorMsg);
+        console.error('IP 차단 내역 로드 실패:', '데이터 로드에 실패했습니다.');
         setHistoryList([]);
       }
     } catch (error) {

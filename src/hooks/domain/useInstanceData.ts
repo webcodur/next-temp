@@ -56,9 +56,9 @@ export function useInstanceData(
 				};
 				initializeFormRef.current(initialData);
 			} else {
-				console.error('인스턴스 조회 실패:', result.errorMsg);
+				console.error('인스턴스 조회 실패:', '데이터 조회에 실패했습니다.');
 				showErrorModalRef.current(
-					`세대 정보를 불러올 수 없습니다: ${result.errorMsg}`
+					'세대 정보를 불러올 수 없습니다.'
 				);
 				setTimeout(() => {
 					router.push('/parking/occupancy/instance');

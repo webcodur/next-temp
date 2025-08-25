@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CreateCarRequest, Car } from '@/types/car';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarServerResponse {
@@ -95,10 +96,10 @@ export async function createCar(data: CreateCarRequest, parkinglotId?: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량 생성 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('cars_create', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarServerResponse;

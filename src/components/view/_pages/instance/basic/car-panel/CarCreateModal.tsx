@@ -72,7 +72,6 @@ export default function CarCreateModal({
       });
 
       if (!createResult.success) {
-        setErrorMessage(createResult.errorMsg || '차량 생성에 실패했습니다.');
         return;
       }
 
@@ -84,7 +83,6 @@ export default function CarCreateModal({
       });
 
       if (!connectResult.success) {
-        setErrorMessage(connectResult.errorMsg || '차량 연결에 실패했습니다.');
         return;
       }
 

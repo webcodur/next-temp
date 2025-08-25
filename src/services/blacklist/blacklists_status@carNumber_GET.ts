@@ -4,6 +4,7 @@ import {
 	BlacklistStatusResponse,
 	ENUM_BlacklistRegistrationReason,
 } from '@/types/blacklist';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface BlacklistStatusServerResponse {
@@ -96,11 +97,10 @@ export async function getBlacklistStatus(carNumber: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message ||
-			`차량 블랙리스트 상태 확인 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('blacklists_status', result, response.status),
+		};
 	}
 
 	const serverResponse = result as BlacklistStatusServerResponse;

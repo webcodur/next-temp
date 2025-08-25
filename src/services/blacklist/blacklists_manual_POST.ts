@@ -5,6 +5,7 @@ import {
 	BlacklistResponse,
 	ENUM_BlacklistRegistrationReason,
 } from '@/types/blacklist';
+import { getApiErrorMessage} from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CreateManualBlacklistServerRequest {
@@ -107,10 +108,10 @@ export async function createManualBlacklist(
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `수동 블랙리스트 등록 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('blacklists_create_manual', result, response.status),
+		};
 	}
 
 	const serverResponse = result as BlacklistServerResponse;

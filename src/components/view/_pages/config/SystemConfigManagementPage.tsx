@@ -101,7 +101,7 @@ export default function SystemConfigManagementPage() {
           setActiveCategoryId(firstCategory);
         }
       } else {
-        console.error('시스템 설정 로드 실패:', result.errorMsg);
+        console.error('시스템 설정 로드 실패:', '데이터 로드에 실패했습니다.');
         setAllConfigs([]);
       }
     } catch (error) {

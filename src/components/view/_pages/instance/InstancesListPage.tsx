@@ -58,7 +58,7 @@ export default function InstancesListPage() {
         setDialogMessage('세대가 성공적으로 삭제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`세대 삭제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('세대 삭제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

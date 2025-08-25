@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { HelpCircle } from 'lucide-react';
 import clsx from 'clsx';
-import { Dialog, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
 
 interface GuideButtonProps {
@@ -26,12 +26,10 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
       </button>
 
       {/* 가이드 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="가이드"
-        size="sm"
-        variant="info"
       >
         <div className="space-y-6 min-w-[280px]">
           {/* 키보드 네비게이션 섹션 */}
@@ -55,14 +53,14 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
               </li>
             </ul>
           </section>
-        </div>
 
-        <DialogFooter>
-          <Button onClick={() => setIsOpen(false)} className="font-multilang">
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setIsOpen(false)} className="font-multilang">
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 } 

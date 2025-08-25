@@ -6,6 +6,7 @@ import {
 	ViolationReporterType,
 	ViolationStatus,
 } from '@/types/carViolation';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarViolationServerResponse {
@@ -111,10 +112,10 @@ export async function getViolationDetail(id: number) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `위반 기록 상세 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('violations_detail', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarViolationServerResponse;

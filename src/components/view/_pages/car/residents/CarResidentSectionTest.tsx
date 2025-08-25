@@ -60,7 +60,6 @@ export default function CarResidentSection({
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [detailData, setDetailData] = useState<CarInstanceResidentDetail | null>(null);
@@ -160,7 +159,7 @@ export default function CarResidentSection({
       if (result.success && result.data) {
         setAvailableResidents(result.data.residentInstance || []);
       } else {
-        console.error('세대 주민 조회 실패:', result.errorMsg);
+        console.error('세대 주민 조회 실패:', '데이터 조회에 실패했습니다.');
         setAvailableResidents([]);
       }
     } catch (error) {
@@ -242,15 +241,13 @@ export default function CarResidentSection({
           isPrimary: result.data.isPrimary
         });
       } else {
-        console.error('상세 조회 실패:', result.errorMsg);
-        setModalMessage(`상세 조회에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        console.error('상세 조회 실패:', '대상 작업에 실패했습니다.');
+        setModalMessage('상세 조회에 실패했습니다.');
         setDetailModalOpen(false);
       }
     } catch (error) {
       console.error('상세 조회 중 오류:', error);
       setModalMessage('상세 조회 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
       setDetailModalOpen(false);
     } finally {
       setDetailLoading(false);
@@ -324,7 +321,6 @@ export default function CarResidentSection({
 
     if (!targetCarInstance) {
       setModalMessage('선택된 세대에 해당 차량이 연결되어 있지 않습니다.');
-      setErrorModalOpen(true);
       return;
     }
 
@@ -350,13 +346,11 @@ export default function CarResidentSection({
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`주민 연결 생성에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 연결 생성에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 생성 중 오류:', error);
       setModalMessage('주민 연결 생성 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -378,13 +372,11 @@ export default function CarResidentSection({
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`주민 연결 삭제에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 연결 삭제에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 삭제 중 오류:', error);
       setModalMessage('주민 연결 삭제 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setDeleteConfirmOpen(false);
       setDeleteTargetId(null);
@@ -414,13 +406,11 @@ export default function CarResidentSection({
         await loadResidentData();
         onDataChange();
       } else {
-        setModalMessage(`주민 연결 수정에 실패했습니다: ${result.errorMsg}`);
-        setErrorModalOpen(true);
+        setModalMessage('주민 연결 수정에 실패했습니다.');
       }
     } catch (error) {
       console.error('주민 연결 수정 중 오류:', error);
       setModalMessage('주민 연결 수정 중 오류가 발생했습니다.');
-      setErrorModalOpen(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -902,27 +892,6 @@ export default function CarResidentSection({
 
           <div className="flex justify-center pt-4">
             <Button onClick={() => setSuccessModalOpen(false)}>
-              확인
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 오류 모달 */}
-      <Modal
-        isOpen={errorModalOpen}
-        onClose={() => setErrorModalOpen(false)}
-        title="오류 발생"
-        size="sm"
-      >
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="mb-2 text-lg font-semibold text-red-600">오류</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
-          </div>
-
-          <div className="flex justify-center pt-4">
-            <Button onClick={() => setErrorModalOpen(false)}>
               확인
             </Button>
           </div>

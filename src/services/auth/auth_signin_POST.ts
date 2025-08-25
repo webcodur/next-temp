@@ -2,6 +2,7 @@
 
 import { fetchDefault } from '@/services/fetchClient';
 import { TokenResponse } from '@/types/auth';
+import { getApiErrorMessage, getNetworkErrorMessage} from '@/utils/apiErrorMessages';
 
 //#region 서버 타입 정의 (파일 내부 사용)
 interface TokenServerResponse {
@@ -57,7 +58,7 @@ export async function signInWithCredentials(account: string, password: string) {
       const errorData = await response.json();
       return {
         success: false,
-        errorMsg: errorData.message || '로그인 실패',
+        errorMsg: getApiErrorMessage('auth_signin', errorData, response.status),
       };
     }
 
@@ -70,7 +71,7 @@ export async function signInWithCredentials(account: string, password: string) {
   } catch {
     return {
       success: false,
-      errorMsg: '네트워크 오류',
+      errorMsg: getNetworkErrorMessage(),
     };
   }
 } 

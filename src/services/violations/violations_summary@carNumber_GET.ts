@@ -1,6 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { CarViolationSummary, CarViolationType } from '@/types/carViolation';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface CarViolationSummaryServerResponse {
@@ -39,10 +40,10 @@ export async function getViolationSummary(carNumber: string) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `차량 위반 요약 조회 실패(코드): ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: getApiErrorMessage('violations_summary', result, response.status),
+		};
 	}
 
 	const serverResponse = result as CarViolationSummaryServerResponse;

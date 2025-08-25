@@ -172,7 +172,7 @@ export default function BlacklistDetailPage() {
         setSuccessDialogOpen(true);
         loadBlacklistData(); // 데이터 새로고침
       } else {
-        setDialogMessage(`블랙리스트 수정에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('블랙리스트 수정에 실패했습니다.');
         setErrorDialogOpen(true);
       } 
     } catch (error) {
@@ -200,7 +200,7 @@ export default function BlacklistDetailPage() {
         setSuccessDialogOpen(true);
         loadBlacklistData(); // 데이터 새로고침
       } else {
-        setDialogMessage(`블랙리스트 해제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('블랙리스트 해제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {

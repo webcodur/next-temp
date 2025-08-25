@@ -6,7 +6,7 @@ import { Unlock, Shield, AlertCircle } from 'lucide-react';
 // UI 라이브러리 컴포넌트
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { PaginatedTable, BaseTableColumn } from '@/components/ui/ui-data/paginatedTable/PaginatedTable';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/ui-layout/dialog/Dialog';
+import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { AdvancedSearch } from '@/components/ui/ui-input/advanced-search/AdvancedSearch';
 
 // Field 컴포넌트들
@@ -93,8 +93,8 @@ export default function IpBlockListPage() {
         const data = result.data?.data || [];
         setIpBlockList(data);
       } else {
-        console.error('IP 차단 목록 로드 실패:', result.errorMsg);
-        setError(result.errorMsg || 'IP 차단 목록을 불러오는데 실패했습니다.');
+        console.error('IP 차단 목록 로드 실패:', '데이터 로드에 실패했습니다.');
+        setError('IP 차단 목록을 불러오는데 실패했습니다.');
         setIpBlockList([]);
       }
     } catch (error) {
@@ -153,7 +153,7 @@ export default function IpBlockListPage() {
         setDialogMessage('IP 차단이 성공적으로 해제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`IP 차단 해제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('IP 차단 해제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -175,7 +175,7 @@ export default function IpBlockListPage() {
         setDialogMessage('모든 IP 차단이 성공적으로 해제되었습니다.');
         setSuccessDialogOpen(true);
       } else {
-        setDialogMessage(`전체 IP 차단 해제에 실패했습니다: ${result.errorMsg}`);
+        setDialogMessage('전체 IP 차단 해제에 실패했습니다.');
         setErrorDialogOpen(true);
       }
     } catch (error) {
@@ -397,106 +397,110 @@ export default function IpBlockListPage() {
       )}
 
       {/* 개별 IP 차단 해제 확인 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        variant="warning"
         title="IP 차단 해제 확인"
       >
-        <DialogHeader>
-          <DialogTitle>정말로 차단을 해제하시겠습니까?</DialogTitle>
-          <DialogDescription>
-            {deleteTargetIp}의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
-          </DialogDescription>
-        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">정말로 차단을 해제하시겠습니까?</h3>
+            <p className="text-sm text-muted-foreground">
+              {deleteTargetIp}의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
+            </p>
+          </div>
 
-        <DialogFooter>
-          <Button
-            variant="ghost"
-            onClick={() => setDeleteConfirmOpen(false)}
-          >
-            취소
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDeleteConfirm}
-          >
-            해제
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex space-x-3 justify-end pt-4">
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              취소
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+            >
+              해제
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 전체 IP 차단 해제 확인 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={deleteAllConfirmOpen}
         onClose={() => setDeleteAllConfirmOpen(false)}
-        variant="warning"
         title="전체 IP 차단 해제 확인"
       >
-        <DialogHeader>
-          <DialogTitle>정말로 모든 IP 차단을 해제하시겠습니까?</DialogTitle>
-          <DialogDescription>
-            현재 차단된 모든 IP의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
-          </DialogDescription>
-        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">정말로 모든 IP 차단을 해제하시겠습니까?</h3>
+            <p className="text-sm text-muted-foreground">
+              현재 차단된 모든 IP의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
+            </p>
+          </div>
 
-        <DialogFooter>
-          <Button
-            variant="ghost"
-            onClick={() => setDeleteAllConfirmOpen(false)}
-          >
-            취소
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDeleteAllConfirm}
-          >
-            전체 해제
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex space-x-3 justify-end pt-4">
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteAllConfirmOpen(false)}
+            >
+              취소
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteAllConfirm}
+            >
+              전체 해제
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 성공 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={successDialogOpen}
         onClose={() => setSuccessDialogOpen(false)}
-        variant="success"
         title="작업 완료"
       >
-        <DialogHeader>
-          <DialogTitle>성공</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">성공</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
 
-        <DialogFooter>
-          <Button onClick={() => setSuccessDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setSuccessDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* 오류 다이얼로그 */}
-      <Dialog
+      <Modal
         isOpen={errorDialogOpen}
         onClose={() => setErrorDialogOpen(false)}
-        variant="error"
         title="오류 발생"
       >
-        <DialogHeader>
-          <DialogTitle>오류</DialogTitle>
-          <DialogDescription>
-            {dialogMessage}
-          </DialogDescription>
-        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium text-foreground mb-2">오류</h3>
+            <p className="text-sm text-muted-foreground">
+              {dialogMessage}
+            </p>
+          </div>
 
-        <DialogFooter>
-          <Button onClick={() => setErrorDialogOpen(false)}>
-            확인
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          <div className="flex justify-end pt-4">
+            <Button onClick={() => setErrorDialogOpen(false)}>
+              확인
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
   // #endregion
