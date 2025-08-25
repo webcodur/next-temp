@@ -25,7 +25,7 @@ export async function deleteCacheNamespace(namespace: string) {
 	if (!response.ok) {
 			return {
 		success: false,
-		errorMsg: getApiErrorMessage('cache_namespace_delete', result, response.status),
+		errorMsg: await getApiErrorMessage(result, response.status),
 	};
 	}
 

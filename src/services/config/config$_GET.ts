@@ -108,7 +108,7 @@ export async function searchConfigs(
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('config_search', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

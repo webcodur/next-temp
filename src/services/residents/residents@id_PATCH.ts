@@ -113,7 +113,7 @@ export async function updateResident(id: number, data: UpdateResidentRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('residents_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

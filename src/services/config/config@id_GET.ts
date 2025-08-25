@@ -83,7 +83,7 @@ export async function getConfigById(id: number, parkinglotId?: string) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('config_detail', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

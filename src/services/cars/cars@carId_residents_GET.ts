@@ -84,7 +84,7 @@ export async function getCarResidents(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('cars_residents', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

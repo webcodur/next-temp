@@ -100,7 +100,7 @@ export async function updateCar(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('cars_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

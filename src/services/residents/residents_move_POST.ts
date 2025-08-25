@@ -108,7 +108,7 @@ export async function moveResident(data: MoveResidentRequest) {
 		if (!response.ok) {
 			return { 
 				success: false, 
-				errorMsg: getApiErrorMessage('residents_move', result, response.status),
+				errorMsg: await getApiErrorMessage(result, response.status),
 			};
 		}
 

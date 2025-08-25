@@ -56,7 +56,7 @@ export async function refreshTokenWithString(refreshTokenString: string) {
       const errorData = await response.json();
       return {
         success: false,
-        errorMsg: getApiErrorMessage('auth_refresh', errorData, response.status),
+        errorMsg: await getApiErrorMessage(errorData, response.status),
       };
     }
 

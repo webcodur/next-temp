@@ -18,7 +18,7 @@ export async function deleteCar(carId: number, parkinglotId?: string) {
 		const result = await response.json();
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('cars_delete', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

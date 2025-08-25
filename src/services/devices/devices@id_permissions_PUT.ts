@@ -109,7 +109,7 @@ export async function updateParkingDevicePermissions(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_permissions_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

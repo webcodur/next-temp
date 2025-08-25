@@ -142,7 +142,7 @@ export async function updateViolation(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('violations_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

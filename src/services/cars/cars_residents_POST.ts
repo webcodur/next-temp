@@ -42,12 +42,12 @@ export async function createCarInstanceResident(data: CreateCarInstanceResidentR
   if (!response.ok) {
     try {
       const result = await response.json();
-      const errorMsg = getApiErrorMessage('cars_residents_create', result, response.status);
+      const errorMsg = await getApiErrorMessage(result, response.status);
       console.error('차량-주민 연결 생성 실패:', result);
       return { success: false, errorMsg };
     } catch (parseError) {
       // JSON 파싱 실패 시 기본 에러 메시지
-      const errorMsg = getApiErrorMessage('cars_residents_create', {}, response.status);
+      const errorMsg = await getApiErrorMessage({}, response.status);
       console.error('차량-주민 연결 생성 파싱 오류:', parseError);
       return { success: false, errorMsg };
     }

@@ -40,7 +40,7 @@ export async function updateInstanceServiceConfig(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('instances_service_config_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

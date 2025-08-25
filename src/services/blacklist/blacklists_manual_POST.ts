@@ -110,7 +110,7 @@ export async function createManualBlacklist(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('blacklists_create_manual', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

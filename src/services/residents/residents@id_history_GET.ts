@@ -127,7 +127,7 @@ export async function getResidentHistory(id: number) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('residents_history', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

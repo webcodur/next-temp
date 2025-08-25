@@ -44,7 +44,7 @@ export async function getCacheStats() {
 	if (!response.ok) {
 			return {
 		success: false,
-		errorMsg: getApiErrorMessage('cache_stats', result, response.status),
+		errorMsg: await getApiErrorMessage(result, response.status),
 	};
 	}
 

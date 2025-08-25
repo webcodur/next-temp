@@ -146,8 +146,8 @@ export default function InstanceResidentList({
               onDataChange();
             }
           } else {
-            console.error('주민 삭제 실패:', deleteResult.errorMsg);
-            toast.error(`주민 삭제에 실패했습니다: ${deleteResult.errorMsg}`);
+            console.error('주민 삭제 실패:', '대상 작업에 실패했습니다.');
+            toast.error('주민 삭제에 실패했습니다.');
           }
           break;
       }
@@ -158,8 +158,6 @@ export default function InstanceResidentList({
       setConfirmModal(prev => ({ ...prev, isOpen: false }));
     }
   };
-
-
 
   const handleConnectClick = () => {
     setConnectModalOpen(true);

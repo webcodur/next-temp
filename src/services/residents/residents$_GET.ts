@@ -124,7 +124,7 @@ export async function searchResidents(params?: SearchResidentParams) {
 	if (!response.ok) {
 			return { 
 		success: false, 
-		errorMsg: getApiErrorMessage('residents_search', result, response.status),
+		errorMsg: await getApiErrorMessage(result, response.status),
 	};
 	}
 

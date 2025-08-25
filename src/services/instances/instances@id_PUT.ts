@@ -76,7 +76,7 @@ export async function updateInstance(id: number, data: UpdateInstanceRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('instances_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

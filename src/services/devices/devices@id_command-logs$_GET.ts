@@ -79,7 +79,7 @@ export async function searchParkingDeviceCommandLogs(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_command_logs', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

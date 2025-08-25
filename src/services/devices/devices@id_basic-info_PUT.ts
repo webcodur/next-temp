@@ -99,7 +99,7 @@ export async function updateParkingDeviceBasicInfo(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_basic_info_update', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

@@ -113,7 +113,7 @@ export async function createResidentInstance(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('residents_instances_create', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

@@ -60,7 +60,7 @@ export async function getAdminDetail({ id }: { id: number }) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('admin_detail', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

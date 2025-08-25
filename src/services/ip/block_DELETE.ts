@@ -38,7 +38,7 @@ export async function deleteAllBlockedIp() {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('ip_block_delete_all', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

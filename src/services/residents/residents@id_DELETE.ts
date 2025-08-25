@@ -11,7 +11,7 @@ export async function deleteResident(id: number) {
 		const result = await response.json();
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('residents_delete', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

@@ -73,7 +73,7 @@ export async function getParkingDeviceDetail(id: number) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_detail', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

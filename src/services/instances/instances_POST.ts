@@ -76,7 +76,7 @@ export async function createInstance(data: CreateInstanceRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('instances_create', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

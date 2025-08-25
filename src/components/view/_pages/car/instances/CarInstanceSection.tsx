@@ -258,6 +258,7 @@ export default function CarInstanceSection({
       const createResult = await createCarInstance(createData);
       if (!createResult.success) {
         throw new Error(`새 연결 생성 실패: ${createResult.errorMsg}`);
+        
       }
 
       // 성공 처리

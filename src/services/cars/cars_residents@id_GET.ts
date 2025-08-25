@@ -126,7 +126,7 @@ export async function getCarInstanceResidentDetail(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('cars_residents_detail', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

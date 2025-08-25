@@ -123,7 +123,7 @@ export async function getCarInstanceDetail(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('cars_instances_detail', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

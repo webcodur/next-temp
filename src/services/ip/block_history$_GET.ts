@@ -100,7 +100,7 @@ export async function searchBlockHistory(params?: SearchIpBlockHistoryRequest) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('ip_block_history_search', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

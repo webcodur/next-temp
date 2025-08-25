@@ -113,7 +113,7 @@ export async function searchParkingDevices(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_search', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

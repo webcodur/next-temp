@@ -98,7 +98,7 @@ export async function searchAdmin(params: SearchAdminRequest = {}) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('admin_search', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

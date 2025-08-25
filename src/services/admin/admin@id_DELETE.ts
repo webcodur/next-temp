@@ -35,7 +35,7 @@ export async function deleteAdmin({ id }: { id: number }) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: getApiErrorMessage('admin_delete', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

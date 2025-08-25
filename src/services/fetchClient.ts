@@ -4,60 +4,7 @@ import {
 	getParkinglotIdFromToken,
 	getRoleIdFromToken,
 } from '@/utils/tokenUtils';
-import { API_ERRORS, type ApiErrorKey } from '@/constants/apiErrors';
-
-// 동적 import로 토스트 사용 (SSR 문제 방지)
-let toastInstance:
-	| typeof import('@/components/ui/ui-effects/toast/Toast').customToast
-	| null = null;
-
-const loadToast = async () => {
-	if (!toastInstance && typeof window !== 'undefined') {
-		const { customToast } = await import(
-			'@/components/ui/ui-effects/toast/Toast'
-		);
-		toastInstance = customToast;
-	}
-	return toastInstance;
-};
-
-/**
- * URL을 기반으로 API 키 추론
- */
-const inferApiKeyFromUrl = (url: string): ApiErrorKey => {
-	// URL에서 패스만 추출 (baseUrl 제거)
-	const path = url.replace(baseUrl || '', '').replace(/^\//, '');
-	
-	// API 패스를 서비스_액션 형태로 변환
-	const segments = path.split('/');
-	const service = segments[0];
-	
-	// HTTP 메서드별 액션 매핑 (기본값)
-	let action = 'unknown';
-	
-	// 일반적인 RESTful 패턴 추론
-	if (segments.length === 1) {
-		action = 'search'; // GET /admin -> admin_search
-	} else if (segments.length === 2) {
-		if (segments[1] === 'status' || segments[1] === 'stats' || segments[1] === 'history') {
-			action = segments[1]; // GET /cache/stats -> cache_stats
-		} else {
-			action = 'detail'; // GET /admin/123 -> admin_detail
-		}
-	} else if (segments.length === 3) {
-		action = segments[2]; // POST /admin/123/password_reset -> admin_password_reset
-	}
-	
-	const apiKey = `${service}_${action}` as ApiErrorKey;
-	
-	// API_ERRORS에 해당 키가 있는지 확인
-	if (API_ERRORS[apiKey]) {
-		return apiKey;
-	}
-	
-	// 기본값 반환
-	return 'unknown_error';
-};
+// fetchClient는 HTTP 클라이언트만 제공하고, 에러 처리는 각 서비스에서 담당
 
 const URL_PROD = process.env.NEXT_PUBLIC_API_PROD_URL;
 const URL_TEST = process.env.NEXT_PUBLIC_API_TEST_URL;
@@ -109,154 +56,7 @@ const getEffectiveParkingLotId = (): number | null => {
 	return tokenParkingLotId;
 };
 
-//#region 전역 에러 처리
-
-/**
- * 에러 데이터 타입 정의
- */
-interface ErrorData {
-	errorCode?: string;
-	code?: string;
-	message?: string;
-	[key: string]: unknown;
-}
-
-/**
- * 전역 에러 처리 함수
- */
-const handleGlobalError = async (
-	errorData: ErrorData,
-	statusCode: number,
-	url?: string
-): Promise<void> => {
-	const toast = await loadToast();
-	if (!toast) return;
-
-	// React 동적 임포트
-	const React = await import('react');
-
-	// 에러 코드 추출
-	const errorCode = errorData.errorCode || errorData.code;
-
-	// URL에서 API 키 추론하여 커스텀 메시지 사용
-	let userMessage: string;
-	if (url) {
-		const apiKey = inferApiKeyFromUrl(url);
-		const baseMessage = API_ERRORS[apiKey] || API_ERRORS['unknown_error'];
-		userMessage = `${baseMessage}: ${statusCode}`;
-	} else {
-		userMessage = errorData.message || '오류가 발생했습니다';
-	}
-
-	// 에러 코드가 있으면 뱃지 형태로 함께 표시
-	if (errorCode) {
-		// 에러코드가 있는 경우 뱃지 형태로 표시
-
-		toast.custom(
-			() =>
-				React.createElement(
-					'div',
-					{
-						style: {
-							display: 'flex',
-							alignItems: 'center',
-							gap: '8px',
-							fontFamily: 'var(--font-multilang)',
-							fontSize: '16px',
-							fontWeight: '700',
-							color: 'hsl(var(--destructive-foreground))',
-							whiteSpace: 'nowrap',
-							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-						},
-					},
-					[
-						React.createElement(
-							'span',
-							{
-								key: 'badge',
-								style: {
-									display: 'inline-block',
-									padding: '3px 8px',
-									fontSize: '12px',
-									fontWeight: '700',
-									letterSpacing: '0.5px',
-									backgroundColor: 'rgba(255, 255, 255, 0.9)',
-									color: 'rgb(185, 28, 28)',
-									border: '1px solid rgba(185, 28, 28, 0.3)',
-									borderRadius: '6px',
-									textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-								},
-							},
-							errorCode
-						),
-						React.createElement(
-							'span',
-							{
-								key: 'message',
-								style: { fontWeight: '700' },
-							},
-							userMessage
-						),
-					]
-				),
-			{
-				duration: 5000,
-				style: {
-					background: 'hsl(var(--destructive))',
-					borderColor: 'hsl(var(--destructive))',
-					color: 'hsl(var(--destructive-foreground))',
-					fontFamily: 'var(--font-multilang)',
-					fontSize: '16px',
-					fontWeight: '700',
-					maxWidth: '400px',
-					whiteSpace: 'nowrap',
-				},
-			}
-		);
-	} else {
-		// 에러 코드가 없어도 커스텀 토스트 사용 (줄바꿈 방지)
-		toast.custom(
-			() =>
-				React.createElement(
-					'div',
-					{
-						style: {
-							fontFamily: 'var(--font-multilang)',
-							fontSize: '16px',
-							fontWeight: '700',
-							color: 'hsl(var(--destructive-foreground))',
-							whiteSpace: 'nowrap',
-							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-						},
-					},
-					userMessage
-				),
-			{
-				duration: 5000,
-				style: {
-					background: 'hsl(var(--destructive))',
-					borderColor: 'hsl(var(--destructive))',
-					color: 'hsl(var(--destructive-foreground))',
-					fontFamily: 'var(--font-multilang)',
-					fontSize: '16px',
-					fontWeight: '700',
-					maxWidth: '400px',
-				},
-			}
-		);
-	}
-
-	// 토큰 만료 처리 (401 상태코드 기준)
-	if (statusCode === 401) {
-		// 토큰 만료 시 로그아웃 처리 (필요시)
-		setTimeout(() => {
-			// 로그아웃 로직 추가 가능
-		}, 2000);
-	}
-};
-//#endregion
+// HTTP 클라이언트 설정
 
 export const fetchDefault = returnFetch({
 	baseUrl: baseUrl,
@@ -278,27 +78,7 @@ export const fetchDefault = returnFetch({
 			return args;
 		},
 		response: async (response) => {
-			// 에러 응답 처리
-			if (!response.ok) {
-				try {
-					const errorData = await response.clone().json();
-					if (errorData && typeof errorData === 'object') {
-						// 전역 에러 처리 트리거
-						handleGlobalError(errorData, response.status, response.url);
-					}
-				} catch {
-					// JSON 파싱 실패 시 기본 에러 처리
-					handleGlobalError(
-						{
-							errorCode: `HTTP_${response.status}`,
-							message: response.statusText || '알 수 없는 오류가 발생했습니다',
-							statusCode: response.status,
-						},
-						response.status,
-						response.url
-					);
-				}
-			}
+			// 에러 처리는 각 서비스에서 개별적으로 처리
 			return response;
 		},
 	},
@@ -321,27 +101,7 @@ export const fetchForm = returnFetch({
 			return args;
 		},
 		response: async (response) => {
-			// 에러 응답 처리
-			if (!response.ok) {
-				try {
-					const errorData = await response.clone().json();
-					if (errorData && typeof errorData === 'object') {
-						// 전역 에러 처리 트리거
-						handleGlobalError(errorData, response.status, response.url);
-					}
-				} catch {
-					// JSON 파싱 실패 시 기본 에러 처리
-					handleGlobalError(
-						{
-							errorCode: `HTTP_${response.status}`,
-							message: response.statusText || '알 수 없는 오류가 발생했습니다',
-							statusCode: response.status,
-						},
-						response.status,
-						response.url
-					);
-				}
-			}
+			// 에러 처리는 각 서비스에서 개별적으로 처리
 			return response;
 		},
 	},

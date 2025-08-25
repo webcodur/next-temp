@@ -40,7 +40,7 @@ export async function getCacheStatsByNamespace(namespace: string) {
 	if (!response.ok) {
 			return {
 		success: false,
-		errorMsg: getApiErrorMessage('cache_namespace_stats', result, response.status),
+		errorMsg: await getApiErrorMessage(result, response.status),
 	};
 	}
 

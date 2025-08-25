@@ -125,7 +125,7 @@ export async function createParkingDevice(data: CreateParkingDeviceRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_create', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 

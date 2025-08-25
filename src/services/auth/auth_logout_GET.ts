@@ -29,7 +29,7 @@ export async function logout() {
       const errorData = await response.json();
       return {
         success: false,
-        errorMsg: getApiErrorMessage('auth_logout', errorData, response.status),
+        errorMsg: await getApiErrorMessage(errorData, response.status),
       };
     }
 

@@ -12,7 +12,7 @@ export async function deleteParkingDevice(id: number) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: getApiErrorMessage('devices_delete', result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status),
 		};
 	}
 
