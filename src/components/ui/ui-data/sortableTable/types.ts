@@ -30,7 +30,6 @@ export interface SortableTableProps<T extends { id?: string | number }> {
   // 테이블 옵션
   loadingRows?: number;
   onRowClick?: (item: T, index: number) => void;
-  minWidth?: string | number;
   
   // 접근성
   itemName?: string; // 아이템 명칭 (스크린 리더용)

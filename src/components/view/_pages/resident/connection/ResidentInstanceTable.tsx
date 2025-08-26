@@ -72,7 +72,7 @@ export default function ResidentInstanceTable({
     {
       key: 'address',
       header: '주소',
-      width: '25%',
+      minWidth: '300px',
       align: 'start',
       cell: (item: ResidentInstanceWithInstance) => {
         if (item.instance) {
@@ -85,7 +85,7 @@ export default function ResidentInstanceTable({
     {
       key: 'instanceType',
       header: '세대 타입',
-      width: '12%',
+      minWidth: '140px',
       align: 'center',
       cell: (item: ResidentInstanceWithInstance) => {
         if (item.instance) {
@@ -102,21 +102,21 @@ export default function ResidentInstanceTable({
     {
       key: 'memo',
       header: '메모',
-      width: '20%',
+      minWidth: '240px',
       align: 'start',
       cell: (item: ResidentInstanceWithInstance) => item.memo || '-',
     },
     {
       key: 'createdAt',
       header: '관계 생성일',
-      width: '13%',
+      minWidth: '160px',
       align: 'center',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '40%',
+      minWidth: '480px',
       cell: (item: ResidentInstanceWithInstance) => (
         <div className="flex gap-2 justify-center">
           <Button

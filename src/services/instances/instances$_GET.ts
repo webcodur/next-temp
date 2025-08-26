@@ -10,6 +10,7 @@ import {
 	ResidentInstanceWithResident,
 	CarInstanceWithCar,
 } from '@/types/instance';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface InstanceServiceConfigServer {

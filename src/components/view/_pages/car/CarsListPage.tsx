@@ -314,34 +314,34 @@ export default function CarsListPage() {
     {
       key: 'id',
       header: 'ID',
-      width: '6%',
+      minWidth: '80px',
       align: 'center',
     },
     {
       key: 'carNumber',
       header: '차량번호',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
     },
     {
       key: 'brand',
       header: '브랜드',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: CarWithInstance) => item.brand || '-',
     },
     {
       key: 'model',
       header: '모델',
       align: 'start',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: CarWithInstance) => item.model || '-',
     },
     {
       key: 'type',
       header: '차종',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: CarWithInstance) => {
         const typeMap: Record<string, string> = {
           SEDAN: '세단',
@@ -360,14 +360,14 @@ export default function CarsListPage() {
       key: 'year',
       header: '연식',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: CarWithInstance) => item.year?.toString() || '-',
     },
     {
       key: 'fuel',
       header: '연료',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: CarWithInstance) => {
         const fuelMap: Record<string, string> = {
           GASOLINE: '휘발유',
@@ -384,20 +384,20 @@ export default function CarsListPage() {
       key: 'carInstance',
       header: '등록 세대',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: CarWithInstance) => `${item.carInstance?.length || 0}개`,
     },
     {
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: CarWithInstance) => (
         <div className="flex gap-1 justify-center">
           <CrudButton
@@ -450,7 +450,6 @@ export default function CarsListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="차량"
-        minWidth="1200px"
       />
 
       {/* 삭제 확인 다이얼로그 */}

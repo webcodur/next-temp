@@ -132,6 +132,7 @@ export default function MenuSearch({
       key: 'fullPath',
       header: '메뉴 경로',
       align: 'start',
+      minWidth: '300px',
       cell: (item) => (
         <div className="flex gap-2 items-center">
           {/* 메뉴 경로 */}
@@ -155,7 +156,7 @@ export default function MenuSearch({
       key: 'href',
       header: '경로',
       align: 'start',
-      width: '200px',
+      minWidth: '200px',
       render: (value) => (
         <div className="flex gap-2 items-center">
           <code className="px-2 py-1 text-xs rounded bg-counter-1 text-muted-foreground">
@@ -168,7 +169,7 @@ export default function MenuSearch({
     {
       header: '선택',
       align: 'center',
-      width: '80px',
+      minWidth: '80px',
       cell: (item) => (
         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-none ${
           selectedResult?.id === item.id

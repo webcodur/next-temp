@@ -375,65 +375,65 @@ export default function DevicesListPage() {
       key: 'dragHandle',
       header: '이동',
       align: 'center',
-      width: '5%',
+      minWidth: '60px',
     },
     {
       key: 'sequence',
       header: '순서',
       align: 'center',
-      width: '5%',
+      minWidth: '60px',
       cell: (item: ParkingDevice) => item.sequence || '-',
     },
     {
       key: 'name',
       header: '차단기명',
       align: 'start',
-      width: '11%',
+      minWidth: '130px',
     },
     {
       key: 'ip',
       header: 'IP 주소',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
     },
     {
       key: 'port',
       header: '포트',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
     },
     {
       key: 'deviceType',
       header: '디바이스 타입',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ParkingDevice) => getDeviceTypeLabel(item.deviceType),
     },
     {
       key: 'status',
       header: '운영 상태',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ParkingDevice) => getStatusBadge(item.status),
     },
     {
       key: 'representativePhone',
       header: '대표전화',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: ParkingDevice) => item.representativePhone || '-',
     },
     {
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '7%',
+      minWidth: '90px',
       cell: (item: ParkingDevice) => (
         <div className="flex gap-1 justify-center">
           <CrudButton
@@ -487,7 +487,6 @@ export default function DevicesListPage() {
           onOrderChange={handleOrderChange}
           dragHandleColumn="dragHandle"
           itemName="차단기"
-          minWidth="1100px"
         />
         
         {/* 페이지네이션 */}

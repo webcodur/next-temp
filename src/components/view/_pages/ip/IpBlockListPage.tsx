@@ -244,26 +244,26 @@ export default function IpBlockListPage() {
       key: 'ip',
       header: 'IP 주소',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
     },
     {
       key: 'blockType',
       header: '차단 유형',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: IpBlock) => item.blockType === 'MANUAL' ? '수동 차단' : '자동 차단',
     },
     {
       key: 'blockReason',
       header: '차단 사유',
       align: 'start',
-      width: '25%',
+      minWidth: '300px',
     },
     {
       key: 'blockedAt',
       header: '차단 시간',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: IpBlock) => {
         const date = new Date(item.blockedAt);
         return date.toLocaleString('ko-KR', {
@@ -279,7 +279,7 @@ export default function IpBlockListPage() {
       key: 'unblockedAt',
       header: '해제 시간',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: IpBlock) => {
         if (!item.unblockedAt) return '-';
         const date = new Date(item.unblockedAt);
@@ -296,7 +296,7 @@ export default function IpBlockListPage() {
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: IpBlock) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.isActive
             ? 'bg-red-100 text-red-800'
@@ -309,7 +309,7 @@ export default function IpBlockListPage() {
     {
       header: '관리',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: IpBlock) => (
         <div className="flex gap-1 justify-center">
           {item.isActive && (
@@ -404,13 +404,13 @@ export default function IpBlockListPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium text-foreground mb-2">정말로 차단을 해제하시겠습니까?</h3>
+            <h3 className="mb-2 text-lg font-medium text-foreground">정말로 차단을 해제하시겠습니까?</h3>
             <p className="text-sm text-muted-foreground">
               {deleteTargetIp}의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
             </p>
           </div>
 
-          <div className="flex space-x-3 justify-end pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => setDeleteConfirmOpen(false)}
@@ -435,13 +435,13 @@ export default function IpBlockListPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium text-foreground mb-2">정말로 모든 IP 차단을 해제하시겠습니까?</h3>
+            <h3 className="mb-2 text-lg font-medium text-foreground">정말로 모든 IP 차단을 해제하시겠습니까?</h3>
             <p className="text-sm text-muted-foreground">
               현재 차단된 모든 IP의 차단이 해제됩니다. 이 작업은 되돌릴 수 없습니다.
             </p>
           </div>
 
-          <div className="flex space-x-3 justify-end pt-4">
+          <div className="flex justify-end pt-4 space-x-3">
             <Button
               variant="ghost"
               onClick={() => setDeleteAllConfirmOpen(false)}
@@ -466,7 +466,7 @@ export default function IpBlockListPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium text-foreground mb-2">성공</h3>
+            <h3 className="mb-2 text-lg font-medium text-foreground">성공</h3>
             <p className="text-sm text-muted-foreground">
               {dialogMessage}
             </p>
@@ -488,7 +488,7 @@ export default function IpBlockListPage() {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-medium text-foreground mb-2">오류</h3>
+            <h3 className="mb-2 text-lg font-medium text-foreground">오류</h3>
             <p className="text-sm text-muted-foreground">
               {dialogMessage}
             </p>

@@ -36,7 +36,6 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	pageSize: basePageSize = 10,
 	loadingRows = 5,
 	onRowClick,
-	minWidth,
 }: PaginatedTableProps<T>) => {
 	// #region 페이지네이션 상태 관리
 	const paginationState = usePaginationState({
@@ -59,7 +58,7 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	const columnsWithRowNumber = showRowNumber ? [
 		{
 			header: '순번',
-			width: '70px',
+			minWidth: '70px',
 			align: 'center' as const,
 			type: 'text' as const,
 			headerClassName: 'w-[70px] min-w-[70px] max-w-[70px]',
@@ -91,7 +90,6 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 				pageSize={paginationState.pageSize}
 				loadingRows={loadingRows}
 				onRowClick={onRowClick}
-				minWidth={minWidth}
 			/>
 
 			{/* 추가 로딩 인디케이터 */}

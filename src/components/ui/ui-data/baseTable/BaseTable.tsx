@@ -31,7 +31,6 @@ const BaseTable = <T extends Record<string, unknown>>({
 	pageSize = 10,
 	loadingRows = 5,
 	onRowClick,
-	minWidth,
 }: BaseTableProps<T>) => {
 	// #region 훅 및 상태
 	const { isRTL } = useLocale();
@@ -65,8 +64,6 @@ const BaseTable = <T extends Record<string, unknown>>({
 			<tr>
 				{filteredColumns.map((column, colIndex) => {
 					const columnKey = column.key ? String(column.key) : `col-${colIndex}`;
-
-										const isPixelWidth = column.width?.endsWith('px');
 					
 					return (
 						<th
@@ -78,12 +75,9 @@ const BaseTable = <T extends Record<string, unknown>>({
 							${column.headerClassName || ''}
 							${colIndex === 0 ? 'rounded-tl-lg' : ''}
 							${colIndex === filteredColumns.length - 1 ? 'rounded-tr-lg' : ''}
-							${isPixelWidth ? 'shrink-0' : ''}
 						`}
 						style={{ 
-							width: column.width,
-							minWidth: column.width,
-							maxWidth: column.width
+							minWidth: column.minWidth
 						}}
 					>
 							{/* 헤더 타이틀 */}
@@ -226,8 +220,6 @@ const BaseTable = <T extends Record<string, unknown>>({
 			);
 		};
 
-		const isPixelWidth = column.width?.endsWith('px');
-
 		return (
 			<td
 				className={`
@@ -237,12 +229,9 @@ const BaseTable = <T extends Record<string, unknown>>({
 					${column.cellClassName || cellClassName}
 					${index === displayData.length - 1 && colIndex === 0 ? 'rounded-bl-lg' : ''}
 					${index === displayData.length - 1 && colIndex === filteredColumns.length - 1 ? 'rounded-br-lg' : ''}
-					${isPixelWidth ? 'shrink-0' : ''}
 				`}
 				style={{ 
-					width: column.width,
-					minWidth: column.width,
-					maxWidth: column.width 
+					minWidth: column.minWidth
 				}}
 			>
 				{renderCellContent()}
@@ -259,8 +248,6 @@ const BaseTable = <T extends Record<string, unknown>>({
 				Array.from({ length: Math.min(loadingRows, pageSize) }, (_, index) => (
 					<tr key={`loading-${index}`} className="animate-pulse">
 						{filteredColumns.map((column, colIndex) => {
-							const isPixelWidth = column.width?.endsWith('px');
-							
 							return (
 								<td
 									key={`loading-${index}-${String(column.key)}`}
@@ -268,12 +255,9 @@ const BaseTable = <T extends Record<string, unknown>>({
 										px-6 py-4 
 										${colIndex < filteredColumns.length - 1 ? 'border-r border-primary-4/30' : ''}
 										${cellClassName}
-										${isPixelWidth ? 'shrink-0' : ''}
 									`}
 									style={{ 
-										width: column.width,
-										minWidth: column.width,
-										maxWidth: column.width 
+										minWidth: column.minWidth
 									}}
 								>
 									<div className="h-5 rounded bg-muted"></div>
@@ -344,12 +328,11 @@ const BaseTable = <T extends Record<string, unknown>>({
 				)}
 			>
 				<table
-					className="w-full rounded-lg bg-background"
+					className="w-full rounded-lg bg-background border border-primary-4"
 					style={{ 
 						tableLayout: 'auto', 
 						borderSpacing: '0 2px', 
-						borderCollapse: 'separate',
-						minWidth: minWidth 
+						borderCollapse: 'separate'
 					}}
 				>
 					{renderHeader()}

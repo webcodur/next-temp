@@ -114,7 +114,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
       header: '상태',
       key: 'isActive',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="flex justify-center">
           {item.isActive ? (
@@ -134,7 +134,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
     {
       header: '세대 ID',
       key: 'instanceId',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="flex gap-2 items-center">
           <Home className="h-3.5 w-3.5 text-blue-500" />
@@ -153,7 +153,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
     {
       header: '주소',
       key: 'address',
-      width: '30%',
+      minWidth: '360px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="flex gap-2 items-center">
           <MapPin className="h-3.5 w-3.5 text-gray-400" />
@@ -171,7 +171,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
       header: '세대 유형',
       key: 'instanceType',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="text-center">
           <div className="text-sm">{getInstanceTypeLabel(item.instance?.instanceType)}</div>
@@ -182,7 +182,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
       header: '거주 기간',
       key: 'period',
       align: 'center',
-      width: '18%',
+      minWidth: '220px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="flex flex-col gap-1 items-center">
           <div className="flex gap-1 items-center text-sm">
@@ -202,7 +202,7 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
     {
       header: '메모',
       key: 'memo',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ResidentInstanceHistory) => (
         <div className="text-sm text-gray-600">
           {item.memo || '-'}
@@ -247,7 +247,6 @@ export default function ResidentHistorySection({ resident }: ResidentHistorySect
         pageSizeOptions={[5, 10, 20]}
         itemName="거주 이력"
         isFetching={loading}
-        minWidth="900px"
       />
     </div>
   );

@@ -397,7 +397,7 @@ export default function ConfigManagement({
       key: 'index',
       header: '순번',
       align: 'center',
-      width: '5%',
+      minWidth: '60px',
       cell: (item: SystemConfig, index: number) => (
         <span className="text-xs text-foreground">
           {index + 1}
@@ -408,7 +408,7 @@ export default function ConfigManagement({
       key: 'title',
       header: '제목',
       align: 'start',
-      width: '16%',
+      minWidth: '200px',
       cell: (item: SystemConfig) => (
         <span className="text-sm font-medium text-foreground">
           {item.title || item.key}
@@ -419,7 +419,7 @@ export default function ConfigManagement({
       key: 'description',
       header: '설명',
       align: 'start',
-      width: '28%',
+      minWidth: '340px',
       cell: (item: SystemConfig) => (
         <span className="text-sm text-muted-foreground">
           {item.description || '-'}
@@ -430,7 +430,7 @@ export default function ConfigManagement({
       key: 'type',
       header: '타입',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: SystemConfig) => (
         <span className="px-2 py-1 text-xs rounded bg-muted text-foreground">
           {item.type}
@@ -441,7 +441,7 @@ export default function ConfigManagement({
       key: 'value',
       header: '값',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: SystemConfig) => {
         const displayValue = typeof item.value === 'object' 
           ? JSON.stringify(item.value) 
@@ -458,7 +458,7 @@ export default function ConfigManagement({
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: SystemConfig) => (
         <span 
           className={`px-2 py-1 text-xs rounded-full font-medium ${
@@ -475,7 +475,7 @@ export default function ConfigManagement({
       key: 'updatedAt',
       header: '수정일시',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: SystemConfig) => {
         if (!item.updatedAt) return <span className="text-muted-foreground">-</span>;
         

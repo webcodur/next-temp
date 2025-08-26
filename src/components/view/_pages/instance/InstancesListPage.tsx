@@ -110,28 +110,28 @@ export default function InstancesListPage() {
     {
       key: 'id',
       header: 'ID',
-      width: '4%',
+      minWidth: '60px',
       align: 'center',
     },
     {
       key: 'dongHosu',
       header: '동호수',
       align: 'start',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
     },
     {
       key: 'name',
       header: '세대명',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: Instance) => item.name || '-',
     },
     {
       key: 'ownerName',
       header: '소유자',
       align: 'start',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Instance) => item.ownerName || '-',
     },
 
@@ -139,7 +139,7 @@ export default function InstancesListPage() {
       key: 'instanceType',
       header: '타입',
       align: 'center',
-      width: '6%',
+      minWidth: '80px',
       cell: (item: Instance) => {
         const typeMap = {
           GENERAL: '일반',
@@ -153,48 +153,48 @@ export default function InstancesListPage() {
       key: 'residentCount',
       header: '주민',
       align: 'center',
-      width: '7%',
+      minWidth: '90px',
       cell: (item: Instance) => `${item.residentCount ?? 0}명`,
     },
     {
       key: 'carCount',
       header: '차량',
       align: 'center',
-      width: '7%',
+      minWidth: '90px',
       cell: (item: Instance) => `${item.carCount ?? 0}대`,
     },
     {
       key: 'address3Depth',
       header: '기타주소',
       align: 'start',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Instance) => item.address3Depth || '-',
     },
     {
       key: 'memo',
       header: '메모',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: Instance) => item.memo || '-',
     },
     {
       key: 'updatedAt',
       header: '수정일',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       type: 'datetime',
     },
     {
       key: 'createdAt',
       header: '등록일',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '6%',
+      minWidth: '80px',
       cell: (item: Instance) => (
         <div className="flex gap-1 justify-center">
           <CrudButton

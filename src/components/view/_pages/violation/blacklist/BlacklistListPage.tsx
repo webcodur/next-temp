@@ -330,27 +330,27 @@ export default function BlacklistListPage() {
     {
       key: 'id',
       header: 'ID',
-      width: '6%',
+      minWidth: '80px',
       align: 'center',
     },
     {
       key: 'carNumber',
       header: '차량번호',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
     },
     {
       key: 'blacklistType',
       header: '유형',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Record<string, unknown>) => (item as unknown as BlacklistResponse).blacklistType === 'AUTO' ? '자동' : '수동',
     },
     {
       key: 'registrationReason',
       header: '등록 사유',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         const reason = REGISTRATION_REASON_OPTIONS.find(opt => opt.value === blacklist.registrationReason);
@@ -361,7 +361,7 @@ export default function BlacklistListPage() {
       key: 'blockedUntil',
       header: '차단 만료일',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       type: 'datetime',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
@@ -373,7 +373,7 @@ export default function BlacklistListPage() {
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         return (
@@ -400,14 +400,14 @@ export default function BlacklistListPage() {
       key: 'blockedAt',
       header: '차단일시',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       type: 'datetime',
     },
     {
       key: 'totalViolations',
       header: '총 위반 수',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         return blacklist.totalViolations.toString();
@@ -416,7 +416,7 @@ export default function BlacklistListPage() {
     {
       header: '관리',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Record<string, unknown>) => {
         const blacklist = item as unknown as BlacklistResponse;
         return (
@@ -476,7 +476,6 @@ export default function BlacklistListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="블랙리스트"
-        minWidth="1100px"
       />
 
       {/* 해제 확인 다이얼로그 */}

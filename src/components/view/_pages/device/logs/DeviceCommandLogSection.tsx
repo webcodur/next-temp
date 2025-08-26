@@ -104,14 +104,14 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
     {
       key: 'id',
       header: 'ID',
-      width: '8%',
+      minWidth: '100px',
       align: 'center',
     },
     {
       key: 'command',
       header: '명령',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ParkingDeviceCommandLog) => (
         <code className="px-2 py-1 text-sm rounded bg-muted">
           {item.command}
@@ -122,21 +122,21 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
       key: 'status',
       header: '상태',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ParkingDeviceCommandLog) => getStatusBadge(item.status),
     },
     {
       key: 'adminId',
       header: '실행자',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ParkingDeviceCommandLog) => item.adminId || 'SYSTEM',
     },
     {
       key: 'requestData',
       header: '요청 데이터',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: ParkingDeviceCommandLog) => (
         <div className="truncate max-w-40">
           {item.requestData ? JSON.stringify(item.requestData) : '-'}
@@ -147,7 +147,7 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
       key: 'responseData',
       header: '응답 데이터',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: ParkingDeviceCommandLog) => (
         <div className="truncate max-w-40">
           {item.responseData ? JSON.stringify(item.responseData) : '-'}
@@ -158,7 +158,7 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
       key: 'errorMessage',
       header: '오류 메시지',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ParkingDeviceCommandLog) => (
         <div className="text-red-600 truncate max-w-32">
           {item.errorMessage || '-'}
@@ -169,7 +169,7 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
       key: 'createdAt',
       header: '실행 시간',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       type: 'datetime',
     },
   ], []);
@@ -188,7 +188,6 @@ const DeviceCommandLogSection = forwardRef<DeviceCommandLogSectionRef, DeviceCom
           currentPage={currentPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          minWidth="1000px"
         />
     </>
   );

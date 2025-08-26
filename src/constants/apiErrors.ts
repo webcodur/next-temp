@@ -9,16 +9,15 @@ export const API_ERRORS = {
   'refreshTokenWithString': '토큰 갱신 실패',
 
   // Admin  
-  'searchAdmins': '관리자 검색 실패',
+  'searchAdmin': '관리자 검색 실패',
   'getAdminDetail': '관리자 상세 조회 실패',
   'createAdmin': '관리자 계정 생성 실패',
   'updateAdmin': '관리자 계정 수정 실패',
   'deleteAdmin': '관리자 계정 삭제 실패',
-  'resetAdminPassword': '관리자 비밀번호 초기화 실패',
 
   // Cars
   'searchCars': '차량 목록 조회 실패',
-  'getCarDetail': '차량 상세 조회 실패',
+  'getCarsByInstance': '차량 상세 조회 실패',
   'createCar': '차량 생성 실패',
   'updateCar': '차량 정보 수정 실패',
   'deleteCar': '차량 삭제 실패',
@@ -28,27 +27,27 @@ export const API_ERRORS = {
   'createCarInstance': '차량-인스턴스 연결 실패',
   'updateCarInstance': '차량-인스턴스 연결 수정 실패',
   'deleteCarInstance': '차량-인스턴스 연결 삭제 실패',
-  'getCarResidentDetail': '차량-주민 연결 상세 조회 실패',
-  'createCarResident': '차량-주민 연결 생성 실패',
-  'updateCarResident': '차량-주민 연결 수정 실패',
-  'deleteCarResident': '차량-주민 연결 삭제 실패',
+  'getCarInstanceResidentDetail': '차량-주민 연결 상세 조회 실패',
+  'createCarInstanceResident': '차량-주민 연결 생성 실패',
+  'updateCarInstanceResident': '차량-주민 연결 수정 실패',
+  'deleteCarInstanceResident': '차량-주민 연결 삭제 실패',
 
   // Blacklist
   'searchBlacklists': '블랙리스트 목록 조회 실패',
   'updateBlacklist': '블랙리스트 수정 실패',
-  'unblockCar': '블랙리스트 해제 실패',
+  'unblockBlacklist': '블랙리스트 해제 실패',
   'createManualBlacklist': '수동 블랙리스트 등록 실패',
-  'checkCarBlacklistStatus': '차량 블랙리스트 상태 확인 실패',
+  'getBlacklistStatus': '차량 블랙리스트 상태 확인 실패',
 
   // Cache
   'getCacheStats': '캐시 통계 조회 실패',
-  'getNamespaceCacheStats': '네임스페이스별 캐시 통계 조회 실패',
-  'deleteNamespaceCache': '네임스페이스 캐시 삭제 실패',
+  'getCacheStatsByNamespace': '네임스페이스별 캐시 통계 조회 실패',
+  'deleteCacheNamespace': '네임스페이스 캐시 삭제 실패',
 
   // Config
   'searchConfigs': '설정값 조회 실패',
-  'getConfigDetail': '특정 설정값 조회 실패',
-  'updateConfig': '설정값 업데이트 실패',
+  'getConfigById': '특정 설정값 조회 실패',
+  'updateConfigById': '설정값 업데이트 실패',
 
   // Devices
   'searchParkingDevices': '차단기 목록 조회 실패',
@@ -75,9 +74,9 @@ export const API_ERRORS = {
   'updateInstanceVisitConfig': '인스턴스 방문 설정 수정 실패',
 
   // IP
-  'getBlockedIps': '차단된 IP 목록 조회 실패',
+  'getBlockedIpList': '차단된 IP 목록 조회 실패',
   'deleteBlockedIp': '특정 IP 차단 해제 실패',
-  'deleteAllBlockedIps': '모든 IP 차단 해제 실패',
+  'deleteAllBlockedIp': '모든 IP 차단 해제 실패',
   'searchBlockHistory': '차단 내역 검색 실패',
 
   // Residents

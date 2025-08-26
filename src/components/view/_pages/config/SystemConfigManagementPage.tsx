@@ -271,7 +271,7 @@ export default function SystemConfigManagementPage() {
       key: 'id',
       header: 'ID',
       align: 'center',
-      width: '6%',
+      minWidth: '80px',
       cell: (item: SystemConfig) => (
         <span className="font-mono text-xs text-muted-foreground">
           #{item.id}
@@ -282,7 +282,7 @@ export default function SystemConfigManagementPage() {
       key: 'title',
       header: '제목',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: SystemConfig) => (
         <span className="text-sm font-medium">
           {item.title || item.key}
@@ -293,7 +293,7 @@ export default function SystemConfigManagementPage() {
       key: 'description',
       header: '설명',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: SystemConfig) => (
         <span className="text-sm text-muted-foreground">
           {item.description || '-'}
@@ -304,7 +304,7 @@ export default function SystemConfigManagementPage() {
       key: 'type',
       header: '타입',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: SystemConfig) => (
         <span className="px-2 py-1 text-xs rounded bg-muted text-muted-foreground">
           {item.type}
@@ -315,7 +315,7 @@ export default function SystemConfigManagementPage() {
       key: 'value',
       header: '현재 값',
       align: 'start',
-      width: '18%',
+      minWidth: '220px',
       cell: (item: SystemConfig) => {
         const displayValue = typeof item.value === 'object' 
           ? JSON.stringify(item.value) 
@@ -332,7 +332,7 @@ export default function SystemConfigManagementPage() {
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: SystemConfig) => (
         <span 
           className={`px-2 py-1 text-xs rounded-full font-medium ${
@@ -349,7 +349,7 @@ export default function SystemConfigManagementPage() {
       key: 'updatedAt',
       header: '수정일시',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       type: 'datetime',
     },
   ];

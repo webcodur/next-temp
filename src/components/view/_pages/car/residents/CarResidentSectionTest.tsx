@@ -467,20 +467,20 @@ export default function CarResidentSection({
     {
       key: 'instanceId',
       header: '세대 ID',
-      width: '12%',
+      minWidth: '140px',
       align: 'center',
     },
     {
       key: 'address1Depth',
       header: '동호수',
-      width: '25%',
+      minWidth: '300px',
       align: 'start',
       cell: (item: typeof connectedInstances[0]) => `${item.address1Depth} ${item.address2Depth}`,
     },
     {
       key: 'carShareOnoff',
       header: '공유 여부',
-      width: '15%',
+      minWidth: '180px',
       align: 'center',
       cell: (item: typeof connectedInstances[0]) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.carShareOnoff
@@ -494,13 +494,13 @@ export default function CarResidentSection({
     {
       key: 'createdAt',
       header: '연결일자',
-      width: '20%',
+      minWidth: '240px',
       align: 'center',
       type: 'datetime',
     },
     {
       header: '선택',
-      width: '15%',
+      minWidth: '180px',
       align: 'center',
       cell: (item: typeof connectedInstances[0]) => {
         const isSelected = createFormData.selectedInstance?.id === item.instanceId;
@@ -524,35 +524,35 @@ export default function CarResidentSection({
     {
       key: 'id',
       header: 'ID',
-      width: '10%',
+      minWidth: '120px',
       align: 'center',
       cell: (item: ResidentInstanceWithResident) => item.resident.id,
     },
     {
       key: 'name',
       header: '이름',
-      width: '15%',
+      minWidth: '180px',
       align: 'start',
       cell: (item: ResidentInstanceWithResident) => item.resident.name,
     },
     {
       key: 'phone',
       header: '연락처',
-      width: '20%',
+      minWidth: '240px',
       align: 'start',
       cell: (item: ResidentInstanceWithResident) => item.resident.phone,
     },
     {
       key: 'email',
       header: '이메일',
-      width: '25%',
+      minWidth: '300px',
       align: 'start',
       cell: (item: ResidentInstanceWithResident) => item.resident.email,
     },
     {
       key: 'status',
       header: '상태',
-      width: '10%',
+      minWidth: '120px',
       align: 'center',
       cell: (item: ResidentInstanceWithResident) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.status === 'ACTIVE'
@@ -565,7 +565,7 @@ export default function CarResidentSection({
     },
     {
       header: '선택',
-      width: '10%',
+      minWidth: '120px',
       align: 'center',
       cell: (item: ResidentInstanceWithResident) => {
         const isSelected = createFormData.selectedResident?.id === item.id;
@@ -608,42 +608,42 @@ export default function CarResidentSection({
     {
       key: 'carInstanceResidentId',
       header: '연결 ID',
-      width: '7%',
+      minWidth: '80px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => item.carInstanceResidentId,
     },
     {
       key: 'residentId',
       header: '주민 ID',
-      width: '7%',
+      minWidth: '80px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => item.id,
     },
     {
       key: 'name',
       header: '이름',
-      width: '10%',
+      minWidth: '120px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => item.name,
     },
     {
       key: 'phone',
       header: '연락처',
-      width: '13%',
+      minWidth: '160px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => item.phone || '-',
     },
     {
       key: 'email',
       header: '이메일',
-      width: '18%',
+      minWidth: '220px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => item.email || '-',
     },
     {
       key: 'address',
       header: '주소',
-      width: '12%',
+      minWidth: '140px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => `${item.address1Depth} ${item.address2Depth}${item.address3Depth ? ` ${item.address3Depth}` : ''}`,
     },
@@ -651,12 +651,12 @@ export default function CarResidentSection({
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '13%',
+      minWidth: '160px',
       type: 'datetime',
     },
     {
       header: '작업',
-      width: '20%',
+      minWidth: '240px',
       align: 'center',
       cell: (item: CarResidentWithDetails) => (
         <div className="flex gap-2 justify-center">

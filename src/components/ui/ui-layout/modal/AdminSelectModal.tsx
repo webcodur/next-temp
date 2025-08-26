@@ -229,51 +229,51 @@ export default function AdminSelectModal({
     {
       key: 'id',
       header: 'ID',
-      width: '6%',
+      minWidth: '80px',
       align: 'center',
     },
     {
       key: 'account',
       header: '계정명',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
     },
     {
       key: 'name',
       header: '이름',
       align: 'start',
-      width: '12%',
+      minWidth: '140px',
     },
     {
       key: 'email',
       header: '이메일',
       align: 'start',
-      width: '17%',
+      minWidth: '200px',
     },
     {
       key: 'phone',
       header: '연락처',
       align: 'center',
-      width: '13%',
+      minWidth: '160px',
     },
     {
       key: 'role',
       header: '권한',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: Admin) => item.role?.name || '-',
     },
     {
       key: 'parkinglotId',
       header: '주차장 ID',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: Admin) => item.parkinglotId || '-',
     },
     {
       header: '선택',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: Admin) => (
         <Button
           size="sm"

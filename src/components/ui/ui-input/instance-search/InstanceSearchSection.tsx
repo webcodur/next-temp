@@ -165,27 +165,27 @@ export default function InstanceSearchSection({
       id: {
         key: 'id',
         header: 'ID',
-        width: '8%',
+        minWidth: '100px',
         align: 'center',
       },
       dongHosu: {
         key: 'dongHosu',
         header: '동호수',
-        width: '12%',
+        minWidth: '140px',
         align: 'start',
         cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
       },
       name: {
         key: 'name',
         header: '세대명',
-        width: '12%',
+        minWidth: '140px',
         align: 'start',
         cell: (item: Instance) => item.name || '-',
       },
       ownerName: {
         key: 'ownerName',
         header: '소유자',
-        width: '10%',
+        minWidth: '120px',
         align: 'start',
         cell: (item: Instance) => item.ownerName || '-',
       },
@@ -193,7 +193,7 @@ export default function InstanceSearchSection({
       instanceType: {
         key: 'instanceType',
         header: '타입',
-        width: '8%',
+        minWidth: '100px',
         align: 'center',
         cell: (item: Instance) => {
           const typeMap = {
@@ -207,21 +207,21 @@ export default function InstanceSearchSection({
       residentCount: {
         key: 'residentCount',
         header: '주민',
-        width: '8%',
+        minWidth: '100px',
         align: 'center',
         cell: (item: Instance) => `${item.residentCount ?? 0}명`,
       },
       carCount: {
         key: 'carCount',
         header: '차량',
-        width: '8%',
+        minWidth: '100px',
         align: 'center',
         cell: (item: Instance) => `${item.carCount ?? 0}대`,
       },
       memo: {
         key: 'memo',
         header: '메모',
-        width: '15%',
+        minWidth: '180px',
         align: 'start',
         cell: (item: Instance) => item.memo || '-',
       },
@@ -267,7 +267,7 @@ export default function InstanceSearchSection({
     if (config.selectColumnConfig && !config.selectColumnConfig.disabled) {
       const selectColumn: BaseTableColumn<Instance> = {
         header: '선택',
-        width: '12%',
+        minWidth: '140px',
         align: 'center',
         cell: (item: Instance) => {
           const disabledInstance = getDisabledInstance(item.id);
@@ -494,18 +494,19 @@ export default function InstanceSearchSection({
 
     if (tableType === 'paginated') {
       return (
-        <PaginatedTable
-          {...tableProps}
-          pageSize={pageSize}
-          pageSizeOptions={pageSizeOptions}
-          itemName={itemName}
-          minWidth={minWidth}
-        />
+        <div style={{ minWidth }}>
+          <PaginatedTable
+            {...tableProps}
+            pageSize={pageSize}
+            pageSizeOptions={pageSizeOptions}
+            itemName={itemName}
+          />
+        </div>
       );
     }
 
     return (
-      <div className="rounded-lg border">
+      <div className="rounded-lg border" style={{ minWidth }}>
         <BaseTable
           {...tableProps}
           pageSize={pageSize}

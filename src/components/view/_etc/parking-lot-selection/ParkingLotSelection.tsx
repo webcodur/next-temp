@@ -119,17 +119,19 @@ export default function ParkingLotSelection({
       key: 'name',
       header: '현장명',
       align: 'start',
+      minWidth: '200px',
     },
     {
       key: 'description',
       header: '설명',
       align: 'start',
+      minWidth: '300px',
       render: (value) => (value as string) || '-',
     },
     {
       header: '선택',
       align: 'center',
-      width: '80px',
+      minWidth: '80px',
       cell: (item) => (
         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto border-2 transition-none ${
           selectedId === item.id

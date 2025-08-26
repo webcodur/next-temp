@@ -245,40 +245,40 @@ export default function IpBlockRealtimeHistoryPage() {
       key: 'ip',
       header: 'IP 주소',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
     },
     {
       key: 'blockType',
       header: '차단 유형',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: IpBlock) => item.blockType === 'MANUAL' ? '수동 차단' : '자동 차단',
     },
     {
       key: 'blockReason',
       header: '차단 사유',
       align: 'start',
-      width: '25%',
+      minWidth: '300px',
     },
     {
       key: 'blockedAt',
       header: '차단 시간',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
       type: 'datetime',
     },
     {
       key: 'unblockedAt',
       header: '해제 시간',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
       type: 'datetime',
     },
     {
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: IpBlock) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.isActive
             ? 'bg-red-100 text-red-800'
@@ -291,7 +291,7 @@ export default function IpBlockRealtimeHistoryPage() {
     {
       header: '관리',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: IpBlock) => (
         <div className="flex gap-1 justify-center">
           {item.isActive && (

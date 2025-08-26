@@ -156,7 +156,7 @@ const SortableTableRow = <T extends { id?: string | number }>({
           colIndex < columns.length - 1 ? 'border-r border-primary-4/30' : '',
           column.cellClassName || cellClassName
         )}
-        style={{ width: column.width }}
+        style={{ minWidth: column.minWidth }}
       >
         {renderCellContent()}
       </td>

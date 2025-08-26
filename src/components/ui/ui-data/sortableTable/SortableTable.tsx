@@ -39,7 +39,6 @@ const SortableTable = <T extends { id?: string | number }>({
   onOrderChange,
   loadingRows = 5,
   onRowClick,
-  minWidth,
   itemName = '항목',
 }: SortableTableProps<T>) => {
   // #region 훅 및 상태
@@ -106,7 +105,7 @@ const SortableTable = <T extends { id?: string | number }>({
                 colIndex === 0 ? 'rounded-tl-lg' : '',
                 colIndex === columns.length - 1 ? 'rounded-tr-lg' : ''
               )}
-              style={{ width: column.width }}
+              style={{ minWidth: column.minWidth }}
             >
               <span className="block text-base truncate font-multilang">
                 {column.header}
@@ -216,10 +215,9 @@ const SortableTable = <T extends { id?: string | number }>({
         <table
           className="w-full rounded-lg bg-background"
           style={{ 
-            tableLayout: 'fixed', 
+            tableLayout: 'auto', 
             borderSpacing: 0, 
-            borderCollapse: 'separate',
-            minWidth: minWidth 
+            borderCollapse: 'separate'
           }}
         >
           {renderHeader()}

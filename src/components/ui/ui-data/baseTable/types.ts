@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 export interface BaseTableColumn<T> {
 	key?: keyof T | string;
 	header: string;
-	width?: string;
+	minWidth: string;
 	align?: 'start' | 'center' | 'end';
 	type?: 'text' | 'date' | 'datetime' | 'id';
 	render?: (value: T[keyof T], item: T, index: number) => ReactNode;
@@ -23,6 +23,5 @@ export interface BaseTableProps<T> {
 	pageSize?: number;
 	loadingRows?: number;
 	onRowClick?: (item: T, index: number) => void;
-	minWidth?: string | number;
 }
 // #endregion 

@@ -77,38 +77,38 @@ const DeviceHistorySection = forwardRef<DeviceHistorySectionRef, DeviceHistorySe
       key: 'timestamp',
       header: '변경 일시',
       align: 'center',
-      width: '20%',
+      minWidth: '240px',
       type: 'datetime',
     },
     {
       key: 'action',
       header: '작업',
       align: 'center', 
-      width: '15%',
+      minWidth: '180px',
     },
     {
       key: 'field',
       header: '변경 필드',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
     },
     {
       key: 'oldValue',
       header: '이전 값',
       align: 'center',
-      width: '20%',
+      minWidth: '240px',
     },
-    {
-      key: 'newValue', 
+        {
+      key: 'newValue',
       header: '새로운 값',
       align: 'center',
-      width: '20%',
+      minWidth: '240px',
     },
     {
       key: 'user',
       header: '변경자',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
     },
   ];
   // #endregion
@@ -122,8 +122,6 @@ const DeviceHistorySection = forwardRef<DeviceHistorySectionRef, DeviceHistorySe
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="히스토리"
         isFetching={loading}
-        minWidth="800px"
-        // emptyMessage="변경 이력이 없습니다."
       />
     </div>
   );

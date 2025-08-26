@@ -179,33 +179,33 @@ export default function ViolationsPage() {
     {
       key: 'carNumber' as keyof TableCarViolation,
       header: '차량번호',
-      width: '120px',
+      minWidth: '120px',
     },
     {
       key: 'violationTypeText' as keyof TableCarViolation,
       header: '위반 유형',
-      width: '140px',
+      minWidth: '140px',
     },
     {
       key: 'violationTime' as keyof TableCarViolation,
       header: '위반 시각',
-      width: '160px',
+      minWidth: '160px',
       type: 'datetime',
     },
     {
       key: 'statusText' as keyof TableCarViolation,
       header: '상태',
-      width: '100px',
+      minWidth: '100px',
     },
     {
       key: 'reporterTypeText' as keyof TableCarViolation,
       header: '신고자',
-      width: '100px',
+      minWidth: '100px',
     },
     {
       key: 'severityLevel' as keyof TableCarViolation,
       header: '심각도',
-      width: '80px',
+      minWidth: '80px',
     },
 
 

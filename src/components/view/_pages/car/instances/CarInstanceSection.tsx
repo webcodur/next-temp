@@ -317,34 +317,34 @@ export default function CarInstanceSection({
     {
       key: 'id',
       header: 'ID',
-      width: '8%',
+      minWidth: '80px',
       align: 'center',
     },
     {
       key: 'dongHosu',
       header: '동호수',
-      width: '20%',
+      minWidth: '120px',
       align: 'start',
       cell: (item: Instance) => `${item.address1Depth} ${item.address2Depth}`,
     },
     {
       key: 'name',
       header: '세대명',
-      width: '15%',
+      minWidth: '120px',
       align: 'start',
       cell: (item: Instance) => item.name || '-',
     },
     {
       key: 'ownerName',
       header: '소유자',
-      width: '12%',
+      minWidth: '100px',
       align: 'start',
       cell: (item: Instance) => item.ownerName || '-',
     },
     {
       key: 'instanceType',
       header: '타입',
-      width: '10%',
+      minWidth: '80px',
       align: 'center',
       cell: (item: Instance) => {
         const typeMap = {
@@ -357,7 +357,7 @@ export default function CarInstanceSection({
     },
     {
       header: '선택',
-      width: '15%',
+      minWidth: '100px',
       align: 'center',
       cell: (item: Instance) => {
         const isAlreadyConnected = isInstanceAlreadyConnected(item.id);
@@ -398,7 +398,7 @@ export default function CarInstanceSection({
     {
       key: 'id',
       header: 'ID',
-      width: '8%',
+      minWidth: '80px',
       align: 'center',
       cell: (item: CarInstanceResidentDetail) => item.carInstance?.id || '-',
     },
@@ -406,14 +406,14 @@ export default function CarInstanceSection({
       key: 'instanceId',
       header: '세대 ID',
       align: 'center',
-      width: '10%',
+      minWidth: '80px',
       cell: (item: CarInstanceResidentDetail) => item.carInstance?.instanceId || '-',
     },
     {
       key: 'dongHosu',
       header: '동호수',
       align: 'start',
-      width: '15%',
+      minWidth: '120px',
       cell: (item: CarInstanceResidentDetail) => {
         if (item.carInstance?.instance) {
           const { address1Depth, address2Depth, address3Depth } = item.carInstance.instance;
@@ -426,7 +426,7 @@ export default function CarInstanceSection({
       key: 'carShareOnoff',
       header: '공유 여부',
       align: 'center',
-      width: '12%',
+      minWidth: '100px',
       cell: (item: CarInstanceResidentDetail) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.carInstance?.carShareOnoff
           ? 'bg-green-100 text-green-800'
@@ -440,7 +440,7 @@ export default function CarInstanceSection({
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '15%',
+      minWidth: '120px',
       type: 'datetime',
       cell: (item: CarInstanceResidentDetail) => {
         if (!item.carInstance?.createdAt) return '-';
@@ -450,7 +450,7 @@ export default function CarInstanceSection({
     {
       header: '관리',
       align: 'center',
-      width: '25%',
+      minWidth: '250px',
       cell: (item: CarInstanceResidentDetail) => (
         <div className="flex gap-2 justify-center">
           <Button
@@ -633,7 +633,6 @@ export default function CarInstanceSection({
               searchMode="server"
               excludeInstanceIds={existingInstanceIds}
               pageSize={5}
-              minWidth="700px"
               title="연결할 세대 검색"
               subtitle="차량을 연결할 세대를 검색하고 선택하세요."
             />

@@ -303,34 +303,34 @@ export default function ResidentsListPage() {
     {
       key: 'id',
       header: 'ID',
-      width: '5%',
+      minWidth: '80px',
       align: 'center',
     },
     {
       key: 'name',
       header: '이름',
       align: 'start',
-      width: '10%',
+      minWidth: '120px',
     },
     {
       key: 'phone',
       header: '전화번호',
       align: 'start',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: ResidentDetail) => item.phone || '-',
     },
     {
       key: 'email',
       header: '이메일',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ResidentDetail) => item.email || '-',
     },
     {
       key: 'gender',
       header: '성별',
       align: 'center',
-      width: '6%',
+      minWidth: '80px',
       cell: (item: ResidentDetail) => {
         const genderMap = { M: '남성', F: '여성' };
         return item.gender ? genderMap[item.gender] : '-';
@@ -340,7 +340,7 @@ export default function ResidentsListPage() {
       key: 'currentAddress',
       header: '현재 거주지',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: ResidentDetail) => {
         const currentResidences = item.residentInstance?.filter(ri => ri.instance) || [];
         if (currentResidences.length > 0) {
@@ -356,20 +356,20 @@ export default function ResidentsListPage() {
       key: 'emergencyContact',
       header: '비상연락처',
       align: 'start',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: ResidentDetail) => item.emergencyContact || '-',
     },
     {
       key: 'createdAt',
       header: '등록일자',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       type: 'datetime',
     },
     {
       header: '관리',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ResidentDetail) => (
         <div className="flex gap-1 justify-center">
           <CrudButton
@@ -413,7 +413,6 @@ export default function ResidentsListPage() {
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="주민"
         isFetching={isLoading}
-        minWidth="1100px"
       />
 
       {/* 삭제 확인 다이얼로그 */}

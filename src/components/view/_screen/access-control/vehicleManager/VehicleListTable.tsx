@@ -51,7 +51,7 @@ const createColumns = (
 	return [
 		{
 			header: t('주차_테이블_헤더_순번'),
-			width: '4rem', // 최소 너비만 지정
+			minWidth: '60px',
 			align: 'center',
 			cell: (_item, index) => (
 				<div className="font-mono text-base text-center">
@@ -64,7 +64,7 @@ const createColumns = (
 		{
 			key: 'type',
 			header: t('주차_테이블_헤더_차량구분'),
-			width: '8rem',
+			minWidth: '120px',
 			align: 'start',
 			cell: (vehicle) => (
 				<div className="space-y-1">
@@ -87,7 +87,7 @@ const createColumns = (
 		{
 			key: 'car_number',
 			header: t('주차_테이블_헤더_차량번호'),
-			width: '7rem',
+			minWidth: '100px',
 			align: 'start',
 			cell: (vehicle) => (
 				<div className="space-y-1">
@@ -108,7 +108,7 @@ const createColumns = (
 		{
 			key: 'status',
 			header: t('주차_테이블_헤더_입출차'),
-			width: '5rem',
+			minWidth: '80px',
 			align: 'center',
 			cell: (vehicle) => (
 				<div className="space-y-1">
@@ -132,7 +132,7 @@ const createColumns = (
 		{
 			key: 'use_time',
 			header: t('주차_테이블_헤더_이용시간'),
-			width: '7rem',
+			minWidth: '140px',
 			align: 'center',
 			type: 'datetime',
 		},

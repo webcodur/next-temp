@@ -56,31 +56,31 @@ export default function PaginationExample() {
 		{
 			key: 'id' as keyof User,
 			header: t('테이블_ID'),
-			width: '10%',
+			minWidth: '120px',
 			align: 'center',
 		},
 		{
 			key: 'name',
 			header: t('테이블_이름'),
-			width: '18%',
+			minWidth: '220px',
 			align: 'start',
 		},
 		{
 			key: 'email',
 			header: t('테이블_이메일'),
-			width: '30%',
+			minWidth: '360px',
 			align: 'start',
 		},
 		{
 			key: 'department',
 			header: t('페이지네이션_부서'),
-			width: '15%',
+			minWidth: '180px',
 			align: 'center',
 		},
 		{
 			key: 'status',
 			header: t('테이블_상태'),
-			width: '15%',
+			minWidth: '180px',
 			align: 'center',
 			cell: (user: User) => (
 				<span
@@ -102,7 +102,7 @@ export default function PaginationExample() {
 		{
 			key: 'joinDate',
 			header: t('페이지네이션_입사일'),
-			width: '12%',
+			minWidth: '140px',
 			align: 'center',
 		},
 	];

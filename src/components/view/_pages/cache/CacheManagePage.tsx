@@ -220,7 +220,7 @@ export default function CacheManagePage() {
       key: 'namespace',
       header: '네임스페이스',
       align: 'start',
-      width: '30%',
+      minWidth: '200px',
       cell: (item: NamespaceData) => (
         <span className="font-mono text-sm">{item.namespace}</span>
       ),
@@ -229,7 +229,7 @@ export default function CacheManagePage() {
       key: 'keys',
       header: '키 개수',
       align: 'end',
-      width: '20%',
+      minWidth: '100px',
       cell: (item: NamespaceData) => (
         <span className="text-sm">{(item.keys ?? 0).toLocaleString()}</span>
       ),
@@ -238,7 +238,7 @@ export default function CacheManagePage() {
       key: 'memory',
       header: '메모리 사용량',
       align: 'end',
-      width: '20%',
+      minWidth: '120px',
       cell: (item: NamespaceData) => (
         <span className="text-sm">{formatBytes(item.memory ?? 0)}</span>
       ),
@@ -247,7 +247,7 @@ export default function CacheManagePage() {
       key: 'actions',
       header: '관리',
       align: 'center',
-      width: '30%',
+      minWidth: '120px',
       cell: (item: NamespaceData) => (
         <div className="flex gap-2 justify-center">
           <Button

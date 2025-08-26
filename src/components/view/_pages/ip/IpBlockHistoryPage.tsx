@@ -259,32 +259,32 @@ export default function IpBlockHistoryPage() {
       key: 'id',
       header: 'ID',
       align: 'center',
-      width: '6%',
+      minWidth: '80px',
     },
     {
       key: 'ip',
       header: 'IP 주소',
       align: 'start',
-      width: '12%',
+      minWidth: '140px',
     },
     {
       key: 'blockType',
       header: '차단 유형',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: IpBlockHistory) => item.blockType === 'MANUAL' ? '수동' : '자동',
     },
     {
       key: 'requestMethod',
       header: '메소드',
       align: 'center',
-      width: '7%',
+      minWidth: '90px',
     },
     {
       key: 'requestUrl',
       header: '요청 URL',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: IpBlockHistory) => (
         <span className="truncate" title={item.requestUrl || '-'}>
           {item.requestUrl || '-'}
@@ -295,7 +295,7 @@ export default function IpBlockHistoryPage() {
       key: 'blockReason',
       header: '차단 사유',
       align: 'start',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: IpBlockHistory) => (
         <span className="truncate" title={item.blockReason}>
           {item.blockReason}
@@ -306,7 +306,7 @@ export default function IpBlockHistoryPage() {
       key: 'blockedAt',
       header: '차단 시간',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: IpBlockHistory) => {
         const date = new Date(item.blockedAt);
         return date.toLocaleString('ko-KR', {
@@ -322,7 +322,7 @@ export default function IpBlockHistoryPage() {
       key: 'unblockedAt',
       header: '해제 시간',
       align: 'center',
-      width: '12%',
+      minWidth: '140px',
       cell: (item: IpBlockHistory) => {
         if (!item.unblockedAt) return '-';
         const date = new Date(item.unblockedAt);
@@ -339,7 +339,7 @@ export default function IpBlockHistoryPage() {
       key: 'isActive',
       header: '상태',
       align: 'center',
-      width: '8%',
+      minWidth: '100px',
       cell: (item: IpBlockHistory) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${
           item.isActive 

@@ -240,13 +240,13 @@ export default function HubNoticePage() {
     {
       key: 'isPinned',
       header: '',
-      width: '40px',
+      minWidth: '40px',
       render: (_: any, notice: any) => notice.isPinned ? <Pin className="w-4 h-4 text-accent" /> : null,
     },
     {
       key: 'category',
       header: '구분',
-      width: '100px',
+      minWidth: '100px',
       render: (_: any, notice: any) => {
         const categoryLabel = categoryOptions.find(opt => opt.value === notice.category)?.label || notice.category;
         const variant = notice.category === 'emergency' ? 'destructive' : 
@@ -258,6 +258,7 @@ export default function HubNoticePage() {
     {
       key: 'title',
       header: '제목',
+      minWidth: '300px',
       render: (_: any, notice: any) => (
         <div className="flex gap-2 items-center">
           {notice.isImportant && <AlertCircle className="w-4 h-4 text-red-500" />}
@@ -278,18 +279,18 @@ export default function HubNoticePage() {
     {
       key: 'author',
       header: '작성자',
-      width: '120px',
+      minWidth: '120px',
     },
     {
       key: 'viewCount',
       header: '조회수',
-      width: '80px',
+      minWidth: '80px',
       render: (_: any, notice: any) => notice.viewCount.toLocaleString(),
     },
     {
       key: 'period',
       header: '게시기간',
-      width: '180px',
+      minWidth: '180px',
       render: (_: any, notice: any) => {
         if (notice.startDate && notice.endDate) {
           return (
@@ -306,7 +307,7 @@ export default function HubNoticePage() {
     {
       key: 'createdAt',
       header: '등록일',
-      width: '100px',
+      minWidth: '100px',
       render: (_: any, notice: any) => format(new Date(notice.createdAt), 'yyyy.MM.dd', { locale: ko }),
     },
   ], []);

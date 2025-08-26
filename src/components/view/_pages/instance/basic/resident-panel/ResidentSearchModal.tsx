@@ -157,7 +157,7 @@ export default function ResidentSearchModal({
     {
       key: 'selected',
       header: '선택',
-      width: '8%',
+      minWidth: '100px',
       align: 'center',
       cell: (item: ResidentDetail) => (
         <input
@@ -173,27 +173,27 @@ export default function ResidentSearchModal({
       key: 'name',
       header: '이름',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
     },
     {
       key: 'phone',
       header: '전화번호',
       align: 'center',
-      width: '18%',
+      minWidth: '220px',
       cell: (item: ResidentDetail) => item.phone || '-',
     },
     {
       key: 'email',
       header: '이메일',
       align: 'start',
-      width: '20%',
+      minWidth: '240px',
       cell: (item: ResidentDetail) => item.email || '-',
     },
     {
       key: 'gender',
       header: '성별',
       align: 'center',
-      width: '10%',
+      minWidth: '120px',
       cell: (item: ResidentDetail) => {
         if (item.gender === 'M') return '남성';
         if (item.gender === 'F') return '여성';
@@ -204,7 +204,7 @@ export default function ResidentSearchModal({
       key: 'birthDate',
       header: '생년월일',
       align: 'center',
-      width: '15%',
+      minWidth: '180px',
       cell: (item: ResidentDetail) => {
         if (!item.birthDate) return '-';
         return new Date(item.birthDate).toLocaleDateString('ko-KR', {
@@ -218,7 +218,7 @@ export default function ResidentSearchModal({
       key: 'emergencyContact',
       header: '긴급연락처',
       align: 'center',
-      width: '14%',
+      minWidth: '170px',
       cell: (item: ResidentDetail) => item.emergencyContact || '-',
     },
   ];
