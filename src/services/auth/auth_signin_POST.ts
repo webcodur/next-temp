@@ -58,7 +58,7 @@ export async function signInWithCredentials(account: string, password: string) {
       const errorData = await response.json();
       return {
         success: false,
-        errorMsg: await getApiErrorMessage(errorData, response.status),
+        errorMsg: await getApiErrorMessage(errorData, response.status, 'signInWithCredentials'),
       };
     }
 

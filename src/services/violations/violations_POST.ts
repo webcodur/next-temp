@@ -149,7 +149,7 @@ export async function createViolation(data: CreateCarViolationRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'createViolation'),
 		};
 	}
 

@@ -131,7 +131,7 @@ export async function searchBlacklists(params?: SearchBlacklistRequest) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'searchBlacklists'),
 		};
 	}
 

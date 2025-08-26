@@ -17,11 +17,11 @@ export async function deleteCarInstanceResident(carInstanceResidentId: number, p
   if (!response.ok) {
     try {
       const result = await response.json();
-      const errorMsg = await getApiErrorMessage(result, response.status);
+      const errorMsg = await getApiErrorMessage(result, response.status, 'deleteCarInstanceResident');
       console.error('차량-주민 연결 삭제 실패:', result);
       return { success: false, errorMsg };
     } catch (parseError) {
-      const errorMsg = await getApiErrorMessage({}, response.status);
+      const errorMsg = await getApiErrorMessage({}, response.status, 'deleteCarInstanceResident');
       console.error('차량-주민 연결 삭제 파싱 오류:', parseError);
       return { success: false, errorMsg };
     }

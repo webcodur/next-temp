@@ -87,7 +87,7 @@ export async function getResidentDetail(id: number) {
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'getResidentDetail'),
 		};
 	}
 

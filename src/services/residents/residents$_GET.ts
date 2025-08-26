@@ -122,10 +122,10 @@ export async function searchResidents(params?: SearchResidentParams) {
 	const result = await response.json();
 
 	if (!response.ok) {
-			return { 
-		success: false, 
-		errorMsg: await getApiErrorMessage(result, response.status),
-	};
+					return { 
+			success: false, 
+			errorMsg: await getApiErrorMessage(result, response.status, 'searchResidents'),
+		};
 	}
 
 	const serverResponse = result as PaginatedResidentServerResponse;

@@ -291,10 +291,10 @@ export async function searchInstances(params?: SearchInstanceParams) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		const errorMsg =
-			result.message || `인스턴스 목록 조회 실패: ${response.status}`;
-
-		return { success: false, errorMsg };
+		return { 
+			success: false, 
+			errorMsg: await getApiErrorMessage(result, response.status, 'searchInstances'),
+		};
 	}
 
 	const serverResponse = result as PaginatedInstanceServerResponse;

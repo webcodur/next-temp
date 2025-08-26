@@ -105,7 +105,7 @@ export async function unblockBlacklist(
 	if (!response.ok) {
 		return { 
 			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'unblockBlacklist'),
 		};
 	}
 

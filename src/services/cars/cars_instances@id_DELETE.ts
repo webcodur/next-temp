@@ -21,7 +21,7 @@ export async function deleteCarInstance(
 		const result = await response.json();
 		return { 
 			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'deleteCarInstance'),
 		};
 	}
 

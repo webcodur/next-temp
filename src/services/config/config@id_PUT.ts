@@ -112,7 +112,7 @@ export async function updateConfigById(
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'updateConfigById'),
 		};
 	}
 

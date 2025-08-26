@@ -68,7 +68,7 @@ export async function getBlockedIpList(page?: number, limit?: number) {
 	if (!response.ok) {
 		return {
 			success: false,
-			errorMsg: await getApiErrorMessage(result, response.status),
+			errorMsg: await getApiErrorMessage(result, response.status, 'getBlockedIpList'),
 		};
 	}
 

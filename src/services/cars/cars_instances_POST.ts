@@ -47,7 +47,7 @@ export async function createCarInstance(
 			const result = await response.json();
 			return { 
 				success: false, 
-				errorMsg: await getApiErrorMessage(result, response.status),
+				errorMsg: await getApiErrorMessage(result, response.status, 'createCarInstance'),
 			};
 		} catch {
 			// JSON 파싱 실패 시 기본 에러 메시지

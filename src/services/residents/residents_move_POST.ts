@@ -106,10 +106,10 @@ export async function moveResident(data: MoveResidentRequest) {
 		const result = await response.json();
 
 		if (!response.ok) {
-			return { 
-				success: false, 
-				errorMsg: await getApiErrorMessage(result, response.status),
-			};
+					return { 
+			success: false, 
+			errorMsg: await getApiErrorMessage(result, response.status, 'moveResident'),
+		};
 		}
 
 		if (!result || typeof result !== 'object') {

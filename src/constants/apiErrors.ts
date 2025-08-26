@@ -3,12 +3,12 @@
  * 함수명을 키로 사용하는 패턴
  */
 export const API_ERRORS = {
-  // Auth 관련
+  // Auth
   'signInWithCredentials': '로그인 실패',
   'logout': '로그아웃 실패',
   'refreshTokenWithString': '토큰 갱신 실패',
 
-  // Admin 관련  
+  // Admin  
   'searchAdmins': '관리자 검색 실패',
   'getAdminDetail': '관리자 상세 조회 실패',
   'createAdmin': '관리자 계정 생성 실패',
@@ -16,7 +16,7 @@ export const API_ERRORS = {
   'deleteAdmin': '관리자 계정 삭제 실패',
   'resetAdminPassword': '관리자 비밀번호 초기화 실패',
 
-  // Cars 관련
+  // Cars
   'searchCars': '차량 목록 조회 실패',
   'getCarDetail': '차량 상세 조회 실패',
   'createCar': '차량 생성 실패',
@@ -33,24 +33,24 @@ export const API_ERRORS = {
   'updateCarResident': '차량-주민 연결 수정 실패',
   'deleteCarResident': '차량-주민 연결 삭제 실패',
 
-  // Blacklist 관련
+  // Blacklist
   'searchBlacklists': '블랙리스트 목록 조회 실패',
   'updateBlacklist': '블랙리스트 수정 실패',
   'unblockCar': '블랙리스트 해제 실패',
   'createManualBlacklist': '수동 블랙리스트 등록 실패',
   'checkCarBlacklistStatus': '차량 블랙리스트 상태 확인 실패',
 
-  // Cache 관련
+  // Cache
   'getCacheStats': '캐시 통계 조회 실패',
   'getNamespaceCacheStats': '네임스페이스별 캐시 통계 조회 실패',
   'deleteNamespaceCache': '네임스페이스 캐시 삭제 실패',
 
-  // Config 관련
+  // Config
   'searchConfigs': '설정값 조회 실패',
   'getConfigDetail': '특정 설정값 조회 실패',
   'updateConfig': '설정값 업데이트 실패',
 
-  // Devices 관련
+  // Devices
   'searchParkingDevices': '차단기 목록 조회 실패',
   'getParkingDeviceDetail': '차단기 상세 조회 실패',
   'createParkingDevice': '차단기 생성 실패',
@@ -65,7 +65,7 @@ export const API_ERRORS = {
   'searchParkingDeviceCommandLogs': '차단기 명령 로그 조회 실패',
   'searchParkingDeviceHistory': '차단기 변경 이력 조회 실패',
 
-  // Instances 관련
+  // Instances
   'searchInstances': '인스턴스 목록 조회 실패',
   'getInstanceDetail': '인스턴스 상세 조회 실패',
   'createInstance': '인스턴스 생성 실패',
@@ -74,13 +74,13 @@ export const API_ERRORS = {
   'updateInstanceServiceConfig': '인스턴스 서비스 설정 수정 실패',
   'updateInstanceVisitConfig': '인스턴스 방문 설정 수정 실패',
 
-  // IP 관련
+  // IP
   'getBlockedIps': '차단된 IP 목록 조회 실패',
   'deleteBlockedIp': '특정 IP 차단 해제 실패',
   'deleteAllBlockedIps': '모든 IP 차단 해제 실패',
   'searchBlockHistory': '차단 내역 검색 실패',
 
-  // Residents 관련
+  // Residents
   'searchResidents': '주민 목록 조회 실패',
   'getResidentDetail': '주민 상세 조회 실패',
   'updateResident': '주민 수정 실패',
@@ -91,7 +91,7 @@ export const API_ERRORS = {
   'deleteResidentInstance': '주민-인스턴스 관계 삭제 실패',
   'moveResident': '주민 인스턴스 이동 실패',
 
-  // Violations 관련
+  // Violations
   'searchViolations': '위반 목록 조회 실패',
   'getViolationDetail': '위반 기록 상세 조회 실패',
   'createViolation': '차량 위반 기록 생성 실패',
