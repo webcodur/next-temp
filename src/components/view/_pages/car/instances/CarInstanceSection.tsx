@@ -15,7 +15,7 @@ import InstanceTransferModal, { TransferFromInfo, AdditionalFieldConfig } from '
 import { createCarInstance } from '@/services/cars/cars_instances_POST';
 import { deleteCarInstance } from '@/services/cars/cars_instances@id_DELETE';
 import { updateCarInstance } from '@/services/cars/cars_instances@id_PATCH';
-import { CarWithInstance, CarInstanceResidentDetail } from '@/types/car';
+import { CarWithInstance, CarInstanceUserDetail } from '@/types/car';
 import { Instance } from '@/types/instance';
 
 interface CarInstanceSectionProps {
@@ -33,7 +33,7 @@ export default function CarInstanceSection({
 }: CarInstanceSectionProps) {
   // #region 상태 관리
   const router = useRouter();
-  const [instanceList, setInstanceList] = useState<CarInstanceResidentDetail[]>([]);
+  const [instanceList, setInstanceList] = useState<CarInstanceUserDetail[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 모달 상태
@@ -45,14 +45,14 @@ export default function CarInstanceSection({
   const [modalMessage, setModalMessage] = useState('');
 
   // 세대 변경 상태
-  const [changeFromInstance, setChangeFromInstance] = useState<CarInstanceResidentDetail | null>(null);
+  const [changeFromInstance, setChangeFromInstance] = useState<CarInstanceUserDetail | null>(null);
 
   // 폼 상태
   const [createFormData, setCreateFormData] = useState<CreateInstanceFormData>({
     selectedInstance: null,
     carShareOnoff: false,
   });
-  const [editTarget, setEditTarget] = useState<CarInstanceResidentDetail | null>(null);
+  const [editTarget, setEditTarget] = useState<CarInstanceUserDetail | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // #endregion
@@ -68,15 +68,15 @@ export default function CarInstanceSection({
     setLoading(true);
     try {
       const carInstances = car.carInstance?.map(instance => ({
-        id: instance.id, // CarInstanceResident ID는 임시로 CarInstance ID 사용
+        id: instance.id, // CarInstanceUser ID는 임시로 CarInstance ID 사용
         carInstanceId: instance.id,
-        residentId: 0, // 세대 연결에서는 사용하지 않음
+        userId: 0, // 세대 연결에서는 사용하지 않음
         carAlarm: false,
         isPrimary: false,
         createdAt: instance.createdAt,
         updatedAt: instance.updatedAt,
         carInstance: instance,
-        resident: undefined,
+        user: undefined,
       })) || [];
 
       setInstanceList(carInstances);
@@ -208,7 +208,7 @@ export default function CarInstanceSection({
     }
   };
 
-  const handleEditClick = (instance: CarInstanceResidentDetail) => {
+  const handleEditClick = (instance: CarInstanceUserDetail) => {
     setEditTarget(instance);
     // 설정 수정 시 현재 공유 여부을 초기값으로 설정
     setCreateFormData({
@@ -223,14 +223,14 @@ export default function CarInstanceSection({
     setDeleteConfirmOpen(true);
   };
 
-  const handleInstanceDetailClick = (item: CarInstanceResidentDetail) => {
+  const handleInstanceDetailClick = (item: CarInstanceUserDetail) => {
     if (item.carInstance?.instanceId) {
       router.push(`/parking/occupancy/instance/${item.carInstance.instanceId}`);
     }
   };
 
   // 세대 변경 핸들러
-  const handleChangeInstanceClick = (instance: CarInstanceResidentDetail) => {
+  const handleChangeInstanceClick = (instance: CarInstanceUserDetail) => {
     setChangeFromInstance(instance);
     setCreateFormData({ selectedInstance: null, carShareOnoff: instance.carInstance?.carShareOnoff || false });
     setChangeModalOpen(true);
@@ -394,27 +394,27 @@ export default function CarInstanceSection({
   // #endregion
 
   // #region 컬럼 정의
-  const columns: BaseTableColumn<CarInstanceResidentDetail>[] = [
+  const columns: BaseTableColumn<CarInstanceUserDetail>[] = [
     {
       key: 'id',
       header: 'ID',
       minWidth: '80px',
       align: 'center',
-      cell: (item: CarInstanceResidentDetail) => item.carInstance?.id || '-',
+      cell: (item: CarInstanceUserDetail) => item.carInstance?.id || '-',
     },
     {
       key: 'instanceId',
       header: '세대 ID',
       align: 'center',
       minWidth: '80px',
-      cell: (item: CarInstanceResidentDetail) => item.carInstance?.instanceId || '-',
+      cell: (item: CarInstanceUserDetail) => item.carInstance?.instanceId || '-',
     },
     {
       key: 'dongHosu',
       header: '동호수',
       align: 'start',
       minWidth: '120px',
-      cell: (item: CarInstanceResidentDetail) => {
+      cell: (item: CarInstanceUserDetail) => {
         if (item.carInstance?.instance) {
           const { address1Depth, address2Depth, address3Depth } = item.carInstance.instance;
           return `${address1Depth} ${address2Depth}${address3Depth ? ` ${address3Depth}` : ''}`;
@@ -427,7 +427,7 @@ export default function CarInstanceSection({
       header: '공유 여부',
       align: 'center',
       minWidth: '100px',
-      cell: (item: CarInstanceResidentDetail) => (
+      cell: (item: CarInstanceUserDetail) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${item.carInstance?.carShareOnoff
           ? 'bg-green-100 text-green-800'
           : 'bg-gray-100 text-gray-800'
@@ -442,7 +442,7 @@ export default function CarInstanceSection({
       align: 'center',
       minWidth: '120px',
       type: 'datetime',
-      cell: (item: CarInstanceResidentDetail) => {
+      cell: (item: CarInstanceUserDetail) => {
         if (!item.carInstance?.createdAt) return '-';
         return ''; // type: 'date'가 자동으로 포맷팅
       },
@@ -451,7 +451,7 @@ export default function CarInstanceSection({
       header: '관리',
       align: 'center',
       minWidth: '250px',
-      cell: (item: CarInstanceResidentDetail) => (
+      cell: (item: CarInstanceUserDetail) => (
         <div className="flex gap-2 justify-center">
           <Button
             variant="outline"

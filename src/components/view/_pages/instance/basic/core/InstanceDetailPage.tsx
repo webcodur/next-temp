@@ -22,7 +22,7 @@ import { deleteInstance } from '@/services/instances/instances@id_DELETE';
 import { ENUM_InstanceType } from '@/types/instance';
 import { createInstanceTabs } from '../../_shared/instanceTabs';
 import { useInstanceForm } from '@/hooks/ui-hooks/useInstanceForm';
-import { useCarResidentManager } from '@/hooks/domain/useCarResidentManager';
+import { useCarUserManager } from '@/hooks/domain/useCarUserManager';
 import { useInstanceData } from '@/hooks/domain/useInstanceData';
 
 export default function InstanceDetailPage() {  
@@ -35,9 +35,9 @@ export default function InstanceDetailPage() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [primaryCarTransferModal, setPrimaryCarTransferModal] = useState({
     isOpen: false,
-    currentPrimaryResident: null,
-    newPrimaryResidentId: null as number | null,
-    newPrimaryResidentName: ''
+    currentPrimaryUser: null,
+    newPrimaryUserId: null as number | null,
+    newPrimaryUserName: ''
   });
   // #endregion
 
@@ -65,21 +65,21 @@ export default function InstanceDetailPage() {
   );
   // #endregion
 
-  // #region 차량-주민 관리 훅
+  // #region 차량-사용자 관리 훅
   const {
-    residentManagementMode,
+    userManagementMode,
     selectedCarInstanceId,
-    carResidents,
-    loadingCarResidents,
-    loadCarResidentsWithDetails,
-    refreshCarResidents,
-    handleManageResidents,
-    connectResident,
-    disconnectResident,
+    carUsers,
+    loadingCarUsers,
+    loadCarUsersWithDetails,
+    refreshCarUsers,
+    handleManageUsers,
+    connectUser,
+    disconnectUser,
     togglePrimary,
     toggleAlarm,
-    closeResidentManagement
-  } = useCarResidentManager();
+    closeUserManagement
+  } = useCarUserManager();
   // #endregion
 
   // #region 탭 관리
@@ -98,7 +98,7 @@ export default function InstanceDetailPage() {
   // #region 차량-세대 연결 해제 감지 및 관리모드 자동 해제
   useEffect(() => {
     // 관리모드가 활성화되어 있고 선택된 차량이 있는 경우에만 체크
-    if (residentManagementMode && selectedCarInstanceId && instance?.carInstance) {
+    if (userManagementMode && selectedCarInstanceId && instance?.carInstance) {
       // 현재 선택된 차량이 세대의 차량 목록에 여전히 존재하는지 확인
       const selectedCarExists = instance.carInstance.some(
         carInstance => carInstance.id === selectedCarInstanceId
@@ -107,11 +107,11 @@ export default function InstanceDetailPage() {
       // 선택된 차량이 더 이상 존재하지 않으면 관리모드 해제
       if (!selectedCarExists) {
 
-        closeResidentManagement();
+        closeUserManagement();
         toast.info('관리 중이던 차량이 세대에서 제거되어 관리모드가 해제되었습니다.');
       }
     }
-  }, [instance?.carInstance, residentManagementMode, selectedCarInstanceId, closeResidentManagement]);
+  }, [instance?.carInstance, userManagementMode, selectedCarInstanceId, closeUserManagement]);
   // #endregion
 
   // #region 이벤트 핸들러
@@ -187,75 +187,75 @@ export default function InstanceDetailPage() {
   };
 
   // 차량 관리 핸들러
-  const handleManageResidentsClick = async (carInstanceId: number) => {
+  const handleManageUsersClick = async (carInstanceId: number) => {
     if (!instance || !instance.carInstance) return;
 
     // 선택된 차량의 ID를 찾기
     const carInstance = instance.carInstance.find(ci => ci.id === carInstanceId);
     if (!carInstance?.car) return;
 
-    await handleManageResidents(
+    await handleManageUsers(
       carInstanceId,
       instance.carInstance,
-      () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+      () => loadCarUsersWithDetails(carInstance.car!.id, instance.id)
     );
   };
 
-  // 주민 연결 관련 핸들러
-  const handleConnectResident = async (residentId: number) => {
+  // 사용자 연결 관련 핸들러
+  const handleConnectUser = async (userId: number) => {
     if (!selectedCarInstanceId || !instance) return;
     
     try {
-      const result = await connectResident(selectedCarInstanceId, residentId);
+      const result = await connectUser(selectedCarInstanceId, userId);
       if (result.success) {
-        toast.success('주민이 성공적으로 연결되었습니다.');
+        toast.success('사용자가 성공적으로 연결되었습니다.');
         
-        // 연결모드 유지하면서 차량-주민 데이터만 새로고침
+        // 연결모드 유지하면서 차량-사용자 데이터만 새로고침
         const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
         if (carInstance?.car) {
-          await refreshCarResidents(
-            () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+          await refreshCarUsers(
+            () => loadCarUsersWithDetails(carInstance.car!.id, instance.id)
           );
         }
       } else {
-        setModalMessage('주민 연결에 실패했습니다.');
+        setModalMessage('사용자 연결에 실패했습니다.');
       }
     } catch (error) {
-      console.error('주민 연결 중 오류:', error);
-      setModalMessage('주민 연결 중 오류가 발생했습니다.');
+      console.error('사용자 연결 중 오류:', error);
+      setModalMessage('사용자 연결 중 오류가 발생했습니다.');
     }
   };
 
-  const handleDisconnectResident = async (residentId: number) => {
+  const handleDisconnectUser = async (userId: number) => {
     try {
-      const result = await disconnectResident(residentId);
+      const result = await disconnectUser(userId);
       if (result.success) {
-        toast.success('주민 연결이 성공적으로 해제되었습니다.');
+        toast.success('사용자 연결이 성공적으로 해제되었습니다.');
         
-        // 연결모드 유지하면서 차량-주민 데이터만 새로고침
+        // 연결모드 유지하면서 차량-사용자 데이터만 새로고침
         if (selectedCarInstanceId && instance) {
           const carInstance = instance.carInstance?.find(ci => ci.id === selectedCarInstanceId);
           if (carInstance?.car) {
-            await refreshCarResidents(
-              () => loadCarResidentsWithDetails(carInstance.car!.id, instance.id)
+            await refreshCarUsers(
+              () => loadCarUsersWithDetails(carInstance.car!.id, instance.id)
             );
           }
         }
       } else {
-        setModalMessage('주민 연결 해제에 실패했습니다.');
+        setModalMessage('사용자 연결 해제에 실패했습니다.');
       }
     } catch (error) {
-      console.error('주민 연결 해제 중 오류:', error);
-      setModalMessage('주민 연결 해제 중 오류가 발생했습니다.');
+      console.error('사용자 연결 해제 중 오류:', error);
+      setModalMessage('사용자 연결 해제 중 오류가 발생했습니다.');
     }
   };
 
-  const handleTogglePrimary = async (residentId: number) => {
+  const handleTogglePrimary = async (userId: number) => {
     try {
-      const result = await togglePrimary(residentId);
+      const result = await togglePrimary(userId);
       if (result.success) {
         toast.success('차량 소유자 설정이 성공적으로 변경되었습니다.');
-        // 소유자 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
+        // 소유자 설정은 이미 useCarUserManager에서 로컬 상태 업데이트됨
       } else {
         setModalMessage('차량 소유자 설정 변경에 실패했습니다.');
       }
@@ -265,12 +265,12 @@ export default function InstanceDetailPage() {
     }
   };
 
-  const handleToggleAlarm = async (residentId: number) => {
+  const handleToggleAlarm = async (userId: number) => {
     try {
-      const result = await toggleAlarm(residentId);
+      const result = await toggleAlarm(userId);
       if (result.success) {
         toast.success('알람 설정이 성공적으로 변경되었습니다.');
-        // 알람 설정은 이미 useCarResidentManager에서 로컬 상태 업데이트됨
+        // 알람 설정은 이미 useCarUserManager에서 로컬 상태 업데이트됨
       } else {
         setModalMessage('알람 설정 변경에 실패했습니다.');
       }
@@ -281,8 +281,8 @@ export default function InstanceDetailPage() {
   };
 
   // 연결 상태 확인 헬퍼
-  const isResidentConnectedToSelectedCar = (residentId: number) => {
-    return carResidents.some(cr => cr.id === residentId);
+  const isUserConnectedToSelectedCar = (userId: number) => {
+    return carUsers.some(cr => cr.id === userId);
   };
 
   // 모달 핸들러
@@ -338,22 +338,22 @@ export default function InstanceDetailPage() {
               onSubmit={handleSubmit}
               onDelete={handleDelete}
               
-              // 차량-주민 관리 관련
-              residentManagementMode={residentManagementMode}
+              // 차량-사용자 관리 관련
+              userManagementMode={userManagementMode}
               selectedCarInstanceId={selectedCarInstanceId}
-              carResidents={carResidents}
-              loadingCarResidents={loadingCarResidents}
-              onConnectResident={handleConnectResident}
-              onDisconnectResident={handleDisconnectResident}
+              carUsers={carUsers}
+              loadingCarUsers={loadingCarUsers}
+              onConnectUser={handleConnectUser}
+              onDisconnectUser={handleDisconnectUser}
               onTogglePrimary={handleTogglePrimary}
               onToggleAlarm={handleToggleAlarm}
               
               // 데이터 새로고침
               onDataChange={handleDataChange}
-              onManageResidents={handleManageResidentsClick}
+              onManageUsers={handleManageUsersClick}
               
               // 연결 상태 확인 헬퍼
-              isResidentConnectedToSelectedCar={isResidentConnectedToSelectedCar}
+              isUserConnectedToSelectedCar={isUserConnectedToSelectedCar}
             />
           )}
           {activeTab === 'service' && instance && (

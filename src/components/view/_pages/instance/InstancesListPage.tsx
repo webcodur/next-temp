@@ -150,11 +150,11 @@ export default function InstancesListPage() {
       },
     },
     {
-      key: 'residentCount',
+      key: 'userCount',
       header: '주민',
       align: 'center',
       minWidth: '90px',
-      cell: (item: Instance) => `${item.residentCount ?? 0}명`,
+      cell: (item: Instance) => `${item.userCount ?? 0}명`,
     },
     {
       key: 'carCount',

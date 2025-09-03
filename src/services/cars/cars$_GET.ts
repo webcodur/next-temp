@@ -1,7 +1,7 @@
 'use client';
 import { fetchDefault } from '@/services/fetchClient';
 import { SearchCarParams, CarListResponse, CarWithInstance } from '@/types/car';
-import { getApiErrorMessage} from '@/utils/apiErrorMessages';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // 클라이언트 Instance 타입 정의 (CarInstance와 호환)
 interface Instance {
@@ -170,7 +170,7 @@ export async function searchCars(
 	if (params?.yearTo) searchParams.append('year_to', params.yearTo);
 	if (params?.instanceId)
 		searchParams.append('instance_id', params.instanceId.toString());
-	if (params?.residentId) searchParams.append('resident_id', params.residentId);
+	if (params?.userId) searchParams.append('user_id', params.userId);
 	if (params?.status) searchParams.append('status', params.status);
 
 	const headers: Record<string, string> = {};
@@ -187,8 +187,8 @@ export async function searchCars(
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
+		return {
+			success: false,
 			errorMsg: await getApiErrorMessage(result, response.status, 'searchCars'),
 		};
 	}

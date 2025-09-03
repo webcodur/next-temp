@@ -3,17 +3,17 @@ import { fetchDefault } from '@/services/fetchClient';
 import {
 	SearchCarInstanceParams,
 	CarInstanceListResponse,
-	CarInstanceResidentDetail,
+	CarInstanceUserDetail,
 } from '@/types/car';
-import { getApiErrorMessage} from '@/utils/apiErrorMessages';
+import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
-// Instance와 Resident 타입 정의
+// Instance와 User 타입 정의
 interface Instance {
 	id: number;
 	[key: string]: unknown;
 }
 
-interface Resident {
+interface User {
 	id: number;
 	[key: string]: unknown;
 }
@@ -48,20 +48,20 @@ interface CarInstanceServerResponse {
 	instance?: Record<string, unknown>;
 }
 
-interface CarInstanceResidentDetailServerResponse {
+interface CarInstanceUserDetailServerResponse {
 	id: number;
 	car_instance_id: number;
-	resident_id: number;
+	user_id: number;
 	car_alarm: boolean;
 	is_primary: boolean;
 	created_at: string;
 	updated_at: string;
 	car_instance?: CarInstanceServerResponse;
-	resident?: Record<string, unknown>;
+	user?: Record<string, unknown>;
 }
 
 interface PaginatedServerResponse {
-	data: CarInstanceResidentDetailServerResponse[];
+	data: CarInstanceUserDetailServerResponse[];
 	total: number;
 	page: number;
 	limit: number;
@@ -71,12 +71,12 @@ interface PaginatedServerResponse {
 
 // #region 변환 함수 (내부 사용)
 function serverToClient(
-	server: CarInstanceResidentDetailServerResponse
-): CarInstanceResidentDetail {
+	server: CarInstanceUserDetailServerResponse
+): CarInstanceUserDetail {
 	return {
 		id: server.id,
 		carInstanceId: server.car_instance_id,
-		residentId: server.resident_id,
+		userId: server.user_id,
 		carAlarm: server.car_alarm,
 		isPrimary: server.is_primary,
 		createdAt: server.created_at,
@@ -111,7 +111,7 @@ function serverToClient(
 					instance: server.car_instance.instance as Instance | undefined,
 				}
 			: undefined,
-		resident: server.resident as Resident | undefined,
+		user: server.user as User | undefined,
 	};
 }
 // #endregion
@@ -139,9 +139,13 @@ export async function searchCarInstances(
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status, 'searchCarInstances'),
+		return {
+			success: false,
+			errorMsg: await getApiErrorMessage(
+				result,
+				response.status,
+				'searchCarInstances'
+			),
 		};
 	}
 

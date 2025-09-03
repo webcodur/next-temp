@@ -13,7 +13,7 @@ import { updateInstanceServiceConfig } from '@/services/instances/instances@id_s
 import { InstanceDetail } from '@/types/instance';
 
 interface ServiceConfigData {
-  canAddNewResident: boolean;
+  canAddNewUser: boolean;
   isCommonEntranceSubscribed: boolean;
   isTemporaryAccess: boolean;
   tempCarLimit: number;
@@ -30,13 +30,13 @@ export default function InstanceServiceConfigSection({
 }: InstanceServiceConfigSectionProps) {
   // #region 상태 관리
   const [formData, setFormData] = useState<ServiceConfigData>({
-    canAddNewResident: instance.instanceServiceConfig?.canAddNewResident ?? true,
+    canAddNewUser: instance.instanceServiceConfig?.canAddNewUser ?? true,
     isCommonEntranceSubscribed: instance.instanceServiceConfig?.isCommonEntranceSubscribed ?? false,
     isTemporaryAccess: instance.instanceServiceConfig?.isTemporaryAccess ?? false,
     tempCarLimit: instance.instanceServiceConfig?.tempCarLimit ?? 0,
   });
   const [originalData] = useState<ServiceConfigData>({
-    canAddNewResident: instance.instanceServiceConfig?.canAddNewResident ?? true,
+    canAddNewUser: instance.instanceServiceConfig?.canAddNewUser ?? true,
     isCommonEntranceSubscribed: instance.instanceServiceConfig?.isCommonEntranceSubscribed ?? false,
     isTemporaryAccess: instance.instanceServiceConfig?.isTemporaryAccess ?? false,
     tempCarLimit: instance.instanceServiceConfig?.tempCarLimit ?? 0,
@@ -51,7 +51,7 @@ export default function InstanceServiceConfigSection({
   // #region 변경 감지
   const hasChanges = useMemo(() => {
     return (
-      formData.canAddNewResident !== originalData.canAddNewResident ||
+      formData.canAddNewUser !== originalData.canAddNewUser ||
       formData.isCommonEntranceSubscribed !== originalData.isCommonEntranceSubscribed ||
       formData.isTemporaryAccess !== originalData.isTemporaryAccess ||
       formData.tempCarLimit !== originalData.tempCarLimit
@@ -78,7 +78,7 @@ export default function InstanceServiceConfigSection({
 
     try {
       const updateData = {
-        canAddNewResident: formData.canAddNewResident,
+        canAddNewUser: formData.canAddNewUser,
         isCommonEntranceSubscribed: formData.isCommonEntranceSubscribed,
         isTemporaryAccess: formData.isTemporaryAccess,
         tempCarLimit: formData.tempCarLimit,
@@ -120,13 +120,13 @@ export default function InstanceServiceConfigSection({
         {(() => {
           const fields: GridFormFieldSchema[] = [
           {
-            id: 'canAddNewResident',
+            id: 'canAddNewUser',
             label: '신규 입주민 등록 허용',
             rules: '등록 권한',
             component: (
               <SimpleToggleSwitch
-                checked={formData.canAddNewResident}
-                onChange={(checked) => handleFieldChange('canAddNewResident', checked)}
+                checked={formData.canAddNewUser}
+                onChange={(checked) => handleFieldChange('canAddNewUser', checked)}
                 disabled={isSubmitting}
                 size="md"
               />

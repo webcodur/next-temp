@@ -8,10 +8,10 @@
 
 import React from 'react';
 import InstanceForm from './InstanceForm';
-import InstanceResidentList from '../resident-panel/InstanceResidentList';
+import InstanceUserList from '../user-panel/InstanceUserList';
 import InstanceCarList from '../car-panel/InstanceCarList';
 import type { InstanceDetail } from '@/types/instance';
-import type { CarResidentWithDetails } from '@/types/car';
+import type { CarUserWithDetails } from '@/types/car';
 import type { InstanceFormData } from '@/hooks/ui-hooks/useInstanceForm';
 
 // #region 타입 및 인터페이스
@@ -29,22 +29,22 @@ interface InstanceBasicTabProps {
   onSubmit: () => Promise<void>;
   onDelete: () => void;
   
-  // 차량-주민 관리 관련
-  residentManagementMode: boolean;
+  // 차량-사용자 관리 관련
+  userManagementMode: boolean;
   selectedCarInstanceId: number | null;
-  carResidents: CarResidentWithDetails[];
-  loadingCarResidents: boolean;
-  onConnectResident: (residentId: number) => void;
-  onDisconnectResident: (residentId: number) => void;
-  onTogglePrimary: (residentId: number) => void;
-  onToggleAlarm: (residentId: number) => void;
+  carUsers: CarUserWithDetails[];
+  loadingCarUsers: boolean;
+  onConnectUser: (userId: number) => void;
+  onDisconnectUser: (userId: number) => void;
+  onTogglePrimary: (userId: number) => void;
+  onToggleAlarm: (userId: number) => void;
   
   // 데이터 새로고침
   onDataChange: () => void;
-  onManageResidents: (carInstanceId: number) => void;
+  onManageUsers: (carInstanceId: number) => void;
   
   // 연결 상태 확인 헬퍼
-  isResidentConnectedToSelectedCar: (residentId: number) => boolean;
+  isUserConnectedToSelectedCar: (userId: number) => boolean;
 }
 // #endregion
 
@@ -62,22 +62,22 @@ export default function InstanceBasicTab({
   onSubmit,
   onDelete,
   
-  // 차량-주민 관리 관련
-  residentManagementMode,
+  // 차량-사용자 관리 관련
+  userManagementMode,
   selectedCarInstanceId,
-  carResidents,
-  loadingCarResidents,
-  onConnectResident,
-  onDisconnectResident,
+  carUsers,
+  loadingCarUsers,
+  onConnectUser,
+  onDisconnectUser,
   onTogglePrimary,
   onToggleAlarm,
   
   // 데이터 새로고침
   onDataChange,
-  onManageResidents,
+  onManageUsers,
   
   // 연결 상태 확인 헬퍼
-  isResidentConnectedToSelectedCar
+  isUserConnectedToSelectedCar
 }: InstanceBasicTabProps) {
 
   return (
@@ -99,27 +99,27 @@ export default function InstanceBasicTab({
       
       {/* 연결된 주민 | 차량 목록 */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <InstanceResidentList 
-          residentInstances={instance.residentInstance}
+        <InstanceUserList 
+          userInstances={instance.userInstance}
           loading={loading}
           instanceId={instance.id}
           onDataChange={onDataChange} // 주민-세대 연결 해지를 위해 항상 활성화
-          residentManagementMode={residentManagementMode}
-          carResidents={carResidents}
-          loadingCarResidents={loadingCarResidents}
-          onConnectResident={onConnectResident}
-          onDisconnectResident={onDisconnectResident}
+          userManagementMode={userManagementMode}
+          carUsers={carUsers}
+          loadingCarUsers={loadingCarUsers}
+          onConnectUser={onConnectUser}
+          onDisconnectUser={onDisconnectUser}
           onTogglePrimary={onTogglePrimary}
           onToggleAlarm={onToggleAlarm}
-          isResidentConnectedToSelectedCar={isResidentConnectedToSelectedCar}
+          isUserConnectedToSelectedCar={isUserConnectedToSelectedCar}
         />
         <InstanceCarList 
           carInstances={instance.carInstance}
           loading={loading}
           instanceId={instance.id}
           onDataChange={onDataChange}
-          onManageResidents={onManageResidents}
-          residentManagementMode={residentManagementMode}
+          onManageUsers={onManageUsers}
+          userManagementMode={userManagementMode}
           managedCarInstanceId={selectedCarInstanceId}
         />
       </div>

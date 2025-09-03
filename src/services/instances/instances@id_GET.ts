@@ -6,7 +6,7 @@ import {
 	InstanceVisitConfig,
 	ENUM_InstanceType,
 	CarInstanceWithCar,
-	ResidentInstanceWithResident,
+	UserInstanceWithUser,
 } from '@/types/instance';
 import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
@@ -14,7 +14,7 @@ import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 interface InstanceServiceConfigServerResponse {
 	id: number;
 	instance_id: number;
-	can_add_new_resident: boolean;
+	can_add_new_user: boolean;
 	is_common_entrance_subscribed: boolean;
 	is_temporary_access: boolean;
 	temp_car_limit: number;
@@ -32,7 +32,7 @@ interface InstanceVisitConfigServerResponse {
 	updated_at: string;
 }
 
-interface ResidentServerResponse {
+interface UserServerResponse {
 	id: number;
 	name: string;
 	phone: string;
@@ -46,16 +46,16 @@ interface ResidentServerResponse {
 	deleted_at?: string | null;
 }
 
-interface ResidentInstanceServerResponse {
+interface UserInstanceServerResponse {
 	id: number;
-	resident_id: number;
+	user_id: number;
 	instance_id: number;
 	memo?: string | null;
 	status: string;
 	created_at: string;
 	updated_at: string;
 	deleted_at?: string | null;
-	resident: ResidentServerResponse;
+	user: UserServerResponse;
 }
 
 interface CarServerResponse {
@@ -102,7 +102,7 @@ interface InstanceDetailServerResponse {
 	created_at: string;
 	updated_at: string;
 	deleted_at?: string | null;
-	resident_instance: ResidentInstanceServerResponse[];
+	user_instance: UserInstanceServerResponse[];
 	car_instance?: CarInstanceServerResponse[];
 	instance_service_config?: InstanceServiceConfigServerResponse | null;
 	instance_visit_config?: InstanceVisitConfigServerResponse | null;
@@ -116,7 +116,7 @@ function serviceConfigServerToClient(
 	return {
 		id: server.id,
 		instanceId: server.instance_id,
-		canAddNewResident: server.can_add_new_resident,
+		canAddNewUser: server.can_add_new_user,
 		isCommonEntranceSubscribed: server.is_common_entrance_subscribed,
 		isTemporaryAccess: server.is_temporary_access,
 		tempCarLimit: server.temp_car_limit,
@@ -139,7 +139,7 @@ function visitConfigServerToClient(
 	};
 }
 
-function residentServerToClient(server: ResidentServerResponse) {
+function userServerToClient(server: UserServerResponse) {
 	return {
 		id: server.id,
 		name: server.name,
@@ -155,19 +155,19 @@ function residentServerToClient(server: ResidentServerResponse) {
 	};
 }
 
-function residentInstanceServerToClient(
-	server: ResidentInstanceServerResponse
-): ResidentInstanceWithResident {
+function userInstanceServerToClient(
+	server: UserInstanceServerResponse
+): UserInstanceWithUser {
 	return {
 		id: server.id,
-		residentId: server.resident_id,
+		userId: server.user_id,
 		instanceId: server.instance_id,
 		memo: server.memo,
 		status: server.status,
 		createdAt: server.created_at,
 		updatedAt: server.updated_at,
 		deletedAt: server.deleted_at,
-		resident: residentServerToClient(server.resident),
+		user: userServerToClient(server.user),
 	};
 }
 
@@ -222,8 +222,7 @@ function serverToClient(server: InstanceDetailServerResponse): InstanceDetail {
 		createdAt: server.created_at,
 		updatedAt: server.updated_at,
 		deletedAt: server.deleted_at,
-		residentInstance:
-			server.resident_instance?.map(residentInstanceServerToClient) || [],
+		userInstance: server.user_instance?.map(userInstanceServerToClient) || [],
 		carInstance: server.car_instance?.map(carInstanceServerToClient) || [],
 		instanceServiceConfig: server.instance_service_config
 			? serviceConfigServerToClient(server.instance_service_config)
@@ -243,9 +242,13 @@ export async function getInstanceDetail(id: number) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status, 'getInstanceDetail'),
+		return {
+			success: false,
+			errorMsg: await getApiErrorMessage(
+				result,
+				response.status,
+				'getInstanceDetail'
+			),
 		};
 	}
 

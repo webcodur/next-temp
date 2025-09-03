@@ -7,7 +7,7 @@ import {
 	ENUM_InstanceType,
 	InstanceServiceConfig,
 	InstanceVisitConfig,
-	ResidentInstanceWithResident,
+	UserInstanceWithUser,
 	CarInstanceWithCar,
 } from '@/types/instance';
 import { getApiErrorMessage } from '@/utils/apiErrorMessages';
@@ -16,7 +16,7 @@ import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 interface InstanceServiceConfigServer {
 	id: number;
 	instance_id: number;
-	can_add_new_resident: boolean;
+	can_add_new_user: boolean;
 	is_common_entrance_subscribed: boolean;
 	is_temporary_access: boolean;
 	temp_car_limit: number;
@@ -36,7 +36,7 @@ interface InstanceVisitConfigServer {
 	deleted_at?: string | null;
 }
 
-interface ResidentServer {
+interface UserServer {
 	id: number;
 	name: string;
 	phone: string;
@@ -50,16 +50,16 @@ interface ResidentServer {
 	deleted_at?: string | null;
 }
 
-interface ResidentInstanceServer {
+interface UserInstanceServer {
 	id: number;
-	resident_id: number;
+	user_id: number;
 	instance_id: number;
 	memo?: string | null;
 	status: string;
 	created_at: string;
 	updated_at: string;
 	deleted_at?: string | null;
-	resident: ResidentServer;
+	user: UserServer;
 }
 
 interface CarServer {
@@ -106,11 +106,11 @@ interface InstanceServerResponse {
 	created_at: string;
 	updated_at: string;
 	deleted_at?: string | null;
-	resident_count?: number;
+	user_count?: number;
 	car_count?: number;
 	instance_service_config?: InstanceServiceConfigServer | null;
 	instance_visit_config?: InstanceVisitConfigServer | null;
-	resident_instance?: ResidentInstanceServer[];
+	user_instance?: UserInstanceServer[];
 	car_instance?: CarInstanceServer[];
 }
 
@@ -132,7 +132,7 @@ function convertInstanceServiceConfig(
 	return {
 		id: server.id,
 		instanceId: server.instance_id,
-		canAddNewResident: server.can_add_new_resident,
+		canAddNewUser: server.can_add_new_user,
 		isCommonEntranceSubscribed: server.is_common_entrance_subscribed,
 		isTemporaryAccess: server.is_temporary_access,
 		tempCarLimit: server.temp_car_limit,
@@ -157,7 +157,7 @@ function convertInstanceVisitConfig(
 	};
 }
 
-function convertResident(server: ResidentServer) {
+function convertUser(server: UserServer) {
 	return {
 		id: server.id,
 		name: server.name,
@@ -173,19 +173,17 @@ function convertResident(server: ResidentServer) {
 	};
 }
 
-function convertResidentInstance(
-	server: ResidentInstanceServer
-): ResidentInstanceWithResident {
+function convertUserInstance(server: UserInstanceServer): UserInstanceWithUser {
 	return {
 		id: server.id,
-		residentId: server.resident_id,
+		userId: server.user_id,
 		instanceId: server.instance_id,
 		memo: server.memo,
 		status: server.status,
 		createdAt: server.created_at,
 		updatedAt: server.updated_at,
 		deletedAt: server.deleted_at,
-		resident: convertResident(server.resident),
+		user: convertUser(server.user),
 	};
 }
 
@@ -238,7 +236,7 @@ function serverToClient(server: InstanceServerResponse): Instance {
 		createdAt: server.created_at,
 		updatedAt: server.updated_at,
 		deletedAt: server.deleted_at,
-		residentCount: server.resident_count,
+		userCount: server.user_count,
 		carCount: server.car_count,
 		instanceServiceConfig: server.instance_service_config
 			? convertInstanceServiceConfig(server.instance_service_config)
@@ -246,7 +244,7 @@ function serverToClient(server: InstanceServerResponse): Instance {
 		instanceVisitConfig: server.instance_visit_config
 			? convertInstanceVisitConfig(server.instance_visit_config)
 			: null,
-		residentInstance: server.resident_instance?.map(convertResidentInstance),
+		userInstance: server.user_instance?.map(convertUserInstance),
 		carInstance: server.car_instance?.map(convertCarInstance),
 	};
 }
@@ -292,9 +290,13 @@ export async function searchInstances(params?: SearchInstanceParams) {
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status, 'searchInstances'),
+		return {
+			success: false,
+			errorMsg: await getApiErrorMessage(
+				result,
+				response.status,
+				'searchInstances'
+			),
 		};
 	}
 

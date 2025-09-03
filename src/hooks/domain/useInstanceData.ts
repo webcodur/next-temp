@@ -8,7 +8,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getInstanceDetail } from '@/services/instances/instances@id_GET';
 import type { InstanceDetail } from '@/types/instance';
-import type { CarResidentWithDetails } from '@/types/car';
+import type { CarUserWithDetails } from '@/types/car';
 import type { InstanceFormData } from '@/hooks/ui-hooks/useInstanceForm';
 
 export function useInstanceData(
@@ -57,9 +57,7 @@ export function useInstanceData(
 				initializeFormRef.current(initialData);
 			} else {
 				console.error('인스턴스 조회 실패:', '데이터 조회에 실패했습니다.');
-				showErrorModalRef.current(
-					'세대 정보를 불러올 수 없습니다.'
-				);
+				showErrorModalRef.current('세대 정보를 불러올 수 없습니다.');
 				setTimeout(() => {
 					router.push('/parking/occupancy/instance');
 				}, 2000);
@@ -77,25 +75,23 @@ export function useInstanceData(
 	}, [instanceId]);
 
 	// 차량-주민 데이터 새로고침을 위한 헬퍼 함수
-	const createRefreshCarResidentsFunction = useCallback(
+	const createRefreshCarUsersFunction = useCallback(
 		(
 			selectedCarInstanceId: number | null,
-			refreshCarResidents: (
-				loader: () => Promise<CarResidentWithDetails[]>
+			refreshCarUsers: (
+				loader: () => Promise<CarUserWithDetails[]>
 			) => Promise<void>,
-			loadCarResidentsWithDetails: (
-				carId: number
-			) => Promise<CarResidentWithDetails[]>
+			loadCarUsersWithDetails: (carId: number) => Promise<CarUserWithDetails[]>
 		) => {
 			return async () => {
-				await refreshCarResidents(async () => {
+				await refreshCarUsers(async () => {
 					const currentInstance = await getInstanceDetail(instanceId);
 					if (currentInstance.success && currentInstance.data) {
 						const carInstance = currentInstance.data.carInstance?.find(
 							(ci) => ci.id === selectedCarInstanceId
 						);
 						if (carInstance && carInstance.car) {
-							return await loadCarResidentsWithDetails(carInstance.car.id);
+							return await loadCarUsersWithDetails(carInstance.car.id);
 						}
 					}
 					return [];
@@ -113,6 +109,6 @@ export function useInstanceData(
 
 		// 핸들러
 		loadInstanceData,
-		createRefreshCarResidentsFunction,
+		createRefreshCarUsersFunction,
 	};
 }

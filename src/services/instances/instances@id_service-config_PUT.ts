@@ -5,7 +5,7 @@ import { getApiErrorMessage } from '@/utils/apiErrorMessages';
 
 // #region 서버 타입 정의 (내부 사용)
 interface UpdateInstanceServiceConfigServerRequest {
-	can_add_new_resident?: boolean;
+	can_add_new_user?: boolean;
 	is_common_entrance_subscribed?: boolean;
 	is_temporary_access?: boolean;
 	temp_car_limit?: number;
@@ -17,7 +17,7 @@ function clientToServer(
 	client: UpdateInstanceServiceConfigRequest
 ): UpdateInstanceServiceConfigServerRequest {
 	return {
-		can_add_new_resident: client.canAddNewResident,
+		can_add_new_user: client.canAddNewUser,
 		is_common_entrance_subscribed: client.isCommonEntranceSubscribed,
 		is_temporary_access: client.isTemporaryAccess,
 		temp_car_limit: client.tempCarLimit,
@@ -38,9 +38,13 @@ export async function updateInstanceServiceConfig(
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status, 'updateInstanceServiceConfig'),
+		return {
+			success: false,
+			errorMsg: await getApiErrorMessage(
+				result,
+				response.status,
+				'updateInstanceServiceConfig'
+			),
 		};
 	}
 

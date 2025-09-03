@@ -25,7 +25,7 @@ interface ParkingDeviceServerResponse {
 	is_receipting?: string | null;
 	representative_phone?: string | null;
 	sequence: number;
-	resident_permission?: number | null;
+	user_permission?: number | null;
 	regular_permission?: number | null;
 	visitor_permission?: number | null;
 	temp_permission?: number | null;
@@ -63,7 +63,7 @@ function serverToClient(server: ParkingDeviceServerResponse): ParkingDevice {
 		isReceipting: server.is_receipting,
 		representativePhone: server.representative_phone,
 		sequence: server.sequence,
-		residentPermission: server.resident_permission,
+		userPermission: server.user_permission,
 		regularPermission: server.regular_permission,
 		visitorPermission: server.visitor_permission,
 		tempPermission: server.temp_permission,
@@ -91,9 +91,13 @@ export async function updateParkingDeviceStatus(
 	const result = await response.json();
 
 	if (!response.ok) {
-		return { 
-			success: false, 
-			errorMsg: await getApiErrorMessage(result, response.status, 'updateParkingDeviceStatus'),
+		return {
+			success: false,
+			errorMsg: await getApiErrorMessage(
+				result,
+				response.status,
+				'updateParkingDeviceStatus'
+			),
 		};
 	}
 

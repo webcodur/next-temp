@@ -32,23 +32,23 @@ export interface CarInstance {
   instance?: Instance;
 }
 
-export interface CarInstanceResident {
+export interface CarInstanceUser {
   id: number;
   carInstanceId: number;
-  residentId: number;
+  userId: number;
   carAlarm: boolean;
   isPrimary: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CarInstanceResidentDetail extends CarInstanceResident {
+export interface CarInstanceUserDetail extends CarInstanceUser {
   carInstance?: CarInstance;
-  resident?: Resident;
+  user?: User;
 }
 
-export interface CarResidentWithDetails {
-  id: number; // 주민 ID
+export interface CarUserWithDetails {
+  id: number; // 사용자 ID
   name: string;
   phone?: string | null;
   email?: string | null;
@@ -59,7 +59,7 @@ export interface CarResidentWithDetails {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
-  carInstanceResidentId: number; // 주민-차량 관계 ID
+  carInstanceUserId: number; // 사용자-차량 관계 ID
   instanceId: number; // 세대 ID
   address1Depth: string;
   address2Depth: string;
@@ -115,14 +115,14 @@ export interface UpdateCarInstanceRequest {
   carShareOnoff?: boolean;
 }
 
-export interface CreateCarInstanceResidentRequest {
+export interface CreateCarInstanceUserRequest {
   carInstanceId: number;
-  residentId: number;
+  userId: number;
   carAlarm?: boolean;
   isPrimary?: boolean;
 }
 
-export interface UpdateCarInstanceResidentRequest {
+export interface UpdateCarInstanceUserRequest {
   carAlarm?: boolean;
   isPrimary?: boolean;
 }
@@ -138,7 +138,7 @@ export interface SearchCarParams {
   yearFrom?: string;
   yearTo?: string;
   instanceId?: number;
-  residentId?: string;
+  userId?: string;
   status?: string;
 }
 
@@ -159,7 +159,7 @@ export interface PaginatedResponse<T> {
 
 // ... existing code ...
 export type CarListResponse = PaginatedResponse<CarWithInstance>;
-export type CarInstanceListResponse = PaginatedResponse<CarInstanceResidentDetail>;
+export type CarInstanceListResponse = PaginatedResponse<CarInstanceUserDetail>;
 // ... existing code ...
 
 // #endregion
@@ -170,7 +170,7 @@ interface Instance {
   [key: string]: unknown;
 }
 
-interface Resident {
+interface User {
   id: number;
   [key: string]: unknown;
 }

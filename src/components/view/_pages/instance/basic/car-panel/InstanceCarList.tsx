@@ -20,8 +20,8 @@ interface InstanceCarListProps {
   loading?: boolean;
   instanceId?: number;
   onDataChange?: () => void;
-  onManageResidents?: (carInstanceId: number) => void;
-  residentManagementMode?: boolean;
+  onManageUsers?: (carInstanceId: number) => void;
+  userManagementMode?: boolean;
   managedCarInstanceId?: number | null;
 }
 
@@ -30,8 +30,8 @@ export default function InstanceCarList({
   loading = false,
   instanceId,
   onDataChange,
-  onManageResidents,
-  residentManagementMode = false,
+  onManageUsers,
+  userManagementMode = false,
   managedCarInstanceId = null
 }: InstanceCarListProps) {
   const router = useRouter();
@@ -93,14 +93,14 @@ export default function InstanceCarList({
           if (carInstance && instanceId) {
             try {
               // 1단계: 해당 차량에 연결된 모든 주민 연결 정보 조회
-              const { getCarResidents } = await import('@/services/cars/cars@carId_residents_GET');
-              const carResidentsResult = await getCarResidents(confirmModal.carId, instanceId);
+              const { getCarUsers } = await import('@/services/cars/cars@carId_users_GET');
+              const carUsersResult = await getCarUsers(confirmModal.carId, instanceId);
               
-              if (carResidentsResult.success && carResidentsResult.data) {
+              if (carUsersResult.success && carUsersResult.data) {
                 // 2단계: 모든 차량-주민 연결 제거
-                const { deleteCarInstanceResident } = await import('@/services/cars/cars_residents@id_DELETE');
-                const deletePromises = carResidentsResult.data.map(resident => 
-                  deleteCarInstanceResident(resident.carInstanceResidentId)
+                const { deleteCarInstanceUser } = await import('@/services/cars/cars_users@id_DELETE');
+                const deletePromises = carUsersResult.data.map(user => 
+                  deleteCarInstanceUser(user.carInstanceUserId)
                 );
                 
                 // 모든 차량-주민 연결 삭제 (실패해도 계속 진행)
@@ -276,12 +276,12 @@ export default function InstanceCarList({
               <CarCardItem
                 key={carInstance.id}
                 carInstance={carInstance}
-                residentManagementMode={residentManagementMode}
+                userManagementMode={userManagementMode}
                 managedCarInstanceId={managedCarInstanceId}
                 onDetailClick={() => handleDetailClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
                 onExcludeClick={() => handleExcludeClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
                 onDeleteClick={() => handleDeleteClick(carInstance.car?.id || 0, carInstance.car?.carNumber || '')}
-                onManageResidents={onManageResidents}
+                onManageUsers={onManageUsers}
               />
             ))}
           </div>

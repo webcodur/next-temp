@@ -132,13 +132,13 @@ export const sitemapData: NodeSitemapData[] = [
 				description: '입주민의 개인정보와 거주 관련 사항을 관리합니다.',
 				pages: [
 					{
-						name: '주민 관리',
-						href: '/parking/occupancy/resident',
-						description: '입주민의 기본 정보와 거주 상태를 관리합니다.',
+						name: '사용자 관리',
+						href: '/parking/occupancy/user',
+						description: '사용자의 기본 정보와 거주 상태를 관리합니다.',
 						detailTabs: [
 							{
 								name: '기본 정보',
-								description: '입주민 성명, 연락처, 신분 등 기본 정보',
+								description: '사용자 성명, 연락처, 신분 등 기본 정보',
 							},
 							{
 								name: '거주 정보',
@@ -174,7 +174,7 @@ export const sitemapData: NodeSitemapData[] = [
 								description: '차량과 연결된 세대 정보 관리',
 							},
 							{
-								name: '주민 연결',
+								name: '사용자 연결',
 								description: '차량 소유자와 사용자 연결 관리',
 							},
 						],

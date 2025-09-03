@@ -45,7 +45,7 @@ export default function DeviceCreatePage() {
   
   // 권한 설정 상태
   const [permissionData, setPermissionData] = useState({
-    residentPermission: true,
+    userPermission: true,
     regularPermission: true,
     visitorPermission: false,
     tempPermission: false,
@@ -94,7 +94,7 @@ export default function DeviceCreatePage() {
         representativePhone: formData.representativePhone || undefined,
         sequence: parseInt(formData.sequence) || undefined,
         // 권한 데이터 추가
-        residentPermission: permissionData.residentPermission ? 1 : 0,
+        userPermission: permissionData.userPermission ? 1 : 0,
         regularPermission: permissionData.regularPermission ? 1 : 0,
         visitorPermission: permissionData.visitorPermission ? 1 : 0,
         tempPermission: permissionData.tempPermission ? 1 : 0,

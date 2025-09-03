@@ -15,7 +15,7 @@ export interface ParkingDevice {
   isReceipting?: string | null;
   representativePhone?: string | null;
   sequence: number;
-  residentPermission?: number | null;
+  userPermission?: number | null;
   regularPermission?: number | null;
   visitorPermission?: number | null;
   tempPermission?: number | null;
@@ -42,7 +42,7 @@ export interface CreateParkingDeviceRequest {
   isReceipting?: string;
   representativePhone?: string;
   sequence?: number;
-  residentPermission?: number;
+  userPermission?: number;
   regularPermission?: number;
   visitorPermission?: number;
   tempPermission?: number;
@@ -65,7 +65,7 @@ export interface UpdateParkingDeviceRequest {
   isReceipting?: string;
   representativePhone?: string;
   sequence?: number;
-  residentPermission?: number;
+  userPermission?: number;
   regularPermission?: number;
   visitorPermission?: number;
   tempPermission?: number;
@@ -104,7 +104,7 @@ export interface UpdateParkingDeviceNetworkRequest {
 }
 
 export interface UpdateParkingDevicePermissionsRequest {
-  residentPermission?: number;
+  userPermission?: number;
   regularPermission?: number;
   visitorPermission?: number;
   tempPermission?: number;
@@ -205,7 +205,7 @@ export interface ParkingDeviceHistoryListResponse {
 
 // #region 차량 유형 상수
 export type VehicleType = 
-  | 'resident' 
+  | 'user' 
   | 'regular' 
   | 'visitor' 
   | 'temp' 

@@ -19,7 +19,7 @@ export type CarViolationType =
 export type ViolationReporterType = 
   | 'SYSTEM'
   | 'ADMIN'
-  | 'RESIDENT'
+  | 'USER'
   | 'SECURITY';
 
 export type ViolationStatus = 

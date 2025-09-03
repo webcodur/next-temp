@@ -21,16 +21,16 @@ export const API_ERRORS = {
   'createCar': '차량 생성 실패',
   'updateCar': '차량 정보 수정 실패',
   'deleteCar': '차량 삭제 실패',
-  'getCarResidents': '차량-주민 관계 조회 실패',
+  'getCarUsers': '차량-사용자 관계 조회 실패',
   'searchCarInstances': '차량-인스턴스 연결 조회 실패',
   'getCarInstanceDetail': '인스턴스 차량 상세 조회 실패',
   'createCarInstance': '차량-인스턴스 연결 실패',
   'updateCarInstance': '차량-인스턴스 연결 수정 실패',
   'deleteCarInstance': '차량-인스턴스 연결 삭제 실패',
-  'getCarInstanceResidentDetail': '차량-주민 연결 상세 조회 실패',
-  'createCarInstanceResident': '차량-주민 연결 생성 실패',
-  'updateCarInstanceResident': '차량-주민 연결 수정 실패',
-  'deleteCarInstanceResident': '차량-주민 연결 삭제 실패',
+  'getCarInstanceUserDetail': '차량-사용자 연결 상세 조회 실패',
+  'createCarInstanceUser': '차량-사용자 연결 생성 실패',
+  'updateCarInstanceUser': '차량-사용자 연결 수정 실패',
+  'deleteCarInstanceUser': '차량-사용자 연결 삭제 실패',
 
   // Blacklist
   'searchBlacklists': '블랙리스트 목록 조회 실패',
@@ -79,16 +79,16 @@ export const API_ERRORS = {
   'deleteAllBlockedIp': '모든 IP 차단 해제 실패',
   'searchBlockHistory': '차단 내역 검색 실패',
 
-  // Residents
-  'searchResidents': '주민 목록 조회 실패',
-  'getResidentDetail': '주민 상세 조회 실패',
-  'updateResident': '주민 수정 실패',
-  'deleteResident': '주민 삭제 실패',
-  'getResidentHistory': '주민 인스턴스 이동 이력 조회 실패',
-  'createResidentInstance': '주민-인스턴스 관계 생성 실패',
-  'updateResidentInstance': '주민-인스턴스 관계 수정 실패',
-  'deleteResidentInstance': '주민-인스턴스 관계 삭제 실패',
-  'moveResident': '주민 인스턴스 이동 실패',
+  // Users
+  'searchUsers': '사용자 목록 조회 실패',
+  'getUserDetail': '사용자 상세 조회 실패',
+  'updateUser': '사용자 수정 실패',
+  'deleteUser': '사용자 삭제 실패',
+  'getUserHistory': '사용자 인스턴스 이동 이력 조회 실패',
+  'createUserInstance': '사용자-인스턴스 관계 생성 실패',
+  'updateUserInstance': '사용자-인스턴스 관계 수정 실패',
+  'deleteUserInstance': '사용자-인스턴스 관계 삭제 실패',
+  'moveUser': '사용자 인스턴스 이동 실패',
 
   // Violations
   'searchViolations': '위반 목록 조회 실패',

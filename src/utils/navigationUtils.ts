@@ -64,7 +64,7 @@ export function getListPageTitle(pathname: string): string {
     'device': '차단기',
     'car': '차량',
     'instance': '세대',
-    'resident': '주민', 
+    'user': '사용자', 
     'blacklist': '블랙리스트',
     'history': '내역',
     'blacklist-config': '블랙리스트 설정',

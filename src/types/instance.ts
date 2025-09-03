@@ -16,11 +16,11 @@ export interface Instance {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
-  residentCount?: number;
+  userCount?: number;
   carCount?: number;
   instanceServiceConfig?: InstanceServiceConfig | null;
   instanceVisitConfig?: InstanceVisitConfig | null;
-  residentInstance?: ResidentInstanceWithResident[];
+  userInstance?: UserInstanceWithUser[];
   carInstance?: CarInstanceWithCar[];
 }
 
@@ -60,7 +60,7 @@ export interface SearchInstanceParams {
 export interface InstanceServiceConfig {
   id: number;
   instanceId: number;
-  canAddNewResident: boolean;
+  canAddNewUser: boolean;
   isCommonEntranceSubscribed: boolean;
   isTemporaryAccess: boolean;
   tempCarLimit: number;
@@ -71,7 +71,7 @@ export interface InstanceServiceConfig {
 
 // 인스턴스 서비스 설정 수정
 export interface UpdateInstanceServiceConfigRequest {
-  canAddNewResident?: boolean;
+  canAddNewUser?: boolean;
   isCommonEntranceSubscribed?: boolean;
   isTemporaryAccess?: boolean;
   tempCarLimit?: number;
@@ -96,17 +96,17 @@ export interface UpdateInstanceVisitConfigRequest {
   visitRequestLimit?: number;
 }
 
-// 주민 인스턴스 관계 (주민 정보 포함)
-export interface ResidentInstanceWithResident {
+// 사용자 인스턴스 관계 (사용자 정보 포함)
+export interface UserInstanceWithUser {
   id: number;
-  residentId: number;
+  userId: number;
   instanceId: number;
   memo?: string | null;
   status: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
-  resident: {
+  user: {
     id: number;
     name: string;
     phone: string;

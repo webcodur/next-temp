@@ -14,7 +14,7 @@ import type { CarInstanceWithCar } from '@/types/instance';
 // #region 타입 및 인터페이스
 interface CarCardItemProps {
   carInstance: CarInstanceWithCar;
-  residentManagementMode: boolean;
+  userManagementMode: boolean;
   managedCarInstanceId: number | null;
   
   // 기본 액션 핸들러
@@ -23,24 +23,24 @@ interface CarCardItemProps {
   onDeleteClick: (carId: number, carNumber: string) => void;
   
   // 관리 모드 핸들러
-  onManageResidents?: (carInstanceId: number) => void;
+  onManageUsers?: (carInstanceId: number) => void;
 }
 // #endregion
 
 export default function CarCardItem({
   carInstance,
-  residentManagementMode,
+  userManagementMode,
   managedCarInstanceId,
   onDetailClick,
   onExcludeClick,
   onDeleteClick,
-  onManageResidents
+  onManageUsers
 }: CarCardItemProps) {
 
   // #region 내부 핸들러
-  const handleManageResidentsClick = (carInstanceId: number) => {
-    if (onManageResidents) {
-      onManageResidents(carInstanceId);
+  const handleManageUsersClick = (carInstanceId: number) => {
+    if (onManageUsers) {
+      onManageUsers(carInstanceId);
     }
   };
   // #endregion
@@ -101,12 +101,12 @@ export default function CarCardItem({
   );
 
   // 커스텀 액션 - 관리 모드 버튼
-  const isCurrentlyManaged = residentManagementMode && managedCarInstanceId === carInstance.id;
-  const customActions: CustomAction[] = onManageResidents ? [{
+  const isCurrentlyManaged = userManagementMode && managedCarInstanceId === carInstance.id;
+  const customActions: CustomAction[] = onManageUsers ? [{
     icon: isCurrentlyManaged 
       ? <Users className="text-white" />
       : <Users className="text-gray-700" />,
-    onClick: () => handleManageResidentsClick(carInstance.id),
+    onClick: () => handleManageUsersClick(carInstance.id),
     title: isCurrentlyManaged ? '관리 모드 종료' : '관리 모드',
     hoverClass: isCurrentlyManaged 
       ? 'bg-red-500 text-white shadow-lg ring-2 ring-red-200 hover:bg-red-600'

@@ -44,8 +44,8 @@ export interface DisabledInstance {
 
 export interface ColumnConfiguration {
   preset?: 'basic' | 'detailed' | 'compact';
-  includeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'residentCount' | 'carCount' | 'memo')[];
-  excludeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'residentCount' | 'carCount' | 'memo')[];
+  includeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'userCount' | 'carCount' | 'memo')[];
+  excludeColumns?: ('id' | 'dongHosu' | 'name' | 'ownerName' | 'instanceType' | 'userCount' | 'carCount' | 'memo')[];
   customColumns?: BaseTableColumn<Instance>[];
   selectColumnConfig?: {
     disabled?: boolean;
@@ -204,12 +204,12 @@ export default function InstanceSearchSection({
           return typeMap[item.instanceType as keyof typeof typeMap] || item.instanceType;
         },
       },
-      residentCount: {
-        key: 'residentCount',
+      userCount: {
+        key: 'userCount',
         header: '주민',
         minWidth: '100px',
         align: 'center',
-        cell: (item: Instance) => `${item.residentCount ?? 0}명`,
+        cell: (item: Instance) => `${item.userCount ?? 0}명`,
       },
       carCount: {
         key: 'carCount',

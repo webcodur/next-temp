@@ -10,7 +10,7 @@ import { updateParkingDevicePermissions } from '@/services/devices/devices@id_pe
 import { ParkingDevice } from '@/types/device';
 
 interface PermissionConfigData {
-  residentPermission: boolean;
+  userPermission: boolean;
   regularPermission: boolean;
   visitorPermission: boolean;
   tempPermission: boolean;
@@ -33,7 +33,7 @@ export interface DevicePermissionConfigSectionRef {
 }
 
 const PERMISSION_LABELS = {
-  residentPermission: '주민 출입',
+  userPermission: '주민 출입',
   regularPermission: '정기 출입',
   visitorPermission: '방문 출입',
   tempPermission: '임시 출입',
@@ -52,7 +52,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
 }, ref) => {
   // #region 상태 관리
   const defaultPermissions: PermissionConfigData = useMemo(() => ({
-    residentPermission: true,
+    userPermission: true,
     regularPermission: true,
     visitorPermission: false,
     tempPermission: false,
@@ -66,7 +66,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
   const initialData = mode === 'create' 
     ? defaultPermissions
     : {
-        residentPermission: device?.residentPermission === 1,
+        userPermission: device?.userPermission === 1,
         regularPermission: device?.regularPermission === 1,
         visitorPermission: device?.visitorPermission === 1,
         tempPermission: device?.tempPermission === 1,
@@ -141,7 +141,7 @@ const DevicePermissionConfigSection = forwardRef<DevicePermissionConfigSectionRe
 
     try {
       const updateData = {
-        residentPermission: formData.residentPermission ? 1 : 0,
+        userPermission: formData.userPermission ? 1 : 0,
         regularPermission: formData.regularPermission ? 1 : 0,
         visitorPermission: formData.visitorPermission ? 1 : 0,
         tempPermission: formData.tempPermission ? 1 : 0,

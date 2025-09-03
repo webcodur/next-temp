@@ -1,0 +1,10 @@
+// 사용자 관리 API 서비스 내보내기
+export { searchUsers } from './users$_GET';
+export { getUserDetail } from './users@id_GET';
+export { updateUser } from './users@id_PATCH';
+export { deleteUser } from './users@id_DELETE';
+export { moveUser } from './users_move_POST';
+export { createUserInstance } from './users_instances_POST';
+export { updateUserInstance } from './users_instances@id_PATCH';
+export { deleteUserInstance } from './users_instances@id_DELETE';
+export { getUserHistory } from './users@id_history_GET';

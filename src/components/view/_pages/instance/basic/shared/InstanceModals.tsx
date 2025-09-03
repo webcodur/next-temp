@@ -9,14 +9,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import type { CarResidentWithDetails } from '@/types/car';
+import type { CarUserWithDetails } from '@/types/car';
 
 // #region 타입 및 인터페이스
 interface PrimaryCarTransferModal {
   isOpen: boolean;
-  currentPrimaryResident: CarResidentWithDetails | null;
-  newPrimaryResidentId: number | null;
-  newPrimaryResidentName: string;
+  currentPrimaryUser: CarUserWithDetails | null;
+  newPrimaryUserId: number | null;
+  newPrimaryUserName: string;
 }
 
 interface InstanceModalsProps {
@@ -76,8 +76,8 @@ export default function InstanceModals({
         <div className="space-y-4">
           <div className="text-center">
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>현재 <strong className="text-foreground">{primaryCarTransferModal.currentPrimaryResident?.name}님</strong>이 차량 소유자입니다.</p>
-              <p><strong className="text-foreground">{primaryCarTransferModal.newPrimaryResidentName}님</strong>으로 차량 소유자을 전환하시겠습니까?</p>
+              <p>현재 <strong className="text-foreground">{primaryCarTransferModal.currentPrimaryUser?.name}님</strong>이 차량 소유자입니다.</p>
+              <p><strong className="text-foreground">{primaryCarTransferModal.newPrimaryUserName}님</strong>으로 차량 소유자을 전환하시겠습니까?</p>
               <div className="p-2 mt-3 text-sm text-orange-800 bg-orange-50 rounded-md border border-orange-200">
                 <p>⚠️ 기존 차량 소유자 설정이 해제되고, 새로운 주민에게 적용됩니다.</p>
               </div>

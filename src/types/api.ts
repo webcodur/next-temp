@@ -237,8 +237,8 @@ export interface AssignAdminToParkingLotRequest {
 }
 // #endregion
 
-// #region 주민 관련 타입
-export interface Resident {
+// #region 사용자 관련 타입
+export interface User {
   id: number;
   name: string;
   phone?: string;
@@ -250,10 +250,10 @@ export interface Resident {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  // residentHouseholds?: unknown[];
+  // userHouseholds?: unknown[];
 }
 
-export interface CreateResidentRequest {
+export interface CreateUserRequest {
   name: string;
   phone?: string;
   email?: string;
@@ -263,7 +263,7 @@ export interface CreateResidentRequest {
   memo?: string;
 }
 
-export interface UpdateResidentRequest {
+export interface UpdateUserRequest {
   name?: string;
   phone?: string;
   email?: string;
@@ -273,7 +273,7 @@ export interface UpdateResidentRequest {
   memo?: string;
 }
 
-export interface SearchResidentRequest {
+export interface SearchUserRequest {
   name?: string;
   phone?: string;
   email?: string;
