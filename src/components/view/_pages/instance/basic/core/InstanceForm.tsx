@@ -7,6 +7,7 @@ import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPan
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { SimpleDropdown } from '@/components/ui/ui-input/simple-input/SimpleDropdown';
 import { SimpleDatePicker } from '@/components/ui/ui-input/simple-input/time/SimpleDatePicker';
+import { SimpleAddressInput } from '@/components/ui/ui-input/simple-input/SimpleAddressInput';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import { CrudButton } from '@/components/ui/ui-input/crud-button/CrudButton';
 import { InstanceDetail, ENUM_InstanceType } from '@/types/instance';
@@ -243,12 +244,11 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       label: '기타 주소 정보',
       rules: '기타 주소 정보',
       component: (
-        <SimpleTextInput
+        <SimpleAddressInput
           value={data.address3Depth}
           onChange={(value) => handleFieldChange('address3Depth', value)}
           placeholder="기타 주소 정보"
           disabled={isReadOnly}
-          autocomplete="off"
           validationRule={getValidationRule('address', false)}
         />
       )
