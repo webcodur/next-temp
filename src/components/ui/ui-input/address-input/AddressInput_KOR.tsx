@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapPin, X, Search } from 'lucide-react';
+import { CoordinatesDisplay } from './CoordinatesDisplay';
+import { CountrySelector } from './CountrySelector';
 import type { AddressInputProps_KOR, DaumAddressData, AddressData, Coordinates } from './types';
 
 /**
@@ -12,9 +14,9 @@ import type { AddressInputProps_KOR, DaumAddressData, AddressData, Coordinates }
  * - 영문 주소 지원
  */
 export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
-  placeholder = '주소를 검색하세요',
   disabled = false,
   className = '',
+  colorVariant = 'primary',
   value,
   onChange,
   onClear,
@@ -147,9 +149,12 @@ export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
       onclose: () => {
         setIsLoading(false);
       },
+      width: 570,
+      height: 420,
       ...popupOptions
     });
     
+    // 브라우저 기본 중앙 배치 사용 (가장 안정적)
     popup.open();
   }, [isScriptLoaded, disabled, handleAddressComplete, popupOptions]);
 
@@ -221,8 +226,31 @@ export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
   const currentAddress = getCurrentAddressText();
   const hasAddress = Boolean(currentAddress);
 
+  // colorVariant에 따른 색상 클래스 생성
+  const getColorClasses = () => {
+    const baseColor = colorVariant === 'primary' ? 'primary' : 'secondary';
+    return {
+      ring: `focus-within:ring-${baseColor}/20`,
+      border: `focus:border-${baseColor}`,
+      icon: `text-${baseColor}`,
+      spinner: `border-${baseColor}/30 border-t-${baseColor}`,
+    };
+  };
+  
+  const colorClasses = getColorClasses();
+
   return (
     <div className={`space-y-3 ${className}`}>
+      {/* 국가 선택 (한국 고정) */}
+      <CountrySelector
+        value="KR"
+        onChange={() => {}} // 한국 고정이므로 변경 불가
+        disabled={disabled}
+        colorVariant={colorVariant}
+        fixedCountry="KR"
+        enableCountryApi={true}
+      />
+      
       {/* 주소 검색 영역 */}
       <div className="space-y-2">
         {/* 기본 주소 표시/검색 버튼 */}
@@ -234,19 +262,19 @@ export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
                 ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
                 : hasAddress 
                   ? 'bg-background border-border cursor-pointer hover:border-border/80'
-                  : 'bg-background border-border cursor-pointer hover:border-border/80 focus-within:ring-2 focus-within:ring-primary/20'
+                  : `bg-background border-border cursor-pointer hover:border-border/80 focus-within:ring-2 ${colorClasses.ring}`
               }
             `}
             onClick={embedMode ? toggleEmbed : openPopup}
           >
-            <MapPin className={`w-4 h-4 mr-2 ${disabled ? 'text-muted-foreground' : 'text-primary'}`} />
+            <MapPin className={`w-4 h-4 mr-2 ${disabled ? 'text-muted-foreground' : colorClasses.icon}`} />
             
             <span className={`flex-1 ${hasAddress ? 'text-foreground' : 'text-muted-foreground'}`}>
-              {hasAddress ? currentAddress : placeholder}
+              {hasAddress ? currentAddress : "주소를 검색하세요"}
             </span>
             
             {isLoading && (
-              <div className="ml-2 w-4 h-4 rounded-full border-2 animate-spin border-primary/30 border-t-primary" />
+              <div className={`ml-2 w-4 h-4 rounded-full border-2 animate-spin ${colorClasses.spinner}`} />
             )}
             
             {!isLoading && !disabled && (
@@ -282,7 +310,24 @@ export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
         {/* 선택된 기본 주소 표시 및 상세주소 입력 */}
         {showDetailAddress && hasAddress && (
           <div className="p-4 rounded-lg border bg-muted/30">
-            <div className="flex gap-3">
+            <div className="space-y-2">
+              {/* 기본 주소 정보 및 좌표 */}
+              <div className="flex gap-2 items-center text-sm font-medium text-foreground">
+                <span>선택된 주소</span>
+                {value?.coordinates && (
+                  <CoordinatesDisplay
+                    coordinates={value.coordinates}
+                    colorVariant={colorVariant}
+                    compact={true}
+                  />
+                )}
+              </div>
+              
+              {/* 기본 주소 표시 */}
+              <div className="text-xs text-muted-foreground">
+                {getCurrentAddressText()}
+              </div>
+              
               {/* 상세주소 입력 */}
               <input
                 ref={detailInputRef}
@@ -292,10 +337,10 @@ export const AddressInput_KOR: React.FC<AddressInputProps_KOR> = ({
                 placeholder={detailAddressPlaceholder}
                 disabled={disabled}
                 className={`
-                  flex-1 px-3 py-2.5 text-sm rounded-lg border transition-colors
+                  w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
                   ${disabled 
                     ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                    : 'bg-background border-border focus:ring-2 focus:ring-primary/20 focus:border-primary'
+                    : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
                   }
                 `}
               />

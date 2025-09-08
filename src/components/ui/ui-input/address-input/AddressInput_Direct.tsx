@@ -20,6 +20,7 @@ export const AddressInput_Direct: React.FC<AddressInput_DirectProps> = ({
   placeholder = '주소를 직접 입력하세요',
   disabled = false,
   className = '',
+  colorVariant = 'primary',
   value,
   onChange,
   onClear,
@@ -80,6 +81,17 @@ export const AddressInput_Direct: React.FC<AddressInput_DirectProps> = ({
   const hasAddress = addressFields.fullAddress.trim() !== '';
   const effectivePlaceholder = addressPlaceholder || placeholder;
 
+  // colorVariant에 따른 색상 클래스 생성
+  const getColorClasses = () => {
+    const baseColor = colorVariant === 'primary' ? 'primary' : 'secondary';
+    return {
+      ring: `focus:ring-${baseColor}/20`,
+      border: `focus:border-${baseColor}`,
+    };
+  };
+  
+  const colorClasses = getColorClasses();
+
   return (
     <div className={`relative ${className}`}>
       <MapPin className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 text-muted-foreground" />
@@ -94,7 +106,7 @@ export const AddressInput_Direct: React.FC<AddressInput_DirectProps> = ({
           w-full pl-9 pr-9 py-2.5 text-sm rounded-lg border transition-colors
           ${disabled 
             ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-            : 'bg-background border-border focus:ring-2 focus:ring-primary/20 focus:border-primary'
+            : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
           }
         `}
       />

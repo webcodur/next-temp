@@ -23,7 +23,6 @@ import type {
  */
 export const AddressInput: React.FC<AddressInputProps> = ({
   label = '주소',
-  placeholder,
   disabled = false,
   className = '',
   colorVariant = 'primary',
@@ -74,15 +73,6 @@ export const AddressInput: React.FC<AddressInputProps> = ({
   const handleGlobalAddressChange = useCallback((address: GlobalAddressData | null) => {
     handleAddressChange(address);
   }, [handleAddressChange]);
-
-  // 지역별 플레이스홀더 생성
-  const getPlaceholder = (): string => {
-    if (placeholder) return placeholder;
-    
-    return currentRegion === 'korea' 
-      ? '주소를 검색하세요'
-      : 'Enter your address';
-  };
 
   // 지역별 레이블 생성
   const getLabel = (): string => {
@@ -154,7 +144,6 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       {currentRegion === 'korea' ? (
         <AddressInput_KOR
           label={getLabel()}
-          placeholder={getPlaceholder()}
           disabled={disabled}
           colorVariant={colorVariant}
           value={value && 'rawData' in value ? value as AddressData : null}
@@ -166,7 +155,6 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       ) : (
         <AddressInput_Global
           label={getLabel()}
-          placeholder={getPlaceholder()}
           disabled={disabled}
           colorVariant={colorVariant}
           value={value && !('rawData' in value) ? value as GlobalAddressData : null}

@@ -77,7 +77,8 @@ export interface GlobalAddressData {
   country: string;
   state?: string;
   city?: string;
-  street?: string;
+  street?: string; // Address Line 1
+  addressLine2?: string; // Address Line 2 (아파트, 층, 호실 등)
   buildingNumber?: string;
   
   // 좌표 정보
@@ -173,10 +174,13 @@ export interface AddressInputProps_Global extends AddressInputBaseProps {
   countries?: string[]; // 지원 국가 목록 (필터링용)
   defaultCountry?: string;
   enableCountryApi?: boolean; // REST Countries API 사용 여부 (기본: true)
+  enablePlacesAPI?: boolean; // Google Places API 사용 여부 (기본: true)
   
   // UI 옵션
   showClearButton?: boolean;
   showCountrySelector?: boolean;
+  showAddressLine2?: boolean; // Address Line 2 입력 필드 표시 (기본: true)
+  addressLine2Placeholder?: string; // Address Line 2 플레이스홀더
 }
 
 // 직접입력 주소 입력 컴포넌트 Props

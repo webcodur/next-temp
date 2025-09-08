@@ -5,7 +5,8 @@
 */ // ------------------------------
 
 import React, { useState, useRef } from 'react';
-import { MapPin, X } from 'lucide-react';
+import { MapPin, X, Globe, Keyboard } from 'lucide-react';
+import Image from 'next/image';
 
 import type { ValidationRule } from '@/utils/validation';
 import { validateField } from '@/utils/validation';
@@ -13,6 +14,7 @@ import { validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
+import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 
 import { AddressInput_KOR } from '../address-input/AddressInput_KOR';
 import { AddressInput_Global } from '../address-input/AddressInput_Global';
@@ -48,7 +50,6 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
   label = '',
   value = '',
   onChange,
-  placeholder = '클릭하여 주소를 입력하세요',
   disabled = false,
   className = '',
   validationRule,
@@ -76,6 +77,10 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
   const handleContainerClick = () => {
     if (disabled) return;
     setAddressModalOpen(true);
+    // 모달 열릴 때 기본 탭을 한국으로 설정
+    if (!selectedRegion) {
+      setSelectedRegion('korea');
+    }
     inputRef.current?.focus();
   };
 
@@ -92,6 +97,8 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
   // 지역 선택 핸들러
   const handleRegionSelect = (region: ENUM_Region) => {
     setSelectedRegion(region);
+    // 지역이 변경되면 임시 주소 초기화
+    setTempAddress(null);
   };
 
   // 모달 닫기 핸들러
@@ -191,7 +198,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
           readOnly
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={placeholder}
+          placeholder="주소를 입력하세요"
           disabled={disabled}
           className={`w-full pl-10 pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start cursor-pointer ${disabled ? 'cursor-not-allowed' : ''}`}
         />
@@ -216,57 +223,35 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
         size="lg"
       >
         <div className="space-y-6">
-          {/* 지역 선택 */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium text-foreground">
-              주소 입력 방식 선택
-            </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <button
-                onClick={() => handleRegionSelect('korea')}
-                className={`p-4 text-start rounded-lg border transition-colors ${
-                  selectedRegion === 'korea'
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border hover:bg-muted'
-                }`}
-              >
-                <div className="font-medium">한국 주소</div>
-                <div className="text-sm text-muted-foreground">다음 우편번호 서비스</div>
-              </button>
-              
-              <button
-                onClick={() => handleRegionSelect('global')}
-                className={`p-4 text-start rounded-lg border transition-colors ${
-                  selectedRegion === 'global'
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border hover:bg-muted'
-                }`}
-              >
-                <div className="font-medium">해외 주소</div>
-                <div className="text-sm text-muted-foreground">국가별 구조화 입력</div>
-              </button>
-              
-              <button
-                onClick={() => handleRegionSelect('direct')}
-                className={`p-4 text-start rounded-lg border transition-colors ${
-                  selectedRegion === 'direct'
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border hover:bg-muted'
-                }`}
-              >
-                <div className="font-medium">직접 입력</div>
-                <div className="text-sm text-muted-foreground">자유 텍스트 입력</div>
-              </button>
-            </div>
-          </div>
+          {/* 지역 선택 탭 */}
+          <Tabs
+            tabs={[
+              {
+                id: 'korea',
+                label: '한국 주소',
+                icon: <Image src="/icons/flags/KR.svg" alt="한국 국기" width={16} height={16} className="w-4 h-4" />
+              },
+              {
+                id: 'global',
+                label: 'global address',
+                icon: <Globe className="w-4 h-4" />
+              },
+              {
+                id: 'direct',
+                label: '직접 입력',
+                icon: <Keyboard className="w-4 h-4" />
+              }
+            ]}
+            activeId={selectedRegion || 'korea'}
+            onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}
+          />
 
           {/* 주소 입력 영역 */}
           {selectedRegion && (
-            <div className="space-y-3">
-              <div className="pt-4 border-t">
+            <div className="space-y-6">
+              <div>
                 {selectedRegion === 'korea' && (
                   <AddressInput_KOR
-                    placeholder="주소를 검색하세요"
                     colorVariant={colorVariant}
                     value={tempAddress && 'region' in tempAddress ? tempAddress as AddressData : null}
                     onChange={handleTempAddressChange}
@@ -276,7 +261,6 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                 
                 {selectedRegion === 'global' && (
                   <AddressInput_Global
-                    placeholder="주소를 입력하세요"
                     colorVariant={colorVariant}
                     value={tempAddress && 'country' in tempAddress ? tempAddress as GlobalAddressData : null}
                     onChange={handleTempAddressChange}
@@ -285,33 +269,30 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                 
                 {selectedRegion === 'direct' && (
                   <AddressInput_Direct
-                    placeholder="주소를 직접 입력하세요"
                     colorVariant={colorVariant}
                     value={tempAddress && !('region' in tempAddress) && !('country' in tempAddress) ? tempAddress as DirectAddressData : null}
                     onChange={handleTempAddressChange}
                   />
                 )}
               </div>
-            </div>
-          )}
-          
-          {/* 하단 버튼 */}
-          {selectedRegion && (
-            <div className="flex gap-3 justify-end pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={handleModalClose}
-                disabled={disabled}
-              >
-                취소
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleConfirmAddress}
-                disabled={disabled || !tempAddress}
-              >
-                확정
-              </Button>
+              
+              {/* 하단 버튼 */}
+              <div className="flex gap-3 justify-end pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={handleModalClose}
+                  disabled={disabled}
+                >
+                  취소
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleConfirmAddress}
+                  disabled={disabled || !tempAddress}
+                >
+                  확정
+                </Button>
+              </div>
             </div>
           )}
         </div>
