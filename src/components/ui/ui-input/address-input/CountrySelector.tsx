@@ -7,7 +7,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Globe, Loader2, RefreshCw, ChevronDown, Check, Search, X } from 'lucide-react';
 
-import { useCountries, type Country } from './hooks/useCountries';
+import { useCountries } from './hooks/useCountries';
 
 // #region 타입 정의
 interface CountrySelectorProps {
