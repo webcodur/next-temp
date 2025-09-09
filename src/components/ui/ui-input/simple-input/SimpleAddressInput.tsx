@@ -230,81 +230,88 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
         onClose={handleModalClose}
         title="주소 입력"
         size="lg"
+        className='bg-gray-300'
       >
-        <div className="space-y-6">
+        <div>
           {/* 지역 선택 탭 */}
-          <Tabs
-            tabs={[
-              {
-                id: 'korea',
-                label: '한국 주소',
-                icon: <Image src="/icons/flags/KR.svg" alt="한국 국기" width={16} height={16} className="w-4 h-4" />
-              },
-              {
-                id: 'global',
-                label: 'global address',
-                icon: <Globe className="w-4 h-4" />
-              },
-              {
-                id: 'direct',
-                label: '직접 입력',
-                icon: <Keyboard className="w-4 h-4" />
-              }
-            ]}
-            activeId={selectedRegion || 'korea'}
-            onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}
-          />
+          <div>
+            <Tabs
+              tabs={[
+                {
+                  id: 'korea',
+                  label: '한국 주소',
+                  icon: <Image src="/icons/flags/KR.svg" alt="한국 국기" width={16} height={16} className="w-4 h-4" />
+                },
+                {
+                  id: 'global',
+                  label: 'global address',
+                  icon: <Globe className="w-4 h-4" />
+                },
+                {
+                  id: 'direct',
+                  label: '자유 입력',
+                  icon: <Keyboard className="w-4 h-4" />
+                }
+              ]}
+              activeId={selectedRegion || 'korea'}
+              onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}
+            />
+          </div>
 
-          {/* 현재 주소 표시 영역 */}
-          {currentAddress && (
-            <div className="p-3 mb-4 rounded-lg border bg-muted/30 border-border/50">
-              <div className="text-xs font-medium text-muted-foreground mb-1">현재 주소</div>
-              <div className="text-sm text-foreground">{currentAddress.fullAddress}</div>
-            </div>
-          )}
-          
-          {/* 주소 입력 영역 */}
-          {selectedRegion && (
-            <div className="space-y-6">
-              <div>
-                {selectedRegion === 'korea' && (
-                  <AddressInput_NAVER
-                    colorVariant={colorVariant}
-                    value={tempAddress && 'region' in tempAddress ? tempAddress as AddressData : null}
-                    onChange={handleTempAddressChange}
-                    showDetailAddress={true}
-                  />
-                )}
-                
-                {selectedRegion === 'global' && (
-                  <AddressInput_Global
-                    colorVariant={colorVariant}
-                    value={tempAddress && 'country' in tempAddress ? tempAddress as GlobalAddressData : null}
-                    onChange={handleTempAddressChange}
-                  />
-                )}
-                
-                {selectedRegion === 'direct' && (
-                  <AddressInput_Direct
-                    colorVariant={colorVariant}
-                    value={tempAddress && !('region' in tempAddress) && !('country' in tempAddress) ? tempAddress as DirectAddressData : null}
-                    onChange={handleTempAddressChange}
-                  />
-                )}
+          {/* 탭 콘텐츠 영역 */}
+          <div className="rounded-t-lg bg-background">
+            {/* 현재 주소 표시 영역 */}
+            {currentAddress && (
+              <div className="p-4 border-b bg-muted/30">
+                <div className="mb-1 text-xs font-medium text-muted-foreground">현재 주소</div>
+                <div className="text-sm text-foreground">{currentAddress.fullAddress}</div>
               </div>
-              
-              {/* 하단 버튼 - 변경 버튼만 표시 */}
-              <div className="flex justify-end pt-4 border-t">
-                <Button
-                  variant="primary"
-                  onClick={handleChangeAddress}
-                  disabled={disabled || !tempAddress}
-                >
-                  변경
-                </Button>
+            )}
+            
+            {/* 주소 입력 영역 */}
+            {selectedRegion && (
+              <div className="p-4 space-y-6">
+                {/* 탭 내용 영역 */}
+                <div>
+                  {selectedRegion === 'korea' && (
+                    <AddressInput_NAVER
+                      colorVariant={colorVariant}
+                      value={tempAddress && 'region' in tempAddress ? tempAddress as AddressData : null}
+                      onChange={handleTempAddressChange}
+                      showDetailAddress={true}
+                    />
+                  )}
+                  
+                  {selectedRegion === 'global' && (
+                    <AddressInput_Global
+                      colorVariant={colorVariant}
+                      value={tempAddress && 'country' in tempAddress ? tempAddress as GlobalAddressData : null}
+                      onChange={handleTempAddressChange}
+                    />
+                  )}
+                  
+                  {selectedRegion === 'direct' && (
+                    <AddressInput_Direct
+                      colorVariant={colorVariant}
+                      value={tempAddress && !('region' in tempAddress) && !('country' in tempAddress) ? tempAddress as DirectAddressData : null}
+                      onChange={handleTempAddressChange}
+                    />
+                  )}
+                </div>
+                
+                {/* 하단 버튼 - 변경 버튼만 표시 */}
+                <div className="flex justify-end pt-4 border-t">
+                  <Button
+                    variant="primary"
+                    onClick={handleChangeAddress}
+                    disabled={disabled || !tempAddress}
+                  >
+                    변경
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </Modal>
     </div>

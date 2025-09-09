@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapPin, X, Search } from 'lucide-react';
 import { CountrySelector } from './CountrySelector';
+import { 
+  LABEL_BOX_STYLES, 
+  CONTAINER_STYLES, 
+  ICON_POSITIONS,
+  createInputStyles,
+  createSearchButtonStyles 
+} from './styles';
 import type { AddressInputProps_KOR, AddressData } from './types';
 
 // Daum Postcode API 타입 확장
@@ -38,7 +45,8 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
   detailAddressPlaceholder = '동, 호수 등 상세주소를 입력하세요'
 }) => {
   const [detailAddress, setDetailAddress] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState<string>('');
+  const [inputAddress, setInputAddress] = useState<string>(''); // 사용자 입력 주소
+  const [selectedAddress, setSelectedAddress] = useState<string>(''); // 선택된 최종 주소
   const [selectedDaumData, setSelectedDaumData] = useState<DaumAddressData | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [map, setMap] = useState<any>(null);
@@ -57,10 +65,12 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
     if (value && typeof value === 'object' && 'fullAddress' in value) {
       const baseAddress = value.fullAddress?.split(' ').slice(0, -1).join(' ') || '';
       setSelectedAddress(baseAddress);
+      setInputAddress(baseAddress); // 입력 필드에도 반영
       const detail = value.fullAddress?.replace(baseAddress, '').trim() || '';
       setDetailAddress(detail);
     } else if (!value) {
       setSelectedAddress('');
+      setInputAddress('');
       setDetailAddress('');
     }
   }, [value]);
@@ -230,6 +240,11 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
     }
   }, [map, marker, infoWindow, detailAddress]);
 
+  // 입력 필드 변경 핸들러
+  const handleInputChange = useCallback((newValue: string) => {
+    setInputAddress(newValue);
+  }, []);
+
   // Daum Postcode API로 주소 검색
   const openPostcodeSearch = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -245,6 +260,7 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
         // 도로명주소 우선, 없으면 지번주소 사용
         const selectedAddr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
         setSelectedAddress(selectedAddr);
+        setInputAddress(selectedAddr); // 입력 필드도 업데이트
         setSelectedDaumData(data);
         
         const addressData: AddressData = {
@@ -269,9 +285,11 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
       },
       width: '100%',
       height: '100%',
-      autoClose: true
+      autoClose: true,
+      // 검색어가 있으면 전달
+      ...(inputAddress.trim() && { q: inputAddress.trim() })
     }).open();
-  }, [detailAddress, onChange, showDetailAddress, searchCoordinatesAndUpdateMap, isDaumLoaded]);
+  }, [inputAddress, detailAddress, onChange, showDetailAddress, searchCoordinatesAndUpdateMap, isDaumLoaded]);
 
   // 상세주소 변경 핸들러
   const handleDetailAddressChange = useCallback((newDetail: string) => {
@@ -292,6 +310,7 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
 
   // 주소 초기화
   const handleClear = useCallback(() => {
+    setInputAddress('');
     setSelectedAddress('');
     setDetailAddress('');
     setSelectedDaumData(null);
@@ -314,23 +333,19 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
     }
   }, [onChange, onClear, marker, infoWindow, map]);
 
-  // colorVariant에 따른 색상 클래스 생성
-  const getColorClasses = () => {
-    const baseColor = colorVariant === 'primary' ? 'primary' : 'secondary';
-    return {
-      ring: `focus-within:ring-${baseColor}/20`,
-      border: `focus:border-${baseColor}`,
-      icon: `text-${baseColor}`,
-    };
+  const colorClasses = {
+    ring: `focus-within:ring-${colorVariant === 'primary' ? 'primary' : 'secondary'}/20`,
+    border: `focus:border-${colorVariant === 'primary' ? 'primary' : 'secondary'}`,
+    icon: `text-${colorVariant === 'primary' ? 'primary' : 'secondary'}`,
   };
-  
-  const colorClasses = getColorClasses();
 
   return (
-    <div className={`space-y-3 ${className}`}>
+    <div className={`${CONTAINER_STYLES.main} ${className}`}>
       {/* 국가 선택 (한국 고정) */}
       <div className="grid grid-cols-3 gap-3 items-center">
-        <label className="text-sm font-medium text-foreground">국가</label>
+        <div className={LABEL_BOX_STYLES}>
+          <label className="text-sm font-medium text-foreground">국가</label>
+        </div>
         <div className="col-span-2">
           <CountrySelector
             value="KR"
@@ -348,39 +363,41 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
       <div className="space-y-3">
         {/* 주소 검색 */}
         <div className="grid grid-cols-3 gap-3 items-center">
-          <label className="text-sm font-medium text-foreground">주소 검색</label>
-          <div className="relative col-span-2">
-            {Boolean(selectedAddress) ? (
-              // 선택된 주소 표시
-              <div className={`flex relative items-center py-3 pr-3 pl-9 w-full text-base rounded-lg border transition-colors bg-background border-border`}>
-                <MapPin className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 text-muted-foreground" />
-                <span className="flex-1 text-foreground">{selectedAddress}</span>
-                {showClearButton && !disabled && (
-                  <button
-                    type="button"
-                    onClick={handleClear}
-                    className="ml-2 p-0.5 transition-colors text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ) : (
-              // 주소 검색 버튼
+          <div className={LABEL_BOX_STYLES}>
+            <label className="text-sm font-medium text-foreground">주소 검색</label>
+          </div>
+          <div className="relative col-span-2 h-14">
+            <MapPin className={`${ICON_POSITIONS.left} text-muted-foreground`} />
+            
+            <input
+              type="text"
+              value={inputAddress}
+              onChange={(e) => handleInputChange(e.target.value)}
+              placeholder="검색 버튼을 눌러 주소를 찾으세요"
+              disabled={disabled}
+              readOnly={!disabled} // disabled가 아닐 때는 readOnly
+              className={createInputStyles(disabled, true, colorVariant, 'withIconAndButton')}
+              onClick={!disabled ? openPostcodeSearch : undefined} // 클릭 시에도 검색 팝업 열기
+            />
+
+            {/* 검색 버튼 */}
+            <button
+              type="button"
+              onClick={openPostcodeSearch}
+              disabled={disabled || !isDaumLoaded}
+              className={createSearchButtonStyles(disabled || !isDaumLoaded)}
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Clear 버튼 */}
+            {inputAddress && showClearButton && !disabled && (
               <button
                 type="button"
-                onClick={openPostcodeSearch}
-                disabled={disabled}
-                className={`
-                  flex items-center justify-center w-full py-3 px-4 text-base rounded-lg border transition-colors
-                  ${disabled 
-                    ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                    : `bg-background border-border hover:bg-muted/50 focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-                  }
-                `}
+                onClick={handleClear}
+                className={`absolute right-16 top-1/2 w-4 h-4 transform -translate-y-1/2 transition-colors text-muted-foreground hover:text-foreground`}
               >
-                <Search className="mr-2 w-4 h-4" />
-                주소 검색
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -389,9 +406,9 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
         {/* 상세주소 입력 */}
         {showDetailAddress && (
           <div className="grid grid-cols-3 gap-3">
-            <label className="self-start pt-3 text-sm font-medium text-foreground">
-              상세주소
-            </label>
+            <div className={LABEL_BOX_STYLES}>
+              <label className="text-sm font-medium text-foreground">상세주소</label>
+            </div>
             <div className="col-span-2">
               <input
                 ref={detailInputRef}
@@ -440,9 +457,21 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
                 )}
               </div>
             </div>
+          ) : inputAddress ? (
+            <div className="flex items-start space-x-2">
+              <MapPin className={`w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0`} />
+              <div className="flex-1">
+                <div className="mt-1 text-sm text-muted-foreground">
+                  입력된 주소: {inputAddress}
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">
+                  검색 버튼을 눌러 정확한 주소를 찾으세요
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="flex justify-center items-center h-14 text-sm text-muted-foreground">
-              주소를 검색하면 미리보기가 표시됩니다
+              주소를 입력하고 검색하면 미리보기가 표시됩니다
             </div>
           )}
         </div>

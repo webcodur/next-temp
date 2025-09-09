@@ -194,8 +194,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             onClick={handleOpen}
             disabled={disabled || isLoadingCountries}
             className={`
-              w-full flex items-center px-3 py-2.5 text-sm rounded-lg border transition-colors text-left
-              ${disabled || isLoadingCountries
+              w-full h-14 flex items-center px-3 text-sm rounded-lg border transition-colors text-left
+              ${disabled || isLoadingCountries || fixedCountry
                 ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
                 : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border} hover:border-border/80`
               }
@@ -213,11 +213,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
               )}
             </span>
             
-            {fixedCountry ? (
-              <span className="text-xs text-muted-foreground">Fixed</span>
-            ) : (
-              <ChevronDown className="w-4 h-4 text-muted-foreground ml-2 flex-shrink-0" />
-            )}
+            <ChevronDown className={`w-4 h-4 ml-2 flex-shrink-0 ${fixedCountry ? 'text-muted-foreground' : 'text-muted-foreground'}`} />
           </button>
         )}
 
@@ -233,7 +229,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
               onKeyDown={handleKeyDown}
               placeholder="Search countries..."
               className={`
-                w-full pl-9 pr-9 py-2.5 text-sm rounded-lg border transition-colors
+                w-full h-14 pl-9 pr-9 text-sm rounded-lg border transition-colors
                 bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}
               `}
             />

@@ -11,6 +11,10 @@ import { PlacesAutocomplete } from './PlacesAutocomplete';
 import { CoordinatesDisplay } from './CoordinatesDisplay';
 import { CountrySelector } from './CountrySelector';
 import { GoogleMap } from './GoogleMap';
+import { 
+  LABEL_BOX_STYLES, 
+  CONTAINER_STYLES 
+} from './styles';
 
 import type { AddressInputProps_Global, GlobalAddressData } from './types';
 import type { PlaceDetails, ParsedAddress } from './hooks/usePlacesAutocomplete';
@@ -217,23 +221,19 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
   }, [onChange, onClear]);
   const hasAddress = addressFields.street.trim() !== '' || addressFields.city.trim() !== '';
 
-  // colorVariant에 따른 색상 클래스 생성
-  const getColorClasses = () => {
-    const baseColor = colorVariant === 'primary' ? 'primary' : 'secondary';
-    return {
-      ring: `focus:ring-${baseColor}/20`,
-      border: `focus:border-${baseColor}`,
-      icon: `text-${baseColor}`,
-    };
+  const colorClasses = {
+    ring: `focus:ring-${colorVariant === 'primary' ? 'primary' : 'secondary'}/20`,
+    border: `focus:border-${colorVariant === 'primary' ? 'primary' : 'secondary'}`,
+    icon: `text-${colorVariant === 'primary' ? 'primary' : 'secondary'}`,
   };
-  
-  const colorClasses = getColorClasses();
 
   return (
-    <div className={`space-y-3 ${className}`}>
+    <div className={`${CONTAINER_STYLES.main} ${className}`}>
       {/* 국가 선택 - 고정 높이 */}
       <div className="grid items-center grid-cols-3 gap-3">
-        <label className="text-sm font-medium text-foreground">Country</label>
+        <div className={LABEL_BOX_STYLES}>
+          <label className="text-sm font-medium text-foreground">Country</label>
+        </div>
         <div className="col-span-2">
           {showCountrySelector ? (
             <CountrySelector
@@ -257,10 +257,10 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
         {enablePlacesAPI && (
           <>
             <div className="grid items-center grid-cols-3 gap-3">
-              <label className="text-sm font-medium text-foreground">
-                Search Address
-              </label>
-              <div className="col-span-2">
+              <div className={LABEL_BOX_STYLES}>
+                <label className="text-sm font-medium text-foreground">Search Address</label>
+              </div>
+              <div className="col-span-2 h-14">
                 <PlacesAutocomplete
                   placeholder={placeholder}
                   disabled={disabled}
@@ -277,9 +277,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
             <div className="grid grid-cols-3 gap-3" style={{ minHeight: '56px' }}>
               {showAddressLine2 ? (
                 <>
-                  <label className="self-start pt-3 text-sm font-medium text-foreground">
-                    Address Line 2
-                  </label>
+                  <div className={LABEL_BOX_STYLES}>
+                    <label className="text-sm font-medium text-foreground">Address Line 2</label>
+                  </div>
                   <div className="col-span-2">
                     <input
                       type="text"
@@ -309,9 +309,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
           <div className="space-y-3">
             {/* Street Address */}
             <div className="grid items-center grid-cols-3 gap-3">
-              <label className="text-sm font-medium text-foreground">
-                Street Address
-              </label>
+              <div className={LABEL_BOX_STYLES}>
+                <label className="text-sm font-medium text-foreground">Street Address</label>
+              </div>
               <div className="col-span-2">
                 <input
                   type="text"
@@ -334,9 +334,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
             <div className="grid grid-cols-3 gap-3" style={{ minHeight: '56px' }}>
               {showAddressLine2 ? (
                 <>
-                  <label className="self-start pt-3 text-sm font-medium text-foreground">
-                    Address Line 2
-                  </label>
+                  <div className={LABEL_BOX_STYLES}>
+                    <label className="text-sm font-medium text-foreground">Address Line 2</label>
+                  </div>
                   <div className="col-span-2">
                     <input
                       type="text"
@@ -361,9 +361,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
           
             {/* City */}
             <div className="grid items-center grid-cols-3 gap-3">
-              <label className="text-sm font-medium text-foreground">
-                City
-              </label>
+              <div className={LABEL_BOX_STYLES}>
+                <label className="text-sm font-medium text-foreground">City</label>
+              </div>
               <div className="col-span-2">
                 <input
                   type="text"
@@ -384,9 +384,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
             
             {/* State/Province */}
             <div className="grid items-center grid-cols-3 gap-3">
-              <label className="text-sm font-medium text-foreground">
-                State/Province
-              </label>
+              <div className={LABEL_BOX_STYLES}>
+                <label className="text-sm font-medium text-foreground">State/Province</label>
+              </div>
               <div className="col-span-2">
                 <input
                   type="text"
@@ -407,9 +407,9 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
             
             {/* Postal Code */}
             <div className="grid items-center grid-cols-3 gap-3">
-              <label className="text-sm font-medium text-foreground">
-                Postal Code
-              </label>
+              <div className={LABEL_BOX_STYLES}>
+                <label className="text-sm font-medium text-foreground">Postal Code</label>
+              </div>
               <div className="relative col-span-2">
                 <input
                   type="text"

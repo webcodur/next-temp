@@ -214,23 +214,23 @@ export const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 text-muted-foreground" />
         
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-          onChange={(e) => handleInputChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-          placeholder={placeholder}
-          disabled={disabled || !isMapsLoaded}
-          className={`
-            w-full pl-9 pr-9 py-3 text-base rounded-lg border transition-colors
-            ${disabled || !isMapsLoaded
-              ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-              : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-            }
-          `}
-        />
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => handleInputChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+            placeholder={placeholder}
+            disabled={disabled || !isMapsLoaded}
+            className={`
+              w-full pl-9 pr-9 h-14 text-base rounded-lg border transition-colors
+              ${disabled || !isMapsLoaded
+                ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
+                : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
+              }
+            `}
+          />
 
         {/* 로딩/검색 아이콘 - 우측 끝에 위치 */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
