@@ -34,10 +34,6 @@ export async function POST(request: NextRequest) {
     const clientSecret = process.env.NAVER_CLIENT_SECRET;
     
     if (!clientId || !clientSecret) {
-      console.error('NAVER API 환경변수 누락:', {
-        clientId: clientId ? '설정됨' : '누락',
-        clientSecret: clientSecret ? '설정됨' : '누락'
-      });
       return NextResponse.json(
         { error: '서버 설정 오류', details: 'NAVER API 키가 설정되지 않았습니다' },
         { status: 500 }
@@ -59,11 +55,6 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('NAVER Geocoding API 오류:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText
-      });
       return NextResponse.json(
         { error: 'Geocoding 실패', details: errorText },
         { status: response.status }
@@ -71,7 +62,6 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log('NAVER Geocoding API 응답:', data);
     
     // 네이버 API 응답에서 좌표 추출
     if (data.addresses && data.addresses.length > 0) {
@@ -81,7 +71,6 @@ export async function POST(request: NextRequest) {
         latitude: parseFloat(y),
       };
       
-      console.log('좌표 변환 성공:', coordinates);
       return NextResponse.json({ coordinates });
     }
 
@@ -91,7 +80,6 @@ export async function POST(request: NextRequest) {
     );
     
   } catch (error) {
-    console.error('API 라우트 오류:', error);
     return NextResponse.json(
       { error: '서버 오류가 발생했습니다' },
       { status: 500 }
