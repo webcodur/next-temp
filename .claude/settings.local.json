@@ -16,7 +16,21 @@
       "Bash(mv:*)",
       "Bash(npm run build:*)",
       "Bash(grep:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(npm ls:*)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:api.ncloud-docs.com)",
+      "Bash(curl:*)",
+      "Read(//c/Users/webco/Desktop/screenshot/**)",
+      "Bash(pkill:*)",
+      "Bash(taskkill:*)",
+      "Bash(PORT=3000 npm run dev)",
+      "Bash(cmd //c:*)",
+      "WebFetch(domain:navermaps.github.io)",
+      "WebFetch(domain:postcode.map.daum.net)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(cat:*)",
+      "WebSearch"
     ],
     "deny": []
   }

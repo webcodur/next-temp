@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 
-import { AddressInput_KOR } from '../address-input/AddressInput_KOR';
+import { AddressInput_NAVER } from '../address-input/AddressInput_NAVER';
 import { AddressInput_Global } from '../address-input/AddressInput_Global';
 import { AddressInput_Direct } from '../address-input/AddressInput_Direct';
 
@@ -61,6 +61,10 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
   const [addressModalOpen, setAddressModalOpen] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<ENUM_Region | null>(null);
   const [tempAddress, setTempAddress] = useState<AddressData | GlobalAddressData | DirectAddressData | null>(null); // 임시 주소 상태
+  // 초기 value가 있으면 currentAddress로 설정
+  const [currentAddress, setCurrentAddress] = useState<AddressData | GlobalAddressData | DirectAddressData | null>(
+    value ? { fullAddress: value } as DirectAddressData : null
+  ); // 현재 확정된 주소
   const inputRef = useRef<HTMLInputElement>(null);
   // #endregion
 
@@ -81,6 +85,10 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
     if (!selectedRegion) {
       setSelectedRegion('korea');
     }
+    // 현재 주소가 있으면 임시 주소로 설정
+    if (currentAddress) {
+      setTempAddress(currentAddress);
+    }
     inputRef.current?.focus();
   };
 
@@ -91,6 +99,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
     onAddressChange?.({
       fullAddress: '',
     });
+    setCurrentAddress(null); // 현재 주소도 초기화
     inputRef.current?.focus();
   };
 
@@ -101,11 +110,11 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
     setTempAddress(null);
   };
 
-  // 모달 닫기 핸들러
+  // 모달 닫기 핸들러 (X 버튼이나 백드롭 클릭)
   const handleModalClose = () => {
     setAddressModalOpen(false);
-    setSelectedRegion(null);
-    setTempAddress(null); // 임시 주소 초기화
+    // 모달이 닫힐 때는 상태만 초기화하고 값은 유지
+    setTempAddress(null); // 임시 주소만 초기화
   };
 
   // 임시 주소 변경 핸들러 (즉시 적용하지 않음)
@@ -113,15 +122,17 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
     setTempAddress(address);
   };
 
-  // 주소 확정 핸들러 (확정 버튼 클릭 시)
-  const handleConfirmAddress = () => {
+  // 주소 변경 핸들러 (변경 버튼 클릭 시)
+  const handleChangeAddress = () => {
     if (!tempAddress) {
       onChange?.('');
       onAddressChange?.({
         fullAddress: '',
       });
+      setCurrentAddress(null);
     } else {
       onChange?.(tempAddress.fullAddress);
+      setCurrentAddress(tempAddress); // 현재 주소 업데이트
       
       // 상세 주소 정보 전달
       if (onAddressChange) {
@@ -150,10 +161,8 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
       }
     }
     
-    // 모달 닫기
-    setAddressModalOpen(false);
-    setSelectedRegion(null);
-    setTempAddress(null);
+    // 변경 버튼 클릭 시 모달은 열린 상태 유지
+    // 사용자가 계속 수정할 수 있도록 함
   };
 
   // validation 결과 계산
@@ -246,12 +255,20 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
             onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}
           />
 
+          {/* 현재 주소 표시 영역 */}
+          {currentAddress && (
+            <div className="p-3 mb-4 rounded-lg border bg-muted/30 border-border/50">
+              <div className="text-xs font-medium text-muted-foreground mb-1">현재 주소</div>
+              <div className="text-sm text-foreground">{currentAddress.fullAddress}</div>
+            </div>
+          )}
+          
           {/* 주소 입력 영역 */}
           {selectedRegion && (
             <div className="space-y-6">
               <div>
                 {selectedRegion === 'korea' && (
-                  <AddressInput_KOR
+                  <AddressInput_NAVER
                     colorVariant={colorVariant}
                     value={tempAddress && 'region' in tempAddress ? tempAddress as AddressData : null}
                     onChange={handleTempAddressChange}
@@ -276,21 +293,14 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                 )}
               </div>
               
-              {/* 하단 버튼 */}
-              <div className="flex gap-3 justify-end pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={handleModalClose}
-                  disabled={disabled}
-                >
-                  취소
-                </Button>
+              {/* 하단 버튼 - 변경 버튼만 표시 */}
+              <div className="flex justify-end pt-4 border-t">
                 <Button
                   variant="primary"
-                  onClick={handleConfirmAddress}
+                  onClick={handleChangeAddress}
                   disabled={disabled || !tempAddress}
                 >
-                  확정
+                  변경
                 </Button>
               </div>
             </div>

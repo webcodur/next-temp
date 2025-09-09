@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Globe2, MapPin } from 'lucide-react';
 
 import { useRegionDetection } from './hooks/useRegionDetection';
-import { AddressInput_KOR } from './AddressInput_KOR';
+import { AddressInput_NAVER } from './AddressInput_NAVER';
 import { AddressInput_Global } from './AddressInput_Global';
 
 import type { 
@@ -142,7 +142,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
 
       {/* 지역별 주소 입력 컴포넌트 */}
       {currentRegion === 'korea' ? (
-        <AddressInput_KOR
+        <AddressInput_NAVER
           label={getLabel()}
           disabled={disabled}
           colorVariant={colorVariant}

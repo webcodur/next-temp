@@ -224,7 +224,7 @@ export const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
           placeholder={placeholder}
           disabled={disabled || !isMapsLoaded}
           className={`
-            w-full pl-9 pr-9 py-2.5 text-sm rounded-lg border transition-colors
+            w-full pl-9 pr-9 py-3 text-base rounded-lg border transition-colors
             ${disabled || !isMapsLoaded
               ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
               : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
@@ -232,25 +232,25 @@ export const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
           `}
         />
 
-        {/* 로딩/검색 아이콘 */}
-        <div className="absolute right-9 top-1/2 transform -translate-y-1/2">
+        {/* 로딩/검색 아이콘 - 우측 끝에 위치 */}
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
           {showLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-          ) : hasValue ? null : (
+          ) : !hasValue && !disabled ? (
             <Search className="w-4 h-4 text-muted-foreground" />
+          ) : null}
+          
+          {/* 초기화 버튼 */}
+          {hasValue && showClearButton && !disabled && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-0.5 transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
           )}
         </div>
-
-        {/* 초기화 버튼 */}
-        {hasValue && showClearButton && !disabled && (
-          <button
-            type="button"
-            onClick={handleClear}
-            className="absolute right-3 top-1/2 w-4 h-4 transition-colors transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
       </div>
 
       {/* 자동완성 제안 목록 */}

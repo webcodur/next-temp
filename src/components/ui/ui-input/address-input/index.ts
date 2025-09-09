@@ -1,10 +1,11 @@
 // 주소 입력 모듈
 export { AddressInput } from './AddressInput';
-export { AddressInput_KOR } from './AddressInput_KOR';
+export { AddressInput_NAVER } from './AddressInput_NAVER';
 export { AddressInput_Global } from './AddressInput_Global';
 export { AddressInput_Direct } from './AddressInput_Direct';
 export { CoordinatesDisplay } from './CoordinatesDisplay';
 export { CountrySelector } from './CountrySelector';
+export { GoogleMap } from './GoogleMap';
 
 // 훅
 export { useRegionDetection } from './hooks/useRegionDetection';

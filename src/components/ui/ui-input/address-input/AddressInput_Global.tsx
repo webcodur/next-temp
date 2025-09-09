@@ -10,6 +10,7 @@ import { MapPin, X } from 'lucide-react';
 import { PlacesAutocomplete } from './PlacesAutocomplete';
 import { CoordinatesDisplay } from './CoordinatesDisplay';
 import { CountrySelector } from './CountrySelector';
+import { GoogleMap } from './GoogleMap';
 
 import type { AddressInputProps_Global, GlobalAddressData } from './types';
 import type { PlaceDetails, ParsedAddress } from './hooks/usePlacesAutocomplete';
@@ -28,7 +29,10 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
   addressLine2Placeholder = 'Apartment, suite, unit, building, floor, etc.',
   enableCountryApi = true, // API 사용 여부
   enablePlacesAPI = true, // Google Places API 사용 여부
-  placeholder = 'Search for an address...'
+  placeholder = 'Search for an address...',
+  showMap = true, // 지도 표시 여부
+  mapHeight = 300, // 지도 높이
+  mapZoom = 15 // 지도 줌 레벨
 }) => {
   const [selectedCountry, setSelectedCountry] = useState(
     value?.country || defaultCountry
@@ -43,7 +47,7 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
     ...parseAddressFromValue(value)
   });
 
-  const [selectedPlace, setSelectedPlace] = useState<PlaceDetails | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<(PlaceDetails & { parsedAddress?: ParsedAddress }) | null>(null);
   const [showManualFields, setShowManualFields] = useState(false); // Google Places 실패 시만 수동 입력 표시
 
   // value에서 주소 필드 추출
@@ -120,7 +124,8 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
 
   // Places API에서 장소 선택 시 처리
   const handlePlaceSelect = useCallback((place: PlaceDetails, parsedAddress: ParsedAddress) => {
-    setSelectedPlace(place);
+    // place와 parsedAddress를 함께 저장
+    setSelectedPlace({ ...place, parsedAddress });
     setShowManualFields(false); // Google Places 성공 시 수동 입력 숨김
     
     // 국가 코드가 있으면 자동으로 국가 변경
@@ -158,18 +163,36 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
       setShowManualFields(true); // 수동 입력 필드 표시
     }
     
-    // 충분한 주소 정보가 입력되었을 때만 onChange 호출
-    // street(도로명)과 city(도시) 둘 다 입력되었을 때만 유효한 주소로 간주
-    const hasMinimumAddress = updatedFields.street.trim() && updatedFields.city.trim();
-    
-    if (hasMinimumAddress) {
-      const addressData = createAddressDataFromFields(updatedFields, selectedCountry);
+    // Address Line 2 변경이고 Google Places로 선택된 상태인 경우
+    if (field === 'addressLine2' && selectedPlace) {
+      // Google Places 선택 상태에서는 이미 유효한 주소가 있으므로
+      // Address Line 2만 업데이트하여 onChange 호출
+      const addressData = {
+        ...createAddressDataFromPlace(selectedPlace, selectedPlace.parsedAddress || {
+          street: updatedFields.street,
+          city: updatedFields.city,
+          state: updatedFields.state,
+          postalCode: updatedFields.postalCode,
+          country: selectedCountry,
+          countryCode: selectedCountry
+        }),
+        addressLine2: newValue
+      };
       onChange?.(addressData);
     } else {
-      // 최소 요구사항을 충족하지 않으면 null 전달
-      onChange?.(null);
+      // 수동 입력 모드일 때만 최소 요구사항 체크
+      // street(도로명)과 city(도시) 둘 다 입력되었을 때만 유효한 주소로 간주
+      const hasMinimumAddress = updatedFields.street.trim() && updatedFields.city.trim();
+      
+      if (hasMinimumAddress) {
+        const addressData = createAddressDataFromFields(updatedFields, selectedCountry);
+        onChange?.(addressData);
+      } else {
+        // 최소 요구사항을 충족하지 않으면 null 전달
+        onChange?.(null);
+      }
     }
-  }, [addressFields, selectedCountry, createAddressDataFromFields, onChange]);
+  }, [addressFields, selectedCountry, selectedPlace, createAddressDataFromFields, createAddressDataFromPlace, onChange]);
 
   // 국가 변경 핸들러
   const handleCountryChange = useCallback((countryCode: string) => {
@@ -208,69 +231,88 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <div className="space-y-3">
-        {/* 국가 선택 */}
-        {showCountrySelector && (
-          <CountrySelector
-            value={selectedCountry}
-            onChange={handleCountryChange}
-            disabled={disabled}
-            colorVariant={colorVariant}
-            countries={countryCodes}
-            enableCountryApi={enableCountryApi}
-          />
-        )}
+      {/* 국가 선택 - 고정 높이 */}
+      <div className="grid items-center grid-cols-3 gap-3">
+        <label className="text-sm font-medium text-foreground">Country</label>
+        <div className="col-span-2">
+          {showCountrySelector ? (
+            <CountrySelector
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              disabled={disabled}
+              colorVariant={colorVariant}
+              countries={countryCodes}
+              enableCountryApi={enableCountryApi}
+              showLabel={false}
+            />
+          ) : (
+            <div className="h-12" />
+          )}
+        </div>
+      </div>
         
-        {/* Google Places API 자동완성 */}
-        <div className="space-y-3">
-          {/* Google Places 자동완성 (항상 기본 표시) */}
-          {enablePlacesAPI && (
-            <div className="space-y-1">
-              <label className="block text-xs font-medium text-foreground">
+      {/* Google Places API 자동완성 - 고정 레이아웃 */}
+      <div className="space-y-3">
+        {/* Google Places 자동완성 (항상 기본 표시) */}
+        {enablePlacesAPI && (
+          <>
+            <div className="grid items-center grid-cols-3 gap-3">
+              <label className="text-sm font-medium text-foreground">
                 Search Address
               </label>
-              <PlacesAutocomplete
-                placeholder={placeholder}
-                disabled={disabled}
-                colorVariant={colorVariant}
-                countryRestriction={selectedCountry.toLowerCase()}
-                language="en"
-                onPlaceSelect={handlePlaceSelect}
-                showClearButton={showClearButton}
-              />
-              {/* Address Line 2 input after Google Places selection */}
-              {selectedPlace && showAddressLine2 && (
-                <div>
-                  <label className="block mb-1 text-xs font-medium text-foreground">
-                    Address Line 2 (Optional)
+              <div className="col-span-2">
+                <PlacesAutocomplete
+                  placeholder={placeholder}
+                  disabled={disabled}
+                  colorVariant={colorVariant}
+                  countryRestriction={selectedCountry.toLowerCase()}
+                  language="en"
+                  onPlaceSelect={handlePlaceSelect}
+                  showClearButton={showClearButton}
+                />
+              </div>
+            </div>
+            
+            {/* Address Line 2 - 항상 표시 */}
+            <div className="grid grid-cols-3 gap-3" style={{ minHeight: '56px' }}>
+              {showAddressLine2 ? (
+                <>
+                  <label className="self-start pt-3 text-sm font-medium text-foreground">
+                    Address Line 2
                   </label>
-                  <input
-                    type="text"
-                    value={addressFields.addressLine2}
-                    onChange={(e) => handleFieldChange('addressLine2', e.target.value)}
-                    placeholder={addressLine2Placeholder}
-                    disabled={disabled}
-                    className={`
-                      w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
-                      ${disabled 
-                        ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                        : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-                      }
-                    `}
-                  />
-                </div>
+                  <div className="col-span-2">
+                    <input
+                      type="text"
+                      value={addressFields.addressLine2}
+                      onChange={(e) => handleFieldChange('addressLine2', e.target.value)}
+                      placeholder={addressLine2Placeholder}
+                      disabled={disabled || !selectedPlace}
+                      className={`
+                        w-full px-3 py-3 text-base rounded-lg border transition-colors
+                        ${disabled || !selectedPlace
+                          ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
+                          : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
+                        }
+                      `}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="h-full col-span-3" />
               )}
             </div>
-          )}
+          </>
+        )}
 
-          {/* 수동 입력 필드들 (Google Places 비활성화 또는 실패 시) */}
-          {(!enablePlacesAPI || showManualFields) && (
-            <div className="space-y-2">
-              {/* 거리 주소 */}
-              <div>
-                <label className="block mb-1 text-xs font-medium text-foreground">
-                  Street Address (Address Line 1)
-                </label>
+        {/* 수동 입력 필드들 (Google Places 비활성화 또는 실패 시) */}
+        {(!enablePlacesAPI || showManualFields) && (
+          <div className="space-y-3">
+            {/* Street Address */}
+            <div className="grid items-center grid-cols-3 gap-3">
+              <label className="text-sm font-medium text-foreground">
+                Street Address
+              </label>
+              <div className="col-span-2">
                 <input
                   type="text"
                   value={addressFields.street}
@@ -278,7 +320,7 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                   placeholder="123 Main Street"
                   disabled={disabled}
                   className={`
-                    w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
+                    w-full px-3 py-3 text-base rounded-lg border transition-colors
                     ${disabled 
                       ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
                       : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
@@ -286,78 +328,89 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                   `}
                 />
               </div>
+            </div>
 
-              {/* Address Line 2 */}
-              {showAddressLine2 && (
-                <div>
-                  <label className="block mb-1 text-xs font-medium text-foreground">
-                    Address Line 2 (Optional)
+            {/* Address Line 2 */}
+            <div className="grid grid-cols-3 gap-3" style={{ minHeight: '56px' }}>
+              {showAddressLine2 ? (
+                <>
+                  <label className="self-start pt-3 text-sm font-medium text-foreground">
+                    Address Line 2
                   </label>
-                  <input
-                    type="text"
-                    value={addressFields.addressLine2}
-                    onChange={(e) => handleFieldChange('addressLine2', e.target.value)}
-                    placeholder={addressLine2Placeholder}
-                    disabled={disabled}
-                    className={`
-                      w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
-                      ${disabled 
-                        ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                        : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-                      }
-                    `}
-                  />
-                </div>
+                  <div className="col-span-2">
+                    <input
+                      type="text"
+                      value={addressFields.addressLine2}
+                      onChange={(e) => handleFieldChange('addressLine2', e.target.value)}
+                      placeholder={addressLine2Placeholder}
+                      disabled={disabled}
+                      className={`
+                        w-full px-3 py-3 text-base rounded-lg border transition-colors
+                        ${disabled 
+                          ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
+                          : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
+                        }
+                      `}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="h-full col-span-3" />
               )}
+            </div>
           
-              {/* 도시, 주/도 */}
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block mb-1 text-xs font-medium text-foreground">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={addressFields.city}
-                    onChange={(e) => handleFieldChange('city', e.target.value)}
-                    placeholder="New York"
-                    disabled={disabled}
-                    className={`
-                      w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
-                      ${disabled 
-                        ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                        : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-                      }
-                    `}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-1 text-xs font-medium text-foreground">
-                    State / Province
-                  </label>
-                  <input
-                    type="text"
-                    value={addressFields.state}
-                    onChange={(e) => handleFieldChange('state', e.target.value)}
-                    placeholder="NY"
-                    disabled={disabled}
-                    className={`
-                      w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
-                      ${disabled 
-                        ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
-                        : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
-                      }
-                    `}
-                  />
-                </div>
+            {/* City */}
+            <div className="grid items-center grid-cols-3 gap-3">
+              <label className="text-sm font-medium text-foreground">
+                City
+              </label>
+              <div className="col-span-2">
+                <input
+                  type="text"
+                  value={addressFields.city}
+                  onChange={(e) => handleFieldChange('city', e.target.value)}
+                  placeholder="New York"
+                  disabled={disabled}
+                  className={`
+                    w-full px-3 py-3 text-base rounded-lg border transition-colors
+                    ${disabled 
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
+                      : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
+                    }
+                  `}
+                />
               </div>
-              
-              {/* 우편번호 */}
-              <div className="relative">
-                <label className="block mb-1 text-xs font-medium text-foreground">
-                  Postal / ZIP Code
-                </label>
+            </div>
+            
+            {/* State/Province */}
+            <div className="grid items-center grid-cols-3 gap-3">
+              <label className="text-sm font-medium text-foreground">
+                State/Province
+              </label>
+              <div className="col-span-2">
+                <input
+                  type="text"
+                  value={addressFields.state}
+                  onChange={(e) => handleFieldChange('state', e.target.value)}
+                  placeholder="NY"
+                  disabled={disabled}
+                  className={`
+                    w-full px-3 py-3 text-base rounded-lg border transition-colors
+                    ${disabled 
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
+                      : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
+                    }
+                  `}
+                />
+              </div>
+            </div>
+            
+            {/* Postal Code */}
+            <div className="grid items-center grid-cols-3 gap-3">
+              <label className="text-sm font-medium text-foreground">
+                Postal Code
+              </label>
+              <div className="relative col-span-2">
                 <input
                   type="text"
                   value={addressFields.postalCode}
@@ -365,7 +418,7 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                   placeholder="10001"
                   disabled={disabled}
                   className={`
-                    w-full px-3 py-2.5 text-sm rounded-lg border transition-colors
+                    w-full px-3 py-3 text-base rounded-lg border transition-colors
                     ${disabled 
                       ? 'bg-muted text-muted-foreground cursor-not-allowed border-border/50' 
                       : `bg-background border-border focus:ring-2 ${colorClasses.ring} ${colorClasses.border}`
@@ -377,23 +430,23 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="absolute right-3 top-1/2 w-4 h-4 transition-colors transform translate-y-1 text-muted-foreground hover:text-foreground"
+                    className="absolute w-4 h-4 transition-colors transform -translate-y-1/2 right-3 top-1/2 text-muted-foreground hover:text-foreground"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
             </div>
-          )}
+          </div>
+        )}
         
-        {/* 현재 주소 미리보기 */}
-        {hasAddress && (
-          <div className="p-3 rounded-lg border bg-muted/30 border-border/50">
+        {/* 미리보기 - 고정 높이 */}
+        <div className="p-3 border rounded-lg bg-muted/30 border-border/50" style={{ minHeight: '80px' }}>
+          {hasAddress ? (
             <div className="flex items-start space-x-2">
               <MapPin className={`w-4 h-4 ${colorClasses.icon} mt-0.5 flex-shrink-0`} />
               <div className="flex-1">
-                <div className="flex gap-2 items-center text-sm font-medium text-foreground">
-                  Address Preview
+                <div className="flex items-center gap-2">
                   {selectedPlace && (
                     <span className="inline-flex items-center px-2 py-1 text-xs rounded bg-primary/10 text-primary">
                       Google Places
@@ -412,7 +465,7 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                     />
                   )}
                 </div>
-                <div className="mt-1 text-xs text-muted-foreground">
+                <div className="mt-1 text-sm text-foreground">
                   {selectedPlace ? 
                     `${selectedPlace.formattedAddress}${addressFields.addressLine2 ? `, ${addressFields.addressLine2}` : ''}` : 
                     createAddressDataFromFields(addressFields, selectedCountry).fullAddress
@@ -420,9 +473,31 @@ export const AddressInput_Global: React.FC<AddressInputProps_Global> = ({
                 </div>
               </div>
             </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-sm text-muted-foreground" style={{ minHeight: '56px' }}>
+              주소를 입력하면 미리보기가 표시됩니다
+            </div>
+          )}
+        </div>
+        
+        {/* 지도 표시 */}
+        {showMap && selectedPlace?.geometry && (
+          <div className="mt-3">
+            <GoogleMap
+              coordinates={{
+                latitude: selectedPlace.geometry.location.lat,
+                longitude: selectedPlace.geometry.location.lng
+              }}
+              address={selectedPlace.formattedAddress}
+              height={mapHeight}
+              zoom={mapZoom}
+              colorVariant={colorVariant}
+              showMarker={true}
+              showFullscreenButton={true}
+              disabled={disabled}
+            />
           </div>
         )}
-        </div>
       </div>
     </div>
   );

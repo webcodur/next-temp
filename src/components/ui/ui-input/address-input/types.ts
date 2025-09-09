@@ -92,6 +92,7 @@ export interface GlobalAddressData {
 export interface DirectAddressData {
   fullAddress: string; // 사용자가 직접 입력한 전체 주소
   postalCode?: string; // 우편번호 (선택사항)
+  country?: string; // 국가 코드
   
   // 좌표 정보 (수동 입력 시에는 없음)
   coordinates?: Coordinates;
@@ -100,6 +101,8 @@ export interface DirectAddressData {
   rawData?: {
     inputMethod: 'manual';
     timestamp: number;
+    country?: string;
+    originalAddress?: string;
   };
 }
 
@@ -181,6 +184,11 @@ export interface AddressInputProps_Global extends AddressInputBaseProps {
   showCountrySelector?: boolean;
   showAddressLine2?: boolean; // Address Line 2 입력 필드 표시 (기본: true)
   addressLine2Placeholder?: string; // Address Line 2 플레이스홀더
+  
+  // 지도 옵션
+  showMap?: boolean; // 지도 표시 여부 (기본: true)
+  mapHeight?: number; // 지도 높이 (기본: 300)
+  mapZoom?: number; // 지도 줌 레벨 (기본: 15)
 }
 
 // 직접입력 주소 입력 컴포넌트 Props
@@ -193,6 +201,12 @@ export interface AddressInput_DirectProps extends AddressInputBaseProps {
   showPostalCode?: boolean; // 우편번호 입력 필드 표시 (기본: true)
   addressPlaceholder?: string; // 주소 입력 필드 플레이스홀더
   postalCodePlaceholder?: string; // 우편번호 입력 필드 플레이스홀더
+  
+  // 국가 선택 옵션
+  showCountrySelector?: boolean; // 국가 선택 표시 (기본: true)
+  defaultCountry?: string; // 기본 국가 (기본: 'KR')
+  countries?: string[]; // 지원 국가 목록
+  enableCountryApi?: boolean; // REST Countries API 사용 여부
   
   // UI 옵션
   showClearButton?: boolean;
