@@ -238,6 +238,11 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
             <Tabs
               tabs={[
                 {
+                  id: 'direct',
+                  label: '자유 입력',
+                  icon: <Keyboard className="w-4 h-4" />
+                },
+                {
                   id: 'korea',
                   label: '한국 주소',
                   icon: <Image src="/icons/flags/KR.svg" alt="한국 국기" width={16} height={16} className="w-4 h-4" />
@@ -247,11 +252,6 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                   label: 'global address',
                   icon: <Globe className="w-4 h-4" />
                 },
-                {
-                  id: 'direct',
-                  label: '자유 입력',
-                  icon: <Keyboard className="w-4 h-4" />
-                }
               ]}
               activeId={selectedRegion || 'korea'}
               onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}

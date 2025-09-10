@@ -142,7 +142,7 @@ export const AddressInput_NAVER: React.FC<AddressInputProps_KOR> = ({
   const searchCoordinatesAndUpdateMap = useCallback(async (address: string) => {
     console.log('🔍 주소 좌표 검색 시작:', address);
     try {
-      const response = await fetch('/api/geocoding', {
+      const response = await fetch('/geo/geocoding', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

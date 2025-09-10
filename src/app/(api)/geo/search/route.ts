@@ -1,5 +1,5 @@
 /**
- * 네이버 클라우드 플랫폼 Maps Geocoding API 프록시 라우트
+ * 네이버 클라우드 플랫폼 Maps Geocoding API 프록시 라우트 (검색용)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    
     const clientId = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
     const clientSecret = process.env.NAVER_CLIENT_SECRET;
     
