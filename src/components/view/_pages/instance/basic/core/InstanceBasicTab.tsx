@@ -29,7 +29,7 @@ interface InstanceBasicTabProps {
   onSubmit: () => Promise<void>;
   onDelete: () => void;
   
-  // 차량-사용자 관리 관련
+  // 차량-주민 관리 관련
   userManagementMode: boolean;
   selectedCarInstanceId: number | null;
   carUsers: CarUserWithDetails[];
@@ -62,7 +62,7 @@ export default function InstanceBasicTab({
   onSubmit,
   onDelete,
   
-  // 차량-사용자 관리 관련
+  // 차량-주민 관리 관련
   userManagementMode,
   selectedCarInstanceId,
   carUsers,

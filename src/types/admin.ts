@@ -109,6 +109,16 @@ export function canManagePassword(currentUserRoleId: number, targetUserRoleId: n
 }
 
 /**
+ * Admin 비밀번호 초기화 응답 타입
+ */
+export interface ResetAdminPasswordResponse {
+  id: number;
+  account: string;
+  temporaryPassword: string;
+  resetAt: string;
+}
+
+/**
  * 비밀번호 초기화 권한 확인
  * - 최고 관리자: 현장 관리자 및 전체 직원 초기화 가능
  * - 현장 관리자: 하위 직원만 초기화 가능
@@ -123,6 +133,11 @@ export function canResetPassword(currentUserRoleId: number, targetUserRoleId: nu
   // 현장 관리자(2)는 하위 직원(3,4,5)만 초기화 가능
   if (currentUserRoleId === 2) {
     return targetUserRoleId >= 3; // 운영자, 근무자, 상업자
+  }
+
+  // 운영자(3)는 근무자(4)만 초기화 가능
+  if (currentUserRoleId === 3) {
+    return targetUserRoleId === 4; // 근무자
   }
   
   // 기타 역할은 초기화 불가능

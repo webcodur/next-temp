@@ -115,28 +115,6 @@ export default function InstanceVisitConfigSection({
         icon={<CalendarCheck size={18} />}
       >
         <div className="space-y-6">
-          {/* 방문 시간 통계 정보 */}
-          <div className="p-4 rounded-lg bg-muted">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              {/* 총 방문 시간 */}
-              <div>
-                <span className="text-muted-foreground">총 방문 시간:</span>
-                <span className="ml-2 font-medium">
-                  {formData.availableVisitTime + formData.purchasedVisitTime}분
-                </span>
-              </div>
-              {/* 평균 요청당 시간 */}
-              <div>
-                <span className="text-muted-foreground">평균 요청당 시간:</span>
-                <span className="ml-2 font-medium">
-                  {formData.visitRequestLimit > 0
-                    ? Math.round((formData.availableVisitTime + formData.purchasedVisitTime) / formData.visitRequestLimit)
-                    : 0
-                  }분
-                </span>
-              </div>
-            </div>
-          </div>
 
           {(() => {
         const fields: GridFormFieldSchema[] = [
@@ -213,6 +191,30 @@ export default function InstanceVisitConfigSection({
               />
             );
           })()}
+
+        {/* 방문 시간 통계 정보 */}
+          <div className="p-4 rounded-lg bg-muted">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* 총 방문 시간 */}
+              <div>
+                <span className="text-muted-foreground">총 방문 시간:</span>
+                <span className="ml-2 font-medium">
+                  {formData.availableVisitTime + formData.purchasedVisitTime}분
+                </span>
+              </div>
+              {/* 평균 요청당 시간 */}
+              <div>
+                <span className="text-muted-foreground">평균 요청당 시간:</span>
+                <span className="ml-2 font-medium">
+                  {formData.visitRequestLimit > 0
+                    ? Math.round((formData.availableVisitTime + formData.purchasedVisitTime) / formData.visitRequestLimit)
+                    : 0
+                  }분
+                </span>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </SectionPanel>
 

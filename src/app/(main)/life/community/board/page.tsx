@@ -12,7 +12,7 @@ export default function CommunityBoardPage() {
 			content: (
 				<div>
 					<h2 className="mb-4 text-2xl font-bold">앱 게시판</h2>
-					<p>입주민들을 위한 일반 게시판입니다.</p>
+					<p>주민들을 위한 일반 게시판입니다.</p>
 				</div>
 			),
 		},
@@ -32,7 +32,7 @@ export default function CommunityBoardPage() {
 			content: (
 				<div>
 					<h2 className="mb-4 text-2xl font-bold">신문고 관리</h2>
-					<p>입주민 건의사항 및 제안 관리</p>
+					<p>주민 건의사항 및 제안 관리</p>
 				</div>
 			),
 		},

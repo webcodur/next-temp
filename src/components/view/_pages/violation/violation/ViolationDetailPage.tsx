@@ -77,7 +77,7 @@ const STATUS_OPTIONS = [
 const REPORTER_TYPE_OPTIONS = [
   { value: 'SYSTEM', label: '시스템' },
   { value: 'ADMIN', label: '관리자' },
-  { value: 'RESIDENT', label: '입주민' },
+  { value: 'RESIDENT', label: '주민' },
   { value: 'SECURITY', label: '경비원' },
 ];
 // #endregion

@@ -40,6 +40,14 @@ export function loadDevAccounts(): DevAccountSet[] {
 		accounts.push({ id: id3, password: password3, description: description3 });
 	}
 
+  // 계정 4
+  const id4 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_4_ID;
+  const password4 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_4_PASSWORD;
+  const description4 = process.env.NEXT_PUBLIC_DEV_ACCOUNT_4_DESCRIPTION;
+  if (id4 && password4 && description4) {
+    accounts.push({ id: id4, password: password4, description: description4 });
+  }
+
 	// 빌드 시에는 로그 출력하지 않음
 	if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
 		if (accounts.length === 0) {

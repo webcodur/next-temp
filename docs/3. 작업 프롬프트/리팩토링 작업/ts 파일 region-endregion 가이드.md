@@ -35,7 +35,7 @@
 ```typescript
 /* 
   파일명: /services/userService.ts
-  기능: 사용자 관리 서비스
+  기능: 주민 관리 서비스
   책임: 사용자 CRUD 및 인증
   
   주요 기능:

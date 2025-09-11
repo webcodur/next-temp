@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { UserCog, Lock } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -17,10 +17,12 @@ import { updateAdmin } from '@/services/admin/admin@id_PUT';
 import { Admin, ROLE_ID_MAP } from '@/types/admin';
 
 
-export default function AdminDetailPage() {  
+interface Props {
+  adminId: number;
+}
+
+export default function AdminDetailPage({ adminId }: Props) {  
   const router = useRouter();
-  const params = useParams();
-  const adminId = Number(params.id);
   const routerRef = useRef(router);
   routerRef.current = router;
 

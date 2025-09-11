@@ -121,7 +121,7 @@ export default function InstanceServiceConfigSection({
           const fields: GridFormFieldSchema[] = [
           {
             id: 'canAddNewUser',
-            label: '신규 입주민 등록 허용',
+            label: '신규 주민 등록 허용',
             rules: '등록 권한',
             component: (
               <SimpleToggleSwitch

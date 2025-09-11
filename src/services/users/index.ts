@@ -1,4 +1,4 @@
-// 사용자 관리 API 서비스 내보내기
+// 주민 관리 API 서비스 내보내기
 export { searchUsers } from './users$_GET';
 export { getUserDetail } from './users@id_GET';
 export { updateUser } from './users@id_PATCH';

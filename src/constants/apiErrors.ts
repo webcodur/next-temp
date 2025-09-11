@@ -14,6 +14,7 @@ export const API_ERRORS = {
   'createAdmin': '관리자 계정 생성 실패',
   'updateAdmin': '관리자 계정 수정 실패',
   'deleteAdmin': '관리자 계정 삭제 실패',
+  'resetAdminPassword': '관리자 비밀번호 초기화 실패',
 
   // Cars
   'searchCars': '차량 목록 조회 실패',

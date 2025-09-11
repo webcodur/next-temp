@@ -25,7 +25,7 @@ interface UserCardItemProps {
   onExcludeClick: (userId: number, userName: string) => void;
   onDeleteClick: (userId: number, userName: string) => void;
   
-  // 차량-사용자 관리 핸들러
+  // 차량-주민 관리 핸들러
   onConnectUser?: (userId: number) => void;
   onDisconnectUser?: (userId: number) => void;
   onTogglePrimary?: (userId: number) => void;
@@ -115,7 +115,7 @@ export default function UserCardItem({
         onDelete={() => onDeleteClick(userInstance.user.id, userInstance.user.name)}
       />
       
-      {/* 사용자 관리 모드 overlay */}
+      {/* 주민 관리 모드 overlay */}
       {userManagementMode && (
         <UserManagementOverlay
           userId={userInstance.user.id}

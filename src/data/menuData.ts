@@ -125,7 +125,7 @@ export const menuData: MenuData = {
 						href: '/parking/occupancy/instance',
 					},
 					{
-						key: '사용자 관리',
+						key: '주민 관리',
 						href: '/parking/occupancy/user',
 					},
 					{

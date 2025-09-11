@@ -8,8 +8,10 @@ import { GridFormAuto, type GridFormFieldSchema } from '@/components/ui/ui-layou
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { SimpleTextInput } from '@/components/ui/ui-input/simple-input/SimpleTextInput';
 import { updateAdmin } from '@/services/admin/admin@id_PUT';
+import { resetAdminPassword } from '@/services/admin/admin@id_reset_password_PATCH';
 import { Admin, canManagePassword, canResetPassword } from '@/types/admin';
 import { getRoleIdFromToken } from '@/utils/tokenUtils';
+import { getNetworkErrorMessage } from '@/utils/apiErrorMessages';
 
 interface PasswordChangeData {
   currentPassword: string;
@@ -108,9 +110,8 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
         console.error('비밀번호 변경 실패:', '대상 작업에 실패했습니다.');
         setModalMessage('비밀번호 변경에 실패했습니다.');
       }
-    } catch (error) {
-      console.error('비밀번호 변경 중 오류:', error);
-      setModalMessage('비밀번호 변경 중 오류가 발생했습니다.');
+    } catch {
+      setModalMessage(getNetworkErrorMessage());
     } finally {
       setIsSubmitting(false);
     }
@@ -127,42 +128,48 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
   const handlePasswordReset = async () => {
     if (!admin || !canReset || isResetting) return;
 
-    const confirmMessage = `정말로 ${admin.name || admin.account}의 비밀번호를 초기화(0000)하시겠습니까?`;
+    const confirmMessage = `정말로 ${admin.name || admin.account}의 비밀번호를 초기화하시겠습니까?`;
     if (!confirm(confirmMessage)) return;
 
     setIsResetting(true);
 
     try {
-      // TODO: API 구현 전까지 임시 처리
-      setModalMessage('비밀번호 초기화 기능은 아직 구현되지 않았습니다.');
-      setInfoModalOpen(true);
+      const result = await resetAdminPassword({ id: admin.id });
       
-      // 추후 실제 API 연동 시 사용할 코드
-      // const result = await resetAdminPassword({ id: admin.id });
-      // if (result.success) {
-      //   setModalMessage('비밀번호가 0000으로 초기화되었습니다.');
-      //   setSuccessModalOpen(true);
-      // } else {
-      //   console.error('비밀번호 초기화 실패:', '대상 작업에 실패했습니다.');
-      //   setModalMessage('비밀번호 초기화에 실패했습니다.');
-      // }
-    } catch (error) {
-      console.error('비밀번호 초기화 중 오류:', error);
-      setModalMessage('비밀번호 초기화 중 오류가 발생했습니다.');
+      if (result.success && result.data) {
+        const resetInfo = `비밀번호가 성공적으로 초기화되었습니다.\n\n임시 비밀번호: ${result.data.temporaryPassword}\n초기화 시간: ${new Date(result.data.resetAt).toLocaleString()}\n\n해당 관리자에게 임시 비밀번호를 전달해주세요.`;
+        setModalMessage(resetInfo);
+        setSuccessModalOpen(true);
+      } else {
+        console.error('비밀번호 초기화 실패:', result.errorMsg || '대상 작업에 실패했습니다.');
+        setModalMessage(result.errorMsg || '비밀번호 초기화에 실패했습니다.');
+        setInfoModalOpen(true);
+      }
+    } catch {
+      setModalMessage(getNetworkErrorMessage());
+      setInfoModalOpen(true);
     } finally {
       setIsResetting(false);
     }
   };
   // #endregion
 
-  // 권한이 없으면 렌더링하지 않음
-  if (!canManage && !canReset) {
-
-    return null;
-  }
-
   return (
     <div className="space-y-6">
+      {!canManage && !canReset && (
+        <div className="p-6 rounded-lg border bg-card border-border">
+          <div className="flex gap-2 items-center mb-4">
+            <Lock size={20} />
+            <h2 className="text-lg font-semibold text-foreground">
+              비밀번호 변경
+              </h2>
+          </div>
+          <div className="mb-4 text-md text-muted-foreground">
+            비밀번호 변경/초기화가 불가능합니다.
+          </div>
+        </div>
+      )}
+
       {/* 비밀번호 재설정 섹션 */}
       {canManage && (
         <div className="p-6">
@@ -270,7 +277,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
           </div>
 
           <div className="mb-4 text-sm text-muted-foreground">
-            {admin.name || admin.account}의 비밀번호를 0000으로 초기화합니다.
+            {admin.name || admin.account}의 비밀번호를 임시 비밀번호로 초기화합니다.
           </div>
 
           <div className="flex justify-end">
@@ -278,7 +285,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
               variant="outline"
               onClick={handlePasswordReset}
               disabled={isResetting || isSubmitting}
-              title={isResetting ? '초기화 중...' : '비밀번호 초기화 (0000)'}
+              title={isResetting ? '초기화 중...' : '비밀번호 초기화'}
             >
               <RotateCcw size={16} />
               {isResetting ? '초기화 중...' : '초기화'}
@@ -298,7 +305,7 @@ export default function AdminPasswordSection({ admin }: AdminPasswordSectionProp
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="mb-2 text-lg font-semibold text-green-600">성공</h3>
-            <p className="text-muted-foreground">{modalMessage}</p>
+            <div className="whitespace-pre-line text-muted-foreground">{modalMessage}</div>
           </div>
           
           <div className="flex justify-center pt-4">

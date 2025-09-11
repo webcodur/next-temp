@@ -1,4 +1,4 @@
-/* 메뉴 설명: 사용자 관리 목록 페이지 */
+/* 메뉴 설명: 주민 관리 목록 페이지 */
 'use client';
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -392,8 +392,8 @@ export default function UsersListPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader 
-        title="사용자 관리" 
-        subtitle="사용자 등록, 수정, 삭제 및 세대 관계 관리"
+        title="주민 관리" 
+        subtitle="주민 등록, 수정, 삭제 및 세대 관계 관리"
       />
 
       {/* 고급 검색 */}

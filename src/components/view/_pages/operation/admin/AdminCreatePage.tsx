@@ -27,9 +27,6 @@ export default function AdminCreatePage() {
   const searchParams = useSearchParams();
   const copyFromId = searchParams.get('copyFrom');
 
-  
-
-
   // #region 복사 기능
   const loadAdminForCopy = useCallback(async (adminId: number) => {
     setCopyLoading(true);

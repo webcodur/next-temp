@@ -65,7 +65,7 @@ export default function InstanceDetailPage() {
   );
   // #endregion
 
-  // #region 차량-사용자 관리 훅
+  // #region 차량-주민 관리 훅
   const {
     userManagementMode,
     selectedCarInstanceId,
@@ -338,7 +338,7 @@ export default function InstanceDetailPage() {
               onSubmit={handleSubmit}
               onDelete={handleDelete}
               
-              // 차량-사용자 관리 관련
+              // 차량-주민 관리 관련
               userManagementMode={userManagementMode}
               selectedCarInstanceId={selectedCarInstanceId}
               carUsers={carUsers}

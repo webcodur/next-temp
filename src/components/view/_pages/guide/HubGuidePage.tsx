@@ -33,8 +33,8 @@ const guideInfo = {
     title: '시스템 개요',
     description: '주차 SAAS 허브는 통합 주차장 관리 시스템으로, 효율적인 주차 운영을 위한 모든 기능을 제공합니다.',
     features: [
-      { icon: Car, title: '차량 관리', description: '입주민/방문자 차량 등록 및 관리' },
-      { icon: Users, title: '사용자 관리', description: '입주민, 관리자 계정 통합 관리' },
+      { icon: Car, title: '차량 관리', description: '주민/방문자 차량 등록 및 관리' },
+      { icon: Users, title: '주민 관리', description: '주민, 관리자 계정 통합 관리' },
       { icon: Shield, title: '보안 기능', description: '출입 통제 및 보안 관리' },
       { icon: BarChart3, title: '통계 분석', description: '이용 현황 및 수익 분석' },
       { icon: Settings, title: '시설 관리', description: '주차장 시설 및 설정 관리' },
@@ -66,10 +66,10 @@ const guideInfo = {
       },
       {
         step: 3,
-        title: '사용자 등록',
-        description: '입주민 및 관리자 계정을 등록합니다.',
+        title: '주민 등록',
+        description: '주민 계정을 등록합니다.',
         details: [
-          '입주민 정보 일괄 등록',
+          '주민 정보 일괄 등록',
           '관리자 계정 추가 생성',
           '권한 설정 및 승인'
         ]
@@ -77,9 +77,9 @@ const guideInfo = {
       {
         step: 4,
         title: '차량 등록',
-        description: '입주민 차량 및 방문자 차량을 등록합니다.',
+        description: '주민 차량 및 방문자 차량을 등록합니다.',
         details: [
-          '입주민 차량 번호 등록',
+          '주민 차량 번호 등록',
           '방문자 차량 임시 등록',
           '차량 분류 및 태그 설정'
         ]
@@ -105,7 +105,7 @@ const guideInfo = {
         description: '개별 주차장 운영 관리',
         permissions: [
           '해당 주차장 운영 관리',
-          '입주민/차량 등록 관리',
+          '주민/차량 등록 관리',
           '출입 기록 조회',
           '요금 정산 처리',
           '각종 신고 처리'
@@ -123,7 +123,7 @@ const guideInfo = {
         ]
       },
       {
-        role: '입주민',
+        role: '주민',
         description: '개인 주차장 이용 관리',
         permissions: [
           '개인 차량 등록/수정',

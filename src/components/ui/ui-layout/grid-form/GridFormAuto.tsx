@@ -36,10 +36,10 @@ const GridFormAuto = React.forwardRef<
   }, [fields, viewMode]);
 
   return (
-    <>
-      {/* 뷰 선택기 (필요한 경우에만) */}
+    <div className="relative">
+      {/* 뷰 선택기 (필요한 경우에만) - 우상단 고정 */}
       {showViewSelector && (
-        <div className="flex justify-end mb-4">
+        <div className="absolute right-2 -top-16 z-10">
           <GridFormViewSelector
             viewMode={viewMode}
             onViewModeChange={setViewMode}
@@ -84,7 +84,7 @@ const GridFormAuto = React.forwardRef<
           </GridFormRow>
         ))}
       </GridForm>
-    </>
+    </div>
   );
 });
 

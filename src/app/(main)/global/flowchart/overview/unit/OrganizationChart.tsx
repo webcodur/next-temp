@@ -72,17 +72,17 @@ const NODE_DEFINITIONS = [
   },
   {
     id: 'person',
-    label: '입주민',
+    label: '주민',
     type: 'person' as const,
     level: 3,
-    description: '실제 거주하는 입주민'
+    description: '실제 거주하는 주민'
   },
   {
     id: 'vehicle',
     label: '차량',
     type: 'vehicle' as const,
     level: 3,
-    description: '입주민이 소유한 차량'
+    description: '주민이 소유한 차량'
   }
 ];
 

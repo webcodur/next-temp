@@ -1,6 +1,6 @@
 /* 
   파일명: /components/view/_pages/instance/basic/user-panel/UserManagementOverlay.tsx
-  기능: 사용자 관리 모드 오버레이 UI 컴포넌트
+  기능: 주민 관리 모드 오버레이 UI 컴포넌트
   책임: 차량-사용자 연결/해제, 소유자/알람 설정 UI를 제공한다.
 */ // ------------------------------
 
