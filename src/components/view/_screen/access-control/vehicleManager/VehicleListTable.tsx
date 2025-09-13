@@ -3,7 +3,7 @@ import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPan
 import { InfiniteTable, BaseTableColumn } from '@/components/ui/ui-data/infiniteTable/InfiniteTable';
 import VehicleSearchFilter from './VehicleSearchFilter';
 import { VehicleEntry, SearchFilters } from '@/types/parking';
-import { parseCarAllowType } from '@/data/mockParkingData';
+import { parseCarAllowTypeKey, parseDeviceNameKey } from '@/data/mockParkingData';
 import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region Types & Constants
@@ -69,10 +69,10 @@ const createColumns = (
 			cell: (vehicle) => (
 				<div className="space-y-1">
 					<div className="text-base font-medium leading-tight text-foreground">
-						{parseCarAllowType(vehicle.type)}
+						{t(parseCarAllowTypeKey(vehicle.type))}
 						{vehicle.modify_car_type && (
 							<span className="ml-1 text-sm text-warning">
-								→{parseCarAllowType(vehicle.modify_car_type)}
+								→{t(parseCarAllowTypeKey(vehicle.modify_car_type))}
 							</span>
 						)}
 					</div>
@@ -123,7 +123,7 @@ const createColumns = (
 					</span>
 					{vehicle.device_name && (
 						<div className="text-sm leading-tight text-muted-foreground">
-							{vehicle.device_name}
+							{t(parseDeviceNameKey(vehicle.device_name))}
 						</div>
 					)}
 				</div>
@@ -134,7 +134,11 @@ const createColumns = (
 			header: t('주차_테이블_헤더_이용시간'),
 			minWidth: '140px',
 			align: 'center',
-			type: 'datetime',
+			cell: (vehicle) => (
+				<div className="text-sm font-mono text-center">
+					{vehicle.use_time || '-'}
+				</div>
+			),
 		},
 	];
 };

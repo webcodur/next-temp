@@ -7,6 +7,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import { OrganizationChart } from './unit/OrganizationChart';
 import { DetailModal } from './unit/DetailModal';
@@ -25,6 +26,7 @@ interface ChartNode {
 // #region 렌더링
 export default function OrganizationOverviewPage() {
   // #region 상태
+  const t = useTranslations();
   const [selectedNodeId, setSelectedNodeId] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // #endregion
@@ -44,8 +46,8 @@ export default function OrganizationOverviewPage() {
     <div className="container p-6 mx-auto space-y-6 max-w-7xl">
       {/* 페이지 헤더 */}
       <PageHeader
-        title="시스템 사이트맵"
-        subtitle="주차장 관리 시스템의 관리 영역별 실제 페이지와 기능을 한눈에 확인할 수 있습니다."
+        title={t('페이지헤더_사이트맵_제목')}
+        subtitle={t('페이지헤더_사이트맵_부제목')}
       />
 
       {/* 메인 콘텐츠 */}

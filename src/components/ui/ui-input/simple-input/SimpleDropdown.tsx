@@ -182,13 +182,13 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 					className="cursor-pointer">
 					{/* 왼쪽 리스트 아이콘 */}
 					{showIcon && (
-						<List className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+						<List className="absolute top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none start-3 neu-icon-input" />
 					)}
 					
 					{/* 표시 텍스트 */}
 					<div
 						ref={triggerRef}
-						className={`w-full h-full flex items-center justify-start ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium cursor-pointer ${
+						className={`w-full h-full flex items-center justify-start ${showIcon ? 'ps-10' : 'ps-3'} pe-16 text-sm font-medium cursor-pointer ${
 							selectedOption ? 'text-foreground' : 'text-muted-foreground'
 						}`}
 						onClick={handleToggle}
@@ -196,13 +196,13 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 						tabIndex={disabled ? -1 : 0}
 						aria-expanded={isOpen}
 						aria-haspopup="listbox">
-						<span className="flex-1 text-start select-none">
+						<span className="flex-1 select-none text-start">
 							{selectedOption ? selectedOption.label : placeholder}
 						</span>
 					</div>
 
 					{/* 우측 아이콘들 */}
-					<div className="flex absolute right-3 top-1/2 gap-1 items-center transform -translate-y-1/2">
+					<div className="flex absolute top-1/2 gap-1 items-center transform -translate-y-1/2 end-3">
 						{selectedOption && !disabled && (
 							<button
 								type="button"

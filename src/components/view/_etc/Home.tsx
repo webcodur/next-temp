@@ -14,18 +14,21 @@ import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
 import Tabs from '@/components/ui/ui-layout/tabs/Tabs';
 import VehicleManagementTab from '@/components/view/_screen/vehicle/VehicleManagementTab';
 import AccessControlManager from '@/components/view/_screen/access-control/AccessControlManager';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function Home() {
 	// #region 상수
+	const t = useTranslations();
+	
   const tabs = [
 		{
 			id: 'vehicles',
-			label: '입출차 관리(T)',
+			label: t('주차_입출차관리'),
 			icon: <Car size={16} />,
 		},
 		{
 			id: 'access-control',
-			label: '주차장 출입 관리(T)',
+			label: t('주차_차단기제어'),
 			icon: <Shield size={16} />,
 		},
 	];
@@ -39,8 +42,8 @@ export default function Home() {
 	return (
 		<div className="flex flex-col gap-6 h-full">
 			<PageHeader 
-				title="통합 대시보드 홈" 
-        subtitle="각종 스크린을 추가할 수 있는 메인 페이지입니다."
+				title={t('페이지헤더_홈_제목')} 
+				subtitle={t('페이지헤더_홈_부제')}
 			/>
 			
 			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}

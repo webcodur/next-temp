@@ -120,7 +120,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				
 				{/* 왼쪽 아이콘 */}
 				{showIcon && (
-					<Type className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<Type className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
 				)}
 
 				{/* 중앙 입력 필드 */}
@@ -135,7 +135,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					autoComplete={autocomplete}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${disabled ? 'cursor-not-allowed' : ''}`}
+					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 
 				{/* 비밀번호 보기/숨기기 버튼 */}
@@ -143,7 +143,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="absolute right-8 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+						className="absolute end-8 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}>
 						{showPassword ? (
 							<EyeOff className="w-4 h-4 text-muted-foreground hover:text-foreground" />
@@ -158,7 +158,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+						className="absolute end-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
 					</button>

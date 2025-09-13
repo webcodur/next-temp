@@ -67,3 +67,25 @@
 [dir='rtl'] .neu-icon-inactive:hover {
 	transform: translateY(-0.5px) scaleX(-1);
 }
+
+/* Input 아이콘 - Simple Input 컴포넌트용 */
+.neu-icon-input {
+	color: hsl(var(--muted-foreground));
+	transition: 
+		color 0.15s ease-out,
+		transform 0.1s ease-out;
+}
+
+.neu-icon-input:hover {
+	color: hsl(var(--foreground));
+}
+
+/* RTL 환경에서 Input 아이콘 좌우반전 */
+[dir='rtl'] .neu-icon-input {
+	transform: scaleX(-1);
+}
+
+/* RTL 환경에서 Input 아이콘 호버 시 반전 상태 유지 */
+[dir='rtl'] .neu-icon-input:hover {
+	transform: scaleX(-1);
+}

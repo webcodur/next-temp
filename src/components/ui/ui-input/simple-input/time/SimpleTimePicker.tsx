@@ -103,7 +103,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 				
 				{/* 왼쪽 시계 아이콘 */}
 				{showIcon && (
-					<Clock className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<Clock className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
 				)}
 
 				{/* 중앙 TimePicker */}
@@ -122,7 +122,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`pr-10 ${showIcon ? 'pl-10' : 'pl-3'} w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					className={`pe-10 ${showIcon ? 'ps-10' : 'ps-3'} w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
 					wrapperClassName="w-full"
 				/>
 
@@ -131,7 +131,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+						className="absolute end-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
 					</button>

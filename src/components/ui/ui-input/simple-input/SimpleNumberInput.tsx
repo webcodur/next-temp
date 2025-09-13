@@ -224,7 +224,7 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 				
 				{/* 왼쪽 이진수 아이콘 */}
 				{showIcon && (
-					<Binary className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<Binary className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
 				)}
 
 				{/* 중앙 입력 필드 */}
@@ -240,12 +240,12 @@ export const SimpleNumberInput: React.FC<SimpleNumberInputProps> = ({
 					disabled={disabled}
 					min={min}
 					max={max}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-16 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? 'cursor-not-allowed' : ''}`}
+					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-16 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 
 				{/* 우측 증감 버튼 */}
 				{!disabled && (
-					<div className="flex absolute right-2 top-1/2 gap-1 transform -translate-y-1/2">
+					<div className="flex absolute end-2 top-1/2 gap-1 transform -translate-y-1/2">
 						<button
 							type="button"
 							onMouseDown={handleDecrementMouseDown}

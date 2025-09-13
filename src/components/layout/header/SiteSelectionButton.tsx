@@ -20,7 +20,7 @@ export function SiteSelectionButton({ className }: SiteSelectionButtonProps) {
 			onClick={() => setIsOpen(true)}
 			aria-label={t('헤더_현장선택')}
 		>
-			<Building2 size={23} />
+			<Building2 size={23} className="neu-icon-inactive" />
 		</button>
 	);
 } 

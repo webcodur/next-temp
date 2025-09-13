@@ -6,7 +6,8 @@
 
 'use client';
 
-import { Settings, Users, Car, Building2, ChevronRight } from 'lucide-react';
+import { useTranslations, useLocale } from '@/hooks/ui-hooks/useI18n';
+import { Settings, Users, Car, Building2, ChevronRight, ChevronLeft } from 'lucide-react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { getSitemapDataByNodeId } from '../data/sitemapData';
 
@@ -37,15 +38,18 @@ const getNodeIcon = (nodeId: string) => {
 
 // #region 렌더링
 export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProps) {
+  const t = useTranslations();
+  const { isRTL } = useLocale();
   const sitemapData = selectedNodeId ? getSitemapDataByNodeId(selectedNodeId) : null;
   const IconComponent = selectedNodeId ? getNodeIcon(selectedNodeId) : Settings;
+  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
   
   if (!sitemapData) {
     return (
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="사이트맵 정보"
+        title={t('모달_사이트맵정보')}
         size="lg"
         className="max-h-[80vh] overflow-hidden"
       >
@@ -54,10 +58,9 @@ export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProp
             <div className="flex justify-center items-center mx-auto mb-3 w-12 h-12 rounded-full bg-muted/40">
               <Settings className="w-5 h-5 text-muted-foreground" />
             </div>
-            <h4 className="mb-2 text-base font-semibold text-foreground">항목을 선택해주세요</h4>
+            <h4 className="mb-2 text-base font-semibold text-foreground">{t('모달_선택요청제목')}</h4>
             <p className="max-w-xs text-sm leading-relaxed">
-              플로우차트에서 관리하고자 하는<br />
-              시스템 요소를 클릭하면 관련 페이지가 표시됩니다.
+              {t('모달_선택요청설명')}
             </p>
           </div>
         </div>
@@ -76,16 +79,16 @@ export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProp
         <div className="space-y-4">
           {/* 헤더 */}
           <div className="pb-3 border-b border-primary/20">
-            <div className="flex gap-3 items-center mb-2">
+            <div className={`flex gap-3 items-center mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <div className="p-2 rounded-lg bg-primary/10">
                 <IconComponent className="w-4 h-4 text-primary" />
               </div>
-              <div>
+              <div className={isRTL ? 'text-end' : 'text-start'}>
                 <h3 className="text-xl font-bold text-foreground">{sitemapData.title}</h3>
-                <p className="text-sm text-muted-foreground">관련 관리 페이지들</p>
+                <p className="text-sm text-muted-foreground">{t('모달_관련페이지')}</p>
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">{sitemapData.description}</p>
+            <p className={`text-sm leading-relaxed text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{sitemapData.description}</p>
           </div>
           
           {/* 카테고리별 그룹 */}
@@ -93,13 +96,13 @@ export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProp
             {sitemapData.categories.map((category, categoryIndex) => (
               <div key={categoryIndex} className="space-y-3">
                 {/* 카테고리 제목 */}
-                <div className="p-3 rounded-lg border-l-4 bg-muted/15 border-primary">
-                  <h4 className="mb-1 text-base font-bold text-foreground">{category.name}</h4>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{category.description}</p>
+                <div className={`p-3 rounded-lg bg-muted/15 border-primary ${isRTL ? 'border-r-4' : 'border-l-4'}`}>
+                  <h4 className={`mb-1 text-base font-bold text-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{category.name}</h4>
+                  <p className={`text-sm leading-relaxed text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{category.description}</p>
                 </div>
                 
                 {/* 페이지 목록 */}
-                <div className="ml-4 space-y-3">
+                <div className={`space-y-3 ${isRTL ? 'mr-4' : 'ml-4'}`}>
                   {category.pages.map((page, pageIndex) => (
                     <div key={pageIndex} className="space-y-2">
                       {/* 메인 페이지 */}
@@ -109,24 +112,24 @@ export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProp
                       >
                         {/* 페이지 헤더 */}
                         <div className="mb-3">
-                          <div className="flex justify-between items-center mb-1">
-                            <h5 className="text-sm font-semibold text-foreground group-hover:text-primary">{page.name}</h5>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                          <div className={`flex justify-between items-center mb-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <h5 className={`text-sm font-semibold text-foreground group-hover:text-primary ${isRTL ? 'text-end' : 'text-start'}`}>{page.name}</h5>
+                            <ChevronIcon className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
                           </div>
-                          <p className="text-sm leading-relaxed text-muted-foreground">{page.description}</p>
+                          <p className={`text-sm leading-relaxed text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{page.description}</p>
                         </div>
                         
                         {/* 상세 탭들 */}
                         {page.detailTabs && page.detailTabs.length > 0 && (
                           <div className="pt-3 border-t border-border/40">
                             <div className="mb-2">
-                              <h6 className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">상세 탭</h6>
+                              <h6 className={`text-sm font-semibold tracking-wide uppercase text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{t('모달_상세탭')}</h6>
                             </div>
                             <div className="grid gap-2 md:grid-cols-2">
                               {page.detailTabs.map((tab, tabIndex) => (
                                 <div key={tabIndex} className="p-2 rounded-md border bg-muted/20 border-border/30">
-                                  <h6 className="mb-1 text-sm font-medium text-foreground">{tab.name}</h6>
-                                  <p className="text-sm leading-relaxed text-muted-foreground">{tab.description}</p>
+                                  <h6 className={`mb-1 text-sm font-medium text-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{tab.name}</h6>
+                                  <p className={`text-sm leading-relaxed text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>{tab.description}</p>
                                 </div>
                               ))}
                             </div>
@@ -134,9 +137,9 @@ export function DetailModal({ isOpen, onClose, selectedNodeId }: DetailModalProp
                         )}
                         
                         {/* 클릭 힌트 */}
-                        <div className="flex justify-end mt-2">
+                        <div className={`flex mt-2 ${isRTL ? 'justify-start' : 'justify-end'}`}>
                           <span className="text-sm font-medium text-muted-foreground/60 group-hover:text-primary">
-                            클릭하여 페이지 이동
+                            {t('모달_페이지이동')}
                           </span>
                         </div>
                       </div>

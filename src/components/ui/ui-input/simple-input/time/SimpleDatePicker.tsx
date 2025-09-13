@@ -247,7 +247,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				
 				{/* 왼쪽 캘린더 아이콘 */}
 				{showIcon && (
-					<Calendar className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+					<Calendar className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
 				)}
 
 				{/* 중앙 DatePicker */}
@@ -265,7 +265,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
+					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
 					wrapperClassName="w-full"
 					popperPlacement="bottom-start"
 					calendarClassName="!z-50"
@@ -276,7 +276,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 					<button
 						type="button"
 						onClick={handleClear}
-						className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+						className="absolute end-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
 						aria-label="값 지우기">
 						<div className="w-4 h-4 text-muted-foreground hover:text-foreground">✗</div>
 					</button>

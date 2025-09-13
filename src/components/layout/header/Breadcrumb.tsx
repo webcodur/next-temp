@@ -19,12 +19,14 @@ import {
 	currentBotMenuAtom
 } from '@/store/ui';
 import { menuData } from '@/data/menuData';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 export default function Breadcrumb() {
 	const pathname = usePathname();
 	const [currentTopMenu, setCurrentTopMenu] = useAtom(currentTopMenuAtom);
 	const [currentMidMenu, setCurrentMidMenu] = useAtom(currentMidMenuAtom);
 	const [currentBotMenu, setCurrentBotMenu] = useAtom(currentBotMenuAtom);
+	const t = useTranslations();
 
 
 	// #region 효과
@@ -74,21 +76,21 @@ export default function Breadcrumb() {
 
 		// 홈 추가
 		items.push({
-			label: '홈',
+			label: t('페이지_홈'),
 			href: '/',
 			isClickable: true,
 		});
 
 		if (currentTopMenu && menuData[currentTopMenu]) {
 			items.push({
-				label: currentTopMenu,
+				label: t(currentTopMenu),
 				href: '#',
 				isClickable: false,
 			});
 
 			if (currentMidMenu && menuData[currentTopMenu].midItems[currentMidMenu]) {
 				items.push({
-					label: currentMidMenu,
+					label: t(currentMidMenu),
 					href: '#',
 					isClickable: false,
 				});
@@ -99,7 +101,7 @@ export default function Breadcrumb() {
 					].botItems.find(item => item.key === currentBotMenu);
 					if (botItem) {
 						items.push({ 
-							label: currentBotMenu, 
+							label: t(currentBotMenu), 
 							href: botItem.href,
 							isClickable: true 
 						});

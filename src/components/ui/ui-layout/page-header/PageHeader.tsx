@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/ui-input/button/Button';
 import { ArrowLeft, List } from 'lucide-react';
 import { useBackNavigation } from '@/hooks/useBackNavigation';
 import { useListNavigation } from '@/hooks/ui-hooks/useListNavigation';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입
 export interface PageHeaderProps extends HTMLAttributes<HTMLDivElement> {
@@ -41,6 +42,9 @@ export default function PageHeader({
 	className,
 	...props
 }: PageHeaderProps) {
+	// 다국어 번역 함수
+	const t = useTranslations();
+	
 	// 뒤로가기 기능
 	const { handleBack } = useBackNavigation({ hasChanges });
 	
@@ -57,15 +61,15 @@ export default function PageHeader({
 			{...props}
 		>
 			{/* 좌측 영역 - 네비게이션 버튼들 */}
-			<div className="flex absolute bottom-0 left-0 gap-2 items-center">
+			<div className="flex absolute bottom-0 gap-2 items-center start-0">
 				<Button
 					variant="primary"
 					size="sm"
 					onClick={handleBack}
-					title="뒤로가기"
+					title={t('뒤로가기')}
 				>
 					<ArrowLeft className="w-4 h-4" />
-          뒤로가기
+					{t('뒤로가기')}
 				</Button>
 				
 				{/* 상세/편집/생성 페이지에서만 목록으로 버튼 표시 */}
@@ -74,10 +78,10 @@ export default function PageHeader({
 						variant="outline"
 						size="sm"
 						onClick={handleGoToList}
-						title={`${listPageTitle} 목록으로 이동`}
+						title={t('{title} 목록으로 이동', { title: listPageTitle })}
 					>
 						<List className="w-4 h-4" />
-						목록으로
+						{t('목록으로')}
 					</Button>
 				)}
 			</div>
@@ -96,7 +100,7 @@ export default function PageHeader({
 			
 			{/* 우측 영역 - 서브타이틀 라인에 정렬 */}
 			{finalRightActions && (
-				<div className="flex absolute right-0 bottom-0 gap-2 items-center">
+				<div className="flex absolute bottom-0 gap-2 items-center end-0">
 					{finalRightActions}
 				</div>
 			)}

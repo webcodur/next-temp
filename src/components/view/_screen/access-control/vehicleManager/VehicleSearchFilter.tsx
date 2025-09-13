@@ -112,18 +112,18 @@ const VehicleSearchFilter: React.FC<VehicleSearchFilterProps> = ({
 							onClick={handleResetFilters}
 							variant="outline"
 							size="icon"
-							className="w-10 h-full text-muted-foreground hover:text-primary hover:bg-accent neu-raised"
+							className="w-10 h-full text-muted-foreground hover:text-primary neu-raised"
 							type="button"
 						>
 							<RefreshCw className="w-4 h-4" />
 						</Button>
 						<Button
 							onClick={onSearch}
-							variant="primary"
+							variant="outline"
 							size="icon"
-							className="w-10 h-full bg-primary text-primary-foreground hover:bg-primary/90 neu-raised"
+              className="w-10 h-full text-muted-foreground hover:text-primary neu-raised"
 						>
-							<Search className="w-4 h-4" />
+							<Search className="w-4 h-4 neu-icon-active" />
 						</Button>
 					</div>
 				</div>

@@ -77,20 +77,20 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 			<button
 				onClick={() => setIsOpen(!isOpen)}
 				className={clsx('flex gap-1 items-center', className)}>
-				<User className="w-6 h-6 text-muted-foreground" />
+				<User className="w-6 h-6 text-muted-foreground neu-icon-inactive" />
 				<ChevronDown
-					className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+					className={`w-4 h-4 text-muted-foreground neu-icon-inactive transition-transform duration-200 ${
 						isOpen ? 'rotate-180' : ''}`}
 				/>
 			</button>
 
 			{/* 드롭다운 메뉴 */}
 			{isOpen && (
-				<div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border shadow-lg neu-flat bg-background border-border/50">
+				<div className="absolute end-0 top-full z-50 mt-2 w-64 rounded-lg border shadow-lg neu-flat bg-background border-border/50">
 					{/* 사용자 정보 헤더 */}
 					<div className="px-4 py-3 border-b border-border/50">
 						<div className="flex gap-3 items-center mb-2">
-							<User className="w-8 h-8 text-muted-foreground" />
+							<User className="w-8 h-8 text-muted-foreground neu-icon-inactive" />
 							<div className="flex-1">
 								<div className="font-medium text-foreground font-multilang">
 									{userProfile?.name || userProfile?.account || '사용자'}
@@ -127,7 +127,7 @@ export const ProfileButton = memo(function ProfileButton({ className = '' }: Pro
 						<button
 							onClick={handleLogout}
 							className="flex gap-3 items-center p-2 w-full rounded-md transition-colors text-start hover:bg-destructive/10 text-destructive">
-							<LogOut className="w-5 h-5" />
+							<LogOut className="w-5 h-5 neu-icon-inactive" />
 							<span className="text-base cursor-pointer font-multilang">로그아웃</span>
 						</button>
 					</div>

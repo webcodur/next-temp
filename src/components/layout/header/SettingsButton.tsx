@@ -3,10 +3,9 @@ import { useAtom } from 'jotai';
 import LanguageSwitcher from '@/components/ui/ui-input/language-switcher/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ui-layout/theme-toggle/ThemeToggle';
 import { ColorSetSelector } from '@/components/ui/ui-input/color-set-picker/ColorSetSelector';
-import { Settings as SettingsIcon } from 'lucide-react';
-import clsx from 'clsx';
+import { Settings as SettingsIcon, Globe, Palette, Sun } from 'lucide-react';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
-import { useLocale } from '@/hooks/ui-hooks/useI18n';
+import { useLocale, useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { themeAtom } from '@/store/theme';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
 
@@ -18,7 +17,8 @@ interface SettingsButtonProps {
 
 export function SettingsButton({ className = '' }: SettingsButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { localeMetadata } = useLocale();
+  const { localeMetadata, isRTL } = useLocale();
+  const t = useTranslations();
   const [theme] = useAtom(themeAtom);
   const { colorSetName } = useColorSet();
 
@@ -26,60 +26,66 @@ export function SettingsButton({ className = '' }: SettingsButtonProps) {
 
   // 현재 상태 데이터 준비
   const currentLanguageName = localeMetadata.name;
-  const currentThemeName = theme === 'dark' ? '다크 모드' : '라이트 모드';
-  const currentColorSetName = colorSetName;
+  const currentThemeName = theme === 'dark' ? t('테마_다크모드') : t('테마_라이트모드');
+  const currentColorSetName = t(colorSetName);
 
   return (
     <>
       {/* 설정 버튼 */}
       <button
         onClick={toggleOpen}
-        className={clsx('flex justify-center items-center', className)}
-        aria-label="설정"
+        className={`flex justify-center items-center ${className}`}
+        aria-label={t('설정_버튼')}
       >
-        <SettingsIcon className="w-6 h-6 text-muted-foreground" />
+        <SettingsIcon className="w-6 h-6 text-muted-foreground neu-icon-inactive" />
       </button>
 
       {/* 설정 모달 */}
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="인터페이스 설정"
+        title={t('설정_인터페이스설정')}
         size="md"
       >
-        <div className="space-y-6 min-w-[400px]">
+        <div className="space-y-6 min-w-[400px]" dir={isRTL ? 'rtl' : 'ltr'}>
           {/* 언어 스위처 */}
-          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center justify-items-center">
-            <div className="flex flex-col gap-0.5 justify-self-start">
-              <span className="text-sm font-medium text-foreground font-multilang">언어</span>
-              <span className="text-xs text-muted-foreground font-multilang">표시 언어</span>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center">
+            <div className="flex items-center gap-3 justify-self-start">
+              <div className="flex justify-center items-center w-8 h-8 text-muted-foreground">
+                <Globe className="w-5 h-5 neu-icon-inactive" />
+              </div>
+              <span className="text-sm font-medium text-foreground font-multilang">{t('설정_언어')}</span>
             </div>
-            <span className="text-sm text-center text-foreground font-multilang">{currentLanguageName}</span>
-            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+            <span className="text-sm text-foreground font-multilang text-end">{currentLanguageName}</span>
+            <div className="flex justify-center items-center w-12 h-12 neu-flat justify-self-end">
               <LanguageSwitcher variant="inline" hideChevron noBorder className="text-primary" />
             </div>
           </div>
 
           {/* 색상 테마 */}
-          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center justify-items-center">
-            <div className="flex flex-col gap-0.5 justify-self-start">
-              <span className="text-sm font-medium text-foreground font-multilang">색상 테마</span>
-              <span className="text-xs text-muted-foreground font-multilang">색상 조합</span>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center">
+            <div className="flex items-center gap-3 justify-self-start">
+              <div className="flex justify-center items-center w-8 h-8 text-muted-foreground">
+                <Palette className="w-5 h-5 neu-icon-inactive" />
+              </div>
+              <span className="text-sm font-medium text-foreground font-multilang">{t('설정_색상테마')}</span>
             </div>
-            <span className="text-sm text-center text-foreground font-multilang">{currentColorSetName}</span>
-            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+            <span className="text-sm text-foreground font-multilang text-end">{currentColorSetName}</span>
+            <div className="flex justify-center items-center w-12 h-12 neu-flat justify-self-end">
               <ColorSetSelector compact />
             </div>
           </div>
 
           {/* 테마 토글 */}
-          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center justify-items-center">
-            <div className="flex flex-col gap-0.5 justify-self-start">
-              <span className="text-sm font-medium text-foreground font-multilang">테마</span>
-              <span className="text-xs text-muted-foreground font-multilang">화면 모드</span>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center">
+            <div className="flex items-center gap-3 justify-self-start">
+              <div className="flex justify-center items-center w-8 h-8 text-muted-foreground">
+                <Sun className="w-5 h-5 neu-icon-inactive" />
+              </div>
+              <span className="text-sm font-medium text-foreground font-multilang">{t('설정_테마')}</span>
             </div>
-            <span className="text-sm text-center text-foreground font-multilang">{currentThemeName}</span>
-            <div className="flex justify-center items-center w-12 h-12 neu-flat">
+            <span className="text-sm text-foreground font-multilang text-end">{currentThemeName}</span>
+            <div className="flex justify-center items-center w-12 h-12 neu-flat justify-self-end">
               <ThemeToggle />
             </div>
           </div>

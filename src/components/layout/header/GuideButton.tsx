@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { HelpCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 import clsx from 'clsx';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
 import { Button } from '@/components/ui/ui-input/button/Button';
@@ -22,7 +22,7 @@ export function GuideButton({ className = '' }: GuideButtonProps) {
         className={clsx('flex justify-center items-center', className)}
         aria-label="사용자 가이드"
       >
-        <HelpCircle className="w-6 h-6 text-muted-foreground" />
+        <Info className="w-6 h-6 text-muted-foreground neu-icon-inactive" />
       </button>
 
       {/* 가이드 다이얼로그 */}

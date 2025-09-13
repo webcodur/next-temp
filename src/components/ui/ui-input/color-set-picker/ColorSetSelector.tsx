@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -19,6 +20,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { colorSet: currentSet, setColorSet } = useColorSet();
+	const t = useTranslations();
 
 	const currentColorSet = COLOR_SETS[currentSet];
 	const primaryColor = currentColorSet.primary.light;
@@ -70,7 +72,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 							}}
 						/>
 						<span className="flex-1 text-sm font-medium text-left text-foreground">
-							{currentColorSet.name}
+							{t(currentColorSet.name)}
 						</span>
 					</div>
 				)}
@@ -80,7 +82,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 			<Modal
 				isOpen={isModalOpen}
 				onClose={handleCloseModal}
-				title="색상 테마 선택"
+				title={t('설정_색상테마')}
 				size="lg"
 			>
 				<div className="space-y-3 min-w-[400px] max-h-[60vh] overflow-y-auto">
@@ -114,7 +116,7 @@ export const ColorSetSelector: React.FC<ColorSetSelectorProps> = ({
 								{/* 색상 세트 정보 */}
 								<div className="flex-1 min-w-0">
 									<div className="mb-1 text-base font-medium text-foreground">
-										{colorSet.name}
+										{t(colorSet.name)}
 									</div>
 									<div className="text-xs text-muted-foreground">
 										Primary: {primaryColor}

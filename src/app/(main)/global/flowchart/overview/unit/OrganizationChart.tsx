@@ -4,6 +4,7 @@
   책임: 건물→세대→개인/차량의 계층 구조를 시각적으로 표현한다.
 */
 
+import { useTranslations, useLocale } from '@/hooks/ui-hooks/useI18n';
 import { Workflow } from 'lucide-react';
 
 // #region 타입
@@ -40,49 +41,49 @@ const SVG_CONFIG = {
   }
 };
 
-// 노드 기본 정보 (좌표 제외)
+// 노드 기본 정보 (좌표 제외) - 다국어 키들
 const NODE_DEFINITIONS = [
   {
     id: 'building',
-    label: '건물',
+    labelKey: '노드_건물',
     type: 'building' as const,
     level: 1,
-    description: '아파트 건물 전체를 관리하는 최상위 단위'
+    descriptionKey: '노드설명_건물'
   },
   {
     id: 'parking',
-    label: '주차장',
+    labelKey: '노드_주차장',
     type: 'parking' as const,
     level: 2,
-    description: '건물 내 주차 공간 관리 단위'
+    descriptionKey: '노드설명_주차장'
   },
   {
     id: 'room',
-    label: '세대',
+    labelKey: '노드_세대',
     type: 'room' as const,
     level: 2,
-    description: '각 세대별 주거 공간 단위'
+    descriptionKey: '노드설명_세대'
   },
   {
     id: 'facility',
-    label: '공용시설',
+    labelKey: '노드_공용시설',
     type: 'facility' as const,
     level: 2,
-    description: '커뮤니티 시설 및 공용 공간 관리 단위'
+    descriptionKey: '노드설명_공용시설'
   },
   {
     id: 'person',
-    label: '주민',
+    labelKey: '노드_주민',
     type: 'person' as const,
     level: 3,
-    description: '실제 거주하는 주민'
+    descriptionKey: '노드설명_주민'
   },
   {
     id: 'vehicle',
-    label: '차량',
+    labelKey: '노드_차량',
     type: 'vehicle' as const,
     level: 3,
-    description: '주민이 소유한 차량'
+    descriptionKey: '노드설명_차량'
   }
 ];
 
@@ -102,7 +103,7 @@ const CONNECTIONS = [
 ];
 
 // 노드 위치 동적 계산 함수
-const calculateNodePositions = (): ChartNode[] => {
+const calculateNodePositions = (t: (key: string) => string, isRTL: boolean): ChartNode[] => {
   const { viewBox, padding } = SVG_CONFIG;
   const { width, height } = viewBox;
   const workingHeight = height - padding.top - padding.bottom;
@@ -127,9 +128,11 @@ const calculateNodePositions = (): ChartNode[] => {
       if (nodeDef.id === 'room') {
         x = centerX; // 세대은 정확히 중앙
       } else if (nodeDef.id === 'parking') {
-        x = centerX - 150; // 주차장은 중앙에서 왼쪽으로 150px (1.5배)
+        const offset = isRTL ? 150 : -150; // RTL일 때는 오른쪽으로
+        x = centerX + offset;
       } else if (nodeDef.id === 'facility') {
-        x = centerX + 150; // 공용시설은 중앙에서 오른쪽으로 150px (1.5배)
+        const offset = isRTL ? -150 : 150; // RTL일 때는 왼쪽으로
+        x = centerX + offset;
       } else {
         x = centerX; // 기본값
       }
@@ -137,14 +140,18 @@ const calculateNodePositions = (): ChartNode[] => {
       // 레벨 3: 세대을 기준으로 좌우 배치 (세대이 중앙이므로 centerX 기준)
       const level3Nodes = NODE_DEFINITIONS.filter(n => n.level === 3);
       const nodeIndex = level3Nodes.findIndex(n => n.id === nodeDef.id);
-      const offset = (nodeIndex === 0) ? -75 : 75; // 좌우로 75px 떨어뜨리기 (1.5배)
+      let offset = (nodeIndex === 0) ? -75 : 75;
+      if (isRTL) offset = -offset; // RTL일 때는 위치 반전
       x = centerX + offset;
     }
     
     return {
-      ...nodeDef,
+      id: nodeDef.id,
+      label: t(nodeDef.labelKey),
+      type: nodeDef.type,
       x,
-      y: levelY[nodeDef.level as keyof typeof levelY]
+      y: levelY[nodeDef.level as keyof typeof levelY],
+      description: t(nodeDef.descriptionKey)
     };
   });
 };
@@ -183,21 +190,24 @@ const getNodeStroke = (type: ChartNode['type'], isSelected: boolean, nodeId: str
 
 // #region 렌더링
 export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationChartProps) {
+  const t = useTranslations();
+  const { isRTL } = useLocale();
+  
   // 노드 위치 동적 계산
-  const NODES = calculateNodePositions();
+  const NODES = calculateNodePositions(t, isRTL);
   
   return (
     <div className="p-4 h-full rounded-lg border shadow-sm bg-card border-border/50">
       <div className="flex flex-col space-y-4 h-full">
         {/* 헤더 */}
         <div className="pb-3 border-b border-primary/20">
-          <div className="flex gap-3 items-center mb-2">
+          <div className={`flex gap-3 items-center mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <div className="p-2 rounded-lg bg-primary/10">
               <Workflow className="w-4 h-4 text-primary" />
             </div>
-            <div>
-              <h3 className="text-xl font-bold text-foreground">조직도 및 통합 다이어그램</h3>
-              <p className="text-sm text-muted-foreground">시스템 구조와 관계</p>
+            <div className={isRTL ? 'text-end' : 'text-start'}>
+              <h3 className="text-xl font-bold text-foreground">{t('조직도_제목')}</h3>
+              <p className="text-sm text-muted-foreground">{t('조직도_설명')}</p>
             </div>
           </div>
         </div>
@@ -312,15 +322,15 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
       
       {/* 범례 (확대) */}
       <div className="flex flex-wrap gap-8 justify-center text-base text-muted-foreground">
-        <div className="flex gap-3 items-center">
+        <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-8 h-1 opacity-80" style={{ backgroundColor: 'hsl(var(--muted-foreground))' }}></div>
-          <span>실선: 계층 관계</span>
+          <span>{t('범례_실선')}</span>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-8 h-1 border-dashed opacity-80 border-t-3" style={{ borderColor: 'hsl(var(--muted-foreground))' }}></div>
-          <span>점선: 연관 관계</span>
+          <span>{t('범례_점선')}</span>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div 
             className="w-5 h-5 rounded-sm border-dashed opacity-80 border-3" 
             style={{ 
@@ -328,9 +338,9 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
               borderColor: 'hsl(var(--primary))' 
             }}
           ></div>
-          <span>선택된 항목</span>
+          <span>{t('범례_선택됨')}</span>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div 
             className="w-5 h-5 rounded-sm opacity-50" 
             style={{ 
@@ -338,7 +348,7 @@ export function OrganizationChart({ onNodeClick, selectedNodeId }: OrganizationC
               border: '1.5px solid hsl(var(--muted-foreground) / 0.3)'
             }}
           ></div>
-          <span>준비중 (클릭 불가)</span>
+          <span>{t('범례_준비중')}</span>
         </div>
       </div>
       </div>

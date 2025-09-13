@@ -196,8 +196,8 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
         validationStatus={getFeedbackType()}
         onClick={handleContainerClick}>
         
-        {/* 왼쪽 지도 아이콘 */}
-        <MapPin className="absolute left-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none text-muted-foreground" />
+		{/* 왼쪽 지도 아이콘 */}
+		<MapPin className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
 
         {/* 중앙 표시 영역 */}
         <input
@@ -209,7 +209,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
           onBlur={handleBlur}
           placeholder="주소를 입력하세요"
           disabled={disabled}
-          className={`w-full pl-10 pr-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start cursor-pointer ${disabled ? 'cursor-not-allowed' : ''}`}
+          className={`w-full ps-10 pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start cursor-pointer ${disabled ? 'cursor-not-allowed' : ''}`}
         />
 
         {/* 우측 X 아이콘 */}
@@ -217,7 +217,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+            className="absolute end-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
             aria-label="값 지우기">
             <X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
           </button>

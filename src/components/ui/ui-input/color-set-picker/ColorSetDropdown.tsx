@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import { createPortal } from 'react-dom';
@@ -22,6 +23,7 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 	const containerRef = useRef<HTMLDivElement>(null);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const { colorSet: currentSet, setColorSet } = useColorSet();
+	const t = useTranslations();
 
 	// 외부 클릭 감지
 	useEffect(() => {
@@ -83,7 +85,7 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 								}}
 							/>
 							<span className="text-sm font-medium text-foreground">
-								{currentColorSet.name}
+								{t(currentColorSet.name)}
 							</span>
 						</div>
 						<ChevronDown
@@ -132,9 +134,9 @@ export const ColorSetDropdown: React.FC<ColorSetDropdownProps> = ({
 										}}
 									/>
 									<div className="flex-1">
-										<div className="text-sm font-medium text-foreground">
-											{colorSet.name}
-										</div>
+								<div className="text-sm font-medium text-foreground">
+									{t(colorSet.name)}
+								</div>
 									</div>
 									{/* 선택 표시 */}
 									{isSelected && (

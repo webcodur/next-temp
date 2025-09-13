@@ -114,7 +114,7 @@ export const SimpleCheckboxGroup: React.FC<SimpleCheckboxGroupProps> = ({
 								</div>
 							</div>
 							<span
-								className={`ml-3 text-sm font-medium ${isChecked ? colorStyles.textColor : 'text-muted-foreground'}`}>
+								className={`ms-3 text-sm font-medium ${isChecked ? colorStyles.textColor : 'text-muted-foreground'}`}>
 								{option.label}
 							</span>
 						</div>

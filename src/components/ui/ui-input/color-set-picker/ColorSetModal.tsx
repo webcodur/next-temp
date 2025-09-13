@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 import Modal from '@/components/ui/ui-layout/modal/Modal';
@@ -20,6 +21,7 @@ export const ColorSetModal: React.FC<ColorSetModalProps> = ({
 	className = '',
 }) => {
 	const { colorSet: currentSet, setColorSet } = useColorSet();
+	const t = useTranslations();
 
 	const handleSetChange = (newSet: ColorSetKey) => {
 
@@ -32,7 +34,7 @@ export const ColorSetModal: React.FC<ColorSetModalProps> = ({
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			title="색상 테마 선택"
+			title={t('설정_색상테마')}
 			size="lg"
 			className={className}
 		>
@@ -66,9 +68,9 @@ export const ColorSetModal: React.FC<ColorSetModalProps> = ({
 							
 							{/* 색상 세트 정보 */}
 							<div className="flex-1 min-w-0">
-								<div className="mb-1 text-base font-medium text-foreground">
-									{colorSet.name}
-								</div>
+							<div className="mb-1 text-base font-medium text-foreground">
+								{t(colorSet.name)}
+							</div>
 								<div className="text-xs text-muted-foreground">
 									Primary: {primaryColor}
 								</div>

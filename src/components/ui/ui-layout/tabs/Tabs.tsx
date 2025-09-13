@@ -100,10 +100,17 @@ const Tabs = React.forwardRef<
 									!isActive && `bg-muted/80 hover:bg-muted z-10 ${colorStyles.inactive} border-border`,
 									)}
 								>
-									{tab.icon && <span className="inline-block me-2">{tab.icon}</span>}
+									{tab.icon && (
+										<span className={cn(
+											"inline-block me-2",
+											isActive ? 'neu-icon-active' : 'neu-icon-inactive'
+										)}>
+											{tab.icon}
+										</span>
+									)}
 									<span>{tab.label}</span>
 									{typeof tab.count === 'number' && (
-										<span className="ml-1 text-xs opacity-70">
+										<span className="ms-1 text-xs opacity-70">
 											({tab.count})
 										</span>
 									)}
@@ -149,7 +156,7 @@ const Tabs = React.forwardRef<
 									>
 										{subTab.label}
 										{typeof subTab.count === 'number' && (
-											<span className="ml-1 text-xs opacity-70">
+											<span className="ms-1 text-xs opacity-70">
 												({subTab.count})
 											</span>
 										)}

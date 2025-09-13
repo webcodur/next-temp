@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useColorSet } from '@/hooks/ui-hooks/useColorSet';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
 import { COLOR_SETS, type ColorSetKey } from '@/store/colorSet';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,7 @@ export const ColorSetPicker: React.FC<ColorSetPickerProps> = ({
 	showLabels = true,
 }) => {
 	const { colorSet: currentSet, setColorSet } = useColorSet();
+	const t = useTranslations();
 
 	const handleSetChange = (newSet: ColorSetKey) => {
 
@@ -28,7 +30,7 @@ export const ColorSetPicker: React.FC<ColorSetPickerProps> = ({
 		<div className={cn('space-y-4', className)}>
 			{showLabels && (
 				<div className="text-sm font-medium text-foreground">
-					색상 테마 선택
+					{t('설정_색상테마')}
 				</div>
 			)}
 			
@@ -64,7 +66,7 @@ export const ColorSetPicker: React.FC<ColorSetPickerProps> = ({
 							
 							{/* 색상 세트 이름 */}
 							<div className="text-sm font-medium transition-colors text-foreground group-hover:text-primary">
-								{colorSet.name}
+								{t(colorSet.name)}
 							</div>
 							
 							{/* HSL 값 표시 - 라이트/다크 모드별 */}
@@ -94,9 +96,9 @@ export const ColorSetPicker: React.FC<ColorSetPickerProps> = ({
 						}}
 					/>
 					<div className="flex-1">
-						<div className="text-sm font-medium text-foreground">
-							선택된 테마: {COLOR_SETS[currentSet].name}
-						</div>
+					<div className="text-sm font-medium text-foreground">
+						{t('설정_색상테마')}: {t(COLOR_SETS[currentSet].name)}
+					</div>
 						<div className="text-xs text-muted-foreground">
 							Light: P:{COLOR_SETS[currentSet].primary.light} | S:{COLOR_SETS[currentSet].secondary.light}
 						</div>

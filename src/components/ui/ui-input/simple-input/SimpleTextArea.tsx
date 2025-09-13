@@ -124,7 +124,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 				
 				{/* 왼쪽 텍스트 아이콘 */}
 				{showIcon && (
-					<AlignLeft className="absolute top-3 left-3 w-4 h-4 pointer-events-none text-muted-foreground" />
+					<AlignLeft className="absolute top-3 start-3 w-4 h-4 pointer-events-none neu-icon-input" />
 				)}
 
 				{/* 텍스트 영역 */}
@@ -139,7 +139,7 @@ export const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
 					disabled={disabled}
 					rows={rows}
 					maxLength={maxLength}
-					className={`w-full ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${resizeClass[resize]} min-h-[2.5rem] ${disabled ? 'cursor-not-allowed' : ''}`}
+					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-3 py-3 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${resizeClass[resize]} min-h-[2.5rem] ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 			</InputContainer>
 		</div>

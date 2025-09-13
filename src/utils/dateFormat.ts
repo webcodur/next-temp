@@ -93,6 +93,43 @@ export const formatToMonthDay = (dateInput: DateInput): string => {
 
 // #region 시간 포함 포맷팅
 /**
+ * 다국어 환경을 위한 시간 포맷팅 함수
+ * 브라우저의 현재 언어 설정에 따라 시간을 포맷팅한다
+ * @param dateInput - 날짜 문자열, Date 객체, null, undefined
+ * @returns 현재 로케일에 맞는 시간 형식 또는 '-'
+ */
+export const formatToLocaleDateTime = (dateInput: DateInput): string => {
+  if (!dateInput) return '-';
+  
+  try {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    
+    if (isNaN(date.getTime())) {
+      return '-';
+    }
+    
+    // 현재 브라우저 언어 감지
+    const locale = navigator.language || 'ko-KR';
+    
+    // 각 언어별 맞춤 포맷
+    const options: Intl.DateTimeFormatOptions = {
+      year: '2-digit',
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false // 24시간 형식
+    };
+    
+    return date.toLocaleDateString(locale, options).replace(/\//g, '.').replace(',', '');
+  } catch (error) {
+    console.warn('로케일 날짜시간 포맷팅 실패:', error);
+    // 기본 형식으로 폴백
+    return formatToShortDateTime(dateInput);
+  }
+};
+/**
  * 날짜와 시간을 yy.mm.dd hh:mm:ss 형태로 포맷팅한다
  * @param dateInput - 날짜 문자열, Date 객체, null, undefined
  * @returns yy.mm.dd hh:mm:ss 형태의 문자열 또는 '-'
@@ -192,6 +229,7 @@ const dateFormat = {
   monthDay: formatToMonthDay,      // mm/dd
   shortDateTime: formatToShortDateTime, // yy.mm.dd hh:mm:ss
   shortDateTimeDot: formatToShortDateTimeDot, // yy.mm.dd hh.mm.ss
+  localeDateTime: formatToLocaleDateTime, // 로케일별 시간 형식
   
   // 유틸리티
   isToday,

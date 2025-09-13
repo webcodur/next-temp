@@ -13,6 +13,7 @@ import { GuideButton } from '@/components/layout/header/GuideButton';
 import { ProfileButton } from '@/components/layout/header/ProfileButton';
 import { SettingsButton } from '@/components/layout/header/SettingsButton';
 import MenuSearch from '@/components/view/_etc/menu-search/MenuSearch';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
 import { Search } from 'lucide-react';
 
 import { Logo } from './Logo';
@@ -21,11 +22,14 @@ import { SiteSelectionButton } from './SiteSelectionButton';
 const Header = memo(function Header() {
 	// #region 상태
 	const [isMenuSearchOpen, setIsMenuSearchOpen] = useState(false);
+	const { getUserRoleId } = useAuth();
 	// #endregion
 
 	// #region 상수
 	const buttonBase = 'h-10 flex items-center justify-center rounded-lg neu-raised hover:neu-inset transition-all duration-200';
 	const squareButton = clsx(buttonBase, 'w-10');
+	const currentUserRoleId = getUserRoleId();
+	const isSuperAdmin = currentUserRoleId === 1; // 최고관리자 (SUPER_ADMIN)
 	// #endregion
 
 	// #region 핸들러
@@ -53,13 +57,13 @@ const Header = memo(function Header() {
 
 				{/* Right: Buttons */}
 				<div className="flex gap-3.5 items-center">
-					<SiteSelectionButton className={squareButton} />
+					{isSuperAdmin && <SiteSelectionButton className={squareButton} />}
 					<button
 						onClick={handleMenuSearchOpen}
 						className={squareButton}
 						title="메뉴 검색"
 					>
-						<Search size={18} />
+						<Search size={18} className="neu-icon-inactive" />
 					</button>
 					<GuideButton className={squareButton} />
 					<SettingsButton className={squareButton} />
