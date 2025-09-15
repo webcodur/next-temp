@@ -64,9 +64,14 @@ const CrudButton = React.forwardRef<HTMLButtonElement, CrudButtonProps>(
         variant={config.variant}
         size={iconOnly ? 'icon' : size}
         icon={IconComponent}
+        className={`xl:px-4 xl:w-auto w-10 h-10 ${props.className || ''}`}
         {...props}
       >
-        {!iconOnly && (children || config.text)}
+        {!iconOnly && (
+          <span className="hidden xl:inline">
+            {children || config.text}
+          </span>
+        )}
       </Button>
     );
   }

@@ -152,10 +152,6 @@ export default function CarsListPage() {
   // #endregion
 
   // #region 이벤트 핸들러
-  const handleCreateClick = useCallback(() => {
-    router.push('/parking/occupancy/car/create');
-  }, [router]);
-
   const handleRowClick = useCallback((car: CarWithInstance, _index: number) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     router.push(`/parking/occupancy/car/${car.id}`);
   }, [router]);
@@ -421,17 +417,7 @@ export default function CarsListPage() {
     <div className="flex flex-col gap-6">
       <PageHeader 
         title="차량 관리" 
-        subtitle="차량 등록, 수정, 삭제 및 세대 연결 관리"
-        rightActions={
-          <CrudButton
-            action="create"
-            size="default"
-            onClick={handleCreateClick}
-            title="차량 추가"
-          >
-            추가
-          </CrudButton>
-        }
+        subtitle="차량 수정, 삭제 및 세대 연결 관리"
       />
 
       {/* 고급 검색 */}

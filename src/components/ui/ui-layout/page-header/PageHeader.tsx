@@ -67,9 +67,10 @@ export default function PageHeader({
 					size="sm"
 					onClick={handleBack}
 					title={t('뒤로가기')}
+					className="px-0 w-8 h-8 min-w-8 xl:w-auto xl:min-w-20 xl:px-3"
 				>
 					<ArrowLeft className="w-4 h-4" />
-					{t('뒤로가기')}
+					<span className="hidden xl:inline">{t('뒤로가기')}</span>
 				</Button>
 				
 				{/* 상세/편집/생성 페이지에서만 목록으로 버튼 표시 */}
@@ -79,9 +80,10 @@ export default function PageHeader({
 						size="sm"
 						onClick={handleGoToList}
 						title={t('{title} 목록으로 이동', { title: listPageTitle })}
+						className="px-0 w-8 h-8 min-w-8 xl:w-auto xl:min-w-20 xl:px-3"
 					>
 						<List className="w-4 h-4" />
-						{t('목록으로')}
+						<span className="hidden xl:inline">{t('목록으로')}</span>
 					</Button>
 				)}
 			</div>

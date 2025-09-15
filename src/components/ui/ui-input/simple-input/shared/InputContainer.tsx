@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Type, Binary, List, AlignLeft, Calendar, Clock, MapPin } from 'lucide-react';
 
 interface InputContainerProps {
 	children: React.ReactNode;
@@ -11,7 +12,20 @@ interface InputContainerProps {
 	className?: string;
 	isTextArea?: boolean;
 	validationStatus?: 'success' | 'error' | 'info' | 'none';
+	// 아이콘 관련 - xl 이하에서 무조건 숨김 처리
+	iconType?: 'text' | 'number' | 'dropdown' | 'textarea' | 'calendar' | 'clock' | 'address';
+	showIcon?: boolean;
 }
+
+const iconMap = {
+	text: Type,
+	number: Binary,
+	dropdown: List,
+	textarea: AlignLeft,
+	calendar: Calendar,
+	clock: Clock,
+	address: MapPin,
+};
 
 export const InputContainer: React.FC<InputContainerProps> = ({
 	children,
@@ -22,6 +36,8 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 	className = '',
 	isTextArea = false,
 	validationStatus = 'none',
+	iconType,
+	showIcon = false,
 }) => {
 	// validation 상태에 따른 border 색상 클래스 결정
 
@@ -77,11 +93,22 @@ export const InputContainer: React.FC<InputContainerProps> = ({
 		}
 	};
 
+	// 아이콘 컴포넌트 가져오기
+	const IconComponent = iconType && showIcon ? iconMap[iconType] : null;
+
 	return (
 		<div
 			onClick={onClick}
 			style={getInlineStyle()}
 			className={`relative flex justify-start ${isTextArea ? '':'items-center p-1 rounded'} ${validationStatus === 'success' || validationStatus === 'error' ? '' : getBorderClass()} ${disabled ? 'cursor-not-allowed' : ''} ${className}`}>
+			
+			{/* 왼쪽 아이콘 - xl 이하에서 숨김 처리 */}
+			{IconComponent && (
+				<IconComponent className={`absolute start-3 w-4 h-4 pointer-events-none neu-icon-input hidden xl:block ${
+					isTextArea ? 'top-3' : 'top-1/2 transform -translate-y-1/2'
+				}`} />
+			)}
+
 			<div className={`w-full ${disabled ? 'cursor-not-allowed' : ''}`}>
 				{children}
 			</div>

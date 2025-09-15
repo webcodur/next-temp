@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { List, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { Portal } from '../field/shared/Portal';
 import { InputContainer } from './shared/InputContainer';
@@ -179,16 +179,14 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 					disabled={disabled}
 					colorVariant={colorVariant}
 					validationStatus={getFeedbackType()}
-					className="cursor-pointer">
-					{/* 왼쪽 리스트 아이콘 */}
-					{showIcon && (
-						<List className="absolute top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none start-3 neu-icon-input" />
-					)}
+					className="cursor-pointer"
+					iconType="dropdown"
+					showIcon={showIcon}>
 					
 					{/* 표시 텍스트 */}
 					<div
 						ref={triggerRef}
-						className={`w-full h-full flex items-center justify-start ${showIcon ? 'ps-10' : 'ps-3'} pe-16 text-sm font-medium cursor-pointer ${
+						className={`w-full h-full flex items-center justify-start ${showIcon ? 'ps-3 xl:ps-10' : 'ps-3'} pe-16 text-sm font-medium cursor-pointer ${
 							selectedOption ? 'text-foreground' : 'text-muted-foreground'
 						}`}
 						onClick={handleToggle}

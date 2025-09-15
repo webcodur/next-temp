@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { ArrowUpDown, ChevronDown } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, X } from 'lucide-react';
 import { FieldSortSelectComponentProps } from '../core/types';
 import { FIELD_STYLES, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
@@ -21,6 +21,7 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 	showAllOption = true,
 	allOptionLabel = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_LABEL,
 	allOptionValue = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_VALUE,
+	showClearButton = true,
 }) => {
 	const inputRef = useRef<HTMLButtonElement>(null); // 내부 button ref 추가
 	
@@ -97,14 +98,27 @@ export const FieldSortSelect: React.FC<FieldSortSelectComponentProps> = ({
 						)}
 					</span>
 
-					                                <ChevronDown
-                                        className={`
-                                                ${FIELD_STYLES.endIcon}
-                                                								neu-icon-active
-                                                
-                                                ${isOpen ? 'rotate-180' : ''}
-                                        `}
-					/>
+					{/* 클리어 버튼과 드롭다운 버튼 */}
+					<div className="flex gap-1 items-center">
+						{showClearButton && selectedOption && selectedOption.value !== allOptionValue && (
+							<button
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									onChange?.(allOptionValue);
+								}}
+								className={FIELD_STYLES.clearButton}
+							>
+								<X className="w-3 h-3" />
+							</button>
+						)}
+						<ChevronDown
+							className={`
+								w-4 h-4 neu-icon-active
+								${isOpen ? 'rotate-180' : ''}
+							`}
+						/>
+					</div>
 				</button>
 
 				<SelectDropdown

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { List, ChevronDown } from 'lucide-react';
+import { List, ChevronDown, X } from 'lucide-react';
 import { FIELD_STYLES, getColorVariantStyles, FIELD_CONSTANTS } from '../core/config';
 import { SelectDropdown } from './SelectDropdown';
 import { useLocale } from '@/hooks/ui-hooks/useI18n';
@@ -24,6 +24,7 @@ interface FieldSelectProps {
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
+	showClearButton?: boolean;
 }
 // #endregion
 
@@ -43,6 +44,7 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 	showAllOption = true,
 	allOptionLabel = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_LABEL,
 	allOptionValue = FIELD_CONSTANTS.DEFAULT_ALL_OPTION_VALUE,
+	showClearButton = true,
 }) => {
 	// #region 상태
 	const [isFocused, setIsFocused] = useState(false);
@@ -114,13 +116,28 @@ const FieldSelect: React.FC<FieldSelectProps> = ({
 					<span className={`${selectedOption ? 'text-foreground' : 'text-muted-foreground'}`}>
 						{selectedOption ? selectedOption.label : placeholder}
 					</span>
-					<ChevronDown 
-						className={`
-							${FIELD_STYLES.endIcon}
-							w-4 h-4
-							${isOpen ? 'rotate-180' : ''}
-						`}
-					/>
+					
+					{/* 클리어 버튼과 드롭다운 버튼 */}
+					<div className={`flex absolute ${isRTL ? 'start-3' : 'end-3'} top-1/2 gap-1 items-center transform -translate-y-1/2`}>
+						{showClearButton && selectedOption && selectedOption.value !== allOptionValue && (
+							<button
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									onChange?.(allOptionValue);
+								}}
+								className={FIELD_STYLES.clearButton}
+							>
+								<X className="w-3 h-3" />
+							</button>
+						)}
+						<ChevronDown 
+							className={`
+								w-4 h-4 neu-icon-active
+								${isOpen ? 'rotate-180' : ''}
+							`}
+						/>
+					</div>
 				</div>
 				
 				{isOpen && (

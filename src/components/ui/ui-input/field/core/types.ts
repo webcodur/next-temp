@@ -80,6 +80,7 @@ export interface FieldSelectComponentProps extends FieldBaseProps {
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
+	showClearButton?: boolean;
 }
 
 export interface FieldSortSelectComponentProps extends FieldBaseProps {
@@ -94,6 +95,7 @@ export interface FieldSortSelectComponentProps extends FieldBaseProps {
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
+	showClearButton?: boolean;
 }
 
 // Factory Component Types
@@ -120,6 +122,7 @@ export interface FieldSelectProps extends FieldBaseProps {
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
+	showClearButton?: boolean;
 }
 
 export interface FieldSortSelectProps extends FieldBaseProps {
@@ -135,6 +138,7 @@ export interface FieldSortSelectProps extends FieldBaseProps {
 	showAllOption?: boolean;
 	allOptionLabel?: string;
 	allOptionValue?: string;
+	showClearButton?: boolean;
 }
 
 export interface FieldPasswordProps extends FieldBaseProps {

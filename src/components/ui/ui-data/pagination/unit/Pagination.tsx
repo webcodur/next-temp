@@ -30,7 +30,6 @@ const Pagination: React.FC<PaginationProps> = ({
 	pageSizeOptions = [5, 10, 20, 50],
 	groupSize = 5,
 	totalItems,
-	itemName = "항목",
 	colorVariant = 'primary',
 	className = '',
 }) => {
@@ -89,6 +88,25 @@ const Pagination: React.FC<PaginationProps> = ({
 		}
 	};
 
+	// 페이지 이동 입력 핸들러
+	const [pageInput, setPageInput] = React.useState<string>('');
+	
+	const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		if (value === '' || (/^\d+$/.test(value) && parseInt(value) >= 1)) {
+			setPageInput(value);
+		}
+	};
+
+	const handlePageInputSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		const page = parseInt(pageInput);
+		if (!isNaN(page) && page >= 1 && page <= totalPages && !noData) {
+			onPageChange(page);
+			setPageInput('');
+		}
+	};
+
 	// 꺽쇠 버튼용 - elevated 스타일
 	const arrowButtonClasses = `
 		flex items-center justify-center min-w-[40px] h-10 px-3 text-sm font-medium rounded-md
@@ -122,19 +140,29 @@ const Pagination: React.FC<PaginationProps> = ({
 
 	return (
 		<div className={`flex justify-between items-center ${className}`}>
-			{/* 왼쪽: 총 항목 수 표시 */}
+			{/* 왼쪽: 페이지 이동 입력 */}
 			<div className="flex-1 text-start">
-				{typeof totalItems === 'number' && (
-					totalItems > 0 ? (
-						<div className="text-sm text-muted-foreground font-multilang">
-							총 {totalItems}개의 {itemName} 중
-							{' '}
-							{(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalItems)}개 표시
-						</div>
-					) : (
-						<div className="text-sm text-muted-foreground font-multilang">표시할 데이터가 없습니다.</div>
-					)
-				)}
+				<form onSubmit={handlePageInputSubmit} className="flex gap-2 items-center text-sm text-muted-foreground font-multilang">
+					<input
+						type="text"
+						value={pageInput}
+						onChange={handlePageInputChange}
+						placeholder="페이지"
+						disabled={noData}
+						className={`
+							w-16 h-8 px-2 text-center text-sm rounded-md border
+							border-border bg-background text-foreground
+							${colorStyles.border} focus:ring-1 ${colorStyles.ring}
+							disabled:opacity-50 disabled:cursor-not-allowed
+						`}
+					/>
+					<span>페이지로 이동</span>
+					{!noData && totalPages > 0 && (
+						<span className="text-xs">
+							(입장가능: 1-{totalPages})
+						</span>
+					)}
+				</form>
 			</div>
 
 			{/* 가운데: 페이지네이션 컨트롤 */}

@@ -5,7 +5,7 @@
 */ // ------------------------------
 
 import React, { useState, useRef } from 'react';
-import { MapPin, X, Globe, Keyboard } from 'lucide-react';
+import { X, Globe, Keyboard } from 'lucide-react';
 import Image from 'next/image';
 
 import type { ValidationRule } from '@/utils/validation';
@@ -32,7 +32,7 @@ export interface SimpleAddressInputProps {
   className?: string;
   validationRule?: ValidationRule;
   colorVariant?: 'primary' | 'secondary';
-  
+
   // 기존 시스템 호환성: 분리된 주소 필드들
   onAddressChange?: (parts: {
     fullAddress: string;
@@ -81,9 +81,9 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
   const handleContainerClick = () => {
     if (disabled) return;
     setAddressModalOpen(true);
-    // 모달 열릴 때 기본 탭을 한국으로 설정
+    // 모달 열릴 때 기본 탭을 자유 입력으로 설정
     if (!selectedRegion) {
-      setSelectedRegion('korea');
+      setSelectedRegion('direct');
     }
     // 현재 주소가 있으면 임시 주소로 설정
     if (currentAddress) {
@@ -133,7 +133,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
     } else {
       onChange?.(tempAddress.fullAddress);
       setCurrentAddress(tempAddress); // 현재 주소 업데이트
-      
+
       // 상세 주소 정보 전달
       if (onAddressChange) {
         if ('region' in tempAddress && tempAddress.region) {
@@ -160,14 +160,14 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
         }
       }
     }
-    
+
     // 변경 버튼 클릭 시 모달은 열린 상태 유지
     // 사용자가 계속 수정할 수 있도록 함
   };
 
   // validation 결과 계산
   const validationResult = validationRule ? validateField(value, validationRule) : null;
-  
+
   // 피드백 타입 결정
   const getFeedbackType = () => {
     if (!validationRule || !validationResult) return 'info';
@@ -194,10 +194,9 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
         disabled={disabled}
         colorVariant={colorVariant}
         validationStatus={getFeedbackType()}
-        onClick={handleContainerClick}>
-        
-		{/* 왼쪽 지도 아이콘 */}
-		<MapPin className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
+        onClick={handleContainerClick}
+        iconType="address"
+        showIcon={true}>
 
         {/* 중앙 표시 영역 */}
         <input
@@ -209,7 +208,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
           onBlur={handleBlur}
           placeholder="주소를 입력하세요"
           disabled={disabled}
-          className={`w-full ps-10 pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start cursor-pointer ${disabled ? 'cursor-not-allowed' : ''}`}
+          className={`w-full ps-3 xl:ps-10 pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start cursor-pointer ${disabled ? 'cursor-not-allowed' : ''}`}
         />
 
         {/* 우측 X 아이콘 */}
@@ -217,7 +216,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute end-3 top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 hover:bg-muted"
+            className="absolute top-1/2 p-1 rounded-full transition-colors duration-200 transform -translate-y-1/2 end-3 hover:bg-muted"
             aria-label="값 지우기">
             <X className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground" />
           </button>
@@ -253,7 +252,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                   icon: <Globe className="w-4 h-4" />
                 },
               ]}
-              activeId={selectedRegion || 'korea'}
+              activeId={selectedRegion || 'direct'}
               onTabChange={(id) => handleRegionSelect(id as ENUM_Region)}
             />
           </div>
@@ -267,12 +266,19 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                 <div className="text-sm text-foreground">{currentAddress.fullAddress}</div>
               </div>
             )}
-            
+
             {/* 주소 입력 영역 */}
             {selectedRegion && (
               <div className="p-4 space-y-6">
                 {/* 탭 내용 영역 */}
                 <div>
+                  {selectedRegion === 'direct' && (
+                    <AddressInput_Direct
+                      colorVariant={colorVariant}
+                      value={tempAddress && !('region' in tempAddress) && !('country' in tempAddress) ? tempAddress as DirectAddressData : null}
+                      onChange={handleTempAddressChange}
+                    />
+                  )}
                   {selectedRegion === 'korea' && (
                     <AddressInput_NAVER
                       colorVariant={colorVariant}
@@ -281,7 +287,7 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                       showDetailAddress={true}
                     />
                   )}
-                  
+
                   {selectedRegion === 'global' && (
                     <AddressInput_Global
                       colorVariant={colorVariant}
@@ -289,16 +295,8 @@ export const SimpleAddressInput: React.FC<SimpleAddressInputProps> = ({
                       onChange={handleTempAddressChange}
                     />
                   )}
-                  
-                  {selectedRegion === 'direct' && (
-                    <AddressInput_Direct
-                      colorVariant={colorVariant}
-                      value={tempAddress && !('region' in tempAddress) && !('country' in tempAddress) ? tempAddress as DirectAddressData : null}
-                      onChange={handleTempAddressChange}
-                    />
-                  )}
                 </div>
-                
+
                 {/* 하단 버튼 - 변경 버튼만 표시 */}
                 <div className="flex justify-end pt-4 border-t">
                   <Button

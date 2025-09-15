@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { Clock, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from '../shared/InputContainer';
 
@@ -98,13 +98,10 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
-				validationStatus={getFeedbackType()}
-				onClick={handleContainerClick}>
-				
-				{/* 왼쪽 시계 아이콘 */}
-				{showIcon && (
-					<Clock className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
-				)}
+		validationStatus={getFeedbackType()}
+		onClick={handleContainerClick}
+		iconType="clock"
+		showIcon={showIcon}>
 
 				{/* 중앙 TimePicker */}
 				<DatePicker
@@ -122,7 +119,7 @@ export const SimpleTimePicker: React.FC<SimpleTimePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`pe-10 ${showIcon ? 'ps-10' : 'ps-3'} w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					className={`pe-10 ${showIcon ? 'ps-3 xl:ps-10' : 'ps-3'} w-full text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
 					wrapperClassName="w-full"
 				/>
 

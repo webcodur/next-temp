@@ -4,7 +4,6 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { Calendar } from 'lucide-react';
 import { getYear, getMonth } from 'date-fns';
 import { ValidationRule, validateField } from '@/utils/validation';
 import timezone from '@/utils/timezone';
@@ -243,12 +242,9 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 				disabled={disabled}
 				colorVariant={colorVariant}
 				validationStatus={getFeedbackType()}
-				onClick={handleContainerClick}>
-				
-				{/* 왼쪽 캘린더 아이콘 */}
-				{showIcon && (
-					<Calendar className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
-				)}
+				onClick={handleContainerClick}
+				iconType="calendar"
+				showIcon={showIcon}>
 
 				{/* 중앙 DatePicker */}
 				<DatePicker
@@ -265,7 +261,7 @@ export const SimpleDatePicker: React.FC<SimpleDatePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
+					className={`w-full ${showIcon ? 'ps-3 xl:ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start`}
 					wrapperClassName="w-full"
 					popperPlacement="bottom-start"
 					calendarClassName="!z-50"

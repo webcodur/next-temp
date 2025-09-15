@@ -5,5 +5,5 @@
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
 	},
-	"claudeCodeChat.permissions.yoloMode": true
+  "claudeCodeChat.permissions.yoloMode": true
 }

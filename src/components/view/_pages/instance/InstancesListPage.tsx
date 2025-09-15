@@ -240,7 +240,6 @@ export default function InstancesListPage() {
         pageSize={10}
         pageSizeOptions={[5, 10, 20, 50]}
         itemName="세대"
-        minWidth="1400px"
         showSection={false}
         excludeInstanceIds={excludeInstanceIds}
       />

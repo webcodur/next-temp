@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Car, CarFront, Plus, Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
 import { CarInstanceWithCar } from '@/types/instance';
 
 import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
@@ -35,6 +36,10 @@ export default function InstanceCarList({
   managedCarInstanceId = null
 }: InstanceCarListProps) {
   const router = useRouter();
+  const { getUserRoleId } = useAuth();
+  
+  // 임직원(roleId: 1)인지 확인
+  const isDeveloperStaff = getUserRoleId() === 1;
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     type: 'detail' | 'exclude' | 'delete';
@@ -204,7 +209,7 @@ export default function InstanceCarList({
         title="차량 목록" 
         subtitle="세대에 등록된 차량을 관리합니다."
         icon={<Car size={18} />}
-        headerActions={(
+        headerActions={isDeveloperStaff && (
           <div className="flex gap-1 items-center">
             <Button
               variant="outline"
@@ -240,7 +245,7 @@ export default function InstanceCarList({
         </span>
       }
       icon={<Car size={18} />}
-      headerActions={(
+      headerActions={isDeveloperStaff && (
         <div className="flex gap-2 items-center">
           <Button
             variant="outline"

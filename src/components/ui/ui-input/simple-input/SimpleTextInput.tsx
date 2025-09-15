@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Type, X, Eye, EyeOff } from 'lucide-react';
+import { X, Eye, EyeOff } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from './shared/InputContainer';
 
@@ -116,12 +116,9 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 				disabled={disabled}
 				colorVariant={colorVariant}
 				validationStatus={getFeedbackType()}
-				onClick={handleContainerClick}>
-				
-				{/* 왼쪽 아이콘 */}
-				{showIcon && (
-					<Type className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
-				)}
+				onClick={handleContainerClick}
+				iconType="text"
+				showIcon={showIcon}>
 
 				{/* 중앙 입력 필드 */}
 				<input
@@ -135,7 +132,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					autoComplete={autocomplete}
-					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${disabled ? 'cursor-not-allowed' : ''}`}
+					className={`w-full ${showIcon ? 'ps-3 xl:ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground text-start ${disabled ? 'cursor-not-allowed' : ''}`}
 				/>
 
 				{/* 비밀번호 보기/숨기기 버튼 */}

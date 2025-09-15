@@ -6,6 +6,7 @@ import { Info } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import PageHeader from '@/components/ui/ui-layout/page-header/PageHeader';
+import { SectionPanel } from '@/components/ui/ui-layout/section-panel/SectionPanel';
 import AdminForm, { AdminFormData } from './AdminForm';
 import { createAdmin } from '@/services/admin/admin_POST';
 import { getAdminDetail } from '@/services/admin/admin@id_GET';
@@ -187,36 +188,41 @@ export default function AdminCreatePage() {
         subtitle="새로운 관리자 계정을 생성합니다"
       />
 
-      {/* 복사 정보 안내 */}
-      {copyInfoMessage && (
-        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="flex gap-2 items-center text-blue-700">
-            <Info size={20} />
-            <span className="font-medium">{copyInfoMessage}</span>
-          </div>
-        </div>
-      )}
+      {/* 메인 콘텐츠 */}
+      <SectionPanel 
+        title="관리자 정보"
+      >
+        <div className="flex flex-col gap-4">
+          {/* 복사 정보 안내 */}
+          {copyInfoMessage && (
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex gap-2 items-center text-blue-700">
+                <Info size={20} />
+                <span className="font-medium">{copyInfoMessage}</span>
+              </div>
+            </div>
+          )}
 
-      {/* 폼 섹션 */}
-      <div className="p-6 rounded-lg border bg-card border-border">
-        {copyLoading ? (
-          <div className="flex justify-center items-center py-8">
-            <div className="text-muted-foreground">복사할 정보를 불러오는 중...</div>
-          </div>
-        ) : (
-          <AdminForm
-            mode="create"
-            data={formData}
-            onChange={handleFormChange}
-            disabled={isSubmitting || copyLoading}
-            showActions={true}
-            onSubmit={handleSubmit}
-            onReset={handleReset}
-            hasChanges={hasChanges}
-            isValid={Boolean(isValid && !copyLoading)}
-          />
-        )}
-      </div>
+          {/* 폼 */}
+          {copyLoading ? (
+            <div className="flex justify-center items-center py-8">
+              <div className="text-muted-foreground">복사할 정보를 불러오는 중...</div>
+            </div>
+          ) : (
+            <AdminForm
+              mode="create"
+              data={formData}
+              onChange={handleFormChange}
+              disabled={isSubmitting || copyLoading}
+              showActions={true}
+              onSubmit={handleSubmit}
+              onReset={handleReset}
+              hasChanges={hasChanges}
+              isValid={Boolean(isValid && !copyLoading)}
+            />
+          )}
+        </div>
+      </SectionPanel>
 
       {/* 오류 모달 제거됨 - 통합 모듈에서 처리 */}
     </div>

@@ -122,7 +122,7 @@ export default function Breadcrumb() {
 	}
 
 	return (
-		<nav className="flex items-center px-1 py-2 space-x-2 text-sm">
+		<nav className="hidden xl:flex items-center px-1 py-2 space-x-2 text-sm">
 			{breadcrumbItems.map((item, index) => (
 				<React.Fragment key={index}>
 					{index === 0 ? (

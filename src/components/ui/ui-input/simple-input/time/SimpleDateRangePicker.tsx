@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { Calendar, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ValidationRule, validateField } from '@/utils/validation';
 import { InputContainer } from '../shared/InputContainer';
 
@@ -208,13 +208,10 @@ export const SimpleDateRangePicker: React.FC<SimpleDateRangePickerProps> = ({
 				isFocused={isFocused}
 				disabled={disabled}
 				colorVariant={colorVariant}
-				validationStatus={getFeedbackType()}
-				onClick={handleContainerClick}>
-				
-				{/* 왼쪽 캘린더 아이콘 */}
-				{showIcon && (
-					<Calendar className="absolute start-3 top-1/2 w-4 h-4 transform -translate-y-1/2 pointer-events-none neu-icon-input" />
-				)}
+			validationStatus={getFeedbackType()}
+			onClick={handleContainerClick}
+			iconType="calendar"
+			showIcon={showIcon}>
 
 				{/* 중앙 DateRangePicker */}
 				<DatePicker
@@ -232,7 +229,7 @@ export const SimpleDateRangePicker: React.FC<SimpleDateRangePickerProps> = ({
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
-					className={`w-full ${showIcon ? 'ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
+					className={`w-full ${showIcon ? 'ps-3 xl:ps-10' : 'ps-3'} pe-10 text-sm font-medium bg-transparent border-none outline-none placeholder:text-muted-foreground placeholder:select-none text-foreground`}
 					wrapperClassName="w-full"
 				/>
 

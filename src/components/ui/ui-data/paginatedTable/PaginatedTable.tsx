@@ -79,6 +79,13 @@ const PaginatedTable = <T extends Record<string, unknown>>({
 	// #region 렌더링
 	return (
 		<div className="p-4 space-y-6 rounded-lg border bg-card">
+			{/* 전체 항목 수 표시 */}
+			{paginationData.totalItems > 0 && (
+				<div className="text-sm text-muted-foreground font-multilang">
+					전체 {paginationData.totalItems} 개의 {itemName} 검색됨
+				</div>
+			)}
+
 			{/* BaseTable 렌더링 */}
 			<BaseTable
 				data={paginationData.isInitialLoading ? null : paginationData.paginatedData}
