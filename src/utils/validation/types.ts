@@ -4,7 +4,7 @@
 
 // #region 기본 타입
 export interface ValidationRule {
-  type: 'required' | 'email' | 'phone' | 'password' | 'password-confirm' | 'ip' | 'port' | 'length' | 'number' | 'custom' | 'free';
+  type: 'required' | 'email' | 'phone' | 'password' | 'password-confirm' | 'ip' | 'port' | 'url' | 'length' | 'number' | 'custom' | 'free';
   message?: string;
   // 길이 제한 (length 타입용)
   minLength?: number;

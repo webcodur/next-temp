@@ -53,7 +53,7 @@ import { cn } from '@/lib/utils';
 // #region 타입 및 스타일
 const buttonVariants = cva(
 	// 기본 공통 스타일: 레이아웃, 타이포그래피, 전환, 접근성
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer min-w-20',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-multilang font-medium transition-all duration-150 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0 cursor-pointer min-w-20',
 	{
 		variants: {
 			variant: {
@@ -119,9 +119,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			>
 				{/* 로딩 중일 때 스피너, 아닐 때 아이콘 */}
 				{loading ? (
-					<Loader2 className="w-4 h-4 animate-spin" />
+					<Loader2 className="w-5 h-5 animate-spin" />
 				) : (
-					Icon && <Icon className="w-4 h-4" />
+					Icon && <Icon className="w-5 h-5" />
 				)}
 				{/* 로딩 텍스트가 있으면 표시, 없으면 기본 children */}
 				{loading && loadingText ? loadingText : children}

@@ -148,7 +148,7 @@ export const SimpleDropdown: React.FC<SimpleDropdownProps> = ({
 	// 피드백 타입 결정
 	const getFeedbackType = () => {
 		if (!validationRule || !validationResult) return 'info';
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+		if (!disabled && validationResult.hasValue) {
 			return validationResult.isValid ? 'success' : 'error';
 		}
 		return 'info';

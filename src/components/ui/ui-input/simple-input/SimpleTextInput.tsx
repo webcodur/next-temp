@@ -90,7 +90,7 @@ export const SimpleTextInput: React.FC<SimpleTextInputProps> = ({
 			return 'info';
 		}
 		
-		if (validationRule.mode === 'edit' && !disabled && validationResult.hasValue) {
+		if (!disabled && validationResult.hasValue) {
 			return validationResult.isValid ? 'success' : 'error';
 		}
 		

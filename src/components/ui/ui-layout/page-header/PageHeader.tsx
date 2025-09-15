@@ -4,6 +4,10 @@
   책임: 페이지 제목과 좌우측 액션 버튼들을 포함하는 헤더 영역을 제공한다
       상세/편집/생성 페이지에서는 자동으로 "목록으로" 버튼을 추가한다
 
+  📱 반응형 버튼:
+  - xl 이상: 아이콘 + 텍스트, 적절한 너비
+  - xl 미만: 아이콘만, 40px × 40px 정사각형 (CrudButton과 동일한 규격)
+
   사용 예시:
   <PageHeader 
     title="IP 차단 전체 히스토리" 
@@ -67,9 +71,9 @@ export default function PageHeader({
 					size="sm"
 					onClick={handleBack}
 					title={t('뒤로가기')}
-					className="px-0 w-8 h-8 min-w-8 xl:w-auto xl:min-w-20 xl:px-3"
+					className="px-0 w-10 min-w-0 h-10 xl:w-auto xl:min-w-20 xl:px-4"
 				>
-					<ArrowLeft className="w-4 h-4" />
+					<ArrowLeft className="w-5 h-5" />
 					<span className="hidden xl:inline">{t('뒤로가기')}</span>
 				</Button>
 				
@@ -80,9 +84,9 @@ export default function PageHeader({
 						size="sm"
 						onClick={handleGoToList}
 						title={t('{title} 목록으로 이동', { title: listPageTitle })}
-						className="px-0 w-8 h-8 min-w-8 xl:w-auto xl:min-w-20 xl:px-3"
+						className="px-0 w-10 min-w-0 h-10 xl:w-auto xl:min-w-20 xl:px-4"
 					>
-						<List className="w-4 h-4" />
+						<List className="w-5 h-5" />
 						<span className="hidden xl:inline">{t('목록으로')}</span>
 					</Button>
 				)}
