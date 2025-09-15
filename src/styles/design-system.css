@@ -55,6 +55,7 @@
 /* Pretendard 서브셋 폰트는 @font-face로 직접 정의하므로 CSS 파일 import 불필요 */
 
 @import url('../styles/system/01-fonts.css');
+@import url('../styles/system/01-fonts2.css');
 @import url('../styles/system/02-variables.css');
 @import url('../styles/system/03-base.css');
 @import url('../styles/system/04-neumorphism.css');

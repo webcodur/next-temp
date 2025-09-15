@@ -12,7 +12,6 @@ export async function middleware(request: NextRequest) {
 		pathname.startsWith('/fonts/') ||
 		pathname.startsWith('/images/') ||
 		pathname.startsWith('/icons/') ||
-		pathname.startsWith('/tinymce/') ||
 		pathname.endsWith('.svg') ||
 		pathname.endsWith('.png') ||
 		pathname.endsWith('.jpg') ||
@@ -52,9 +51,7 @@ export const config = {
 		 * - fonts directory
 		 * - images directory
 		 * - icons directory
-		 * - tinymce directory
 		 * - common static file extensions
 		 */
-		'/((?!api|_next/static|_next/image|favicon.ico|fonts|images|icons|tinymce).*)',
 	],
 };

@@ -24,7 +24,7 @@ export const Logo = memo(() => {
 				height={40}
 				style={{ width: 'auto', height: '40px', borderRadius: '10px' }}
 			/>
-			<div className="flex flex-col gap-[2px] items-baseline ml-4">
+			<div className="hidden xl:flex flex-col gap-[2px] items-baseline ml-4">
 				{selectedParkingLot &&(
 					<>
 						<h1 className="text-xl font-black text-[hsl(var(--gray-9))]">{selectedParkingLot.name}</h1>

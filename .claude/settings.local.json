@@ -30,7 +30,11 @@
       "WebFetch(domain:postcode.map.daum.net)",
       "Bash(timeout 15 npm run dev)",
       "Bash(cat:*)",
-      "WebSearch"
+      "WebSearch",
+      "Read(//c/Users/webco/Desktop/prj/backoffice2/**)",
+      "Bash(npm uninstall:*)",
+      "Bash(sed:*)",
+      "Bash(echo:*)"
     ],
     "deny": []
   }

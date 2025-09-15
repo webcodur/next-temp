@@ -134,7 +134,7 @@ Radix UI, Framer Motion 등 외부 라이브러리 컴포넌트에 직접 뉴모
 - **sonner**: 토스트 알림
 - **@tanstack/react-table**: 데이터 그리드
 - **recharts**: 차트
-- **@tinymce/tinymce-react**: 리치 텍스트 에디터
+- **@tiptap/react**: 리치 텍스트 에디터
 - **react-hook-form**: 폼 상태 관리
 - **zod**: 스키마 검증
 - **jotai**: 원자적 상태 관리

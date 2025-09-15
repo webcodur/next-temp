@@ -1,0 +1,592 @@
+/* #region -------------------- 한국어 -------------------- */
+
+/* #region Pretendard */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Thin.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-ExtraLight.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Light.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Medium.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-SemiBold.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Bold.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-ExtraBold.subset.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Black.subset.woff2') format('woff2');
+}
+/* #endregion */
+
+/* #region HY헤드라인M */
+@font-face {
+  font-family: 'HY헤드라인M';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ko/HyHeadlineM.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #endregion */
+
+/* #region -------------------- 아랍어 -------------------- */
+
+/* #region Cairo - 현대적인 아랍어 폰트 */
+@font-face {
+  font-family: 'Cairo';
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('/fonts/ar/Cairo.woff2') format('woff2');
+}
+/* #endregion */
+
+/* #region Amiri - 전통적인 아랍어 서체 */
+@font-face {
+  font-family: 'Amiri';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ar/Amiri/Amiri-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Amiri';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ar/Amiri/Amiri-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Amiri';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/ar/Amiri/Amiri-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Amiri';
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/ar/Amiri/Amiri-BoldItalic.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Tajawal - 깔끔한 아랍어 산세리프 */
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/ar/Tajawal/Tajawal-Black.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Noto Kufi Arabic - 쿠픽 스타일 */
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Kufi Arabic';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Kufi_Arabic/static/NotoKufiArabic-Black.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Noto Naskh Arabic - 나스크 스타일 */
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Naskh_Arabic/static/NotoNaskhArabic-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Naskh_Arabic/static/NotoNaskhArabic-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ar/Noto_Naskh_Arabic/static/NotoNaskhArabic-Bold.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Lalezar - 디스플레이 폰트 */
+@font-face {
+  font-family: 'Lalezar';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ar/Lalezar/Lalezar-Regular.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #endregion */
+
+/* #region -------------------- 영어 -------------------- */
+
+/* #region Inter - 모던 산세리프 */
+@font-face {
+  font-family: 'Inter';
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/en/Inter/static/Inter_18pt-Black.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Roboto - 구글 머티리얼 디자인 */
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/en/Roboto/Roboto-Black.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Fira Code - 코딩 폰트 */
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/en/Fira_Code/static/FiraCode-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/Fira_Code/static/FiraCode-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/Fira_Code/static/FiraCode-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/en/Fira_Code/static/FiraCode-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/Fira_Code/static/FiraCode-Bold.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region JetBrains Mono - 개발자 폰트 */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/en/JetBrains_Mono/static/JetBrainsMono-ExtraBold.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Lora - 세리프 본문 폰트 */
+@font-face {
+  font-family: 'Lora';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/en/Lora/static/Lora-BoldItalic.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #region Playfair Display - 디스플레이 세리프 */
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/en/Playfair_Display/static/PlayfairDisplay-BlackItalic.ttf') format('truetype');
+}
+/* #endregion */
+
+/* #endregion */

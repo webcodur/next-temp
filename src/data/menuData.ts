@@ -1,4 +1,4 @@
-import { Car, Monitor, MonitorCog } from 'lucide-react';
+import { Car, Monitor, MonitorCog, Smartphone } from 'lucide-react';
 // library-big SquareParking monitor
 import type { MenuData } from '@/components/layout/sidebar/types';
 
@@ -131,6 +131,19 @@ export const menuData: MenuData = {
 					{
 						key: '메뉴_차량관리',
 						href: '/parking/occupancy/car',
+					},
+				],
+			},
+		},
+	},
+	'메뉴_라이프': {
+		icon: Smartphone,
+		midItems: {
+			'메뉴_앱관리': {
+				botItems: [
+					{
+						key: '메뉴_앱게시판',
+						href: '/life/app/board',
 					},
 				],
 			},

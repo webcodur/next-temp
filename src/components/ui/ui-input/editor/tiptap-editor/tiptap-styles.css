@@ -1,0 +1,392 @@
+/* 다국어 폰트 정의 */
+@font-face {
+  font-family: 'Cairo';
+  font-display: swap;
+  src: url('/fonts/Cairo.woff2') format('woff2');
+  font-weight: 200 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Regular.subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Bold.subset.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Medium.subset.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-display: swap;
+  src: url('/fonts/ko/woff2-subset/Pretendard-Light.subset.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* TipTap Editor Styles - 테이블 문제 해결을 위한 기본 스타일 */
+
+/* 에디터 기본 스타일 */
+.ProseMirror {
+  min-height: 100%;
+  outline: none;
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* 에디터 컨테이너 포커스 스타일 */
+.tiptap-editor-container {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease;
+  background-color: white;
+}
+
+/* 플레이스홀더 */
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #9ca3af;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* RTL 플레이스홀더 */
+.ProseMirror[dir="rtl"] p.is-editor-empty:first-child::before {
+  float: right;
+  text-align: right;
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+/* 테이블 - 가장 중요한 스타일 */
+.ProseMirror table {
+  border-collapse: collapse;
+  width: auto;
+  max-width: 100%;
+  margin: 1rem 0;
+  border: 2px solid #374151;
+  min-width: 300px;
+  table-layout: auto;
+  background-color: white;
+  font-size: 0.875rem;
+}
+
+.ProseMirror td,
+.ProseMirror th {
+  border: 1px solid #6b7280;
+  padding: 0.5rem;
+  text-align: left;
+  min-width: 80px;
+  height: 36px;
+  vertical-align: middle;
+  position: relative;
+  background-color: white;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.ProseMirror th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  border-color: #374151;
+}
+
+/* 빈 셀에 내용 표시 */
+.ProseMirror td:empty::after,
+.ProseMirror th:empty::after {
+  content: '\00a0';
+  visibility: hidden;
+}
+
+/* 선택된 셀 */
+.ProseMirror .selectedCell {
+  background-color: #dbeafe !important;
+  border-color: #3b82f6 !important;
+}
+
+/* 테이블 리사이즈 핸들 */
+.ProseMirror .column-resize-handle {
+  background-color: #3b82f6;
+  width: 4px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -2px;
+  cursor: col-resize;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+/* 테이블 전체 선택 */
+.ProseMirror table.ProseMirror-selectednode {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 테이블 호버 효과 */
+.ProseMirror td:hover {
+  background-color: #f9fafb;
+}
+
+.ProseMirror th:hover {
+  background-color: #e5e7eb;
+}
+
+/* 기타 기본 스타일 */
+.ProseMirror h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem; /* 스크롤 시 여백 */
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem;
+}
+
+.ProseMirror h4 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem;
+}
+
+.ProseMirror h5 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem;
+}
+
+.ProseMirror h6 {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  scroll-margin-top: 2rem;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror strong {
+  font-weight: bold;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror u {
+  text-decoration: underline;
+}
+
+.ProseMirror code {
+  background-color: #f3f4f6;
+  color: #dc2626;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin: 1.5rem 0;
+}
+
+/* 체크리스트 (Task List) */
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div p {
+  margin: 0;
+  padding: 0;
+}
+
+/* 링크 */
+.ProseMirror a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ProseMirror a:hover {
+  color: #1d4ed8;
+}
+
+/* 목차 스타일 */
+/* 다국어 지원 스타일 */
+.ProseMirror {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* 아랍어 RTL 지원 */
+.ProseMirror[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.ProseMirror[lang="ar"],
+.ProseMirror [lang="ar"] {
+  font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+/* 한국어 폰트 */
+.ProseMirror[lang="ko"],
+.ProseMirror [lang="ko"] {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+/* 중국어/일본어 폰트 */
+.ProseMirror[lang="zh"],
+.ProseMirror [lang="ja"],
+.ProseMirror [lang="zh-CN"],
+.ProseMirror [lang="zh-TW"],
+.ProseMirror [lang="ja-JP"] {
+  font-family: 'Noto Sans CJK KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+}
+
+/* 영어 및 라틴 문자 */
+.ProseMirror[lang="en"],
+.ProseMirror [lang="en"] {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* RTL 언어용 정렬 스타일 */
+.ProseMirror [dir="rtl"] p,
+.ProseMirror [dir="rtl"] h1,
+.ProseMirror [dir="rtl"] h2,
+.ProseMirror [dir="rtl"] h3,
+.ProseMirror [dir="rtl"] h4,
+.ProseMirror [dir="rtl"] h5,
+.ProseMirror [dir="rtl"] h6 {
+  text-align: right;
+}
+
+.ProseMirror [dir="rtl"] ul,
+.ProseMirror [dir="rtl"] ol {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+.ProseMirror [dir="rtl"] blockquote {
+  border-right: 4px solid #e5e7eb;
+  border-left: none;
+  padding-right: 1rem;
+  padding-left: 0;
+}
+
+/* 테이블 RTL 지원 */
+.ProseMirror[dir="rtl"] table,
+.ProseMirror [dir="rtl"] table {
+  direction: rtl;
+}
+
+.ProseMirror[dir="rtl"] td,
+.ProseMirror[dir="rtl"] th,
+.ProseMirror [dir="rtl"] td,
+.ProseMirror [dir="rtl"] th {
+  text-align: right;
+}
+
+/* 언어별 줄 높이 조정 */
+.ProseMirror[lang="ar"] p,
+.ProseMirror [lang="ar"] p {
+  line-height: 1.8;
+}
+
+.ProseMirror[lang="ko"] p,
+.ProseMirror [lang="ko"] p {
+  line-height: 1.6;
+}
+
+/* 혼합 언어 텍스트 지원 */
+.ProseMirror .arabic-text {
+  font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+.ProseMirror .korean-text {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+.ProseMirror .english-text {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}

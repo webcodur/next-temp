@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
+import React, { useImperativeHandle, forwardRef } from 'react';
+import { TipTapEditor } from './tiptap-editor';
+import type { TipTapEditorProps, EditorContent } from './tiptap-editor/types';
 import { useLocale, useTranslations } from '@/hooks/ui-hooks/useI18n';
 
 // #region 타입
@@ -16,103 +17,82 @@ interface EditorProps {
 	colorVariant?: 'primary' | 'secondary';
 	className?: string;
 }
+
+interface EditorRef {
+	setContent: (content: string) => void;
+	getContent: () => string;
+}
 // #endregion
 
-const Editor: React.FC<EditorProps> = ({
+const Editor = forwardRef<EditorRef, EditorProps>(({
 	value = '',
 	onChange,
 	placeholder,
 	height = 400,
 	disabled = false,
-	toolbar,
-	plugins,
-	colorVariant = 'primary',
 	className = '',
-}) => {
+}, ref) => {
 	// #region 훅
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const editorRef = useRef<any>(null);
-	const { isRTL, currentLocale } = useLocale();
+	const { isRTL } = useLocale();
 	const t = useTranslations();
 	// #endregion
-	
+
 	// #region 상수
 	// 다국어 처리된 placeholder 사용
 	const resolvedPlaceholder = placeholder || t('에디터_플레이스홀더_내용입력');
-
-	const defaultToolbar = isRTL
-		? 'undo redo | blocks | ' +
-    'bold italic forecolor backcolor | alignright aligncenter ' +
-    'alignleft alignjustify | bullist numlist outdent indent | ' +
-    'removeformat | help'
-		: 'undo redo | blocks | ' +
-    'bold italic forecolor backcolor | alignleft aligncenter ' +
-    'alignright alignjustify | bullist numlist outdent indent | ' +
-    'removeformat | help';
-
-	const defaultPlugins = [
-		'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-		'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-		'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
-	];
 	// #endregion
 
 	// #region 핸들러
-	// 색상 variant에 따른 색상 설정
-	const themeColor = colorVariant === 'primary' ? 'var(--primary)' : 'var(--secondary)';
+	const handleChange = (content: EditorContent) => {
+		onChange?.(content.html);
+	};
+	// #endregion
 
-	// RTL에 따른 에디터 설정
-	const getEditorConfig = () => ({
-		height,
-		menubar: false,
-		plugins: plugins || defaultPlugins,
-		toolbar: toolbar || defaultToolbar,
-		placeholder: resolvedPlaceholder,
-		directionality: (isRTL ? 'rtl' : 'ltr') as 'rtl' | 'ltr',
-		language: currentLocale === 'ar' ? 'ar' : currentLocale === 'en' ? 'en' : 'ko_KR',
-		content_style: `
-			body { 
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-				font-size: 14px;
-				direction: ${isRTL ? 'rtl' : 'ltr'};
-				text-align: ${isRTL ? 'right' : 'left'};
-			}
-			.mce-content-body { 
-				${isRTL ? 'margin-right: 22px;' : 'margin-left: 22px;'}
-			}
-			a { color: ${themeColor}; }
-			.primary-color { color: ${themeColor}; }
-		`,
-		branding: false,
-		resize: false,
-		statusbar: false,
-		setup: (editor: unknown) => {
-			const typedEditor = editor as { on: (event: string, callback: () => void) => void; getContent: () => string };
-			typedEditor.on('change', () => {
-				const content = typedEditor.getContent();
-				onChange?.(content);
-			});
+	// #region ref 처리
+	// TipTapEditor는 직접적인 ref 제어를 제공하지 않으므로
+	// 현재는 placeholder로 구현
+	useImperativeHandle(ref, () => ({
+		setContent: () => {
+			// TODO: TipTapEditor에서 ref 제어 메서드 제공 시 구현
+			console.warn('setContent not implemented yet');
 		},
-	});
+		getContent: () => {
+			// TODO: TipTapEditor에서 ref 제어 메서드 제공 시 구현
+			console.warn('getContent not implemented yet');
+			return '';
+		},
+	}));
+	// #endregion
 
-	useEffect(() => {
-		if (editorRef.current) {
-			editorRef.current.setContent(value);
+	// #region TipTap 설정
+	const tipTapProps: TipTapEditorProps = {
+		content: value,
+		placeholder: resolvedPlaceholder,
+		onChange: handleChange,
+		editable: !disabled,
+		showMenuBar: true,
+		height: `${height}px`,
+		className: className,
+		onImageUpload: async (file: File) => {
+			// TODO: 이미지 업로드 로직 구현 필요
+			return URL.createObjectURL(file);
+		},
+		onFileUpload: async (file: File) => {
+			// TODO: 파일 업로드 로직 구현 필요
+			return URL.createObjectURL(file);
 		}
-	}, [value]);
+	};
 	// #endregion
 
 	// #region 렌더링
 	return (
-		<div className={`overflow-hidden rounded-lg neu-flat ${className}`}>
-			<TinyMCEEditor
-				onInit={(evt, editor) => editorRef.current = editor}
-				init={getEditorConfig()}
-				disabled={disabled}
-			/>
+		<div className={`tiptap-wrapper ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
+			<TipTapEditor {...tipTapProps} />
 		</div>
 	);
 	// #endregion
-};
+});
 
-export default Editor; 
+Editor.displayName = 'Editor';
+
+export default Editor;
