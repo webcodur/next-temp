@@ -9,11 +9,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
-import { useAuth } from '@/hooks/auth-hooks/useAuth/useAuth';
+import { useTranslations } from '@/hooks/ui-hooks/useI18n';
+
+// #region 목업데이터
+const mockLogoData = {
+	title: '로고_시스템제목',
+	subtitle: '로고_시스템부제'
+};
+// #endregion
 
 // #region 렌더링
 export const Logo = memo(() => {
-	const { selectedParkingLot } = useAuth();
+	const t = useTranslations();
 	
 	return (
 		<Link href="/" className="flex items-center gap-3.5 cursor-pointer">
@@ -25,12 +32,8 @@ export const Logo = memo(() => {
 				style={{ width: 'auto', height: '40px', borderRadius: '10px' }}
 			/>
 			<div className="flex flex-col gap-[2px] items-baseline ml-4">
-				{selectedParkingLot &&(
-					<>
-						<h1 className="text-xl font-black text-[hsl(var(--gray-9))]">{selectedParkingLot.name}</h1>
-						<p className="text-sm font-semibold text-[hsl(var(--gray-8))]">{selectedParkingLot.description}</p>
-					</>
-				)}
+				<h1 className="text-xl font-black text-[hsl(var(--gray-9))]">{t(mockLogoData.title)}</h1>
+				<p className="text-sm font-semibold text-[hsl(var(--gray-8))]">{t(mockLogoData.subtitle)}</p>
 			</div>
 		</Link>
 	);
@@ -38,8 +41,3 @@ export const Logo = memo(() => {
 
 Logo.displayName = 'Logo';
 // #endregion 
-// 
-// 
-
-
-

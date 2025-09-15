@@ -39,11 +39,17 @@ export default function Home() {
 	// #endregion
 
 	// #region 렌더링
+	const getSubtitle = () => {
+		return activeTab === 'vehicles' 
+			? t('페이지헤더_홈_부제_입출차관리')
+			: t('페이지헤더_홈_부제_차단기제어');
+	};
+
 	return (
 		<div className="flex flex-col gap-6 h-full">
 			<PageHeader 
 				title={t('페이지헤더_홈_제목')} 
-				subtitle={t('페이지헤더_홈_부제')}
+				subtitle={getSubtitle()}
 			/>
 			
 			{/* 탭과 콘텐츠를 하나의 컨테이너로 묶음 */}
