@@ -27,8 +27,8 @@ const ToolbarContainer: React.FC<ToolbarContainerProps> = ({
 
   return (
     <div className="toolbar-container border-b border-gray-200">
-      <MenuBar 
-        editor={editor} 
+      <MenuBar
+        editor={editor}
         onImageUpload={onImageUpload}
         onShowPreview={onShowPreview}
       />

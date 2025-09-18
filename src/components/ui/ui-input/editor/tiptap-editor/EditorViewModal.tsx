@@ -28,7 +28,7 @@ const EditorViewModal: React.FC<EditorViewModalProps> = ({
       />
       
       {/* 모달 콘텐츠 */}
-      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-[98vw] max-h-[98vh] mx-2 flex flex-col">
+      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] mx-4 flex flex-col">
         {/* 헤더 */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>

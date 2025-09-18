@@ -2,6 +2,7 @@
 
 import React, { ReactNode, useEffect, useState, forwardRef } from 'react';
 import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 // #region 타입
@@ -59,8 +60,6 @@ const ModalContainer = forwardRef<HTMLDivElement, ModalContainerProps>(({
 	// 서버 사이드 또는 마운트 전에는 아무것도 렌더링하지 않음
 	if (!mounted) return null;
 
-	if (!isOpen) return null;
-
 	const handleBackdropClick = (e: React.MouseEvent) => {
 		if (closeOnBackdropClick && e.target === e.currentTarget && onClose) {
 			onClose();
@@ -70,18 +69,48 @@ const ModalContainer = forwardRef<HTMLDivElement, ModalContainerProps>(({
 
 	// #region 렌더링
 	const modalContent = (
-		<div
-			className="flex fixed inset-0 z-50 justify-center items-center backdrop-blur-sm bg-background/40"
-			onClick={handleBackdropClick}
-		>
-			<div 
-				ref={ref}
-				tabIndex={tabIndex}
-				className={cn('relative rounded-lg shadow-lg bg-background neu-elevated', className)}
-			>
-				{children}
-			</div>
-		</div>
+		<AnimatePresence>
+			{isOpen && (
+				<motion.div
+					className="flex fixed inset-0 z-50 justify-center items-center"
+					onClick={handleBackdropClick}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					transition={{ duration: 0.15 }}
+				>
+					{/* 배경 오버레이 - 블러 처리 */}
+					<motion.div 
+						className="absolute inset-0 bg-background/40"
+						initial={{ 
+							opacity: 0,
+							backdropFilter: 'blur(0px)'
+						}}
+						animate={{ 
+							opacity: 1,
+							backdropFilter: 'blur(4px)'
+						}}
+						exit={{ 
+							opacity: 0,
+							backdropFilter: 'blur(0px)'
+						}}
+						transition={{ duration: 0.2 }}
+					/>
+					
+					<motion.div 
+						ref={ref}
+						tabIndex={tabIndex}
+						className={cn('relative rounded-lg shadow-lg bg-background neu-elevated', className)}
+						initial={{ opacity: 0, scale: 0.95 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.95 }}
+						transition={{ duration: 0.15 }}
+					>
+						{children}
+					</motion.div>
+				</motion.div>
+			)}
+		</AnimatePresence>
 	);
 
 	// 클라이언트에서만 렌더링

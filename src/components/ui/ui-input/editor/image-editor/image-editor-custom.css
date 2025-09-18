@@ -1,0 +1,128 @@
+/* TUI Image Editor 커스텀 스타일링 */
+
+/* 우상단 헤더 버튼들의 스타일 개선 */
+.tui-image-editor-container .tui-image-editor-header-buttons button,
+.tui-image-editor-container .tui-image-editor-header-buttons div {
+  /* 텍스트 중앙 정렬 개선 */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* 기본 스타일 통일 - 버튼 크기 축소, 텍스트 크기 증대 */
+  width: 90px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  border: 1px solid #ddd !important;
+  font-family: 'Pretendard', 'Noto Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  line-height: 1 !important;
+
+  /* 호버 효과 */
+  transition: all 0.2s ease !important;
+}
+
+/* 각 버튼별 색상 통일 */
+.tui-image-editor-container .tui-image-editor-header-buttons .tui-image-editor-download-btn {
+  background-color: #4F46E5 !important;
+  border-color: #4F46E5 !important;
+  color: white !important;
+}
+
+.tui-image-editor-container .tui-image-editor-header-buttons .tui-image-editor-download-btn:hover {
+  background-color: #3730A3 !important;
+  border-color: #3730A3 !important;
+}
+
+/* 불러오기/로드 버튼 */
+.tui-image-editor-container .tui-image-editor-header-buttons button:not(.tui-image-editor-download-btn) {
+  background-color: #f8f9fa !important;
+  border-color: #d0d7de !important;
+  color: #24292f !important;
+}
+
+.tui-image-editor-container .tui-image-editor-header-buttons button:not(.tui-image-editor-download-btn):hover {
+  background-color: #f3f4f6 !important;
+  border-color: #d0d7de !important;
+}
+
+/* 커스텀 취소/적용 버튼 스타일링 */
+.tui-image-editor-container .custom-save-btn,
+.tui-image-editor-container .custom-close-btn {
+  /* 텍스트 중앙 정렬 개선 */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* 기본 스타일 - 버튼 크기 축소, 텍스트 크기 증대 */
+  width: 90px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  font-family: 'Pretendard', 'Noto Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  line-height: 1 !important;
+  border: 1px solid !important;
+
+  /* 호버 효과 */
+  transition: all 0.2s ease !important;
+}
+
+/* 적용 버튼 (파란색) */
+.tui-image-editor-container .custom-save-btn {
+  background-color: #4F46E5 !important;
+  border-color: #4F46E5 !important;
+  color: white !important;
+}
+
+.tui-image-editor-container .custom-save-btn:hover {
+  background-color: #3730A3 !important;
+  border-color: #3730A3 !important;
+}
+
+/* 취소 버튼 (회색) */
+.tui-image-editor-container .custom-close-btn {
+  background-color: #6b7280 !important;
+  border-color: #6b7280 !important;
+  color: white !important;
+}
+
+.tui-image-editor-container .custom-close-btn:hover {
+  background-color: #4b5563 !important;
+  border-color: #4b5563 !important;
+}
+
+/* 헤더 버튼 컨테이너 정렬 */
+.tui-image-editor-container .tui-image-editor-header-buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 8px !important;
+}
+
+/* 모든 헤더 버튼들의 기본 레이아웃 통일 */
+.tui-image-editor-container .tui-image-editor-header-buttons > * {
+  flex-shrink: 0 !important;
+}
+
+/* 파일 입력 버튼의 텍스트 정렬 수정 */
+.tui-image-editor-container .tui-image-editor-header-buttons div {
+  position: relative !important;
+}
+
+.tui-image-editor-container .tui-image-editor-load-btn {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  z-index: 1 !important;
+}

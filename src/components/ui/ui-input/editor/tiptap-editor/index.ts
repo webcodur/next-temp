@@ -24,8 +24,7 @@ export { default as ModalManager } from './modals/ModalManager'
 export { default as MediaDropzone } from './editor/interaction/MediaDropzone'
 
 // 내부 컴포넌트들 (컨테이너로 캡슐화됨)
-// MenuBar, TableContextMenu, EditorViewModal, 
-// ImageEditPopover는 더 이상 직접 export하지 않음
+// MenuBar, TableContextMenu, EditorViewModal은 더 이상 직접 export하지 않음
 
 // 타입 정의 (외부 사용 타입만)
 export type {

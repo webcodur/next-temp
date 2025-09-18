@@ -75,8 +75,6 @@ const Modal: React.FC<ModalProps> = ({
 		return () => document.removeEventListener('keydown', handleKeyDown);
 	}, [isOpen, onConfirm]);
 
-	if (!isOpen) return null;
-
 	const sizeClasses = {
 		sm: 'max-w-sm',
 		md: 'max-w-4xl',

@@ -7,7 +7,6 @@ import type { Editor } from '@tiptap/react'
 interface EditorContainerProps {
   editor: Editor | null
   onContextMenu: (event: React.MouseEvent) => void
-  onClick: (event: React.MouseEvent) => void
   className?: string
 }
 
@@ -20,11 +19,11 @@ interface EditorContainerProps {
 const EditorContainer: React.FC<EditorContainerProps> = ({
   editor,
   onContextMenu,
-  onClick,
   className = ''
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  
+
+
   if (!editor) return null
 
   // 컨테이너 클릭 이벤트 처리
@@ -54,11 +53,10 @@ const EditorContainer: React.FC<EditorContainerProps> = ({
       className={`relative flex-1 ${className}`}
       onClick={handleContainerClick}
     >
-      <EditorContent 
-        editor={editor} 
+      <EditorContent
+        editor={editor}
         className="overflow-y-auto max-w-none h-full prose prose-sm focus:outline-none"
         onContextMenu={onContextMenu}
-        onClick={onClick}
       />
     </div>
   )

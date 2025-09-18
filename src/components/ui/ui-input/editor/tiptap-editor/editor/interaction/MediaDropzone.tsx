@@ -75,8 +75,11 @@ const MediaDropzone: React.FC<MediaDropzoneProps> = ({
         
         if (file.type.startsWith('image/') && onImageUpload) {
           url = await onImageUpload(file)
-          // 에디터에 이미지 삽입
-          editor?.chain().focus().setImage({ src: url }).run()
+          // 에디터에 이미지 삽입 (resizableImage 노드 사용)
+          editor?.chain().focus().insertContent({
+            type: 'resizableImage',
+            attrs: { src: url }
+          }).run()
         } else if (onFileUpload) {
           url = await onFileUpload(file)
           // 에디터에 파일 링크 삽입
@@ -88,7 +91,11 @@ const MediaDropzone: React.FC<MediaDropzoneProps> = ({
             reader.onloadend = () => resolve(reader.result as string)
             reader.readAsDataURL(file)
           })
-          editor?.chain().focus().setImage({ src: url }).run()
+          // 에디터에 이미지 삽입 (resizableImage 노드 사용)
+          editor?.chain().focus().insertContent({
+            type: 'resizableImage',
+            attrs: { src: url }
+          }).run()
         }
       } catch (error) {
         console.error('파일 업로드 실패:', error)
@@ -124,22 +131,22 @@ const MediaDropzone: React.FC<MediaDropzoneProps> = ({
       
       {/* 드래그 오버레이 */}
       <div 
-        className="fixed inset-0 z-50 flex items-center justify-center bg-blue-500 bg-opacity-20 backdrop-blur-sm"
+        className="flex fixed inset-0 z-50 justify-center items-center bg-blue-500 bg-opacity-20 backdrop-blur-sm"
         style={{ pointerEvents: 'none' }}
       >
-        <div className="bg-white rounded-xl shadow-2xl p-8 border-2 border-dashed border-blue-400 max-w-md mx-4">
+        <div className="p-8 mx-4 max-w-md bg-white rounded-xl border-2 border-blue-400 border-dashed shadow-2xl">
           <div className="text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+            <div className="flex justify-center mb-4">
+              <div className="flex justify-center items-center w-16 h-16 bg-blue-100 rounded-full">
                 <Upload size={32} className="text-blue-600" />
               </div>
             </div>
             
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">
               파일을 여기에 드롭하세요
             </h3>
             
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="mb-4 text-sm text-gray-600">
               이미지, 비디오 및 문서 파일을 지원합니다
             </p>
             

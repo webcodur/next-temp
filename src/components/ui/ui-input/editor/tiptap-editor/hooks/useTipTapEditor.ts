@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
@@ -9,7 +9,7 @@ import { TaskItem } from '@tiptap/extension-task-item'
 import { Typography } from '@tiptap/extension-typography'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import { Link } from '@tiptap/extension-link'
-import { Image } from '@tiptap/extension-image'
+import ResizableImage from 'tiptap-extension-resize-image'
 import { Youtube } from '@tiptap/extension-youtube'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
@@ -54,18 +54,24 @@ export const useTipTapEditor = ({
     show: false,
     position: { x: 0, y: 0 }
   })
-  
-  const [imageEditPopover, setImageEditPopover] = useState<{
+
+  const [showViewModal, setShowViewModal] = useState(false)
+  const [imageContextMenu, setImageContextMenu] = useState<{
     show: boolean
     position: { x: number; y: number }
-    imageNode: HTMLImageElement | null
+    imageUrl: string
   }>({
     show: false,
     position: { x: 0, y: 0 },
-    imageNode: null
+    imageUrl: ''
   })
-  
-  const [showViewModal, setShowViewModal] = useState(false)
+  const [imageEditModal, setImageEditModal] = useState<{
+    show: boolean
+    imageUrl: string
+  }>({
+    show: false,
+    imageUrl: ''
+  })
   // #endregion
   
   // #region 파일 핸들러
@@ -74,7 +80,7 @@ export const useTipTapEditor = ({
       if (onImageUpload) {
         return await onImageUpload(file)
       }
-      // 기본 동작: base64 변환
+
       return new Promise((resolve) => {
         const reader = new FileReader()
         reader.onloadend = () => resolve(reader.result as string)
@@ -90,10 +96,12 @@ export const useTipTapEditor = ({
         const url = await handleImageUpload(file)
         return { url, pos }
       }
+
       if (onFileUpload) {
         const url = await onFileUpload(file)
         return { url, pos, fileName: file.name }
       }
+
       return null
     },
     [handleImageUpload, onFileUpload]
@@ -101,6 +109,7 @@ export const useTipTapEditor = ({
   // #endregion
 
   // #region Editor 초기화
+
   const editor = useEditor({
     immediatelyRender: false, // SSR 하이드레이션 문제 해결
     extensions: [
@@ -123,7 +132,7 @@ export const useTipTapEditor = ({
         autolink: true,
         linkOnPaste: true
       }),
-      Image.configure({
+      ResizableImage.configure({
         inline: true,
         allowBase64: true
       }),
@@ -164,12 +173,20 @@ export const useTipTapEditor = ({
         onDrop: (editor, files, pos) => {
           files.forEach(async (file) => {
             const result = await handleFileDrop(file, pos)
-            if (result && result.url) {
-              editor.chain().focus().insertContentAt(pos, {
-                type: 'image',
-                attrs: { src: result.url }
-              }).run()
+            if (!result?.url) return
+
+            const nodes = ['resizableImage', 'imageResize', 'image']
+            for (const nodeType of nodes) {
+              if (editor.schema.nodes[nodeType]) {
+                editor.chain().focus().insertContentAt(pos, {
+                  type: nodeType,
+                  attrs: { src: result.url }
+                }).run()
+                return
+              }
             }
+
+            editor.chain().focus().insertContentAt(pos, `<img src="${result.url}" />`).run()
           })
           return true
         }
@@ -224,16 +241,23 @@ export const useTipTapEditor = ({
       onChange?.({ html, json, text })
     }
   })
+
   // #endregion
 
   // #region 이벤트 핸들러
+
   const handleContextMenu = useCallback((event: React.MouseEvent) => {
     if (!editor) return
-    
-    // 테이블 내에서 우클릭했는지 확인
+
     const target = event.target as HTMLElement
+
+    // 이미지는 네이티브 이벤트에서 처리하므로 여기서는 무시
+    if (target.tagName === 'IMG' || target.closest('img')) {
+      return
+    }
+
+    // 테이블 내에서 우클릭했는지 확인
     const tableCell = target.closest('td, th')
-    
     if (tableCell) {
       event.preventDefault()
       setContextMenu({
@@ -255,24 +279,205 @@ export const useTipTapEditor = ({
     setShowViewModal(false)
   }, [])
 
-  const handleImageClick = useCallback((event: React.MouseEvent) => {
-    const target = event.target as HTMLElement
-    
-    // 이미지 클릭 처리
-    const imageElement = target.closest('img') as HTMLImageElement
-    if (imageElement) {
-      event.preventDefault()
-      setImageEditPopover({
-        show: true,
-        position: { x: event.clientX, y: event.clientY },
-        imageNode: imageElement
-      })
+  // 네이티브 DOM 이벤트로 이미지 우클릭 처리 - 완전히 새로운 접근
+  useEffect(() => {
+    if (!editor) return
+
+    const handleNativeContextMenu = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+
+      // TUI Image Editor 내부의 이벤트는 무시
+      if (target.closest('.tui-image-editor-container')) return
+
+      // 에디터 내부인지 확인
+      if (!target.closest('.ProseMirror')) return
+
+      // 이미지 찾기 (ResizableImage wrapper 고려)
+      let img: HTMLImageElement | null = null
+
+      if (target.tagName === 'IMG') {
+        img = target as HTMLImageElement
+      } else {
+        // ResizableImage wrapper 내부의 이미지 찾기
+        const wrapper = target.closest('.image-resizer') ||
+                       target.closest('[data-drag-handle]') ||
+                       target.closest('.ProseMirror-selectednode')
+        if (wrapper) {
+          img = wrapper.querySelector('img') as HTMLImageElement
+        }
+
+        // 그래도 못 찾으면 상위로 올라가며 찾기
+        if (!img) {
+          img = target.closest('img') as HTMLImageElement
+        }
+      }
+
+      if (img && img.src) {
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+
+        // 마우스의 실제 위치 (뷰포트 기준)
+        const x = event.clientX
+        const y = event.clientY
+
+        console.log('Context menu position:', { x, y }) // 디버깅용
+
+        setImageContextMenu({
+          show: true,
+          position: { x, y },
+          imageUrl: img.src
+        })
+
+        return false
+      }
     }
+
+    // 캡처 단계에서 처리
+    document.addEventListener('contextmenu', handleNativeContextMenu, true)
+
+    return () => {
+      document.removeEventListener('contextmenu', handleNativeContextMenu, true)
+    }
+  }, [editor])
+
+  const closeImageContextMenu = useCallback(() => {
+    setImageContextMenu({
+      show: false,
+      position: { x: 0, y: 0 },
+      imageUrl: ''
+    })
   }, [])
 
-  const closeImageEditPopover = useCallback(() => {
-    setImageEditPopover({ show: false, position: { x: 0, y: 0 }, imageNode: null })
+  const handleImageEdit = useCallback((imageUrl: string) => {
+    setImageEditModal({
+      show: true,
+      imageUrl
+    })
   }, [])
+
+  const closeImageEditModal = useCallback(() => {
+    setImageEditModal({
+      show: false,
+      imageUrl: ''
+    })
+  }, [])
+
+  const handleImageSave = useCallback((editedImageUrl: string) => {
+    if (!editor || !editedImageUrl) {
+      console.error('Editor or editedImageUrl is missing')
+      return
+    }
+
+    if (!editedImageUrl.startsWith('data:image/')) {
+      console.error('Invalid image data format - not a valid data URL')
+      return
+    }
+
+    // 현재 편집 중인 이미지 URL로 해당 노드를 찾아서 교체
+    const originalImageUrl = imageEditModal.imageUrl
+
+    const { state } = editor
+    const { doc } = state
+    let imageNodeFound = false
+    const foundNodes: Array<{ pos: number; node: unknown }> = []
+
+    // 문서 전체에서 모든 이미지 노드 찾기
+    doc.descendants((node, pos) => {
+      if (node.type.name === 'imageResize' || node.type.name === 'resizableImage' || node.type.name === 'image') {
+        foundNodes.push({ pos, node })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const nodeAny = node as any
+
+        if (nodeAny.attrs.src === originalImageUrl) {
+          imageNodeFound = true
+
+          // 해당 위치의 노드를 새 이미지로 교체
+          try {
+            const transaction = state.tr.setNodeMarkup(pos, undefined, {
+              ...nodeAny.attrs,
+              src: editedImageUrl
+            })
+
+            editor.view.dispatch(transaction)
+            // 업데이트를 강제로 트리거
+            editor.view.updateState(editor.view.state)
+
+            return false // 첫 번째 매칭되는 노드만 교체하고 중단
+          } catch (error) {
+            console.error('Error updating image:', error)
+            return false
+          }
+        }
+      }
+      return true
+    })
+
+    if (!imageNodeFound) {
+      // 대체 방법 1: 가장 최근에 선택된 이미지 교체
+      if (foundNodes.length > 0) {
+        const lastNode = foundNodes[foundNodes.length - 1]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const lastNodeAny = lastNode.node as any
+        try {
+          const transaction = state.tr.setNodeMarkup(lastNode.pos, undefined, {
+            ...lastNodeAny.attrs,
+            src: editedImageUrl
+          })
+          editor.view.dispatch(transaction)
+          // 강제 업데이트
+          editor.view.updateState(editor.view.state)
+          imageNodeFound = true
+        } catch (error) {
+          console.error('Error replacing last image node:', error)
+        }
+      }
+
+      // 대체 방법 2: 새 이미지 삽입
+      if (!imageNodeFound) {
+        try {
+          // 가능한 노드 타입들을 순서대로 시도
+          const imageNodeTypes = ['imageResize', 'resizableImage', 'image']
+          let insertSuccess = false
+
+          for (const nodeType of imageNodeTypes) {
+            if (editor.schema.nodes[nodeType]) {
+              try {
+                editor.chain()
+                  .focus()
+                  .insertContentAt(editor.state.selection.anchor, {
+                    type: nodeType,
+                    attrs: { src: editedImageUrl }
+                  })
+                  .run()
+                insertSuccess = true
+                break
+              } catch {
+                continue
+              }
+            }
+          }
+
+          // HTML 방식으로 대체 시도
+          if (!insertSuccess) {
+            try {
+              editor.chain()
+                .focus()
+                .insertContent(`<img src="${editedImageUrl}" />`)
+                .run()
+            } catch (htmlError) {
+              console.error('Failed to insert new image:', htmlError)
+            }
+          }
+        } catch (error) {
+          console.error('Error inserting new image:', error)
+        }
+      }
+    }
+
+    closeImageEditModal()
+  }, [editor, closeImageEditModal, imageEditModal.imageUrl])
+
 
   // #endregion
 
@@ -291,8 +496,7 @@ export const useTipTapEditor = ({
     editorContent: {
       editor,
       contextMenu,
-      onContextMenu: handleContextMenu,
-      onClick: handleImageClick
+      onContextMenu: handleContextMenu
     },
     
     // 모달 관련
@@ -307,18 +511,19 @@ export const useTipTapEditor = ({
         position: contextMenu.position,
         onClose: closeContextMenu
       },
+      imageContextMenu: {
+        show: imageContextMenu.show,
+        position: imageContextMenu.position,
+        imageUrl: imageContextMenu.imageUrl,
+        onClose: closeImageContextMenu,
+        onEdit: handleImageEdit
+      },
       imageEdit: {
-        show: imageEditPopover.show,
-        position: imageEditPopover.position,
-        imageNode: imageEditPopover.imageNode,
-        onClose: closeImageEditPopover
+        show: imageEditModal.show,
+        imageUrl: imageEditModal.imageUrl,
+        onClose: closeImageEditModal,
+        onSave: handleImageSave
       }
-    },
-    
-    // 드롭존 관련
-    dropzone: {
-      onImageUpload: handleImageUpload,
-      onFileUpload
     }
   }
 }
