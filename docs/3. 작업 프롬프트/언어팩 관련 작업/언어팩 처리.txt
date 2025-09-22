@@ -1,4 +1,0 @@
-
-- left right 지양 및 start end 활용
-- isRTL 불필요 프로젝트 최상단 layout 에서 처리중
-- 아이콘도 처리 필요 (neu-icons.css)
