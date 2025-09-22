@@ -1,0 +1,142 @@
+● ★ Insight ─────────────────────────────────────
+  Git subtree는 여러 프로젝트에서 공통 코드나 문서를 공유하는 강력한 방법입니다. submodule과 달리 단일 저장소처럼 작동하면서도 독립적인 업데이트가 가능해
+  프롬프트 관리 시스템에 이상적입니다.
+  ─────────────────────────────────────────────────
+
+  Git subtree를 활용한 프롬프트 관리 시스템 안내서를 작성해드리겠습니다.
+
+● Write(docs\_nextjs\nextjs 프롬프트 관리.txt)
+  ⎿  Error writing file
+
+● Write(docs\_nextjs\nextjs-prompt-management.txt)
+  ⎿  Wrote 1 lines to docs\_nextjs\nextjs-prompt-management.txt
+     ==================================================
+     Git Subtree를 활용한 Next.js 프롬프트 관리 시스템
+     ==================================================
+     목차:
+     1. Git Subtree 기초 이해
+     2. 프롬프트 저장소 구축
+     3. 프로젝트에 Subtree 추가
+     4. 업데이트와 동기화
+     5. 실전 활용 시나리오
+
+● Git Subtree를 활용한 Next.js 프롬프트 관리 시스템 가이드를 nextjs-prompt-management.txt 파일에 작성했습니다.
+
+  ★ Insight ─────────────────────────────────────
+  • Git Subtree는 팀원들이 추가 학습 없이도 사용 가능한 단순성이 강점 - submodule과 달리 일반 디렉토리처럼 작동
+  • 중앙 프롬프트 저장소를 통한 일관성 유지와 프로젝트별 커스터마이징의 균형이 핵심
+  • 자동화 스크립트와 Git 별칭 설정으로 복잡한 명령어를 간소화하여 실무 적용성 향상
+  ─────────────────────────────────────────────────
+
+  문서 구성 요약
+
+  1. Git Subtree 기초 - submodule과의 차이점과 적용 시나리오 설명
+  2. 프롬프트 저장소 구축 - 중앙 저장소의 구조와 초기 설정
+  3. Subtree 추가 방법 - 새 프로젝트와 기존 프로젝트에 적용하는 방법
+  4. 동기화 전략 - Pull/Push 작업과 자동화 스크립트
+  5. 실전 시나리오 - 4가지 주요 사용 사례별 구체적 명령어
+  6. 문제 해결 - 자주 발생하는 5가지 문제와 해결법
+
+  핵심 장점
+
+  - 투명한 통합: 팀원들이 subtree 존재를 모르고도 작업 가능
+  - 오프라인 지원: 전체 코드가 로컬에 있어 인터넷 없이도 개발 가능
+  - 버전 관리: 태그와 브랜치를 활용한 Next.js 버전별 관리
+  - 점진적 도입: 기존 프로젝트에도 쉽게 추가 가능
+
+  실무 적용 팁
+
+  # 간편 사용을 위한 별칭 설정
+  git config --global alias.prompt-pull 'subtree pull --prefix=.prompts'
+  git config --global alias.prompt-push 'subtree push --prefix=.prompts'
+
+  이 가이드를 따라 모든 Next.js 프로젝트에 일관된 프롬프트 시스템을 구축하고 유지관리할 수 있습니다.
+
+> 각 프로젝트에서 해당 트리에 대해서 푸시나 풀 다 가능하지?
+
+● ★ Insight ─────────────────────────────────────
+  Git subtree는 양방향 동기화를 완벽하게 지원합니다. 각 프로젝트에서 수정한 내용을 중앙 저장소로 push할 수 있고, 다른 프로젝트들이 이를 pull하여 공유할 수 있어      
+  진정한 협업이 가능합니다.
+  ─────────────────────────────────────────────────
+
+  네, 맞습니다! Git subtree의 강력한 기능 중 하나가 바로 양방향 동기화입니다. 각 프로젝트에서 push와 pull이 모두 가능합니다.
+
+  양방향 동기화 작동 방식
+
+  Pull (중앙 → 프로젝트)
+
+  # 중앙 저장소의 최신 변경사항을 가져오기
+  git subtree pull --prefix=.prompts https://github.com/team/nextjs-prompts.git main --squash
+
+  Push (프로젝트 → 중앙)
+
+  # 프로젝트에서 수정한 내용을 중앙으로 보내기
+  git subtree push --prefix=.prompts https://github.com/team/nextjs-prompts.git feature/my-improvement
+
+  실제 협업 시나리오
+
+  예시: A 프로젝트에서 개선 → B, C 프로젝트에서 활용
+
+  # 1. A 프로젝트에서 새로운 컴포넌트 템플릿 추가
+  cd ~/project-a
+  echo "새로운 템플릿" > .prompts/templates/new-component.md
+  git add .
+  git commit -m "새 컴포넌트 템플릿 추가"
+
+  # 2. 중앙 저장소로 Push
+  git subtree push --prefix=.prompts https://github.com/team/nextjs-prompts.git feature/new-template
+
+  # 3. GitHub에서 PR 생성 후 main에 병합
+
+  # 4. B 프로젝트에서 Pull로 받기
+  cd ~/project-b
+  git subtree pull --prefix=.prompts https://github.com/team/nextjs-prompts.git main --squash
+
+  # 5. C 프로젝트에서도 Pull로 받기
+  cd ~/project-c
+  git subtree pull --prefix=.prompts https://github.com/team/nextjs-prompts.git main --squash
+
+  주의사항과 베스트 프랙티스
+
+  1. 충돌 관리
+
+  # Pull 시 충돌이 발생할 수 있음
+  git subtree pull --prefix=.prompts origin main --squash
+  # CONFLICT 발생 시 수동 해결 필요
+
+  2. 브랜치 전략
+
+  # 직접 main에 push하지 말고 feature 브랜치 사용
+  git subtree push --prefix=.prompts origin feature/your-change
+
+  # PR을 통한 리뷰 후 병합
+
+  3. 프로젝트 특화 vs 공통 내용 구분
+
+  my-project/
+  ├── .prompts/              # 공통 프롬프트 (subtree로 관리)
+  │   └── templates/         # 모든 프로젝트가 공유
+  └── CLAUDE.md             # 프로젝트 특화 (로컬 파일)
+      └── # 이 프로젝트만의 설정
+
+  ★ Insight ─────────────────────────────────────
+  • Push 권한이 있다면 모든 프로젝트가 중앙 저장소에 기여 가능 - 진정한 분산 협업
+  • Feature 브랜치와 PR을 통한 품질 관리로 무분별한 변경 방지
+  • 프로젝트별 특화 내용과 공통 내용을 명확히 구분하여 관리하는 것이 핵심
+  ─────────────────────────────────────────────────
+
+  권한 설정 예시
+
+  GitHub 저장소 권한 구성
+
+  - Read 권한: Pull만 가능
+  - Write 권한: Push/Pull 모두 가능
+  - Admin 권한: 설정 변경 가능
+
+  팀별 운영 방식
+
+  1. 중앙집중식: 관리자만 push, 팀원은 pull only
+  2. 분산협업식: 모든 팀원이 push/pull 가능 (PR 필수)
+  3. 하이브리드: 시니어는 직접 push, 주니어는 PR
+
+  이렇게 양방향 동기화가 가능하기 때문에 팀 전체가 프롬프트 시스템을 함께 개선해 나갈 수 있습니다!
