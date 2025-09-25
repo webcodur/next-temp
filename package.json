@@ -7,9 +7,9 @@
 		"npm": ">=10.0.0"
 	},
 	"scripts": {
-		"dev": "next dev --turbopack -p 6000",
+		"dev": "next dev --turbopack -p 3456",
 		"build": "next build",
-		"start": "next start -p 6000",
+		"start": "next start -p 3456",
 		"lint": "next lint"
 	},
 	"dependencies": {
